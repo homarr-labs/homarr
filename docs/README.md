@@ -155,6 +155,13 @@
 </a>
 </td></tr>
 <tr><td align="center">
+<a href="https://homarr.dev/docs/integrations/immich" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg" alt="Immich" width="90" height="90" />
+  <br/>  
+  <p align="center">Immich</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/jellyfin" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg" alt="Jellyfin" width="90" height="90" />
   <br/>  
@@ -195,15 +202,15 @@
   <br/>  
   <p align="center">NPM</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/ntfy" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg" alt="ntfy" width="90" height="90" />
   <br/>  
   <p align="center">ntfy</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/nzbget" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg" alt="NZBGet" width="90" height="90" />
   <br/>  
@@ -244,15 +251,15 @@
   <br/>  
   <p align="center">Plex</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/prowlarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg" alt="Prowlarr" width="90" height="90" />
   <br/>  
   <p align="center">Prowlarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/proxmox" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg" alt="Proxmox" width="90" height="90" />
   <br/>  
@@ -293,15 +300,15 @@
   <br/>  
   <p align="center">SABnzbd</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/seerr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg" alt="Seerr" width="90" height="90" />
   <br/>  
   <p align="center">Seerr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/slskd" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg" alt="Slskd" width="90" height="90" />
   <br/>  
@@ -323,6 +330,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/tracearr" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg" alt="Tracearr" width="90" height="90" />
+  <br/>  
+  <p align="center">Tracearr</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/transmission" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg" alt="Transmission" width="90" height="90" />
   <br/>  
@@ -335,8 +349,8 @@
   <br/>  
   <p align="center">TrueNAS</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/unifi-controller" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png" alt="Unifi Controller" width="90" height="90" />
   <br/>  

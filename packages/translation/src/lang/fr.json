@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
+    },
     "downloads": {
       "name": "Client de téléchargement",
       "description": "Vous permet de visualiser et de gérer vos téléchargements à partir de clients Torrent et Usenet.",

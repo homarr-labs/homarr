@@ -25,7 +25,7 @@
   "dependencies": {
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.3.15",
+    "@mantine/dates": "^8.3.16",
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -34,7 +34,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }
 }

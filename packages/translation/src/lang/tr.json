@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Mevcut",
+              "label": "Mevcut uygulamayı seçin"
             },
             "new": {
-              "title": "",
+              "title": "Yeni",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "Uygulama url  si",
+                "description": "Kontrol panelinden erişildiğinde uygulamanın açılacağı URL"
               }
             }
           }
@@ -676,8 +676,8 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
+            "add": "Bir uygulamayı bağla",
+            "remove": "Bağlantıyı kaldır",
             "select": ""
           }
         }
@@ -2090,6 +2090,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "İndirme İstemcisi",

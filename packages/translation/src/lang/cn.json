@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
+    },
     "downloads": {
       "name": "下载客户端",
       "description": "允许您查看和管理来自Torrent 和 Usenet 客户端的下载。",

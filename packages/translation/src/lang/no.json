@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "Immich-serverstatistikk",
+      "description": "Informasjon om din Immich-instans",
+      "option": {
+        "showUsers": {
+          "label": "Vis brukere",
+          "description": "Vis antall brukere på din instans"
+        },
+        "showPhotos": {
+          "label": "Vis bilder",
+          "description": "Vis antall bilder på din instans"
+        },
+        "showVideos": {
+          "label": "Vis videoer",
+          "description": "Vis antall videoer på din instans"
+        },
+        "showStorage": {
+          "label": "Vis lagring",
+          "description": "Vis total mengde lagringsplass brukt"
+        }
+      },
+      "users": "Brukere",
+      "photos": "Bilder",
+      "videos": "Videoer",
+      "storage": "Brukt lagringsplass"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "Dette er en unik ID som refererer til ditt Immich-album. Du kan finne denne ID-en ved å åpne et album og kopiere den unike strengen fra URL-en, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervall i sekunder",
+          "description": "Roter mellom bilder i albumet hvert X. sekund. Må være minst 1. Må være under 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Vis bildeinformasjon",
+          "description": "Vis datoen for bildet og gjeldende indeks nederst i lysbildeserien"
+        }
+      },
+      "description": "Lysbildefremvisning av bilder i ditt Immich-album",
+      "noAlbumSelected": "Ingen album valgt, rediger widgeten og velg et album",
+      "noPhotos": "Ingen bilder i dette albumet"
+    },
     "downloads": {
       "name": "Nedlastings-klient",
       "description": "Lar deg se og behandle nedlastinger fra både Torrent og Usenet klienter.",
