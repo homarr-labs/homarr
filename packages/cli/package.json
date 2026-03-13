@@ -19,7 +19,9 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "run": "pnpm with-env node cli.cjs",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e .env --"
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
@@ -35,7 +37,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "esbuild": "^0.27.3",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }
 }

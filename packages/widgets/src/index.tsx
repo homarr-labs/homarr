@@ -20,6 +20,8 @@ import * as downloads from "./downloads";
 import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
+import * as immichAlbumCarousel from "./immich/album-carousel";
+import * as immichServerStats from "./immich/server-stats";
 import type { WidgetImportRecord } from "./import";
 import * as indexerManager from "./indexer-manager";
 import * as mediaReleases from "./media-releases";
@@ -41,6 +43,7 @@ import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
+import * as tracearr from "./tracearr";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -81,6 +84,9 @@ export const widgetImports = {
   coolify,
   systemDisks,
   timetable,
+  "immich-serverStats": immichServerStats,
+  "immich-albumCarousel": immichAlbumCarousel,
+  tracearr,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
