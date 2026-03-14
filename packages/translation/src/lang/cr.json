@@ -1996,6 +1996,61 @@
         "title": "crwdns3876:0crwdne3876:0"
       }
     },
+    "tracearr": {
+      "name": "crwdns3928:0crwdne3928:0",
+      "description": "crwdns3930:0crwdne3930:0",
+      "option": {
+        "showStreams": {
+          "label": "crwdns3932:0crwdne3932:0"
+        },
+        "showStats": {
+          "label": "crwdns3934:0crwdne3934:0"
+        },
+        "showRecentActivity": {
+          "label": "crwdns3936:0crwdne3936:0"
+        },
+        "showViolations": {
+          "label": "crwdns3938:0crwdne3938:0"
+        }
+      },
+      "stats": {
+        "activeStreams": "crwdns3940:0crwdne3940:0",
+        "totalUsers": "crwdns3942:0crwdne3942:0",
+        "transcodes": "crwdns3944:0crwdne3944:0",
+        "bandwidth": "crwdns3946:0crwdne3946:0"
+      },
+      "streams": {
+        "empty": "crwdns3948:0crwdne3948:0",
+        "user": "crwdns3950:0crwdne3950:0",
+        "media": "crwdns3952:0crwdne3952:0",
+        "state": "crwdns3954:0crwdne3954:0",
+        "quality": "crwdns3956:0crwdne3956:0",
+        "device": "crwdns3958:0crwdne3958:0",
+        "progress": "crwdns3960:0crwdne3960:0",
+        "videoDecision": {
+          "directPlay": "crwdns3962:0crwdne3962:0",
+          "transcode": "crwdns3964:0crwdne3964:0",
+          "directStream": "crwdns3966:0crwdne3966:0"
+        }
+      },
+      "recentActivity": {
+        "title": "crwdns3968:0crwdne3968:0",
+        "empty": "crwdns3970:0crwdne3970:0",
+        "watched": "crwdns3972:0crwdne3972:0",
+        "partial": "crwdns3974:0crwdne3974:0"
+      },
+      "violations": {
+        "title": "crwdns3976:0crwdne3976:0",
+        "empty": "crwdns3978:0crwdne3978:0",
+        "rule": "crwdns3980:0crwdne3980:0",
+        "user": "crwdns3982:0crwdne3982:0"
+      },
+      "noSectionsEnabled": "crwdns3984:0crwdne3984:0",
+      "error": {
+        "noIntegration": "crwdns3986:0crwdne3986:0",
+        "internalServerError": "crwdns3988:0crwdne3988:0"
+      }
+    },
     "common": {
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
@@ -3518,6 +3573,9 @@
             },
             "weather": {
               "label": "crwdns3724:0crwdne3724:0"
+            },
+            "tracearr": {
+              "label": "crwdns3990:0crwdne3990:0"
             }
           },
           "interval": {
