@@ -339,7 +339,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
     category: ["photoService"],
-    // @ts-expect-error TS2345
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
   },
   tracearr: {
@@ -347,7 +346,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
     category: ["mediaMonitoring"],
-    // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
