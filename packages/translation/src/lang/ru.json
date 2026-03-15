@@ -1997,58 +1997,58 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Мониторинг медиасервера с детальной информацией о потоках и транскодировании",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Показать активные потоки"
         },
         "showStats": {
-          "label": ""
+          "label": "Показать сводку статистики"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Показать недавнюю активность"
         },
         "showViolations": {
-          "label": ""
+          "label": "Показать нарушения"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Активные потоки",
+        "totalUsers": "Всего пользователей",
+        "transcodes": "Транскодирования",
+        "bandwidth": "Пропускная способность"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Нет активных потоков",
+        "user": "Пользователь",
+        "media": "Медиа",
+        "state": "Состояние",
+        "quality": "Качество",
+        "device": "Устройство",
+        "progress": "Прогресс",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Прямое воспроизведение",
+          "transcode": "Транскодирование",
+          "directStream": "Прямой поток"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Недавняя активность",
+        "empty": "Нет недавней активности",
+        "watched": "Просмотрено",
+        "partial": "Частично"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Нарушения",
+        "empty": "Нет недавних нарушений",
+        "rule": "Правило",
+        "user": "Пользователь"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Секции не включены",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Интеграция Tracearr не настроена",
+        "internalServerError": "Не удалось получить данные Tracearr"
       }
     },
     "common": {
@@ -3575,7 +3575,7 @@
               "label": "Погода"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
