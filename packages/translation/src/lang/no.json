@@ -1996,6 +1996,61 @@
         "title": "Instanser"
       }
     },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -3518,6 +3573,9 @@
             },
             "weather": {
               "label": "Vær"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

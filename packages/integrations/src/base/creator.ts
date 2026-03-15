@@ -41,6 +41,7 @@ import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
+import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
@@ -111,6 +112,7 @@ export const integrationCreators = {
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  tracearr: TracearrIntegration,
   glances: GlancesIntegration,
   immich: ImmichIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;

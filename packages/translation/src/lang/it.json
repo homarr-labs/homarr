@@ -1996,6 +1996,61 @@
         "title": "Istanze"
       }
     },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "Utenti Totali",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "Utente",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "Dispositivo",
+        "progress": "Avanzamento",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": "Parziale"
+      },
+      "violations": {
+        "title": "Violazioni",
+        "empty": "Nessuna violazione recente",
+        "rule": "Regola",
+        "user": "Utente"
+      },
+      "noSectionsEnabled": "Nessuna sezione abilitata",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Città / Codice postale",
@@ -3518,6 +3573,9 @@
             },
             "weather": {
               "label": "Meteo"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

@@ -330,6 +330,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/tracearr" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg" alt="Tracearr" width="90" height="90" />
+  <br/>  
+  <p align="center">Tracearr</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/transmission" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg" alt="Transmission" width="90" height="90" />
   <br/>  
@@ -342,8 +349,8 @@
   <br/>  
   <p align="center">TrueNAS</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/unifi-controller" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png" alt="Unifi Controller" width="90" height="90" />
   <br/>  

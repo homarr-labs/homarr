@@ -1,3 +1,36 @@
+## [1.56.0](https://github.com/homarr-labs/homarr/compare/v1.55.0...v1.56.0) (2026-03-13)
+
+### Features
+
+* add immich integration and widget ([#5165](https://github.com/homarr-labs/homarr/issues/5165)) ([cdd90b8](https://github.com/homarr-labs/homarr/commit/cdd90b8aa091e4d05a40af35ea87486b83bf4182))
+* **boards:** show supported integrations in widget selection ([#5187](https://github.com/homarr-labs/homarr/issues/5187)) ([dabe96b](https://github.com/homarr-labs/homarr/commit/dabe96bd5ea52110812934b1ec9c8dc9ecd77603))
+* expand cli ([#5159](https://github.com/homarr-labs/homarr/issues/5159)) ([aa36ce3](https://github.com/homarr-labs/homarr/commit/aa36ce3c4784c91024c4e8001c236e28f02396e7))
+* Tracearr integration ([#5060](https://github.com/homarr-labs/homarr/issues/5060)) ([f686001](https://github.com/homarr-labs/homarr/commit/f68600150ab1985d56f1bed45d8ac158a74ec443))
+
+### Bug Fixes
+
+* **boards:** duplication of boards fails with postgresql / mysql ([#5228](https://github.com/homarr-labs/homarr/issues/5228)) ([ba9c3f3](https://github.com/homarr-labs/homarr/commit/ba9c3f3e27659a5c06604d06192ccb8316658937))
+* **deps:** update dependency @tabler/icons-react to ^3.38.0 ([#5182](https://github.com/homarr-labs/homarr/issues/5182)) ([6aaaf31](https://github.com/homarr-labs/homarr/commit/6aaaf31d8b5495090081f8795844db00a7b0a2ed))
+* **deps:** update dependency @tabler/icons-react to ^3.39.0 ([#5209](https://github.com/homarr-labs/homarr/issues/5209)) ([22fd8e9](https://github.com/homarr-labs/homarr/commit/22fd8e9b95bcddd9a9a1fa599f1a42f4d502f205))
+* **deps:** update dependency @tabler/icons-react to ^3.40.0 ([#5220](https://github.com/homarr-labs/homarr/issues/5220)) ([12ad241](https://github.com/homarr-labs/homarr/commit/12ad241406d581c98826ed270d71faf50779c601))
+* **deps:** update dependency fast-xml-parser to ^5.4.2 ([#5190](https://github.com/homarr-labs/homarr/issues/5190)) ([5159d9f](https://github.com/homarr-labs/homarr/commit/5159d9f0e7263166f26ec770c55dd4e2944dfd72))
+* **deps:** update dependency fastify to ^5.8.1 ([#5202](https://github.com/homarr-labs/homarr/issues/5202)) ([b02e8cc](https://github.com/homarr-labs/homarr/commit/b02e8cc875df20ff4d007c527bb5682db960fae6))
+* **deps:** update dependency fastify to ^5.8.2 ([#5221](https://github.com/homarr-labs/homarr/issues/5221)) ([5c4f394](https://github.com/homarr-labs/homarr/commit/5c4f39450148fd91e2cecf70c20c8ec78ecebfd6))
+* **deps:** update dependency mysql2 to v3.19.0 ([#5206](https://github.com/homarr-labs/homarr/issues/5206)) ([324bfd9](https://github.com/homarr-labs/homarr/commit/324bfd90d1a2c6ca80610c549b84d93f4a695cab))
+* **deps:** update dependency pg to ^8.20.0 ([#5198](https://github.com/homarr-labs/homarr/issues/5198)) ([1c6e23a](https://github.com/homarr-labs/homarr/commit/1c6e23a4b6509e83667396a392b23655f8b614dd))
+* **deps:** update mantine monorepo to ^8.3.16 ([#5201](https://github.com/homarr-labs/homarr/issues/5201)) ([c7fa5cd](https://github.com/homarr-labs/homarr/commit/c7fa5cdbb3ffdf90dbc9c9dbef0551e2b0edfb4c))
+* **deps:** update tiptap monorepo to v3.20.1 ([#5215](https://github.com/homarr-labs/homarr/issues/5215)) ([d941ed5](https://github.com/homarr-labs/homarr/commit/d941ed58fa482f2e41d27b6b5088146a608b236e))
+* **deps:** update trpc monorepo to ^11.12.0 ([#5213](https://github.com/homarr-labs/homarr/issues/5213)) ([00dd32b](https://github.com/homarr-labs/homarr/commit/00dd32bbe124f02ad7ae5ecb4e298a6d3fb4f0b8))
+* **deps:** update turbo monorepo to ^2.8.14 ([#5113](https://github.com/homarr-labs/homarr/issues/5113)) ([8ee05e0](https://github.com/homarr-labs/homarr/commit/8ee05e0d491bfec9f768a3a915ad1c8abf433b5b))
+* **glances:** unable to parse uptime of 1 day ([#5226](https://github.com/homarr-labs/homarr/issues/5226)) ([3091ed6](https://github.com/homarr-labs/homarr/commit/3091ed6358d83249a94827f55a812323c1e80497))
+* **image-proxy:** hash full URL and headers deterministically ([#5184](https://github.com/homarr-labs/homarr/issues/5184)) ([9a878af](https://github.com/homarr-labs/homarr/commit/9a878af414e12691420edb945ed6f9f6255c7eae))
+* language changes when searching for some icons ([#5224](https://github.com/homarr-labs/homarr/issues/5224)) ([21225c9](https://github.com/homarr-labs/homarr/commit/21225c979edb9a2c9cc00c4649363c0aab8058f1))
+* **releases:** allow any icon url for repositories ([#5229](https://github.com/homarr-labs/homarr/issues/5229)) ([d3c2ad1](https://github.com/homarr-labs/homarr/commit/d3c2ad134f7a9972118abcfff5482ca6d6105406))
+* **security:** harden hashing in image-proxy ([#5188](https://github.com/homarr-labs/homarr/issues/5188)) ([5723da2](https://github.com/homarr-labs/homarr/commit/5723da21aae8b69642a39e4b5a05ad84fa8dd8ef))
+* **stock-price:** align sparkline color with displayed price change ([#5181](https://github.com/homarr-labs/homarr/issues/5181)) ([bbf0adf](https://github.com/homarr-labs/homarr/commit/bbf0adf31a1f08f3ca09b709efd1daa15cb8498c))
+* **system-disks:** format absolute denominator with human-readable size ([#5183](https://github.com/homarr-labs/homarr/issues/5183)) ([85c4601](https://github.com/homarr-labs/homarr/commit/85c460190ceedad83c40af81d5efa270bc464b94))
+* **true-nas:** ignore offline/exported pools ([#5225](https://github.com/homarr-labs/homarr/issues/5225)) ([451602d](https://github.com/homarr-labs/homarr/commit/451602d1e61256696f6bcb0cd76f09748345a940))
+
 ## [1.55.0](https://github.com/homarr-labs/homarr/compare/v1.54.0...v1.55.0) (2026-03-06)
 
 ### Features
