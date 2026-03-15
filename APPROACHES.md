@@ -188,3 +188,182 @@ With all services in one process, Redis connection pools could be shared. Curren
 | 4. `--max-old-space-size` | Configurable | None | 📋 User option |
 | 5. Standalone output | Already optimal | None | ✅ Already done |
 | 6. Shared Redis pools | ~5-10 MB saved | Medium | 📋 Future |
+| 7. Redis-backed initial query data | Faster page loads | Medium | 📋 POC documented |
+| 8. Client-side rendering with ISR shell | Faster TTFB | High | 📋 POC documented |
+
+---
+
+## Approach 7: Redis-Backed TanStack Query Initial Data
+
+**Status:** 📋 POC documented
+
+### Problem
+
+Currently, the dashboard page (`/`) is fully server-rendered on every request:
+
+1. Server calls `api.board.getHomeBoard()` (database query)
+2. Server prefetches all widget data via `prefetchForKindAsync()` (multiple database/integration queries)
+3. Server renders the full React tree with hydration boundary
+4. Client hydrates and takes over
+
+Each page load triggers a cascade: **Client → Next.js Server → tRPC → Database → Back**. For data that doesn't change often (board layout, widget configurations), this is wasteful.
+
+### Approach
+
+Use Redis as a shared cache layer between cron jobs and page loads. Cron jobs already populate Redis with integration data. The idea is to:
+
+1. **Cron jobs write to Redis** (already happening via `createItemAndIntegrationChannel`)
+2. **Server reads from Redis first** instead of hitting the database for widget data
+3. **Pass Redis data as `initialData`** to TanStack Query on the client
+4. **Client-side queries take over** with stale-while-revalidate behavior
+
+```tsx
+// POC: In _creator.tsx, read from Redis cache first for widget prefetching
+import { createItemAndIntegrationChannel } from "@homarr/redis";
+
+// Instead of always calling the database:
+const cachedData = await redisChannel.getAsync();
+if (cachedData) {
+  // Use cached data as initial query data - skip the database call
+  queryClient.setQueryData(queryKey, cachedData.data);
+} else {
+  // Fall back to normal prefetch
+  await prefetchForKindAsync(kind, queryClient, items);
+}
+```
+
+On the client side, TanStack Query's `initialData` option lets us hydrate from cache:
+
+```tsx
+// Client component using cached initial data
+const { data } = useQuery({
+  queryKey: ["widget", widgetId],
+  queryFn: () => fetchWidgetData(widgetId),
+  initialData: cachedWidgetData, // From Redis via server props
+  staleTime: 30_000, // Consider fresh for 30s
+});
+```
+
+### How TanStack Query Initial Data Works
+
+From the [TanStack Query docs](https://tanstack.com/query/v5/docs/framework/react/guides/initial-query-data):
+
+- `initialData` pre-populates the query cache before the component mounts
+- The query still revalidates in the background (stale-while-revalidate)
+- Combined with `staleTime`, the query won't refetch until the data is considered stale
+- This means the page renders instantly with cached data, then silently updates
+
+### PROs
+- **Faster page loads**: Redis reads are ~1ms vs ~50-200ms for database queries with joins
+- **Reduced database load**: Most page views hit Redis instead of SQLite/MySQL/PostgreSQL
+- **Leverages existing infrastructure**: Cron jobs already write widget data to Redis channels
+- **Graceful degradation**: Falls back to normal database queries on cache miss
+- **Non-breaking**: Can be adopted incrementally per widget type
+- **Shared across users**: Non-personal data (board layout, widget data) is the same for all users viewing the same board
+
+### CONs
+- **Cache staleness**: Data may be up to one cron interval old (typically 1-5 minutes)
+- **Cache invalidation complexity**: Need to invalidate Redis when boards are edited
+- **Memory usage**: More data stored in Redis (marginal since it's already stored for pub/sub)
+- **Serialization overhead**: superjson parse/stringify on every cache read
+- **Testing complexity**: Need to test cache hit/miss/stale scenarios
+
+### Estimated Impact
+
+| Metric | Before | After (cache hit) | Improvement |
+|---|---|---|---|
+| Dashboard TTFB | ~200-500ms | ~50-100ms | 2-5x faster |
+| Database queries per page load | 5-20 (depending on widgets) | 0-2 (board + auth only) | ~90% reduction |
+| Redis reads per page load | 0 | 5-20 | Acceptable (~1ms each) |
+
+### Implementation Path
+
+1. Create a `createBoardCacheChannel(boardId)` in `@homarr/redis`
+2. Populate it when boards are saved and when cron jobs update widget data
+3. In `_creator.tsx`, check cache before `prefetchForKindAsync()`
+4. Set `staleTime` to match cron interval for each widget type
+5. Add cache invalidation when boards are edited (`board.saveBoard` mutation)
+
+---
+
+## Approach 8: Client-Side Rendering with ISR Static Shell
+
+**Status:** 📋 POC documented (not recommended for Homarr's use case)
+
+### Concept
+
+Instead of server-rendering the entire dashboard on each request, serve a **static HTML shell** via Next.js ISR (Incremental Static Regeneration) and let the client fetch all dynamic content via TanStack Query.
+
+```tsx
+// Hypothetical ISR dashboard page
+export const revalidate = 60; // Regenerate every 60 seconds
+
+export default function DashboardPage() {
+  // Return a static shell - no server-side data fetching
+  return (
+    <DashboardShell>
+      <Suspense fallback={<BoardSkeleton />}>
+        <ClientBoard /> {/* Fetches via useQuery on mount */}
+      </Suspense>
+    </DashboardShell>
+  );
+}
+```
+
+The client component would then fetch everything:
+
+```tsx
+"use client";
+
+function ClientBoard() {
+  const { data: board, isLoading } = clientApi.board.getHomeBoard.useQuery(undefined, {
+    initialData: undefined, // Could be populated from Redis via API route
+  });
+
+  if (isLoading) return <BoardSkeleton />;
+  return <BoardContent board={board} />;
+}
+```
+
+### How Next.js ISR Works
+
+- On first request, Next.js generates the page and caches it
+- Subsequent requests serve the cached HTML instantly (TTFB ~0ms for CDN)
+- After `revalidate` seconds, the next request triggers background regeneration
+- The stale page is served until the new one is ready (stale-while-revalidate)
+
+### PROs
+- **Near-instant TTFB**: Static HTML served from disk/CDN cache
+- **Reduced server CPU**: No React SSR on every request
+- **Scalable**: Static pages can be served by any CDN or reverse proxy
+- **Good for public boards**: Shared boards viewed by many users benefit most
+
+### CONs
+- **Layout shift (CLS)**: Dashboard appears empty then fills in — bad UX for dashboards
+- **No SSR for SEO**: Not relevant for Homarr (it's a private dashboard app)
+- **Slower perceived load**: Users see a skeleton for 200-500ms while queries run
+- **Authentication complexity**: ISR pages must be the same for all users. Homarr's dashboard is user-specific (permissions, board access), making ISR caching ineffective for the page itself
+- **Breaks existing hydration pattern**: The current `HydrationBoundary` + `dehydrate()` pattern works well and ensures no layout shift
+- **WebSocket subscriptions delayed**: Real-time updates don't start until client JS loads and connects
+
+### Benchmark Comparison (Theoretical)
+
+| Metric | Current (SSR) | Approach 7 (Redis initial data) | Approach 8 (ISR + CSR) |
+|---|---|---|---|
+| TTFB | 200-500ms | 50-100ms | ~10ms (static) |
+| Time to Interactive | 200-500ms | 50-100ms | 200-500ms (same) |
+| Largest Contentful Paint | 200-500ms | 50-100ms | 400-800ms (worse) |
+| Cumulative Layout Shift | ~0 | ~0 | 0.1-0.3 (worse) |
+| Server CPU per request | High | Low | Near zero |
+
+### Recommendation
+
+**Approach 7 (Redis-backed initial data) is recommended over Approach 8 (ISR)** for Homarr because:
+
+1. **Dashboards are personalized**: Board access depends on user permissions, making ISR page-level caching ineffective
+2. **No layout shift**: Users expect the dashboard to appear fully rendered
+3. **Existing infrastructure**: Redis + cron jobs already provide the cache layer needed
+4. **Incremental adoption**: Can be applied per-widget without changing the overall rendering strategy
+5. **ISR is designed for content sites**: Blog posts, documentation pages, product pages — not interactive dashboards with real-time WebSocket subscriptions
+
+ISR could still be useful for specific Homarr pages like `/manage/about` or documentation pages that don't depend on user state, but the main dashboard is not a good candidate.
