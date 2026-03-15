@@ -1,6 +1,6 @@
 import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 
-import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
+import { createCacheChannel, createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 
 export {
   createCacheChannel,
@@ -40,3 +40,14 @@ export interface LoggerMessage {
 }
 
 export const loggingChannel = createSubPubChannel<LoggerMessage>("logging");
+
+/**
+ * POC: Redis cache for widget prefetch data.
+ * Caches serialized query data per widget kind to avoid database queries on every page load.
+ * Default TTL: 5 minutes (matches existing cron job intervals).
+ *
+ * Usage: see packages/widgets/src/prefetch.ts
+ * This can be reverted by reverting this commit.
+ */
+export const createWidgetPrefetchCache = (widgetKind: string) =>
+  createCacheChannel<Record<string, unknown>>(`widget-prefetch:${widgetKind}`, 5 * 60 * 1000);
