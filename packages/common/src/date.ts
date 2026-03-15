@@ -6,6 +6,17 @@ dayjs.extend(isBetween);
 
 const validUnits = ["h", "d", "w", "M", "y"] as UnitTypeShort[];
 
+export function formatDuration(milliseconds: number) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
 export const isDateWithin = (date: Date, relativeDate: string): boolean => {
   if (relativeDate.length < 2) {
     throw new Error("Relative date must be at least 2 characters long");

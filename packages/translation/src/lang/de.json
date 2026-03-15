@@ -1138,9 +1138,9 @@
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "unsavedChanges": "Sie haben ungespeicherte Änderungen!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Server",
+    "applications": "Apps",
+    "services": "Dienste",
     "preview": {
       "show": "Vorschau ansehen",
       "hide": "Vorschau ausblenden"
@@ -1964,36 +1964,91 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Übersicht Ihrer Coolify-Instanz mit Servern und Anwendungen",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Server anzeigen"
         },
         "showApplications": {
-          "label": ""
+          "label": "Anwendungen anzeigen"
         },
         "showServices": {
-          "label": ""
+          "label": "Dienste anzeigen"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Keine Server gefunden",
+        "applications": "Keine Anwendungen gefunden",
+        "services": "Keine Dienste gefunden"
       },
       "footer": {
-        "updated": ""
+        "updated": "Aktualisiert {when}"
       },
+      "error": {
+        "noIntegration": "Keine Coolify-Integration konfiguriert",
+        "internalServerError": "Fehler beim Abrufen der Coolify-Daten"
+      },
+      "server": {
+        "buildServer": "Version"
+      },
+      "instances": {
+        "title": "Instanzen"
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
       "error": {
         "noIntegration": "",
         "internalServerError": ""
-      },
-      "server": {
-        "buildServer": ""
-      },
-      "instances": {
-        "title": ""
       }
     },
     "common": {
@@ -2090,6 +2145,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "Download Client",
@@ -2646,32 +2747,32 @@
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Systemdatenträger",
+      "description": "Festplattennutzung Ihres Systems",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Zeige Temperatur, falls verfügbar"
         },
         "displayMode": {
-          "label": "",
+          "label": "Anzeigemodus",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Prozentsatz (z.B. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Absolute Werte (z.B. 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Prozentsatz freier Speicherplatz (z. B. 24% frei)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Zeige Hintergrundnutzungsleiste"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Fehlerhaft"
       }
     }
   },
@@ -3305,7 +3406,7 @@
             "title": "Nutzungsdaten",
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
-              "text": "Homarr schickt anonymisierte Nutzungsdaten mit der Open-Source-Software Umami. Es sammelt zu keinem Zeitpunkt personenbezogene Daten und ist daher vollständig DPR & CCPA konform. Wir empfehlen diese Nutzungsdaten zu aktivieren, da es unserem Open-Source-Team hilft Probleme zu identifizieren und unserem Backlog ermöglicht Priorität einzuräumen."
+              "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
             },
             "widgetData": {
               "title": "Widget Daten",
@@ -3360,10 +3461,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Benutzer",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar aktivieren",
+              "description": "Falls kein benutzerdefinierter Avatar gesetzt ist und eine E-Mail konfiguriert wurde, ist ein nutzen der Avatare von Libravatar/Gravatar möglich"
             }
           },
           "search": {
@@ -3472,6 +3573,9 @@
             },
             "weather": {
               "label": "Wetter"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

@@ -1,3 +1,186 @@
+## [1.56.0](https://github.com/homarr-labs/homarr/compare/v1.55.0...v1.56.0) (2026-03-13)
+
+### Features
+
+* add immich integration and widget ([#5165](https://github.com/homarr-labs/homarr/issues/5165)) ([cdd90b8](https://github.com/homarr-labs/homarr/commit/cdd90b8aa091e4d05a40af35ea87486b83bf4182))
+* **boards:** show supported integrations in widget selection ([#5187](https://github.com/homarr-labs/homarr/issues/5187)) ([dabe96b](https://github.com/homarr-labs/homarr/commit/dabe96bd5ea52110812934b1ec9c8dc9ecd77603))
+* expand cli ([#5159](https://github.com/homarr-labs/homarr/issues/5159)) ([aa36ce3](https://github.com/homarr-labs/homarr/commit/aa36ce3c4784c91024c4e8001c236e28f02396e7))
+* Tracearr integration ([#5060](https://github.com/homarr-labs/homarr/issues/5060)) ([f686001](https://github.com/homarr-labs/homarr/commit/f68600150ab1985d56f1bed45d8ac158a74ec443))
+
+### Bug Fixes
+
+* **boards:** duplication of boards fails with postgresql / mysql ([#5228](https://github.com/homarr-labs/homarr/issues/5228)) ([ba9c3f3](https://github.com/homarr-labs/homarr/commit/ba9c3f3e27659a5c06604d06192ccb8316658937))
+* **deps:** update dependency @tabler/icons-react to ^3.38.0 ([#5182](https://github.com/homarr-labs/homarr/issues/5182)) ([6aaaf31](https://github.com/homarr-labs/homarr/commit/6aaaf31d8b5495090081f8795844db00a7b0a2ed))
+* **deps:** update dependency @tabler/icons-react to ^3.39.0 ([#5209](https://github.com/homarr-labs/homarr/issues/5209)) ([22fd8e9](https://github.com/homarr-labs/homarr/commit/22fd8e9b95bcddd9a9a1fa599f1a42f4d502f205))
+* **deps:** update dependency @tabler/icons-react to ^3.40.0 ([#5220](https://github.com/homarr-labs/homarr/issues/5220)) ([12ad241](https://github.com/homarr-labs/homarr/commit/12ad241406d581c98826ed270d71faf50779c601))
+* **deps:** update dependency fast-xml-parser to ^5.4.2 ([#5190](https://github.com/homarr-labs/homarr/issues/5190)) ([5159d9f](https://github.com/homarr-labs/homarr/commit/5159d9f0e7263166f26ec770c55dd4e2944dfd72))
+* **deps:** update dependency fastify to ^5.8.1 ([#5202](https://github.com/homarr-labs/homarr/issues/5202)) ([b02e8cc](https://github.com/homarr-labs/homarr/commit/b02e8cc875df20ff4d007c527bb5682db960fae6))
+* **deps:** update dependency fastify to ^5.8.2 ([#5221](https://github.com/homarr-labs/homarr/issues/5221)) ([5c4f394](https://github.com/homarr-labs/homarr/commit/5c4f39450148fd91e2cecf70c20c8ec78ecebfd6))
+* **deps:** update dependency mysql2 to v3.19.0 ([#5206](https://github.com/homarr-labs/homarr/issues/5206)) ([324bfd9](https://github.com/homarr-labs/homarr/commit/324bfd90d1a2c6ca80610c549b84d93f4a695cab))
+* **deps:** update dependency pg to ^8.20.0 ([#5198](https://github.com/homarr-labs/homarr/issues/5198)) ([1c6e23a](https://github.com/homarr-labs/homarr/commit/1c6e23a4b6509e83667396a392b23655f8b614dd))
+* **deps:** update mantine monorepo to ^8.3.16 ([#5201](https://github.com/homarr-labs/homarr/issues/5201)) ([c7fa5cd](https://github.com/homarr-labs/homarr/commit/c7fa5cdbb3ffdf90dbc9c9dbef0551e2b0edfb4c))
+* **deps:** update tiptap monorepo to v3.20.1 ([#5215](https://github.com/homarr-labs/homarr/issues/5215)) ([d941ed5](https://github.com/homarr-labs/homarr/commit/d941ed58fa482f2e41d27b6b5088146a608b236e))
+* **deps:** update trpc monorepo to ^11.12.0 ([#5213](https://github.com/homarr-labs/homarr/issues/5213)) ([00dd32b](https://github.com/homarr-labs/homarr/commit/00dd32bbe124f02ad7ae5ecb4e298a6d3fb4f0b8))
+* **deps:** update turbo monorepo to ^2.8.14 ([#5113](https://github.com/homarr-labs/homarr/issues/5113)) ([8ee05e0](https://github.com/homarr-labs/homarr/commit/8ee05e0d491bfec9f768a3a915ad1c8abf433b5b))
+* **glances:** unable to parse uptime of 1 day ([#5226](https://github.com/homarr-labs/homarr/issues/5226)) ([3091ed6](https://github.com/homarr-labs/homarr/commit/3091ed6358d83249a94827f55a812323c1e80497))
+* **image-proxy:** hash full URL and headers deterministically ([#5184](https://github.com/homarr-labs/homarr/issues/5184)) ([9a878af](https://github.com/homarr-labs/homarr/commit/9a878af414e12691420edb945ed6f9f6255c7eae))
+* language changes when searching for some icons ([#5224](https://github.com/homarr-labs/homarr/issues/5224)) ([21225c9](https://github.com/homarr-labs/homarr/commit/21225c979edb9a2c9cc00c4649363c0aab8058f1))
+* **releases:** allow any icon url for repositories ([#5229](https://github.com/homarr-labs/homarr/issues/5229)) ([d3c2ad1](https://github.com/homarr-labs/homarr/commit/d3c2ad134f7a9972118abcfff5482ca6d6105406))
+* **security:** harden hashing in image-proxy ([#5188](https://github.com/homarr-labs/homarr/issues/5188)) ([5723da2](https://github.com/homarr-labs/homarr/commit/5723da21aae8b69642a39e4b5a05ad84fa8dd8ef))
+* **stock-price:** align sparkline color with displayed price change ([#5181](https://github.com/homarr-labs/homarr/issues/5181)) ([bbf0adf](https://github.com/homarr-labs/homarr/commit/bbf0adf31a1f08f3ca09b709efd1daa15cb8498c))
+* **system-disks:** format absolute denominator with human-readable size ([#5183](https://github.com/homarr-labs/homarr/issues/5183)) ([85c4601](https://github.com/homarr-labs/homarr/commit/85c460190ceedad83c40af81d5efa270bc464b94))
+* **true-nas:** ignore offline/exported pools ([#5225](https://github.com/homarr-labs/homarr/issues/5225)) ([451602d](https://github.com/homarr-labs/homarr/commit/451602d1e61256696f6bcb0cd76f09748345a940))
+
+## [1.55.0](https://github.com/homarr-labs/homarr/compare/v1.54.0...v1.55.0) (2026-03-06)
+
+### Features
+
+* add seerr integration ([#5139](https://github.com/homarr-labs/homarr/issues/5139)) ([0e29a2f](https://github.com/homarr-labs/homarr/commit/0e29a2fce172cbfda083b899c01b92bd8b6210b7))
+
+### Bug Fixes
+
+* **deps:** update dependency fast-xml-parser to ^5.4.1 ([#5150](https://github.com/homarr-labs/homarr/issues/5150)) ([eb2f85f](https://github.com/homarr-labs/homarr/commit/eb2f85f6f8c9d7d90c1aeec079225678dfef4dd0))
+* **deps:** update dependency ioredis to v5.10.0 ([#5169](https://github.com/homarr-labs/homarr/issues/5169)) ([1c06e56](https://github.com/homarr-labs/homarr/commit/1c06e562c33bd9f1387cb05a3dece7beedfe43c2))
+* **deps:** update dependency ldapts to v8.1.7 ([#5168](https://github.com/homarr-labs/homarr/issues/5168)) ([ec45aac](https://github.com/homarr-labs/homarr/commit/ec45aacc63766c51a99ead6130bade442124e70d))
+* **deps:** update dependency mysql2 to v3.17.5 ([#5140](https://github.com/homarr-labs/homarr/issues/5140)) ([66ad67e](https://github.com/homarr-labs/homarr/commit/66ad67eced587fd49a470395298477dc09cdd225))
+* **deps:** update dependency mysql2 to v3.18.0 ([#5141](https://github.com/homarr-labs/homarr/issues/5141)) ([52792af](https://github.com/homarr-labs/homarr/commit/52792af186a6eb3519aafdee5a7c0dd03a86a461))
+* **deps:** update dependency mysql2 to v3.18.1 ([#5152](https://github.com/homarr-labs/homarr/issues/5152)) ([8bf2a43](https://github.com/homarr-labs/homarr/commit/8bf2a43e065671c7c119ef1da5aa09d284db0ede))
+* **deps:** update dependency mysql2 to v3.18.2 ([#5164](https://github.com/homarr-labs/homarr/issues/5164)) ([4717a57](https://github.com/homarr-labs/homarr/commit/4717a5724d4a6286c0f2bb92cf1e1fe17903a13a))
+* **deps:** update dependency pg to ^8.19.0 ([#5153](https://github.com/homarr-labs/homarr/issues/5153)) ([0b0fb1c](https://github.com/homarr-labs/homarr/commit/0b0fb1c5798357d7bc847dfe577b26529be8aa5c))
+* **deps:** update dependency swagger-ui-react to ^5.32.0 ([#5167](https://github.com/homarr-labs/homarr/issues/5167)) ([ff11599](https://github.com/homarr-labs/homarr/commit/ff1159943c967b6fea44894765c2210c3cdd44cc))
+* **deps:** update dependency typescript-eslint to ^8.56.1 ([#5142](https://github.com/homarr-labs/homarr/issues/5142)) ([ac3b4e7](https://github.com/homarr-labs/homarr/commit/ac3b4e7de0460cab7723dcc1a5a8e14072a37d25))
+* **deps:** update trpc monorepo to ^11.11.0 ([#5174](https://github.com/homarr-labs/homarr/issues/5174)) ([bc2a532](https://github.com/homarr-labs/homarr/commit/bc2a532a03d8cb76270f52b766f1a7f46d704096))
+
+## [1.54.0](https://github.com/homarr-labs/homarr/compare/v1.53.2...v1.54.0) (2026-02-27)
+
+### Features
+
+* add glances integration ([#5102](https://github.com/homarr-labs/homarr/issues/5102)) ([91846bc](https://github.com/homarr-labs/homarr/commit/91846bc000b419b03925acc4b447efcc696ff009))
+* add slskd integration ([#5088](https://github.com/homarr-labs/homarr/issues/5088)) ([d999f37](https://github.com/homarr-labs/homarr/commit/d999f3797562a4c1d07a08b10ef4821c12390d2f))
+
+### Bug Fixes
+
+* **deps:** update dependency @ctrl/deluge to ^7.5.1 ([#5098](https://github.com/homarr-labs/homarr/issues/5098)) ([53d4625](https://github.com/homarr-labs/homarr/commit/53d46257ce2c257f2e083d0645178823afd45227))
+* **deps:** update dependency @ctrl/deluge to ^7.5.2 ([#5105](https://github.com/homarr-labs/homarr/issues/5105)) ([dacbcce](https://github.com/homarr-labs/homarr/commit/dacbcce179c21f8858f61633c4a72b248ec437b7))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.11.1 ([#5097](https://github.com/homarr-labs/homarr/issues/5097)) ([193d4d2](https://github.com/homarr-labs/homarr/commit/193d4d2e2aabaffb019108c3150de3f92d84efe8))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.11.2 ([#5106](https://github.com/homarr-labs/homarr/issues/5106)) ([ee62667](https://github.com/homarr-labs/homarr/commit/ee6266707f779e7a080b40b4ed3e0a8679bb2910))
+* **deps:** update dependency @tabler/icons-react to ^3.37.0 ([#5119](https://github.com/homarr-labs/homarr/issues/5119)) ([ba86019](https://github.com/homarr-labs/homarr/commit/ba860193d78f84fa9326a006caba4b3cc7c195c2))
+* **deps:** update dependency @tabler/icons-react to ^3.37.1 ([#5121](https://github.com/homarr-labs/homarr/issues/5121)) ([c3a4051](https://github.com/homarr-labs/homarr/commit/c3a40510075f56d7f156c877e1041b7bf36677b5))
+* **deps:** update dependency fast-xml-parser to ^5.3.7 ([#5122](https://github.com/homarr-labs/homarr/issues/5122)) ([6861839](https://github.com/homarr-labs/homarr/commit/6861839b65fffb0c8030ae7a6fd24105fdad6b95))
+* **deps:** update dependency glob to ^13.0.4 ([#5107](https://github.com/homarr-labs/homarr/issues/5107)) ([ea0a411](https://github.com/homarr-labs/homarr/commit/ea0a411c813c8dfcb17493e6a41d2ab96077adb6))
+* **deps:** update dependency glob to ^13.0.5 ([#5109](https://github.com/homarr-labs/homarr/issues/5109)) ([02ec089](https://github.com/homarr-labs/homarr/commit/02ec0898ef32f8b6ac540a9c005130f3e7312e65))
+* **deps:** update dependency glob to ^13.0.6 ([#5117](https://github.com/homarr-labs/homarr/issues/5117)) ([908bced](https://github.com/homarr-labs/homarr/commit/908bced0dfb158a9da155c97dbf982c2d544fc20))
+* **deps:** update dependency isomorphic-dompurify to v3 ([#5130](https://github.com/homarr-labs/homarr/issues/5130)) ([cfaf82c](https://github.com/homarr-labs/homarr/commit/cfaf82cd04e4659db50e6074fce4cc739ee2aaf8))
+* **deps:** update dependency jotai to ^2.18.0 ([#5115](https://github.com/homarr-labs/homarr/issues/5115)) ([4aad087](https://github.com/homarr-labs/homarr/commit/4aad0873baec97167460bad1c69c770aecb38bd0))
+* **deps:** update dependency mysql2 to v3.17.2 ([#5104](https://github.com/homarr-labs/homarr/issues/5104)) ([15c7fc5](https://github.com/homarr-labs/homarr/commit/15c7fc5ae809b671c8d774d39b7a7fdf893db611))
+* **deps:** update dependency mysql2 to v3.17.3 ([#5116](https://github.com/homarr-labs/homarr/issues/5116)) ([42e5326](https://github.com/homarr-labs/homarr/commit/42e53261ef956a0f5ad60ac45c623d3acd3d9530))
+* **deps:** update dependency mysql2 to v3.17.4 ([#5123](https://github.com/homarr-labs/homarr/issues/5123)) ([7ca38c3](https://github.com/homarr-labs/homarr/commit/7ca38c3a781d54f91d01844e077528345a9b190b))
+* **deps:** update dependency next-intl to v4.8.3 ([#5100](https://github.com/homarr-labs/homarr/issues/5100)) ([d67c2db](https://github.com/homarr-labs/homarr/commit/d67c2db886b92e7d0973bf17ff5059b8328acdf6))
+* **deps:** update dependency swagger-ui-react to ^5.31.1 ([#5101](https://github.com/homarr-labs/homarr/issues/5101)) ([210d46b](https://github.com/homarr-labs/homarr/commit/210d46b43ffeb956af3f983a82772609e42f08df))
+* **deps:** update dependency swagger-ui-react to ^5.31.2 ([#5124](https://github.com/homarr-labs/homarr/issues/5124)) ([51585c6](https://github.com/homarr-labs/homarr/commit/51585c6413ab3841f0bee1e736d726081912ab08))
+* **deps:** update dependency typescript-eslint to ^8.56.0 ([#5103](https://github.com/homarr-labs/homarr/issues/5103)) ([8bac6e1](https://github.com/homarr-labs/homarr/commit/8bac6e1c5a239108bc48fd877b3fc1ec8b445109))
+* **deps:** update mantine monorepo to ^8.3.15 ([#5099](https://github.com/homarr-labs/homarr/issues/5099)) ([b8f9b4c](https://github.com/homarr-labs/homarr/commit/b8f9b4cf1d870956806a68ad78a95af60c99975f))
+* **deps:** update testcontainers-node monorepo to ^11.12.0 ([#5110](https://github.com/homarr-labs/homarr/issues/5110)) ([e3c8174](https://github.com/homarr-labs/homarr/commit/e3c8174bdcb95de8e731c79c2b4bebce98d6dbce))
+* **deps:** update tiptap monorepo to v3.20.0 ([#5112](https://github.com/homarr-labs/homarr/issues/5112)) ([3d2bc82](https://github.com/homarr-labs/homarr/commit/3d2bc82a33a88a8f2d60fd61112f1f712e956670))
+
+## [1.53.2](https://github.com/homarr-labs/homarr/compare/v1.53.1...v1.53.2) (2026-02-20)
+
+### Bug Fixes
+
+* **analytics:** restrict publishing to every week ([#5028](https://github.com/homarr-labs/homarr/issues/5028)) ([8c4be2f](https://github.com/homarr-labs/homarr/commit/8c4be2fbe80e42472b8b17542a4282ec26d1fefe))
+* **deps:** update dependency @tanstack/react-query to ^5.90.21 ([#5067](https://github.com/homarr-labs/homarr/issues/5067)) ([1b8dde9](https://github.com/homarr-labs/homarr/commit/1b8dde98d2518d3d82895a26a58db7f42abf2a6e))
+* **deps:** update dependency dotenv to ^17.3.0 ([#5079](https://github.com/homarr-labs/homarr/issues/5079)) ([1e822fb](https://github.com/homarr-labs/homarr/commit/1e822fbe0c8224e6ba5b99e6516ea4437c9f36bb))
+* **deps:** update dependency dotenv to ^17.3.1 ([#5081](https://github.com/homarr-labs/homarr/issues/5081)) ([46ba48f](https://github.com/homarr-labs/homarr/commit/46ba48fb20b69b2876fc42ee862a64717e6428f7))
+* **deps:** update dependency drizzle-kit to ^0.31.9 ([#5059](https://github.com/homarr-labs/homarr/issues/5059)) ([db14d98](https://github.com/homarr-labs/homarr/commit/db14d98d1966dada5d74507e64e90f34fb4eee60))
+* **deps:** update dependency fast-xml-parser to ^5.3.6 ([#5089](https://github.com/homarr-labs/homarr/issues/5089)) ([ac5bc70](https://github.com/homarr-labs/homarr/commit/ac5bc70a5de9a4307c4165203ff26ee1a112ca81))
+* **deps:** update dependency glob to ^13.0.2 ([#5065](https://github.com/homarr-labs/homarr/issues/5065)) ([50601d5](https://github.com/homarr-labs/homarr/commit/50601d53792baae5a259adb4e4d3fefcc35d25df))
+* **deps:** update dependency glob to ^13.0.3 ([#5078](https://github.com/homarr-labs/homarr/issues/5078)) ([ba0ed77](https://github.com/homarr-labs/homarr/commit/ba0ed77bb036dd0e35db08ce9df98f133f835d53))
+* **deps:** update dependency ioredis to v5.9.3 ([#5076](https://github.com/homarr-labs/homarr/issues/5076)) ([4e1baa5](https://github.com/homarr-labs/homarr/commit/4e1baa570324be06eb442f2db08a8b152d9b416b))
+* **deps:** update dependency mysql2 to v3.17.0 ([#5066](https://github.com/homarr-labs/homarr/issues/5066)) ([fcb020c](https://github.com/homarr-labs/homarr/commit/fcb020c191b98a729508b7660fb484f29208c51c))
+* **deps:** update dependency mysql2 to v3.17.1 ([#5082](https://github.com/homarr-labs/homarr/issues/5082)) ([475f14d](https://github.com/homarr-labs/homarr/commit/475f14dc312c1b8cffbabe607c17be8b2d1d294c))
+* **deps:** update dependency react-error-boundary to ^6.1.1 ([#5086](https://github.com/homarr-labs/homarr/issues/5086)) ([bb9da30](https://github.com/homarr-labs/homarr/commit/bb9da3007e4f29fd7993bd9960e80e316a17bbf0))
+* **deps:** update dependency tsdav to ^2.1.8 ([#5090](https://github.com/homarr-labs/homarr/issues/5090)) ([840d110](https://github.com/homarr-labs/homarr/commit/840d1107ec3392b4581c931ef1efe2d9816ededd))
+* **deps:** update dependency typescript-eslint to ^8.55.0 ([#5061](https://github.com/homarr-labs/homarr/issues/5061)) ([56ecce2](https://github.com/homarr-labs/homarr/commit/56ecce254195c480eef9cefefd7bad98c49b9175))
+* **deps:** update trpc monorepo to ^11.10.0 ([#5062](https://github.com/homarr-labs/homarr/issues/5062)) ([bc7ec63](https://github.com/homarr-labs/homarr/commit/bc7ec63f8547e8f868ef5d56a1a8c5c893fda1e3))
+* **deps:** update turbo monorepo to ^2.8.5 ([#5064](https://github.com/homarr-labs/homarr/issues/5064)) ([c36e947](https://github.com/homarr-labs/homarr/commit/c36e947935246761cac26049ac24c56c8cc0990a))
+* **deps:** update turbo monorepo to ^2.8.7 ([#5071](https://github.com/homarr-labs/homarr/issues/5071)) ([c6c48ea](https://github.com/homarr-labs/homarr/commit/c6c48ea6e5f76303fd93022fd566a99af1ad829f))
+* **deps:** update turbo monorepo to ^2.8.8 ([#5084](https://github.com/homarr-labs/homarr/issues/5084)) ([dcae437](https://github.com/homarr-labs/homarr/commit/dcae437fc5cadc2e112037fa26f8351111c69869))
+* **deps:** update turbo monorepo to ^2.8.9 ([#5092](https://github.com/homarr-labs/homarr/issues/5092)) ([24560cb](https://github.com/homarr-labs/homarr/commit/24560cb93f17767b5ab8047c07f81a165e0fb769))
+
+## [1.53.1](https://github.com/homarr-labs/homarr/compare/v1.53.0...v1.53.1) (2026-02-13)
+
+### Bug Fixes
+
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.7.1 ([#5021](https://github.com/homarr-labs/homarr/issues/5021)) ([5946e6c](https://github.com/homarr-labs/homarr/commit/5946e6c7193eded77b98c76aedff71a7bb912574))
+* **deps:** update dependency @octokit/auth-app to ^8.2.0 ([#5009](https://github.com/homarr-labs/homarr/issues/5009)) ([4a86361](https://github.com/homarr-labs/homarr/commit/4a86361134da404462b1a9f8ff98fe3504fade0d))
+* **deps:** update dependency dotenv to ^17.2.4 ([#5029](https://github.com/homarr-labs/homarr/issues/5029)) ([e8c7f45](https://github.com/homarr-labs/homarr/commit/e8c7f454768044540ee37d75fc73654b74315390))
+* **deps:** update dependency fast-xml-parser to ^5.3.5 ([#5050](https://github.com/homarr-labs/homarr/issues/5050)) ([30f561f](https://github.com/homarr-labs/homarr/commit/30f561f85ad2abb90ccb9fa3292155d51f1f379b))
+* **deps:** update dependency fastify to ^5.7.4 ([#5027](https://github.com/homarr-labs/homarr/issues/5027)) ([18e16d6](https://github.com/homarr-labs/homarr/commit/18e16d687f8137e5b5c55cf2385436b714a2d27b))
+* **deps:** update dependency glob to ^13.0.1 ([#5013](https://github.com/homarr-labs/homarr/issues/5013)) ([3b21c3e](https://github.com/homarr-labs/homarr/commit/3b21c3ef765add0f7cdc8f66ae8f1b7aac3cf51e))
+* **deps:** update dependency isomorphic-dompurify to ^2.36.0 ([#5041](https://github.com/homarr-labs/homarr/issues/5041)) ([e561fc5](https://github.com/homarr-labs/homarr/commit/e561fc550fab2207212ae108a5177a248795cf66))
+* **deps:** update dependency jotai to ^2.17.1 ([#5019](https://github.com/homarr-labs/homarr/issues/5019)) ([da96566](https://github.com/homarr-labs/homarr/commit/da965668d021ebebd8c8a7e2a4560577a6b0828b))
+* **deps:** update dependency ldapts to v8.1.5 ([#5004](https://github.com/homarr-labs/homarr/issues/5004)) ([c3932b1](https://github.com/homarr-labs/homarr/commit/c3932b18f03b86e8ee049c14ace63119fd2ab0d6))
+* **deps:** update dependency ldapts to v8.1.6 ([#5018](https://github.com/homarr-labs/homarr/issues/5018)) ([c92d487](https://github.com/homarr-labs/homarr/commit/c92d487ceaa9159579ef4352d763429887953bb5))
+* **deps:** update dependency mysql2 to v3.16.3 ([#5014](https://github.com/homarr-labs/homarr/issues/5014)) ([04b3598](https://github.com/homarr-labs/homarr/commit/04b35980f5997e744a455a847f28b1a676f9861e))
+* **deps:** update dependency next-intl to v4.8.2 ([#5005](https://github.com/homarr-labs/homarr/issues/5005)) ([b67fecd](https://github.com/homarr-labs/homarr/commit/b67fecd3963bc3112ab8ecd91385bbe13c982290))
+* **deps:** update dependency tsdav to ^2.1.7 ([#5033](https://github.com/homarr-labs/homarr/issues/5033)) ([d694b1a](https://github.com/homarr-labs/homarr/commit/d694b1a5410833a791d57fb3dd4650003510140e))
+* **deps:** update dependency video.js to ^8.23.7 ([#5034](https://github.com/homarr-labs/homarr/issues/5034)) ([6efabd4](https://github.com/homarr-labs/homarr/commit/6efabd436849b9fdea0d060fe7beaa9c67424c29))
+* **deps:** update tiptap monorepo to v3.19.0 ([#5012](https://github.com/homarr-labs/homarr/issues/5012)) ([ad41a91](https://github.com/homarr-labs/homarr/commit/ad41a918ef72f322015a02e9601c43728e680b34))
+* **deps:** update turbo monorepo to ^2.8.2 ([#5010](https://github.com/homarr-labs/homarr/issues/5010)) ([b479fea](https://github.com/homarr-labs/homarr/commit/b479fea6eb0b025b55668201160a5e57267de2e7))
+* **deps:** update turbo monorepo to ^2.8.3 ([#5016](https://github.com/homarr-labs/homarr/issues/5016)) ([f1d2f07](https://github.com/homarr-labs/homarr/commit/f1d2f07f3888e7567b56ae61a9d137255a2b8529))
+* **sections:** dynamic sections vanish when adding category ([#5046](https://github.com/homarr-labs/homarr/issues/5046)) ([60fcb71](https://github.com/homarr-labs/homarr/commit/60fcb71bd2616af3e99b20cbbcd1b0417a0fff76))
+* **seerr:** use reasonable limits for amount of returned entries ([#5001](https://github.com/homarr-labs/homarr/issues/5001)) ([be1a26a](https://github.com/homarr-labs/homarr/commit/be1a26a98d2ed9d25969ded5ae64705c001f71dd))
+
+## [1.53.0](https://github.com/homarr-labs/homarr/compare/v1.52.0...v1.53.0) (2026-02-06)
+
+### Features
+
+* **analytics:** consolidate server analytics into single comprehensive Umami event ([#4938](https://github.com/homarr-labs/homarr/issues/4938)) ([10848db](https://github.com/homarr-labs/homarr/commit/10848db595b2254b1485ea168d1c327b907d9ff8))
+
+### Bug Fixes
+
+* **deps:** update dependency @next/eslint-plugin-next to v16.1.5 ([#4959](https://github.com/homarr-labs/homarr/issues/4959)) ([ec40309](https://github.com/homarr-labs/homarr/commit/ec40309cde2280cf689856d4f78fb1500b583130))
+* **deps:** update dependency @paralleldrive/cuid2 to ^3.3.0 ([#4952](https://github.com/homarr-labs/homarr/issues/4952)) ([a9db68b](https://github.com/homarr-labs/homarr/commit/a9db68bd3eaea6a4564cd6842054ea60cc45e3a3))
+* **deps:** update dependency @tanstack/react-query-devtools to ^5.91.3 ([#4985](https://github.com/homarr-labs/homarr/issues/4985)) ([1115ad1](https://github.com/homarr-labs/homarr/commit/1115ad1364bca84dee33aa42499c986bdad2c528))
+* **deps:** update dependency fast-xml-parser to ^5.3.4 ([#4982](https://github.com/homarr-labs/homarr/issues/4982)) ([460d53c](https://github.com/homarr-labs/homarr/commit/460d53cafa1abeebf4dea7b1bb1e920267c2f9fe))
+* **deps:** update dependency fastify to ^5.7.2 ([#4955](https://github.com/homarr-labs/homarr/issues/4955)) ([0eab26c](https://github.com/homarr-labs/homarr/commit/0eab26cdace47c0b19519372a3daa6998e0c8207))
+* **deps:** update dependency jotai to ^2.17.0 ([#4972](https://github.com/homarr-labs/homarr/issues/4972)) ([e67483f](https://github.com/homarr-labs/homarr/commit/e67483fea56f0b06fa54e68b8dd62fd0b5dedadd))
+* **deps:** update dependency ldapts to v8.1.4 ([#4993](https://github.com/homarr-labs/homarr/issues/4993)) ([c2d9f18](https://github.com/homarr-labs/homarr/commit/c2d9f18e4ef28f063e4abf1175cd90ba746410b7))
+* **deps:** update dependency mysql2 to v3.16.2 ([#4961](https://github.com/homarr-labs/homarr/issues/4961)) ([5c6eafb](https://github.com/homarr-labs/homarr/commit/5c6eafb272436b78d4668d562d50001bca48e6d3))
+* **deps:** update dependency next-intl to v4.8.0 ([#4977](https://github.com/homarr-labs/homarr/issues/4977)) ([c3a7ab5](https://github.com/homarr-labs/homarr/commit/c3a7ab52ee3acbcf47255d5813317c3cf67ea49f))
+* **deps:** update dependency next-intl to v4.8.1 ([#4986](https://github.com/homarr-labs/homarr/issues/4986)) ([62b6939](https://github.com/homarr-labs/homarr/commit/62b6939b92f29618cc6d13a189b65df1922779ba))
+* **deps:** update dependency pg to ^8.18.0 ([#4989](https://github.com/homarr-labs/homarr/issues/4989)) ([c3071a3](https://github.com/homarr-labs/homarr/commit/c3071a3c95f3a30438050aa37c65950cccabf681))
+* **deps:** update dependency typescript-eslint to ^8.54.0 ([#4958](https://github.com/homarr-labs/homarr/issues/4958)) ([e88d126](https://github.com/homarr-labs/homarr/commit/e88d126355b96ac5060b552047c191f8b284461c))
+* **deps:** update dependency video.js to ^8.23.6 ([#4992](https://github.com/homarr-labs/homarr/issues/4992)) ([4209f7c](https://github.com/homarr-labs/homarr/commit/4209f7c70e75870f56b93a97f3b6053962ee3ff7))
+* **deps:** update mantine monorepo to ^8.3.14 ([#4998](https://github.com/homarr-labs/homarr/issues/4998)) ([0fafa50](https://github.com/homarr-labs/homarr/commit/0fafa505ac1c7f4ddb33ee5e8dedca9a883164ba))
+* **deps:** update nextjs monorepo to v16.1.6 ([#4969](https://github.com/homarr-labs/homarr/issues/4969)) ([7c3fe3d](https://github.com/homarr-labs/homarr/commit/7c3fe3d6d47879c67950b3dc4d7e39adbc06c146))
+* **deps:** update react monorepo to v19.2.4 ([#4960](https://github.com/homarr-labs/homarr/issues/4960)) ([d3e0b47](https://github.com/homarr-labs/homarr/commit/d3e0b47875998fc766e1c5f0481244fc659b0c49))
+* **deps:** update tiptap monorepo to v3.18.0 ([#4975](https://github.com/homarr-labs/homarr/issues/4975)) ([24e24dc](https://github.com/homarr-labs/homarr/commit/24e24dc634a9e5a25ab934541225996e62ac31be))
+* **deps:** update trpc monorepo to ^11.9.0 ([#4970](https://github.com/homarr-labs/homarr/issues/4970)) ([aeb6e0f](https://github.com/homarr-labs/homarr/commit/aeb6e0f40659bf1c514380a6c96858afdaf7e6db))
+* **deps:** update turbo monorepo to ^2.8.0 ([#4978](https://github.com/homarr-labs/homarr/issues/4978)) ([054ca57](https://github.com/homarr-labs/homarr/commit/054ca57188656ddac7aaa16f792269eaa2ef319b))
+* **deps:** update turbo monorepo to ^2.8.1 ([#4991](https://github.com/homarr-labs/homarr/issues/4991)) ([43b6246](https://github.com/homarr-labs/homarr/commit/43b6246876debccbe7239c8ee67753e17527e469))
+
+## [1.52.0](https://github.com/homarr-labs/homarr/compare/v1.51.0...v1.52.0) (2026-01-30)
+
+### Features
+
+* **installations:** support docker secrets file for encryption key ([#4946](https://github.com/homarr-labs/homarr/issues/4946)) ([9ba8213](https://github.com/homarr-labs/homarr/commit/9ba82133da2ae472952358f84d8ee1758c0f108a))
+
+### Bug Fixes
+
+* **deps:** update dependency @tanstack/react-query to ^5.90.20 ([#4939](https://github.com/homarr-labs/homarr/issues/4939)) ([840940b](https://github.com/homarr-labs/homarr/commit/840940bab663e728b8516ac48f913fef2b5c61b7))
+* **deps:** update dependency next to v16.1.5 [security] ([#4937](https://github.com/homarr-labs/homarr/issues/4937)) ([aeb1df1](https://github.com/homarr-labs/homarr/commit/aeb1df122926c7bed71bea9b21f1c42c45cc9b3e))
+* **deps:** update dependency pg to ^8.17.2 ([#4916](https://github.com/homarr-labs/homarr/issues/4916)) ([a50a29a](https://github.com/homarr-labs/homarr/commit/a50a29a778689efcca0afc2b640fdb497e6e7d98))
+* **deps:** update dependency prettier to ^3.8.1 ([#4925](https://github.com/homarr-labs/homarr/issues/4925)) ([a727b8e](https://github.com/homarr-labs/homarr/commit/a727b8e323b9fb7cba536909a51fabde0a992a69))
+* **deps:** update dependency sass to ^1.97.3 ([#4927](https://github.com/homarr-labs/homarr/issues/4927)) ([b1658a5](https://github.com/homarr-labs/homarr/commit/b1658a5d01b5c12f391af9d326ec98b3da000f9e))
+* **deps:** update dependency typescript-eslint to ^8.53.1 ([#4904](https://github.com/homarr-labs/homarr/issues/4904)) ([c58da00](https://github.com/homarr-labs/homarr/commit/c58da0095738352515d6d8c5e81b3c34c8726ffe))
+* **deps:** update mantine monorepo to ^8.3.13 ([#4911](https://github.com/homarr-labs/homarr/issues/4911)) ([f2eec74](https://github.com/homarr-labs/homarr/commit/f2eec748494480e773b45a309aa89ae3862e2b05))
+* **deps:** update nextjs monorepo to v16.1.4 ([#4909](https://github.com/homarr-labs/homarr/issues/4909)) ([99a2574](https://github.com/homarr-labs/homarr/commit/99a2574d80ad5a7dfe3b9c92d43bd4b9423bf22d))
+* **deps:** update tiptap monorepo to v3.16.0 ([#4912](https://github.com/homarr-labs/homarr/issues/4912)) ([2354510](https://github.com/homarr-labs/homarr/commit/23545101b61e456fd886eedb4b3d86b8cc606639))
+* **deps:** update tiptap monorepo to v3.17.0 ([#4940](https://github.com/homarr-labs/homarr/issues/4940)) ([d030261](https://github.com/homarr-labs/homarr/commit/d03026187cb6451d727167b02ac138f9c7ccc754))
+* **deps:** update tiptap monorepo to v3.17.1 ([#4945](https://github.com/homarr-labs/homarr/issues/4945)) ([b354085](https://github.com/homarr-labs/homarr/commit/b354085c7adfb6e5f3cad51b5b825426e072e874))
+* **deps:** update turbo monorepo to ^2.7.6 ([#4947](https://github.com/homarr-labs/homarr/issues/4947)) ([e078237](https://github.com/homarr-labs/homarr/commit/e078237e31d11029987c6c4370fd8f65023b87bc))
+
 ## [1.51.0](https://github.com/homarr-labs/homarr/compare/v1.50.1...v1.51.0) (2026-01-23)
 
 ### Features

@@ -65,7 +65,7 @@ jobs:
       - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 24.13.0
+          node-version: 24.14.0
           cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
@@ -128,7 +128,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -167,7 +167,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -228,8 +228,17 @@ jobs:
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
     steps:
+      - name: Obtain token
+        if: needs.release.outputs.skipped == 'false'
+        id: obtainToken
+        uses: actions/create-github-app-token@v2
+        with:
+          private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          permission-contents: write # required to publish the release
+
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -258,7 +267,7 @@ jobs:
       - name: Publish release
         if: needs.release.outputs.skipped == 'false'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
           gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
 

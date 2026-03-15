@@ -1996,6 +1996,61 @@
         "title": "crwdns3876:0crwdne3876:0"
       }
     },
+    "tracearr": {
+      "name": "crwdns3928:0crwdne3928:0",
+      "description": "crwdns3930:0crwdne3930:0",
+      "option": {
+        "showStreams": {
+          "label": "crwdns3932:0crwdne3932:0"
+        },
+        "showStats": {
+          "label": "crwdns3934:0crwdne3934:0"
+        },
+        "showRecentActivity": {
+          "label": "crwdns3936:0crwdne3936:0"
+        },
+        "showViolations": {
+          "label": "crwdns3938:0crwdne3938:0"
+        }
+      },
+      "stats": {
+        "activeStreams": "crwdns3940:0crwdne3940:0",
+        "totalUsers": "crwdns3942:0crwdne3942:0",
+        "transcodes": "crwdns3944:0crwdne3944:0",
+        "bandwidth": "crwdns3946:0crwdne3946:0"
+      },
+      "streams": {
+        "empty": "crwdns3948:0crwdne3948:0",
+        "user": "crwdns3950:0crwdne3950:0",
+        "media": "crwdns3952:0crwdne3952:0",
+        "state": "crwdns3954:0crwdne3954:0",
+        "quality": "crwdns3956:0crwdne3956:0",
+        "device": "crwdns3958:0crwdne3958:0",
+        "progress": "crwdns3960:0crwdne3960:0",
+        "videoDecision": {
+          "directPlay": "crwdns3962:0crwdne3962:0",
+          "transcode": "crwdns3964:0crwdne3964:0",
+          "directStream": "crwdns3966:0crwdne3966:0"
+        }
+      },
+      "recentActivity": {
+        "title": "crwdns3968:0crwdne3968:0",
+        "empty": "crwdns3970:0crwdne3970:0",
+        "watched": "crwdns3972:0crwdne3972:0",
+        "partial": "crwdns3974:0crwdne3974:0"
+      },
+      "violations": {
+        "title": "crwdns3976:0crwdne3976:0",
+        "empty": "crwdns3978:0crwdne3978:0",
+        "rule": "crwdns3980:0crwdne3980:0",
+        "user": "crwdns3982:0crwdne3982:0"
+      },
+      "noSectionsEnabled": "crwdns3984:0crwdne3984:0",
+      "error": {
+        "noIntegration": "crwdns3986:0crwdne3986:0",
+        "internalServerError": "crwdns3988:0crwdne3988:0"
+      }
+    },
     "common": {
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
@@ -2090,6 +2145,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "crwdns3880:0crwdne3880:0",
+      "description": "crwdns3882:0crwdne3882:0",
+      "option": {
+        "showUsers": {
+          "label": "crwdns3884:0crwdne3884:0",
+          "description": "crwdns3886:0crwdne3886:0"
+        },
+        "showPhotos": {
+          "label": "crwdns3888:0crwdne3888:0",
+          "description": "crwdns3890:0crwdne3890:0"
+        },
+        "showVideos": {
+          "label": "crwdns3892:0crwdne3892:0",
+          "description": "crwdns3894:0crwdne3894:0"
+        },
+        "showStorage": {
+          "label": "crwdns3896:0crwdne3896:0",
+          "description": "crwdns3898:0crwdne3898:0"
+        }
+      },
+      "users": "crwdns3900:0crwdne3900:0",
+      "photos": "crwdns3902:0crwdne3902:0",
+      "videos": "crwdns3904:0crwdne3904:0",
+      "storage": "crwdns3906:0crwdne3906:0"
+    },
+    "immich-albumCarousel": {
+      "name": "crwdns3908:0crwdne3908:0",
+      "option": {
+        "albumId": {
+          "label": "crwdns3910:0crwdne3910:0",
+          "description": "crwdns3912:0crwdne3912:0"
+        },
+        "rotationIntervalSeconds": {
+          "label": "crwdns3914:0crwdne3914:0",
+          "description": "crwdns3916:0crwdne3916:0"
+        },
+        "showPhotoInfo": {
+          "label": "crwdns3918:0crwdne3918:0",
+          "description": "crwdns3920:0crwdne3920:0"
+        }
+      },
+      "description": "crwdns3922:0crwdne3922:0",
+      "noAlbumSelected": "crwdns3924:0crwdne3924:0",
+      "noPhotos": "crwdns3926:0crwdne3926:0"
     },
     "downloads": {
       "name": "crwdns1170:0crwdne1170:0",
@@ -3305,7 +3406,7 @@
             "title": "crwdns1764:0crwdne1764:0",
             "general": {
               "title": "crwdns1766:0crwdne1766:0",
-              "text": "crwdns1768:0crwdne1768:0"
+              "text": "crwdns3878:0crwdne3878:0"
             },
             "widgetData": {
               "title": "crwdns1770:0crwdne1770:0",
@@ -3472,6 +3573,9 @@
             },
             "weather": {
               "label": "crwdns3724:0crwdne3724:0"
+            },
+            "tracearr": {
+              "label": "crwdns3990:0crwdne3990:0"
             }
           },
           "interval": {

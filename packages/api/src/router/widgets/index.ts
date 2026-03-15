@@ -4,6 +4,7 @@ import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
+  immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
   weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
   app: lazy(() => import("./app").then((mod) => mod.appRouter)),
@@ -25,4 +26,5 @@ export const widgetRouter = createTRPCRouter({
   networkController: lazy(() => import("./network-controller").then((mod) => mod.networkControllerRouter)),
   firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
   notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
+  tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
 });

@@ -27,12 +27,13 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
-    "@paralleldrive/cuid2": "^3.1.0",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "cookie": "1.1.1",
     "dayjs": "^1.11.19",
-    "next": "16.1.4",
+    "next": "16.1.6",
     "octokit": "^5.0.5",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "undici": "7.18.2",
     "zod": "^4.2.1",
     "zod-validation-error": "^5.0.0"
@@ -41,7 +42,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }
 }

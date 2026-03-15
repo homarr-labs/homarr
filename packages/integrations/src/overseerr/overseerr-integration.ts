@@ -115,9 +115,8 @@ export class OverseerrIntegration
   }
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
-    //Ensure to get all pending request first
     const pendingRequests = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/v1/request", { take: -1, filter: "pending" }),
+      this.url("/api/v1/request", { take: 20, filter: "pending" }),
       {
         headers: {
           "X-Api-Key": this.getSecretValue("apiKey"),
@@ -125,7 +124,6 @@ export class OverseerrIntegration
       },
     );
 
-    //Change 20 to integration setting (set to -1 for all)
     const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -223,7 +221,7 @@ export class OverseerrIntegration
   }
 
   public async getUsersAsync(): Promise<RequestUser[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/user", { take: -1 }), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/user", { take: 10, sort: "requests" }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },

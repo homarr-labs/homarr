@@ -1138,9 +1138,9 @@
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Serveurs",
+    "applications": "Applications",
+    "services": "Services",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -1964,36 +1964,91 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Aperçu de votre instance Coolify avec les serveurs et les applications",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Afficher les serveurs"
         },
         "showApplications": {
-          "label": ""
+          "label": "Afficher les applications"
         },
         "showServices": {
-          "label": ""
+          "label": "Afficher les services"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Aucun serveur trouvé",
+        "applications": "Aucune application trouvée",
+        "services": "Aucun service trouvé"
       },
       "footer": {
-        "updated": ""
+        "updated": "Mis à jour {when}"
       },
+      "error": {
+        "noIntegration": "Aucune intégration de Coolify configurée",
+        "internalServerError": "Impossible de récupérer les données de Coolify"
+      },
+      "server": {
+        "buildServer": "Version"
+      },
+      "instances": {
+        "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
       "error": {
         "noIntegration": "",
         "internalServerError": ""
-      },
-      "server": {
-        "buildServer": ""
-      },
-      "instances": {
-        "title": ""
       }
     },
     "common": {
@@ -2090,6 +2145,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "Client de téléchargement",
@@ -2646,32 +2747,32 @@
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Disques système",
+      "description": "Utilisation du disque de votre système",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Afficher la température si disponible"
         },
         "displayMode": {
-          "label": "",
+          "label": "Mode d'affichage",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Pourcentage (ex : 70%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Valeurs absolues (ex. : 800 Go / 1 To)"
             },
             "free": {
-              "label": ""
+              "label": "Pourcentage d'espace libre (ex. : 24 % libre)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Afficher la barre d'utilisation en arrière-plan"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Dysfonctionnement"
       }
     }
   },
@@ -3472,6 +3573,9 @@
             },
             "weather": {
               "label": "Météo"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

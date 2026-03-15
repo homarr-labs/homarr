@@ -73,6 +73,13 @@ export const integrationDefs = {
     category: ["downloadClient", "torrent", "miscellaneous"],
     documentationUrl: createDocumentationLink("/docs/integrations/aria2"),
   },
+  slskd: {
+    name: "Slskd",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
+    category: ["downloadClient", "miscellaneous"],
+    documentationUrl: createDocumentationLink("/docs/integrations/slskd"),
+  },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
@@ -136,6 +143,13 @@ export const integrationDefs = {
     category: ["mediaSearch", "mediaRequest", "search"],
     documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr"),
   },
+  seerr: {
+    name: "Seerr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
+    category: ["mediaSearch", "mediaRequest", "search"],
+    documentationUrl: createDocumentationLink("/docs/integrations/seerr"),
+  },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
@@ -177,6 +191,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
+  },
+  glances: {
+    name: "Glances",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: null,
   },
   tdarr: {
     name: "Tdarr",
@@ -313,6 +334,20 @@ export const integrationDefs = {
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
   },
+  immich: {
+    name: "Immich",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
+    category: ["photoService"],
+    documentationUrl: createDocumentationLink("/docs/integrations/immich"),
+  },
+  tracearr: {
+    name: "Tracearr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
+    category: ["mediaMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -399,6 +434,8 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "photoService",
+  "mediaMonitoring",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
