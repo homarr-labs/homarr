@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
+import { SystemResourceGPUChart } from "./chart/gpu-chart";
 import { SystemResourceMemoryChart } from "./chart/memory-chart";
 import { NetworkTrafficChart } from "./chart/network-traffic";
 
@@ -23,10 +24,13 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const memoryCapacityInBytes =
     (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
 
-  const [items, setItems] = useState<{ cpu: number; memory: number; network: { up: number; down: number } | null }[]>(
+  const [items, setItems] = useState<{ cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]>(
     data.map((item) => ({
       cpu: item.healthInfo.cpuUtilization,
       memory: item.healthInfo.memUsedInBytes,
+      gpu: item.healthInfo.gpu.length > 0
+        ? item.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / item.healthInfo.gpu.length
+        : 0,
       network: item.healthInfo.network,
     })),
   );
@@ -41,6 +45,9 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
           const next = {
             cpu: data.healthInfo.cpuUtilization,
             memory: data.healthInfo.memUsedInBytes,
+            gpu: data.healthInfo.gpu.length > 0
+              ? data.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / data.healthInfo.gpu.length
+              : 0,
             network: data.healthInfo.network,
           };
 
@@ -70,6 +77,15 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
           <SystemResourceMemoryChart
             memoryUsageOverTime={items.map((item) => item.memory)}
             totalCapacityInBytes={memoryCapacityInBytes}
+            hasShadow={options.hasShadow}
+            labelDisplayMode={options.labelDisplayMode}
+          />
+        </Box>
+      )}
+      {options.visibleCharts.includes("gpu") && (
+        <Box h={rowHeight}>
+          <SystemResourceGPUChart
+            gpuUsageOverTime={items.map((item) => item.gpu)}
             hasShadow={options.hasShadow}
             labelDisplayMode={options.labelDisplayMode}
           />

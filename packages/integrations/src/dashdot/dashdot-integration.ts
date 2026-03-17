@@ -56,6 +56,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       availablePkgUpdates: 0,
       rebootRequired: false,
       smart: [], // API endpoint does not provide S.M.A.R.T data.
+      gpu: [], // API endpoint does not provide GPU data.
       uptime: info.uptime,
       version: `${info.operatingSystemVersion}`,
       loadAverage: {

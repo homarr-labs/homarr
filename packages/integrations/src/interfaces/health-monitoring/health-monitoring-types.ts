@@ -31,6 +31,14 @@ export interface SystemHealthMonitoring {
     overallStatus: string;
     healthy: boolean;
   }[];
+  gpu: {
+    gpuId: string;
+    name: string;
+    memoryUtilization: number;
+    processorUtilization: number;
+    temperature: number | null;
+    fanSpeed: number | null;
+  }[];
 }
 
 // TODO: in the future decouple this from the Proxmox integration

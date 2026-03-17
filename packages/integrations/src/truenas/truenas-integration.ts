@@ -297,6 +297,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       version: systemInformation.version,
       cpuModelName: systemInformation.model,
       rebootRequired: false,
+      gpu: [],
     };
   }
 

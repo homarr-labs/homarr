@@ -1861,6 +1861,9 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "gpu": {
+          "label": "Show GPU Info"
+        },
         "showUptime": {
           "label": "Show Uptime"
         },
@@ -2728,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memory",
+            "gpu": "GPU",
             "network": "Network"
           }
         },
@@ -2744,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
