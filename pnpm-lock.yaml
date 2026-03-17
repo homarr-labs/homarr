@@ -272,8 +272,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -291,7 +291,7 @@ importers:
         version: 2.18.1(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
       mantine-react-table:
         specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -426,8 +426,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -847,8 +847,8 @@ importers:
         specifier: 1.1.1
         version: 1.1.1
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -1600,8 +1600,8 @@ importers:
         specifier: ^3.40.0
         version: 3.40.0(react@19.2.4)
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -1855,8 +1855,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../redis
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       octokit:
         specifier: ^5.0.5
         version: 5.0.5
@@ -1921,7 +1921,7 @@ importers:
         version: link:../server-settings
       '@mantine/dates':
         specifier: ^8.3.16
-        version: 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -2033,14 +2033,14 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../definitions
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       deepmerge:
         specifier: 4.3.1
         version: 4.3.1
       mantine-react-table:
         specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -2092,7 +2092,7 @@ importers:
         version: 8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mantine/dates':
         specifier: ^8.3.16
-        version: 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mantine/hooks':
         specifier: ^8.3.16
         version: 8.3.16(react@19.2.4)
@@ -2104,7 +2104,7 @@ importers:
         version: 4.2.0
       mantine-react-table:
         specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -2306,14 +2306,14 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+        specifier: ^1.11.20
+        version: 1.11.20
       mantine-form-zod-resolver:
         specifier: ^1.3.0
         version: 1.3.0(@mantine/form@8.3.16(react@19.2.4))(zod@4.2.1)
       mantine-react-table:
         specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0)
@@ -6193,8 +6193,8 @@ packages:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
 
-  dayjs@1.11.19:
-    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
+  dayjs@1.11.20:
+    resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -12235,12 +12235,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@mantine/core': 8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mantine/hooks': 8.3.16(react@19.2.4)
       clsx: 2.1.1
-      dayjs: 1.11.19
+      dayjs: 1.11.20
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
@@ -15214,7 +15214,7 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.2
 
-  dayjs@1.11.19: {}
+  dayjs@1.11.20: {}
 
   debug@3.2.7:
     dependencies:
@@ -17298,17 +17298,17 @@ snapshots:
       '@mantine/form': 8.3.16(react@19.2.4)
       zod: 4.2.1
 
-  mantine-react-table@2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  mantine-react-table@2.0.0-beta.9(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/dates@8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(@tabler/icons-react@3.40.0(react@19.2.4))(clsx@2.1.1)(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       '@mantine/core': 8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@mantine/dates': 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mantine/dates': 8.3.16(@mantine/core@8.3.16(@mantine/hooks@8.3.16(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.16(react@19.2.4))(dayjs@1.11.20)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mantine/hooks': 8.3.16(react@19.2.4)
       '@tabler/icons-react': 3.40.0(react@19.2.4)
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.20.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-virtual': 3.11.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx: 2.1.1
-      dayjs: 1.11.19
+      dayjs: 1.11.20
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
