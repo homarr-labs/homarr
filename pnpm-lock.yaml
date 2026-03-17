@@ -284,8 +284,8 @@ importers:
         specifier: ^13.0.6
         version: 13.0.6
       isomorphic-dompurify:
-        specifier: ^3.1.0
-        version: 3.1.0(@noble/hashes@2.0.1)
+        specifier: ^3.3.0
+        version: 3.3.0(@noble/hashes@2.0.1)
       jotai:
         specifier: ^2.18.1
         version: 2.18.1(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
@@ -7730,8 +7730,8 @@ packages:
     resolution: {integrity: sha512-6B3tLtFqtQS4ekarvLVMZ+X+VlvQekbe4taUkf/rhVO3d/h0M2rfARm/pXLcPEsjjMsFgrFgSrhQIxcSVrBz8w==}
     engines: {node: '>=18'}
 
-  isomorphic-dompurify@3.1.0:
-    resolution: {integrity: sha512-mwWh3/+EQPeBvUAfZZDG5Tmyvr/yKxKB8VYSdw6c+3hMfW4FZZ93kxdohpHmtmSRUWX/jOJQtVObeA6cBLvosA==}
+  isomorphic-dompurify@3.3.0:
+    resolution: {integrity: sha512-Xx3GlNZNAXIISX49OMpfNgxrRU49KVQ5hqnK2zbkqkPucdWnCZXquTMK/COnb8pmIOJlfiaNYav9qyHX3gRDMA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   isomorphic-fetch@3.0.0:
@@ -16952,7 +16952,7 @@ snapshots:
   isexe@3.1.5:
     optional: true
 
-  isomorphic-dompurify@3.1.0(@noble/hashes@2.0.1):
+  isomorphic-dompurify@3.3.0(@noble/hashes@2.0.1):
     dependencies:
       dompurify: 3.3.3
       jsdom: 28.1.0(@noble/hashes@2.0.1)
