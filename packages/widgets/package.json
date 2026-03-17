@@ -69,7 +69,7 @@
     "@tiptap/react": "^3.20.1",
     "@tiptap/starter-kit": "^3.20.1",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "mantine-form-zod-resolver": "^1.3.0",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "16.1.6",

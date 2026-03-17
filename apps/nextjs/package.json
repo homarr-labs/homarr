@@ -69,7 +69,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.2.0",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "dotenv": "^17.3.1",
     "flag-icons": "^7.5.0",
     "glob": "^13.0.6",

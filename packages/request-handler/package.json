@@ -30,7 +30,7 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "octokit": "^5.0.5",
     "superjson": "2.2.6",
     "undici": "7.18.2",
