@@ -2001,7 +2001,7 @@
       "description": "",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Aktive Streams anzeigen"
         },
         "showStats": {
           "label": ""
@@ -2014,7 +2014,7 @@
         }
       },
       "stats": {
-        "activeStreams": "",
+        "activeStreams": "Aktive Streams",
         "totalUsers": "",
         "transcodes": "",
         "bandwidth": ""
@@ -2151,7 +2151,7 @@
       "description": "",
       "option": {
         "showUsers": {
-          "label": "",
+          "label": "Benutzer anzeigen",
           "description": ""
         },
         "showPhotos": {
