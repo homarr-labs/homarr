@@ -86,7 +86,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
       cpuTemp: cpuTempResult.success ? cpuTempResult.data.response.cputemp : undefined,
       fileSystem,
       smart,
-      gpu: [],
+      gpu: [], // OpenMediaVault does not expose GPU monitoring via its RPC API.
     };
   }
 
