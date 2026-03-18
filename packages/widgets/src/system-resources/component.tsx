@@ -24,13 +24,16 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const memoryCapacityInBytes =
     (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
 
-  const [items, setItems] = useState<{ cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]>(
+  const [items, setItems] = useState<
+    { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
+  >(
     data.map((item) => ({
       cpu: item.healthInfo.cpuUtilization,
       memory: item.healthInfo.memUsedInBytes,
-      gpu: item.healthInfo.gpu.length > 0
-        ? item.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / item.healthInfo.gpu.length
-        : 0,
+      gpu:
+        item.healthInfo.gpu.length > 0
+          ? item.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / item.healthInfo.gpu.length
+          : 0,
       network: item.healthInfo.network,
     })),
   );
@@ -45,9 +48,10 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
           const next = {
             cpu: data.healthInfo.cpuUtilization,
             memory: data.healthInfo.memUsedInBytes,
-            gpu: data.healthInfo.gpu.length > 0
-              ? data.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / data.healthInfo.gpu.length
-              : 0,
+            gpu:
+              data.healthInfo.gpu.length > 0
+                ? data.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / data.healthInfo.gpu.length
+                : 0,
             network: data.healthInfo.network,
           };
 
