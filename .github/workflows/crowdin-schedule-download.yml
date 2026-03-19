@@ -19,7 +19,7 @@ jobs:
 
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
           app-id: ${{ secrets.CROWDIN_APP_ID }}
