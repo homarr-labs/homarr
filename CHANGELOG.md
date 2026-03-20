@@ -1,3 +1,27 @@
+## [1.56.1](https://github.com/homarr-labs/homarr/compare/v1.56.0...v1.56.1) (2026-03-20)
+
+### Bug Fixes
+
+* **deps:** update dependency dayjs to ^1.11.20 ([#5253](https://github.com/homarr-labs/homarr/issues/5253)) ([615062c](https://github.com/homarr-labs/homarr/commit/615062c6b141fa1e4bc91d2fab505fa1652608d2))
+* **deps:** update dependency fast-xml-parser to ^5.5.1 ([#5246](https://github.com/homarr-labs/homarr/issues/5246)) ([91a9b6b](https://github.com/homarr-labs/homarr/commit/91a9b6bec9438e9a812960b829cea343e8478c63))
+* **deps:** update dependency fast-xml-parser to ^5.5.3 ([#5251](https://github.com/homarr-labs/homarr/issues/5251)) ([d1d8659](https://github.com/homarr-labs/homarr/commit/d1d8659f951cdd22bf4a22b407a4f3027f036ec2))
+* **deps:** update dependency fast-xml-parser to ^5.5.5 ([#5270](https://github.com/homarr-labs/homarr/issues/5270)) ([2423ecd](https://github.com/homarr-labs/homarr/commit/2423ecdce57353dd50d678444da800c02a246223))
+* **deps:** update dependency isomorphic-dompurify to ^3.1.0 ([#5239](https://github.com/homarr-labs/homarr/issues/5239)) ([63f91b6](https://github.com/homarr-labs/homarr/commit/63f91b6352e9ba58a0823434d86915371f1c1d30))
+* **deps:** update dependency isomorphic-dompurify to ^3.3.0 ([#5252](https://github.com/homarr-labs/homarr/issues/5252)) ([e8f6876](https://github.com/homarr-labs/homarr/commit/e8f6876d2477fb0e1936006b81f7324b90b6eb33))
+* **deps:** update dependency jotai to ^2.18.1 ([#5238](https://github.com/homarr-labs/homarr/issues/5238)) ([729b49f](https://github.com/homarr-labs/homarr/commit/729b49ffa9b1f91ebd7bcd2300febba4d9d0fbb9))
+* **deps:** update dependency mysql2 to v3.19.1 ([#5240](https://github.com/homarr-labs/homarr/issues/5240)) ([1040eca](https://github.com/homarr-labs/homarr/commit/1040ecac04fd0b10e101495d5230a3fa4898097a))
+* **deps:** update dependency next to v16.1.7 [security] ([#5263](https://github.com/homarr-labs/homarr/issues/5263)) ([3bbde3c](https://github.com/homarr-labs/homarr/commit/3bbde3cbb8eb3aa528485f17d40817cb982a8687))
+* **deps:** update dependency sass to ^1.98.0 ([#5247](https://github.com/homarr-labs/homarr/issues/5247)) ([f995cba](https://github.com/homarr-labs/homarr/commit/f995cba157c9954b6f266bd5b2bb8d60a08f51f1))
+* **deps:** update dependency typescript-eslint to ^8.57.0 ([#5241](https://github.com/homarr-labs/homarr/issues/5241)) ([7841b58](https://github.com/homarr-labs/homarr/commit/7841b58f0fdd4a4494b6f3d61881a1efb4c9eba3))
+* **deps:** update mantine monorepo to ^8.3.17 ([#5271](https://github.com/homarr-labs/homarr/issues/5271)) ([6fa9087](https://github.com/homarr-labs/homarr/commit/6fa9087a119334dee63e4ca4ed51276b25c4564a))
+* **deps:** update tiptap monorepo to v3.20.2 ([#5279](https://github.com/homarr-labs/homarr/issues/5279)) ([55cf3c7](https://github.com/homarr-labs/homarr/commit/55cf3c72a3d9cd9f702e802716d549d7d2644105))
+* **deps:** update trpc monorepo to ^11.13.2 ([#5273](https://github.com/homarr-labs/homarr/issues/5273)) ([7d93b10](https://github.com/homarr-labs/homarr/commit/7d93b1003245ab89fdba7175b0b4f745041cd1fe))
+* **deps:** update trpc monorepo to ^11.13.3 ([#5276](https://github.com/homarr-labs/homarr/issues/5276)) ([0e0b857](https://github.com/homarr-labs/homarr/commit/0e0b857905a7b5196dbf529520f86467aa94d8ce))
+* **deps:** update trpc monorepo to ^11.13.4 ([#5278](https://github.com/homarr-labs/homarr/issues/5278)) ([9648d9e](https://github.com/homarr-labs/homarr/commit/9648d9e99f02be8ba16a5238bd47866f7303724d))
+* **deps:** update turbo monorepo to ^2.8.15 ([#5243](https://github.com/homarr-labs/homarr/issues/5243)) ([1bd924e](https://github.com/homarr-labs/homarr/commit/1bd924ea9917949ac64ab754d97964b12c083b82))
+* **deps:** update turbo monorepo to ^2.8.16 ([#5250](https://github.com/homarr-labs/homarr/issues/5250)) ([ac80008](https://github.com/homarr-labs/homarr/commit/ac80008ce0796cb6927642c83ff2e667f6e9d24c))
+* **deps:** update turbo monorepo to ^2.8.17 ([#5265](https://github.com/homarr-labs/homarr/issues/5265)) ([d2f438f](https://github.com/homarr-labs/homarr/commit/d2f438f294df3093b249213ac0a018b770705e3b))
+
 ## [1.56.0](https://github.com/homarr-labs/homarr/compare/v1.55.0...v1.56.0) (2026-03-13)
 
 ### Features
