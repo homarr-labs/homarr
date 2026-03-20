@@ -1,5 +1,6 @@
 import { getAlbumInfo, getAllAlbums, getMyUser, getServerStatistics, init, searchUsers } from "@immich/sdk";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
 
@@ -41,7 +42,10 @@ export class ImmichIntegration extends Integration {
 
   public async getServerStatsAsync(): Promise<ImmichServerStats> {
     this.initClient();
-    const [statistics, users] = await Promise.all([getServerStatistics(), searchUsers()]);
+    const [statistics, users] = await Promise.all([
+      getServerStatistics(this.getRequestOptions()),
+      searchUsers(this.getRequestOptions()),
+    ]);
     return {
       photoCount: statistics.photos,
       userCount: users.length,
@@ -52,7 +56,7 @@ export class ImmichIntegration extends Integration {
 
   public async getAlbumAsync(albumId: string): Promise<ImmichAlbum> {
     this.initClient();
-    const album = await getAlbumInfo({ id: albumId });
+    const album = await getAlbumInfo({ id: albumId }, this.getRequestOptions());
     const imageProxy = new ImageProxy();
     return {
       albumName: album.albumName,
@@ -89,15 +93,21 @@ export class ImmichIntegration extends Integration {
     }[]
   > {
     this.initClient();
-    const albums = await getAllAlbums({});
+    const albums = await getAllAlbums({}, this.getRequestOptions());
     return albums.map((album) => ({ id: album.id, albumName: album.albumName, assetCount: album.assetCount }));
   }
 
   protected async testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
     this.initClient();
-    const user = await getMyUser();
+    const user = await getMyUser(this.getRequestOptions());
     logger.debug(`Logged in as ${user.name} (${user.id})`);
     return { success: true };
+  }
+
+  private getRequestOptions() {
+    return {
+      fetch: fetchWithTrustedCertificatesAsync,
+    };
   }
 
   /**
