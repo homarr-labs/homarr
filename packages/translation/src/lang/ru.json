@@ -1996,6 +1996,61 @@
         "title": "Экземпляры"
       }
     },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Мониторинг медиасервера с детальной информацией о потоках и транскодировании",
+      "option": {
+        "showStreams": {
+          "label": "Показать активные потоки"
+        },
+        "showStats": {
+          "label": "Показать сводку статистики"
+        },
+        "showRecentActivity": {
+          "label": "Показать недавнюю активность"
+        },
+        "showViolations": {
+          "label": "Показать нарушения"
+        }
+      },
+      "stats": {
+        "activeStreams": "Активные потоки",
+        "totalUsers": "Всего пользователей",
+        "transcodes": "Транскодирования",
+        "bandwidth": "Пропускная способность"
+      },
+      "streams": {
+        "empty": "Нет активных потоков",
+        "user": "Пользователь",
+        "media": "Медиа",
+        "state": "Состояние",
+        "quality": "Качество",
+        "device": "Устройство",
+        "progress": "Прогресс",
+        "videoDecision": {
+          "directPlay": "Прямое воспроизведение",
+          "transcode": "Транскодирование",
+          "directStream": "Прямой поток"
+        }
+      },
+      "recentActivity": {
+        "title": "Недавняя активность",
+        "empty": "Нет недавней активности",
+        "watched": "Просмотрено",
+        "partial": "Частично"
+      },
+      "violations": {
+        "title": "Нарушения",
+        "empty": "Нет недавних нарушений",
+        "rule": "Правило",
+        "user": "Пользователь"
+      },
+      "noSectionsEnabled": "Секции не включены",
+      "error": {
+        "noIntegration": "Интеграция Tracearr не настроена",
+        "internalServerError": "Не удалось получить данные Tracearr"
+      }
+    },
     "common": {
       "location": {
         "query": "Город / Почтовый индекс",
@@ -3518,6 +3573,9 @@
             },
             "weather": {
               "label": "Погода"
+            },
+            "tracearr": {
+              "label": "Tracearr"
             }
           },
           "interval": {

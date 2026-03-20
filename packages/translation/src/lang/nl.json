@@ -764,7 +764,7 @@
             "expired": "Het certificaat is verlopen.",
             "notYetValid": "Het certificaat is nog niet geldig.",
             "untrusted": "Het certificaat wordt niet vertrouwd.",
-            "hostnameMismatch": ""
+            "hostnameMismatch": "Het certificaat hostname komt niet overeen met de URL."
           },
           "alert": {
             "permission": {
@@ -1994,6 +1994,61 @@
       },
       "instances": {
         "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -3518,6 +3573,9 @@
             },
             "weather": {
               "label": "Weer"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

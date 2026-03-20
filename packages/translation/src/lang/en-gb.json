@@ -1689,62 +1689,62 @@
               "label": "3 Months"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Months"
             },
             "ytd": {
-              "label": ""
+              "label": "Year to Date"
             },
             "1y": {
-              "label": ""
+              "label": "1 Year"
             },
             "2y": {
-              "label": ""
+              "label": "2 Years"
             },
             "5y": {
-              "label": ""
+              "label": "5 Years"
             },
             "10y": {
-              "label": ""
+              "label": "10 Years"
             },
             "max": {
-              "label": ""
+              "label": "Max"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Time Interval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Minutes"
             },
             "15m": {
-              "label": ""
+              "label": "15 Minutes"
             },
             "30m": {
-              "label": ""
+              "label": "30 Minutes"
             },
             "1h": {
-              "label": ""
+              "label": "1 Hour"
             },
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Days"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Week"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             }
           }
         }
       }
     },
     "calendar": {
-      "name": "",
-      "description": "",
+      "name": "Calendar",
+      "description": "Display events from your integrations in a calendar view within a certain relative time period",
       "duration": {
         "allDay": ""
       },
@@ -1994,6 +1994,61 @@
       },
       "instances": {
         "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -3517,6 +3572,9 @@
               "label": ""
             },
             "weather": {
+              "label": ""
+            },
+            "tracearr": {
               "label": ""
             }
           },
