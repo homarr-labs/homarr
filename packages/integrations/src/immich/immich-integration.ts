@@ -97,16 +97,16 @@ export class ImmichIntegration extends Integration {
     return albums.map((album) => ({ id: album.id, albumName: album.albumName, assetCount: album.assetCount }));
   }
 
-  protected async testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     this.initClient();
-    const user = await getMyUser(this.getRequestOptions());
+    const user = await getMyUser(this.getRequestOptions(input.fetchAsync));
     logger.debug(`Logged in as ${user.name} (${user.id})`);
     return { success: true };
   }
 
-  private getRequestOptions() {
+  private getRequestOptions(fetchAsync = fetchWithTrustedCertificatesAsync) {
     return {
-      fetch: fetchWithTrustedCertificatesAsync,
+      fetch: fetchAsync,
     };
   }
 
