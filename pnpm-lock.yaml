@@ -5,8 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@babel/helpers@<7.26.10': '>=7.28.6'
-  '@babel/runtime@<7.26.10': '>=7.28.6'
+  '@babel/helpers@<7.26.10': '>=7.29.2'
+  '@babel/runtime@<7.26.10': '>=7.29.2'
   axios@>=1.0.0 <1.8.2: '>=1.13.6'
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.4'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.4'
@@ -2619,6 +2619,10 @@ packages:
     resolution: {integrity: sha512-xOBvwq86HHdB7WUDTfKfT/Vuxh7gElQ+Sfti2Cy6yIWNW05P8iUslOVcZ4/sKbE+/jQaukQAdz/gf3724kYdqw==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/helpers@7.29.2':
+    resolution: {integrity: sha512-HoGuUs4sCZNezVEKdVcwqmZN8GoHirLUcLaYVNBK2J0DadGtdcqgr3BCbvH8+XUo4NGjNl3VOtSjEKNzqfFgKw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/parser@7.28.4':
     resolution: {integrity: sha512-yZbBqeM6TkpP9du/I2pUZnJsRMGGvOuIrhjzC1AwHwW+6he4mni6Bp/m8ijn0iOuZuPI2BfkCoSRunpyjnrQKg==}
     engines: {node: '>=6.0.0'}
@@ -2647,6 +2651,10 @@ packages:
 
   '@babel/runtime@7.28.6':
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.2':
+    resolution: {integrity: sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.25.9':
@@ -11057,7 +11065,7 @@ snapshots:
       '@babel/generator': 7.29.0
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-module-transforms': 7.26.0(@babel/core@7.26.0)
-      '@babel/helpers': 7.28.6
+      '@babel/helpers': 7.29.2
       '@babel/parser': 7.29.0
       '@babel/template': 7.25.9
       '@babel/traverse': 7.29.0
@@ -11218,6 +11226,11 @@ snapshots:
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
 
+  '@babel/helpers@7.29.2':
+    dependencies:
+      '@babel/template': 7.28.6
+      '@babel/types': 7.29.0
+
   '@babel/parser@7.28.4':
     dependencies:
       '@babel/types': 7.29.0
@@ -11241,6 +11254,8 @@ snapshots:
       core-js-pure: 3.38.1
 
   '@babel/runtime@7.28.6': {}
+
+  '@babel/runtime@7.29.2': {}
 
   '@babel/template@7.25.9':
     dependencies:
@@ -14017,7 +14032,7 @@ snapshots:
 
   '@videojs/http-streaming@3.17.4(video.js@8.23.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@videojs/vhs-utils': 4.1.1
       aes-decrypter: 4.0.2
       global: 4.4.0
@@ -14028,18 +14043,18 @@ snapshots:
 
   '@videojs/vhs-utils@4.0.0':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       global: 4.4.0
       url-toolkit: 2.2.5
 
   '@videojs/vhs-utils@4.1.1':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       global: 4.4.0
 
   '@videojs/xhr@2.7.0':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       global: 4.4.0
       is-function: 1.0.2
 
@@ -14240,7 +14255,7 @@ snapshots:
 
   aes-decrypter@4.0.2:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@videojs/vhs-utils': 4.1.1
       global: 4.4.0
       pkcs7: 1.0.4
@@ -15235,7 +15250,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       csstype: 3.2.3
 
   dom-walk@0.1.2: {}
@@ -17136,7 +17151,7 @@ snapshots:
 
   m3u8-parser@7.2.0:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@videojs/vhs-utils': 4.1.1
       global: 4.4.0
 
@@ -17498,7 +17513,7 @@ snapshots:
 
   mpd-parser@1.3.1:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@videojs/vhs-utils': 4.0.0
       '@xmldom/xmldom': 0.8.10
       global: 4.4.0
@@ -17513,7 +17528,7 @@ snapshots:
 
   mux.js@7.1.0:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       global: 4.4.0
 
   mysql2@3.20.0(@types/node@24.12.0):
@@ -18058,7 +18073,7 @@ snapshots:
 
   pkcs7@1.0.4:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
 
   pkg-conf@2.1.0:
     dependencies:
@@ -18533,7 +18548,7 @@ snapshots:
 
   react-textarea-autosize@8.5.9(@types/react@19.2.14)(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       react: 19.2.4
       use-composed-ref: 1.3.0(react@19.2.4)
       use-latest: 1.2.1(@types/react@19.2.14)(react@19.2.4)
@@ -18542,7 +18557,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -20070,7 +20085,7 @@ snapshots:
 
   use-deep-compare-effect@1.8.1(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       dequal: 2.0.3
       react: 19.2.4
 
