@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
+import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
+import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
-import { and, eq, like } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
@@ -90,10 +92,55 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-      await createUserAsync(ctx.db, input);
+      const salt = await createSaltAsync();
+      const hashedPassword = await hashPasswordAsync(input.password, salt);
 
-      // Delete invite as it's used
-      await ctx.db.delete(invites).where(inviteWhere);
+      const userId = createId();
+      const user = {
+        id: userId,
+        name: input.username,
+        password: hashedPassword,
+        salt,
+      };
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (trx) => {
+            await trx.insert(schema.users).values(user);
+
+            // Delete invite as it's used
+            const queryResult = (await trx.delete(schema.invites).where(inviteWhere)) as
+              | QueryResult
+              | MySqlRawQueryResult;
+            let count = 0;
+            if (Array.isArray(queryResult)) {
+              count = queryResult[0].affectedRows;
+            } else {
+              count = queryResult.rowCount ?? 0;
+            }
+            if (count === 0) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "Invalid invite",
+              });
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((trx) => {
+            trx.insert(users).values(user).run();
+            // Delete invite as it's used
+            const result = trx.delete(invites).where(inviteWhere).run();
+
+            if (result.changes === 0) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "Invalid invite",
+              });
+            }
+          });
+        },
+      });
     }),
   create: permissionRequiredProcedure
     .requiresPermission("admin")
