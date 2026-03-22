@@ -33,7 +33,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.17",
+    "@mantine/core": "^8.3.18",
     "@tabler/icons-react": "^3.40.0",
     "dayjs": "^1.11.20",
     "next": "16.1.7",
