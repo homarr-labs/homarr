@@ -6,7 +6,7 @@ import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
 
-import { createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
+import { fetchWithTrustedCertificatesAsync, createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -16,6 +16,8 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+import type { Notification } from "../interfaces/notifications/notification-types";
 
 const logger = createLogger({ module: "nextcloudIntegration" });
 
@@ -23,7 +25,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
-export class NextcloudIntegration extends Integration implements ICalendarIntegration {
+export class NextcloudIntegration extends Integration implements ICalendarIntegration, INotificationsIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
@@ -102,6 +104,40 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
         });
       })
       .flat();
+  }
+
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const url = this.url("/ocs/v2.php/apps/notifications/api/v2/notifications", { format: "json" });
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${this.getSecretValue("username")}:${this.getSecretValue("password")}`,
+        ).toString("base64")}`,
+        "OCS-APIRequest": "true",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Nextcloud notifications request failed: ${response.status}`);
+    }
+
+    const json = (await response.json()) as {
+      ocs: {
+        data: {
+          notification_id: number;
+          datetime: string;
+          subject: string;
+          message: string;
+        }[];
+      };
+    };
+
+    return json.ocs.data.map((n) => ({
+      id: String(n.notification_id),
+      time: new Date(n.datetime),
+      title: n.subject,
+      body: n.message,
+    }));
   }
 
   private async createCalendarClientAsync(agent?: Agent) {

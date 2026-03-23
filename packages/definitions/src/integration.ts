@@ -217,7 +217,7 @@ export const integrationDefs = {
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
-    category: ["calendar"],
+    category: ["calendar", "notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/nextcloud"),
   },
   unifiController: {

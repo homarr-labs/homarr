@@ -55,14 +55,17 @@ export const AddBoardModal = createModal(({ actions }) => {
           label={t("board.field.name.label")}
           data-autofocus
           {...form.getInputProps("name")}
-          description={
-            boardNameStatus.description ? (
+        description={
+          boardNameStatus.description ? (
+            <span>
               <Group c={boardNameStatus.description.color} gap="xs" align="center">
                 {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
                 <span>{boardNameStatus.description.label}</span>
               </Group>
-            ) : null
-          }
+            </span>
+          ) : null
+        }
+
         />
         <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
           <Slider
