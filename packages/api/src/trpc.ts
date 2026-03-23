@@ -34,7 +34,7 @@ const logger = createLogger({ module: "trpc" });
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: { headers: Headers; session: Session | null }) => {
+export const createTRPCContext = (opts: { headers: Headers; session: Session | null; jobManager?: any }) => {
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
@@ -44,6 +44,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
     session,
     deviceType: userAgent(opts.headers).device.type,
     db,
+    jobManager: opts.jobManager,
   };
 };
 

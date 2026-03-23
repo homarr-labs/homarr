@@ -1,12 +1,9 @@
-import { createTask, validate } from "node-cron";
-
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 
 import type { Logger } from "./logger";
-import type { ValidateCron } from "./validation";
 
 export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
   beforeCallback?: (name: TAllowedNames) => MaybePromise<void>;
@@ -74,28 +71,6 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
     return {
       name,
       cronExpression: defaultCronExpression,
-      async createTaskAsync() {
-        const configuration = await db.query.cronJobConfigurations.findFirst({
-          where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
-        });
-
-        const cronExpression = options.preventCustomInterval
-          ? defaultCronExpression
-          : (configuration?.cronExpression ?? defaultCronExpression);
-
-        const scheduledTask = createTask(cronExpression, () => void catchingCallbackAsync(), {
-          name,
-          timezone: creatorOptions.timezone,
-        });
-        creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
-          name,
-          cronExpression: defaultCronExpression,
-          timezone: creatorOptions.timezone,
-          runOnStart: options.runOnStart,
-        });
-
-        return scheduledTask;
-      },
       async onStartAsync() {
         if (options.beforeStart) {
           creatorOptions.logger.logDebug("Running beforeStart for job", {
@@ -136,9 +111,7 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
       name,
       cronExpression: defaultCronExpression,
     });
-    if (!validate(defaultCronExpression)) {
-      throw new Error(`Invalid cron expression '${defaultCronExpression}' for job '${name}'`);
-    }
+    // Validation will be done by cron-parser when needed
     creatorOptions.logger.logDebug("Cron job expression for cron job is valid", {
       name,
       cronExpression: defaultCronExpression,

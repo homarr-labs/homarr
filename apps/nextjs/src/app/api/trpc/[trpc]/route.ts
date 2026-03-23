@@ -9,6 +9,7 @@ import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
+import { getJobManager } from "~/lib/job-manager";
 
 const logger = createLogger({ module: "trpcRoute" });
 
@@ -45,7 +46,7 @@ const handler = auth(async (req) => {
     endpoint: trpcPath,
     router: appRouter,
     req,
-    createContext: () => createTRPCContext({ session, headers: req.headers }),
+    createContext: () => createTRPCContext({ session, headers: req.headers, jobManager: getJobManager() }),
     onError({ error, path, type }) {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));
     },

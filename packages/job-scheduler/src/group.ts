@@ -1,9 +1,9 @@
 import { objectEntries, objectKeys } from "@homarr/common";
 import { db } from "@homarr/db";
-import { jobRegistry } from "./registry";
+import { jobRegistry } from "@homarr/cron-jobs-core";
 
-import type { JobCallback } from "./creator";
-import type { Logger } from "./logger";
+import type { JobCallback } from "@homarr/cron-jobs-core";
+import type { Logger } from "@homarr/cron-jobs-core";
 
 type Jobs<TAllowedNames extends string> = {
   [name in TAllowedNames]: ReturnType<JobCallback<TAllowedNames, name>>;
