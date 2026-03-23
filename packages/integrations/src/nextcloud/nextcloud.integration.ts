@@ -132,7 +132,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
       };
     };
 
-    return json.ocs.data.map((n) => ({
+    return json.ocs.data.map((notification) => ({
       id: String(n.notification_id),
       time: new Date(n.datetime),
       title: n.subject,
