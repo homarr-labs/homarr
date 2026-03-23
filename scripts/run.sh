@@ -54,10 +54,17 @@ WSS_PID=$!
 node apps/nextjs/server.js &
 NEXTJS_PID=$!
 
+# Wait a bit for NextJS to start
+sleep 5
+
+# Start job scheduler
+node scripts/job-scheduler.js &
+SCHEDULER_PID=$!
+
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $SCHEDULER_PID $WSS_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then

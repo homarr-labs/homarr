@@ -1,4 +1,4 @@
-import { schedule, validate as validateCron } from "node-cron";
+import { parseExpression } from "cron-parser";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { IJobManager } from "@homarr/cron-job-api";
@@ -10,56 +10,101 @@ import { cronJobConfigurations } from "@homarr/db/schema";
 const logger = createLogger({ module: "jobManager" });
 
 export class JobManager implements IJobManager {
+  private runningJobs = new Set<string>();
+
   constructor(
     private db: Database,
     private jobGroup: typeof cronJobGroup,
   ) {}
 
   public async startAsync(name: JobGroupKeys): Promise<void> {
-    await this.jobGroup.startAsync(name);
+    // In the new system, start just means enable
+    await this.enableAsync(name);
   }
+
   public async triggerAsync(name: JobGroupKeys): Promise<void> {
     await this.jobGroup.runManuallyAsync(name);
   }
+
   public async stopAsync(name: JobGroupKeys): Promise<void> {
-    await this.jobGroup.stopAsync(name);
+    // In the new system, stop means disable
+    await this.disableAsync(name);
   }
+
   public async updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void> {
     logger.info("Updating cron job interval", { name, expression: cron });
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
-    if (!validateCron(cron)) {
+
+    // Validate cron expression
+    try {
+      parseExpression(cron);
+    } catch {
       throw new Error(`Invalid cron expression: ${cron}`);
     }
+
     if (job.preventCustomInterval && cron !== job.cronExpression) {
       throw new Error(`Custom cron expressions are not allowed for job ${name}`);
     }
 
     await this.updateConfigurationAsync(name, { cronExpression: cron });
-    await this.jobGroup.getTask(name)?.destroy();
-
-    this.jobGroup.setTask(
-      name,
-      schedule(cron, () => void job.executeAsync(), {
-        name,
-      }),
-    );
     logger.info("Cron job interval updated", { name, expression: cron });
   }
+
   public async disableAsync(name: JobGroupKeys): Promise<void> {
     logger.info("Disabling cron job", { name });
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
 
     await this.updateConfigurationAsync(name, { isEnabled: false });
-    await this.jobGroup.stopAsync(name);
     logger.info("Cron job disabled", { name });
   }
+
   public async enableAsync(name: JobGroupKeys): Promise<void> {
     logger.info("Enabling cron job", { name });
     await this.updateConfigurationAsync(name, { isEnabled: true });
-    await this.jobGroup.startAsync(name);
     logger.info("Cron job enabled", { name });
+  }
+
+  // New method to trigger jobs based on current time
+  public async triggerJobsAsync(): Promise<void> {
+    const jobs = await this.getAllAsync();
+    const now = new Date();
+
+    for (const jobInfo of jobs) {
+      if (!jobInfo.isEnabled) continue;
+      if (this.runningJobs.has(jobInfo.name)) continue; // Prevent parallel execution
+
+      try {
+        const cronExpression = jobInfo.cron;
+        const interval = parseExpression(cronExpression);
+        const nextRun = interval.next();
+        const prevRun = interval.prev();
+
+        // Check if current time matches the cron (within a small tolerance)
+        const timeDiff = Math.abs(now.getTime() - nextRun.getTime());
+        if (timeDiff < 1000) { // Within 1 second
+          await this.executeJobAsync(jobInfo.name);
+        }
+      } catch (error) {
+        logger.error("Error checking job schedule", { name: jobInfo.name, error });
+      }
+    }
+  }
+
+  private async executeJobAsync(name: string): Promise<void> {
+    if (this.runningJobs.has(name)) return;
+
+    this.runningJobs.add(name);
+    try {
+      logger.info("Executing scheduled job", { name });
+      await this.jobGroup.runManuallyAsync(name as JobGroupKeys);
+      logger.info("Job executed successfully", { name });
+    } catch (error) {
+      logger.error("Job execution failed", { name, error });
+    } finally {
+      this.runningJobs.delete(name);
+    }
   }
 
   private async updateConfigurationAsync(
@@ -79,7 +124,6 @@ export class JobManager implements IJobManager {
     if (existingConfig) {
       await this.db
         .update(cronJobConfigurations)
-        // prevent updating the name, as it is the primary key
         .set({ ...configuration, name: undefined })
         .where(eq(cronJobConfigurations.name, name));
       logger.debug("Cron job configuration updated", {
@@ -97,7 +141,7 @@ export class JobManager implements IJobManager {
       cronExpression: configuration.cronExpression ?? job.cronExpression,
       isEnabled: configuration.isEnabled ?? true,
     });
-    logger.debug("Cron job configuration updated", {
+    logger.debug("Cron job configuration created", {
       name,
       configuration: JSON.stringify(configuration),
     });

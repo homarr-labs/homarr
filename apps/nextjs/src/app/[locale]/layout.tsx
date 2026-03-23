@@ -26,6 +26,7 @@ import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
+import { initializeJobManager } from "~/lib/job-manager";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
@@ -82,6 +83,9 @@ export default async function Layout(props: {
   const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
+
+  // Initialize job manager
+  await initializeJobManager();
 
   const StackedProvider = composeWrappers([
     (innerProps) => {

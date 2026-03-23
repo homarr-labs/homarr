@@ -1,0 +1,19 @@
+{
+  "name": "@homarr/job-scheduler",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@homarr/common": "workspace:*",
+    "@homarr/core": "workspace:*",
+    "@homarr/cron-job-api": "workspace:*",
+    "@homarr/cron-jobs": "workspace:*",
+    "@homarr/cron-jobs-core": "workspace:*",
+    "@homarr/cron-job-status": "workspace:*",
+    "@homarr/db": "workspace:*",
+    "@homarr/redis": "workspace:*",
+    "cron-parser": "^4.9.0"
+  }
+}</content>
+<parameter name="filePath">/workspaces/homarr/packages/job-scheduler/package.json
