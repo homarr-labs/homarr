@@ -1466,7 +1466,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@immich/sdk':
-        specifier: ^2.6.0
+        specifier: ^2.6.1
         version: 2.6.1
       '@jellyfin/sdk':
         specifier: ^0.13.0
