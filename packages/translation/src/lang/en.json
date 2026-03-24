@@ -3763,6 +3763,12 @@
     },
     "action": {
       "title": "Actions",
+      "logs": {
+        "label": "View logs",
+        "modal": {
+          "title": "{name} logs"
+        }
+      },
       "start": {
         "label": "Start",
         "notification": {

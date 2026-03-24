@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { ContainerInfo, ContainerStats } from "dockerode";
+import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
@@ -20,6 +20,137 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
 const dockerInstances = DockerSingleton.getInstances();
 
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+
+const findContainerByIdAsync = async (id: string) => {
+  const containers = await Promise.all(
+    dockerInstances.map(async ({ instance }) => {
+      const container = instance.getContainer(id);
+
+      return await new Promise<Container | null>((resolve) => {
+        container.inspect((err, data) => {
+          if (err || !data) {
+            resolve(null);
+          } else {
+            resolve(container);
+          }
+        });
+      });
+    }),
+  );
+
+  return containers.find((container) => container) ?? null;
+};
+
+export const getContainerLogsAsync = async (id: string, tail = 200) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    return null;
+  }
+
+  const rawLogs = await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: false,
+  });
+
+  return decodeDockerLogs(rawLogs);
+};
+
+export const streamContainerLogsAsync = async (
+  id: string,
+  tail: number,
+  onData: (data: string) => void,
+  onError: (err: Error) => void,
+) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    onError(new Error("Container not found"));
+    return () => undefined;
+  }
+
+  const stream = await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: true,
+  });
+
+  // Docker uses a multiplexed stream format for logs where each message has an 8-byte header:
+  // - 1 byte: stream type (stdout/stderr)
+  // - 3 bytes: padding
+  // - 4 bytes: payload length (big-endian)
+  // We need to process the stream in chunks and extract complete messages from the buffer.
+  const DOCKER_STREAM_HEADER_SIZE = 8;
+  const MAX_MESSAGE_SIZE = 1024 * 1024; // 1MB maximum message size for safety
+  let buffer = Buffer.alloc(0);
+
+  const processChunk = (chunk: Buffer) => {
+    buffer = Buffer.concat([buffer, chunk]);
+
+    while (buffer.length >= DOCKER_STREAM_HEADER_SIZE) {
+      const length = buffer.readUInt32BE(4);
+      
+      // Validate message size to prevent memory exhaustion from corrupted data
+      if (length > MAX_MESSAGE_SIZE) {
+        onError(new Error(`Docker log message size (${length} bytes) exceeds maximum allowed (${MAX_MESSAGE_SIZE} bytes)`));
+        return;
+      }
+      
+      const fullMessageSize = DOCKER_STREAM_HEADER_SIZE + length;
+
+      if (buffer.length < fullMessageSize) {
+        // Wait for more data
+        break;
+      }
+
+      const payload = buffer.subarray(DOCKER_STREAM_HEADER_SIZE, fullMessageSize);
+      onData(payload.toString("utf-8"));
+
+      buffer = buffer.subarray(fullMessageSize);
+    }
+  };
+
+  stream.on("data", processChunk);
+  stream.on("error", onError);
+
+  return () => {
+    stream.removeListener("data", processChunk);
+    stream.removeListener("error", onError);
+    stream.destroy();
+  };
+};
+
+const decodeDockerLogs = (logs: Buffer | string) => {
+  if (typeof logs === "string") {
+    return logs;
+  }
+
+  // Docker multiplexed stream: 1 byte stream type, 3 bytes padding, 4 bytes big-endian length, then payload
+  // Repeat until buffer consumed.
+  let cursor = 0;
+  const parts: string[] = [];
+
+  while (cursor < logs.length) {
+    // Defensive: need at least 8 bytes header
+    if (cursor + 8 > logs.length) {
+      break;
+    }
+
+    const length = logs.readUInt32BE(cursor + 4);
+    const start = cursor + 8;
+    const end = start + length;
+    if (end > logs.length) {
+      break;
+    }
+
+    const payload = logs.subarray(start, end);
+    parts.push(payload.toString("utf-8"));
+    cursor = end;
+  }
+
+  return parts.join("");
+};
 
 async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
