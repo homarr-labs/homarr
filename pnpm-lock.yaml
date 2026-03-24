@@ -1466,8 +1466,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@immich/sdk':
-        specifier: ^2.5.6
-        version: 2.5.6
+        specifier: ^2.6.0
+        version: 2.6.1
       '@jellyfin/sdk':
         specifier: ^0.13.0
         version: 0.13.0(axios@1.12.2)
@@ -3529,8 +3529,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@immich/sdk@2.5.6':
-    resolution: {integrity: sha512-u6o0rNBsTbAkl/6vz3Z63A/yNkLYeuKiHKoJgLuvRqTpPahgxAFcfDeN8rLd0Ya1kM5I2c610/VDcvItzzVcWg==}
+  '@immich/sdk@2.6.1':
+    resolution: {integrity: sha512-b8G0Qm8FZ4+D4IPq5cbXb3Lh3VvpUSnMf9Uz8nB4Yr8ivPG3TmGcw3lRsB00mdAPyQFuMqB8UL6LiMC6rtWy5Q==}
 
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
@@ -12042,7 +12042,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@immich/sdk@2.5.6':
+  '@immich/sdk@2.6.1':
     dependencies:
       '@oazapfts/runtime': 1.2.0
 
