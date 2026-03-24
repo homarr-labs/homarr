@@ -21,6 +21,19 @@ import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import type { Notification } from "../interfaces/notifications/notification-types";
 
+const notificationSchema = z.object({
+  ocs: z.object({
+    data: z.array(
+      z.object({
+        notification_id: z.number(),
+        datetime: z.string(),
+        subject: z.string(),
+        message: z.string(),
+      }),
+    ),
+  }),
+});
+
 const logger = createLogger({ module: "nextcloudIntegration" });
 
 dayjs.extend(utc);
@@ -120,19 +133,6 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
     });
 
     if (!response.ok) throw new ResponseError(response);
-
-    const notificationSchema = z.object({
-      ocs: z.object({
-        data: z.array(
-          z.object({
-            notification_id: z.number(),
-            datetime: z.string(),
-            subject: z.string(),
-            message: z.string(),
-          }),
-        ),
-      }),
-    });
 
     const json = notificationSchema.parse(await response.json());
 
