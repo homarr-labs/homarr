@@ -5,7 +5,9 @@ import utc from "dayjs/plugin/utc";
 import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
+import { z } from "zod";
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync, createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
@@ -117,26 +119,28 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Nextcloud notifications request failed: ${response.status}`);
-    }
+    if (!response.ok) throw new ResponseError(response);
 
-    const json = (await response.json()) as {
-      ocs: {
-        data: {
-          notification_id: number;
-          datetime: string;
-          subject: string;
-          message: string;
-        }[];
-      };
-    };
+    const notificationSchema = z.object({
+      ocs: z.object({
+        data: z.array(
+          z.object({
+            notification_id: z.number(),
+            datetime: z.string(),
+            subject: z.string(),
+            message: z.string(),
+          }),
+        ),
+      }),
+    });
+
+    const json = notificationSchema.parse(await response.json());
 
     return json.ocs.data.map((notification) => ({
-      id: String(n.notification_id),
-      time: new Date(n.datetime),
-      title: n.subject,
-      body: n.message,
+      id: String(notification.notification_id),
+      time: new Date(notification.datetime),
+      title: notification.subject,
+      body: notification.message,
     }));
   }
 
