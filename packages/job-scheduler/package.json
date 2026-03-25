@@ -15,5 +15,4 @@
     "@homarr/redis": "workspace:*",
     "cron-parser": "^4.9.0"
   }
-}</content>
-<parameter name="filePath">/workspaces/homarr/packages/job-scheduler/package.json
+}
