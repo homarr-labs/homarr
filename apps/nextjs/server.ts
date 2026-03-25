@@ -36,13 +36,13 @@ const logger = createLogger({ module: "customServer" });
 
 // --- JobManager (from apps/tasks/src/job-manager.ts) ---
 import type { IJobManager } from "@homarr/cron-job-api";
-import type { JobGroupKeys } from "@homarr/cron-jobs";
+import type { jobGroup as CronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 
 class JobManager implements IJobManager {
   constructor(
     private db: Database,
-    private jobGroup: typeof jobGroup,
+    private jobGroup: typeof CronJobGroup,
   ) {}
 
   public async startAsync(name: JobGroupKeys): Promise<void> {

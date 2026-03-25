@@ -339,7 +339,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
     category: ["photoService"],
-    // @ts-expect-error TS2345
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
   },
   tracearr: {

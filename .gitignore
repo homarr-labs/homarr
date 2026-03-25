@@ -69,3 +69,6 @@ apps/nextjs/public/images/background.png
 
 # next-intl
 en.d.json.ts
+
+# Custom server build artifacts
+apps/nextjs/customServer.css
