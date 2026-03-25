@@ -139,9 +139,18 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../../packages/core
+      '@homarr/cron-job-api':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-job-api
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
+      '@homarr/cron-jobs':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs
+      '@homarr/cron-jobs-core':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs-core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -184,9 +193,15 @@ importers:
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../../packages/old-schema
+      '@homarr/ping':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings
@@ -277,6 +292,9 @@ importers:
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
+      fastify:
+        specifier: ^5.7.4
+        version: 5.8.2
       flag-icons:
         specifier: ^7.5.0
         version: 7.5.0
@@ -325,6 +343,9 @@ importers:
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.2.4)
+      ws:
+        specifier: ^8.19.0
+        version: 8.19.0
       zod:
         specifier: ^4.2.1
         version: 4.2.1
@@ -356,18 +377,27 @@ importers:
       '@types/swagger-ui-react':
         specifier: ^5.18.0
         version: 5.18.0
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
+      esbuild:
+        specifier: ^0.27.3
+        version: 0.27.3
       eslint:
         specifier: ^9.39.4
         version: 9.39.4
       node-loader:
         specifier: ^2.1.0
-        version: 2.1.0(webpack@5.94.0)
+        version: 2.1.0(webpack@5.94.0(esbuild@0.27.3))
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
+      tsx:
+        specifier: 4.20.4
+        version: 4.20.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -7144,9 +7174,6 @@ packages:
 
   get-tsconfig@4.13.6:
     resolution: {integrity: sha512-shZT/QMiSHc/YBLxxOkMtgSid5HFoauqCE3/exfsEcwg1WkeqjG+V40yBbBrsD+jW2HDXcs28xOfcbm2jI8Ddw==}
-
-  get-tsconfig@4.8.1:
-    resolution: {integrity: sha512-k9PN+cFBmaLWtVz29SkUoqU5O0slLuHJXt/2P+tMVFT+phsSGXGkp9t3rQIqdz0e+06EHNGs3oM6ZX1s2zHxRg==}
 
   git-hooks-list@4.1.1:
     resolution: {integrity: sha512-cmP497iLq54AZnv4YRAEMnEyQ1eIn4tGKbmswqwmFV4GBnAqE8NLtWxxdXa++AalfgL5EBH4IxTPyquEuGY/jA==}
@@ -16361,10 +16388,6 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  get-tsconfig@4.8.1:
-    dependencies:
-      resolve-pkg-maps: 1.0.0
-
   git-hooks-list@4.1.1: {}
 
   git-log-parser@1.2.1:
@@ -17816,10 +17839,10 @@ snapshots:
     dependencies:
       rrule: 2.8.1
 
-  node-loader@2.1.0(webpack@5.94.0):
+  node-loader@2.1.0(webpack@5.94.0(esbuild@0.27.3)):
     dependencies:
       loader-utils: 2.0.4
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.27.3)
 
   node-mock-http@1.0.2: {}
 
@@ -19704,13 +19727,15 @@ snapshots:
       type-fest: 2.19.0
       unique-string: 3.0.0
 
-  terser-webpack-plugin@5.3.17(webpack@5.94.0):
+  terser-webpack-plugin@5.3.17(esbuild@0.27.3)(webpack@5.94.0(esbuild@0.27.3)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       terser: 5.46.0
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.27.3)
+    optionalDependencies:
+      esbuild: 0.27.3
 
   terser@5.46.0:
     dependencies:
@@ -19905,7 +19930,7 @@ snapshots:
   tsx@4.20.4:
     dependencies:
       esbuild: 0.25.12
-      get-tsconfig: 4.8.1
+      get-tsconfig: 4.13.6
     optionalDependencies:
       fsevents: 2.3.3
 
@@ -20428,7 +20453,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.94.0:
+  webpack@5.94.0(esbuild@0.27.3):
     dependencies:
       '@types/estree': 1.0.8
       '@webassemblyjs/ast': 1.14.1
@@ -20450,7 +20475,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.17(webpack@5.94.0)
+      terser-webpack-plugin: 5.3.17(esbuild@0.27.3)(webpack@5.94.0(esbuild@0.27.3))
       watchpack: 2.5.1
       webpack-sources: 3.3.4
     transitivePeerDependencies:
