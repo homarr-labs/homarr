@@ -85,7 +85,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       cpuModel: serverInfo.cpu.model,
       operatingSystemVersion: `${serverInfo.os.distro} ${serverInfo.os.release} (${serverInfo.os.kernel})`,
       uptime: serverInfo.os.uptime,
-      gpuNames: serverInfo.gpu.map((gpu) => gpu.brand),
+      gpuNames: serverInfo.gpu.layout.map((gpu) => gpu.brand),
     };
   }
 
@@ -161,14 +161,14 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
   }
 
   private async getCurrentGpuLoadAsync() {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/load/gpu"));
-    const result = await response.text();
-
-    // response is either valid json or empty if gpu widget is disabled.
-    if (result.length === 0) return [];
-
-    const data = await gpuLoadApi.parseAsync(JSON.parse(result));
-    return data.layout;
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/load/gpu"));
+      const result = await response.json();
+      const data = await gpuLoadApi.parseAsync(result);
+      return data.layout;
+    } catch {
+      return [];
+    }
   }
 
   private getChannel() {
@@ -219,14 +219,16 @@ const internalServerInfoApi = z.object({
       ),
     }),
   ),
-  gpu: z
-    .array(
-      z.object({
-        brand: z.string(),
-        model: z.string().optional(),
-      }),
-    )
-    .default([]),
+  gpu: z.object({
+    layout: z
+      .array(
+        z.object({
+          brand: z.string(),
+          model: z.string().optional(),
+        }),
+      )
+      .default([]),
+  }),
 });
 
 const cpuLoadPerCoreApiList = z.array(cpuLoadPerCoreApi);
