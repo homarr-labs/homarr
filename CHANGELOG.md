@@ -1,3 +1,12 @@
+## [1.57.1](https://github.com/homarr-labs/homarr/compare/v1.57.0...v1.57.1) (2026-03-27)
+
+### Bug Fixes
+
+* dashdot gpu ([#5347](https://github.com/homarr-labs/homarr/issues/5347)) ([192a43a](https://github.com/homarr-labs/homarr/commit/192a43a031eb9431da2c11395eda69a6c7236b9b))
+* **deps:** update dependency @t3-oss/env-nextjs to ^0.13.11 ([#5345](https://github.com/homarr-labs/homarr/issues/5345)) ([49d9394](https://github.com/homarr-labs/homarr/commit/49d9394cd78b2a1146c8dc00dd982215a2f9a580))
+* **deps:** update dependency dockerode to ^4.0.10 ([#5327](https://github.com/homarr-labs/homarr/issues/5327)) ([42a3791](https://github.com/homarr-labs/homarr/commit/42a3791e6b5664a0f28d3ee4d29d5257ef3765f6))
+* **deps:** update dependency fast-xml-parser to ^5.5.8 ([#5324](https://github.com/homarr-labs/homarr/issues/5324)) ([7982938](https://github.com/homarr-labs/homarr/commit/798293813cf82e38d7059069823f927b7cdfb3b8))
+
 ## [1.57.0](https://github.com/homarr-labs/homarr/compare/v1.56.1...v1.57.0) (2026-03-27)
 
 ### Features
