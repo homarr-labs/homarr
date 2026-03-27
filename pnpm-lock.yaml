@@ -16,7 +16,7 @@ overrides:
   linkifyjs@<4.3.2: '>=4.3.2'
   nanoid@>=4.0.0 <5.0.9: '>=5.1.7'
   prismjs@<1.30.0: '>=1.30.0'
-  proxmox-api>undici: 7.24.0
+  proxmox-api>undici: 7.24.5
   react-is: ^19.2.4
   rollup@>=4.0.0 <4.22.4: '>=4.60.0'
   sha.js@<=2.4.11: '>=2.4.12'
@@ -10421,10 +10421,6 @@ packages:
     resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
     engines: {node: '>=18.17'}
 
-  undici@7.24.0:
-    resolution: {integrity: sha512-jxytwMHhsbdpBXxLAcuu0fzlQeXCNnWdDyRHpvWsUl8vd98UwYdl9YTyn8/HcpcJPC3pwUveefsa3zTxyD/ERg==}
-    engines: {node: '>=20.18.1'}
-
   undici@7.24.5:
     resolution: {integrity: sha512-3IWdCpjgxp15CbJnsi/Y9TCDE7HWVN19j1hmzVhoAkY/+CJx449tVxT5wZc1Gwg8J+P0LWvzlBzxYRnHJ+1i7Q==}
     engines: {node: '>=20.18.1'}
@@ -18477,7 +18473,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.24.0
+      undici: 7.24.5
 
   proxy-from-env@1.1.0: {}
 
@@ -20064,8 +20060,6 @@ snapshots:
   undici-types@7.16.0: {}
 
   undici@6.23.0: {}
-
-  undici@7.24.0: {}
 
   undici@7.24.5: {}
 
