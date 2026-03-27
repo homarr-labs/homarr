@@ -27,7 +27,7 @@
           "description": "Configurer le comportement d'importation"
         },
         "boardSelection": {
-          "title": "Tableaux {count} trouvés",
+          "title": "{count} tableaux trouvés",
           "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
           "action": {
             "selectAll": "Tout sélectionner",
@@ -1997,20 +1997,20 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Surveillance avancée du serveur multimédia avec des données détaillées de flux et de transcodage",
       "option": {
         "showStreams": {
           "label": ""
         },
         "showStats": {
-          "label": ""
+          "label": "Afficher le résumé des statistiques"
         },
         "showRecentActivity": {
           "label": "Afficher l'activité récente"
         },
         "showViolations": {
-          "label": ""
+          "label": "Afficher les violations"
         }
       },
       "stats": {
@@ -2022,7 +2022,7 @@
       "streams": {
         "empty": "",
         "user": "Utilisateur",
-        "media": "",
+        "media": "Média",
         "state": "",
         "quality": "Qualité",
         "device": "Appareil",
@@ -2040,15 +2040,15 @@
         "partial": ""
       },
       "violations": {
-        "title": "",
-        "empty": "",
+        "title": "Violations",
+        "empty": "Aucune violation récente",
         "rule": "Règle",
         "user": "Utilisateur"
       },
       "noSectionsEnabled": "",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Aucune intégration Tracearr configurée",
+        "internalServerError": "Impossible de récupérer les données de Tracearr"
       }
     },
     "common": {
@@ -3575,7 +3575,7 @@
               "label": "Météo"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
