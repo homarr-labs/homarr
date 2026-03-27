@@ -119,4 +119,5 @@ const permissionMapping = {
   allowGeolocation: "geolocation",
   allowMicrophone: "microphone",
   allowPayment: "payment",
+  allowModals: "allow-modals",
 } satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">, string>;

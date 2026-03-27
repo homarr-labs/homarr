@@ -101,6 +101,7 @@ const optionMapping: OptionMapping = {
     allowMicrophone: (oldOptions) => oldOptions.allowMicrophone,
     allowGeolocation: (oldOptions) => oldOptions.allowGeolocation,
     allowScrolling: (oldOptions) => oldOptions.allowScrolling,
+    allowModals: () => undefined,
   },
   video: {
     feedUrl: (oldOptions) => oldOptions.FeedUrl,
