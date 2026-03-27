@@ -105,6 +105,10 @@ const getSandboxFlags = (
     baseSandbox.push("allow-popups-to-escape-sandbox");
   }
 
+  if (permissions.allowModals) {
+    baseSandbox.push("allow-modals");
+  }
+
   return baseSandbox;
 };
 
