@@ -4,10 +4,10 @@ import { Card, Center, Stack, Text, Title } from "@mantine/core";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
+import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
-import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 interface LoginProps {
   searchParams: Promise<{

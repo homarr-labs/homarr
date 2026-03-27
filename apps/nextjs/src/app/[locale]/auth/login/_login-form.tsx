@@ -7,8 +7,6 @@ import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Te
 import { useDisclosure } from "@mantine/hooks";
 import { z } from "zod/v4";
 
-
-
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { useForm } from "@homarr/form";
@@ -17,10 +15,6 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 import { userSignInSchema } from "@homarr/validation/user";
-
-
-
-
 
 type Provider = "credentials" | "ldap" | "oidc";
 

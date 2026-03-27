@@ -9,6 +9,6 @@ export const sanitizeRedirectionUrl = (url?: string) => {
   if (url && url.startsWith("/") && !url.startsWith("//")) {
     return url;
   } else {
-    return '/'; // Safe default
+    return "/"; // Safe default
   }
-}
+};
