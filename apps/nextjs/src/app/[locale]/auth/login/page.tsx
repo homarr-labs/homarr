@@ -7,6 +7,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
+import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 interface LoginProps {
   searchParams: Promise<{
@@ -19,7 +20,7 @@ export default async function Login(props: LoginProps) {
   const session = await auth();
 
   if (session) {
-    redirect(searchParams.callbackUrl ?? "/");
+    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
   }
 
   const t = await getScopedI18n("user.page.login");

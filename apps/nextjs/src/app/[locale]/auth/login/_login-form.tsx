@@ -7,13 +7,20 @@ import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Te
 import { useDisclosure } from "@mantine/hooks";
 import { z } from "zod/v4";
 
+
+
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { useForm } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 import { userSignInSchema } from "@homarr/validation/user";
+
+
+
+
 
 type Provider = "credentials" | "ldap" | "oidc";
 
@@ -70,7 +77,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
       await revalidatePathActionAsync("/");
-      router.push(callbackUrl);
+      router.push(sanitizeRedirectionUrl(callbackUrl));
     },
     [t, router, callbackUrl],
   );
