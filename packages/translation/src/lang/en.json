@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Allow geolocation"
+        },
+        "allowModals": {
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -2033,7 +2036,6 @@
           "directStream": "Direct Stream"
         }
       },
-
       "recentActivity": {
         "title": "Recent Activity",
         "empty": "No recent activity",

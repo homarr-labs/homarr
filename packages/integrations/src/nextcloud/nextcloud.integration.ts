@@ -8,7 +8,7 @@ import { DAVClient } from "tsdav";
 import { z } from "zod";
 
 import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync, createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
+import { createHttpsAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -18,8 +18,8 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
-import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 
 const notificationSchema = z.object({
   ocs: z.object({

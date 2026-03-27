@@ -14,7 +14,7 @@ import { ApiKeysManagement } from "./components/api-keys";
 
 export async function generateMetadata() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("admin")) {
+  if (!session?.user.permissions.includes("admin")) {
     return {};
   }
 
@@ -27,7 +27,7 @@ export async function generateMetadata() {
 
 export default async function ApiPage() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("admin")) {
+  if (!session?.user.permissions.includes("admin")) {
     notFound();
   }
   const document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
