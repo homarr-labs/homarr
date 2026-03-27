@@ -29,9 +29,9 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@tanstack/react-query": "^5.91.2",
-    "@trpc/client": "^11.13.4",
-    "@trpc/server": "^11.13.4",
-    "@trpc/tanstack-react-query": "^11.13.4",
+    "@trpc/client": "^11.14.1",
+    "@trpc/server": "^11.14.1",
+    "@trpc/tanstack-react-query": "^11.14.1",
     "node-cron": "^4.2.1",
     "react": "19.2.4",
     "zod": "^4.2.1"
