@@ -162,6 +162,7 @@ const optionMapping: OptionMapping = {
     sectionIndicatorRequirement: (oldOptions) =>
       "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
     showUptime: () => undefined,
+    gpu: () => undefined,
     visibleClusterSections: (oldOptions) => {
       if (!("showNode" in oldOptions)) return undefined;
 

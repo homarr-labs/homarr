@@ -36,6 +36,16 @@ export class SystemHealthMonitoringMockService implements ISystemHealthMonitorin
           healthy: true,
         },
       ],
+      gpu: [
+        {
+          gpuId: "mock0",
+          name: "Mock GPU RTX 4090",
+          memoryUtilization: Math.floor(Math.random() * 100),
+          processorUtilization: Math.floor(Math.random() * 100),
+          temperature: Math.floor(Math.random() * 90),
+          fanSpeed: Math.floor(Math.random() * 2000),
+        },
+      ],
     });
   }
 }

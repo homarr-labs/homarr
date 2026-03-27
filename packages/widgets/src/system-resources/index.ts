@@ -19,7 +19,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),
       visibleCharts: factory.multiSelect({
-        options: (["cpu", "memory", "network"] as const).map((key) => ({
+        options: (["cpu", "memory", "gpu", "network"] as const).map((key) => ({
           value: key,
           label: (t) => t(`widget.systemResources.option.visibleCharts.option.${key}`),
         })),
