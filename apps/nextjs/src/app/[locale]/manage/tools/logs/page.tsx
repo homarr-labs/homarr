@@ -18,7 +18,7 @@ import { LogContextProvider } from "./log-context";
 
 export async function generateMetadata() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("admin")) {
+  if (!session?.user.permissions.includes("admin")) {
     return {};
   }
   const t = await getScopedI18n("management");
@@ -30,7 +30,7 @@ export async function generateMetadata() {
 
 export default async function LogsManagementPage() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("other-view-logs")) {
+  if (!session?.user.permissions.includes("other-view-logs")) {
     notFound();
   }
 
