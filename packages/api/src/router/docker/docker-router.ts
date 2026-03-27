@@ -140,7 +140,7 @@ interface DockerContainer {
   id: string;
   state: ContainerState;
   image: string;
-  ports: Port[];
+  ports: Port[] | undefined;
   iconUrl: string | null;
   cpuUsage: number;
   memoryUsage: number;

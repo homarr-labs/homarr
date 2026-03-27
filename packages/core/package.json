@@ -41,8 +41,8 @@
     "better-sqlite3": "^12.6.2",
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
-    "ioredis": "5.10.0",
-    "mysql2": "3.19.1",
+    "ioredis": "5.10.1",
+    "mysql2": "3.20.0",
     "pg": "^8.20.0",
     "superjson": "2.2.6",
     "winston": "3.19.0",
@@ -53,7 +53,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }

@@ -94,7 +94,6 @@ const createSpotlightContext = (displayName: string) => {
         context.unregisterItems(key);
       };
       // We ignore the results
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...dependencyArray, key]);
   };
 

@@ -27,7 +27,7 @@
           "description": "Configurer le comportement d'importation"
         },
         "boardSelection": {
-          "title": "Tableaux {count} trouvés",
+          "title": "{count} tableaux trouvés",
           "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
           "action": {
             "selectAll": "Tout sélectionner",
@@ -1997,36 +1997,36 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Surveillance avancée du serveur multimédia avec des données détaillées de flux et de transcodage",
       "option": {
         "showStreams": {
           "label": ""
         },
         "showStats": {
-          "label": ""
+          "label": "Afficher le résumé des statistiques"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Afficher l'activité récente"
         },
         "showViolations": {
-          "label": ""
+          "label": "Afficher les violations"
         }
       },
       "stats": {
         "activeStreams": "",
-        "totalUsers": "",
+        "totalUsers": "Utilisateurs totaux",
         "transcodes": "",
-        "bandwidth": ""
+        "bandwidth": "Bande passante"
       },
       "streams": {
         "empty": "",
-        "user": "",
-        "media": "",
+        "user": "Utilisateur",
+        "media": "Média",
         "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "quality": "Qualité",
+        "device": "Appareil",
+        "progress": "Progression",
         "videoDecision": {
           "directPlay": "",
           "transcode": "",
@@ -2034,21 +2034,21 @@
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
+        "title": "Activité récente",
+        "empty": "Aucune activité récente",
         "watched": "",
         "partial": ""
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Violations",
+        "empty": "Aucune violation récente",
+        "rule": "Règle",
+        "user": "Utilisateur"
       },
       "noSectionsEnabled": "",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Aucune intégration Tracearr configurée",
+        "internalServerError": "Impossible de récupérer les données de Tracearr"
       }
     },
     "common": {
@@ -2147,50 +2147,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Statistiques du serveur Immich",
+      "description": "Informations sur votre instance Immich",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les utilisateurs",
+          "description": "Afficher le nombre d'utilisateurs de l'instance"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les photos",
+          "description": "Afficher le nombre de photos de l'instance"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les vidéos",
+          "description": "Afficher le nombre de vidéos de l'instance"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Affiche le stockage",
+          "description": "Afficher le stockage total utilisé"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Utilisateurs",
+      "photos": "Photos",
+      "videos": "Vidéos",
+      "storage": "Stockage utilisé"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Album Immich",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Identifiant de l'album",
+          "description": "C'est l'identifiant unique qui correspond à l'album Immich. Vous pouvez le trouver en ouvrant un album et copiant l'identifiant unique depuis l'URL, par exemple 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Intervalle en secondes",
+          "description": "Rotation entre les images de l'album chaque X secondes. Doit être entre 1 et 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les informations de la photo",
+          "description": "Afficher la date et l'index de la photo en bas du diaporama"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Diaporama de photos dans votre album Immich",
+      "noAlbumSelected": "Aucun album sélectionné, modifier le widget et choisissez un album",
+      "noPhotos": "Aucune photo dans cet album"
     },
     "downloads": {
       "name": "Client de téléchargement",
@@ -3575,7 +3575,7 @@
               "label": "Météo"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
