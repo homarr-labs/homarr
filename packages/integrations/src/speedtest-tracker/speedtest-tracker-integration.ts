@@ -49,7 +49,7 @@ export class SpeedtestTrackerIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerLatestResultSchema.parse(await response.json());
+    return speedtestTrackerLatestResultSchema.parse(((await response.json()) as { data: unknown }).data);
   }
 
   /**
@@ -66,7 +66,7 @@ export class SpeedtestTrackerIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerStatsSchema.parse(await response.json());
+    return speedtestTrackerStatsSchema.parse(((await response.json()) as { data: unknown }).data);
   }
 
   /**

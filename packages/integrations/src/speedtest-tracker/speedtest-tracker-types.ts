@@ -54,7 +54,7 @@ export const speedtestTrackerResultPayloadSchema = z.object({
   result: z
     .object({
       id: z.string(),
-      url: z.string(),
+      url: z.string().optional(), // absent when persisted=false
       persisted: z.boolean(),
     })
     .optional(),
@@ -68,10 +68,11 @@ export const speedtestTrackerResultSchema = z.object({
   ping: z.number().nullable(),
   download: z.number().int().nullable(),
   upload: z.number().int().nullable(),
-  download_bits: z.number().int().nullable(),
-  upload_bits: z.number().int().nullable(),
-  download_bits_human: z.string().nullable(),
-  upload_bits_human: z.string().nullable(),
+  // These are conditionally omitted (not null) when download/upload is falsy
+  download_bits: z.number().int().nullish(),
+  upload_bits: z.number().int().nullish(),
+  download_bits_human: z.string().nullish(),
+  upload_bits_human: z.string().nullish(),
   healthy: z.boolean().nullable(),
   status: z.string(),
   scheduled: z.boolean(),
@@ -88,18 +89,29 @@ export const speedtestTrackerLatestResultSchema = speedtestTrackerResultSchema;
 export type SpeedtestTrackerLatestResult = SpeedtestTrackerResult;
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
+// StatResource returns nested: { ping: {avg,min,max}, download: {...}, upload: {...}, total_results }
+
+export const speedtestTrackerStatsBandwidthSchema = z.object({
+  avg: z.number(),
+  avg_bits: z.number().optional(),
+  avg_bits_human: z.string().optional(),
+  min: z.number(),
+  min_bits: z.number().optional(),
+  min_bits_human: z.string().optional(),
+  max: z.number(),
+  max_bits: z.number().optional(),
+  max_bits_human: z.string().optional(),
+});
 
 export const speedtestTrackerStatsSchema = z.object({
+  ping: z.object({
+    avg: z.number(),
+    min: z.number(),
+    max: z.number(),
+  }),
+  download: speedtestTrackerStatsBandwidthSchema,
+  upload: speedtestTrackerStatsBandwidthSchema,
   total_results: z.number().int(),
-  avg_ping: z.number(),
-  avg_download: z.number(),
-  avg_upload: z.number(),
-  min_ping: z.number(),
-  min_download: z.number(),
-  min_upload: z.number(),
-  max_ping: z.number(),
-  max_download: z.number(),
-  max_upload: z.number(),
 });
 
 export type SpeedtestTrackerStats = z.infer<typeof speedtestTrackerStatsSchema>;
