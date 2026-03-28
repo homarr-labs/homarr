@@ -27,4 +27,5 @@ export const widgetRouter = createTRPCRouter({
   firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
   notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
   tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
+  speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
 });
