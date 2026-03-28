@@ -153,6 +153,21 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: false,
   }),
+  umamiEventName: () => ({
+    type: "umamiEventName" as const,
+    defaultValue: "",
+    withDescription: true,
+  }),
+  umamiEventNames: () => ({
+    type: "umamiEventNames" as const,
+    defaultValue: [] as string[],
+    withDescription: true,
+  }),
+  umamiWebsite: () => ({
+    type: "umamiWebsite" as const,
+    defaultValue: "",
+    withDescription: true,
+  }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,
   ) => ({

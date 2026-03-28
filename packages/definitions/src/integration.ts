@@ -28,6 +28,7 @@ interface integrationDefinition {
   category: AtLeastOneOf<IntegrationCategory>;
   documentationUrl: string | null;
   defaultUrl?: string; // optional default URL for the integration
+  urlDescription?: string; // optional hint shown below the URL field in the integration form
 }
 
 export const integrationDefs = {
@@ -357,6 +358,15 @@ export const integrationDefs = {
     category: ["mediaMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
   },
+  umami: {
+    name: "Umami",
+    secretKinds: [["username", "password"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/umami.svg",
+    category: ["analytics"],
+    defaultUrl: "https://api.umami.is/v1",
+    urlDescription: "Use the API base URL. Cloud: https://api.umami.is/v1 · Self-hosted: http://your-umami:3000/api",
+    documentationUrl: null,
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -395,6 +405,11 @@ export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOn
 export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
   const definition = integrationDefs[integration];
   return "defaultUrl" in definition ? definition.defaultUrl : undefined;
+};
+
+export const getIntegrationUrlDescription = (integration: IntegrationKind) => {
+  const definition = integrationDefs[integration];
+  return "urlDescription" in definition ? definition.urlDescription : undefined;
 };
 
 /**
@@ -446,6 +461,7 @@ export const integrationCategories = [
   "timetable",
   "photoService",
   "mediaMonitoring",
+  "analytics",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

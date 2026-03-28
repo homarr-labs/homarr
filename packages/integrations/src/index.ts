@@ -31,6 +31,7 @@ export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
 export { TracearrIntegration } from "./tracearr/tracearr-integration";
+export { UmamiIntegration } from "./umami/umami-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -58,6 +59,7 @@ export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-
 export type { Notification } from "./interfaces/notifications/notification-types";
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 export type { TracearrDashboardData } from "./tracearr/tracearr-types";
+export type { UmamiVisitorStats } from "./umami/umami-types";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

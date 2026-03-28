@@ -44,6 +44,7 @@ import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
+import * as umami from "./umami";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -87,6 +88,7 @@ export const widgetImports = {
   "immich-serverStats": immichServerStats,
   "immich-albumCarousel": immichAlbumCarousel,
   tracearr,
+  umami,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

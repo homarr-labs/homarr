@@ -11,6 +11,9 @@ import { WidgetSliderInput } from "./widget-slider-input";
 import { WidgetSortedItemListInput } from "./widget-sortable-item-list-input";
 import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
+import { WidgetUmamiEventInput } from "./widget-umami-event-input";
+import { WidgetUmamiEventNamesInput } from "./widget-umami-event-names-input";
+import { WidgetUmamiWebsiteInput } from "./widget-umami-website-input";
 
 const mapping = {
   text: WidgetTextInput,
@@ -25,6 +28,9 @@ const mapping = {
   sortableItemList: WidgetSortedItemListInput,
   multiReleasesRepositories: WidgetMultiReleasesRepositoriesInput,
   dynamicSelect: WidgetDynamicSelectInput,
+  umamiEventName: WidgetUmamiEventInput,
+  umamiEventNames: WidgetUmamiEventNamesInput,
+  umamiWebsite: WidgetUmamiWebsiteInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

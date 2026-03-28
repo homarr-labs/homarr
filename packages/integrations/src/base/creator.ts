@@ -44,6 +44,7 @@ import { SearchChIntegration } from "../search-ch/search-ch-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
+import { UmamiIntegration } from "../umami/umami-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
@@ -117,6 +118,7 @@ export const integrationCreators = {
   glances: GlancesIntegration,
   searchCh: SearchChIntegration,
   immich: ImmichIntegration,
+  umami: UmamiIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

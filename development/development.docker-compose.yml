@@ -49,6 +49,31 @@ services:
     # if already run PostgreSQL, change port number to use container's service
     #  - 2345:5432
 
+  umami-db:
+    container_name: umami-db
+    image: postgres:15
+    environment:
+      POSTGRES_DB: umamidb
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    volumes:
+      - umami_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  umami:
+    container_name: umami
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    ports:
+      - "3010:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:umami@umami-db:5432/umamidb
+      APP_SECRET: homarr-dev-secret-change-in-prod
+    depends_on:
+      - umami-db
+    restart: unless-stopped
+
 volumes:
   mysql_data:
   postgresql_data:
+  umami_db_data:
