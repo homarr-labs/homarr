@@ -83,6 +83,10 @@ export const speedtestTrackerResultSchema = z.object({
 
 export type SpeedtestTrackerResult = z.infer<typeof speedtestTrackerResultSchema>;
 
+// Aliases used by the integration class for the /api/v1/results/latest endpoint
+export const speedtestTrackerLatestResultSchema = speedtestTrackerResultSchema;
+export type SpeedtestTrackerLatestResult = SpeedtestTrackerResult;
+
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 export const speedtestTrackerStatsSchema = z.object({
