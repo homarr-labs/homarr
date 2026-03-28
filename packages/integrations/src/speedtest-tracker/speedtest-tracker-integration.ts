@@ -74,7 +74,7 @@ export class SpeedtestTrackerIntegration extends Integration {
    * Returns a paginated list of recent speedtest results.
    */
   public async getRecentResultsAsync(perPage = 10): Promise<SpeedtestTrackerResultsCollection> {
-    const url = this.url("/api/v1/results", { "per.page": String(perPage), sort: "-created_at" });
+    const url = this.url("/api/v1/results", { result_count: String(perPage), sort: "-created_at" });
     const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
@@ -93,7 +93,7 @@ export class SpeedtestTrackerIntegration extends Integration {
     const [latestResult, stats, recentCollection] = await Promise.all([
       this.getLatestResultAsync(),
       this.getStatsAsync(),
-      this.getRecentResultsAsync(10),
+      this.getRecentResultsAsync(30),
     ]);
 
     return {

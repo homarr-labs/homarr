@@ -2718,6 +2718,33 @@
       "noItems": "No notifications to display.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Displays speed test results from your Speedtest Tracker instance.",
+      "option": {
+        "showLatestResult": {
+          "label": "Show latest result"
+        },
+        "showStats": {
+          "label": "Show averages"
+        },
+        "showRecentResults": {
+          "label": "Show recent results"
+        }
+      },
+      "latestResult": "Latest Result",
+      "averages": "Averages",
+      "tests": "tests",
+      "recentResults": "Recent Results",
+      "healthy": "Healthy",
+      "unhealthy": "Unhealthy",
+      "ok": "OK",
+      "fail": "Fail",
+      "noSectionsEnabled": "Enable at least one section in widget options.",
+      "error": {
+        "internalServerError": "Failed to fetch speedtest data"
+      }
+    },
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",

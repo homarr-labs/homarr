@@ -1,66 +1,8 @@
 import { z } from "zod/v4";
 
-// ─── Nested data payload ──────────────────────────────────────────────────────
-
-export const speedtestTrackerPingDetailsSchema = z.object({
-  low: z.number(),
-  high: z.number(),
-  jitter: z.number(),
-  latency: z.number(),
-});
-
-export const speedtestTrackerBandwidthLatencySchema = z.object({
-  iqm: z.number(),
-  low: z.number(),
-  high: z.number(),
-  jitter: z.number(),
-});
-
-export const speedtestTrackerBandwidthSchema = z.object({
-  bytes: z.number().int(),
-  elapsed: z.number().int(),
-  bandwidth: z.number().int(),
-  latency: speedtestTrackerBandwidthLatencySchema,
-});
-
-export const speedtestTrackerServerInfoSchema = z.object({
-  id: z.number().int(),
-  ip: z.string(),
-  host: z.string(),
-  name: z.string(),
-  port: z.number().int(),
-  country: z.string(),
-  location: z.string(),
-});
-
-export const speedtestTrackerInterfaceInfoSchema = z.object({
-  name: z.string(),
-  isVpn: z.boolean(),
-  macAddr: z.string(),
-  externalIp: z.string(),
-  internalIp: z.string(),
-});
-
-export const speedtestTrackerResultPayloadSchema = z.object({
-  isp: z.string().optional(),
-  type: z.string().optional(),
-  ping: speedtestTrackerPingDetailsSchema.optional(),
-  download: speedtestTrackerBandwidthSchema.optional(),
-  upload: speedtestTrackerBandwidthSchema.optional(),
-  server: speedtestTrackerServerInfoSchema.optional(),
-  interface: speedtestTrackerInterfaceInfoSchema.optional(),
-  timestamp: z.string().optional(),
-  packetLoss: z.number().optional(),
-  result: z
-    .object({
-      id: z.string(),
-      url: z.string().optional(), // absent when persisted=false
-      persisted: z.boolean(),
-    })
-    .optional(),
-});
-
 // ─── Top-level Result ─────────────────────────────────────────────────────────
+// The nested `data` payload varies by result status (completed vs failed/log),
+// and the widget never reads it — so we accept any object here.
 
 export const speedtestTrackerResultSchema = z.object({
   id: z.number().int(),
@@ -68,7 +10,7 @@ export const speedtestTrackerResultSchema = z.object({
   ping: z.number().nullable(),
   download: z.number().int().nullable(),
   upload: z.number().int().nullable(),
-  // These are conditionally omitted (not null) when download/upload is falsy
+  // Conditionally omitted (not null) when download/upload is falsy
   download_bits: z.number().int().nullish(),
   upload_bits: z.number().int().nullish(),
   download_bits_human: z.string().nullish(),
@@ -77,7 +19,8 @@ export const speedtestTrackerResultSchema = z.object({
   status: z.string(),
   scheduled: z.boolean(),
   comments: z.string().nullable(),
-  data: speedtestTrackerResultPayloadSchema.nullable(),
+  // Opaque payload — shape differs between completed/failed/log results
+  data: z.record(z.string(), z.unknown()).nullable().optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });
