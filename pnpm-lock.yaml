@@ -1427,8 +1427,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.5.2
-        version: 7.5.2
+        specifier: ^7.5.3
+        version: 7.5.3
       '@ctrl/qbittorrent':
         specifier: ^9.11.2
         version: 9.11.2
@@ -2785,8 +2785,8 @@ packages:
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
 
-  '@ctrl/deluge@7.5.2':
-    resolution: {integrity: sha512-ceejra4uSIwtui4fNvqxRhX8965yNlIc7kSUWSuSjV3qWA3wIf5tu/cqAXr5dHATxBOdzy/5gte2PHlk7XoVQA==}
+  '@ctrl/deluge@7.5.3':
+    resolution: {integrity: sha512-EvliA70vc0b/wJf1q1FUBwFrpDnv5TikH7y4in7sUe8RY6OcZ/vNsqZ9luNA2Qvh7c4d4FjqWdVpw1J02favHw==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -10330,6 +10330,10 @@ packages:
     resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
     engines: {node: '>=20'}
 
+  type-fest@5.5.0:
+    resolution: {integrity: sha512-PlBfpQwiUvGViBNX84Yxwjsdhd1TUlXr6zjX7eoirtCPIr08NAmxwa+fcYBTeRQxHo9YC9wwF3m9i700sHma8g==}
+    engines: {node: '>=20'}
+
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -11446,14 +11450,14 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@ctrl/deluge@7.5.2':
+  '@ctrl/deluge@7.5.3':
     dependencies:
       '@ctrl/magnet-link': 4.3.0
       '@ctrl/shared-torrent': 6.5.1(ofetch@1.5.1)
       node-fetch-native: 1.6.7
       ofetch: 1.5.1
-      tough-cookie: 6.0.0
-      type-fest: 5.4.4
+      tough-cookie: 6.0.1
+      type-fest: 5.5.0
       ufo: 1.6.3
       uint8array-extras: 1.5.0
 
@@ -19933,6 +19937,10 @@ snapshots:
   type-fest@4.41.0: {}
 
   type-fest@5.4.4:
+    dependencies:
+      tagged-tag: 1.0.0
+
+  type-fest@5.5.0:
     dependencies:
       tagged-tag: 1.0.0
 
