@@ -73,7 +73,7 @@
     "dotenv": "^17.3.1",
     "flag-icons": "^7.5.0",
     "glob": "^13.0.6",
-    "isomorphic-dompurify": "^3.6.0",
+    "isomorphic-dompurify": "^3.7.0",
     "jotai": "^2.18.1",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "16.2.1",

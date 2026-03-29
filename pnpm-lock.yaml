@@ -284,7 +284,7 @@ importers:
         specifier: ^13.0.6
         version: 13.0.6
       isomorphic-dompurify:
-        specifier: ^3.6.0
+        specifier: ^3.7.0
         version: 3.7.1(@noble/hashes@2.0.1)
       jotai:
         specifier: ^2.18.1
