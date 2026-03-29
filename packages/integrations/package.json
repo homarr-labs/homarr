@@ -25,7 +25,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@ctrl/deluge": "^7.5.3",
+    "@ctrl/deluge": "^8.0.0",
     "@ctrl/qbittorrent": "^9.11.2",
     "@ctrl/transmission": "^7.4.0",
     "@gitbeaker/rest": "^43.8.0",

@@ -1427,8 +1427,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.5.3
-        version: 7.5.3
+        specifier: ^8.0.0
+        version: 8.0.0
       '@ctrl/qbittorrent':
         specifier: ^9.11.2
         version: 9.11.2
@@ -2785,8 +2785,8 @@ packages:
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
 
-  '@ctrl/deluge@7.5.3':
-    resolution: {integrity: sha512-EvliA70vc0b/wJf1q1FUBwFrpDnv5TikH7y4in7sUe8RY6OcZ/vNsqZ9luNA2Qvh7c4d4FjqWdVpw1J02favHw==}
+  '@ctrl/deluge@8.0.0':
+    resolution: {integrity: sha512-KKDJpB9gLCwjNsJCbUS0bn9SHMzDILyHrqM2i2ieQjTlVaSjTUDB/cn2RSdSXwy4DLug40yalFRnxoAv1+Tj+Q==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -6088,6 +6088,9 @@ packages:
 
   cookie-es@1.2.2:
     resolution: {integrity: sha512-+W7VmiVINB+ywl1HGXJXmrqkOhpKrIiVZV6tQuV54ZyQC7MMuBt81Vc336GMLoHBq5hV/F9eXgt5Mnx0Rha5Fg==}
+
+  cookie-es@3.0.1:
+    resolution: {integrity: sha512-1HqK6V6Prrm7cHzmjtCzfa370ljqPQoNeWIh5NXYqWwUI2l3DZlzjHHh25ZvJIPfwkiYnCvHykE2MIJkEVD1Rg==}
 
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
@@ -11450,13 +11453,13 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@ctrl/deluge@7.5.3':
+  '@ctrl/deluge@8.0.0':
     dependencies:
       '@ctrl/magnet-link': 4.3.0
       '@ctrl/shared-torrent': 6.5.1(ofetch@1.5.1)
+      cookie-es: 3.0.1
       node-fetch-native: 1.6.7
       ofetch: 1.5.1
-      tough-cookie: 6.0.1
       type-fest: 5.5.0
       ufo: 1.6.3
       uint8array-extras: 1.5.0
@@ -15063,6 +15066,8 @@ snapshots:
   convert-source-map@2.0.0: {}
 
   cookie-es@1.2.2: {}
+
+  cookie-es@3.0.1: {}
 
   cookie@0.7.2: {}
 
@@ -18705,14 +18710,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.1
       read-pkg: 10.0.0
-      type-fest: 5.4.4
+      type-fest: 5.5.0
 
   read-pkg@10.0.0:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 8.0.0
       parse-json: 8.3.0
-      type-fest: 5.4.4
+      type-fest: 5.5.0
       unicorn-magic: 0.3.0
 
   read-pkg@9.0.1:
