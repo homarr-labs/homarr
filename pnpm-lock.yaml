@@ -1217,7 +1217,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       fast-xml-parser:
-        specifier: ^5.5.8
+        specifier: ^5.5.9
         version: 5.5.9
       zod:
         specifier: ^4.2.1
