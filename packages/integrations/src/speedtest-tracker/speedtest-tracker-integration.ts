@@ -12,7 +12,6 @@ import {
 import type {
   SpeedtestTrackerDashboardData,
   SpeedtestTrackerLatestResult,
-  SpeedtestTrackerResult,
   SpeedtestTrackerResultsCollection,
   SpeedtestTrackerStats,
 } from "./speedtest-tracker-types";

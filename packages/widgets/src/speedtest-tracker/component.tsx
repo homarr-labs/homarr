@@ -455,7 +455,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
  * a timezone indicator (e.g. "2026-03-28 05:45:00"). We append "Z" to force
  * UTC parsing so JS converts it to local time correctly.
  */
-const parseTimestamp = (ts: string): Date => new Date(ts.replace(" ", "T") + "Z");
+const parseTimestamp = (ts: string): Date => new Date(ts.replace(" ", "TZ"));
 
 const mergeStats = (
   a: SpeedtestTrackerDashboardData["stats"],
