@@ -78,7 +78,7 @@
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.4",
     "video.js": "^8.23.7",
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
