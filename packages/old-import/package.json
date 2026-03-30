@@ -44,7 +44,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "superjson": "2.2.6",
-    "zod": "^4.3.5",
+    "zod": "^4.3.6",
     "zod-form-data": "^3.0.1"
   },
   "devDependencies": {
