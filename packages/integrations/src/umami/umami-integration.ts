@@ -5,6 +5,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type {
   UmamiEventSeries,
@@ -34,7 +35,7 @@ export class UmamiIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new ResponseError(response);
+      return TestConnectionError.StatusResult(response);
     }
 
     return { success: true };

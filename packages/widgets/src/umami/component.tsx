@@ -69,19 +69,15 @@ function formatDuration(seconds: number): string {
   return secs > 0 ? `${mins}m ${secs}s` : `${mins}m`;
 }
 
-function formatTimeFrameLabel(timeFrame: string): string {
+function formatTimeFrameLabel(timeFrame: string, t: ReturnType<typeof useScopedI18n<"widget.umami">>): string {
   switch (timeFrame) {
-    case "today":     return "Today";
-    case "24h":       return "24h";
-    case "7d":        return "7d";
-    case "30d":       return "30d";
-    case "month":     return new Date().toLocaleString("en-US", { month: "short", timeZone: "UTC" });
-    case "lastMonth": {
-      const d = new Date();
-      d.setUTCMonth(d.getUTCMonth() - 1);
-      return d.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
-    }
-    default: return timeFrame;
+    case "today":     return t("option.timeFrame.option.today");
+    case "24h":       return t("option.timeFrame.option.24h");
+    case "7d":        return t("option.timeFrame.option.7d");
+    case "30d":       return t("option.timeFrame.option.30d");
+    case "month":     return t("option.timeFrame.option.month");
+    case "lastMonth": return t("option.timeFrame.option.lastMonth");
+    default:          return timeFrame;
   }
 }
 
@@ -146,7 +142,7 @@ function UmamiContent({ integrationIds, websiteId, timeFrame, eventName, eventNa
     <Stack gap={4} p="xs" h="100%">
       <Group justify="space-between" align="baseline" wrap="nowrap">
         <Text size="xs" c="dimmed" truncate="end" style={{ maxWidth: "55%" }}>
-          {visitorStats.domain} ({formatTimeFrameLabel(timeFrame)})
+          {visitorStats.domain} ({formatTimeFrameLabel(timeFrame, t)})
         </Text>
         {eventName && visitorStats.eventCount !== undefined ? (
           <Group gap={6} align="baseline" wrap="nowrap">

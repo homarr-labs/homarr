@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getAllSecretKindOptions, getDefaultSecretKinds, getIntegrationUrlDescription } from "@homarr/definitions";
+import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
@@ -127,7 +127,6 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           <TextInput
             withAsterisk
             label={t("integration.field.url.label")}
-            description={getIntegrationUrlDescription(integration.kind)}
             {...form.getInputProps("url")}
           />
         )}

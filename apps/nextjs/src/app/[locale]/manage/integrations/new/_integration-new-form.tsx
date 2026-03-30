@@ -29,7 +29,6 @@ import {
   getIconUrl,
   getIntegrationDefaultUrl,
   getIntegrationName,
-  getIntegrationUrlDescription,
   integrationDefs,
 } from "@homarr/definitions";
 import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
@@ -160,7 +159,6 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           <TextInput
             withAsterisk
             label={t("integration.field.url.label")}
-            description={getIntegrationUrlDescription(searchParams.kind)}
             {...form.getInputProps("url")}
           />
         )}
