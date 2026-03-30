@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Consenti geo-localizzazione"
+        },
+        "allowModals": {
+          "label": "Consenti modali"
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "Mostra Informazioni Memoria"
+        },
+        "gpu": {
+          "label": "Mostra informazioni sulla GPU"
         },
         "showUptime": {
           "label": "Mostra Uptime"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memoria",
+            "gpu": "GPU",
             "network": "Rete"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "SU",
         "down": "DOWN"

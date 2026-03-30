@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "位置情報を許可する"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "メモリー情報を表示"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "稼働時間を表示"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "メモリ",
+            "gpu": "",
             "network": "ネットワーク"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"

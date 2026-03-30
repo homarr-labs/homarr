@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "crwdns970:0crwdne970:0"
+        },
+        "allowModals": {
+          "label": "crwdns3992:0crwdne3992:0"
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "crwdns1080:0crwdne1080:0"
+        },
+        "gpu": {
+          "label": "crwdns3994:0crwdne3994:0"
         },
         "showUptime": {
           "label": "crwdns3446:0crwdne3446:0"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "crwdns3700:0crwdne3700:0",
             "memory": "crwdns3702:0crwdne3702:0",
+            "gpu": "crwdns3996:0crwdne3996:0",
             "network": "crwdns3704:0crwdne3704:0"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "crwdns3604:0crwdne3604:0",
         "memory": "crwdns3606:0crwdne3606:0",
+        "gpu": "crwdns3998:0crwdne3998:0",
         "network": "crwdns3608:0crwdne3608:0",
         "up": "crwdns3610:0crwdne3610:0",
         "down": "crwdns3612:0crwdne3612:0"
