@@ -19,7 +19,7 @@ runs:
 
     - name: Build docker image for ${{ inputs.architecture }}
       id: build
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         push: false
         load: true
