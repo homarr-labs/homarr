@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { AreaChart, ChartTooltip } from "@mantine/charts";
-import { Card, Flex, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Card, Flex, Group, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 import { ReferenceLine, XAxis } from "recharts";
@@ -215,6 +215,8 @@ function RecentResultsSection({ results }: { results: SpeedtestTrackerResult[] }
 // ─── Speed history chart ──────────────────────────────────────────────────────
 
 function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
+  const board = useRequiredBoard();
+  const theme = useMantineTheme();
   const data = useMemo(
     () =>
       [...results]
@@ -323,6 +325,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       tickLine="none"
       withLegend
       fillOpacity={0.2}
+      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
       valueFormatter={(v: number) => `${v} Mbps`}
       xAxisProps={{
         type: "number",
@@ -455,7 +458,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
  * a timezone indicator (e.g. "2026-03-28 05:45:00"). We append "Z" to force
  * UTC parsing so JS converts it to local time correctly.
  */
-const parseTimestamp = (ts: string): Date => new Date(ts.replace(" ", "TZ"));
+const parseTimestamp = (ts: string): Date => new Date(`${ts.replace(" ", "T")}Z`);
 
 const mergeStats = (
   a: SpeedtestTrackerDashboardData["stats"],
