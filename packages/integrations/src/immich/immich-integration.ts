@@ -106,7 +106,8 @@ export class ImmichIntegration extends Integration {
 
   private getRequestOptions(fetchAsync = fetchWithTrustedCertificatesAsync) {
     return {
-      fetch: fetchAsync,
+      // Undici and node types are not the same
+      fetch: fetchAsync as unknown as typeof fetch,
     };
   }
 
