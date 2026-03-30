@@ -76,7 +76,9 @@ function SpeedtestTrackerContent({ integrationIds, options, isEditMode }: Speedt
   );
 
   const twelveHoursAgo = Date.now() - 12 * 60 * 60 * 1000;
-  const recentFiltered = combined.recentResults.filter((r) => parseTimestamp(r.created_at).getTime() > twelveHoursAgo);
+  const recentFiltered = combined.recentResults.filter(
+    (result) => parseTimestamp(result.created_at).getTime() > twelveHoursAgo,
+  );
 
   // Stats group: latest result and/or averages — takes flex 1 (top 1/3 when chart also shown)
   const hasStatSection =
@@ -220,33 +222,39 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const data = useMemo(
     () =>
       [...results]
-        .sort((a, b) => parseTimestamp(a.created_at).getTime() - parseTimestamp(b.created_at).getTime())
+        .sort(
+          (resultA, resultB) =>
+            parseTimestamp(resultA.created_at).getTime() - parseTimestamp(resultB.created_at).getTime(),
+        )
         // Skip failed/zero-value results — treat 0 bits as "no result"
-        .filter((r) => (r.download_bits ?? 0) > 0)
-        .map((r) => ({
-          ts: parseTimestamp(r.created_at).getTime(),
-          Download: parseFloat(((r.download_bits as number) / 1_000_000).toFixed(2)),
-          Upload: r.upload_bits != null && r.upload_bits > 0 ? parseFloat((r.upload_bits / 1_000_000).toFixed(2)) : 0,
+        .filter((result) => (result.download_bits ?? 0) > 0)
+        .map((result) => ({
+          ts: parseTimestamp(result.created_at).getTime(),
+          Download: parseFloat(((result.download_bits ?? 0) / 1_000_000).toFixed(2)),
+          Upload:
+            result.upload_bits != null && result.upload_bits > 0
+              ? parseFloat((result.upload_bits / 1_000_000).toFixed(2))
+              : 0,
         })),
     [results],
   );
 
   // ── Y axis: nice round ticks ──────────────────────────────────────────────
   const yConfig = useMemo(() => {
-    const maxVal = Math.max(...data.map((d) => Math.max(d.Download, d.Upload)), 0);
+    const maxVal = Math.max(...data.map((datum) => Math.max(datum.Download, datum.Upload)), 0);
     const step = maxVal <= 400 ? 100 : 200;
     const roundedMax = Math.ceil(maxVal / step) * step || step;
     const ticks: number[] = [];
-    for (let v = 0; v <= roundedMax; v += step) ticks.push(v);
+    for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
     return { ticks, domain: [0, roundedMax] as [number, number] };
   }, [data]);
 
   // ── X axis: 2-hour interval ticks + midnight ──────────────────────────────
   const { midnightTs, xTicks, topDateTicks } = useMemo(() => {
-    if (data.length === 0) return { midnightTs: null as null, xTicks: [] as number[], topDateTicks: [] as number[] };
+    if (data.length === 0) return { midnightTs: null, xTicks: [] as number[], topDateTicks: [] as number[] };
 
-    const first = (data[0] as (typeof data)[0]).ts;
-    const last = (data[data.length - 1] as (typeof data)[0]).ts;
+    const first = data[0]?.ts ?? 0;
+    const last = data.at(-1)?.ts ?? 0;
 
     // 2-hour interval ticks aligned to wall-clock hours
     const twoHourMs = 2 * 60 * 60 * 1000;
@@ -267,18 +275,18 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 
     return {
       midnightTs: foundMidnight,
-      xTicks: Array.from(tickSet).sort((a, b) => a - b),
+      xTicks: Array.from(tickSet).sort((tsA, tsB) => tsA - tsB),
       topDateTicks: topTicks,
     };
   }, [data]);
 
   // Custom tick: time for all ticks, date label below time at midnight
   const renderXTick = ({ x, y, payload }: { x: number; y: number; payload: { value: number } }) => {
-    const ts = payload.value;
-    const d = new Date(ts);
-    const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const isMidnight = midnightTs !== null && ts === midnightTs;
-    const dateStr = isMidnight ? d.toLocaleDateString([], { month: "short", day: "numeric" }) : null;
+    const timestamp = payload.value;
+    const date = new Date(timestamp);
+    const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const isMidnight = midnightTs !== null && timestamp === midnightTs;
+    const dateStr = isMidnight ? date.toLocaleDateString([], { month: "short", day: "numeric" }) : null;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -297,8 +305,8 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   // Top date axis tick: shows short date label above the chart
   const renderTopDateTick = (props: { x: number; y: number; payload: { value: number }; index: number }) => {
     const { x, y, payload, index } = props;
-    const d = new Date(payload.value);
-    const dateStr = d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+    const date = new Date(payload.value);
+    const dateStr = date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
     const anchor = index === 0 ? "start" : "middle";
     return (
       <g transform={`translate(${x},${y})`}>
@@ -326,7 +334,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       withLegend
       fillOpacity={0.2}
       styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
-      valueFormatter={(v: number) => `${v} Mbps`}
+      valueFormatter={(val: number) => `${val} Mbps`}
       xAxisProps={{
         type: "number",
         domain: ["dataMin", "dataMax"],
@@ -339,7 +347,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       yAxisProps={{
         ticks: yConfig.ticks,
         domain: yConfig.domain,
-        tickFormatter: (v: number) => `${v}`,
+        tickFormatter: (val: number) => `${val}`,
         width: 50,
         tick: { fontSize: 10 },
       }}
@@ -352,16 +360,16 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
             active?: boolean;
           };
           if (!active || !payload?.length) return null;
-          const ts = typeof label === "number" ? label : Number(label);
-          const dateStr = Number.isNaN(ts)
+          const timestamp = typeof label === "number" ? label : Number(label);
+          const dateStr = Number.isNaN(timestamp)
             ? ""
-            : new Date(ts).toLocaleString([], {
+            : new Date(timestamp).toLocaleString([], {
                 month: "short",
                 day: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
               });
-          return <ChartTooltip label={dateStr} payload={payload} valueFormatter={(v: number) => `${v} Mbps`} />;
+          return <ChartTooltip label={dateStr} payload={payload} valueFormatter={(val: number) => `${val} Mbps`} />;
         },
       }}
     >
@@ -380,10 +388,10 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         interval={0}
       />
       {/* Dotted vertical reference lines at each x-axis tick */}
-      {xTicks.map((ts) => (
+      {xTicks.map((tickTs) => (
         <ReferenceLine
-          key={ts}
-          x={ts}
+          key={tickTs}
+          x={tickTs}
           yAxisId="left"
           stroke="var(--mantine-color-dimmed)"
           strokeDasharray="3 3"
@@ -458,39 +466,39 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
  * a timezone indicator (e.g. "2026-03-28 05:45:00"). We append "Z" to force
  * UTC parsing so JS converts it to local time correctly.
  */
-const parseTimestamp = (ts: string): Date => new Date(`${ts.replace(" ", "T")}Z`);
+const parseTimestamp = (timestamp: string): Date => new Date(`${timestamp.replace(" ", "T")}Z`);
 
 const mergeStats = (
-  a: SpeedtestTrackerDashboardData["stats"],
-  b: SpeedtestTrackerDashboardData["stats"],
+  statsA: SpeedtestTrackerDashboardData["stats"],
+  statsB: SpeedtestTrackerDashboardData["stats"],
 ): SpeedtestTrackerDashboardData["stats"] => {
-  if (!b) return a;
-  if (!a) return b;
+  if (!statsB) return statsA;
+  if (!statsA) return statsB;
   return {
     ping: {
-      avg: (a.ping.avg + b.ping.avg) / 2,
-      min: Math.min(a.ping.min, b.ping.min),
-      max: Math.max(a.ping.max, b.ping.max),
+      avg: (statsA.ping.avg + statsB.ping.avg) / 2,
+      min: Math.min(statsA.ping.min, statsB.ping.min),
+      max: Math.max(statsA.ping.max, statsB.ping.max),
     },
     download: {
-      avg: (a.download.avg + b.download.avg) / 2,
+      avg: (statsA.download.avg + statsB.download.avg) / 2,
       avg_bits:
-        a.download.avg_bits !== undefined && b.download.avg_bits !== undefined
-          ? (a.download.avg_bits + b.download.avg_bits) / 2
-          : (a.download.avg_bits ?? b.download.avg_bits),
-      min: Math.min(a.download.min, b.download.min),
-      max: Math.max(a.download.max, b.download.max),
+        statsA.download.avg_bits !== undefined && statsB.download.avg_bits !== undefined
+          ? (statsA.download.avg_bits + statsB.download.avg_bits) / 2
+          : (statsA.download.avg_bits ?? statsB.download.avg_bits),
+      min: Math.min(statsA.download.min, statsB.download.min),
+      max: Math.max(statsA.download.max, statsB.download.max),
     },
     upload: {
-      avg: (a.upload.avg + b.upload.avg) / 2,
+      avg: (statsA.upload.avg + statsB.upload.avg) / 2,
       avg_bits:
-        a.upload.avg_bits !== undefined && b.upload.avg_bits !== undefined
-          ? (a.upload.avg_bits + b.upload.avg_bits) / 2
-          : (a.upload.avg_bits ?? b.upload.avg_bits),
-      min: Math.min(a.upload.min, b.upload.min),
-      max: Math.max(a.upload.max, b.upload.max),
+        statsA.upload.avg_bits !== undefined && statsB.upload.avg_bits !== undefined
+          ? (statsA.upload.avg_bits + statsB.upload.avg_bits) / 2
+          : (statsA.upload.avg_bits ?? statsB.upload.avg_bits),
+      min: Math.min(statsA.upload.min, statsB.upload.min),
+      max: Math.max(statsA.upload.max, statsB.upload.max),
     },
-    total_results: a.total_results + b.total_results,
+    total_results: statsA.total_results + statsB.total_results,
   };
 };
 
@@ -509,7 +517,7 @@ const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download" | "up
   return "—";
 };
 
-const formatStatsSpeed = (band: SpeedtestTrackerStats["download"] | SpeedtestTrackerStats["upload"]): string => {
+const formatStatsSpeed = (band: SpeedtestTrackerStats["download"]): string => {
   if (band.avg_bits_human) return band.avg_bits_human;
   if (band.avg_bits != null) return formatBitsPerSec(band.avg_bits);
   // avg is bytes/s — convert to bits/s
