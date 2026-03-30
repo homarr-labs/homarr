@@ -51,7 +51,7 @@
     "@paralleldrive/cuid2": "^3.3.0",
     "@testcontainers/mysql": "^11.13.0",
     "@testcontainers/postgresql": "^11.13.0",
-    "better-sqlite3": "^12.6.2",
+    "better-sqlite3": "^12.8.0",
     "dotenv": "^17.3.1",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.1",
