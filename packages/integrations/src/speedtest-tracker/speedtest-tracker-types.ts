@@ -1,5 +1,10 @@
 import { z } from "zod/v4";
 
+// ─── API envelope ─────────────────────────────────────────────────────────────
+// Most Speedtest Tracker endpoints wrap their payload in `{ data: <payload> }`.
+
+export const speedtestTrackerEnvelopeSchema = z.object({ data: z.unknown() });
+
 // ─── Top-level Result ─────────────────────────────────────────────────────────
 // The nested `data` payload varies by result status (completed vs failed/log),
 // and the widget never reads it — so we accept any object here.

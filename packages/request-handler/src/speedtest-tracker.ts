@@ -14,6 +14,6 @@ export const speedtestTrackerRequestHandler = createCachedIntegrationRequestHand
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(10, "minutes"),
   queryKey: "speedtestTrackerDashboard",
 });

@@ -3,8 +3,10 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import {
+  speedtestTrackerEnvelopeSchema,
   speedtestTrackerLatestResultSchema,
   speedtestTrackerResultsCollectionSchema,
   speedtestTrackerStatsSchema,
@@ -24,7 +26,7 @@ export class SpeedtestTrackerIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new ResponseError(response);
+      return TestConnectionError.StatusResult(response);
     }
 
     return { success: true };
@@ -35,12 +37,10 @@ export class SpeedtestTrackerIntegration extends Integration {
    * Returns the most recent speedtest result.
    */
   public async getLatestResultAsync(): Promise<SpeedtestTrackerLatestResult | null> {
-    const url = this.url("/api/v1/results/latest");
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
-    });
+    const response = await this.getAsync("/api/v1/results/latest");
 
     if (response.status === 404) {
+      // Speedtest Tracker returns 404 when no tests have been run yet (fresh install)
       return null;
     }
 
@@ -48,7 +48,8 @@ export class SpeedtestTrackerIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerLatestResultSchema.parse(((await response.json()) as { data: unknown }).data);
+    const envelope = speedtestTrackerEnvelopeSchema.parse(await response.json());
+    return speedtestTrackerLatestResultSchema.parse(envelope.data);
   }
 
   /**
@@ -56,16 +57,14 @@ export class SpeedtestTrackerIntegration extends Integration {
    * Returns aggregated speedtest statistics.
    */
   public async getStatsAsync(): Promise<SpeedtestTrackerStats | null> {
-    const url = this.url("/api/v1/stats");
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
-    });
+    const response = await this.getAsync("/api/v1/stats");
 
     if (!response.ok) {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerStatsSchema.parse(((await response.json()) as { data: unknown }).data);
+    const envelope = speedtestTrackerEnvelopeSchema.parse(await response.json());
+    return speedtestTrackerStatsSchema.parse(envelope.data);
   }
 
   /**
@@ -73,9 +72,9 @@ export class SpeedtestTrackerIntegration extends Integration {
    * Returns a paginated list of recent speedtest results.
    */
   public async getRecentResultsAsync(perPage = 10): Promise<SpeedtestTrackerResultsCollection> {
-    const url = this.url("/api/v1/results", { result_count: String(perPage), sort: "-created_at" });
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
+    const response = await this.getAsync("/api/v1/results", {
+      result_count: String(perPage),
+      sort: "-created_at",
     });
 
     if (!response.ok) {
@@ -100,6 +99,17 @@ export class SpeedtestTrackerIntegration extends Integration {
       stats,
       recentResults: recentCollection.data,
     };
+  }
+
+  /**
+   * Shared GET helper: builds the URL and attaches auth headers.
+   * Mirrors the pattern used by other integrations (e.g. homeassistant).
+   * Callers are responsible for checking response.ok and throwing as needed.
+   */
+  private async getAsync(path: `/api/v1/${string}`, queryParams?: Record<string, string>) {
+    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   private getAuthHeaders(): Record<string, string> {
