@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "אפשר מיקום גיאוגרפי"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "הצג מידע זיכרון"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "הצג זמן פעולה"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "מעבד",
             "memory": "זיכרון",
+            "gpu": "",
             "network": "רשת"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "מעבד",
         "memory": "זיכרון",
+        "gpu": "",
         "network": "רשת",
         "up": "העלאה",
         "down": "הורדה"
