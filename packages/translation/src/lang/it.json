@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Consenti geo-localizzazione"
+        },
+        "allowModals": {
+          "label": "Consenti modali"
         }
       },
       "error": {
@@ -1858,6 +1861,9 @@
         "memory": {
           "label": "Mostra Informazioni Memoria"
         },
+        "gpu": {
+          "label": "Mostra informazioni sulla GPU"
+        },
         "showUptime": {
           "label": "Mostra Uptime"
         },
@@ -1994,6 +2000,61 @@
       },
       "instances": {
         "title": "Istanze"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Monitoraggio avanzato del server multimediale con dati dettagliati su streaming e transcodifica",
+      "option": {
+        "showStreams": {
+          "label": "Mostra stream attivo"
+        },
+        "showStats": {
+          "label": "Mostra riepilogo statistiche"
+        },
+        "showRecentActivity": {
+          "label": "Mostra attività recenti"
+        },
+        "showViolations": {
+          "label": "Visualizza violazioni"
+        }
+      },
+      "stats": {
+        "activeStreams": "Stream Attivi",
+        "totalUsers": "Utenti Totali",
+        "transcodes": "Transcodifiche",
+        "bandwidth": "Larghezza banda"
+      },
+      "streams": {
+        "empty": "Nessun stream attivo",
+        "user": "Utente",
+        "media": "Multimedia",
+        "state": "Stato",
+        "quality": "Qualità",
+        "device": "Dispositivo",
+        "progress": "Avanzamento",
+        "videoDecision": {
+          "directPlay": "Riproduzione diretta",
+          "transcode": "Transcodifica",
+          "directStream": "Streaming Diretto"
+        }
+      },
+      "recentActivity": {
+        "title": "Attività recenti",
+        "empty": "Nessuna attività recente",
+        "watched": "Guardato",
+        "partial": "Parziale"
+      },
+      "violations": {
+        "title": "Violazioni",
+        "empty": "Nessuna violazione recente",
+        "rule": "Regola",
+        "user": "Utente"
+      },
+      "noSectionsEnabled": "Nessuna sezione abilitata",
+      "error": {
+        "noIntegration": "Nessuna integrazione Tracearr configurata",
+        "internalServerError": "Impossibile recuperare i dati di Tracearr"
       }
     },
     "common": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memoria",
+            "gpu": "GPU",
             "network": "Rete"
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "SU",
         "down": "DOWN"
@@ -3518,6 +3581,9 @@
             },
             "weather": {
               "label": "Meteo"
+            },
+            "tracearr": {
+              "label": "Tracearr"
             }
           },
           "interval": {

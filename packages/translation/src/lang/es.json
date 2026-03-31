@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Permitir geolocalización"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1861,9 @@
         "memory": {
           "label": "Mostrar información de la memoria"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Mostrar tiempo de actividad"
         },
@@ -1994,6 +2000,61 @@
       },
       "instances": {
         "title": "Instancias"
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memoria",
+            "gpu": "",
             "network": "Red"
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "",
         "network": "RED",
         "up": "ENCENDIDO",
         "down": "APAGADO"
@@ -3518,6 +3581,9 @@
             },
             "weather": {
               "label": "Tiempo"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {

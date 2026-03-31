@@ -105,6 +105,10 @@ const getSandboxFlags = (
     baseSandbox.push("allow-popups-to-escape-sandbox");
   }
 
+  if (permissions.allowModals) {
+    baseSandbox.push("allow-modals");
+  }
+
   return baseSandbox;
 };
 
@@ -115,4 +119,5 @@ const permissionMapping = {
   allowGeolocation: "geolocation",
   allowMicrophone: "microphone",
   allowPayment: "payment",
+  allowModals: "allow-modals",
 } satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">, string>;

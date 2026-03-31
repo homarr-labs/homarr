@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Allow geolocation"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1689,173 +1692,176 @@
               "label": "3 Months"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Months"
             },
             "ytd": {
-              "label": ""
+              "label": "Year to Date"
             },
             "1y": {
-              "label": ""
+              "label": "1 Year"
             },
             "2y": {
-              "label": ""
+              "label": "2 Years"
             },
             "5y": {
-              "label": ""
+              "label": "5 Years"
             },
             "10y": {
-              "label": ""
+              "label": "10 Years"
             },
             "max": {
-              "label": ""
+              "label": "Max"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Time Interval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Minutes"
             },
             "15m": {
-              "label": ""
+              "label": "15 Minutes"
             },
             "30m": {
-              "label": ""
+              "label": "30 Minutes"
             },
             "1h": {
-              "label": ""
+              "label": "1 Hour"
             },
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Days"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Week"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             }
           }
         }
       }
     },
     "calendar": {
-      "name": "",
-      "description": "",
+      "name": "Calendar",
+      "description": "Display events from your integrations in a calendar view within a certain relative time period",
       "duration": {
-        "allDay": ""
+        "allDay": "All day"
       },
       "option": {
         "releaseType": {
-          "label": "",
+          "label": "Radarr release type",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "In cinemas",
+            "digitalRelease": "Digital release",
+            "physicalRelease": "Physical release"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start from"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "End at"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Show unmonitored"
         }
       }
     },
     "weather": {
-      "name": "",
-      "description": "",
+      "name": "Weather",
+      "description": "Displays the current weather information of a set location.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperature in Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Disable temperature decimals"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Show current wind speed",
+          "description": "Only on current weather"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Use mph for windspeed"
         },
         "location": {
-          "label": ""
+          "label": "Weather location"
         },
         "showCity": {
-          "label": ""
+          "label": "Show city"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Show forecast"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Amount of forecast days",
+          "description": "When the widget is not wide enough, less days are shown"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Date Format",
+          "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Sunrise",
+        "sunset": "Sunset",
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
-        "clear": "",
-        "mainlyClear": "",
-        "fog": "",
-        "drizzle": "",
-        "freezingDrizzle": "",
+        "clear": "Clear",
+        "mainlyClear": "Mainly clear",
+        "fog": "Fog",
+        "drizzle": "Drizzle",
+        "freezingDrizzle": "Freezing drizzle",
         "rain": "Rain",
         "freezingRain": "Freezing rain",
         "snowFall": "Snow fall",
-        "snowGrains": "",
-        "rainShowers": "",
-        "snowShowers": "",
-        "thunderstorm": "",
-        "thunderstormWithHail": "",
-        "unknown": ""
+        "snowGrains": "Snow grains",
+        "rainShowers": "Rain showers",
+        "snowShowers": "Snow showers",
+        "thunderstorm": "Thunderstorm",
+        "thunderstormWithHail": "Thunderstorm with hail",
+        "unknown": "Unknown"
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Indexer manager status",
+      "description": "Status of your indexers",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Open indexer site in new tab"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Indexer manager",
+      "testAll": "Test all",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch indexers status"
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "System Health Monitoring",
+      "description": "Displays information showing the health and status of your system(s).",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "System",
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "CPU Temp in Fahrenheit"
         },
         "cpu": {
-          "label": ""
+          "label": "Show CPU Info"
         },
         "memory": {
+          "label": ""
+        },
+        "gpu": {
           "label": ""
         },
         "showUptime": {
@@ -1994,6 +2000,61 @@
       },
       "instances": {
         "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "",
             "memory": "",
+            "gpu": "",
             "network": ""
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "",
         "memory": "",
+        "gpu": "",
         "network": "",
         "up": "",
         "down": ""
@@ -3517,6 +3580,9 @@
               "label": ""
             },
             "weather": {
+              "label": ""
+            },
+            "tracearr": {
               "label": ""
             }
           },

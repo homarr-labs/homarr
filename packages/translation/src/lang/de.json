@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Geolokalisierung zulassen"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1861,9 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Laufzeit anzeigen"
         },
@@ -1996,6 +2002,61 @@
         "title": "Instanzen"
       }
     },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": "Aktive Streams anzeigen"
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktive Streams",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Stadt / Postleitzahl",
@@ -2096,7 +2157,7 @@
       "description": "",
       "option": {
         "showUsers": {
-          "label": "",
+          "label": "Benutzer anzeigen",
           "description": ""
         },
         "showPhotos": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Speicher",
+            "gpu": "",
             "network": "Netzwerk"
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Arbeitsspeicher",
+        "gpu": "",
         "network": "Netzwerk",
         "up": "OBEN",
         "down": "UNTEN"
@@ -3518,6 +3581,9 @@
             },
             "weather": {
               "label": "Wetter"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {
