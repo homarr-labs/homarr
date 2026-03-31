@@ -68,13 +68,17 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
     return calendarEvents
       .map((event) => {
-        // @ts-expect-error the typescript definitions for this package are wrong
+        // @ts-expect-error the TypeScript definitions for this package are wrong
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
-        const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
+        const veventObject = Object.values(icalData).find((data) => data?.type === "VEVENT");
 
         if (!veventObject) {
           throw new Error(`Invalid event data object: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
+        }
+
+        if (!veventObject.end) {
+          throw new Error(`Event had no end date: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
         }
 
         logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
@@ -92,13 +96,13 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
           const dateInMillis = utcStartDate.valueOf();
 
           return {
-            title: veventObject.summary,
+            title: veventObject.summary as string,
             subTitle: null,
-            description: veventObject.description,
+            description: veventObject.description as string,
             startDate: utcStartDate,
             endDate,
             image: null,
-            location: veventObject.location || null,
+            location: (veventObject.location as string | undefined) ?? null,
             indicatorColor:
               "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
             links: [
