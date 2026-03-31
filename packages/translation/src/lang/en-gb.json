@@ -1548,314 +1548,320 @@
         "colorHighlight": "Coloured highlight text",
         "code": "Code",
         "clear": "Clear formatting",
-        "heading": "",
-        "align": "",
-        "blockquote": "",
-        "horizontalLine": "",
-        "bulletList": "",
-        "orderedList": "",
-        "checkList": "",
-        "increaseIndent": "",
-        "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
-        "image": "",
-        "addTable": "",
-        "deleteTable": "",
+        "heading": "Heading {level}",
+        "align": "Align text: {position}",
+        "blockquote": "Blockquote",
+        "horizontalLine": "Horizontal line",
+        "bulletList": "Bullet list",
+        "orderedList": "Ordered list",
+        "checkList": "Check list",
+        "increaseIndent": "Increase Indent",
+        "decreaseIndent": "Decrease Indent",
+        "link": "Link",
+        "unlink": "Remove link",
+        "image": "Embed Image",
+        "addTable": "Add table",
+        "deleteTable": "Delete Table",
         "colorCell": "Colour cell",
-        "mergeCell": "",
-        "addColumnLeft": "",
-        "addColumnRight": "",
-        "deleteColumn": "",
-        "addRowTop": "",
-        "addRowBelow": "",
-        "deleteRow": ""
+        "mergeCell": "Toggle cell merging",
+        "addColumnLeft": "Add column before",
+        "addColumnRight": "Add column after",
+        "deleteColumn": "Delete column",
+        "addRowTop": "Add row before",
+        "addRowBelow": "Add row after",
+        "deleteRow": "Delete row"
       },
       "align": {
-        "left": "",
-        "center": "",
-        "right": ""
+        "left": "Left",
+        "center": "Centre",
+        "right": "Right"
       },
       "popover": {
         "clearColor": "Clear colour",
-        "source": "",
-        "widthPlaceholder": "",
-        "columns": "",
-        "rows": "",
-        "width": "",
-        "height": ""
+        "source": "Source",
+        "widthPlaceholder": "Value in % or pixels",
+        "columns": "Columns",
+        "rows": "Rows",
+        "width": "Width",
+        "height": "Height"
       },
-      "placeholder": "",
+      "placeholder": "Start writing your notes",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
         }
       }
     },
     "iframe": {
-      "name": "",
-      "description": "",
+      "name": "iFrame",
+      "description": "Embed any content from the Internet. Some websites may restrict access.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Embed URL"
         },
         "allowFullScreen": {
-          "label": ""
+          "label": "Allow full screen"
         },
         "allowTransparency": {
-          "label": ""
+          "label": "Allow transparency"
         },
         "allowScrolling": {
-          "label": ""
+          "label": "Allow scrolling"
         },
         "allowPayment": {
-          "label": ""
+          "label": "Allow payment"
         },
         "allowAutoPlay": {
-          "label": ""
+          "label": "Allow auto play"
         },
         "allowMicrophone": {
-          "label": ""
+          "label": "Allow microphone"
         },
         "allowCamera": {
-          "label": ""
+          "label": "Allow camera"
         },
         "allowGeolocation": {
+          "label": "Allow geolocation"
+        },
+        "allowModals": {
           "label": ""
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
-        "noBrowerSupport": ""
+        "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
+        "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Entity State",
+      "description": "Display the state of an entity and toggle it optionally",
       "option": {
         "entityId": {
-          "label": ""
+          "label": "Entity ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Display-name"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Entity Unit"
         },
         "clickable": {
-          "label": ""
+          "label": "Clickable"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Execute Automation",
+      "description": "Trigger an automation with one click",
       "option": {
         "displayName": {
-          "label": ""
+          "label": "Display name"
         },
         "automationId": {
-          "label": ""
+          "label": "Automation ID"
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Run {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Stock Price",
+      "description": "Displays the current stock price of a company",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Stock symbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Time Range",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Day"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Months"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Months"
             },
             "ytd": {
-              "label": ""
+              "label": "Year to Date"
             },
             "1y": {
-              "label": ""
+              "label": "1 Year"
             },
             "2y": {
-              "label": ""
+              "label": "2 Years"
             },
             "5y": {
-              "label": ""
+              "label": "5 Years"
             },
             "10y": {
-              "label": ""
+              "label": "10 Years"
             },
             "max": {
-              "label": ""
+              "label": "Max"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Time Interval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Minutes"
             },
             "15m": {
-              "label": ""
+              "label": "15 Minutes"
             },
             "30m": {
-              "label": ""
+              "label": "30 Minutes"
             },
             "1h": {
-              "label": ""
+              "label": "1 Hour"
             },
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Days"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Week"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             }
           }
         }
       }
     },
     "calendar": {
-      "name": "",
-      "description": "",
+      "name": "Calendar",
+      "description": "Display events from your integrations in a calendar view within a certain relative time period",
       "duration": {
-        "allDay": ""
+        "allDay": "All day"
       },
       "option": {
         "releaseType": {
-          "label": "",
+          "label": "Radarr release type",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "In cinemas",
+            "digitalRelease": "Digital release",
+            "physicalRelease": "Physical release"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start from"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "End at"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Show unmonitored"
         }
       }
     },
     "weather": {
-      "name": "",
-      "description": "",
+      "name": "Weather",
+      "description": "Displays the current weather information of a set location.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperature in Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Disable temperature decimals"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Show current wind speed",
+          "description": "Only on current weather"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Use mph for windspeed"
         },
         "location": {
-          "label": ""
+          "label": "Weather location"
         },
         "showCity": {
-          "label": ""
+          "label": "Show city"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Show forecast"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Amount of forecast days",
+          "description": "When the widget is not wide enough, less days are shown"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Date Format",
+          "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Sunrise",
+        "sunset": "Sunset",
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
-        "clear": "",
-        "mainlyClear": "",
-        "fog": "",
-        "drizzle": "",
-        "freezingDrizzle": "",
-        "rain": "",
-        "freezingRain": "",
-        "snowFall": "",
-        "snowGrains": "",
-        "rainShowers": "",
-        "snowShowers": "",
-        "thunderstorm": "",
-        "thunderstormWithHail": "",
-        "unknown": ""
+        "clear": "Clear",
+        "mainlyClear": "Mainly clear",
+        "fog": "Fog",
+        "drizzle": "Drizzle",
+        "freezingDrizzle": "Freezing drizzle",
+        "rain": "Rain",
+        "freezingRain": "Freezing rain",
+        "snowFall": "Snow fall",
+        "snowGrains": "Snow grains",
+        "rainShowers": "Rain showers",
+        "snowShowers": "Snow showers",
+        "thunderstorm": "Thunderstorm",
+        "thunderstormWithHail": "Thunderstorm with hail",
+        "unknown": "Unknown"
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Indexer manager status",
+      "description": "Status of your indexers",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Open indexer site in new tab"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Indexer manager",
+      "testAll": "Test all",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch indexers status"
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "System Health Monitoring",
+      "description": "Displays information showing the health and status of your system(s).",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "System",
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "CPU Temp in Fahrenheit"
         },
         "cpu": {
-          "label": ""
+          "label": "Show CPU Info"
         },
         "memory": {
+          "label": ""
+        },
+        "gpu": {
           "label": ""
         },
         "showUptime": {
@@ -1994,6 +2000,61 @@
       },
       "instances": {
         "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "",
             "memory": "",
+            "gpu": "",
             "network": ""
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "",
         "memory": "",
+        "gpu": "",
         "network": "",
         "up": "",
         "down": ""
@@ -3517,6 +3580,9 @@
               "label": ""
             },
             "weather": {
+              "label": ""
+            },
+            "tracearr": {
               "label": ""
             }
           },
@@ -4357,7 +4423,7 @@
             }
           },
           "local": {
-            "title": ""
+            "title": "Local results"
           }
         }
       },
@@ -4410,50 +4476,50 @@
                 "label": "Global settings"
               },
               "about": {
-                "label": ""
+                "label": "About"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Home board"
               },
               "preferences": {
-                "label": ""
+                "label": "Your preferences"
               }
             }
           }
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Search for users or groups",
         "group": {
           "user": {
-            "title": "",
+            "title": "Users",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show user details"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the user"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Groups",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show group details"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Manage members"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Manage permissions"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the group"
               }
             }
           }
@@ -4461,26 +4527,26 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Find a search engine",
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         },
         "short": {
-          "label": ""
+          "label": "Short"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL search template"
         },
         "description": {
-          "label": ""
+          "label": "Description"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Search engines",
           "noResults": {
-            "title": "",
+            "title": "There are no search engines yet",
             "action": "Create your first search engine"
           },
           "interactive": "Interactive, uses an integration"

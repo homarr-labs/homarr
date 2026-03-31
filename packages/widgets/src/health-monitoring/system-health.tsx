@@ -39,6 +39,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
+import { GpuRing } from "./rings/gpu-ring";
 import { formatMemoryUsage, MemoryRing } from "./rings/memory-ring";
 import classes from "./system-health.module.css";
 
@@ -187,6 +188,10 @@ export const SystemHealthMonitoring = ({
                   isTiny={isTiny}
                 />
               )}
+              {options.gpu &&
+                healthInfo.gpu.map((gpu) => (
+                  <GpuRing key={gpu.gpuId} gpu={gpu} isTiny={isTiny} fahrenheit={options.fahrenheit} />
+                ))}
             </Flex>
             {
               <Text className="health-monitoring-status-update-time" c="dimmed" size="xs" ta="center">

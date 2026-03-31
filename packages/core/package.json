@@ -37,23 +37,23 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.10",
-    "better-sqlite3": "^12.6.2",
+    "@t3-oss/env-nextjs": "^0.13.11",
+    "better-sqlite3": "^12.8.0",
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
-    "ioredis": "5.10.0",
-    "mysql2": "3.19.0",
+    "ioredis": "5.10.1",
+    "mysql2": "3.20.0",
     "pg": "^8.20.0",
     "superjson": "2.2.6",
     "winston": "3.19.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }

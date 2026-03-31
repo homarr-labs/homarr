@@ -1653,6 +1653,9 @@
         },
         "allowGeolocation": {
           "label": "Allow geolocation"
+        },
+        "allowModals": {
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1886,6 +1889,9 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "gpu": {
+          "label": "Show GPU Info"
+        },
         "showUptime": {
           "label": "Show Uptime"
         },
@@ -2022,6 +2028,61 @@
       },
       "instances": {
         "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
+      "option": {
+        "showStreams": {
+          "label": "Show active streams"
+        },
+        "showStats": {
+          "label": "Show stats summary"
+        },
+        "showRecentActivity": {
+          "label": "Show recent activity"
+        },
+        "showViolations": {
+          "label": "Show violations"
+        }
+      },
+      "stats": {
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
+      },
+      "streams": {
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
+        "videoDecision": {
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
+      },
+      "noSectionsEnabled": "No sections enabled",
+      "error": {
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
       }
     },
     "common": {
@@ -2698,6 +2759,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memory",
+            "gpu": "GPU",
             "network": "Network"
           }
         },
@@ -2714,6 +2776,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
@@ -3546,6 +3609,9 @@
             },
             "weather": {
               "label": "Weather"
+            },
+            "tracearr": {
+              "label": "Tracearr"
             }
           },
           "interval": {

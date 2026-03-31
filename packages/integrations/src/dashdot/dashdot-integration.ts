@@ -33,6 +33,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const memoryLoad = await this.getCurrentMemoryLoadAsync();
     const storageLoad = await this.getCurrentStorageLoadAsync();
     const networkLoad = await this.getCurrentNetworkLoadAsync();
+    const gpuLoad = await this.getCurrentGpuLoadAsync();
 
     const channel = this.getChannel();
     const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
@@ -56,6 +57,14 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       availablePkgUpdates: 0,
       rebootRequired: false,
       smart: [], // API endpoint does not provide S.M.A.R.T data.
+      gpu: gpuLoad.map((gpu, index) => ({
+        gpuId: `gpu-${index}`,
+        name: info.gpuNames[index] ?? `GPU ${index}`,
+        memoryUtilization: gpu.memory ?? 0,
+        processorUtilization: gpu.load ?? 0,
+        temperature: null,
+        fanSpeed: null,
+      })),
       uptime: info.uptime,
       version: `${info.operatingSystemVersion}`,
       loadAverage: {
@@ -76,6 +85,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       cpuModel: serverInfo.cpu.model,
       operatingSystemVersion: `${serverInfo.os.distro} ${serverInfo.os.release} (${serverInfo.os.kernel})`,
       uptime: serverInfo.os.uptime,
+      gpuNames: serverInfo.gpu.layout.map((gpu) => gpu.brand),
     };
   }
 
@@ -150,6 +160,17 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     return await networkLoadApi.parseAsync(JSON.parse(result));
   }
 
+  private async getCurrentGpuLoadAsync() {
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/load/gpu"));
+      const result = await response.json();
+      const data = await gpuLoadApi.parseAsync(result);
+      return data.layout;
+    } catch {
+      return [];
+    }
+  }
+
   private getChannel() {
     return createChannelEventHistoryOld<z.infer<typeof cpuLoadPerCoreApiList>>(
       `integration:${this.integration.id}:history:cpu`,
@@ -198,6 +219,25 @@ const internalServerInfoApi = z.object({
       ),
     }),
   ),
+  gpu: z.object({
+    layout: z
+      .array(
+        z.object({
+          brand: z.string(),
+          model: z.string().optional(),
+        }),
+      )
+      .default([]),
+  }),
 });
 
 const cpuLoadPerCoreApiList = z.array(cpuLoadPerCoreApi);
+
+const gpuLoadApi = z.object({
+  layout: z.array(
+    z.object({
+      load: z.number().min(0).optional(),
+      memory: z.number().min(0).optional(),
+    }),
+  ),
+});

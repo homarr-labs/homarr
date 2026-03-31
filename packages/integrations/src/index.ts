@@ -31,6 +31,7 @@ export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
+export { TracearrIntegration } from "./tracearr/tracearr-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -64,6 +65,7 @@ export type {
   AnchorNotesListInput,
   AnchorNoteSummary,
 } from "./anchor/anchor-types";
+export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

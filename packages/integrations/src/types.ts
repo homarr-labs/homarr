@@ -13,3 +13,4 @@ export * from "./opnsense/opnsense-types";
 export * from "./interfaces/media-releases";
 export * from "./coolify/coolify-types";
 export * from "./anchor/anchor-types";
+export * from "./tracearr/tracearr-types";

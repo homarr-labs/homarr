@@ -29,10 +29,10 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "deepmerge": "4.3.1",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "16.1.6",
+    "next": "16.2.1",
     "next-intl": "4.8.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"

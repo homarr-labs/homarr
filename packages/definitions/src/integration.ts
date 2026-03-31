@@ -217,7 +217,7 @@ export const integrationDefs = {
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
-    category: ["calendar"],
+    category: ["calendar", "notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/nextcloud"),
   },
   unifiController: {
@@ -347,8 +347,14 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
     category: ["photoService"],
-    // @ts-expect-error TS2345
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
+  },
+  tracearr: {
+    name: "Tracearr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
+    category: ["mediaMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -438,6 +444,7 @@ export const integrationCategories = [
   "firewall",
   "photoService",
   "notes",
+  "mediaMonitoring",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

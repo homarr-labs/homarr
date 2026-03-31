@@ -59,6 +59,14 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       loadAverage: null,
       smart: [],
       cpuTemp: undefined,
+      gpu: stats.gpu.map((gpu) => ({
+        gpuId: gpu.gpu_id,
+        name: gpu.name,
+        memoryUtilization: gpu.mem ?? 0,
+        processorUtilization: gpu.proc ?? 0,
+        temperature: gpu.temperature ?? null,
+        fanSpeed: gpu.fan_speed ?? null,
+      })),
     };
   }
 
@@ -95,7 +103,18 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
   }
 }
 
-const regex = /^(?:(?<days>\d+) days, )?(?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)$/m;
+// Glances is written in python and uses the following code to format uptime:
+// from datetime import datetime
+// uptime = datetime.now() - datetime.fromtimestamp(1773395580)
+// str(uptime).split(".")[0]
+// This results in one of the following formats:
+// - 71 days, 9:51:35
+// - 1 day, 9:50:23
+// - 9:51:24
+// - 0:22:02
+// - 0:00:17
+// See https://github.com/nicolargo/glances/blob/4139b10c5c3a98afc67a19ae67d66d2d94d7db6a/glances/plugins/uptime/__init__.py#L58
+const regex = /^(?:(?<days>\d+) days?, )?(?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)$/m;
 
 const allSchema = z.object({
   cpu: z.object({
@@ -139,4 +158,16 @@ const allSchema = z.object({
   quicklook: z.object({
     cpu_name: z.string(),
   }),
+  gpu: z
+    .array(
+      z.object({
+        gpu_id: z.string(),
+        name: z.string(),
+        mem: z.number().nullable().optional(),
+        proc: z.number().nullable().optional(),
+        temperature: z.number().nullable().optional(),
+        fan_speed: z.number().nullable().optional(),
+      }),
+    )
+    .default([]),
 });

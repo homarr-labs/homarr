@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Button, Grid, Group, Loader, Stack, TextInput } from "@mantine/core";
-import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
+import { useDebouncedValue, useDocumentTitle } from "@mantine/hooks";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
@@ -10,6 +10,7 @@ import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
+import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -53,7 +54,6 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   );
 
   useLogoPreview(form.values.logoImageUrl);
-  useFaviconPreview(form.values.faviconImageUrl);
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle);
 
   // Cleanup for not applied changes of the page title and logo image URL
@@ -75,6 +75,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           pageTitle: values.pageTitle,
           logoImageUrl: values.logoImageUrl,
         };
+        updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
         savePartialSettings({
           id: board.id,
           ...values,
@@ -146,7 +147,13 @@ const useMetaTitlePreview = (title: string | null) => {
   };
 };
 
-const useFaviconPreview = (url: string | null) => {
-  const [faviconDebounced] = useDebouncedValue(url ?? "", 500);
-  useFavicon(faviconDebounced);
+// Previously we used the useFavicon hook from Mantine
+// However if the user tried to click on a link to a different page
+// it caused an error "Cannot read properties of null (reading 'removeChild')"
+// Probably because the head element was null (https://github.com/mantinedev/mantine/blob/b90d9b81031f45f5d15e75f25138ed6477f65bce/packages/%40mantine/hooks/src/use-favicon/use-favicon.ts#L21)
+// See https://github.com/homarr-labs/homarr/issues/4905
+const updateFavicon = (url: string) => {
+  const link: HTMLLinkElement | null = document.querySelector('link[rel="icon"]');
+  if (!link) return;
+  link.href = url;
 };

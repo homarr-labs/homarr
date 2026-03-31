@@ -4,6 +4,7 @@ import { Card, Center, Stack, Text, Title } from "@mantine/core";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
+import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
@@ -19,7 +20,7 @@ export default async function Login(props: LoginProps) {
   const session = await auth();
 
   if (session) {
-    redirect(searchParams.callbackUrl ?? "/");
+    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
   }
 
   const t = await getScopedI18n("user.page.login");

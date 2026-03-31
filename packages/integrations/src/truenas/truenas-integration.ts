@@ -126,11 +126,28 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       },
     ]);
     const result = await poolSchema.parseAsync(response);
+    // Offline / exported pools have null values for allocated, size and free, so we filter them out
+    // See https://github.com/homarr-labs/homarr/issues/5194
+    const activePools = result
+      .map((pool) => {
+        if (pool.allocated !== null && pool.size !== null && pool.free !== null) {
+          return {
+            ...pool,
+            allocated: pool.allocated,
+            size: pool.size,
+            free: pool.free,
+          };
+        }
+
+        return null;
+      })
+      .filter((pool) => pool !== null);
     logger.debug("Retrieved pools", {
       url: this.wsUrl(),
-      count: result.length,
+      totalCount: result.length,
+      activeCount: activePools.length,
     });
-    return result;
+    return activePools;
   }
 
   /**
@@ -280,6 +297,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       version: systemInformation.version,
       cpuModelName: systemInformation.model,
       rebootRequired: false,
+      gpu: [],
     };
   }
 
@@ -388,9 +406,11 @@ const poolSchema = z.array(
     name: z.string(),
     status: z.string(),
     healthy: z.boolean(),
-    free: z.number().min(0),
-    size: z.number(),
-    allocated: z.number(),
+    // free, size and allocated are null when the pool is offline or exported
+    // see https://github.com/homarr-labs/homarr/issues/5194
+    free: z.number().min(0).nullable(),
+    size: z.number().nullable(),
+    allocated: z.number().nullable(),
   }),
 );
 

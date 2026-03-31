@@ -5,8 +5,10 @@ import utc from "dayjs/plugin/utc";
 import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
+import { z } from "zod";
 
-import { createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
+import { ResponseError } from "@homarr/common/server";
+import { createHttpsAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -16,6 +18,21 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+
+const notificationSchema = z.object({
+  ocs: z.object({
+    data: z.array(
+      z.object({
+        notification_id: z.number(),
+        datetime: z.string(),
+        subject: z.string(),
+        message: z.string(),
+      }),
+    ),
+  }),
+});
 
 const logger = createLogger({ module: "nextcloudIntegration" });
 
@@ -23,7 +40,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
-export class NextcloudIntegration extends Integration implements ICalendarIntegration {
+export class NextcloudIntegration extends Integration implements ICalendarIntegration, INotificationsIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
@@ -70,10 +87,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
         const durationMs = veventObject.end.getTime() - veventObject.start.getTime();
 
         return startDates.map((startDate) => {
-          const timezoneOffsetMinutes = veventObject.rrule?.origOptions.tzid
-            ? dayjs(startDate).tz(veventObject.rrule.origOptions.tzid).utcOffset()
-            : 0;
-          const utcStartDate = new Date(startDate.getTime() - timezoneOffsetMinutes * 60 * 1000);
+          const utcStartDate = dayjs(startDate).tz("UTC").toDate();
           const endDate = new Date(utcStartDate.getTime() + durationMs);
           const dateInMillis = utcStartDate.valueOf();
 
@@ -102,6 +116,29 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
         });
       })
       .flat();
+  }
+
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const url = this.url("/ocs/v2.php/apps/notifications/api/v2/notifications", { format: "json" });
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${this.getSecretValue("username")}:${this.getSecretValue("password")}`,
+        ).toString("base64")}`,
+        "OCS-APIRequest": "true",
+      },
+    });
+
+    if (!response.ok) throw new ResponseError(response);
+
+    const json = notificationSchema.parse(await response.json());
+
+    return json.ocs.data.map((notification) => ({
+      id: String(notification.notification_id),
+      time: new Date(notification.datetime),
+      title: notification.subject,
+      body: notification.message,
+    }));
   }
 
   private async createCalendarClientAsync(agent?: Agent) {

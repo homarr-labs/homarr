@@ -764,7 +764,7 @@
             "expired": "Het certificaat is verlopen.",
             "notYetValid": "Het certificaat is nog niet geldig.",
             "untrusted": "Het certificaat wordt niet vertrouwd.",
-            "hostnameMismatch": ""
+            "hostnameMismatch": "Het certificaat hostname komt niet overeen met de URL."
           },
           "alert": {
             "permission": {
@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Geolocatie toestaan"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1861,9 @@
         "memory": {
           "label": "Werkgeheugen info weergeven"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Uptime weergeven"
         },
@@ -1994,6 +2000,61 @@
       },
       "instances": {
         "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2670,6 +2731,7 @@
           "option": {
             "cpu": "Processor",
             "memory": "Geheugen",
+            "gpu": "",
             "network": "Netwerk"
           }
         },
@@ -2686,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "",
         "network": "NET",
         "up": "OMHOOG",
         "down": "OMLAAG"
@@ -3518,6 +3581,9 @@
             },
             "weather": {
               "label": "Weer"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {
