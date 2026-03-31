@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Geolocatie toestaan"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "Werkgeheugen info weergeven"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "Uptime weergeven"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "Processor",
             "memory": "Geheugen",
+            "gpu": "",
             "network": "Netwerk"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "",
         "network": "NET",
         "up": "OMHOOG",
         "down": "OMLAAG"

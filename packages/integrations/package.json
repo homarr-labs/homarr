@@ -43,13 +43,13 @@
     "@octokit/auth-app": "^8.2.0",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
-    "node-ical": "^0.22.1",
+    "node-ical": "^0.23.1",
     "octokit": "^5.0.5",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.8",
-    "undici": "7.24.5",
+    "undici": "7.24.6",
     "xml2js": "^0.6.2",
-    "zod": "^4.2.1"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
