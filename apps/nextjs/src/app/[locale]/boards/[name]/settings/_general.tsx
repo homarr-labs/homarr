@@ -147,6 +147,11 @@ const useMetaTitlePreview = (title: string | null) => {
   };
 };
 
+// Previously we used the useFavicon hook from Mantine
+// However if the user tried to click on a link to a different page
+// it caused an error "Cannot read properties of null (reading 'removeChild')"
+// Probably because the head element was null (https://github.com/mantinedev/mantine/blob/b90d9b81031f45f5d15e75f25138ed6477f65bce/packages/%40mantine/hooks/src/use-favicon/use-favicon.ts#L21)
+// See https://github.com/homarr-labs/homarr/issues/4905
 const updateFavicon = (url: string) => {
   const link: HTMLLinkElement | null = document.querySelector('link[rel="icon"]');
   if (!link) return;
