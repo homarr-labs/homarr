@@ -217,7 +217,7 @@ export class UmamiIntegration extends Integration {
     endAt: number,
     authHeaders: Record<string, string>,
   ): Promise<UmamiMetricItem[]> {
-    return this.getWebsiteMetricsAsync(websiteId, startAt, endAt, "event", authHeaders);
+    return await this.getWebsiteMetricsAsync(websiteId, startAt, endAt, "event", authHeaders);
   }
 
   private async getWebsiteMetricsAsync(
