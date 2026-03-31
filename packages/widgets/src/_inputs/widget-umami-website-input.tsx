@@ -14,7 +14,7 @@ export const WidgetUmamiWebsiteInput = ({ property, kind }: CommonWidgetInputPro
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
-  const integrationIds = form.values.integrationIds as string[];
+  const integrationIds = form.values.integrationIds;
 
   const { data: websites, isPending } = clientApi.widget.umami.getWebsites.useQuery(
     { integrationIds },

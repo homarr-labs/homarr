@@ -14,8 +14,8 @@ export const WidgetUmamiEventInput = ({ property, kind }: CommonWidgetInputProps
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
-  const integrationIds = form.values.integrationIds as string[];
-  const websiteId = (form.values.options as Record<string, unknown>).websiteId as string | undefined;
+  const integrationIds = form.values.integrationIds;
+  const websiteId = form.values.options.websiteId as string | undefined;
 
   const { data: eventNames, isPending } = clientApi.widget.umami.getEventNames.useQuery(
     { integrationIds, websiteId: websiteId ?? "" },
@@ -30,10 +30,7 @@ export const WidgetUmamiEventInput = ({ property, kind }: CommonWidgetInputProps
     );
   }
 
-  const data = [
-    { value: "", label: t("none") },
-    ...(eventNames ?? []),
-  ];
+  const data = [{ value: "", label: t("none") }, ...(eventNames ?? [])];
 
   return (
     <Select

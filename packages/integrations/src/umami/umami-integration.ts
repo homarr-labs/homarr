@@ -87,7 +87,11 @@ export class UmamiIntegration extends Integration {
     return { startAt, endAt, unit };
   }
 
-  public async getVisitorStatsAsync(websiteId: string, timeFrame = "24h", eventName?: string): Promise<UmamiVisitorStats> {
+  public async getVisitorStatsAsync(
+    websiteId: string,
+    timeFrame = "24h",
+    eventName?: string,
+  ): Promise<UmamiVisitorStats> {
     const authHeaders = await this.getAuthHeadersAsync();
     const website = await this.getWebsiteByIdAsync(websiteId, authHeaders);
 
@@ -102,8 +106,7 @@ export class UmamiIntegration extends Integration {
         : Promise.resolve(null),
     ]);
 
-    const eventCount =
-      eventName && eventMetrics ? (eventMetrics.find((m) => m.x === eventName)?.y ?? 0) : undefined;
+    const eventCount = eventName && eventMetrics ? (eventMetrics.find((m) => m.x === eventName)?.y ?? 0) : undefined;
 
     // Umami instances return timestamps in different formats ("YYYY-MM-DD HH:MM:SS" vs ISO 8601).
     // Normalise to epoch ms for a format-agnostic lookup.
@@ -135,8 +138,27 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const now = Date.now();
     const startAt = dayjs().subtract(30, "day").valueOf();
-    const metrics = await this.getWebsiteEventMetricsAsync(websiteId, startAt, now, authHeaders);
-    return metrics.map((m) => m.x).filter(Boolean).sort();
+    const url = this.url(`/websites/${websiteId}/events`, {
+      startAt: startAt.toString(),
+      endAt: now.toString(),
+      pageSize: "100000",
+    });
+    const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
+    if (!response.ok) return [];
+    const json = await response.json();
+    const rawArray: unknown[] = Array.isArray(json)
+      ? json
+      : json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)
+        ? (json as { data: unknown[] }).data
+        : [];
+    const names = new Set<string>();
+    for (const item of rawArray) {
+      const record = item as Record<string, unknown>;
+      if (typeof record.eventName === "string" && record.eventName) {
+        names.add(record.eventName);
+      }
+    }
+    return [...names].sort();
   }
 
   public async getActiveVisitorsAsync(websiteId: string): Promise<number> {
@@ -175,14 +197,21 @@ export class UmamiIntegration extends Integration {
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
     const results = await Promise.all(
       eventNames.map(async (eventName) => {
-        const dataPoints = await this.getWebsiteEventTimeSeriesAsync(websiteId, startAt, endAt, unit, eventName, authHeaders);
+        const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+          websiteId,
+          startAt,
+          endAt,
+          unit,
+          eventName,
+          authHeaders,
+        );
         return { eventName, dataPoints: dataPoints ?? [] };
       }),
     );
     return results;
   }
 
-  private getWebsiteEventMetricsAsync(
+  private async getWebsiteEventMetricsAsync(
     websiteId: string,
     startAt: number,
     endAt: number,

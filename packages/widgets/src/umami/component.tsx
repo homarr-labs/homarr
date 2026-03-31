@@ -4,9 +4,8 @@ import { BarChart, LineChart } from "@mantine/charts";
 import { Box, Group, ScrollArea, Stack, Text, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
-
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats } from "@homarr/integrations/types";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
@@ -56,7 +55,7 @@ function formatXLabel(timestamp: string, timeFrame: string): string {
     case "30d":
     case "month":
     case "lastMonth":
-      return date.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+      return date.toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
     default:
       return timestamp;
   }
@@ -71,13 +70,20 @@ function formatDuration(seconds: number): string {
 
 function formatTimeFrameLabel(timeFrame: string, t: ReturnType<typeof useScopedI18n<"widget.umami">>): string {
   switch (timeFrame) {
-    case "today":     return t("option.timeFrame.option.today");
-    case "24h":       return t("option.timeFrame.option.24h");
-    case "7d":        return t("option.timeFrame.option.7d");
-    case "30d":       return t("option.timeFrame.option.30d");
-    case "month":     return t("option.timeFrame.option.month");
-    case "lastMonth": return t("option.timeFrame.option.lastMonth");
-    default:          return timeFrame;
+    case "today":
+      return t("option.timeFrame.option.today");
+    case "24h":
+      return t("option.timeFrame.option.24h");
+    case "7d":
+      return t("option.timeFrame.option.7d");
+    case "30d":
+      return t("option.timeFrame.option.30d");
+    case "month":
+      return t("option.timeFrame.option.month");
+    case "lastMonth":
+      return t("option.timeFrame.option.lastMonth");
+    default:
+      return timeFrame;
   }
 }
 
@@ -93,7 +99,17 @@ interface UmamiContentProps {
   topCount: number;
 }
 
-function UmamiContent({ integrationIds, websiteId, timeFrame, eventName, eventNames, chartStyle, chartType, viewMode, topCount }: UmamiContentProps) {
+function UmamiContent({
+  integrationIds,
+  websiteId,
+  timeFrame,
+  eventName,
+  eventNames,
+  chartStyle,
+  chartType,
+  viewMode,
+  topCount,
+}: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
@@ -109,6 +125,15 @@ function UmamiContent({ integrationIds, websiteId, timeFrame, eventName, eventNa
     { integrationIds, websiteId },
     { refetchInterval: 30_000 },
   );
+
+  const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+    { integrationIds, websiteId, timeFrame, eventNames: [...eventNames].sort() },
+    { enabled: viewMode === "events" && eventNames.length > 0 },
+  );
+
+  const multiEventTotal = multiEventSeries
+    ? multiEventSeries.flatMap((s) => s.dataPoints).reduce((sum, p) => sum + p.y, 0)
+    : undefined;
 
   const firstResult = results[0];
   if (!firstResult) {
@@ -144,17 +169,22 @@ function UmamiContent({ integrationIds, websiteId, timeFrame, eventName, eventNa
         <Text size="xs" c="dimmed" truncate="end" style={{ maxWidth: "55%" }}>
           {visitorStats.domain} ({formatTimeFrameLabel(timeFrame, t)})
         </Text>
-        {eventName && visitorStats.eventCount !== undefined ? (
+        {(eventName && viewMode === "chart" && visitorStats.eventCount !== undefined) ||
+        (viewMode === "events" && multiEventTotal !== undefined) ? (
           <Group gap={6} align="baseline" wrap="nowrap">
             <Group gap={4} align="baseline">
               <Text size="lg" fw={700} lh={1}>
-                {visitorStats.eventCount.toLocaleString()}
+                {viewMode === "events"
+                  ? (multiEventTotal ?? 0).toLocaleString()
+                  : (visitorStats.eventCount ?? 0).toLocaleString()}
               </Text>
               <Text size="xs" c="dimmed">
                 {t("event.label")}
               </Text>
             </Group>
-            <Text size="xs" c="dimmed">/</Text>
+            <Text size="xs" c="dimmed">
+              /
+            </Text>
             <Group gap={4} align="baseline">
               <Text size="lg" fw={700} lh={1}>
                 {visitorStats.totalVisitors.toLocaleString()}
@@ -294,9 +324,7 @@ function UmamiEventsContent({ integrationIds, websiteId, timeFrame, eventNames, 
   }
 
   // Collect all unique timestamps across all series
-  const allTimestamps = Array.from(
-    new Set(series.flatMap((s) => s.dataPoints.map((p) => p.x))),
-  ).sort();
+  const allTimestamps = Array.from(new Set(series.flatMap((s) => s.dataPoints.map((p) => p.x)))).sort();
 
   // Build per-event lookup by timestamp string
   const byEvent = new Map(
@@ -408,10 +436,24 @@ function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit 
     timeFrame,
     limit,
   });
-  return <UmamiTopList items={data} heading={t("option.viewMode.option.topReferrers")} emptyLabel={t("topReferrers.direct")} />;
+  return (
+    <UmamiTopList
+      items={data}
+      heading={t("option.viewMode.option.topReferrers")}
+      emptyLabel={t("topReferrers.direct")}
+    />
+  );
 }
 
-function UmamiTopList({ items, heading, emptyLabel }: { items: UmamiMetricItem[]; heading: string; emptyLabel: string }) {
+function UmamiTopList({
+  items,
+  heading,
+  emptyLabel,
+}: {
+  items: UmamiMetricItem[];
+  heading: string;
+  emptyLabel: string;
+}) {
   return (
     <Stack gap={2} h="100%">
       <Text size="xs" c="dimmed" fw={500}>

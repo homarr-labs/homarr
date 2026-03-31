@@ -280,9 +280,7 @@ describe("UmamiIntegration", () => {
 
     test("should handle flat array response format", async () => {
       setupMockFetch({
-        "/websites/site-uuid-1/events": [
-          { id: "1", eventName: "signup", createdAt: "2026-03-21T00:00:00Z" },
-        ],
+        "/websites/site-uuid-1/events": [{ id: "1", eventName: "signup", createdAt: "2026-03-21T00:00:00Z" }],
       });
 
       const integration = createUmamiIntegration();
@@ -305,7 +303,7 @@ describe("UmamiIntegration", () => {
 
       for (const call of mockFetchWithTrustedCertificates.mock.calls) {
         const options = call[1] as { headers?: Record<string, string> };
-        expect(options?.headers?.["x-umami-api-key"]).toBe(TEST_API_KEY);
+        expect(options.headers?.["x-umami-api-key"]).toBe(TEST_API_KEY);
       }
     });
   });
@@ -367,7 +365,7 @@ describe("UmamiIntegration", () => {
         return url.includes("/websites/site-uuid-1/stats");
       });
       const options = dataCall?.[1] as { headers?: Record<string, string> };
-      expect(options?.headers?.["Authorization"]).toBe(`Bearer ${JWT_TOKEN}`);
+      expect(options.headers?.Authorization).toBe(`Bearer ${JWT_TOKEN}`);
     });
   });
 });

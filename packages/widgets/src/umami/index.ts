@@ -23,9 +23,9 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
         }),
         viewMode: factory.select({
           options: [
-            { value: "chart",        label: (t) => t("widget.umami.option.viewMode.option.chart") },
-            { value: "events",       label: (t) => t("widget.umami.option.viewMode.option.events") },
-            { value: "topPages",     label: (t) => t("widget.umami.option.viewMode.option.topPages") },
+            { value: "chart", label: (t) => t("widget.umami.option.viewMode.option.chart") },
+            { value: "events", label: (t) => t("widget.umami.option.viewMode.option.events") },
+            { value: "topPages", label: (t) => t("widget.umami.option.viewMode.option.topPages") },
             { value: "topReferrers", label: (t) => t("widget.umami.option.viewMode.option.topReferrers") },
           ] as const,
           defaultValue: "chart",
@@ -33,7 +33,7 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
         }),
         chartType: factory.select({
           options: [
-            { value: "bar",       label: (t) => t("widget.umami.option.chartType.option.bar") },
+            { value: "bar", label: (t) => t("widget.umami.option.chartType.option.bar") },
             { value: "sparkline", label: (t) => t("widget.umami.option.chartType.option.sparkline") },
           ] as const,
           defaultValue: "bar",
@@ -61,7 +61,8 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
           shouldHide: (options) => !options.websiteId,
         },
         chartType: {
-          shouldHide: (options) => !options.websiteId || (options.viewMode !== "chart" && options.viewMode !== "events"),
+          shouldHide: (options) =>
+            !options.websiteId || (options.viewMode !== "chart" && options.viewMode !== "events"),
         },
         chartStyle: {
           shouldHide: (options) => options.viewMode !== "chart" || !options.eventName || options.chartType !== "bar",
