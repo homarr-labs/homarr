@@ -45,8 +45,8 @@
     "@testcontainers/redis": "^11.13.0",
     "@turbo/gen": "^2.8.20",
     "@vitejs/plugin-react": "^5.2.0",
-    "@vitest/coverage-v8": "^4.1.1",
-    "@vitest/ui": "^4.1.1",
+    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/ui": "^4.1.2",
     "conventional-changelog-conventionalcommits": "^9.3.0",
     "cross-env": "^10.1.0",
     "jsdom": "^29.0.1",
@@ -57,7 +57,7 @@
     "turbo": "^2.8.20",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.1"
+    "vitest": "^4.1.2"
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
