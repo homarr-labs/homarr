@@ -51,7 +51,7 @@
     "@mantine/charts": "^8.3.18",
     "@mantine/core": "^8.3.18",
     "@mantine/hooks": "^8.3.18",
-    "@tabler/icons-react": "^3.40.0",
+    "@tabler/icons-react": "^3.41.0",
     "@tiptap/extension-color": "3.20.5",
     "@tiptap/extension-highlight": "3.20.5",
     "@tiptap/extension-image": "3.20.5",
