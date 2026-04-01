@@ -2730,12 +2730,17 @@
         },
         "showRecentResults": {
           "label": "Show recent results"
+        },
+        "showPingGraph": {
+          "label": "Show ping graph"
         }
       },
       "latestResult": "Latest Result",
       "averages": "Averages",
       "tests": "tests",
       "recentResults": "Recent Results",
+      "recentResultsSpeed": "Speed",
+      "recentResultsPing": "Ping",
       "healthy": "Healthy",
       "unhealthy": "Unhealthy",
       "ok": "OK",

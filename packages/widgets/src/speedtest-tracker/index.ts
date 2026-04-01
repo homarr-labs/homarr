@@ -6,17 +6,27 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("speedtestTracker", {
   icon: IconSpeedboat,
   createOptions() {
-    return optionsBuilder.from((factory) => ({
-      showLatestResult: factory.switch({
-        defaultValue: true,
+    return optionsBuilder.from(
+      (factory) => ({
+        showLatestResult: factory.switch({
+          defaultValue: true,
+        }),
+        showStats: factory.switch({
+          defaultValue: true,
+        }),
+        showRecentResults: factory.switch({
+          defaultValue: true,
+        }),
+        showPingGraph: factory.switch({
+          defaultValue: true,
+        }),
       }),
-      showStats: factory.switch({
-        defaultValue: true,
-      }),
-      showRecentResults: factory.switch({
-        defaultValue: true,
-      }),
-    }));
+      {
+        showPingGraph: {
+          shouldHide: (options) => !options.showRecentResults,
+        },
+      },
+    );
   },
   supportedIntegrations: ["speedtestTracker"],
   errors: {

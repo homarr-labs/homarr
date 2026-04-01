@@ -98,7 +98,7 @@ function SpeedtestTrackerContent({ integrationIds, options, isEditMode }: Speedt
       )}
       {hasChart && (
         <div style={{ flex: 2, minHeight: 0 }}>
-          <RecentResultsSection results={recentFiltered} />
+          <RecentResultsSection results={recentFiltered} showPingGraph={options.showPingGraph} />
         </div>
       )}
       {noSectionsEnabled && (
