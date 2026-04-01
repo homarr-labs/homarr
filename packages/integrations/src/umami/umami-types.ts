@@ -39,7 +39,11 @@ export const umamiPageviewsSchema = z.object({
 export type UmamiPageviews = z.infer<typeof umamiPageviewsSchema>;
 
 export const umamiMetricItemSchema = z.object({
-  x: z.string(),
+  // x can be null for direct traffic (no referrer) in the referrers endpoint
+  x: z
+    .string()
+    .nullable()
+    .transform((v) => v ?? ""),
   y: z.number(),
 });
 

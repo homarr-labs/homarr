@@ -290,6 +290,98 @@ describe("UmamiIntegration", () => {
     });
   });
 
+  describe("getTopPagesAsync", () => {
+    test("should return top pages sorted by view count", async () => {
+      setupMockFetch({
+        "/websites/site-uuid-1/metrics": [
+          { x: "/home", y: 500 },
+          { x: "/about", y: 200 },
+        ],
+      });
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getTopPagesAsync("site-uuid-1", "7d", 10);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.x).toBe("/home");
+      expect(result[0]?.y).toBe(500);
+    });
+
+    test("should return empty array when metrics endpoint fails", async () => {
+      setupMockFetch({});
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getTopPagesAsync("site-uuid-1", "7d", 10);
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("getTopReferrersAsync", () => {
+    test("should return top referrers including null as empty string for direct traffic", async () => {
+      setupMockFetch({
+        "/websites/site-uuid-1/metrics": [
+          { x: "google.com", y: 300 },
+          { x: null, y: 150 },
+        ],
+      });
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getTopReferrersAsync("site-uuid-1", "7d", 10);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.x).toBe("google.com");
+      // null referrer (direct traffic) should be normalised to empty string
+      expect(result[1]?.x).toBe("");
+    });
+
+    test("should return empty array when metrics endpoint fails", async () => {
+      setupMockFetch({});
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getTopReferrersAsync("site-uuid-1", "7d", 10);
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("getMultiEventTimeSeriesAsync", () => {
+    test("should return time series for each requested event name", async () => {
+      setupMockFetch({
+        "/websites/site-uuid-1/events": [
+          { x: "2026-03-28 00:00:00", y: 10 },
+          { x: "2026-03-28 01:00:00", y: 5 },
+        ],
+      });
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getMultiEventTimeSeriesAsync("site-uuid-1", "24h", ["signup", "click"]);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.eventName).toBe("signup");
+      expect(result[1]?.eventName).toBe("click");
+      expect(result[0]?.dataPoints).toHaveLength(2);
+    });
+
+    test("should return empty dataPoints when event series endpoint fails", async () => {
+      setupMockFetch({});
+
+      const integration = createUmamiIntegration();
+      const result = await integration.getMultiEventTimeSeriesAsync("site-uuid-1", "24h", ["signup"]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.eventName).toBe("signup");
+      expect(result[0]?.dataPoints).toEqual([]);
+    });
+
+    test("should return empty array when no event names provided", async () => {
+      const integration = createUmamiIntegration();
+      const result = await integration.getMultiEventTimeSeriesAsync("site-uuid-1", "24h", []);
+
+      expect(result).toEqual([]);
+    });
+  });
+
   describe("API key authentication", () => {
     test("should send x-umami-api-key header on all requests", async () => {
       setupMockFetch({

@@ -26,6 +26,9 @@ import {
   umamiWebsiteSchema,
 } from "./umami-types";
 
+// Umami event type ID for custom events (type 1 = page view, type 2 = custom event)
+const UMAMI_CUSTOM_EVENT_TYPE = 2;
+
 export class UmamiIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = await this.getAuthHeadersAsync();
@@ -52,6 +55,9 @@ export class UmamiIntegration extends Integration {
       : umamiWebsiteSchema.array().parse((json as { data: unknown }).data);
   }
 
+  // Note: dayjs() uses the server's local timezone. Callers needing user-local
+  // boundaries (e.g. "today") may see off-by-one behaviour when the server
+  // runs in UTC but the user is in a different timezone.
   private computeTimeRange(timeFrame: string): { startAt: number; endAt: number; unit: string } {
     let endAt = Date.now();
     let startAt: number;
@@ -304,7 +310,7 @@ export class UmamiIntegration extends Integration {
       const buckets = new Map<string, number>();
       for (const item of rawArray) {
         const e = item as { eventType?: number; eventName?: string; createdAt: string };
-        if (e.eventType !== 2 || e.eventName !== eventName) continue;
+        if (e.eventType !== UMAMI_CUSTOM_EVENT_TYPE || e.eventName !== eventName) continue;
         const bucket = truncate(e.createdAt);
         buckets.set(bucket, (buckets.get(bucket) ?? 0) + 1);
       }
