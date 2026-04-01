@@ -54,7 +54,7 @@
     "better-sqlite3": "^12.8.0",
     "dotenv": "^17.3.1",
     "drizzle-kit": "^0.31.10",
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.8.3",
     "mysql2": "3.20.0",
     "pg": "^8.20.0",
