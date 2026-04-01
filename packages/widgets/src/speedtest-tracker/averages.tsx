@@ -23,21 +23,21 @@ export function AveragesSection({ stats }: { stats: SpeedtestTrackerStats }) {
           icon={IconArrowDown}
           color="blue"
           value={formatStatsSpeed(stats.download)}
-          label="Avg Download"
+          label={t("avgDownload")}
           compact
         />
         <SpeedStatCard
           icon={IconArrowUp}
           color="teal"
           value={formatStatsSpeed(stats.upload)}
-          label="Avg Upload"
+          label={t("avgUpload")}
           compact
         />
         <SpeedStatCard
           icon={IconWaveSine}
           color="orange"
           value={`${stats.ping.avg.toFixed(1)} ms`}
-          label="Avg Ping"
+          label={t("avgPing")}
           compact
         />
       </SimpleGrid>

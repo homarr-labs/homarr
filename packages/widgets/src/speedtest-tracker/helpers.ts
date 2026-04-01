@@ -5,13 +5,6 @@ import type {
   SpeedtestTrackerStats,
 } from "@homarr/integrations/types";
 
-/**
- * Parse a Speedtest Tracker timestamp. The API returns UTC timestamps without
- * a timezone indicator (e.g. "2026-03-28 05:45:00"). We append "Z" to force
- * UTC parsing so JS converts it to local time correctly.
- */
-export const parseTimestamp = (timestamp: string): Date => new Date(`${timestamp.replace(" ", "T")}Z`);
-
 export const mergeStats = (
   statsA: SpeedtestTrackerDashboardData["stats"],
   statsB: SpeedtestTrackerDashboardData["stats"],
@@ -49,16 +42,12 @@ export const mergeStats = (
 export const formatBitsPerSec = (bps: number): string => `${formatNumber(bps, 2)}bps`;
 
 export const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download" | "upload"): string => {
-  const human = dir === "download" ? result.download_bits_human : result.upload_bits_human;
-  if (human) return human;
   const bits = dir === "download" ? result.download_bits : result.upload_bits;
   if (bits != null) return formatBitsPerSec(bits);
   return "—";
 };
 
 export const formatStatsSpeed = (band: SpeedtestTrackerStats["download"]): string => {
-  if (band.avg_bits_human) return band.avg_bits_human;
   if (band.avg_bits != null) return formatBitsPerSec(band.avg_bits);
-  // avg is bytes/s — convert to bits/s
   return formatBitsPerSec(band.avg * 8);
 };

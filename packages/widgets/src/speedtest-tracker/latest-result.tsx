@@ -4,20 +4,21 @@ import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
 
-import { formatResultSpeed, parseTimestamp } from "./helpers";
+import { formatResultSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
 export function LatestResultSection({ result }: { result: SpeedtestTrackerResult }) {
   const t = useScopedI18n("widget.speedtestTracker");
-  const timestamp = parseTimestamp(result.created_at).toLocaleString([], {
+  const locale = useCurrentLocale();
+  const timestamp = Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  });
+  }).format(result.created_at);
   const cols = result.healthy !== null ? 4 : 3;
 
   return (
@@ -33,21 +34,26 @@ export function LatestResultSection({ result }: { result: SpeedtestTrackerResult
           icon={IconArrowDown}
           color="blue"
           value={formatResultSpeed(result, "download")}
-          label="Download"
+          label={t("download")}
         />
-        <SpeedStatCard icon={IconArrowUp} color="teal" value={formatResultSpeed(result, "upload")} label="Upload" />
+        <SpeedStatCard
+          icon={IconArrowUp}
+          color="teal"
+          value={formatResultSpeed(result, "upload")}
+          label={t("upload")}
+        />
         <SpeedStatCard
           icon={IconWaveSine}
           color="orange"
           value={result.ping !== null ? `${result.ping.toFixed(1)} ms` : "—"}
-          label="Ping"
+          label={t("ping")}
         />
         {result.healthy !== null && (
           <SpeedStatCard
             icon={result.healthy ? IconCircleCheck : IconCircleX}
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}
-            label="Status"
+            label={t("status")}
           />
         )}
       </SimpleGrid>

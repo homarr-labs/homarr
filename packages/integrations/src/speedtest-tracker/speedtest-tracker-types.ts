@@ -1,54 +1,28 @@
 import { z } from "zod/v4";
 
-// ─── API envelope ─────────────────────────────────────────────────────────────
-// Most Speedtest Tracker endpoints wrap their payload in `{ data: <payload> }`.
+const createEnvelopeSchema = <T extends z.ZodType>(dataSchema: T) =>
+  z.object({ data: z.unknown() }).transform((envelope) => dataSchema.parse(envelope.data) as z.infer<T>);
 
-export const speedtestTrackerEnvelopeSchema = z.object({ data: z.unknown() });
-
-// ─── Top-level Result ─────────────────────────────────────────────────────────
-// The nested `data` payload varies by result status (completed vs failed/log),
-// and the widget never reads it — so we accept any object here.
+const parseTimestamp = (timestamp: string): Date => new Date(`${timestamp.replace(" ", "T")}Z`);
 
 export const speedtestTrackerResultSchema = z.object({
   id: z.number().int(),
-  service: z.string(),
   ping: z.number().nullable(),
-  download: z.number().int().nullable(),
-  upload: z.number().int().nullable(),
-  // Conditionally omitted (not null) when download/upload is falsy
   download_bits: z.number().int().nullish(),
   upload_bits: z.number().int().nullish(),
-  download_bits_human: z.string().nullish(),
-  upload_bits_human: z.string().nullish(),
   healthy: z.boolean().nullable(),
-  status: z.string(),
-  scheduled: z.boolean(),
-  comments: z.string().nullable(),
-  // Opaque payload — shape differs between completed/failed/log results
-  data: z.record(z.string(), z.unknown()).nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  created_at: z.string().transform(parseTimestamp),
 });
 
 export type SpeedtestTrackerResult = z.infer<typeof speedtestTrackerResultSchema>;
 
-// Aliases used by the integration class for the /api/v1/results/latest endpoint
-export const speedtestTrackerLatestResultSchema = speedtestTrackerResultSchema;
-export type SpeedtestTrackerLatestResult = SpeedtestTrackerResult;
-
-// ─── Stats ────────────────────────────────────────────────────────────────────
-// StatResource returns nested: { ping: {avg,min,max}, download: {...}, upload: {...}, total_results }
+export const speedtestTrackerLatestResultEnvelopeSchema = createEnvelopeSchema(speedtestTrackerResultSchema);
 
 export const speedtestTrackerStatsBandwidthSchema = z.object({
   avg: z.number(),
   avg_bits: z.number().optional(),
-  avg_bits_human: z.string().optional(),
   min: z.number(),
-  min_bits: z.number().optional(),
-  min_bits_human: z.string().optional(),
   max: z.number(),
-  max_bits: z.number().optional(),
-  max_bits_human: z.string().optional(),
 });
 
 export const speedtestTrackerStatsSchema = z.object({
@@ -64,7 +38,7 @@ export const speedtestTrackerStatsSchema = z.object({
 
 export type SpeedtestTrackerStats = z.infer<typeof speedtestTrackerStatsSchema>;
 
-// ─── Results collection (paginated) ──────────────────────────────────────────
+export const speedtestTrackerStatsEnvelopeSchema = createEnvelopeSchema(speedtestTrackerStatsSchema);
 
 export const speedtestTrackerResultsCollectionSchema = z.object({
   data: z.array(speedtestTrackerResultSchema),
@@ -77,8 +51,6 @@ export const speedtestTrackerResultsCollectionSchema = z.object({
 });
 
 export type SpeedtestTrackerResultsCollection = z.infer<typeof speedtestTrackerResultsCollectionSchema>;
-
-// ─── Combined dashboard data ──────────────────────────────────────────────────
 
 export interface SpeedtestTrackerDashboardData {
   latestResult: SpeedtestTrackerResult | null;

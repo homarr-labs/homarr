@@ -10,10 +10,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { parseTimestamp } from "./helpers";
 import { SectionLabel } from "./section-label";
-
-// ── Shared X-axis utilities (module-level, pure) ──────────────────────────────
 
 interface XAxisTicks {
   midnightTs: number | null;
@@ -27,20 +24,17 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
   const first = data[0]?.ts ?? 0;
   const last = data.at(-1)?.ts ?? 0;
 
-  // 2-hour interval ticks aligned to wall-clock hours
   const twoHourMs = 2 * 60 * 60 * 1000;
   const startTick = Math.ceil(first / twoHourMs) * twoHourMs;
   const tickSet = new Set<number>();
   for (let t = startTick; t <= last; t += twoHourMs) tickSet.add(t);
 
-  // Find local midnight within the data window
   const midnightDate = new Date(first);
   midnightDate.setHours(24, 0, 0, 0);
   const mTs = midnightDate.getTime();
   const foundMidnight = mTs > first && mTs < last ? mTs : null;
   if (foundMidnight) tickSet.add(foundMidnight);
 
-  // Top date axis: first data point + any midnight boundaries
   const topTicks: number[] = [first];
   if (foundMidnight) topTicks.push(foundMidnight);
 
@@ -51,14 +45,11 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
   };
 }
 
-// Returns a recharts tick renderer for the bottom X axis. Midnight ticks show
-// two lines (time + date); all other ticks show time only.
 function makeXTickRenderer(midnightTs: number | null) {
   return ({ x, y, payload }: { x: number; y: number; payload: { value: number } }) => {
-    const timestamp = payload.value;
-    const date = new Date(timestamp);
+    const date = new Date(payload.value);
     const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const isMidnight = midnightTs !== null && timestamp === midnightTs;
+    const isMidnight = midnightTs !== null && payload.value === midnightTs;
     const dateStr = isMidnight ? date.toLocaleDateString([], { month: "short", day: "numeric" }) : null;
 
     return (
@@ -76,7 +67,6 @@ function makeXTickRenderer(midnightTs: number | null) {
   };
 }
 
-// Top date axis tick: shows short date label above the chart.
 function renderTopDateTick(props: { x: number; y: number; payload: { value: number }; index: number }) {
   const { x, y, payload, index } = props;
   const date = new Date(payload.value);
@@ -91,7 +81,24 @@ function renderTopDateTick(props: { x: number; y: number; payload: { value: numb
   );
 }
 
-// ── Section ───────────────────────────────────────────────────────────────────
+function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step: number }[]) {
+  const step = stepOptions.find((opt) => maxVal <= opt.threshold)?.step ?? stepOptions.at(-1)!.step;
+  const roundedMax = Math.ceil(maxVal / step) * step || step;
+  const ticks: number[] = [];
+  for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
+  return { ticks, domain: [0, roundedMax] as [number, number] };
+}
+
+function formatTooltipDate(label: number | string | undefined): string {
+  const timestamp = typeof label === "number" ? label : Number(label);
+  if (Number.isNaN(timestamp)) return "";
+  return new Date(timestamp).toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export function RecentResultsSection({
   results,
@@ -113,8 +120,6 @@ export function RecentResultsSection({
   );
 }
 
-// ── Speed sub-chart ───────────────────────────────────────────────────────────
-
 function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult[]; showLabel: boolean }) {
   const t = useScopedI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
@@ -128,8 +133,6 @@ function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult
     </div>
   );
 }
-
-// ── Ping sub-chart ────────────────────────────────────────────────────────────
 
 function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
   const t = useScopedI18n("widget.speedtestTracker");
@@ -145,8 +148,6 @@ function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
   );
 }
 
-// ── Speed chart ───────────────────────────────────────────────────────────────
-
 function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
@@ -154,14 +155,10 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const data = useMemo(
     () =>
       [...results]
-        .sort(
-          (resultA, resultB) =>
-            parseTimestamp(resultA.created_at).getTime() - parseTimestamp(resultB.created_at).getTime(),
-        )
-        // Skip failed/zero-value results — treat 0 bits as "no result"
+        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .filter((result) => (result.download_bits ?? 0) > 0)
         .map((result) => ({
-          ts: parseTimestamp(result.created_at).getTime(),
+          ts: result.created_at.getTime(),
           Download: parseFloat(((result.download_bits ?? 0) / 1_000_000).toFixed(2)),
           Upload:
             result.upload_bits != null && result.upload_bits > 0
@@ -171,15 +168,14 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
     [results],
   );
 
-  // ── Y axis: nice round ticks ──────────────────────────────────────────────
-  const yConfig = useMemo(() => {
-    const maxVal = Math.max(...data.map((datum) => Math.max(datum.Download, datum.Upload)), 0);
-    const step = maxVal <= 400 ? 100 : 200;
-    const roundedMax = Math.ceil(maxVal / step) * step || step;
-    const ticks: number[] = [];
-    for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
-    return { ticks, domain: [0, roundedMax] as [number, number] };
-  }, [data]);
+  const yConfig = useMemo(
+    () =>
+      buildYAxisConfig(Math.max(...data.map((datum) => Math.max(datum.Download, datum.Upload)), 0), [
+        { threshold: 400, step: 100 },
+        { threshold: Infinity, step: 200 },
+      ]),
+    [data],
+  );
 
   const { midnightTs, xTicks, topDateTicks } = useMemo(() => buildXAxisTicks(data), [data]);
   const renderXTick = useMemo(() => makeXTickRenderer(midnightTs), [midnightTs]);
@@ -208,7 +204,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         ticks: xTicks,
         tick: renderXTick,
         interval: 0,
-        // Extra height for date label below time at midnight ticks
         height: midnightTs !== null ? 38 : 28,
       }}
       yAxisProps={{
@@ -227,20 +222,16 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
             active?: boolean;
           };
           if (!active || !payload?.length) return null;
-          const timestamp = typeof label === "number" ? label : Number(label);
-          const dateStr = Number.isNaN(timestamp)
-            ? ""
-            : new Date(timestamp).toLocaleString([], {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-          return <ChartTooltip label={dateStr} payload={payload} valueFormatter={(val: number) => `${val} Mbps`} />;
+          return (
+            <ChartTooltip
+              label={formatTooltipDate(label)}
+              payload={payload}
+              valueFormatter={(val: number) => `${val} Mbps`}
+            />
+          );
         },
       }}
     >
-      {/* Top date axis — shows day labels above the chart */}
       <XAxis
         xAxisId="topDates"
         orientation="top"
@@ -254,7 +245,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         tickLine={false}
         interval={0}
       />
-      {/* Dotted vertical reference lines at each x-axis tick */}
       {xTicks.map((tickTs) => (
         <ReferenceLine
           key={tickTs}
@@ -269,8 +259,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   );
 }
 
-// ── Ping chart ────────────────────────────────────────────────────────────────
-
 function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
@@ -278,27 +266,25 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
   const data = useMemo(
     () =>
       [...results]
-        .sort(
-          (resultA, resultB) =>
-            parseTimestamp(resultA.created_at).getTime() - parseTimestamp(resultB.created_at).getTime(),
-        )
+        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .filter((result) => result.ping != null)
         .map((result) => ({
-          ts: parseTimestamp(result.created_at).getTime(),
+          ts: result.created_at.getTime(),
           Ping: result.ping as number,
         })),
     [results],
   );
 
-  // ── Y axis: nice round ticks scaled to ping range ─────────────────────────
-  const yConfig = useMemo(() => {
-    const maxVal = Math.max(...data.map((datum) => datum.Ping), 0);
-    const step = maxVal <= 10 ? 2 : maxVal <= 50 ? 10 : maxVal <= 200 ? 50 : 100;
-    const roundedMax = Math.ceil(maxVal / step) * step || step;
-    const ticks: number[] = [];
-    for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
-    return { ticks, domain: [0, roundedMax] as [number, number] };
-  }, [data]);
+  const yConfig = useMemo(
+    () =>
+      buildYAxisConfig(Math.max(...data.map((datum) => datum.Ping), 0), [
+        { threshold: 10, step: 2 },
+        { threshold: 50, step: 10 },
+        { threshold: 200, step: 50 },
+        { threshold: Infinity, step: 100 },
+      ]),
+    [data],
+  );
 
   const { midnightTs, xTicks } = useMemo(() => buildXAxisTicks(data), [data]);
   const renderXTick = useMemo(() => makeXTickRenderer(midnightTs), [midnightTs]);
@@ -342,20 +328,16 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
             active?: boolean;
           };
           if (!active || !payload?.length) return null;
-          const timestamp = typeof label === "number" ? label : Number(label);
-          const dateStr = Number.isNaN(timestamp)
-            ? ""
-            : new Date(timestamp).toLocaleString([], {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-          return <ChartTooltip label={dateStr} payload={payload} valueFormatter={(val: number) => `${val} ms`} />;
+          return (
+            <ChartTooltip
+              label={formatTooltipDate(label)}
+              payload={payload}
+              valueFormatter={(val: number) => `${val} ms`}
+            />
+          );
         },
       }}
     >
-      {/* Dotted vertical reference lines at each x-axis tick */}
       {xTicks.map((tickTs) => (
         <ReferenceLine
           key={tickTs}

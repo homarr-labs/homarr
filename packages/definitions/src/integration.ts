@@ -351,7 +351,7 @@ export const integrationDefs = {
   speedtestTracker: {
     name: "Speedtest Tracker",
     secretKinds: [["apiKey"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/alexjustesen/speedtest-tracker@main/public/img/speedtest-tracker-icon.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
     category: ["speedtest"],
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
