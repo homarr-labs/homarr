@@ -26,8 +26,6 @@ export default function SpeedtestTrackerWidget({
   return <SpeedtestTrackerContent integrationIds={integrationIds} options={options} isEditMode={isEditMode} />;
 }
 
-// ─── Main content ──────────────────────────────────────────────────────────────
-
 interface SpeedtestTrackerContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"speedtestTracker">["options"];

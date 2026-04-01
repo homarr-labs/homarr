@@ -1,3 +1,4 @@
+import { formatNumber } from "@homarr/common";
 import type {
   SpeedtestTrackerDashboardData,
   SpeedtestTrackerResult,
@@ -45,12 +46,7 @@ export const mergeStats = (
   };
 };
 
-export const formatBitsPerSec = (bps: number): string => {
-  if (bps >= 1_000_000_000) return `${(bps / 1_000_000_000).toFixed(2)} Gbps`;
-  if (bps >= 1_000_000) return `${(bps / 1_000_000).toFixed(2)} Mbps`;
-  if (bps >= 1_000) return `${(bps / 1_000).toFixed(2)} Kbps`;
-  return `${bps} bps`;
-};
+export const formatBitsPerSec = (bps: number): string => `${formatNumber(bps, 2)}bps`;
 
 export const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download" | "upload"): string => {
   const human = dir === "download" ? result.download_bits_human : result.upload_bits_human;
