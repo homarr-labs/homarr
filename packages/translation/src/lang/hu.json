@@ -51,7 +51,7 @@
           "title": "Import token megadása",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": "Írja be a megjelenített import tokent az előző homarr példányból"
             }
           },
@@ -153,10 +153,10 @@
         "label": "Ikonok használata a pingekhez"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Alapértelmezett kereső"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Nyissa meg a keresési eredményeket új ablakban"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A keresési beállítások sikeresen megváltoztak"
           },
           "error": {
-            "message": ""
+            "message": "A keresési beállításokat nem sikerült megváltoztatni"
           }
         }
       },
@@ -307,12 +307,12 @@
       "name": "Név",
       "members": "Tagok",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Főoldal",
+        "description": "Csak a csoport számára elérhető oldalak választhatók ki"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobiloldal",
+        "description": "Csak a csoport számára elérhető oldalak választhatók ki"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Beállítások elmentve",
+              "message": "Oldal beállítások sikeresen elmentve"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Nem sikerült menteni a beállításokat",
+              "message": "Az oldalbeállítások nem menthetők"
             }
           }
         }
@@ -527,21 +527,21 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pozíció sikeresen megváltozott"
           },
           "error": {
-            "message": ""
+            "message": "Pozíció nem módosítható"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Alapértelmezett csoport",
+      "description": "{name} - Minden bejelentkezett felhasználó"
     }
   },
   "app": {
-    "search": "",
+    "search": "Alkalmazás megtalálása",
     "page": {
       "list": {
         "title": "Alkalmazások",
@@ -599,12 +599,12 @@
         "label": "Leírás"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Más URL használata a ping-hez",
+          "description": "Hasznos, ha a Homarr közvetlenül, egy belső hosztnév vagy hálózaton keresztül fér hozzá, hogy elkerülje az internetszolgáltató által használt sávszélesség terhelését"
         }
       }
     },
@@ -612,17 +612,17 @@
       "select": {
         "label": "Alkalmazás kiválasztása",
         "notFound": "Nem található alkalmazás",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Alkalmazás keresése",
+        "noResults": "Nincs találat",
+        "action": "Kiválasztás {app}",
+        "title": "Válassz egy programot az oldalhoz adáshoz"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Új alkalmazás készítése",
+        "description": "Új alkalmazás létrehozása ",
+        "action": "Alkalmazás készítő megnyitása"
       },
-      "add": ""
+      "add": "Alkalmazás hozzáadása"
     }
   },
   "integration": {
@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Meglévő",
+              "label": "Meglévő alkalmazás kiválasztása"
             },
             "new": {
-              "title": "",
+              "title": "Új",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "Alkalmazás url",
+                "description": "Az url, amelyre az alkalmazás a műszerfalról történő eléréskor irányít"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Alkalmazás megtalálása",
+            "remove": "Leválasztás",
+            "select": "Válasszon ki egy alkalmazást a hivatkozáshoz"
           }
         }
       },
@@ -702,21 +702,21 @@
         "label": "Név"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Keresőmotor létrehozása",
+        "description": "A \"{kind}\" integráció használható a keresőmotorokkal. Jelölje be ezt a jelölőnégyzetet, ha automatikusan szeretné konfigurálni a keresőmotort."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Hivattkozott alkalmazás"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Alkalmazás létrehozása",
+        "description": "Hozzon létre egy alkalmazást, amelynek ugyanaz a neve és ikonja van, mint az integrációnak. Hagyja üresen az alábbi beviteli mezőt, hogy az alkalmazás az integrációs URL-lel jöjjön létre."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Egyéni alkalmazás URL"
       }
     },
     "action": {
@@ -730,59 +730,59 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Részletesebb leírás a problémáról"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Ismeretlen hiba",
+          "description": "Egy ismeretlen hiba történt, nyissa meg a részleteket alul, hogy többet megtudjon"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Elemzési hiba",
+          "description": "A válasz nem volt elemezhető. Kérjük, ellenőrizze, hogy az URL a szolgáltatás alap URL-jére mutat-e."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Hitelesítési hiba",
+          "description": "A kérés nem volt engedélyezett. Kérjük, ellenőrizze, hogy a hitelesítő adatok helyesek-e, és hogy a megfelelő engedélyekkel vannak-e beállítva."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Válaszhiba",
+          "description": "Váratlan {statusCode} ({reason}) választ kapott a <url></url> címen. Kérjük, ellenőrizze, hogy az URL az integráció alap URL-jére mutat-e.",
+          "otherDescription": "Váratlan {statusCode} választ kapott a <url></url> címen. Kérjük, ellenőrizze, hogy az URL az integráció alap URL-jére mutat-e.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Hibás kérés",
+            "notFound": "Nem található",
+            "tooManyRequests": "Túl sok kérés",
+            "internalServerError": "Belső szerverhiba",
+            "serviceUnavailable": "A szolgáltatás nem elérhető",
+            "gatewayTimeout": "Átjáró időtúllépés"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Tanúsítványhiba",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "A tanúsítvány lejárt.",
+            "notYetValid": "A tanúsítvány még nem érvényes.",
+            "untrusted": "A tanúsítvány nem megbízható.",
+            "hostnameMismatch": "A tanúsítványban szereplő hosztnév nem egyezik meg az URL-lel."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Nincsenek megfelelő engedélyek",
+              "message": "Önnek nincs joga tanúsítványokat megbízhatónak nyilvánítani vagy feltölteni. Kérjük, lépjen kapcsolatba a rendszergazdájával, hogy feltölthesse a szükséges gyökér tanúsítványt."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Állomásnév eltérés",
+              "message": "A tanúsítványban szereplő hosztnév nem egyezik meg azzal a hosztnévvel, amelyhez kapcsolódik. Ez biztonsági kockázatot jelezhet, de mégis dönthet úgy, hogy megbízik ebben a tanúsítványban."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "A tanúsító hatóság (CA) tanúsítványának kinyerése sikertelen",
+              "message": "Csak a lánc nélküli, önaláírt tanúsítványok tölthetők le automatikusan. Ha önaláírt tanúsítványt használ, kérjük, feltétlenül töltse fel manuálisan a tanúsító hatóság (CA) tanúsítványát. Az ehhez szükséges lépések leírását itt találja: <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Újrapróbál"
             },
             "trust": {
               "label": ""
@@ -920,8 +920,8 @@
           "message": "Az útvonal valószínűleg nem helyes"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Túl sok kérés adott idő alatt",
+          "message": "Túl sok kérést küldött. Valószínűleg a célrendszer korlátozza vagy elutasítja a kéréseket"
         }
       }
     },
@@ -955,36 +955,36 @@
           "newLabel": "Új jelszó"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token azonosító",
+          "newLabel": "Új token azonosító"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Tartomány",
+          "newLabel": "Új tartomány"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Személyes Hozzáférési Token",
+          "newLabel": "Új Személyes Hozzáférési Token"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Téma",
+          "newLabel": "Új téma"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "Url",
+          "newLabel": "Új url"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API kulcs (Kulcs)",
+          "newLabel": "Új API Kulcs (Kulcs)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Api Kulcs (Titkos)",
+          "newLabel": "Új API Kulcs (Titkos)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App Azonosító",
+          "newLabel": "Új App Azonosító"
         },
         "githubInstallationId": {
           "label": "",
