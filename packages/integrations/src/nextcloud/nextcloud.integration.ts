@@ -4,6 +4,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import ICAL from "ical.js";
 import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
+import { tzlib_get_ical_block, tzlib_get_timezones } from "timezones-ical-library";
 import { DAVClient } from "tsdav";
 import { z } from "zod";
 
@@ -20,6 +21,20 @@ import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integ
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+
+// Register all existing timezones
+if (ICAL.TimezoneService.count === 0) {
+  const timezones = tzlib_get_timezones() as string[];
+  for (const tzid of timezones) {
+    ICAL.TimezoneService.register(
+      new ICAL.Timezone({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-non-null-assertion
+        component: new ICAL.Component(ICAL.parse((tzlib_get_ical_block(tzid) as string[])[0]!)),
+        tzid,
+      }),
+    );
+  }
+}
 
 const notificationSchema = z.object({
   ocs: z.object({
@@ -98,7 +113,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
           // next actually returns undefined when there are no more occurrences
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           while ((next = iterator.next())) {
-            const nextStartDate = next.toJSDate();
+            const nextStartDate = next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
             if (nextStartDate > end) break;
             const nextEndDate = new Date(nextStartDate.getTime() + durationMs);
             if (nextEndDate < start) continue;
@@ -106,13 +121,12 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             startDates.push(nextStartDate);
           }
         } else {
-          startDates = [veventObject.startDate.toJSDate()];
+          startDates = [veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate()];
         }
 
         return startDates.map((startDate) => {
-          const utcStartDate = dayjs(startDate).tz("UTC").toDate();
-          const endDate = new Date(utcStartDate.getTime() + durationMs);
-          const dateInMillis = utcStartDate.valueOf();
+          const endDate = new Date(startDate.getTime() + durationMs);
+          const dateInMillis = startDate.valueOf();
 
           // Get color property from the component
           const colorProperty = veventComponent.getFirstProperty("color");
@@ -122,7 +136,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             title: veventObject.summary,
             subTitle: null,
             description: veventObject.description || null,
-            startDate: utcStartDate,
+            startDate: startDate,
             endDate,
             image: null,
             location: veventObject.location || null,

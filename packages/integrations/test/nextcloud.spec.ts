@@ -42,6 +42,7 @@ interface CalendarTestEvent {
   dtstart: string;
   dtend: string;
   rrule?: string;
+  timezone?: string;
 }
 
 describe("Nextcloud integration", () => {
@@ -143,6 +144,32 @@ describe("Nextcloud integration", () => {
       expect(retrievedEvent?.description).toBeNull();
       expect(retrievedEvent?.indicatorColor).toBe("#ff8600"); // Default color
     }, 20_000);
+    test("Retrieve calendar events > Should work with timezone specified", async () => {
+      // Arrange
+      const calendarName = createId();
+      const testEvent: CalendarTestEvent = {
+        summary: "Timezone Event",
+        dtstart: "20260415T140000",
+        dtend: "20260415T150000",
+        timezone: "Asia/Tokyo",
+      };
+      const start = new Date("2026-04-01T00:00:00Z");
+      const end = new Date("2026-04-30T23:59:59Z");
+
+      await createCalendarAsync(startedContainer!, calendarName);
+      await createCalendarEventAsync(startedContainer!, calendarName, testEvent);
+
+      // Act
+      const events = await nextcloudIntegration!.getCalendarEventsAsync(start, end);
+
+      // Assert
+      const relevantEvents = events.filter((event) => event.title === testEvent.summary);
+      expect(relevantEvents).toHaveLength(1);
+      const retrievedEvent = relevantEvents[0];
+
+      expect(retrievedEvent!.startDate.toISOString()).toBe("2026-04-15T05:00:00.000Z"); // 14:00 in Tokyo is 05:00 UTC
+      expect(retrievedEvent!.endDate?.toISOString()).toBe("2026-04-15T06:00:00.000Z"); // 15:00 in Tokyo is 06:00 UTC
+    }, 120_000);
     test("Retrieve calendar events > Should work with event that starts before the range but ends within the range", async () => {
       // Arrange
       const calendarName = createId();
@@ -400,8 +427,8 @@ function buildICalEvent(uid: string, event: CalendarTestEvent): string {
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
-    `DTSTART:${event.dtstart}`,
-    `DTEND:${event.dtend}`,
+    `DTSTART${event.timezone ? `;TZID=${event.timezone}` : ""}:${event.dtstart}`,
+    `DTEND${event.timezone ? `;TZID=${event.timezone}` : ""}:${event.dtend}`,
     `SUMMARY:${event.summary}`,
   ];
 
