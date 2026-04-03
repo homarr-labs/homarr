@@ -34,8 +34,8 @@
     "octokit": "^5.0.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "undici": "7.24.5",
-    "zod": "^4.2.1",
+    "undici": "7.24.6",
+    "zod": "^4.3.6",
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {

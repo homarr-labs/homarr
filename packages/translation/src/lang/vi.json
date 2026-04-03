@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Cho phép định vị"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1856,6 +1859,9 @@
           "label": ""
         },
         "memory": {
+          "label": ""
+        },
+        "gpu": {
           "label": ""
         },
         "showUptime": {
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "",
             "memory": "",
+            "gpu": "",
             "network": ""
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "",
         "memory": "",
+        "gpu": "",
         "network": "",
         "up": "",
         "down": ""

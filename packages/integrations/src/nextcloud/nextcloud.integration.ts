@@ -2,8 +2,9 @@ import type { Agent } from "https";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import ICAL from "ical.js";
 import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
-import * as ical from "node-ical";
+import { tzlib_get_ical_block, tzlib_get_timezones } from "timezones-ical-library";
 import { DAVClient } from "tsdav";
 import { z } from "zod";
 
@@ -20,6 +21,20 @@ import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integ
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+
+// Register all existing timezones
+if (ICAL.TimezoneService.count === 0) {
+  const timezones = tzlib_get_timezones() as string[];
+  for (const tzid of timezones) {
+    ICAL.TimezoneService.register(
+      new ICAL.Timezone({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-non-null-assertion
+        component: new ICAL.Component(ICAL.parse((tzlib_get_ical_block(tzid) as string[])[0]!)),
+        tzid,
+      }),
+    );
+  }
+}
 
 const notificationSchema = z.object({
   ocs: z.object({
@@ -68,42 +83,64 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
     return calendarEvents
       .map((event) => {
-        // @ts-expect-error the typescript definitions for this package are wrong
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-        const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
-        const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
-
-        if (!veventObject) {
-          throw new Error(`Invalid event data object: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
+        if (typeof event.data !== "string") {
+          return [];
         }
+        const comp = ICAL.Component.fromString(event.data);
+        const veventComponent = comp.getFirstSubcomponent("vevent");
+
+        if (!veventComponent) {
+          return [];
+        }
+
+        const veventObject = new ICAL.Event(veventComponent);
 
         logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
 
         const eventUrlWithoutHost = new URL(event.url).pathname;
         const eventSlug = Buffer.from(eventUrlWithoutHost).toString("base64url");
 
-        const startDates = veventObject.rrule ? veventObject.rrule.between(start, end) : [veventObject.start];
+        const durationMs = veventObject.duration.toSeconds() * 1000;
 
-        const durationMs = veventObject.end.getTime() - veventObject.start.getTime();
+        // Handle recurring events
+        let startDates: Date[];
+        if (veventObject.isRecurring()) {
+          const iterator = veventObject.iterator();
+          startDates = [];
+
+          // Iterate through occurrences within the time range
+          let next: ICAL.Time | undefined;
+          // next actually returns undefined when there are no more occurrences
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          while ((next = iterator.next())) {
+            const nextStartDate = next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
+            if (nextStartDate > end) break;
+            const nextEndDate = new Date(nextStartDate.getTime() + durationMs);
+            if (nextEndDate < start) continue;
+
+            startDates.push(nextStartDate);
+          }
+        } else {
+          startDates = [veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate()];
+        }
 
         return startDates.map((startDate) => {
-          const timezoneOffsetMinutes = veventObject.rrule?.origOptions.tzid
-            ? dayjs(startDate).tz(veventObject.rrule.origOptions.tzid).utcOffset()
-            : 0;
-          const utcStartDate = new Date(startDate.getTime() - timezoneOffsetMinutes * 60 * 1000);
-          const endDate = new Date(utcStartDate.getTime() + durationMs);
-          const dateInMillis = utcStartDate.valueOf();
+          const endDate = new Date(startDate.getTime() + durationMs);
+          const dateInMillis = startDate.valueOf();
+
+          // Get color property from the component
+          const colorProperty = veventComponent.getFirstProperty("color");
+          const color = colorProperty?.getFirstValue() as string | undefined;
 
           return {
             title: veventObject.summary,
             subTitle: null,
-            description: veventObject.description,
-            startDate: utcStartDate,
+            description: veventObject.description || null,
+            startDate,
             endDate,
             image: null,
             location: veventObject.location || null,
-            indicatorColor:
-              "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
+            indicatorColor: color ?? "#ff8600",
             links: [
               {
                 href: this.externalUrl(

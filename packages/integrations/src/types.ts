@@ -12,4 +12,5 @@ export * from "./unifi-controller/unifi-controller-types";
 export * from "./opnsense/opnsense-types";
 export * from "./interfaces/media-releases";
 export * from "./coolify/coolify-types";
+export * from "./interfaces/timetable/timetable-types";
 export * from "./tracearr/tracearr-types";

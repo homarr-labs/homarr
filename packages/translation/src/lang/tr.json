@@ -1625,6 +1625,9 @@
         },
         "allowGeolocation": {
           "label": "Coğrafi konuma izin ver (geolocation)"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1860,9 @@
         },
         "memory": {
           "label": "Bellek Bilgilerini Göster"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "Çalışma Süresini Göster"
@@ -2725,6 +2731,7 @@
           "option": {
             "cpu": "İşlemci",
             "memory": "Bellek",
+            "gpu": "",
             "network": "Ağ"
           }
         },
@@ -2741,6 +2748,7 @@
       "card": {
         "cpu": "İşlemci",
         "memory": "BELLEK",
+        "gpu": "",
         "network": "AĞ",
         "up": "YÜKLEME",
         "down": "İNDİRME"
