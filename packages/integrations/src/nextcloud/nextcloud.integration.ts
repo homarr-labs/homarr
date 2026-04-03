@@ -119,8 +119,39 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             if (nextEndDate < start) continue;
 
             startDates.push(nextStartDate);
+            logger.warn(
+              veventObject.summary +
+                " " +
+                next.zone.tzid +
+                " " +
+                next.toJSDate().toUTCString() +
+                " " +
+                nextStartDate.toUTCString() +
+                " " +
+                next.toJSDate().toISOString() +
+                " " +
+                nextStartDate.toISOString() +
+                " " +
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                ICAL.TimezoneService.get("Asia/Tokyo")?.tzid,
+            );
           }
         } else {
+          logger.warn(
+            veventObject.summary +
+              " " +
+              veventObject.startDate.zone.tzid +
+              " " +
+              veventObject.startDate.toJSDate().toUTCString() +
+              " " +
+              veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate().toUTCString() +
+              veventObject.startDate.toJSDate().toISOString() +
+              " " +
+              veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate().toISOString() +
+              " " +
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              ICAL.TimezoneService.get("Asia/Tokyo")?.tzid,
+          );
           startDates = [veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate()];
         }
 
