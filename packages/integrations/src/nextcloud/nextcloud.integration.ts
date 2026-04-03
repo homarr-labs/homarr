@@ -136,7 +136,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             title: veventObject.summary,
             subTitle: null,
             description: veventObject.description || null,
-            startDate: startDate,
+            startDate,
             endDate,
             image: null,
             location: veventObject.location || null,
