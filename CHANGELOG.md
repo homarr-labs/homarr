@@ -1,3 +1,41 @@
+## [1.58.0](https://github.com/homarr-labs/homarr/compare/v1.57.1...v1.58.0) (2026-04-03)
+
+### Features
+
+* **integrations:** add search.ch integration with timetable widget ([#5180](https://github.com/homarr-labs/homarr/issues/5180)) ([abb2dfc](https://github.com/homarr-labs/homarr/commit/abb2dfc92ab51b16e7172374cfee8b9c0c752454))
+
+### Bug Fixes
+
+* **boards:** unable to click on links at settings page ([#5230](https://github.com/homarr-labs/homarr/issues/5230)) ([6a200c3](https://github.com/homarr-labs/homarr/commit/6a200c39afaa1a9a1057643612065a40ad1cdd82))
+* **deps:** update dependency @ctrl/deluge to ^7.5.3 ([#5365](https://github.com/homarr-labs/homarr/issues/5365)) ([9c134c5](https://github.com/homarr-labs/homarr/commit/9c134c5ceb742b21b021ef3b49de8cc0d526d460))
+* **deps:** update dependency @ctrl/deluge to v8 ([#5367](https://github.com/homarr-labs/homarr/issues/5367)) ([e88e3d1](https://github.com/homarr-labs/homarr/commit/e88e3d17c01dab8836bec11d2ac01195f06cdc2e))
+* **deps:** update dependency @immich/sdk to ^2.6.2 ([#5370](https://github.com/homarr-labs/homarr/issues/5370)) ([4a5bafa](https://github.com/homarr-labs/homarr/commit/4a5bafa79092b209e94a56f72362011f416bf115))
+* **deps:** update dependency @immich/sdk to ^2.6.3 ([#5380](https://github.com/homarr-labs/homarr/issues/5380)) ([2dd3c90](https://github.com/homarr-labs/homarr/commit/2dd3c906c4215b55e23f4b15ba4b423e23be8376))
+* **deps:** update dependency @tabler/icons-react to ^3.41.0 ([#5384](https://github.com/homarr-labs/homarr/issues/5384)) ([a9bcc9d](https://github.com/homarr-labs/homarr/commit/a9bcc9d04bdfcf28ea561cd590ca2a4bd775593c))
+* **deps:** update dependency better-sqlite3 to ^12.8.0 ([#5266](https://github.com/homarr-labs/homarr/issues/5266)) ([46db8b6](https://github.com/homarr-labs/homarr/commit/46db8b6ab32406fb4ff7a7a9938692954778a070))
+* **deps:** update dependency drizzle-orm to ^0.45.2 ([#5388](https://github.com/homarr-labs/homarr/issues/5388)) ([0a78e3f](https://github.com/homarr-labs/homarr/commit/0a78e3f12aa99509f42d7af647a478c5abaf5c96))
+* **deps:** update dependency fast-xml-parser to ^5.5.9 ([#5359](https://github.com/homarr-labs/homarr/issues/5359)) ([189806b](https://github.com/homarr-labs/homarr/commit/189806b5a2b8e67f925cc8def6bc8ddefdc5bfc4))
+* **deps:** update dependency fastify to ^5.8.4 ([#5351](https://github.com/homarr-labs/homarr/issues/5351)) ([728f7e4](https://github.com/homarr-labs/homarr/commit/728f7e489aa499bcd7e97c7ec8571e29e7e2cab3))
+* **deps:** update dependency isomorphic-dompurify to ^3.7.0 ([#5366](https://github.com/homarr-labs/homarr/issues/5366)) ([c2b54dd](https://github.com/homarr-labs/homarr/commit/c2b54ddfaab93daa4e65c0c38bf5c27e4402a492))
+* **deps:** update dependency isomorphic-dompurify to ^3.7.1 ([#5369](https://github.com/homarr-labs/homarr/issues/5369)) ([8d1ff40](https://github.com/homarr-labs/homarr/commit/8d1ff4065d669268f0e6a03f2b68c1ba728a756a))
+* **deps:** update dependency jotai to ^2.19.0 ([#5368](https://github.com/homarr-labs/homarr/issues/5368)) ([14d8717](https://github.com/homarr-labs/homarr/commit/14d87178b5a93bdc6fb74793feed95d014814d0b))
+* **deps:** update dependency node-ical to ^0.23.1 - abandoned ([#4856](https://github.com/homarr-labs/homarr/issues/4856)) ([b07c545](https://github.com/homarr-labs/homarr/commit/b07c545f17f4dafa62167047baa9eed4b7ee4395))
+* **deps:** update dependency typescript-eslint to ^8.57.2 ([#5360](https://github.com/homarr-labs/homarr/issues/5360)) ([cefbf0e](https://github.com/homarr-labs/homarr/commit/cefbf0e2715e9adbc72cdb0b83d84c309e3257d6))
+* **deps:** update dependency undici to v7.24.6 ([#5374](https://github.com/homarr-labs/homarr/issues/5374)) ([4f2cc9a](https://github.com/homarr-labs/homarr/commit/4f2cc9af2a42e19624def3bdea60fcb00334c483))
+* **deps:** update dependency zod to ^4.3.5 - abandoned ([#4803](https://github.com/homarr-labs/homarr/issues/4803)) ([2b4c83d](https://github.com/homarr-labs/homarr/commit/2b4c83dccac168ffa6f9b6e184ed004659373cf7))
+* **deps:** update dependency zod to ^4.3.6 ([#5376](https://github.com/homarr-labs/homarr/issues/5376)) ([a9582f0](https://github.com/homarr-labs/homarr/commit/a9582f04edb0e161d1fab6e64b13d0ce463ef341))
+* **deps:** update tanstack-query monorepo to ^5.95.0 ([#5325](https://github.com/homarr-labs/homarr/issues/5325)) ([b11bf36](https://github.com/homarr-labs/homarr/commit/b11bf367d0567e4c8b9068804442ebd200dab01c))
+* **deps:** update tanstack-query monorepo to ^5.95.1 ([#5355](https://github.com/homarr-labs/homarr/issues/5355)) ([332b6b4](https://github.com/homarr-labs/homarr/commit/332b6b4f42e7c90570cd4c25a6e6a331a76c660f))
+* **deps:** update tanstack-query monorepo to ^5.95.2 ([#5357](https://github.com/homarr-labs/homarr/issues/5357)) ([6820991](https://github.com/homarr-labs/homarr/commit/682099189b689ea17e16af41fd280a72ed68016f))
+* **deps:** update tiptap monorepo to v3.20.5 ([#5371](https://github.com/homarr-labs/homarr/issues/5371)) ([6820f8a](https://github.com/homarr-labs/homarr/commit/6820f8afea622587c1ee18b13d13a041ca0572ee))
+* **deps:** update tiptap monorepo to v3.21.0 ([#5386](https://github.com/homarr-labs/homarr/issues/5386)) ([b30dbaf](https://github.com/homarr-labs/homarr/commit/b30dbafbbbad468ff37ff11237a64ec29df62345))
+* **deps:** update trpc monorepo to ^11.15.0 ([#5354](https://github.com/homarr-labs/homarr/issues/5354)) ([2fb2981](https://github.com/homarr-labs/homarr/commit/2fb2981d2fb79ca2ca6a9bc5c08d91c8fa5710e7))
+* **deps:** update trpc monorepo to ^11.15.1 ([#5381](https://github.com/homarr-labs/homarr/issues/5381)) ([451e68a](https://github.com/homarr-labs/homarr/commit/451e68ab57551e23dd7ae772b7483cc56d57ebbb))
+* **deps:** update trpc monorepo to ^11.16.0 ([#5392](https://github.com/homarr-labs/homarr/issues/5392)) ([72a93e6](https://github.com/homarr-labs/homarr/commit/72a93e681f3701459176692857220730c279f80b))
+* **deps:** update turbo monorepo to ^2.8.21 ([#5391](https://github.com/homarr-labs/homarr/issues/5391)) ([fa40b6b](https://github.com/homarr-labs/homarr/commit/fa40b6b647b884a7f10c268a22330e0e68b50d4d))
+* honor trusted certificates in Immich integration requests ([#5275](https://github.com/homarr-labs/homarr/issues/5275)) ([7679553](https://github.com/homarr-labs/homarr/commit/7679553f16ff2945a3eb6cb668ca3a701d13d5ce)), closes [#5242](https://github.com/homarr-labs/homarr/issues/5242)
+* node-ical prevents many trpc queries from loading ([#5395](https://github.com/homarr-labs/homarr/issues/5395)) ([c977b84](https://github.com/homarr-labs/homarr/commit/c977b84e2d84d5724219f5ff5f99bc550438e168))
+
 ## [1.57.1](https://github.com/homarr-labs/homarr/compare/v1.57.0...v1.57.1) (2026-03-27)
 
 ### Bug Fixes
