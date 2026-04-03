@@ -1627,7 +1627,7 @@
           "label": "Allow geolocation"
         },
         "allowModals": {
-          "label": ""
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1859,110 +1859,110 @@
           "label": "Show CPU Info"
         },
         "memory": {
-          "label": ""
+          "label": "Show Memory Info"
         },
         "gpu": {
-          "label": ""
+          "label": "Show GPU Info"
         },
         "showUptime": {
-          "label": ""
+          "label": "Show Uptime"
         },
         "fileSystem": {
-          "label": ""
+          "label": "Show Filesystem Info"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Default tab"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Section indicator requirement"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "information": "Information",
+        "processor": "Processor: {cpuModelName}",
+        "memory": "Memory: {memory}GiB",
+        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
+        "loadAverage": "Load average:",
+        "minute": "1 minute",
+        "minutes": "{count} minutes",
+        "used": "Used",
+        "available": "Available",
+        "lastSeen": "Last status update: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch health status"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Nodes"
           },
           "qemu": {
-            "name": ""
+            "name": "VMs"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Storage"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Cores",
+            "memory": "Memory",
+            "storage": "Storage",
+            "uptime": "Uptime",
+            "haState": "HA State",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Local storage",
+              "shared": "Shared storage"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker stats",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Column used for sorting by default",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         }
       },
       "error": {
@@ -4390,13 +4390,13 @@
             "title": "",
             "option": {
               "documentation": {
-                "label": ""
+                "label": "Documentation"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Submit an issue"
               },
               "discord": {
-                "label": ""
+                "label": "Community Discord"
               }
             }
           }
@@ -4405,20 +4405,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Search",
             "option": {
               "other": {
-                "label": ""
+                "label": "Search with another search engine"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
               },
               "search": {
-                "label": ""
+                "label": "Search for \"{query}\" with {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Start typing to search"
               }
             }
           },
