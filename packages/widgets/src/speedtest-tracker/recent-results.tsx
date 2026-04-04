@@ -82,7 +82,7 @@ function renderTopDateTick(props: { x: number; y: number; payload: { value: numb
 }
 
 function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step: number }[]) {
-  const step = stepOptions.find((opt) => maxVal <= opt.threshold)?.step ?? stepOptions.at(-1)!.step;
+  const step = (stepOptions.find((opt) => maxVal <= opt.threshold) ?? stepOptions.at(-1))?.step ?? 1;
   const roundedMax = Math.ceil(maxVal / step) * step || step;
   const ticks: number[] = [];
   for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
