@@ -1525,6 +1525,17 @@
         "offline": "オフライン"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "メモ帳",
       "description": "マークダウンをサポートするシンプルなノートブックウィジェット",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft サーバーの状態"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
