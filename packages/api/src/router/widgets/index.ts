@@ -25,6 +25,7 @@ export const widgetRouter = createTRPCRouter({
   releases: lazy(() => import("./releases").then((mod) => mod.releasesRouter)),
   networkController: lazy(() => import("./network-controller").then((mod) => mod.networkControllerRouter)),
   firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
+  uptimeKuma: lazy(() => import("./uptime-kuma").then((mod) => mod.uptimeKumaRouter)),
   notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
   timetable: lazy(() => import("./timetable").then((mod) => mod.timetableRouter)),
   tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),

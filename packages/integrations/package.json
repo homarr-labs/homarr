@@ -41,6 +41,7 @@
     "@immich/sdk": "^2.6.3",
     "@jellyfin/sdk": "^0.13.0",
     "@octokit/auth-app": "^8.2.0",
+    "@ruslanpdf/uptime-kuma-api": "^1.0.2",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
     "octokit": "^5.0.5",

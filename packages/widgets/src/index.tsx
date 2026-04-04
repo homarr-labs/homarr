@@ -46,6 +46,7 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as uptimeKuma from "./uptime-kuma";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -71,6 +72,7 @@ export const widgetImports = {
   networkControllerStatus,
   rssFeed,
   bookmarks,
+  uptimeKuma,
   indexerManager,
   healthMonitoring,
   mediaTranscoding,
