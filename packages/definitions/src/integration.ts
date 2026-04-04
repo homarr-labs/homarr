@@ -340,7 +340,6 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/search-ch.png",
     defaultUrl: "https://search.ch",
     category: ["timetable"],
-    // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/search-ch"),
   },
   immich: {

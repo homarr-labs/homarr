@@ -1,3 +1,9 @@
+## [1.58.1](https://github.com/homarr-labs/homarr/compare/v1.58.0...v1.58.1) (2026-04-04)
+
+### Bug Fixes
+
+* arabic text in english translations ([a86cdb9](https://github.com/homarr-labs/homarr/commit/a86cdb9fb91a10c8250f849e70c17777c18ada77))
+
 ## [1.58.0](https://github.com/homarr-labs/homarr/compare/v1.57.1...v1.58.0) (2026-04-03)
 
 ### Features
