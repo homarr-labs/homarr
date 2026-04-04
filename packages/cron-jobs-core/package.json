@@ -27,7 +27,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^",
     "@homarr/db": "workspace:^0.1.0",
-    "croner": "^10.0.1"
+    "croner": "10.0.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
