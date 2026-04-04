@@ -1,4 +1,4 @@
-import type { ScheduledTask } from "node-cron";
+import type { Cron } from "croner";
 
 import { objectEntries, objectKeys } from "@homarr/common";
 import { db } from "@homarr/db";
@@ -34,7 +34,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       });
     }
 
-    const tasks = new Map<string, ScheduledTask>();
+    const tasks = new Map<string, Cron>();
 
     return {
       initializeAsync: async () => {
@@ -62,7 +62,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
           name: job.name,
         });
         await job.onStartAsync();
-        await tasks.get(name as string)?.start();
+        tasks.get(name as string)?.resume();
       },
       startAllAsync: async () => {
         for (const job of jobRegistry.values()) {
@@ -74,7 +74,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
             name: job.name,
           });
           await job.onStartAsync();
-          await tasks.get(job.name)?.start();
+          tasks.get(job.name)?.resume();
         }
       },
       runManuallyAsync: async (name: keyof TJobs) => {
@@ -87,23 +87,23 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
         options.logger.logInfo("Running schedule cron job manually.", {
           name: job.name,
         });
-        await tasks.get(name as string)?.execute();
+        await tasks.get(name as string)?.trigger();
       },
-      stopAsync: async (name: keyof TJobs) => {
+      stop: (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
         if (!job) return;
 
         options.logger.logInfo("Stopping schedule of cron job.", {
           name: job.name,
         });
-        await tasks.get(name as string)?.stop();
+        tasks.get(name as string)?.pause();
       },
-      stopAllAsync: async () => {
+      stopAll: () => {
         for (const job of jobRegistry.values()) {
           options.logger.logInfo("Stopping schedule of cron job.", {
             name: job.name,
           });
-          await tasks.get(job.name)?.stop();
+          tasks.get(job.name)?.pause();
         }
       },
       getJobRegistry() {
@@ -112,8 +112,8 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       getTask(name: keyof TJobs) {
         return tasks.get(name as string) ?? null;
       },
-      setTask(name: keyof TJobs, task: ScheduledTask) {
-        tasks.set(name as string, task);
+      setTask(name: keyof TJobs, cron: Cron) {
+        tasks.set(name as string, cron);
       },
       getKeys() {
         return objectKeys(jobs);
