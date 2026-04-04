@@ -1525,6 +1525,17 @@
         "offline": "Çevrimdışı"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Not Defteri",
       "description": "Markdown'ı destekleyen basit bir not defteri bileşeni",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft sunucu durumu"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Simge Güncelleme"

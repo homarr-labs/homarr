@@ -1525,6 +1525,17 @@
         "offline": "离线"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "笔记",
       "description": "支持 Markdown 的简单笔记本小部件",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft 服务状态"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "图标更新"
