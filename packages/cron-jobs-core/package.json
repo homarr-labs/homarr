@@ -27,14 +27,12 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^",
     "@homarr/db": "workspace:^0.1.0",
-    "croner": "^10.0.1",
-    "node-cron": "^4.2.1"
+    "croner": "^10.0.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node-cron": "^3.0.11",
     "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }

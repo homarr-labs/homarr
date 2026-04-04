@@ -1,4 +1,4 @@
-import { schedule, validate as validateCron } from "node-cron";
+import { Cron } from "croner";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { IJobManager } from "@homarr/cron-job-api";
@@ -21,29 +21,31 @@ export class JobManager implements IJobManager {
   public async triggerAsync(name: JobGroupKeys): Promise<void> {
     await this.jobGroup.runManuallyAsync(name);
   }
-  public async stopAsync(name: JobGroupKeys): Promise<void> {
+  public stop(name: JobGroupKeys): void {
     this.jobGroup.stop(name);
   }
   public async updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void> {
     logger.info("Updating cron job interval", { name, expression: cron });
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
-    if (!validateCron(cron)) {
-      throw new Error(`Invalid cron expression: ${cron}`);
-    }
     if (job.preventCustomInterval && cron !== job.cronExpression) {
       throw new Error(`Custom cron expressions are not allowed for job ${name}`);
     }
 
-    await this.updateConfigurationAsync(name, { cronExpression: cron });
-    await this.jobGroup.getTask(name)?.destroy();
+    const updatedConfig = await this.updateConfigurationAsync(name, { cronExpression: cron });
+    this.jobGroup.getTask(name)?.stop();
 
     this.jobGroup.setTask(
       name,
-      //new Cron
-      schedule(cron, () => void job.executeAsync(), {
-        name,
-      }),
+      new Cron(
+        cron,
+        {
+          name,
+          timezone: job.timezone,
+          paused: !updatedConfig.isEnabled,
+        },
+        () => void job.executeAsync(),
+      ),
     );
     logger.info("Cron job interval updated", { name, expression: cron });
   }
@@ -87,21 +89,27 @@ export class JobManager implements IJobManager {
         name,
         configuration: JSON.stringify(configuration),
       });
-      return;
+      return {
+        name,
+        cronExpression: configuration.cronExpression ?? existingConfig.cronExpression,
+        isEnabled: configuration.isEnabled ?? existingConfig.isEnabled,
+      };
     }
 
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
 
-    await this.db.insert(cronJobConfigurations).values({
+    const updatedConfig = {
       name,
       cronExpression: configuration.cronExpression ?? job.cronExpression,
       isEnabled: configuration.isEnabled ?? true,
-    });
+    };
+    await this.db.insert(cronJobConfigurations).values(updatedConfig);
     logger.debug("Cron job configuration updated", {
       name,
       configuration: JSON.stringify(configuration),
     });
+    return updatedConfig;
   }
 
   public async getAllAsync(): Promise<
