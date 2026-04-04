@@ -334,6 +334,15 @@ export const integrationDefs = {
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
   },
+  searchCh: {
+    name: "Search.ch",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/search-ch.png",
+    defaultUrl: "https://search.ch",
+    category: ["timetable"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/search-ch"),
+  },
   immich: {
     name: "Immich",
     secretKinds: [["apiKey"]],
@@ -442,6 +451,7 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "timetable",
   "photoService",
   "mediaMonitoring",
   "speedtest",

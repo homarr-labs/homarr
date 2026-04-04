@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timetable",
+      "description": "Displays departure times for a station",
+      "title": "Departures {station}",
+      "noStation": "No station selected",
+      "option": {
+        "station": {
+          "label": "Station"
+        }
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
@@ -3551,6 +3562,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft server status"
+            },
+            "timetable": {
+              "label": "Timetable"
             },
             "iconsUpdater": {
               "label": "Icons Updater"

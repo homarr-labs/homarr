@@ -43,6 +43,7 @@ import * as speedtestTracker from "./speedtest-tracker";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
+import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as video from "./video";
 import * as weather from "./weather";
@@ -83,6 +84,7 @@ export const widgetImports = {
   systemResources,
   coolify,
   systemDisks,
+  timetable,
   "immich-serverStats": immichServerStats,
   "immich-albumCarousel": immichAlbumCarousel,
   tracearr,

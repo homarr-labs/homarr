@@ -1125,17 +1125,17 @@
     "userAvatar": {
       "menu": {
         "switchToDarkMode": "Switch to dark mode",
-        "switchToLightMode": "Switch to light mode",
-        "management": "Management",
-        "preferences": "Your preferences",
-        "logout": "Log-out",
+        "switchToLightMode": "التبديل إلى الوضع الفاتح",
+        "management": "الإدارة",
+        "preferences": "تفضيلاتك",
+        "logout": "تسجيل الخروج",
         "login": "Log-in",
-        "homeBoard": "Your home board",
+        "homeBoard": "لوحة منزلك",
         "loggedOut": "Logged out",
-        "updateAvailable": "New update available: {tag}"
+        "updateAvailable": "{countUpdates} يتوفر تحديث جديد: {tag}"
       }
     },
-    "dangerZone": "Danger zone",
+    "dangerZone": "المنطقة الخطرة",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
     "servers": "Servers",
@@ -1627,7 +1627,7 @@
           "label": "Allow geolocation"
         },
         "allowModals": {
-          "label": ""
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1859,110 +1859,110 @@
           "label": "Show CPU Info"
         },
         "memory": {
-          "label": ""
+          "label": "Show Memory Info"
         },
         "gpu": {
-          "label": ""
+          "label": "Show GPU Info"
         },
         "showUptime": {
-          "label": ""
+          "label": "Show Uptime"
         },
         "fileSystem": {
-          "label": ""
+          "label": "Show Filesystem Info"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Default tab"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Section indicator requirement"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "information": "Information",
+        "processor": "Processor: {cpuModelName}",
+        "memory": "Memory: {memory}GiB",
+        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
+        "loadAverage": "Load average:",
+        "minute": "1 minute",
+        "minutes": "{count} minutes",
+        "used": "Used",
+        "available": "Available",
+        "lastSeen": "Last status update: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch health status"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Nodes"
           },
           "qemu": {
-            "name": ""
+            "name": "VMs"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Storage"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Cores",
+            "memory": "Memory",
+            "storage": "Storage",
+            "uptime": "Uptime",
+            "haState": "HA State",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Local storage",
+              "shared": "Shared storage"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker stats",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Column used for sorting by default",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         }
       },
       "error": {
@@ -3157,98 +3157,98 @@
     },
     "navbar": {
       "items": {
-        "home": "",
-        "boards": "",
-        "apps": "",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "home": "الصفحة الرئسية",
+        "boards": "الألواح",
+        "apps": "التطبيقات",
+        "integrations": "التكاملات",
+        "searchEngies": "محركات البحث",
+        "medias": "الوسائط",
         "users": {
-          "label": "",
+          "label": "المستخدمين",
           "items": {
-            "manage": "",
-            "invites": "",
-            "groups": ""
+            "manage": "إدارة المستخدمين",
+            "invites": "الدعوات",
+            "groups": "المجموعات"
           }
         },
         "tools": {
-          "label": "",
+          "label": "الأدوات",
           "items": {
-            "docker": "",
+            "docker": "الحاويات",
             "kubernetes": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "logs": "السجلات",
+            "api": "API",
+            "certificates": "الشهادات",
+            "tasks": "المهام"
           }
         },
-        "settings": "",
+        "settings": "الإعدادات",
         "help": {
-          "label": "",
+          "label": "المساعدة",
           "items": {
-            "documentation": "",
-            "submitIssue": "",
-            "discord": "",
-            "sourceCode": ""
+            "documentation": "المستندات",
+            "submitIssue": "إبلاغ عن مشكلة",
+            "discord": "مجتمع ديسكورد",
+            "sourceCode": "كود المصدر"
           }
         },
-        "about": ""
+        "about": "حول"
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "",
-          "user": "",
-          "invite": "",
-          "integration": "",
-          "app": "",
-          "group": "",
-          "searchEngine": "",
-          "media": ""
+          "board": "الألواح",
+          "user": "مستخدمين",
+          "invite": "دعوات",
+          "integration": "التكاملات",
+          "app": "البرامج",
+          "group": "المجموعات",
+          "searchEngine": "محركات البحث",
+          "media": "الوسائط"
         },
         "statisticLabel": {
-          "boards": "",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "boards": "اللوحات",
+          "resources": "الموارد",
+          "authentication": "المصادقة",
+          "authorization": "الأذونات"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "مرحبًا بعودتك إلى",
+          "subtitle": "{app} اللوحات"
         }
       },
       "board": {
-        "title": "",
+        "title": "لوحاتك",
         "action": {
           "new": {
-            "label": ""
+            "label": "لوحة جديدة"
           },
           "open": {
-            "label": ""
+            "label": "فتح اللوحة"
           },
           "settings": {
-            "label": ""
+            "label": "الإعدادات"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "تعيينه كلوحة رئيسية",
             "badge": {
-              "label": "",
+              "label": "الرئيسية",
               "tooltip": ""
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "تعيينه كصفحتك الرئيسية للجوال",
             "badge": {
-              "label": "",
+              "label": "الجوال",
               "tooltip": ""
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "تكرار اللوحة"
           },
           "delete": {
-            "label": "",
+            "label": "حذف نهائيًا",
             "confirm": {
               "title": "",
               "description": ""
@@ -3337,10 +3337,10 @@
           }
         },
         "invite": {
-          "title": "",
+          "title": "إدارة دعوات المستخدمين",
           "action": {
             "new": {
-              "title": "",
+              "title": "دعوة جديدة",
               "description": ""
             },
             "copy": {
@@ -3356,13 +3356,13 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "المعرّف"
             },
             "creator": {
-              "label": ""
+              "label": "المنشئ"
             },
             "expirationDate": {
-              "label": ""
+              "label": "انتهاء الصلاحية"
             },
             "token": {
               "label": ""
@@ -4129,7 +4129,7 @@
     "manage": {
       "label": "",
       "boards": {
-        "label": ""
+        "label": "الألواح"
       },
       "integrations": {
         "label": "",
@@ -4162,7 +4162,7 @@
         }
       },
       "users": {
-        "label": "",
+        "label": "المستخدمين",
         "create": {
           "label": ""
         },
@@ -4173,7 +4173,7 @@
           "label": ""
         },
         "invites": {
-          "label": ""
+          "label": "الدعوات"
         }
       },
       "tools": {
@@ -4230,7 +4230,7 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "البحث عن",
     "nothingFound": "",
     "error": {
       "fetch": ""
@@ -4390,13 +4390,13 @@
             "title": "",
             "option": {
               "documentation": {
-                "label": ""
+                "label": "Documentation"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Submit an issue"
               },
               "discord": {
-                "label": ""
+                "label": "Community Discord"
               }
             }
           }
@@ -4405,20 +4405,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Search",
             "option": {
               "other": {
-                "label": ""
+                "label": "Search with another search engine"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
               },
               "search": {
-                "label": ""
+                "label": "Search for \"{query}\" with {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Start typing to search"
               }
             }
           },
