@@ -1,4 +1,5 @@
-import { createTask, validate } from "node-cron";
+import { Cron } from "croner";
+import { validate } from "node-cron";
 
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
@@ -83,10 +84,18 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
           ? defaultCronExpression
           : (configuration?.cronExpression ?? defaultCronExpression);
 
-        const scheduledTask = createTask(cronExpression, () => void catchingCallbackAsync(), {
+        const scheduledTask = new Cron(
+          cronExpression,
+          {
+            name,
+            timezone: creatorOptions.timezone,
+          },
+          () => void catchingCallbackAsync(),
+        );
+        /*const scheduledTask = createTask(cronExpression, () => void catchingCallbackAsync(), {
           name,
           timezone: creatorOptions.timezone,
-        });
+        });*/
         creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
           name,
           cronExpression: defaultCronExpression,

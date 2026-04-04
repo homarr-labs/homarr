@@ -22,7 +22,7 @@ export class JobManager implements IJobManager {
     await this.jobGroup.runManuallyAsync(name);
   }
   public async stopAsync(name: JobGroupKeys): Promise<void> {
-    await this.jobGroup.stopAsync(name);
+    this.jobGroup.stop(name);
   }
   public async updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void> {
     logger.info("Updating cron job interval", { name, expression: cron });
@@ -40,6 +40,7 @@ export class JobManager implements IJobManager {
 
     this.jobGroup.setTask(
       name,
+      //new Cron
       schedule(cron, () => void job.executeAsync(), {
         name,
       }),
@@ -52,7 +53,7 @@ export class JobManager implements IJobManager {
     if (!job) throw new Error(`Job ${name} not found`);
 
     await this.updateConfigurationAsync(name, { isEnabled: false });
-    await this.jobGroup.stopAsync(name);
+    this.jobGroup.stop(name);
     logger.info("Cron job disabled", { name });
   }
   public async enableAsync(name: JobGroupKeys): Promise<void> {

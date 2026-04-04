@@ -1100,6 +1100,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      croner:
+        specifier: ^10.0.1
+        version: 10.0.1
       node-cron:
         specifier: ^4.2.1
         version: 4.2.1
@@ -6109,6 +6112,10 @@ packages:
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
+
+  croner@10.0.1:
+    resolution: {integrity: sha512-ixNtAJndqh173VQ4KodSdJEI6nuioBWI0V1ITNKhZZsO0pEMoDxz539T4FTTbSZ/xIOSuDnzxLVRqBVSvPNE2g==}
+    engines: {node: '>=18.0'}
 
   cross-env@10.1.0:
     resolution: {integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==}
@@ -15010,6 +15017,8 @@ snapshots:
       readable-stream: 4.5.2
 
   crelt@1.0.6: {}
+
+  croner@10.0.1: {}
 
   cross-env@10.1.0:
     dependencies:
