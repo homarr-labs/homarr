@@ -1125,17 +1125,17 @@
     "userAvatar": {
       "menu": {
         "switchToDarkMode": "Switch to dark mode",
-        "switchToLightMode": "التبديل إلى الوضع الفاتح",
-        "management": "الإدارة",
-        "preferences": "تفضيلاتك",
-        "logout": "تسجيل الخروج",
+        "switchToLightMode": "Switch to light mode",
+        "management": "Management",
+        "preferences": "Your preferences",
+        "logout": "Log-out",
         "login": "Log-in",
-        "homeBoard": "لوحة منزلك",
+        "homeBoard": "Your home board",
         "loggedOut": "Logged out",
-        "updateAvailable": "{countUpdates} يتوفر تحديث جديد: {tag}"
+        "updateAvailable": "New update available: {tag}"
       }
     },
-    "dangerZone": "المنطقة الخطرة",
+    "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
     "servers": "Servers",
@@ -1523,6 +1523,17 @@
       "status": {
         "online": "Online",
         "offline": "Offline"
+      }
+    },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
       }
     },
     "notebook": {
@@ -3157,98 +3168,98 @@
     },
     "navbar": {
       "items": {
-        "home": "الصفحة الرئسية",
-        "boards": "الألواح",
-        "apps": "التطبيقات",
-        "integrations": "التكاملات",
-        "searchEngies": "محركات البحث",
-        "medias": "الوسائط",
+        "home": "",
+        "boards": "",
+        "apps": "",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
-          "label": "المستخدمين",
+          "label": "",
           "items": {
-            "manage": "إدارة المستخدمين",
-            "invites": "الدعوات",
-            "groups": "المجموعات"
+            "manage": "",
+            "invites": "",
+            "groups": ""
           }
         },
         "tools": {
-          "label": "الأدوات",
+          "label": "",
           "items": {
-            "docker": "الحاويات",
+            "docker": "",
             "kubernetes": "",
-            "logs": "السجلات",
-            "api": "API",
-            "certificates": "الشهادات",
-            "tasks": "المهام"
+            "logs": "",
+            "api": "",
+            "certificates": "",
+            "tasks": ""
           }
         },
-        "settings": "الإعدادات",
+        "settings": "",
         "help": {
-          "label": "المساعدة",
+          "label": "",
           "items": {
-            "documentation": "المستندات",
-            "submitIssue": "إبلاغ عن مشكلة",
-            "discord": "مجتمع ديسكورد",
-            "sourceCode": "كود المصدر"
+            "documentation": "",
+            "submitIssue": "",
+            "discord": "",
+            "sourceCode": ""
           }
         },
-        "about": "حول"
+        "about": ""
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "الألواح",
-          "user": "مستخدمين",
-          "invite": "دعوات",
-          "integration": "التكاملات",
-          "app": "البرامج",
-          "group": "المجموعات",
-          "searchEngine": "محركات البحث",
-          "media": "الوسائط"
+          "board": "",
+          "user": "",
+          "invite": "",
+          "integration": "",
+          "app": "",
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
-          "boards": "اللوحات",
-          "resources": "الموارد",
-          "authentication": "المصادقة",
-          "authorization": "الأذونات"
+          "boards": "",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         },
         "heroBanner": {
-          "title": "مرحبًا بعودتك إلى",
-          "subtitle": "{app} اللوحات"
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
-        "title": "لوحاتك",
+        "title": "",
         "action": {
           "new": {
-            "label": "لوحة جديدة"
+            "label": ""
           },
           "open": {
-            "label": "فتح اللوحة"
+            "label": ""
           },
           "settings": {
-            "label": "الإعدادات"
+            "label": ""
           },
           "setHomeBoard": {
-            "label": "تعيينه كلوحة رئيسية",
+            "label": "",
             "badge": {
-              "label": "الرئيسية",
+              "label": "",
               "tooltip": ""
             }
           },
           "setMobileHomeBoard": {
-            "label": "تعيينه كصفحتك الرئيسية للجوال",
+            "label": "",
             "badge": {
-              "label": "الجوال",
+              "label": "",
               "tooltip": ""
             }
           },
           "duplicate": {
-            "label": "تكرار اللوحة"
+            "label": ""
           },
           "delete": {
-            "label": "حذف نهائيًا",
+            "label": "",
             "confirm": {
               "title": "",
               "description": ""
@@ -3337,10 +3348,10 @@
           }
         },
         "invite": {
-          "title": "إدارة دعوات المستخدمين",
+          "title": "",
           "action": {
             "new": {
-              "title": "دعوة جديدة",
+              "title": "",
               "description": ""
             },
             "copy": {
@@ -3356,13 +3367,13 @@
           },
           "field": {
             "id": {
-              "label": "المعرّف"
+              "label": ""
             },
             "creator": {
-              "label": "المنشئ"
+              "label": ""
             },
             "expirationDate": {
-              "label": "انتهاء الصلاحية"
+              "label": ""
             },
             "token": {
               "label": ""
@@ -3511,6 +3522,9 @@
           },
           "job": {
             "minecraftServerStatus": {
+              "label": ""
+            },
+            "timetable": {
               "label": ""
             },
             "iconsUpdater": {
@@ -4129,7 +4143,7 @@
     "manage": {
       "label": "",
       "boards": {
-        "label": "الألواح"
+        "label": ""
       },
       "integrations": {
         "label": "",
@@ -4162,7 +4176,7 @@
         }
       },
       "users": {
-        "label": "المستخدمين",
+        "label": "",
         "create": {
           "label": ""
         },
@@ -4173,7 +4187,7 @@
           "label": ""
         },
         "invites": {
-          "label": "الدعوات"
+          "label": ""
         }
       },
       "tools": {
@@ -4230,7 +4244,7 @@
     }
   },
   "search": {
-    "placeholder": "البحث عن",
+    "placeholder": "",
     "nothingFound": "",
     "error": {
       "fetch": ""

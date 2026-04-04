@@ -1525,6 +1525,17 @@
         "offline": "Не в сети"
       }
     },
+    "timetable": {
+      "name": "Расписание",
+      "description": "Отображает время отправления со станции",
+      "title": "Отправления {station}",
+      "noStation": "Станция не выбрана",
+      "option": {
+        "station": {
+          "label": "Станция"
+        }
+      }
+    },
     "notebook": {
       "name": "Блокнот",
       "description": "Простой виджет заметок с поддержкой markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Статус сервера Minecraft"
+            },
+            "timetable": {
+              "label": "Расписание"
             },
             "iconsUpdater": {
               "label": "Обновление иконок"

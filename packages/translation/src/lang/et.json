@@ -1525,6 +1525,17 @@
         "offline": ""
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "",
       "description": "",
@@ -3511,6 +3522,9 @@
           },
           "job": {
             "minecraftServerStatus": {
+              "label": ""
+            },
+            "timetable": {
               "label": ""
             },
             "iconsUpdater": {
