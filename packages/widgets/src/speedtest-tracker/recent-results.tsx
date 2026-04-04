@@ -151,6 +151,7 @@ function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
 function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
+  const t = useScopedI18n("widget.speedtestTracker");
 
   const data = useMemo(
     () =>
@@ -170,7 +171,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 
   const yConfig = useMemo(
     () =>
-      buildYAxisConfig(Math.max(...data.map((datum) => Math.max(datum.Download, datum.Upload)), 0), [
+      buildYAxisConfig(Math.max(...data.map((d) => Math.max(d.Download, d.Upload)), 0), [
         { threshold: 400, step: 100 },
         { threshold: Infinity, step: 200 },
       ]),
@@ -188,8 +189,8 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       data={data}
       dataKey="ts"
       series={[
-        { name: "Download", color: "blue" },
-        { name: "Upload", color: "teal" },
+        { name: "Download", label: t("download"), color: "blue" },
+        { name: "Upload", label: t("upload"), color: "teal" },
       ]}
       curveType="monotone"
       gridAxis="y"
@@ -262,6 +263,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
+  const t = useScopedI18n("widget.speedtestTracker");
 
   const data = useMemo(
     () =>
@@ -277,7 +279,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
 
   const yConfig = useMemo(
     () =>
-      buildYAxisConfig(Math.max(...data.map((datum) => datum.Ping), 0), [
+      buildYAxisConfig(Math.max(...data.map((d) => d.Ping), 0), [
         { threshold: 10, step: 2 },
         { threshold: 50, step: 10 },
         { threshold: 200, step: 50 },
@@ -296,7 +298,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
       h={height}
       data={data}
       dataKey="ts"
-      series={[{ name: "Ping", color: "orange" }]}
+      series={[{ name: "Ping", label: t("ping"), color: "orange" }]}
       curveType="monotone"
       gridAxis="y"
       tickLine="none"

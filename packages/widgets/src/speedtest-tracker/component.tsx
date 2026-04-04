@@ -18,16 +18,6 @@ export default function SpeedtestTrackerWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"speedtestTracker">) {
-  return <SpeedtestTrackerContent integrationIds={integrationIds} options={options} isEditMode={isEditMode} />;
-}
-
-interface SpeedtestTrackerContentProps {
-  integrationIds: string[];
-  options: WidgetComponentProps<"speedtestTracker">["options"];
-  isEditMode: boolean;
-}
-
-function SpeedtestTrackerContent({ integrationIds, options, isEditMode }: SpeedtestTrackerContentProps) {
   const t = useScopedI18n("widget.speedtestTracker");
   const [dashboardData] = clientApi.widget.speedtestTracker.getDashboard.useSuspenseQuery({ integrationIds });
 

@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 
-const createEnvelopeSchema = <T extends z.ZodType>(dataSchema: T) =>
-  z.object({ data: z.unknown() }).transform((envelope) => dataSchema.parse(envelope.data) as z.infer<T>);
+const createEnvelopeSchema = <T extends z.ZodType>(dataSchema: T) => z.object({ data: dataSchema });
 
 const parseTimestamp = (timestamp: string): Date => new Date(`${timestamp.replace(" ", "T")}Z`);
 

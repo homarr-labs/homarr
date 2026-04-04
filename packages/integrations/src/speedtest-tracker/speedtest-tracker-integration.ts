@@ -42,7 +42,7 @@ export class SpeedtestTrackerIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerLatestResultEnvelopeSchema.parse(await response.json());
+    return speedtestTrackerLatestResultEnvelopeSchema.parse(await response.json()).data;
   }
 
   public async getStatsAsync(): Promise<SpeedtestTrackerStats | null> {
@@ -52,7 +52,7 @@ export class SpeedtestTrackerIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return speedtestTrackerStatsEnvelopeSchema.parse(await response.json());
+    return speedtestTrackerStatsEnvelopeSchema.parse(await response.json()).data;
   }
 
   public async getRecentResultsAsync(perPage = 10): Promise<SpeedtestTrackerResultsCollection> {
