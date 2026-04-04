@@ -1525,6 +1525,17 @@
         "offline": "crwdns2494:0crwdne2494:0"
       }
     },
+    "timetable": {
+      "name": "crwdns4000:0crwdne4000:0",
+      "description": "crwdns4002:0crwdne4002:0",
+      "title": "crwdns4004:0{station}crwdne4004:0",
+      "noStation": "crwdns4006:0crwdne4006:0",
+      "option": {
+        "station": {
+          "label": "crwdns4008:0crwdne4008:0"
+        }
+      }
+    },
     "notebook": {
       "name": "crwdns860:0crwdne860:0",
       "description": "crwdns862:0crwdne862:0",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "crwdns2496:0crwdne2496:0"
+            },
+            "timetable": {
+              "label": "crwdns4010:0crwdne4010:0"
             },
             "iconsUpdater": {
               "label": "crwdns1828:0crwdne1828:0"

@@ -1525,6 +1525,17 @@
         "offline": "離線"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "筆記",
       "description": "支持 Markdown 的簡單筆記小工具",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft 伺服器狀態"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "icon 上傳器"

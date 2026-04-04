@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Caderno de anotações",
       "description": "Um widget de bloco de notas simples que suporta markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status do servidor Minecraft"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Atualizador de Ícones"
