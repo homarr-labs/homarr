@@ -1,6 +1,6 @@
 import { command, string } from "@drizzle-team/brocli";
 
-import { hashPasswordAsync } from "@homarr/auth";
+import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { db, eq } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 
@@ -29,15 +29,17 @@ export const usersUpdatePassword = command({
       where: options.id ? eq(users.id, options.id) : eq(users.name, options.username!),
     });
 
-    if (!user?.salt) {
+    if (!user?.password) {
       console.error("User not found or has no credentials record");
       return;
     }
 
+    const salt = await createSaltAsync();
+
     await db
       .update(users)
       .set({
-        password: await hashPasswordAsync(options.password, user.salt),
+        password: await hashPasswordAsync(options.password, salt),
       })
       .where(eq(users.id, user.id));
 

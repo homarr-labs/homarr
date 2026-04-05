@@ -77,7 +77,6 @@ export const recreateAdmin = command({
       name: result.data,
       provider: "credentials",
       password: hashedPassword,
-      salt,
     });
 
     await db.insert(groupMembers).values({

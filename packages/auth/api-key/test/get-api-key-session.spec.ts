@@ -122,7 +122,6 @@ const setupAsync = async (options?: SetupOptions) => {
     await db.insert(apiKeys).values({
       id: defaultApiKeyId,
       apiKey: await hashPasswordAsync(options.token, salt),
-      salt,
       userId: defaultUserId,
     });
   }

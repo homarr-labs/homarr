@@ -3,7 +3,7 @@ import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
 import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { comparePasswordsAsync, createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
@@ -100,7 +100,6 @@ export const userRouter = createTRPCRouter({
         id: userId,
         name: input.username,
         password: hashedPassword,
-        salt,
       };
 
       await handleTransactionsAsync(ctx.db, {
@@ -393,7 +392,6 @@ export const userRouter = createTRPCRouter({
         columns: {
           id: true,
           password: true,
-          salt: true,
           provider: true,
         },
         where: eq(users.id, input.userId),
@@ -423,8 +421,7 @@ export const userRouter = createTRPCRouter({
       });
 
       if (isPreviousPasswordRequired) {
-        const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");
-        const isValid = previousPasswordHash === dbUser.password;
+        const isValid = await comparePasswordsAsync(input.previousPassword, dbUser.password ?? "");
 
         if (!isValid) {
           throw new TRPCError({
@@ -592,7 +589,6 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBase
     name: input.username,
     email: input.email,
     password: hashedPassword,
-    salt,
   });
   return userId;
 };

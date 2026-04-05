@@ -17,7 +17,6 @@ describe("authorizeWithBasicCredentials", () => {
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
-      salt,
       password: await hashPasswordAsync("test", salt),
     });
 
@@ -38,7 +37,6 @@ describe("authorizeWithBasicCredentials", () => {
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
-      salt,
       password: await hashPasswordAsync("test", salt),
     });
 
@@ -59,7 +57,6 @@ describe("authorizeWithBasicCredentials", () => {
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
-      salt,
       password: await hashPasswordAsync("test", salt),
     });
 

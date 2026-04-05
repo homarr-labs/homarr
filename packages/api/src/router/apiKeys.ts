@@ -14,7 +14,6 @@ export const apiKeysRouter = createTRPCRouter({
       columns: {
         id: true,
         apiKey: false,
-        salt: false,
       },
       with: {
         user: {
@@ -36,7 +35,6 @@ export const apiKeysRouter = createTRPCRouter({
     await db.insert(apiKeys).values({
       id,
       apiKey: hashedRandomToken,
-      salt,
       userId: ctx.session.user.id,
     });
     return {
