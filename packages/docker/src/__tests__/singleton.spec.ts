@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-// Use vi.hoisted so the mock env object is available in hoisted vi.mock factories
 const mockEnv = vi.hoisted(() => ({
   DOCKER_SOCKET_PATHS: undefined as string | undefined,
   DOCKER_HOSTNAMES: undefined as string | undefined,

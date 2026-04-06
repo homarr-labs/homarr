@@ -24,7 +24,7 @@ export class DockerSingleton {
       : [];
 
     // TCP instances from existing DOCKER_HOSTNAMES/DOCKER_PORTS
-    const tcpInstances: DockerInstance[] = [];
+    let tcpInstances: DockerInstance[] = [];
     if (hostVariable !== undefined && portVariable !== undefined) {
       const hostnames = hostVariable.split(",");
       const ports = portVariable.split(",");
@@ -33,17 +33,11 @@ export class DockerSingleton {
         throw new Error("The number of hosts and ports must match");
       }
 
-      for (let i = 0; i < hostnames.length; i++) {
-        // Length check above ensures these are defined
+      tcpInstances = hostnames.map((host, i) => ({
+        host: `${host}:${ports[i]}`,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const host = hostnames[i]!;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const port = ports[i]!;
-        tcpInstances.push({
-          host: `${host}:${port}`,
-          instance: new Docker({ host, port: parseInt(port, 10) }),
-        });
-      }
+        instance: new Docker({ host, port: parseInt(ports[i]!, 10) }),
+      }));
     }
 
     const instances = [...socketInstances, ...tcpInstances];

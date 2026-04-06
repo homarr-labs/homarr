@@ -21,11 +21,10 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(20, "seconds"),
 });
 
-const dockerInstances = DockerSingleton.getInstances();
-
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
 
 async function getContainersWithStatsAsync() {
+  const dockerInstances = DockerSingleton.getInstances();
   const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
@@ -54,8 +53,6 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    // Get stats, falling back to an empty stats object if fetch fails
-    // calculateCpuUsage and calculateMemoryUsage will return 0 for invalid/missing stats
     const stats = await instance
       .getContainer(container.Id)
       .stats({ stream: false, "one-shot": true })
@@ -99,8 +96,7 @@ export function calculateCpuUsage(stats: ContainerStats): number {
   }
 
   const numberOfCpus = stats.cpu_stats.online_cpus;
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const usage = stats.cpu_stats?.system_cpu_usage;
+  const usage = stats.cpu_stats.system_cpu_usage;
   if (!usage || usage === 0) {
     return 0;
   }
