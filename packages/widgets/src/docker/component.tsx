@@ -80,6 +80,19 @@ const createColumns = (
     },
   },
   {
+    id: "host",
+    accessorKey: "host",
+    size: 100,
+    header: t("field.host.label"),
+    Cell({ row }) {
+      return (
+        <Text size="xs" truncate="end">
+          {row.original.host}
+        </Text>
+      );
+    },
+  },
+  {
     id: "cpuUsage",
     sortingFn: (rowA, rowB) => {
       const cpuUsageA = safeValue(rowA.original.cpuUsage);

@@ -59,6 +59,18 @@ const createColumns = (
     },
   },
   {
+    accessorKey: "host",
+    header: t("docker.field.host.label"),
+    size: 140,
+    Cell({ row }) {
+      return (
+        <Text truncate="end" title={row.original.host}>
+          {row.original.host}
+        </Text>
+      );
+    },
+  },
+  {
     accessorKey: "image",
     header: t("docker.field.containerImage.label"),
     maxSize: 200,

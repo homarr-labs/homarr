@@ -3780,6 +3780,9 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": "Host"
       }
     },
     "action": {
