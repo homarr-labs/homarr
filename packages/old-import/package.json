@@ -39,7 +39,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^8.3.18",
     "@mantine/hooks": "^8.3.18",
-    "adm-zip": "0.5.16",
+    "adm-zip": "0.5.17",
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
