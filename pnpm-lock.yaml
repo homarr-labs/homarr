@@ -233,13 +233,13 @@ importers:
         specifier: ^3.41.1
         version: 3.41.1(react@19.2.4)
       '@tanstack/react-query':
-        specifier: ^5.96.0
+        specifier: ^5.96.1
         version: 5.96.1(react@19.2.4)
       '@tanstack/react-query-devtools':
-        specifier: ^5.96.0
+        specifier: ^5.96.1
         version: 5.96.1(@tanstack/react-query@5.96.1(react@19.2.4))(react@19.2.4)
       '@tanstack/react-query-next-experimental':
-        specifier: ^5.96.0
+        specifier: ^5.96.1
         version: 5.96.1(@tanstack/react-query@5.96.1(react@19.2.4))(next@16.2.2(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.98.0))(react@19.2.4)
       '@trpc/client':
         specifier: ^11.16.0
@@ -639,7 +639,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@tanstack/react-query':
-        specifier: ^5.96.0
+        specifier: ^5.96.1
         version: 5.96.1(react@19.2.4)
       '@trpc/client':
         specifier: ^11.16.0
@@ -954,7 +954,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
       '@tanstack/react-query':
-        specifier: ^5.96.0
+        specifier: ^5.96.1
         version: 5.96.1(react@19.2.4)
       '@trpc/client':
         specifier: ^11.16.0
