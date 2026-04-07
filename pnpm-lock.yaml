@@ -16,7 +16,7 @@ overrides:
   linkifyjs@<4.3.2: '>=4.3.2'
   nanoid@>=4.0.0 <5.0.9: '>=5.1.7'
   prismjs@<1.30.0: '>=1.30.0'
-  proxmox-api>undici: 7.24.6
+  proxmox-api>undici: 8.0.0
   react-is: ^19.2.4
   rollup@>=4.0.0 <4.22.4: '>=4.60.1'
   sha.js@<=2.4.11: '>=2.4.12'
@@ -18337,7 +18337,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.24.6
+      undici: 8.0.0
 
   proxy-from-env@1.1.0: {}
 
