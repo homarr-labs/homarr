@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Orario",
+      "description": "Visualizza gli orari di partenza per una stazione",
+      "title": "Partenze {station}",
+      "noStation": "Nessuna stazione selezionata",
       "option": {
         "station": {
-          "label": ""
+          "label": "Stazione"
         }
       }
     },
@@ -3525,7 +3525,7 @@
               "label": "Stato del server Minecraft"
             },
             "timetable": {
-              "label": ""
+              "label": "Orario"
             },
             "iconsUpdater": {
               "label": "Aggiornatore Icone"
