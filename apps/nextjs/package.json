@@ -83,7 +83,7 @@
     "react-dom": "19.2.4",
     "react-error-boundary": "^6.1.1",
     "react-simple-code-editor": "^0.14.1",
-    "sass": "^1.98.0",
+    "sass": "^1.99.0",
     "superjson": "2.2.6",
     "swagger-ui-react": "^5.32.1",
     "use-deep-compare-effect": "^1.8.1",
