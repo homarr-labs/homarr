@@ -34,6 +34,7 @@ export class SpeedtestTrackerIntegration extends Integration {
   public async getLatestResultAsync(): Promise<SpeedtestTrackerResult | null> {
     const response = await this.getAsync("/api/v1/results/latest");
 
+    // Speedtest Tracker returns 404 when no tests have been run yet (fresh install)
     if (response.status === 404) {
       return null;
     }
