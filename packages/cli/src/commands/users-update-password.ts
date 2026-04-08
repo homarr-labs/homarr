@@ -1,6 +1,6 @@
 import { command, string } from "@drizzle-team/brocli";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { hashPasswordAsync } from "@homarr/auth";
 import { db, eq } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 
@@ -34,12 +34,10 @@ export const usersUpdatePassword = command({
       return;
     }
 
-    const salt = await createSaltAsync();
-
     await db
       .update(users)
       .set({
-        password: await hashPasswordAsync(options.password, salt),
+        password: await hashPasswordAsync(options.password),
       })
       .where(eq(users.id, user.id));
 

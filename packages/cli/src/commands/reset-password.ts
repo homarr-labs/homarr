@@ -1,6 +1,6 @@
 import { command, string } from "@drizzle-team/brocli";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { and, db, eq } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
@@ -28,13 +28,12 @@ export const resetPassword = command({
     }
 
     // Generates a new password with 48 characters
-    const salt = await createSaltAsync();
     const newPassword = generateSecureRandomToken(24);
 
     await db
       .update(users)
       .set({
-        password: await hashPasswordAsync(newPassword, salt),
+        password: await hashPasswordAsync(newPassword),
       })
       .where(eq(users.id, user.id));
 
