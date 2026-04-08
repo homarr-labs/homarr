@@ -16,7 +16,7 @@ export function AveragesSection({ stats }: { stats: SpeedtestTrackerStats }) {
   return (
     <Stack gap={6} h="100%">
       <SectionLabel>
-        {t("averages")} · {stats.total_results} {t("tests")}
+        {t("averages")} · {t("tests", { count: stats.total_results.toString() })}
       </SectionLabel>
       <SimpleGrid cols={3} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
         <SpeedStatCard

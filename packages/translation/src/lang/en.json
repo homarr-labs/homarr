@@ -2748,7 +2748,7 @@
       },
       "latestResult": "Latest Result",
       "averages": "Averages",
-      "tests": "tests",
+      "tests": "{count} tests",
       "recentResults": "Recent Results",
       "recentResultsSpeed": "Speed",
       "recentResultsPing": "Ping",
