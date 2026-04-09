@@ -4,25 +4,47 @@ import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import type { RouterInputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
+const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
+  const [feedEntries] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  const utils = clientApi.useUtils();
+
+  clientApi.widget.rssFeed.subscribeFeeds.useSubscription(input, {
+    onData(updatedData) {
+      utils.widget.rssFeed.getFeeds.setData(input, (oldData) => {
+        return oldData
+          ?.filter((entry) => entry.feedUrl !== updatedData.url)
+          .concat(updatedData.entries)
+          .sort((entryA, entryB) => {
+            return entryA.published && entryB.published
+              ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
+              : 0;
+          })
+          .slice(0, input.maximumAmountPosts);
+      });
+    },
+  });
+
+  return feedEntries;
+};
+
 export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
-  const [feedEntries] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(
-    {
-      urls: options.feedUrls,
-      maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const feedEntries = useLiveFeedEntries({
+    urls: options.feedUrls,
+    maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
+  });
+
   const board = useRequiredBoard();
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
