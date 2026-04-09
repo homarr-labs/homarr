@@ -208,6 +208,7 @@ async function setupUrlRestrictionAsync(dbUrls: string[]) {
               hideDescription: false,
               textLinesClamp: 3,
               maximumAmountPosts: 5,
+              showPosterImage: true,
             } satisfies WidgetComponentProps<"rssFeed">["options"]),
           }) satisfies InferInsertModel<typeof items>,
       ),
