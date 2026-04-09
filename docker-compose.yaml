@@ -1,9 +1,0 @@
-services:
-  homarr-dev:
-    container_name: homarr-dev
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: runner
-    ports:
-      - "3000:3000"
