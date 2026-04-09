@@ -171,7 +171,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 
   const yConfig = useMemo(
     () =>
-      buildYAxisConfig(Math.max(...data.map((d) => Math.max(d.Download, d.Upload)), 0), [
+      buildYAxisConfig(Math.max(...data.map((item) => Math.max(item.Download, item.Upload)), 0), [
         { threshold: 400, step: 100 },
         { threshold: Infinity, step: 200 },
       ]),
@@ -269,17 +269,21 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
     () =>
       [...results]
         .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
-        .filter((result) => result.ping != null)
-        .map((result) => ({
-          ts: result.created_at.getTime(),
-          Ping: result.ping as number,
-        })),
+        .map((result) =>
+          result.ping === null
+            ? null
+            : {
+                ts: result.created_at.getTime(),
+                Ping: result.ping,
+              },
+        )
+        .filter((result) => result !== null),
     [results],
   );
 
   const yConfig = useMemo(
     () =>
-      buildYAxisConfig(Math.max(...data.map((d) => d.Ping), 0), [
+      buildYAxisConfig(Math.max(...data.map((item) => item.Ping), 0), [
         { threshold: 10, step: 2 },
         { threshold: 50, step: 10 },
         { threshold: 200, step: 50 },
