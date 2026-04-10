@@ -32,6 +32,9 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       hideDescription: factory.switch({
         defaultValue: false,
       }),
+      showPosterImage: factory.switch({
+        defaultValue: false,
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
