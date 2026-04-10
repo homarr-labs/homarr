@@ -317,7 +317,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
     category: ["notes"],
-    // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
   },
   truenas: {
@@ -369,7 +368,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
     category: ["speedtest"],
-    // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
