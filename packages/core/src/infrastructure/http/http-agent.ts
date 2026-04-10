@@ -15,7 +15,11 @@ export class UndiciHttpAgent extends EnvHttpProxyAgent {
   private logger: ILogger;
 
   constructor(props?: HttpAgentOptions) {
-    super(props);
+    super({
+      ...props,
+      // See https://github.com/homarr-labs/homarr/issues/5467#issuecomment-4226844346
+      allowH2: false,
+    });
     this.logger = props?.logger ?? createLogger({ module: "httpAgent" });
   }
 
