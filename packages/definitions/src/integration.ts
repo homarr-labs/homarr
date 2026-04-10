@@ -342,6 +342,14 @@ export const integrationDefs = {
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
   },
+  searchCh: {
+    name: "Search.ch",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/search-ch.png",
+    defaultUrl: "https://search.ch",
+    category: ["timetable"],
+    documentationUrl: createDocumentationLink("/docs/integrations/search-ch"),
+  },
   immich: {
     name: "Immich",
     secretKinds: [["apiKey"]],
@@ -355,6 +363,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
     category: ["mediaMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+  },
+  speedtestTracker: {
+    name: "Speedtest Tracker",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
+    category: ["speedtest"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -442,9 +458,11 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "timetable",
   "photoService",
   "notes",
   "mediaMonitoring",
+  "speedtest",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

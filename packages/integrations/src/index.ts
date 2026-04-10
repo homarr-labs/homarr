@@ -32,6 +32,7 @@ export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
 export { TracearrIntegration } from "./tracearr/tracearr-integration";
+export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -66,6 +67,7 @@ export type {
   AnchorNoteSummary,
 } from "./anchor/anchor-types";
 export type { TracearrDashboardData } from "./tracearr/tracearr-types";
+export type { SpeedtestTrackerDashboardData } from "./speedtest-tracker/speedtest-tracker-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

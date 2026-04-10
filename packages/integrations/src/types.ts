@@ -13,4 +13,6 @@ export * from "./opnsense/opnsense-types";
 export * from "./interfaces/media-releases";
 export * from "./coolify/coolify-types";
 export * from "./anchor/anchor-types";
+export * from "./interfaces/timetable/timetable-types";
 export * from "./tracearr/tracearr-types";
+export * from "./speedtest-tracker/speedtest-tracker-types";

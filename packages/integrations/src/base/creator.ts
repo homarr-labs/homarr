@@ -41,7 +41,9 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { SearchChIntegration } from "../search-ch/search-ch-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
+import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
@@ -116,7 +118,9 @@ export const integrationCreators = {
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
+  searchCh: SearchChIntegration,
   immich: ImmichIntegration,
+  speedtestTracker: SpeedtestTrackerIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

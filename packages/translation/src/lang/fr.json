@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "Rejoignez Homarr",
-        "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
+        "subtitle": "Bienvenue sur Homarr ! Veuillez créer votre compte",
         "description": "Vous avez été invité par {username}"
       },
       "init": {
@@ -177,7 +177,7 @@
           }
         },
         "forgotPassword": {
-          "label": "Mot de passe oublié?",
+          "label": "Mot de passe oublié ?",
           "description": "Un administrateur peut utiliser la commande suivante pour réinitialiser votre mot de passe :"
         }
       },
@@ -578,7 +578,7 @@
       },
       "delete": {
         "title": "Supprimer l'app",
-        "message": "Êtes-vous sûr de vouloir supprimer l'app {name}?",
+        "message": "Êtes-vous sûr de vouloir supprimer l'app {name} ?",
         "notification": {
           "success": {
             "title": "Suppression effectuée avec succès",
@@ -684,7 +684,7 @@
       },
       "delete": {
         "title": "Supprimer l'intégration",
-        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name}?",
+        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name} ?",
         "notification": {
           "success": {
             "title": "Suppression réussie",
@@ -742,7 +742,7 @@
           "description": "La réponse n'a pas pu être analysée. Veuillez vérifier que l'URL pointe vers l'URL de base du service."
         },
         "authorization": {
-          "title": "",
+          "title": "Erreur d'autorisation",
           "description": "La requête n'a pas été autorisée. Veuillez vérifier que les informations d'identification sont correctes et que vous les avez configurées avec suffisamment d'autorisations."
         },
         "statusCode": {
@@ -794,7 +794,7 @@
           "hostnameMismatch": {
             "confirm": {
               "title": "Faire confiant à l'incohérence du nom d'hôte",
-              "message": ""
+              "message": "Êtes-vous sûr de vouloir faire confiance ce certificat avec un nom d'hôte incohérent ?"
             },
             "notification": {
               "success": {
@@ -1164,8 +1164,8 @@
           "number": "Ce champ doit être inférieur ou égal à {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
-          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises.",
+          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises",
           "boardAlreadyExists": "Un tableau avec ce nom existe déjà",
           "invalidFileType": "Type de fichier invalide, {expected} attendu",
           "invalidFileName": "Nom de fichier invalide",
@@ -1248,7 +1248,7 @@
     "action": {
       "create": "Nouvel élément",
       "import": "Importer un élément",
-      "edit": "Editer l'élément",
+      "edit": "Éditer l'élément",
       "moveResize": "Déplacer / redimensionner l'élément",
       "duplicate": "Dupliquer l'élément",
       "remove": "Supprimer l'élément"
@@ -1281,7 +1281,7 @@
       }
     },
     "edit": {
-      "title": "Editer l'élément",
+      "title": "Éditer l'élément",
       "advancedOptions": {
         "label": "Options avancées",
         "title": "Options avancées de l'élément"
@@ -1309,7 +1309,7 @@
   "widget": {
     "app": {
       "name": "App",
-      "description": "Intégre une application dans le tableau.",
+      "description": "Intègre une application dans le tableau.",
       "option": {
         "appId": {
           "label": "Choisir une application"
@@ -1525,6 +1525,17 @@
         "offline": "Hors ligne"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Bloc-notes",
       "description": "Un simple widget bloc-notes qui supporte le markdown",
@@ -1637,7 +1648,7 @@
       }
     },
     "smartHome-entityState": {
-      "name": "Etat de l'entité",
+      "name": "État de l'entité",
       "description": "Affichez l'état d'une entité et optionnellement activez la",
       "option": {
         "entityId": {
@@ -1883,16 +1894,16 @@
       "popover": {
         "information": "Information",
         "processor": "Processeur : {cpuModelName}",
-        "memory": "Mémoire: {memory}GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Mémoire : {memory}GiB",
+        "memoryAvailable": "Disponible : {memoryAvailable}GiB ({percent}%)",
         "version": "Version : {version}",
-        "uptime": "Disponibilité: {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
-        "loadAverage": "Charge moyenne:",
+        "uptime": "Disponibilité : {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
+        "loadAverage": "Charge moyenne :",
         "minute": "1 minute",
         "minutes": "{count} minutes",
         "used": "Utilisé ",
         "available": "Disponible",
-        "lastSeen": "Dernière mise à jour de statut: {lastSeen}"
+        "lastSeen": "Dernière mise à jour de statut : {lastSeen}"
       },
       "memory": {},
       "error": {
@@ -1928,7 +1939,7 @@
             "memory": "Mémoire",
             "storage": "Stockage",
             "uptime": "Disponibilité",
-            "haState": "Etat HA",
+            "haState": "État HA",
             "storageType": {
               "local": "Stockage local",
               "shared": "Stockage partagé"
@@ -2062,7 +2073,7 @@
         "query": "Ville / Code Postal",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "disabledTooltip": "Veuillez saisir une ville ou un code postal.",
+        "disabledTooltip": "Veuillez saisir une ville ou un code postal",
         "unknownLocation": "Lieu inconnu",
         "search": "Rechercher",
         "table": {
@@ -2081,7 +2092,7 @@
         }
       },
       "integration": {
-        "noData": "Aucune intégration trouvée.",
+        "noData": "Aucune intégration trouvée",
         "description": "Cliquez sur <here></here> pour créer une nouvelle intégration"
       },
       "app": {
@@ -2097,7 +2108,7 @@
     },
     "video": {
       "name": "Flux vidéo",
-      "description": "Intégre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
+      "description": "Intègre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
       "option": {
         "feedUrl": {
           "label": "URL du flux"
@@ -2110,7 +2121,7 @@
           "label": "Muet"
         },
         "hasControls": {
-          "label": "Afficher les controles"
+          "label": "Afficher les contrôles"
         }
       },
       "error": {
@@ -2336,7 +2347,7 @@
           "pause": "Mettre en pause l'élément",
           "resume": "Reprendre l'élément",
           "delete": {
-            "title": "Supprimer l'élement",
+            "title": "Supprimer l'élément",
             "modalTitle": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
             "entry": "Supprimer l'entrée",
             "entryAndFiles": "Supprimer l'entrée et le(s) fichier(s)"
@@ -2548,7 +2559,7 @@
             "allImagesAlreadyImported": "Toutes les images déjà importées",
             "onlyAdminCanImport": "Seuls les administrateurs peuvent importer depuis docker",
             "selectAll": "Tout sélectionner",
-            "deselectAll": "Tout déselectionner"
+            "deselectAll": "Tout désélectionner"
           },
           "provider": {
             "label": "Fournisseur"
@@ -2673,7 +2684,7 @@
       },
       "error": {
         "integrationsDisconnected": "Aucune donnée disponible, toutes les intégrations sont déconnectées",
-        "unknownContentOption": "Option de contenu inconnue pour le widget d'état du réseau: "
+        "unknownContentOption": "Option de contenu inconnue pour le widget d'état du réseau : "
       },
       "name": "État du réseau",
       "description": "Afficher les périphériques connectés sur un réseau"
@@ -2765,7 +2776,7 @@
           "label": "Mode d'affichage",
           "option": {
             "percentage": {
-              "label": "Pourcentage (ex : 70%)"
+              "label": "Pourcentage (ex : 76%)"
             },
             "absolute": {
               "label": "Valeurs absolues (ex. : 800 Go / 1 To)"
@@ -2973,7 +2984,7 @@
       },
       "customCss": {
         "label": "CSS personnalisé pour ce tableau",
-        "description": "En outre, vous pouvez personnaliser votre tableau de bord à l'aide de CSS. Réservé aux utilisateurs expérimentés.",
+        "description": "De plus, personnalisez votre tableau de bord à l'aide de CSS, recommandé uniquement pour les utilisateurs expérimentés",
         "customClassesAlert": {
           "title": "Classes personnalisées",
           "description": "Vous pouvez ajouter des classes personnalisées aux éléments de votre tableau dans les options avancées de chaque élément et les utiliser dans le CSS personnalisé ci-dessus."
@@ -3251,7 +3262,7 @@
             "label": "Supprimer définitivement",
             "confirm": {
               "title": "Supprimer le tableau de bord",
-              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name}?"
+              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name} ?"
             }
           }
         },
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "État du serveur Minecraft"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Mise à jour des icônes"

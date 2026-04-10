@@ -7,15 +7,15 @@
         "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
           "scratch": "Começar do zero",
-          "importOldmarr": "Importe de uma instância Homarr anterior a 1.0"
+          "importOldmarr": "Importe de uma instância do Homarr anterior a 1.0"
         }
       },
       "import": {
         "title": "Importar dados",
         "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
         "dropzone": {
-          "title": "Arraste o arquivo zip aqui ou clique para procurar",
-          "description": "O arquivo zip enviado será processado e você poderá selecionar o que deseja importar"
+          "title": "Arraste o arquivo ZIP aqui ou clique para procurar",
+          "description": "O arquivo ZIP enviado será processado e você poderá selecionar o que deseja importar"
         },
         "fileInfo": {
           "action": {
@@ -27,7 +27,7 @@
           "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "{count} painéis encontrados",
+          "title": "{count} Painéis encontrados",
           "description": "Escolha todos os painéis com o tamanho que você deseja importar",
           "action": {
             "selectAll": "Selecionar todos",
@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Calendário",
+      "description": "Mostra os horários de partida de uma estação",
+      "title": "Partidas {station}",
+      "noStation": "Nenhuma estação selecionada",
+      "option": {
+        "station": {
+          "label": "Estação"
+        }
+      }
+    },
     "notebook": {
       "name": "Caderno de anotações",
       "description": "Um widget de bloco de notas simples que suporta markdown",
@@ -1627,7 +1638,7 @@
           "label": "Permitir geolocalização"
         },
         "allowModals": {
-          "label": ""
+          "label": "Permitir modais"
         }
       },
       "error": {
@@ -1862,7 +1873,7 @@
           "label": "Mostrar informações da memória"
         },
         "gpu": {
-          "label": ""
+          "label": "Mostrar informações da GPU"
         },
         "showUptime": {
           "label": "Exibir tempo de atividade"
@@ -2003,58 +2014,58 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Monitoramento avançado de servidor de mídia com dados detalhados de transmissão e transcodificação\n",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Exibir transmissões ativas"
         },
         "showStats": {
-          "label": ""
+          "label": "Exibir resumo de estatísticas"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Exibir Atividade Recente"
         },
         "showViolations": {
-          "label": ""
+          "label": "Mostrar Violações"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Streams Ativas",
+        "totalUsers": "Total de usuários",
+        "transcodes": "Transcodificações",
+        "bandwidth": "Largura da banda"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Sem transmissões ativas",
+        "user": "Usuário",
+        "media": "Mídia",
+        "state": "Estado",
+        "quality": "Qualidade",
+        "device": "Dispositivo",
+        "progress": "Progresso",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Reprodução direta",
+          "transcode": "Transcodificação",
+          "directStream": "Transmissão direta"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Atividade recente",
+        "empty": "Nenhuma atividade recente",
+        "watched": "Assistido",
+        "partial": "Parcial"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Violações",
+        "empty": "Não há violações recentes",
+        "rule": "Regra",
+        "user": "Usuário"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Nenhuma seção habilitada",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nenhuma integração Coolify configurada",
+        "internalServerError": "Falha ao buscar dados do Tracearr"
       }
     },
     "common": {
@@ -2153,50 +2164,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Estatísticas do Servidor Immich",
+      "description": "Informações sobre sua instância do Immich",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar usuários",
+          "description": "Mostrar a contagem de usuários na sua instância"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar Fotos",
+          "description": "Mostrar a contagem de fotos na sua instância"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar vídeos",
+          "description": "Mostrar contagem de vídeos na sua instância"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar armazenamento",
+          "description": "Mostrar a quantidade total de armazenamento utilizado"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Usuários",
+      "photos": "Fotos",
+      "videos": "Vídeos",
+      "storage": "Armazenamento Utilizado"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Álbum do Immich",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "ID do Álbum",
+          "description": "Esta é uma identificação única que se refere ao seu álbum Immich. Você pode encontrar essa identificação abrindo um álbum e copiando a string única da URL, por exemplo 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Intervalo em segundos",
+          "description": "Girar entre as imagens no álbum a cada X segundos. Deve ser pelo menos 1. Deve estar abaixo de 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar informações da foto",
+          "description": "Exibir a data da imagem e o índice atual na parte inferior da apresentação"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Apresentação de imagens em seu álbum Imich",
+      "noAlbumSelected": "Nenhum álbum selecionado, edite o widget e escolha um álbum",
+      "noPhotos": "Nenhuma foto neste álbum"
     },
     "downloads": {
       "name": "Cliente de Download",
@@ -2731,7 +2742,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memória",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Rede"
           }
         },
@@ -2748,7 +2759,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "REDE",
         "up": "ENVIO",
         "down": "RECEBIDO"
@@ -3513,6 +3524,9 @@
             "minecraftServerStatus": {
               "label": "Status do servidor Minecraft"
             },
+            "timetable": {
+              "label": "Horários"
+            },
             "iconsUpdater": {
               "label": "Atualizador de Ícones"
             },
@@ -3583,7 +3597,7 @@
               "label": "Clima"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {

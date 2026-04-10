@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timetable",
+      "description": "Displays departure times for a station",
+      "title": "Departures {station}",
+      "noStation": "No station selected",
+      "option": {
+        "station": {
+          "label": "Station"
+        }
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
@@ -1627,7 +1638,7 @@
           "label": "Allow geolocation"
         },
         "allowModals": {
-          "label": ""
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1859,284 +1870,284 @@
           "label": "Show CPU Info"
         },
         "memory": {
-          "label": ""
+          "label": "Show Memory Info"
         },
         "gpu": {
-          "label": ""
+          "label": "Show GPU Info"
         },
         "showUptime": {
-          "label": ""
+          "label": "Show Uptime"
         },
         "fileSystem": {
-          "label": ""
+          "label": "Show Filesystem Info"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Default tab"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Section indicator requirement"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "information": "Information",
+        "processor": "Processor: {cpuModelName}",
+        "memory": "Memory: {memory}GiB",
+        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
+        "loadAverage": "Load average:",
+        "minute": "1 minute",
+        "minutes": "{count} minutes",
+        "used": "Used",
+        "available": "Available",
+        "lastSeen": "Last status update: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch health status"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Nodes"
           },
           "qemu": {
-            "name": ""
+            "name": "VMs"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Storage"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Cores",
+            "memory": "Memory",
+            "storage": "Storage",
+            "uptime": "Uptime",
+            "haState": "HA State",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Local storage",
+              "shared": "Shared storage"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker stats",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Column used for sorting by default",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch containers stats"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Show servers"
         },
         "showApplications": {
-          "label": ""
+          "label": "Show applications"
         },
         "showServices": {
-          "label": ""
+          "label": "Show services"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
       },
       "footer": {
-        "updated": ""
+        "updated": "Updated {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Instances"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Show active streams"
         },
         "showStats": {
-          "label": ""
+          "label": "Show stats summary"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Show recent activity"
         },
         "showViolations": {
-          "label": ""
+          "label": "Show violations"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "No sections enabled",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
-        "search": "",
+        "query": "City / Postal code",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "disabledTooltip": "Please enter a city or postal code",
+        "unknownLocation": "Unknown location",
+        "search": "Search",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "City",
+            "country": "Country",
+            "coordinates": "Coordinates",
+            "population": "Population"
           },
           "action": {
-            "select": ""
+            "select": "Select {city}, {countryCode}"
           },
           "population": {
-            "fallback": ""
+            "fallback": "Unknown"
           }
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "No integration found",
+        "description": "Click <here></here> to create a new integration"
       },
       "app": {
-        "noData": "",
-        "description": "",
-        "quickCreate": ""
+        "noData": "No app found",
+        "description": "Click <here></here> to create a new app",
+        "quickCreate": "Create app on the fly"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "No integration selected",
+        "noData": "No integration data available"
       },
       "option": {}
     },
     "video": {
-      "name": "",
-      "description": "",
+      "name": "Video Stream",
+      "description": "Embed a video stream or video from a camera or a website",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Feed URL"
         },
         "hasAutoPlay": {
-          "label": "",
-          "description": ""
+          "label": "Autoplay",
+          "description": "Autoplay only works when muted because of browser restrictions"
         },
         "isMuted": {
-          "label": ""
+          "label": "Muted"
         },
         "hasControls": {
-          "label": ""
+          "label": "Show controls"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "No Video URL provided",
+        "forYoutubeUseIframe": "For YouTube videos use the iframe option"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Current media server streams",
+      "description": "Show the current streams on your media servers",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for Plex"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
+        "currentlyPlaying": "Currently playing",
+        "user": "User",
+        "name": "Name",
+        "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Stats for nerds",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Resolution"
           },
           "audio": {
             "title": "",
@@ -3513,6 +3524,9 @@
             "minecraftServerStatus": {
               "label": ""
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -4321,13 +4335,13 @@
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Create a new user"
               },
               "newInvite": {
-                "label": ""
+                "label": "Create a new invite"
               },
               "newGroup": {
-                "label": ""
+                "label": "Create a new group"
               }
             }
           }
@@ -4370,12 +4384,12 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
-                "description": ""
+                "name": "Torrents",
+                "description": "Search for torrents on torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Search for videos on YouTube"
               }
             }
           }
@@ -4384,19 +4398,19 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Modes"
           },
           "help": {
-            "title": "",
+            "title": "Help",
             "option": {
               "documentation": {
-                "label": ""
+                "label": "Documentation"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Submit an issue"
               },
               "discord": {
-                "label": ""
+                "label": "Community Discord"
               }
             }
           }
@@ -4405,20 +4419,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Search",
             "option": {
               "other": {
-                "label": ""
+                "label": "Search with another search engine"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
               },
               "search": {
-                "label": ""
+                "label": "Search for \"{query}\" with {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Start typing to search"
               }
             }
           },

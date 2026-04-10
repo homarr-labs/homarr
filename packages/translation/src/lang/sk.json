@@ -1525,6 +1525,17 @@
         "offline": "Odpojené"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Poznámkový blok",
       "description": "Jednoduchý widget poznámkového bloku, ktorý podporuje markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft Server Stav"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
