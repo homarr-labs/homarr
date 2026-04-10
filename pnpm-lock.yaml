@@ -7,7 +7,7 @@ settings:
 overrides:
   '@babel/helpers@<7.26.10': '>=7.29.2'
   '@babel/runtime@<7.26.10': '>=7.29.2'
-  axios@>=1.0.0 <1.8.2: '>=1.14.0'
+  axios@>=1.0.0 <1.8.2: '>=1.15.0'
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.5'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.5'
   esbuild@<=0.24.2: '>=0.28.0'
@@ -10526,10 +10526,6 @@ packages:
     resolution: {integrity: sha512-Xi4agocCbRzt0yYMZGMA6ApD7gvtUFaxm4ZmeacWI4cZxaF6C+8I8QfofC20NAePiB/IcvZmzkJ7XPa471AEtA==}
     engines: {node: '>=20.18.1'}
 
-  undici@8.0.1:
-    resolution: {integrity: sha512-6qdTUr+jabXmYKeYkv/+pIvO7d0bs1k9uy+5PFnXr4segNVwILH1KExhwRh3/iGa6gSLmySK3hTnSs3k7ZPnjQ==}
-    engines: {node: '>=22.19.0'}
-
   undici@8.0.2:
     resolution: {integrity: sha512-B9MeU5wuFhkFAuNeA19K2GDFcQXZxq33fL0nRy2Aq30wdufZbyyvxW3/ChaeipXVfy/wUweZyzovQGk39+9k2w==}
     engines: {node: '>=22.19.0'}
@@ -20187,8 +20183,6 @@ snapshots:
   undici@6.23.0: {}
 
   undici@7.24.6: {}
-
-  undici@8.0.1: {}
 
   undici@8.0.2: {}
 
