@@ -3,6 +3,7 @@ import { lazy } from "@trpc/server";
 import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
+  anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
   immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),

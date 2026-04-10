@@ -1,5 +1,6 @@
 // General integrations
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
+export { AnchorIntegration } from "./anchor/anchor-integration";
 export { Aria2Integration } from "./download-client/aria2/aria2-integration";
 export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
 export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
@@ -58,10 +59,19 @@ export type {
 export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
+export type {
+  AnchorNote,
+  AnchorNotePermission,
+  AnchorNoteUpdateInput,
+  AnchorNotesListInput,
+  AnchorNoteSummary,
+} from "./anchor/anchor-types";
 export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 export type { SpeedtestTrackerDashboardData } from "./speedtest-tracker/speedtest-tracker-types";
 
 // Schemas
+export { anchorNotesListInputSchema } from "./anchor/anchor-types";
+export { anchorNoteUpdateInputSchema } from "./anchor/anchor-types";
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
