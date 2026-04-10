@@ -124,11 +124,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
         <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
         {hasUrlSecret ? null : (
-          <TextInput
-            withAsterisk
-            label={t("integration.field.url.label")}
-            {...form.getInputProps("url")}
-          />
+          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
         )}
 
         <Fieldset legend={t("integration.secrets.title")}>
