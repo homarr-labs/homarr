@@ -330,6 +330,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/speedtest-tracker" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png" alt="Speedtest Tracker" width="90" height="90" />
+  <br/>  
+  <p align="center">Speedtest<br/>Tracker</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/tdarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png" alt="Tdarr" width="90" height="90" />
   <br/>  
@@ -342,15 +349,15 @@
   <br/>  
   <p align="center">Tracearr</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/transmission" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg" alt="Transmission" width="90" height="90" />
   <br/>  
   <p align="center">Transmission</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/truenas" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg" alt="TrueNAS" width="90" height="90" />
   <br/>  
