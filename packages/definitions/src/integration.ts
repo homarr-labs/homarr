@@ -312,6 +312,14 @@ export const integrationDefs = {
     category: ["calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/ical"),
   },
+  anchor: {
+    name: "Anchor",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
+    category: ["notes"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
+  },
   truenas: {
     name: "TrueNAS",
     secretKinds: [["username", "password"]],
@@ -355,6 +363,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
     category: ["mediaMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+  },
+  speedtestTracker: {
+    name: "Speedtest Tracker",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
+    category: ["speedtest"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -444,7 +460,9 @@ export const integrationCategories = [
   "firewall",
   "timetable",
   "photoService",
+  "notes",
   "mediaMonitoring",
+  "speedtest",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

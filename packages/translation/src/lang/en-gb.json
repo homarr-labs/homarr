@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Timetable",
+      "description": "Displays departure times for a station",
+      "title": "Departures {station}",
+      "noStation": "No station selected",
       "option": {
         "station": {
-          "label": ""
+          "label": "Station"
         }
       }
     },
@@ -1977,177 +1977,177 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch containers stats"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Show servers"
         },
         "showApplications": {
-          "label": ""
+          "label": "Show applications"
         },
         "showServices": {
-          "label": ""
+          "label": "Show services"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
       },
       "footer": {
-        "updated": ""
+        "updated": "Updated {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Instances"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Show active streams"
         },
         "showStats": {
-          "label": ""
+          "label": "Show stats summary"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Show recent activity"
         },
         "showViolations": {
-          "label": ""
+          "label": "Show violations"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "No sections enabled",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
-        "search": "",
+        "query": "City / Postal code",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "disabledTooltip": "Please enter a city or postal code",
+        "unknownLocation": "Unknown location",
+        "search": "Search",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "City",
+            "country": "Country",
+            "coordinates": "Coordinates",
+            "population": "Population"
           },
           "action": {
-            "select": ""
+            "select": "Select {city}, {countryCode}"
           },
           "population": {
-            "fallback": ""
+            "fallback": "Unknown"
           }
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "No integration found",
+        "description": "Click <here></here> to create a new integration"
       },
       "app": {
-        "noData": "",
-        "description": "",
-        "quickCreate": ""
+        "noData": "No app found",
+        "description": "Click <here></here> to create a new app",
+        "quickCreate": "Create app on the fly"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "No integration selected",
+        "noData": "No integration data available"
       },
       "option": {}
     },
     "video": {
-      "name": "",
-      "description": "",
+      "name": "Video Stream",
+      "description": "Embed a video stream or video from a camera or a website",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Feed URL"
         },
         "hasAutoPlay": {
-          "label": "",
-          "description": ""
+          "label": "Autoplay",
+          "description": "Autoplay only works when muted because of browser restrictions"
         },
         "isMuted": {
-          "label": ""
+          "label": "Muted"
         },
         "hasControls": {
-          "label": ""
+          "label": "Show controls"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "No Video URL provided",
+        "forYoutubeUseIframe": "For YouTube videos use the iframe option"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Current media server streams",
+      "description": "Show the current streams on your media servers",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for Plex"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
+        "currentlyPlaying": "Currently playing",
+        "user": "User",
+        "name": "Name",
+        "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Stats for nerds",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Resolution"
           },
           "audio": {
             "title": "",
@@ -4335,13 +4335,13 @@
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Create a new user"
               },
               "newInvite": {
-                "label": ""
+                "label": "Create a new invite"
               },
               "newGroup": {
-                "label": ""
+                "label": "Create a new group"
               }
             }
           }
@@ -4384,12 +4384,12 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
-                "description": ""
+                "name": "Torrents",
+                "description": "Search for torrents on torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Search for videos on YouTube"
               }
             }
           }
@@ -4398,10 +4398,10 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Modes"
           },
           "help": {
-            "title": "",
+            "title": "Help",
             "option": {
               "documentation": {
                 "label": "Documentation"

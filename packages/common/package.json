@@ -30,11 +30,11 @@
     "@paralleldrive/cuid2": "^3.3.0",
     "cookie": "1.1.1",
     "dayjs": "^1.11.20",
-    "next": "16.2.1",
+    "next": "16.2.3",
     "octokit": "^5.0.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "undici": "7.24.6",
+    "undici": "8.0.2",
     "zod": "^4.3.6",
     "zod-validation-error": "^5.0.0"
   },

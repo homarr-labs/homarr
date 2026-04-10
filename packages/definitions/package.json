@@ -24,7 +24,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "fast-xml-parser": "^5.5.9",
+    "fast-xml-parser": "^5.5.10",
     "zod": "^4.3.6"
   },
   "devDependencies": {

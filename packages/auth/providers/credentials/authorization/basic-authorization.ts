@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import type { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -6,6 +5,8 @@ import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import type { userSignInSchema } from "@homarr/validation/user";
+
+import { comparePasswordsAsync } from "../../../security";
 
 const logger = createLogger({ module: "basicAuthorization" });
 
@@ -23,7 +24,7 @@ export const authorizeWithBasicCredentialsAsync = async (
   }
 
   logger.info("User is trying to log in. Checking password...", { userName: user.name });
-  const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+  const isValidPassword = await comparePasswordsAsync(credentials.password, user.password);
 
   if (!isValidPassword) {
     logger.warn("Password for user was incorrect", { userName: user.name });

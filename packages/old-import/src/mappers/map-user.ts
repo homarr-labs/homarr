@@ -16,7 +16,7 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
     ({
       id,
       password,
-      salt,
+      salt: _saltIsNotNeededAsPartOfPassword,
       settings,
       ...user
     }): InferInsertModel<typeof users> & { oldId: string; isAdmin: boolean } => ({
@@ -30,7 +30,6 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
       pingIconsEnabled: settings?.replacePingWithIcons,
       isAdmin: user.isAdmin || user.isOwner,
       password: decryptSecretWithKey(password, key),
-      salt: decryptSecretWithKey(salt, key),
     }),
   );
 };
