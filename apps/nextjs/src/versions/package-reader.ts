@@ -6,8 +6,8 @@ import packageJson from "../../../../package.json";
 const getPackageVersion = () => packageJson.version;
 const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
   const pathNames = await glob("**/package.json", {
-    ignore: "node_modules/**",
-    cwd: "../../",
+    ignore: "**/node_modules/**",
+    cwd: "../../../../",
     absolute: true,
   });
   const packageContents = await Promise.all(pathNames.map(async (path) => await fsPromises.readFile(path, "utf-8")));
