@@ -26,6 +26,7 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
       form.setInitialValues({
         defaultSearchEngineId: variables.defaultSearchEngineId,
         openInNewTab: variables.openInNewTab,
+        ddgBangsEnabled: variables.ddgBangsEnabled,
       });
       showSuccessNotification({
         message: t("user.action.changeSearchPreferences.notification.success.message"),
@@ -41,6 +42,7 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
     initialValues: {
       defaultSearchEngineId: user.defaultSearchEngineId,
       openInNewTab: user.openSearchInNewTab,
+      ddgBangsEnabled: user.ddgBangs,
     },
   });
 
@@ -63,6 +65,10 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
         <Switch
           label={t("user.field.openSearchInNewTab.label")}
           {...form.getInputProps("openInNewTab", { type: "checkbox" })}
+        />
+        <Switch
+          label={t("user.field.ddgBangs.label")}
+          {...form.getInputProps("ddgBangsEnabled", { type: "checkbox" })}
         />
 
         <Group justify="end">

@@ -1,5 +1,7 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -17,6 +19,35 @@ import { interaction } from "../../lib/interaction";
 
 type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
 type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
+type DuckDuckGoBang = RouterOutputs["bangs"]["search"][number];
+
+type ExternalOption =
+  | {
+      key: string;
+      kind: "hint";
+      label: string;
+      description?: string;
+    }
+  | {
+      key: string;
+      kind: "search";
+      label: string;
+      description?: string;
+      iconUrl?: string;
+      bang: string;
+      urlTemplate: string;
+      searchText: string;
+    }
+  | {
+      key: string;
+      kind: "engine";
+      engine: SearchEngine;
+    }
+  | {
+      key: string;
+      kind: "ddg";
+      bang: DuckDuckGoBang;
+    };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type MediaRequestChildrenProps = {
@@ -235,57 +266,214 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
   },
 });
 
-export const searchEnginesSearchGroups = createGroup<SearchEngine>({
-  keyPath: "short",
+const parseBangQuery = (query: string) => {
+  const withBangPrefix = query.startsWith("!") ? query.slice(1) : query;
+  const bangIdx = withBangPrefix.indexOf(" ");
+  const bangToken = (bangIdx === -1 ? withBangPrefix : withBangPrefix.slice(0, bangIdx)).toLowerCase().trim();
+  const searchText = bangIdx === -1 ? "" : withBangPrefix.slice(bangIdx + 1);
+  const locked = bangIdx !== -1;
+  return { bangToken, searchText, locked };
+};
+
+const buildSearchUrl = (template: string, query: string) => {
+  const encoded = encodeURIComponent(query);
+  if (template.includes("{{{s}}}")) {
+    return template.replaceAll("{{{s}}}", encoded);
+  }
+
+  return template.replaceAll("%s", encoded);
+};
+
+export const searchEnginesSearchGroups = createGroup<ExternalOption>({
+  keyPath: "key",
   title: (t) => t("search.mode.external.group.searchEngine.title"),
-  Component: ({ iconUrl, name, short, description }) => {
+  Component: (option) => {
+    if (option.kind === "hint") {
+      return (
+        <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
+          <IconSearch stroke={1.5} />
+          <Stack gap={0}>
+            <Text size="sm">{option.label}</Text>
+            {option.description ? (
+              <Text size="xs" c="gray.6">
+                {option.description}
+              </Text>
+            ) : null}
+          </Stack>
+        </Group>
+      );
+    }
+
+    if (option.kind === "search") {
+      return (
+        <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
+          <Group wrap="nowrap">
+            {option.iconUrl ? (
+              <img height={24} width={24} src={option.iconUrl} alt={option.label} />
+            ) : (
+              <IconSearch stroke={1.5} />
+            )}
+            <Stack gap={0} justify="center">
+              <Text size="sm">{option.label}</Text>
+              {option.description ? (
+                <Text size="xs" c="gray.6">
+                  {option.description}
+                </Text>
+              ) : null}
+            </Stack>
+          </Group>
+
+          <Kbd size="sm">!{option.bang}</Kbd>
+        </Group>
+      );
+    }
+
+    if (option.kind === "engine") {
+      const { iconUrl, name, short, description } = option.engine;
+      return (
+        <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
+          <Group wrap="nowrap">
+            <img height={24} width={24} src={iconUrl} alt={name} />
+            <Stack gap={0} justify="center">
+              <Text size="sm">{name}</Text>
+              <Text size="xs" c="gray.6">
+                {description}
+              </Text>
+            </Stack>
+          </Group>
+
+          <Kbd size="sm">!{short}</Kbd>
+        </Group>
+      );
+    }
+
+    const { s: name, t: short, d: domain } = option.bang;
     return (
       <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
         <Group wrap="nowrap">
-          <img height={24} width={24} src={iconUrl} alt={name} />
+          <IconSearch stroke={1.5} />
           <Stack gap={0} justify="center">
             <Text size="sm">{name}</Text>
             <Text size="xs" c="gray.6">
-              {description}
+              {domain ?? "DuckDuckGo bang"}
             </Text>
           </Stack>
         </Group>
 
-        <Kbd size="sm">{short}</Kbd>
+        <Kbd size="sm">!{short}</Kbd>
       </Group>
     );
   },
-  onKeyDown(event, options, query, { setChildrenOptions }) {
-    if (event.code !== "Space") return;
-
-    const engine = options.find((option) => option.short === query);
-    if (!engine) return;
-
-    setChildrenOptions(searchEnginesChildrenOptions(engine));
-  },
-  useInteraction: (searchEngine, query) => {
+  useInteraction(option, query) {
     const { openSearchInNewTab } = useSettings();
-    if (searchEngine.type === "generic" && searchEngine.urlTemplate) {
+    const { bangToken, searchText } = parseBangQuery(query);
+
+    if (option.kind === "search") {
       return {
-        type: "link" as const,
-        href: searchEngine.urlTemplate.replace("%s", query),
+        type: "link",
+        href: buildSearchUrl(option.urlTemplate, option.searchText),
         newTab: openSearchInNewTab,
       };
     }
 
-    if (searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null) {
-      return {
-        type: "children",
-        ...searchEnginesChildrenOptions(searchEngine),
-      };
+    if (option.kind === "engine") {
+      const nextBang = option.engine.short;
+      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
+      return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
     }
 
-    throw new Error(`Unable to process search engine with type ${searchEngine.type}`);
+    if (option.kind === "ddg") {
+      const nextBang = option.bang.t;
+      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
+      return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
+    }
+
+    return { type: "none" };
   },
   useQueryOptions(query) {
-    return clientApi.searchEngine.search.useQuery({
-      query: query.trim(),
-      limit: 5,
-    });
+    const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
+    const { ddgBangs } = useSettings();
+    const { bangToken, searchText, locked } = parseBangQuery(query);
+    const [debouncedBangToken] = useDebouncedValue(bangToken, 150);
+
+    const enginesQuery = clientApi.searchEngine.search.useQuery(
+      { query: debouncedBangToken, limit: 10 },
+      { placeholderData: keepPreviousData },
+    );
+
+    const ddgQuery = clientApi.bangs.search.useQuery(
+      { query: debouncedBangToken, limit: 10 },
+      {
+        enabled: ddgBangs && debouncedBangToken.length >= 1,
+        placeholderData: keepPreviousData,
+      },
+    );
+
+    const isLoading = enginesQuery.isLoading || ddgQuery.isLoading;
+    const isError = enginesQuery.isError || ddgQuery.isError;
+
+    const engineOptions = (enginesQuery.data ?? []).map(
+      (engine): ExternalOption => ({
+        key: `engine-${engine.short}`,
+        kind: "engine",
+        engine,
+      }),
+    );
+
+    const ddgOptions = (ddgQuery.data ?? [])
+      .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
+      .map(
+        (bang): ExternalOption => ({
+          key: `ddg-${bang.t}`,
+          kind: "ddg",
+          bang,
+        }),
+      );
+
+    const searchActions: ExternalOption[] = [];
+    if (locked && bangToken.length > 0) {
+      const matchedEngine = (enginesQuery.data ?? []).find((engine) => engine.short === bangToken);
+      const matchedDdg = (ddgQuery.data ?? []).find((bang) => bang.t === bangToken);
+
+      const label = matchedEngine?.name ?? matchedDdg?.s;
+      const iconUrl = matchedEngine?.iconUrl;
+      const urlTemplate = matchedEngine?.type === "generic" ? matchedEngine.urlTemplate : matchedDdg?.u;
+
+      if (label && urlTemplate) {
+        if (searchText.trim().length > 0) {
+          searchActions.push({
+            key: "search-action",
+            kind: "search",
+            label: `Search "${searchText.trim()}" with ${label}`,
+            description: "Press Enter to open",
+            bang: bangToken,
+            iconUrl,
+            urlTemplate,
+            searchText: searchText.trim(),
+          });
+        } else {
+          searchActions.push({
+            key: "search-hint",
+            kind: "hint",
+            label: `${label} selected (!${bangToken})`,
+            description: "Type your search query to continue",
+          });
+        }
+      }
+    }
+    if (query.length === 0) {
+      searchActions.push({
+        key: "hint",
+        kind: "hint",
+        label: "Type a bang, e.g. !yt, then press Space to select",
+        description: ddgBangs ? tExternal("tip.ddgBangs") : undefined,
+      });
+    }
+
+    return {
+      isLoading,
+      isError,
+      data: [...searchActions, ...engineOptions, ...ddgOptions].slice(0, 10),
+    };
   },
 });
