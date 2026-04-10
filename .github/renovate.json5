@@ -11,6 +11,12 @@
       matchPackageNames: ["tsx"],
       enabled: false,
     },
+    // Reenable once bug with undici v8 is fixed (https://github.com/homarr-labs/homarr/issues/5467)
+    {
+      matchPackageNames: ["undici"],
+      matchNewValue: "8.*",
+      enabled: false,
+    },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
