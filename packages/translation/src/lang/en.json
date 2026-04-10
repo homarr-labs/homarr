@@ -2516,6 +2516,9 @@
         },
         "hideDescription": {
           "label": "Hide description"
+        },
+        "showPosterImage": {
+          "label": "Show poster image"
         }
       }
     },
