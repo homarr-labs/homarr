@@ -1525,6 +1525,17 @@
         "offline": "Niedostępny"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Notatnik",
       "description": "Prosty widżet notatnika obsługujący markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status serwera Minecraft"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Aktualizator ikon"

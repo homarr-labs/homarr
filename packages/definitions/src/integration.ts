@@ -312,6 +312,13 @@ export const integrationDefs = {
     category: ["calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/ical"),
   },
+  anchor: {
+    name: "Anchor",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
+    category: ["notes"],
+    documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
+  },
   truenas: {
     name: "TrueNAS",
     secretKinds: [["username", "password"]],
@@ -355,6 +362,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
     category: ["mediaMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+  },
+  speedtestTracker: {
+    name: "Speedtest Tracker",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
+    category: ["speedtest"],
+    documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
   umami: {
     name: "Umami",
@@ -452,7 +466,9 @@ export const integrationCategories = [
   "firewall",
   "timetable",
   "photoService",
+  "notes",
   "mediaMonitoring",
+  "speedtest",
   "analytics",
 ] as const;
 

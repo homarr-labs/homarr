@@ -29,7 +29,7 @@ export const usersUpdatePassword = command({
       where: options.id ? eq(users.id, options.id) : eq(users.name, options.username!),
     });
 
-    if (!user?.salt) {
+    if (!user?.password) {
       console.error("User not found or has no credentials record");
       return;
     }
@@ -37,7 +37,7 @@ export const usersUpdatePassword = command({
     await db
       .update(users)
       .set({
-        password: await hashPasswordAsync(options.password, user.salt),
+        password: await hashPasswordAsync(options.password),
       })
       .where(eq(users.id, user.id));
 

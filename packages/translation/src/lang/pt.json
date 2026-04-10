@@ -7,15 +7,15 @@
         "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
           "scratch": "Começar do zero",
-          "importOldmarr": "Importe de uma instância Homarr anterior a 1.0"
+          "importOldmarr": "Importe de uma instância do Homarr anterior a 1.0"
         }
       },
       "import": {
         "title": "Importar dados",
         "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
         "dropzone": {
-          "title": "Arraste o arquivo zip aqui ou clique para procurar",
-          "description": "O arquivo zip enviado será processado e você poderá selecionar o que deseja importar"
+          "title": "Arraste o arquivo ZIP aqui ou clique para procurar",
+          "description": "O arquivo ZIP enviado será processado e você poderá selecionar o que deseja importar"
         },
         "fileInfo": {
           "action": {
@@ -27,7 +27,7 @@
           "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "{count} painéis encontrados",
+          "title": "{count} Painéis encontrados",
           "description": "Escolha todos os painéis com o tamanho que você deseja importar",
           "action": {
             "selectAll": "Selecionar todos",
@@ -1523,6 +1523,17 @@
       "status": {
         "online": "Online",
         "offline": "Offline"
+      }
+    },
+    "timetable": {
+      "name": "Calendário",
+      "description": "Mostra os horários de partida de uma estação",
+      "title": "Partidas {station}",
+      "noStation": "Nenhuma estação selecionada",
+      "option": {
+        "station": {
+          "label": "Estação"
+        }
       }
     },
     "notebook": {
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status do servidor Minecraft"
+            },
+            "timetable": {
+              "label": "Horários"
             },
             "iconsUpdater": {
               "label": "Atualizador de Ícones"

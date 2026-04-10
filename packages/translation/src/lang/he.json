@@ -1525,6 +1525,17 @@
         "offline": "לא מקוון"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "פנקס רשימות",
       "description": "ווידג'ט פשוט של מחברת התומך ב-markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "סטטוס שרת מיינקראפט"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "עדכון אייקונים"

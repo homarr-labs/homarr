@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Orario",
+      "description": "Visualizza gli orari di partenza per una stazione",
+      "title": "Partenze {station}",
+      "noStation": "Nessuna stazione selezionata",
+      "option": {
+        "station": {
+          "label": "Stazione"
+        }
+      }
+    },
     "notebook": {
       "name": "Blocco note",
       "description": "Un semplice widget notebook che supporta markdown",
@@ -3512,6 +3523,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Stato del server Minecraft"
+            },
+            "timetable": {
+              "label": "Orario"
             },
             "iconsUpdater": {
               "label": "Aggiornatore Icone"
