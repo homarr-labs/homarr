@@ -25,7 +25,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "^17.4.0",
+    "dotenv": "^17.4.1",
     "tsx": "4.20.4",
     "ws": "^8.20.0"
   },
