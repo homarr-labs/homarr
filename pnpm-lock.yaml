@@ -16,7 +16,7 @@ overrides:
   linkifyjs@<4.3.2: '>=4.3.2'
   nanoid@>=4.0.0 <5.0.9: '>=5.1.7'
   prismjs@<1.30.0: '>=1.30.0'
-  proxmox-api>undici: 8.0.2
+  proxmox-api>undici: 7.24.6
   react-is: ^19.2.4
   rollup@>=4.0.0 <4.22.4: '>=4.60.1'
   sha.js@<=2.4.11: '>=2.4.12'
@@ -438,8 +438,8 @@ importers:
         specifier: 2.2.6
         version: 2.2.6
       undici:
-        specifier: 8.0.2
-        version: 8.0.2
+        specifier: 7.24.6
+        version: 7.24.6
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -862,8 +862,8 @@ importers:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
       undici:
-        specifier: 8.0.2
-        version: 8.0.2
+        specifier: 7.24.6
+        version: 7.24.6
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -1455,7 +1455,7 @@ importers:
         version: link:../image-proxy
       '@homarr/node-unifi':
         specifier: ^2.6.0
-        version: 2.6.0(undici@8.0.2)
+        version: 2.6.0(undici@7.24.6)
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1493,8 +1493,8 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8
       undici:
-        specifier: 8.0.2
-        version: 8.0.2
+        specifier: 7.24.6
+        version: 7.24.6
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -1864,8 +1864,8 @@ importers:
         specifier: 2.2.6
         version: 2.2.6
       undici:
-        specifier: 8.0.2
-        version: 8.0.2
+        specifier: 7.24.6
+        version: 7.24.6
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -10557,10 +10557,6 @@ packages:
     resolution: {integrity: sha512-Xi4agocCbRzt0yYMZGMA6ApD7gvtUFaxm4ZmeacWI4cZxaF6C+8I8QfofC20NAePiB/IcvZmzkJ7XPa471AEtA==}
     engines: {node: '>=20.18.1'}
 
-  undici@8.0.2:
-    resolution: {integrity: sha512-B9MeU5wuFhkFAuNeA19K2GDFcQXZxq33fL0nRy2Aq30wdufZbyyvxW3/ChaeipXVfy/wUweZyzovQGk39+9k2w==}
-    engines: {node: '>=22.19.0'}
-
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -12061,11 +12057,11 @@ snapshots:
 
   '@homarr/gridstack@1.12.0': {}
 
-  '@homarr/node-unifi@2.6.0(undici@8.0.2)':
+  '@homarr/node-unifi@2.6.0(undici@7.24.6)':
     dependencies:
       axios: 1.9.0
       eventemitter2: 6.4.9
-      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@8.0.2)
+      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.24.6)
       tough-cookie: 5.1.2
       ws: 8.20.0
     transitivePeerDependencies:
@@ -16771,12 +16767,12 @@ snapshots:
 
   html-url-attributes@3.0.1: {}
 
-  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@8.0.2):
+  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.24.6):
     dependencies:
       agent-base: 7.1.3
       tough-cookie: 5.1.2
     optionalDependencies:
-      undici: 8.0.2
+      undici: 7.24.6
 
   http-errors@2.0.0:
     dependencies:
@@ -18635,7 +18631,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 8.0.2
+      undici: 7.24.6
 
   proxy-from-env@1.1.0: {}
 
@@ -20243,8 +20239,6 @@ snapshots:
   undici@6.23.0: {}
 
   undici@7.24.6: {}
-
-  undici@8.0.2: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
