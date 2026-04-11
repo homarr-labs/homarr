@@ -3,10 +3,10 @@ import { glob } from "glob";
 
 import packageJson from "../../../../package.json";
 
-const getPackageVersion = () => packageJson.version;
-const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
+export const getPackageVersion = () => packageJson.version;
+export const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
   const pathNames = await glob("**/package.json", {
-    ignore: "node_modules/**",
+    ignore: "**/node_modules/**",
     cwd: "../../",
     absolute: true,
   });
@@ -22,14 +22,7 @@ const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
   return dependencies;
 };
 
-export const getPackageAttributesAsync = async () => {
-  return {
-    version: getPackageVersion(),
-    dependencies: await getDependenciesAsync(),
-  };
-};
-
-type PackageJsonDependencies = Record<string, string>;
+export type PackageJsonDependencies = Record<string, string>;
 interface PackageJson {
   dependencies: PackageJsonDependencies | undefined;
 }
