@@ -1606,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Incorporar qualquer conteúdo da internet. Alguns sites podem restringir o acesso.",
@@ -2516,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Ocultar descrição"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2728,6 +2759,45 @@
       "description": "Exibe histórico de notificações de uma integração",
       "noItems": "Nenhuma notificação para exibir.",
       "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "systemResources": {
       "name": "Recursos do Sistema",
@@ -3036,7 +3106,7 @@
           }
         },
         "background": {
-          "title": "Antecedentes"
+          "title": "Imagem de fundo"
         },
         "appearance": {
           "title": "Aparência"

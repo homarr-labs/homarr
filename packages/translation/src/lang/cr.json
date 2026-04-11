@@ -1606,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "crwdns4064:0crwdne4064:0",
+      "description": "crwdns4066:0crwdne4066:0",
+      "option": {
+        "noteId": {
+          "label": "crwdns4068:0crwdne4068:0"
+        },
+        "showTitle": {
+          "label": "crwdns4070:0crwdne4070:0"
+        },
+        "showUpdatedAt": {
+          "label": "crwdns4072:0crwdne4072:0"
+        }
+      },
+      "empty": "crwdns4074:0crwdne4074:0",
+      "emptyContent": "crwdns4076:0crwdne4076:0",
+      "notFound": "crwdns4078:0crwdne4078:0",
+      "noNotes": "crwdns4080:0crwdne4080:0",
+      "integrationRequired": "crwdns4082:0crwdne4082:0",
+      "updatedAt": "crwdns4084:0{date}crwdne4084:0",
+      "untitled": "crwdns4086:0crwdne4086:0",
+      "edit": "crwdns4088:0crwdne4088:0",
+      "save": "crwdns4090:0crwdne4090:0",
+      "cancel": "crwdns4092:0crwdne4092:0",
+      "readOnlyViewer": "crwdns4094:0crwdne4094:0",
+      "saveForbidden": "crwdns4096:0crwdne4096:0",
+      "saveFailed": "crwdns4098:0crwdne4098:0"
+    },
     "iframe": {
       "name": "crwdns950:0crwdne950:0",
       "description": "crwdns952:0crwdne952:0",
@@ -2516,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "crwdns3674:0crwdne3674:0"
+        },
+        "showPosterImage": {
+          "label": "crwdns4012:0crwdne4012:0"
         }
       }
     },
@@ -2728,6 +2759,45 @@
       "description": "crwdns3478:0crwdne3478:0",
       "noItems": "crwdns3480:0crwdne3480:0",
       "option": {}
+    },
+    "speedtestTracker": {
+      "name": "crwdns4014:0crwdne4014:0",
+      "description": "crwdns4016:0crwdne4016:0",
+      "option": {
+        "showLatestResult": {
+          "label": "crwdns4018:0crwdne4018:0"
+        },
+        "showStats": {
+          "label": "crwdns4020:0crwdne4020:0"
+        },
+        "showRecentResults": {
+          "label": "crwdns4022:0crwdne4022:0"
+        },
+        "showPingGraph": {
+          "label": "crwdns4024:0crwdne4024:0"
+        }
+      },
+      "latestResult": "crwdns4026:0crwdne4026:0",
+      "averages": "crwdns4028:0crwdne4028:0",
+      "tests": "crwdns4030:0{count}crwdne4030:0",
+      "recentResults": "crwdns4032:0crwdne4032:0",
+      "recentResultsSpeed": "crwdns4034:0crwdne4034:0",
+      "recentResultsPing": "crwdns4036:0crwdne4036:0",
+      "download": "crwdns4038:0crwdne4038:0",
+      "upload": "crwdns4040:0crwdne4040:0",
+      "ping": "crwdns4042:0crwdne4042:0",
+      "status": "crwdns4044:0crwdne4044:0",
+      "avgDownload": "crwdns4046:0crwdne4046:0",
+      "avgUpload": "crwdns4048:0crwdne4048:0",
+      "avgPing": "crwdns4050:0crwdne4050:0",
+      "healthy": "crwdns4052:0crwdne4052:0",
+      "unhealthy": "crwdns4054:0crwdne4054:0",
+      "ok": "crwdns4056:0crwdne4056:0",
+      "fail": "crwdns4058:0crwdne4058:0",
+      "noSectionsEnabled": "crwdns4060:0crwdne4060:0",
+      "error": {
+        "internalServerError": "crwdns4062:0crwdne4062:0"
+      }
     },
     "systemResources": {
       "name": "crwdns3600:0crwdne3600:0",
