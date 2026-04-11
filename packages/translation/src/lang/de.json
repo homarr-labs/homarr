@@ -1606,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
@@ -2516,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Beschreibung ausblenden"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2728,6 +2759,45 @@
       "description": "Benachrichtigungshistorie von einer Integration anzeigen",
       "noItems": "Keine Benachrichtigungen zum Anzeigen.",
       "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "systemResources": {
       "name": "Systemressourcen",

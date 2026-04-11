@@ -1,3 +1,13 @@
+## [1.59.1](https://github.com/homarr-labs/homarr/compare/v1.59.0...v1.59.1) (2026-04-10)
+
+### Bug Fixes
+
+* **qbittorrent:** requests fail ([#5473](https://github.com/homarr-labs/homarr/issues/5473)) ([db6bb87](https://github.com/homarr-labs/homarr/commit/db6bb870e3be14c7895a2882755d3aee09e44fa6))
+
+### Reverts
+
+* **deps:** downgrade undici from v8 to v7 ([#5473](https://github.com/homarr-labs/homarr/issues/5473)) ([dc44fac](https://github.com/homarr-labs/homarr/commit/dc44fac42aab5679427b2921402dfa11e634e1cf))
+
 ## [1.59.0](https://github.com/homarr-labs/homarr/compare/v1.58.1...v1.59.0) (2026-04-10)
 
 ### Features
