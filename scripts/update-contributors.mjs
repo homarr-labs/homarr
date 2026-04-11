@@ -45,10 +45,10 @@ const fetchCrowdinMembers = async (projectId) => {
   };
 
   const response = await fetch(url, options);
-  const data = await response.json();
+  const result = await response.json();
 
-  return data.data
-    .flatMap((data) => data.data)
+  return result.data
+    .flatMap(({ data }) => data)
     .map((contributor) => ({
       username: contributor.username,
       avatarUrl: contributor.avatarUrl,
