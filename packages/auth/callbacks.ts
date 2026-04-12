@@ -36,7 +36,7 @@ export const createSessionAsync = async (
       ...user,
       email: user.email ?? "",
       permissions: await getCurrentUserPermissionsAsync(db, user.id),
-      colorScheme: "dark",
+      colorScheme: "auto",
     },
   } as Session;
 };

@@ -129,7 +129,7 @@ export default async function Layout(props: {
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{
-        backgroundColor: colorScheme === "dark" ? "#242424" : "#fff",
+        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
       }}
       suppressHydrationWarning
     >

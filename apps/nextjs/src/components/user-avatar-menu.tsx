@@ -5,16 +5,7 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
-import {
-  IconCheck,
-  IconHome,
-  IconLogin,
-  IconLogout,
-  IconMoon,
-  IconSettings,
-  IconSun,
-  IconTool,
-} from "@tabler/icons-react";
+import { IconCheck, IconHome, IconLogin, IconLogout, IconSettings, IconTool } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
@@ -24,6 +15,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
+import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { AvailableUpdatesMenuItem } from "./layout/header/update";
 
@@ -34,12 +26,8 @@ interface UserAvatarMenuProps {
 
 export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { toggleColorScheme } = useMantineColorScheme();
   useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
-
-  const ColorSchemeIcon = colorScheme === "dark" ? IconSun : IconMoon;
-
-  const colorSchemeText = colorScheme === "dark" ? t("switchToLightMode") : t("switchToDarkMode");
 
   const session = useSession();
   const router = useRouter();
@@ -67,14 +55,14 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
     <Menu width={300} withArrow withinPortal keepMounted>
       <Menu.Dropdown>
         <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
-        <Menu.Item onClick={toggleColorScheme} leftSection={<ColorSchemeIcon size="1rem" />}>
-          {colorSchemeText}
-        </Menu.Item>
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
           {t("homeBoard")}
         </Menu.Item>
         <Menu.Divider />
 
+        <Menu.Item p={0} closeMenuOnClick={false} component="div">
+          <CurrentColorSchemeCombobox />
+        </Menu.Item>
         <Menu.Item p={0} closeMenuOnClick={false} component="div">
           <CurrentLanguageCombobox />
         </Menu.Item>
