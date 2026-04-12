@@ -62,7 +62,7 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0
       '@turbo/gen':
-        specifier: ^2.9.4
+        specifier: ^2.9.5
         version: 2.9.5(@types/node@24.12.2)
       '@vitejs/plugin-react':
         specifier: ^5.2.0
@@ -95,7 +95,7 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0
       turbo:
-        specifier: ^2.9.4
+        specifier: ^2.9.5
         version: 2.9.5
       typescript:
         specifier: ^5.9.3
@@ -2367,7 +2367,7 @@ importers:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.39.4)
       eslint-config-turbo:
-        specifier: ^2.9.4
+        specifier: ^2.9.5
         version: 2.9.5(eslint@9.39.4)(turbo@2.9.5)
       eslint-plugin-import:
         specifier: ^2.32.0
