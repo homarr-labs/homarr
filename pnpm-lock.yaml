@@ -798,8 +798,8 @@ importers:
   packages/cli:
     dependencies:
       '@drizzle-team/brocli':
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^0.12.0
+        version: 0.12.0
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
@@ -2836,8 +2836,8 @@ packages:
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
-  '@drizzle-team/brocli@0.11.0':
-    resolution: {integrity: sha512-hD3pekGiPg0WPCCGAZmusBBJsDqGUR66Y452YgQsZOnkdQ7ViEPKuyP4huUGEZQefp8g34RRodXYmJ2TbCH+tg==}
+  '@drizzle-team/brocli@0.12.0':
+    resolution: {integrity: sha512-mlUE+rZ8CatQekLhnaiN91Iemdd+e2gFKooGlnRB3oPTL3VghLfX24dx7HrzMNeC1JrIB/0kpsfyty3f5HNfxQ==}
 
   '@emnapi/runtime@1.9.1':
     resolution: {integrity: sha512-VYi5+ZVLhpgK4hQ0TAjiQiZ6ol0oe4mBx7mVv7IflsiEp0OWoVsp/+f9Vc1hOhE0TtkORVrI1GvzyreqpgWtkA==}
@@ -11668,7 +11668,7 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@drizzle-team/brocli@0.11.0': {}
+  '@drizzle-team/brocli@0.12.0': {}
 
   '@emnapi/runtime@1.9.1':
     dependencies:
