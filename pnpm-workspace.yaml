@@ -38,7 +38,7 @@ catalog:
   "@mantine/spotlight": ^8.3.18
   "@mantine/tiptap": ^8.3.18
   "@million/lint": 1.0.14
-  "@next/eslint-plugin-next": 16.2.2
+  "@next/eslint-plugin-next": 16.2.3
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
   "@semantic-release/changelog": ^6.0.3
