@@ -6,3 +6,4 @@ minimumReleaseAge: 4320 # Only download deps if they are at least 3 days old (in
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+catalogMode: strict
