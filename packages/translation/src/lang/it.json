@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Nota Anchor",
+      "description": "Visualizza una nota selezionata da Ancoraggio",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Nota"
         },
         "showTitle": {
-          "label": ""
+          "label": "Mostra titolo"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Mostra ultimo aggiornamento"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Seleziona una nota da visualizzare",
+      "emptyContent": "Questa nota non ha nessun contenuto",
+      "notFound": "Nota non trovata",
+      "noNotes": "Nessuna nota trovata",
+      "integrationRequired": "Seleziona prima l'integrazione di Anchor",
+      "updatedAt": "Aggiornato {date}",
+      "untitled": "Senza titolo",
+      "edit": "Modifica",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "readOnlyViewer": "Hai accesso in modalità visualizzazione a questa nota. La modifica è disabilitata.",
+      "saveForbidden": "Non hai i permessi per modificare questa nota.",
+      "saveFailed": "Impossibile salvare questa nota. Per favore, riprova."
     },
     "iframe": {
       "name": "iFrame",
@@ -2546,7 +2546,7 @@
           "label": "Nascondi descrizione"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Mostra immagine poster"
         }
       }
     },
@@ -2761,42 +2761,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "SpeedTest Tracker",
+      "description": "Visualizza i risultati del test di velocità della tua istanza di Speedtest Tracker.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Mostra l'ultimo risultato"
         },
         "showStats": {
-          "label": ""
+          "label": "Mostra medie"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Mostra risultati recenti"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Mostra grafico di ping"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Ultima Risultato",
+      "averages": "Medie",
+      "tests": "{count} test",
+      "recentResults": "Risultati Recenti",
+      "recentResultsSpeed": "Velocità",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Stato",
+      "avgDownload": "Media di Download",
+      "avgUpload": "Media di Upload",
+      "avgPing": "Media di Ping",
+      "healthy": "Normale funzionamento",
+      "unhealthy": "Compromesso",
+      "ok": "OK",
+      "fail": "Fallito",
+      "noSectionsEnabled": "Abilita almeno una sezione nelle opzioni del widget.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Recupero dei dati di speedtest non riuscito"
       }
     },
     "systemResources": {

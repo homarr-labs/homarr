@@ -74,7 +74,7 @@
     "flag-icons": "^7.5.0",
     "glob": "^13.0.6",
     "isomorphic-dompurify": "^3.7.1",
-    "jotai": "^2.19.0",
+    "jotai": "^2.19.1",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "16.2.3",
     "postcss-preset-mantine": "^1.18.0",
@@ -85,7 +85,7 @@
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.99.0",
     "superjson": "2.2.6",
-    "swagger-ui-react": "^5.32.1",
+    "swagger-ui-react": "^5.32.2",
     "use-deep-compare-effect": "^1.8.1",
     "zod": "^4.3.6"
   },
