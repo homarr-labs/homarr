@@ -40,26 +40,26 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@kubernetes/client-node": "^1.4.0",
-    "@tanstack/react-query": "^5.96.2",
-    "@trpc/client": "^11.16.0",
-    "@trpc/react-query": "^11.16.0",
-    "@trpc/server": "^11.16.0",
-    "@trpc/tanstack-react-query": "^11.16.0",
-    "lodash.clonedeep": "^4.5.0",
-    "next": "16.2.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "superjson": "2.2.6",
-    "trpc-to-openapi": "^3.2.0",
-    "zod": "^4.3.6"
+    "@kubernetes/client-node": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@trpc/client": "catalog:",
+    "@trpc/react-query": "catalog:",
+    "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "catalog:",
+    "lodash.clonedeep": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "superjson": "catalog:",
+    "trpc-to-openapi": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "prettier": "^3.8.1",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }

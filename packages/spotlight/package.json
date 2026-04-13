@@ -33,21 +33,21 @@
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.18",
-    "@mantine/hooks": "^8.3.18",
-    "@mantine/spotlight": "^8.3.18",
-    "@tabler/icons-react": "^3.41.1",
-    "jotai": "^2.19.1",
-    "next": "16.2.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "use-deep-compare-effect": "^1.8.1"
+    "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@mantine/spotlight": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "jotai": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "use-deep-compare-effect": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }
