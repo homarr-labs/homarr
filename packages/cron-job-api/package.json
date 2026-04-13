@@ -33,7 +33,7 @@
     "@trpc/server": "^11.16.0",
     "@trpc/tanstack-react-query": "^11.16.0",
     "node-cron": "^4.2.1",
-    "react": "19.2.4",
+    "react": "19.2.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {

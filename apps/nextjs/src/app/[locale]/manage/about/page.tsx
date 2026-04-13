@@ -12,8 +12,7 @@ import {
   Flex,
   Group,
   Kbd,
-  List,
-  ListItem,
+  SimpleGrid,
   Stack,
   Table,
   TableTbody,
@@ -22,9 +21,11 @@ import {
   TableThead,
   TableTr,
   Text,
+  ThemeIcon,
   Title,
+  UnstyledButton,
 } from "@mantine/core";
-import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import { IconKeyboard, IconLanguage, IconLibrary, IconPackage, IconUsers } from "@tabler/icons-react";
 
 import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
@@ -33,7 +34,8 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
-import { getPackageAttributesAsync } from "~/versions/package-reader";
+import type { PackageJsonDependencies } from "~/versions/package-reader";
+import { getPackageVersion } from "~/versions/package-reader";
 import type githubContributorsJson from "../../../../../../../static-data/contributors.json";
 import type crowdinContributorsJson from "../../../../../../../static-data/translators.json";
 import classes from "./about.module.css";
@@ -57,7 +59,10 @@ const getHostAsync = async () => {
 export default async function AboutPage() {
   const baseServerUrl = `http://${await getHostAsync()}`;
   const t = await getScopedI18n("management.page.about");
-  const attributes = await getPackageAttributesAsync();
+  const version = getPackageVersion();
+  const dependencies = (await fetch(`${baseServerUrl}/api/about/dependencies`).then((res) =>
+    res.json(),
+  )) as PackageJsonDependencies;
   const githubContributors = (await fetch(`${baseServerUrl}/api/about/contributors/github`).then((res) =>
     res.json(),
   )) as typeof githubContributorsJson;
@@ -76,7 +81,7 @@ export default async function AboutPage() {
             <Title order={1} tt="uppercase">
               Homarr
             </Title>
-            <Title order={2}>{t("version", { version: attributes.version })}</Title>
+            <Title order={2}>{t("version", { version })}</Title>
           </Stack>
         </Group>
       </Center>
@@ -137,25 +142,42 @@ export default async function AboutPage() {
               <Text>{t("accordion.libraries.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.libraries.subtitle", {
-                  count: String(Object.keys(attributes.dependencies).length),
+                  count: String(Object.keys(dependencies).length),
                 })}
               </Text>
             </Stack>
           </AccordionControl>
           <AccordionPanel>
-            <List>
-              {Object.entries(attributes.dependencies)
+            <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
+              {Object.entries(dependencies)
+                .filter(([, value]) => !value.includes("workspace:"))
                 .sort(([key1], [key2]) => key1.localeCompare(key2))
-                .map(([key, value]) => (
-                  <ListItem key={key}>
-                    {value.includes("workspace:") ? (
-                      <Text>{key}</Text>
-                    ) : (
-                      <a href={`https://www.npmjs.com/package/${key}`}>{key}</a>
-                    )}
-                  </ListItem>
+                .map(([name, version]) => (
+                  <UnstyledButton
+                    key={name}
+                    component="a"
+                    href={`https://www.npmjs.com/package/${name}`}
+                    target="_blank"
+                  >
+                    <Card withBorder radius="md" p="xs" className={classes.dependencyCard}>
+                      <Group gap="sm" wrap="nowrap">
+                        <ThemeIcon variant="light" size="lg" radius="md">
+                          <IconPackage size="1.5rem" stroke={1.5} />
+                        </ThemeIcon>
+
+                        <Stack gap={0}>
+                          <Text size="sm" fw="bold" lineClamp={1} title={name}>
+                            {name}
+                          </Text>
+                          <Text size="sm" c="dimmed">
+                            v{version.replace("^", "").replace("~", "")}
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Card>
+                  </UnstyledButton>
                 ))}
-            </List>
+            </SimpleGrid>
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem value="hotkeys">
