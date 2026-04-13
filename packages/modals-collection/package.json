@@ -33,19 +33,19 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.18",
-    "@tabler/icons-react": "^3.41.1",
-    "dayjs": "^1.11.20",
-    "next": "16.2.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "zod": "^4.3.6"
+    "@mantine/core": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "dayjs": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

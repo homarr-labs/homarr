@@ -27,22 +27,22 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
-    "@paralleldrive/cuid2": "^3.3.0",
-    "cookie": "1.1.1",
-    "dayjs": "^1.11.20",
-    "next": "16.2.3",
-    "octokit": "^5.0.5",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "undici": "7.24.6",
-    "zod": "^4.3.6",
-    "zod-validation-error": "^5.0.0"
+    "@paralleldrive/cuid2": "catalog:",
+    "cookie": "catalog:",
+    "dayjs": "catalog:",
+    "next": "catalog:",
+    "octokit": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "undici": "catalog:",
+    "zod": "catalog:",
+    "zod-validation-error": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

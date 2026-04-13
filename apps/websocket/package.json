@@ -25,18 +25,18 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "^17.4.1",
-    "tsx": "4.20.4",
-    "ws": "^8.20.0"
+    "dotenv": "catalog:",
+    "tsx": "catalog:",
+    "ws": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/ws": "^8.18.1",
-    "esbuild": "^0.28.0",
-    "eslint": "^9.39.4",
-    "prettier": "^3.8.1",
-    "typescript": "^5.9.3"
+    "@types/ws": "catalog:",
+    "esbuild": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }

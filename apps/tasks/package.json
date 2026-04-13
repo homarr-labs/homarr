@@ -37,22 +37,22 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "dayjs": "^1.11.20",
-    "dotenv": "^17.4.1",
-    "fastify": "^5.8.4",
-    "superjson": "2.2.6",
-    "undici": "7.24.6"
+    "dayjs": "catalog:",
+    "dotenv": "catalog:",
+    "fastify": "catalog:",
+    "superjson": "catalog:",
+    "undici": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^24.12.2",
-    "dotenv-cli": "^11.0.0",
-    "esbuild": "^0.28.0",
-    "eslint": "^9.39.4",
-    "prettier": "^3.8.1",
-    "tsx": "4.20.4",
-    "typescript": "^5.9.3"
+    "@types/node": "catalog:",
+    "dotenv-cli": "catalog:",
+    "esbuild": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }
