@@ -277,10 +277,10 @@ catalogs:
       specifier: ^5.2.0
       version: 5.2.0
     '@vitest/coverage-v8':
-      specifier: ^4.1.3
+      specifier: ^4.1.4
       version: 4.1.4
     '@vitest/ui':
-      specifier: ^4.1.3
+      specifier: ^4.1.4
       version: 4.1.4
     '@xterm/addon-canvas':
       specifier: ^0.7.0
@@ -538,7 +538,7 @@ catalogs:
       specifier: ^6.1.1
       version: 6.1.1
     vitest:
-      specifier: ^4.1.3
+      specifier: ^4.1.4
       version: 4.1.4
     winston:
       specifier: 3.19.0
