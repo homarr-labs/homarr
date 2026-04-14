@@ -25,16 +25,16 @@
   "dependencies": {
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.3.18",
-    "next": "16.2.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "@mantine/dates": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

@@ -25,14 +25,14 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "bcrypt": "^6.0.0"
+    "bcrypt": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/bcrypt": "6.0.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "@types/bcrypt": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }
