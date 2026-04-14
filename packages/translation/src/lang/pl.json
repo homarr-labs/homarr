@@ -1138,9 +1138,9 @@
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
     "unsavedChanges": "Masz niezapisane zmiany!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Serwery",
+    "applications": "Aplikacje",
+    "services": "Usługi",
     "preview": {
       "show": "Pokaż podgląd",
       "hide": "Ukryj podgląd"
@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Rozkład",
+      "description": "Wyświetla czas odjazdu dla stacji",
+      "title": "Odjazdy {station}",
+      "noStation": "Nie wybrano stacji",
       "option": {
         "station": {
-          "label": ""
+          "label": "Stacja"
         }
       }
     },
@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Notatka z Anchor",
+      "description": "Wyświetla wybraną notatkę z Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Notatka"
         },
         "showTitle": {
-          "label": ""
+          "label": "Pokaż tytuł"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Pokaż ostatnią aktualizację"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Wybierz notatkę do wyświetlenia",
+      "emptyContent": "Ta notatka nie ma zawartości",
+      "notFound": "Nie znaleziono notatki",
+      "noNotes": "Nie znaleziono notatek",
+      "integrationRequired": "Najpierw wybierz integrację z Anchor",
+      "updatedAt": "Zaktualizowano {date}",
+      "untitled": "Bez tytułu",
+      "edit": "Edytuj",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "readOnlyViewer": "Masz dostęp tylko do odczytu tej notatki. Edycja jest wyłączona.",
+      "saveForbidden": "Nie masz uprawnień do edycji tej notatki.",
+      "saveFailed": "Nie udało się zapisać tej notatki. Spróbuj ponownie."
     },
     "iframe": {
       "name": "iFrame",
@@ -1666,7 +1666,7 @@
           "label": "Zezwalaj na geolokalizację"
         },
         "allowModals": {
-          "label": ""
+          "label": "Zezwól na okna modalne"
         }
       },
       "error": {
@@ -1901,7 +1901,7 @@
           "label": "Pokaż informacje o pamięci"
         },
         "gpu": {
-          "label": ""
+          "label": "Pokaż informacje o GPU"
         },
         "showUptime": {
           "label": "Pokaż czas pracy"
@@ -1989,19 +1989,19 @@
       "description": "Statystyki Twoich kontenerów (ten widżet można dodać tylko z uprawnieniami administratora)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Włącz sortowanie elementów"
         },
         "defaultSort": {
-          "label": "",
+          "label": "👉 Kolumna używana domyślnie do sortowania",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nazwa",
+            "state": "Stan",
+            "cpuUsage": "Użycie CPU",
+            "memoryUsage": "Użycie pamięci"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Odwróć sortowanie"
         }
       },
       "error": {
@@ -2009,77 +2009,77 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Przegląd instancji Coolify z serwerami i aplikacjami",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Pokaż serwery"
         },
         "showApplications": {
-          "label": ""
+          "label": "Pokaż aplikacje"
         },
         "showServices": {
-          "label": ""
+          "label": "Pokaż usługi"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Nie znaleziono serwerów",
+        "applications": "Nie znaleziono aplikacji",
+        "services": "Nie znaleziono usług"
       },
       "footer": {
-        "updated": ""
+        "updated": "Zaktualizowano {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Brak skonfigurowanej integracji Coolify",
+        "internalServerError": "Nie udało się pobrać danych z Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Instancje"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Rozszerzone monitorowanie serwera multimediów z szczegółowymi danymi o strumieniach i transkodowaniu",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Pokaż aktywne strumienie"
         },
         "showStats": {
-          "label": ""
+          "label": "Pokaż podsumowanie statystyk"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Pokaż ostatnią aktywność"
         },
         "showViolations": {
-          "label": ""
+          "label": "Pokaż naruszenia"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Aktywne strumienie",
+        "totalUsers": "Łączna liczba użytkowników",
+        "transcodes": "Transkodowanie",
+        "bandwidth": "Przepustowość"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Brak aktywnych strumieni",
+        "user": "Użytkownik",
+        "media": "Media",
+        "state": "Status",
+        "quality": "Jakość",
+        "device": "Urządzenie",
+        "progress": "Postęp",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direct Play",
+          "transcode": "Transkodowanie",
+          "directStream": "Direct Stream"
         }
       },
       "recentActivity": {
-        "title": "",
+        "title": "Ostatnia aktywność",
         "empty": "",
         "watched": "",
         "partial": ""
