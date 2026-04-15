@@ -147,7 +147,7 @@ catalog:
   mantine-form-zod-resolver: ^1.3.0
   mantine-react-table: 2.0.0-beta.9
   maria2: ^0.4.1
-  mysql2: 3.21.1
+  mysql2: 3.22.0
   next: 16.2.3
   next-auth: 5.0.0-beta.30
   next-intl: 4.9.1
