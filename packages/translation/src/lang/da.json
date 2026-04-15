@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor note",
+      "description": "Viser en valgt note fra Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Note"
         },
         "showTitle": {
-          "label": ""
+          "label": "Vis titel"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Vis senest opdateret"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Vælg en note der skal vises",
+      "emptyContent": "Denne note har intet indhold",
+      "notFound": "Note ikke fundet",
+      "noNotes": "Ingen noter fundet",
+      "integrationRequired": "Vælg først en Anchorintegration",
+      "updatedAt": "Opdateret {date}",
+      "untitled": "Unavngivet",
+      "edit": "Rediger",
+      "save": "Gem",
+      "cancel": "Annullér",
+      "readOnlyViewer": "Du har læseadgang til denne note. Redigering er deaktiveret.",
+      "saveForbidden": "Du har ikke adgang til at redigere denne note.",
+      "saveFailed": "Kunne ikke gemme denne note. Prøv igen."
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",
@@ -2546,7 +2546,7 @@
           "label": "Skjul beskrivelse"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Vis poster billede"
         }
       }
     },
@@ -2761,42 +2761,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Viser testresultater for hastighed fra din Speedtest Tracker instans.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Vis seneste resultat"
         },
         "showStats": {
-          "label": ""
+          "label": "Vis gennemsnit"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Vis seneste resultater"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Vis ping-graf"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Seneste resultat",
+      "averages": "Gennemsnit",
+      "tests": "{count} tests",
+      "recentResults": "Seneste resultater",
+      "recentResultsSpeed": "Hastighed",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Gns Download",
+      "avgUpload": "Gns Upload",
+      "avgPing": "Gns Ping",
+      "healthy": "Sund",
+      "unhealthy": "Usund",
+      "ok": "OK",
+      "fail": "Fejl",
+      "noSectionsEnabled": "Aktivér mindst én sektion i widget-indstillinger.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente hastighedstestdata"
       }
     },
     "systemResources": {
