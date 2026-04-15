@@ -3,7 +3,6 @@
 // after client disconnect, leaving sockets in CLOSE-WAIT indefinitely.
 //
 // Usage: node --require ./socket-cleanup.cjs server.js
-//   or:  NODE_OPTIONS="--require /app/socket-cleanup.cjs" node server.js
 
 const INTERVAL_MS = 60_000; // Check every 60 seconds
 
