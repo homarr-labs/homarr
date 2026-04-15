@@ -19,6 +19,7 @@ const withNextIntl = createNextIntlPlugin({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  compress: false, // Workaround for vercel/next.js#89091 - zlib retains ServerResponse after client disconnect, causing CLOSE-WAIT socket leak
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,

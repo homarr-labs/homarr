@@ -51,7 +51,7 @@ TASKS_PID=$!
 node apps/websocket/wssServer.cjs &
 WSS_PID=$!
 
-node apps/nextjs/server.js &
+node --require apps/nextjs/socket-cleanup.cjs apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services

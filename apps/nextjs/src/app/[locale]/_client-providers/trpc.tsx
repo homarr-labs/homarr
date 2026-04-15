@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import {
   createWSClient,
-  httpBatchStreamLink,
+  httpBatchLink,
   httpLink,
   isNonJsonSerializable,
   loggerLink,
@@ -90,7 +90,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
               url: getTrpcUrl(),
               headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
             }),
-            false: httpBatchStreamLink({
+            false: httpBatchLink({
               transformer: superjson,
               url: getTrpcUrl(),
               maxURLLength: 2083, // Suggested by tRPC: https://trpc.io/docs/client/links/httpBatchLink#setting-a-maximum-url-length
