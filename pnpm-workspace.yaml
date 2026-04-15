@@ -156,7 +156,7 @@ catalog:
   octokit: ^5.0.5
   pg: ^8.20.0
   postcss-preset-mantine: ^1.18.0
-  prettier: ^3.8.1
+  prettier: ^3.8.2
   prettier-plugin-packagejson: ^3.0.2
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
