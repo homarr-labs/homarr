@@ -76,7 +76,7 @@ catalog:
   "@trpc/react-query": ^11.16.0
   "@trpc/server": ^11.16.0
   "@trpc/tanstack-react-query": ^11.16.0
-  "@turbo/gen": ^2.9.5
+  "@turbo/gen": ^2.9.6
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -127,7 +127,7 @@ catalog:
   esbuild: ^0.28.0
   eslint: ^9.39.4
   eslint-config-prettier: ^10.1.8
-  eslint-config-turbo: ^2.9.5
+  eslint-config-turbo: ^2.9.6
   eslint-plugin-import: ^2.32.0
   eslint-plugin-jsx-a11y: ^6.10.2
   eslint-plugin-react: ^7.37.5
@@ -178,7 +178,7 @@ catalog:
   trpc-to-openapi: ^3.2.0
   tsdav: ^2.1.8
   tsx: 4.20.4
-  turbo: ^2.9.5
+  turbo: ^2.9.6
   typescript: ^5.9.3
   typescript-eslint: ^8.58.1
   undici: 7.24.6
