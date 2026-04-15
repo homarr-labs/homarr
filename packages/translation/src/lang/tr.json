@@ -678,7 +678,7 @@
           "action": {
             "add": "Bir uygulamayı bağla",
             "remove": "Bağlantıyı kaldır",
-            "select": ""
+            "select": "Bağlantı kurmak istediğiniz uygulamayı seçin"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Bağlı Uygulama"
       },
       "createApp": {
         "label": "Uygulama oluştur",
@@ -1051,7 +1051,7 @@
       "add": "Ekle",
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
-      "change": "",
+      "change": "Değiştir",
       "create": "Oluştur",
       "createAnother": "Kaydet ve Yeni Oluştur",
       "edit": "Düzenle",
@@ -1138,9 +1138,9 @@
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
     "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Sunucular",
+    "applications": "Uygulamalar",
+    "services": "Hizmetler",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -1177,8 +1177,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1193,7 +1193,7 @@
           "label": "Başlık"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Özel CSS sınıfları"
         },
         "borderColor": {
           "label": "Kenarlık rengi"
@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Zaman Çizelgesi",
+      "description": "Bir istasyon için kalkış saatlerini görüntüler",
+      "title": "{station} kalkışları",
+      "noStation": "İstasyon seçilmedi",
       "option": {
         "station": {
-          "label": ""
+          "label": "İstasyon"
         }
       }
     },
@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor Notu",
+      "description": "Anchor'dan seçilen bir notu görüntüler",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Not"
         },
         "showTitle": {
-          "label": ""
+          "label": "Başlığı göster"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Son güncellenmeyi göster"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Görüntülenecek bir not seçin",
+      "emptyContent": "Bu notun içeriği yok",
+      "notFound": "Not bulunamadı",
+      "noNotes": "Not bulunamadı",
+      "integrationRequired": "Önce bir Anchor entegrasyonu seçin",
+      "updatedAt": "Güncellendi: {date}",
+      "untitled": "Başlıksız",
+      "edit": "Düzenle",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "readOnlyViewer": "Bu nota görüntüleyici erişiminiz var. Düzenleme devre dışı bırakıldı.",
+      "saveForbidden": "Bu notu düzenleme izniniz yok.",
+      "saveFailed": "Not kaydedilemedi. Lütfen tekrar deneyin."
     },
     "iframe": {
       "name": "iFrame",
@@ -1666,7 +1666,7 @@
           "label": "Coğrafi konuma izin ver (geolocation)"
         },
         "allowModals": {
-          "label": ""
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1825,7 +1825,7 @@
           "description": "Yalnızca mevcut hava durumunda"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Use mph for windspeed"
         },
         "location": {
           "label": "Hava durumu konumu"
@@ -1901,7 +1901,7 @@
           "label": "Bellek Bilgilerini Göster"
         },
         "gpu": {
-          "label": ""
+          "label": "Show GPU Info"
         },
         "showUptime": {
           "label": "Çalışma Süresini Göster"
@@ -1989,19 +1989,19 @@
       "description": "Konteynerlerinizin istatistikleri (Bu widget yalnızca yönetici ayrıcalıklarıyla eklenebilir)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Column used for sorting by default",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         }
       },
       "error": {
@@ -2009,91 +2009,91 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Show servers"
         },
         "showApplications": {
-          "label": ""
+          "label": "Show applications"
         },
         "showServices": {
-          "label": ""
+          "label": "Show services"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
       },
       "footer": {
-        "updated": ""
+        "updated": "Updated {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Instances"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Show active streams"
         },
         "showStats": {
-          "label": ""
+          "label": "Show stats summary"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Show recent activity"
         },
         "showViolations": {
-          "label": ""
+          "label": "Show violations"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "No sections enabled",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
       }
     },
     "common": {
@@ -2192,50 +2192,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich Server Stats",
+      "description": "Information about your Immich instance",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Show users",
+          "description": "Show count of users on your instance"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Show photos",
+          "description": "Show count of photos on your instance"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Show videos",
+          "description": "Show count of videos on your instance"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Show storage",
+          "description": "Show the total amount of storage used"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Users",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Used Storage"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album ID",
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval in seconds",
+          "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Show photo info",
+          "description": "Display date of the picture and the current index at the bottom of the slideshow"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Slideshow of pictures in your Immich album",
+      "noAlbumSelected": "No album selected, edit widget and choose an album",
+      "noPhotos": "No photos in this album"
     },
     "downloads": {
       "name": "İndirme İstemcisi",
@@ -2430,7 +2430,7 @@
         "unknown": "Bilinmeyen",
         "pending": "Bekleyen",
         "processing": "İşlemde",
-        "requested": "",
+        "requested": "Requested",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut",
         "blacklisted": "Engellenenler",
@@ -2546,7 +2546,7 @@
           "label": "Açıklamayı gizle"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Show poster image"
         }
       }
     },
@@ -2761,42 +2761,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Displays speed test results from your Speedtest Tracker instance.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Show latest result"
         },
         "showStats": {
-          "label": ""
+          "label": "Show averages"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Show recent results"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Show ping graph"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Latest Result",
+      "averages": "Averages",
+      "tests": "{count} tests",
+      "recentResults": "Recent Results",
+      "recentResultsSpeed": "Speed",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Avg Download",
+      "avgUpload": "Avg Upload",
+      "avgPing": "Avg Ping",
+      "healthy": "Healthy",
+      "unhealthy": "Unhealthy",
+      "ok": "OK",
+      "fail": "Fail",
+      "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch speedtest data"
       }
     },
     "systemResources": {
@@ -2812,7 +2812,7 @@
           "option": {
             "cpu": "İşlemci",
             "memory": "Bellek",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Ağ"
           }
         },
@@ -2829,39 +2829,39 @@
       "card": {
         "cpu": "İşlemci",
         "memory": "BELLEK",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "AĞ",
         "up": "YÜKLEME",
         "down": "İNDİRME"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "System disks",
+      "description": "Disk usage of your system",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Show temperature if available"
         },
         "displayMode": {
-          "label": "",
+          "label": "Display mode",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Percentage (e.g., 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Absolute values (e.g., 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Free space percentage (e.g., 24% free)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Show background usage bar"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Unhealthy"
       }
     }
   },
@@ -3285,8 +3285,8 @@
           "integration": "Entegrasyonlar",
           "app": "Uygulamalar",
           "group": "Gruplar",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Paneller",
@@ -3295,8 +3295,8 @@
           "authorization": "Yetkilendirme"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3550,10 +3550,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Kullanıcılar",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar'ı etkinleştir",
+              "description": "Özel avatar ayarlanmadığında ve bir e-posta adresi tanımlandığında Libravatar/Gravatar kullanıcı avatarları kullanılır"
             }
           },
           "search": {
@@ -3595,7 +3595,7 @@
               "label": "Minecraft sunucu durumu"
             },
             "timetable": {
-              "label": ""
+              "label": "Zaman Çizelgesi"
             },
             "iconsUpdater": {
               "label": "Simge Güncelleme"
@@ -3667,7 +3667,7 @@
               "label": "Hava Durumu"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
