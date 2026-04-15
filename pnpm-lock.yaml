@@ -52,7 +52,7 @@ catalogs:
       specifier: ^4.7.1
       version: 4.7.1
     '@immich/sdk':
-      specifier: ^2.7.3
+      specifier: ^2.7.4
       version: 2.7.4
     '@jellyfin/sdk':
       specifier: ^0.13.0
