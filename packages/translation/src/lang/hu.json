@@ -785,70 +785,70 @@
               "label": "Újrapróbál"
             },
             "trust": {
-              "label": ""
+              "label": "Bizalmi tanúsítvány"
             },
             "upload": {
-              "label": ""
+              "label": "Tanúsítvány feltöltése"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Megbízható gépnév nem egyezik",
+              "message": "Biztosan megbízik a tanúsítványban, ha a gazdagépnév nem egyezik?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Megbízható tanúsítvány",
+                "message": "A gazdagépnevet felvettük a megbízható tanúsítványok listájára"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "A tanúsítvány hitelesítése sikertelen",
+                "message": "A gazdagépnév-eltérés miatt a tanúsítvány nem tekinthető megbízhatónak"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Önaláírt tanúsítvány megbízhatósága",
+              "message": "Biztosan megbízik ebben az önaláírt tanúsítványban?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Megbízható tanúsítvány",
+                "message": "A tanúsítványt felvettük a megbízható tanúsítványok listájára"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Tanúsítvány hitelesítése sikertelen",
+                "message": "Nem sikerült hozzáadni a tanúsítványt a megbízható tanúsítványok listájához"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Részletek",
+            "description": "Mielőtt megbízik a tanúsítványban, ellenőrizze annak adatait.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Tartalom megjelenítése",
+              "title": "PEM tanúsítvány"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Kérelemhiba",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "A szerver nem érhető el. Ez általában azt jelenti, hogy a szerver nincs online, vagy a hálózatodról nem érhető el.",
+              "networkUnreachable": "A hálózat nem érhető el. Kérjük, ellenőrizze az internetkapcsolatát vagy a hálózati beállításokat.",
+              "refused": "A szerver elutasította a kapcsolatot. Lehet, hogy nem fut, vagy elutasítja a megadott porton érkező kéréseket.",
+              "reset": "A kapcsolatot a szerver váratlanul megszakította. Ez akkor fordulhat elő, ha a szerver instabil, vagy újraindult."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "A szerver címe nem található. Kérjük, ellenőrizze, hogy az URL-címben nincs-e elírás vagy érvénytelen domainnév.",
+              "timeout": "A DNS-lekérdezés időtúllépése történt. Ez átmeneti probléma lehet – kérjük, próbálja meg újra néhány perc múlva.",
+              "noAnswer": "A DNS-kiszolgáló nem adott érvényes választ. Lehet, hogy a domain létezik, de nincsenek érvényes bejegyzései."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "A kérés még befejezése előtt megszakadt. Ennek oka lehet egy felhasználói művelet vagy a rendszer időtúllépése.",
+              "timeout": "A kérés feldolgozása túl sokáig tartott, ezért a rendszer időtúllépést jelezett. Ellenőrizze a hálózati kapcsolatot, vagy próbálja meg később újra."
             }
           }
         }
@@ -987,12 +987,12 @@
           "newLabel": "Új App Azonosító"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Telepítési azonosító",
+          "newLabel": "Új telepítési azonosító"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Privát kulcs",
+          "newLabel": "Új privát kulcs"
         }
       }
     },
@@ -1039,21 +1039,21 @@
         "label": "URL másolása"
       },
       "open": {
-        "label": ""
+        "label": "Média megnyitása"
       }
     }
   },
   "common": {
-    "success": "",
+    "success": "Siker",
     "beta": "Béta",
     "error": "Hiba",
     "action": {
       "add": "Hozzáadás",
       "apply": "Alkalmaz",
       "backToOverview": "Vissza az áttekintéshez",
-      "change": "",
+      "change": "Módosít",
       "create": "Létrehozás",
-      "createAnother": "",
+      "createAnother": "Újrakezdés",
       "edit": "Szerkesztés",
       "import": "Importálás",
       "insert": "Beillesztés",
@@ -1063,7 +1063,7 @@
       "cancel": "Mégse",
       "delete": "Törlés",
       "discard": "Elvetés",
-      "close": "",
+      "close": "Bezárás",
       "confirm": "Megerősít",
       "continue": "Folytatás",
       "previous": "Előző",
@@ -1087,7 +1087,7 @@
     "information": {
       "min": "Legalább",
       "max": "Legfeljebb",
-      "days": "",
+      "days": "Nap",
       "hours": "Óra",
       "minutes": "Perc"
     },
@@ -1105,45 +1105,45 @@
         "error": "Nem sikerült alkalmazni a változtatásokat"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Sikeres átvitel",
+        "error": "Sikertelen átvitel"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Válasszon ki egy vagy több értéket"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "További értékek hozzáadása",
+      "addLabel": "Hozzáad {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Érték kiválasztása",
       "badge": {
-        "recommended": ""
+        "recommended": "Ajánlott"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Váltás sötét módba",
+        "switchToLightMode": "Váltás világos módra",
+        "management": "Kezelés",
         "preferences": "Saját preferenciák",
-        "logout": "",
+        "logout": "Kijelentkezés",
         "login": "Bejelentkezés",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "A saját kezdőlapod",
+        "loggedOut": "Kijelentkezett",
+        "updateAvailable": "{countUpdates} frissítés elérhető: {tag}"
       }
     },
     "dangerZone": "Veszélyzóna",
     "noResults": "Nincs eredmény",
-    "unsavedChanges": "",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "unsavedChanges": "Nem mentett módosításai vannak!",
+    "servers": "Szerverek",
+    "applications": "Alkalmazások",
+    "services": "Szolgáltatások",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Előnézet megjelenítése",
+      "hide": "Előnézet elrejtése"
     },
     "zod": {
       "errors": {
@@ -1153,7 +1153,7 @@
           "startsWith": "Ennek a mezőnek a {startsWith} kell kezdődnie",
           "endsWith": "Ennek a mezőnek a {endsWith} kell végződnie",
           "includes": "Ennek a mezőnek tartalmaznia kell a {includes} értéket",
-          "invalidEmail": ""
+          "invalidEmail": "A mezőnek érvényes e-mail címet kell tartalmaznia"
         },
         "tooSmall": {
           "string": "Ennek a mezőnek legalább {minimum} karakter hosszúságúnak kell lennie",
@@ -1164,44 +1164,44 @@
           "number": "Ennek a mezőnek kisebbnek vagy egyenlőnek kell lennie a {maximum} értékkel"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "A jelszavak nem egyeznek",
+          "passwordRequirements": "A jelszó nem felel meg a követelményeknek",
+          "boardAlreadyExists": "Már létezik ilyen nevű oldal",
+          "invalidFileType": "Érvénytelen fájltípus, várt: {expected}",
+          "invalidFileName": "Érvénytelen fájlnév",
+          "fileTooLarge": "A fájl túl nagy, a maximális méret {maxSize}",
+          "invalidConfiguration": "Érvénytelen konfiguráció",
+          "groupNameTaken": "A felhasználónév már foglalt"
         }
       }
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/óra",
+        "milesPerHour": "mph"
       }
     }
   },
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Új dinamikus szakasz",
+        "remove": "A dinamikus szakasz eltávolítása"
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Cím"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Egyéni css-osztályok"
         },
         "borderColor": {
-          "label": ""
+          "label": "Határszín"
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Dinamikus szakasz eltávolítása",
+        "message": "Biztosan el akarja távolítani ezt a dinamikus részt? Az elemek a szülő rész ugyanazon helyére kerülnek át."
       }
     },
     "category": {
@@ -1211,47 +1211,47 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Új kategória",
+        "edit": "Kategória átnevezése",
+        "remove": "Kategória eltávolítása",
         "moveUp": "Felfelé mozgatás",
         "moveDown": "Mozgatás le",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
+        "createAbove": "Új kategória fent",
+        "createBelow": "Új kategória alább",
+        "openAllInNewTabs": "Mindet lapokban megnyitni"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Új kategória",
+        "submit": "Kategória hozzáadása"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Kategória eltávolítása",
+        "message": "Biztosan el akarja távolítani a {name} kategóriát?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Kategória átnevezése",
+        "submit": "Kategória átnevezése"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Új kategória",
           "changePosition": "Pozíció módosítása"
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Mindet lapokban megnyitni",
+        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A Homarr nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Új elem",
+      "import": "Elemek importálása",
+      "edit": "Elem szerkesztése",
+      "moveResize": "Elem áthelyezése / átméretezése",
+      "duplicate": "Elem másolása",
+      "remove": "Elem eltávolítása"
     },
     "menu": {
       "label": {
@@ -1260,11 +1260,11 @@
     },
     "create": {
       "title": "Válassza ki a hozzáadni kívánt elemet",
-      "search": "",
+      "search": "Elemek szűrése",
       "addToBoard": "Hozzáadás a táblához"
     },
     "moveResize": {
-      "title": "",
+      "title": "Elem áthelyezése / átméretezése",
       "field": {
         "width": {
           "label": "Szélesség"
@@ -1281,7 +1281,7 @@
       }
     },
     "edit": {
-      "title": "",
+      "title": "Elem szerkesztése",
       "advancedOptions": {
         "label": "Haladó beállítások",
         "title": "Speciális tételbeállítások"
@@ -1291,18 +1291,18 @@
           "label": "Integrációk"
         },
         "title": {
-          "label": ""
+          "label": "Cím"
         },
         "customCssClasses": {
           "label": "Egyedi css osztályok"
         },
         "borderColor": {
-          "label": ""
+          "label": "Határszín"
         }
       }
     },
     "remove": {
-      "title": "",
+      "title": "Elem eltávolítása",
       "message": "Biztosan eltávolítja ezt az elemet?"
     }
   },
@@ -1324,21 +1324,21 @@
           "label": "Egyszerű ping engedélyezése"
         },
         "layout": {
-          "label": "",
+          "label": "Elrendezés",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Vízszintes",
+            "row-reverse": "Vízszintes (fordított)",
+            "column": "Függőleges",
+            "column-reverse": "Függőleges (fordított)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Leírás megjelenítési mód",
+          "description": "Válassza ki, hogyan jelenjen meg az alkalmazás leírása",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "A widgeten belül",
+            "tooltip": "Eszköztippként",
+            "hidden": "Rejtett"
           }
         }
       },
@@ -1369,21 +1369,21 @@
               "label": "Rács"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Vízszintes rács"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Cím elrejtése"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Ikon elrejtése"
         },
         "hideHostname": {
-          "label": ""
+          "label": "A gazdagépnevek elrejtése"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Megnyitás új lapon"
         },
         "items": {
           "label": "Könyjelzők",
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Mai lekérdezések",
         "domainsBeingBlocked": "Domainek a tiltólistán"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "A számos integráció miatt a Homarr nem tudja kiszámítani a blokkolt domainek pontos számát"
     },
     "dnsHoleControls": {
       "name": "DNS blokkolók ellenőrzése",
@@ -1497,42 +1497,42 @@
           "description": "Hogyan nézzen ki a dátum"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Egyéni időformátum",
+          "description": "Az idő formázásához használja az ISO 8601 szabványt (ez felülírja az egyéb beállításokat)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Egyedi dátumformátum",
+          "description": "A dátum formázásához használja az ISO 8601 szabványt (ez felülírja az egyéb beállításokat)"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft szerver állapota",
+      "description": "Megjeleníti a Minecraft-szerver állapotát",
       "option": {
         "title": {
-          "label": ""
+          "label": "Cím"
         },
         "domain": {
-          "label": ""
+          "label": "Szerver cím"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock szerver"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Elérhető",
+        "offline": "Nem elérhető"
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Órarend",
+      "description": "Megjeleníti az adott állomás indulási idejét",
+      "title": "Indulások {station}",
+      "noStation": "Nincs kiválasztott állomás",
       "option": {
         "station": {
-          "label": ""
+          "label": "Állomás"
         }
       }
     },
@@ -1596,15 +1596,43 @@
         "width": "Szélesség",
         "height": "Magasság"
       },
-      "placeholder": "",
+      "placeholder": "Kezdd el írni a jegyzeteidet",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Elveted a módosításokat?",
+        "message": "A jegyzetfüzetben vannak mentetlen módosítások. Biztosan el akarja vetni őket?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Változtatások elvetése",
+          "keepEditing": "Szerkesztés folytatása"
         }
       }
+    },
+    "anchorNote": {
+      "name": "Anchor Note",
+      "description": "Megjeleníti az Anchor alkalmazásból kiválasztott jegyzetet",
+      "option": {
+        "noteId": {
+          "label": "Jegyzet"
+        },
+        "showTitle": {
+          "label": "Cím megjelenítése"
+        },
+        "showUpdatedAt": {
+          "label": "Utolsó frissítés megjelenítése"
+        }
+      },
+      "empty": "Válasszon ki egy jegyzetet a megjelenítéshez",
+      "emptyContent": "Ez a jegyzet nem tartalmaz szöveget",
+      "notFound": "Jegyzet nem található",
+      "noNotes": "Nem található jegyzet",
+      "integrationRequired": "Először válasszon ki egy Anchor-integrációt",
+      "updatedAt": "Frissítve: {dátum}",
+      "untitled": "Névtelen",
+      "edit": "Szerkesztés",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "readOnlyViewer": "Ehhez a jegyzethez olvasói hozzáférésed van. A szerkesztés le van tiltva.",
+      "saveForbidden": "You do not have permission to edit this note.",
+      "saveFailed": "A jegyzet mentése nem sikerült. Kérjük, próbálja meg újra."
     },
     "iframe": {
       "name": "Beágyazott keret (iFrame)",
@@ -1638,36 +1666,36 @@
           "label": "Geolokáció engedélyezése"
         },
         "allowModals": {
-          "label": ""
+          "label": "Modálablakok engedélyezése"
         }
       },
       "error": {
         "noUrl": "Nincs megadva iFrame URL",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "A megadott URL nem támogatott protokollt használ. Kérjük, válasszon egyet a ({supportedProtocols}) közül.",
         "noBrowerSupport": "Az Ön böngészője nem támogatja a beágyazott kereteket. Kérjük, frissítse böngészőjét."
       }
     },
     "smartHome-entityState": {
       "name": "Egység állapota",
-      "description": "",
+      "description": "Egy elem állapotának megjelenítése és opcionális be- és kikapcsolása",
       "option": {
         "entityId": {
           "label": "Egység azonosító"
         },
         "displayName": {
-          "label": ""
+          "label": "Megjelenítendő név"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Entitás-egység"
         },
         "clickable": {
-          "label": ""
+          "label": "Kattintható"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Automatizálás végrehajtása",
+      "description": "Indítson el egy automatizált folyamatot egyetlen kattintással",
       "option": {
         "displayName": {
           "label": "Megjelenített név"
@@ -1677,80 +1705,80 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Futtasd a {name} parancsot"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Részvényár",
+      "description": "Megjeleníti egy vállalat aktuális részvényárfolyamát",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Tőzsdei szimbólumok"
         },
         "timeRange": {
-          "label": "",
+          "label": "Időtartomány",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 nap"
             },
             "5d": {
-              "label": ""
+              "label": "5 nap"
             },
             "1mo": {
-              "label": ""
+              "label": "1 hónap"
             },
             "3mo": {
-              "label": ""
+              "label": "3 hónap"
             },
             "6mo": {
-              "label": ""
+              "label": "6 hónap"
             },
             "ytd": {
-              "label": ""
+              "label": "Év eddigi részében"
             },
             "1y": {
-              "label": ""
+              "label": "1 év"
             },
             "2y": {
-              "label": ""
+              "label": "2 év"
             },
             "5y": {
-              "label": ""
+              "label": "5 év"
             },
             "10y": {
-              "label": ""
+              "label": "10 év"
             },
             "max": {
-              "label": ""
+              "label": "Legfeljebb"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Időintervallum",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 perc"
             },
             "15m": {
-              "label": ""
+              "label": "15 perc"
             },
             "30m": {
-              "label": ""
+              "label": "30 perc"
             },
             "1h": {
-              "label": ""
+              "label": "1 óra"
             },
             "1d": {
-              "label": ""
+              "label": "1 nap"
             },
             "5d": {
-              "label": ""
+              "label": "5 nap"
             },
             "1wk": {
-              "label": ""
+              "label": "1 hét"
             },
             "1mo": {
-              "label": ""
+              "label": "1 hónap"
             }
           }
         }
@@ -1758,27 +1786,27 @@
     },
     "calendar": {
       "name": "Naptár",
-      "description": "",
+      "description": "Az integrációkból származó események megjelenítése naptárnézetben egy adott időtartamon belül",
       "duration": {
-        "allDay": ""
+        "allDay": "Egész nap"
       },
       "option": {
         "releaseType": {
           "label": "Radarr kiadás típusa",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Mozikban",
+            "digitalRelease": "Digitális megjelenés",
+            "physicalRelease": "Fizikai megjelenés"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Kezdete"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Vége"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Nem ellenőrzött megjelenítés"
         }
       }
     },
@@ -1787,42 +1815,42 @@
       "description": "Megjeleníti egy meghatározott hely aktuális időjárási adatait.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Hőmérséklet Fahrenheitben"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Hőmérséklet tizedesjegyének kikapcsolása"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Aktuális szélsebesség megjelenítése",
+          "description": "Csak az aktuális időjárásról"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "A szélsebességet mérföld/órában (mph) adja meg"
         },
         "location": {
           "label": "Időjárás helye"
         },
         "showCity": {
-          "label": ""
+          "label": "Város megjelenítése"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Előrejelzés megjelenítése"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Előrejelzés napjainak száma",
+          "description": "Ha a widget nem elég széles, kevesebb nap jelenik meg"
         },
         "dateFormat": {
           "label": "Dátum formátum",
           "description": "Hogyan nézzen ki a dátum"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Napkelte",
+        "sunset": "Naplemente",
+        "maxWindSpeed": "Legnagyobb szélsebesség: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Legerősebb széllökés: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Tiszta",
@@ -1843,24 +1871,24 @@
     },
     "indexerManager": {
       "name": "Indexelő menedzser állapota",
-      "description": "",
+      "description": "Az indexelők állapota",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Indexelő webhely megnyitása új lapon"
         }
       },
       "title": "Indexelő menedzser",
       "testAll": "Teszteld az összeset",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült lekérni az indexelők állapotát"
       }
     },
     "healthMonitoring": {
       "name": "Rendszerállapot-felügyelet",
       "description": "Megjeleníti a rendszer(ek) állapotát és állapotát mutató információkat.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Rendszer",
+        "cluster": "Klaszter"
       },
       "option": {
         "fahrenheit": {
@@ -1873,218 +1901,218 @@
           "label": "Memóriainformációk megjelenítése"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU információ megjelenítése"
         },
         "showUptime": {
-          "label": ""
+          "label": "Üzemidő megjelenítése"
         },
         "fileSystem": {
           "label": "Fájlrendszer-információk megjelenítése"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Alapértelmezett fül"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Látható klaszterrészek"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "A szakaszjelzőre vonatkozó követelmény"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Információ",
+        "processor": "Processzor: {cpuModelName}",
+        "memory": "Memória: {memory} GiB",
+        "memoryAvailable": "Rendelkezésre álló: {memoryAvailable}GiB ({percent}%)",
+        "version": "Verzió: {version}",
+        "uptime": "Üzemidő: {months} hónap, {days} nap, {hours} óra, {minutes} perc",
+        "loadAverage": "Átlagos terhelés:",
+        "minute": "1 perc",
+        "minutes": "{count} perc",
+        "used": "Használt",
         "available": "Elérhető",
-        "lastSeen": ""
+        "lastSeen": "Utolsó állapotfrissítés: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült lekérni az állapotot"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "Processzor",
+          "memory": "Memória"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Node-ok"
           },
           "qemu": {
-            "name": ""
+            "name": "VM-ek"
           },
           "lxc": {
-            "name": ""
+            "name": "Linux konténerek"
           },
           "storage": {
-            "name": ""
+            "name": "Tárhely"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Bővítmény"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Mag",
+            "memory": "Memória",
+            "storage": "Tárhely",
+            "uptime": "Üzemidő",
+            "haState": "HA állapot",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Helyi tárhely",
+              "shared": "Megosztott tárhely"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Név",
+            "cpu": "CPU",
+            "memory": "Memória",
+            "node": "Node"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker statisztika",
+      "description": "A konténereid statisztikái (Ezt a widgetet csak rendszergazdai jogosultsággal lehet hozzáadni)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Az elemek rendezésének engedélyezése"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Alapértelmezés szerint rendezéshez használt oszlop",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Név",
+            "state": "Állapot",
+            "cpuUsage": "CPU használat",
+            "memoryUsage": "Memória használat"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Fordított rendezés"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "A konténerek statisztikáinak lekérése sikertelen"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "A Coolify-példány áttekintése a szerverekkel és alkalmazásokkal",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Kiszolgálók megjelenítése"
         },
         "showApplications": {
-          "label": ""
+          "label": "Alkalmazások megjelenítése"
         },
         "showServices": {
-          "label": ""
+          "label": "Szolgáltatások megjelenítése"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Nem találtható szerver",
+        "applications": "Nem található alkalmazás",
+        "services": "Nem található szolgáltatás"
       },
       "footer": {
-        "updated": ""
+        "updated": "Frissítve {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nincs beállítva Coolify-integráció",
+        "internalServerError": "A Coolify-adatok letöltése nem sikerült"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Példányok"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Továbbfejlesztett médiaszerver-felügyelet részletes adatfolyam- és átkódolási adatokkal",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Aktív streamek megjelenítése"
         },
         "showStats": {
-          "label": ""
+          "label": "Statisztikai összefoglaló megjelenítése"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Legutóbbi tevékenység mutatása"
         },
         "showViolations": {
-          "label": ""
+          "label": "Szabálysértések megjelenítése"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Aktív Stream-ek",
+        "totalUsers": "Összes Felhasználó",
+        "transcodes": "Átkódolás",
+        "bandwidth": "Sávszélesség"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Nincsenek aktív streamek",
+        "user": "Felhasználó",
+        "media": "Média",
+        "state": "Állapot",
+        "quality": "Minőség",
+        "device": "Eszköz",
+        "progress": "Folyamat",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Közvetlen lejátszás",
+          "transcode": "Átkódolás",
+          "directStream": "Közvetlen közvetítés"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Legutóbbi tevékenységek",
+        "empty": "Nincs újabb tevékenység",
+        "watched": "Megnézve",
+        "partial": "Részleges"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Szabálysértések",
+        "empty": "Nincsenek szabálysértések",
+        "rule": "Szabály",
+        "user": "Felhasználó"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Nincs engedélyezett szakasz",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nincs beállítva a Tracearr-integráció",
+        "internalServerError": "Nem sikerült letölteni a Tracearr-adatokat"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
+        "query": "Város / Irányítószám",
+        "latitude": "Szélesség",
+        "longitude": "Hosszúság",
         "disabledTooltip": "",
-        "unknownLocation": "",
+        "unknownLocation": "Ismeretlen hely",
         "search": "Keresés",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Város",
+            "country": "Ország",
+            "coordinates": "Koordináták",
+            "population": "Népesség"
           },
           "action": {
-            "select": ""
+            "select": "Kiválasztás {city}, {countryCode}"
           },
           "population": {
             "fallback": "Ismeretlen"
@@ -2102,7 +2130,7 @@
       },
       "error": {
         "noIntegration": "",
-        "noData": ""
+        "noData": "Nincs elérhető integrációs adat"
       },
       "option": {}
     },
@@ -2115,186 +2143,186 @@
         },
         "hasAutoPlay": {
           "label": "Automatikus lejátszás",
-          "description": ""
+          "description": "Az automatikus lejátszás a böngésző korlátozásai miatt csak némítás esetén működik"
         },
         "isMuted": {
-          "label": ""
+          "label": "Némítva"
         },
         "hasControls": {
-          "label": ""
+          "label": "Vezérlők megjelenítése"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Nincs megadva videó URL-cím",
+        "forYoutubeUseIframe": "YouTube-videók esetén használja az iframe opciót"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Aktuális médiaszolgáltató-adások",
+      "description": "Az aktuális streamek megjelenítése a médialejátszókon",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Csak a jelenleg lejátszottakat mutasd",
+          "description": "Ennek letiltása a Plex esetében nem fog működni"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
+        "currentlyPlaying": "Jelenleg lejátszás alatt",
+        "user": "Felhasználó",
+        "name": "Név",
+        "id": "Azonosító",
         "metadata": {
-          "title": "",
+          "title": "Statisztikák a rajongóknak",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Videó",
+            "resolution": "Felbontás"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Audió",
+            "channelCount": "Hangsávok",
+            "codec": "Hangkodek"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Átkódolás",
+            "container": "Konténer",
+            "resolution": "Felbontás",
+            "target": "Cél kódoló"
           }
         }
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich szerver statisztikák",
+      "description": "Információk az Immich-példányodról",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Felhasználók megjelenítése",
+          "description": "Az instanszon lévő felhasználók számának megjelenítése"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Fotók megjelenítése",
+          "description": "Az instanszon lévő fotók számának megjelenítése"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Videó megjelenítése",
+          "description": "Az instanszon lévő videók számának megjelenítése"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Tárhely megjelenítése",
+          "description": "Felhasznált tárhely teljes mennyiségének megjelenítése"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Felhasználók",
+      "photos": "Fotók",
+      "videos": "Videók",
+      "storage": "Felhasznált tárhely"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album ID",
+          "description": "Ez az Immich-albumodra utaló egyedi azonosító. Az azonosítót úgy találhatod meg, hogy megnyitsz egy albumot, és lemásolod az URL-ből az egyedi karakterláncot, például: „a21aca09-9f05-47dc-b1a1-7b53c547226e”"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Időköz másodpercekben",
+          "description": "Az album képei között X másodpercenként váltson. Az értéknek legalább 1-nek kell lennie. Az érték nem haladhatja meg a 3600-at."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Fotóadatok megjelenítése",
+          "description": "Kép dátumának és az aktuális indexszámnak a megjelenítése a diavetítés alján"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Képek diavetítése az Immich-albumodból",
+      "noAlbumSelected": "Nincs kiválasztott album; szerkeszd a widgetet, és válassz ki egy albumot",
+      "noPhotos": "Ebben az albumban nincs fénykép"
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Kliens letöltése",
+      "description": "Lehetővé teszi a Torrent- és Usenet-kliensből származó letöltések megtekintését és kezelését.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Megjelenítendő oszlopok"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Elemek rendezésének engedélyezése"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Alapértelmezés szerint rendezéshez használt oszlop"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Fordított rendezés"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Mutassa a befejezettként megjelölt Usenet bejegyzéseket"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Mutassa a befejezettként megjelölt torrent bejegyzéseket"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Mutassa a befejezettként megjelölt Vegyes bejegyzéseket"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés (kiB/s-ban)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Szűrhető kategóriák/címkék"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Szűrés fehérlistával"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Használja a szűrőt az arány kiszámításához"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Elemek száma integrációnként",
+          "description": "Ez az egyes integrációkhoz tartozó elemek számát korlátozza, nem pedig általánosan"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Oszlopok kiválasztása az elemek között",
+        "noCommunications": "Nem sikerül betölteni az adatokat az integrációból"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Vezérlők"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Hozzáadva",
           "detailsTitle": "Hozzáadás dátuma"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Extrák",
+          "detailsTitle": "Kategóriák (vagy további információk)"
         },
         "downSpeed": {
           "columnTitle": "Le",
           "detailsTitle": "Letöltési sebesség"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Aktuális index az ügyfélnél"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Azonosító"
         },
         "integration": {
           "columnTitle": "Integráció"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Folyamat neve"
         },
         "progress": {
           "columnTitle": "Folyamat",
-          "detailsTitle": ""
+          "detailsTitle": "Letöltési folyamat"
         },
         "ratio": {
           "columnTitle": "Arány",
-          "detailsTitle": ""
+          "detailsTitle": "Torrent-arány (letöltött/feltöltött)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Összes le",
+          "detailsTitle": "Összes letöltés"
         },
         "sent": {
           "columnTitle": "",
@@ -2313,12 +2341,12 @@
           "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Típus",
+          "detailsTitle": "Letöltőkliens típusa"
         },
         "upSpeed": {
           "columnTitle": "Fel",
-          "detailsTitle": ""
+          "detailsTitle": "Feltöltési sebesség"
         }
       },
       "states": {
@@ -2326,16 +2354,16 @@
         "queued": "Sorban áll",
         "paused": "Szünet",
         "completed": "Kész",
-        "failed": "",
+        "failed": "Sikertelen",
         "processing": "Feldolgozás",
-        "leeching": "",
-        "stalled": "",
+        "leeching": "Leechelés",
+        "stalled": "Elakadt",
         "unknown": "Ismeretlen",
-        "seeding": ""
+        "seeding": "Seedelés"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
+          "modalTitle": "Letöltkliensek listája",
           "pause": "",
           "resume": ""
         },
@@ -2426,28 +2454,28 @@
           "main": "Média statisztikák",
           "approved": "Már jóváhagyva",
           "pending": "Várakozás jóváhagyásra",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Feldolgozás alatt",
+          "declined": "Már elutasították",
+          "available": "Már elérhető",
           "tv": "TV kérések",
           "movie": "Filmkérések",
           "total": "Összesen"
         },
         "users": {
           "main": "Legnépszerűbb felhasználók",
-          "requests": ""
+          "requests": "Kérelmek"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Médiatartalmak átkódolása",
+      "description": "Média átkódolásának statisztikái, az aktuális sorállás és a feldolgozók állapota",
       "option": {
         "defaultView": {
           "label": "Alapértelmezett nézet"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "A várólista méret"
         }
       },
       "tab": {
@@ -2455,9 +2483,9 @@
         "queue": "Várólista",
         "statistics": "Statisztikák"
       },
-      "currentIndex": "",
+      "currentIndex": "{total} / {start}–{end}",
       "healthCheck": {
-        "title": "",
+        "title": "Állapotfelmérés",
         "queued": "Sorban áll",
         "status": {
           "healthy": "Egészséges",
@@ -2468,11 +2496,11 @@
         "statistics": {
           "empty": "Üres",
           "transcodes": "Átkódolás",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
+          "transcodesCount": "Átkódolás",
+          "healthChecksCount": "Állapotfelmérések",
+          "filesCount": "Fájlok",
+          "savedSpace": "Megtakarított tárhely",
+          "healthChecks": "Állapotfelmérések",
           "videoCodecs": "Kodekek",
           "videoContainers": "Tartály",
           "videoResolutions": "Felbontás"
@@ -2484,7 +2512,7 @@
             "eta": "Hátralévő idő",
             "progress": "Folyamat",
             "transcode": "Átkódolás",
-            "healthCheck": ""
+            "healthCheck": "Állapotfelmérés"
           }
         },
         "queue": {
@@ -2493,13 +2521,13 @@
             "file": "Fájl",
             "size": "Méret",
             "transcode": "Átkódolás",
-            "healthCheck": ""
+            "healthCheck": "Állapotfelmérés"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
+      "name": "RSS feedek",
       "description": "",
       "option": {
         "feedUrls": {
@@ -2515,6 +2543,9 @@
           "label": ""
         },
         "hideDescription": {
+          "label": ""
+        },
+        "showPosterImage": {
           "label": ""
         }
       }
@@ -2548,24 +2579,24 @@
         "repositories": {
           "label": "",
           "addRepository": {
-            "label": ""
+            "label": "Gyűjtemény Hozzáadása"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Importálás dockerből",
+            "loading": "Docker-képek betöltése",
+            "noImagesFound": "Nem találtam docker-képet",
+            "listFoundImages": "Talált képek listája",
+            "listAlreadyImportedImages": "A már importált képek listája",
+            "allImagesAlreadyImported": "Minden kép már importálva",
+            "onlyAdminCanImport": "Csak a rendszergazdák importálhatnak docker-ből",
+            "selectAll": "Összes kijelölése",
+            "deselectAll": "Kijelölés elvetése"
           },
           "provider": {
-            "label": ""
+            "label": "Szolgáltató"
           },
           "identifier": {
-            "label": "",
+            "label": "Azonosító",
             "placeholder": ""
           },
           "name": {
@@ -2728,6 +2759,45 @@
       "description": "",
       "noItems": "",
       "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "systemResources": {
       "name": "",
@@ -4617,12 +4687,12 @@
             "title": "",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Évszak",
+                "episodes": "Epizódok"
               }
             },
             "button": {
-              "send": ""
+              "send": "Kérelem küldése"
             }
           }
         }
@@ -4632,39 +4702,39 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Gazdagépnév"
       },
       "subject": {
-        "label": ""
+        "label": "Tárgy"
       },
       "issuer": {
-        "label": ""
+        "label": "Kiállító"
       },
       "validFrom": {
-        "label": ""
+        "label": "Érvényesség kezdete"
       },
       "validTo": {
-        "label": ""
+        "label": "Érvényesség vége"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Sorozatszám"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Ujjlenyomat"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Megbízható tanúsítványok",
+        "description": "A Homarr ezt használja az integrációkból származó adatok lekérésére.",
         "noResults": {
-          "title": ""
+          "title": "Még nincsenek tanúsítványok"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Érvénytelen tanúsítvány",
+          "description": "A tanúsítvány értelmezése sikertelen"
         },
-        "expires": "",
+        "expires": "Lejár {when}",
         "toHostnames": ""
       },
       "hostnames": {
@@ -4714,7 +4784,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "A gazdagépnév nem távolítható el"
           }
         }
       }
@@ -4723,10 +4793,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Hibakeresés",
+        "info": "Infó",
+        "warn": "Figyelmeztetés",
+        "error": "Hiba"
       }
     }
   }
