@@ -60,7 +60,7 @@ jobs:
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         if: env.SKIP_RELEASE == 'false'
       - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
