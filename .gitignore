@@ -74,3 +74,5 @@ AGENTS.md
 .opencode
 .claude/CLAUDE.md
 .claude/settings.json
+docker-compose.yml
+homarr/appdata/redis/dump.rdb
