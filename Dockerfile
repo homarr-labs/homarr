@@ -52,7 +52,6 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/apps/nextjs/.next/standalone ./
-COPY --from=builder /app/apps/nextjs/socket-cleanup.cjs ./apps/nextjs/socket-cleanup.cjs
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
 COPY scripts/run.sh ./run.sh
