@@ -47,12 +47,12 @@ export function UmamiContent({
   });
 
   const { data: activeVisitors } = clientApi.widget.umami.getActiveVisitors.useQuery(
-    { integrationId: integrationIds[0]!, websiteId },
+    { integrationId: integrationIds[0] ?? "", websiteId },
     { refetchInterval: 30_000 },
   );
 
   const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    { integrationId: integrationIds[0]!, websiteId, timeFrame, eventNames: [...eventNames].sort() },
+    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].sort() },
     { enabled: viewMode === "events" && eventNames.length > 0 },
   );
 
