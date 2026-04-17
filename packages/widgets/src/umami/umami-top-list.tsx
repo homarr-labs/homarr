@@ -16,7 +16,7 @@ interface UmamiTopListProps {
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
   const [data] = clientApi.widget.umami.getTopPages.useSuspenseQuery({
-    integrationIds,
+    integrationId: integrationIds[0]!,
     websiteId,
     timeFrame,
     limit,
@@ -27,7 +27,7 @@ export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, lim
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
   const [data] = clientApi.widget.umami.getTopReferrers.useSuspenseQuery({
-    integrationIds,
+    integrationId: integrationIds[0]!,
     websiteId,
     timeFrame,
     limit,

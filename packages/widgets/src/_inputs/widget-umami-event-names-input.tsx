@@ -18,8 +18,8 @@ export const WidgetUmamiEventNamesInput = ({ property, kind }: CommonWidgetInput
   const websiteId = form.values.options.websiteId as string | undefined;
 
   const { data: eventNames, isPending } = clientApi.widget.umami.getEventNames.useQuery(
-    { integrationIds, websiteId: websiteId ?? "" },
-    { enabled: integrationIds.length > 0 && Boolean(websiteId) },
+    { integrationId: integrationIds[0] ?? "", websiteId: websiteId ?? "" },
+    { enabled: Boolean(integrationIds[0]) && Boolean(websiteId) },
   );
 
   if (!websiteId || integrationIds.length === 0) {

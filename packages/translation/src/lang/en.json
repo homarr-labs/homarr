@@ -3766,18 +3766,6 @@
             },
             "tracearr": {
               "label": "Tracearr"
-            },
-            "umami": {
-              "label": "Umami Analytics"
-            },
-            "umamiTopPages": {
-              "label": "Umami Top Pages"
-            },
-            "umamiTopReferrers": {
-              "label": "Umami Top Referrers"
-            },
-            "umamiMultiEvent": {
-              "label": "Umami Multi-Event"
             }
           },
           "interval": {

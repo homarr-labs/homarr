@@ -20,7 +20,6 @@ import { networkControllerJob } from "./jobs/integrations/network-controller";
 import { refreshNotificationsJob } from "./jobs/integrations/notifications";
 import { timetableJob } from "./jobs/integrations/timetable";
 import { tracearrJob } from "./jobs/integrations/tracearr";
-import { umamiJob, umamiMultiEventJob, umamiTopPagesJob, umamiTopReferrersJob } from "./jobs/integrations/umami";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
@@ -55,10 +54,6 @@ export const jobGroup = createCronJobGroup({
   weather: weatherJob,
   timetable: timetableJob,
   tracearr: tracearrJob,
-  umami: umamiJob,
-  umamiTopPages: umamiTopPagesJob,
-  umamiTopReferrers: umamiTopReferrersJob,
-  umamiMultiEvent: umamiMultiEventJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

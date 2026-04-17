@@ -17,8 +17,8 @@ export const WidgetUmamiWebsiteInput = ({ property, kind }: CommonWidgetInputPro
   const integrationIds = form.values.integrationIds;
 
   const { data: websites, isPending } = clientApi.widget.umami.getWebsites.useQuery(
-    { integrationIds },
-    { enabled: integrationIds.length > 0 },
+    { integrationId: integrationIds[0] ?? "" },
+    { enabled: Boolean(integrationIds[0]) },
   );
 
   if (integrationIds.length === 0) {

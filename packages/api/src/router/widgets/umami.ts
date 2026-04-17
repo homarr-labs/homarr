@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations";
 import {
   umamiActiveVisitorsRequestHandler,
@@ -10,20 +11,21 @@ import {
   umamiTopReferrersRequestHandler,
 } from "@homarr/request-handler/umami";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "umami-router" });
 
 export const umamiRouter = createTRPCRouter({
   getWebsites: publicProcedure
-    .input(z.object({ integrationIds: z.array(z.string()) }))
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .input(z.object({ integrationId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return [];
       try {
-        const instance = await createIntegrationAsync(integration);
+        const instance = await createIntegrationAsync(ctx.integration);
         return await instance.getWebsitesAsync();
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getWebsites failed", { error: e });
         return [];
       }
     }),
@@ -31,7 +33,6 @@ export const umamiRouter = createTRPCRouter({
   getVisitorStats: publicProcedure
     .input(
       z.object({
-        integrationIds: z.array(z.string()),
         websiteId: z.string(),
         timeFrame: z.string(),
         eventName: z.string().optional(),
@@ -62,17 +63,15 @@ export const umamiRouter = createTRPCRouter({
     }),
 
   getEventNames: publicProcedure
-    .input(z.object({ integrationIds: z.array(z.string()), websiteId: z.string() }))
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .input(z.object({ integrationId: z.string(), websiteId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return [];
-
       try {
-        const innerHandler = umamiEventNamesRequestHandler.handler(integration, { websiteId: input.websiteId });
+        const innerHandler = umamiEventNamesRequestHandler.handler(ctx.integration, { websiteId: input.websiteId });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getEventNames failed", { error: e });
         return [];
       }
     }),
@@ -80,25 +79,24 @@ export const umamiRouter = createTRPCRouter({
   getTopPages: publicProcedure
     .input(
       z.object({
-        integrationIds: z.array(z.string()),
+        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return [];
       try {
-        const innerHandler = umamiTopPagesRequestHandler.handler(integration, {
+        const innerHandler = umamiTopPagesRequestHandler.handler(ctx.integration, {
           websiteId: input.websiteId,
           timeFrame: input.timeFrame,
           limit: input.limit,
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getTopPages failed", { error: e });
         return [];
       }
     }),
@@ -106,25 +104,24 @@ export const umamiRouter = createTRPCRouter({
   getTopReferrers: publicProcedure
     .input(
       z.object({
-        integrationIds: z.array(z.string()),
+        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return [];
       try {
-        const innerHandler = umamiTopReferrersRequestHandler.handler(integration, {
+        const innerHandler = umamiTopReferrersRequestHandler.handler(ctx.integration, {
           websiteId: input.websiteId,
           timeFrame: input.timeFrame,
           limit: input.limit,
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getTopReferrers failed", { error: e });
         return [];
       }
     }),
@@ -132,42 +129,41 @@ export const umamiRouter = createTRPCRouter({
   getMultiEventTimeSeries: publicProcedure
     .input(
       z.object({
-        integrationIds: z.array(z.string()),
+        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         eventNames: z.array(z.string()),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return [];
       try {
         const sortedNames = [...input.eventNames].sort();
-        const innerHandler = umamiMultiEventRequestHandler.handler(integration, {
+        const innerHandler = umamiMultiEventRequestHandler.handler(ctx.integration, {
           websiteId: input.websiteId,
           timeFrame: input.timeFrame,
           eventNames: sortedNames,
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getMultiEventTimeSeries failed", { error: e });
         return [];
       }
     }),
 
   getActiveVisitors: publicProcedure
-    .input(z.object({ integrationIds: z.array(z.string()), websiteId: z.string() }))
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .input(z.object({ integrationId: z.string(), websiteId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
-      if (!integration) return 0;
-
       try {
-        const innerHandler = umamiActiveVisitorsRequestHandler.handler(integration, { websiteId: input.websiteId });
+        const innerHandler = umamiActiveVisitorsRequestHandler.handler(ctx.integration, {
+          websiteId: input.websiteId,
+        });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch {
+      } catch (e) {
+        logger.warn("umami: getActiveVisitors failed", { error: e });
         return 0;
       }
     }),
