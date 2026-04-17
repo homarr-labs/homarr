@@ -28,14 +28,14 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@umami/node": "^0.4.0",
-    "superjson": "2.2.6"
+    "@umami/node": "catalog:",
+    "superjson": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

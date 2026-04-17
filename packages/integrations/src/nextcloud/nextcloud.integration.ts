@@ -113,7 +113,9 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
           // next actually returns undefined when there are no more occurrences
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           while ((next = iterator.next())) {
-            const nextStartDate = next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
+            const nextStartDate = next.isDate
+              ? next.toJSDate()
+              : next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
             if (nextStartDate > end) break;
             const nextEndDate = new Date(nextStartDate.getTime() + durationMs);
             if (nextEndDate < start) continue;
@@ -121,7 +123,11 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             startDates.push(nextStartDate);
           }
         } else {
-          startDates = [veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate()];
+          startDates = [
+            veventObject.startDate.isDate
+              ? veventObject.startDate.toJSDate()
+              : veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate(),
+          ];
         }
 
         return startDates.map((startDate) => {
