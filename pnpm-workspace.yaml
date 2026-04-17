@@ -119,7 +119,7 @@ catalog:
   deepmerge: 4.3.1
   dns-caching: ^0.2.9
   dockerode: ^4.0.10
-  dotenv: ^17.4.1
+  dotenv: ^17.4.2
   dotenv-cli: ^11.0.0
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
