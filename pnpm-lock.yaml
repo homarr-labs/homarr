@@ -52,8 +52,8 @@ catalogs:
       specifier: ^4.7.1
       version: 4.7.1
     '@immich/sdk':
-      specifier: ^2.7.4
-      version: 2.7.4
+      specifier: ^2.7.5
+      version: 2.7.5
     '@jellyfin/sdk':
       specifier: ^0.13.0
       version: 0.13.0
@@ -2028,7 +2028,7 @@ importers:
         version: link:../validation
       '@immich/sdk':
         specifier: 'catalog:'
-        version: 2.7.4
+        version: 2.7.5
       '@jellyfin/sdk':
         specifier: 'catalog:'
         version: 0.13.0(axios@1.12.2)
@@ -4102,8 +4102,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@immich/sdk@2.7.4':
-    resolution: {integrity: sha512-WAso9EVCV1CS0d13mdJhSW2VxHt47PrYxDMpiV4P2VI+GIxrYqpnF5A+1HKFBPgEpnImkxnMGrk6XMkjKKP05Q==}
+  '@immich/sdk@2.7.5':
+    resolution: {integrity: sha512-gCTpFAWlFF+1Sx0jbqPVmwN+0JD+eZEHzhf3q+BbxuQF+ORpNqT0D453mOyonogvy17nJF1jGA2PtT6vOQiSnA==}
 
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
@@ -12175,7 +12175,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@immich/sdk@2.7.4':
+  '@immich/sdk@2.7.5':
     dependencies:
       '@oazapfts/runtime': 1.2.0
 
