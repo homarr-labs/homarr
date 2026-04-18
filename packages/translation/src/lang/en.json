@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Welcome to Homarr",
-        "subtitle": "Let's get started with setting up your Homarr instance.",
-        "description": "To get started, please select how you want to set up your Homarr instance.",
+        "title": "Welcome to BizerOS Dash",
+        "subtitle": "Let's get started with setting up your BizerOS Dash instance.",
+        "description": "To get started, please select how you want to set up your BizerOS Dash instance.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0"
+          "importOldmarr": "Import from BizerOS Dash before 1.0"
         }
       },
       "import": {
         "title": "Import data",
-        "subtitle": "You can import data from an existing Homarr instance.",
+        "subtitle": "You can import data from an existing BizerOS Dash instance.",
         "dropzone": {
           "title": "Drag the zip file here or click to browse",
           "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Finish setup",
         "subtitle": "You are ready to go!",
-        "description": "You have successfully completed the setup process. You can now start using Homarr. Select your next action:",
+        "description": "You have successfully completed the setup process. You can now start using BizerOS Dash. Select your next action:",
         "action": {
           "goToBoard": "Go to {name} board",
           "createBoard": "Create your first board",
@@ -113,12 +113,12 @@
         "subtitle": "Welcome back! Please enter your credentials"
       },
       "invite": {
-        "title": "Join Homarr",
-        "subtitle": "Welcome to Homarr! Please create your account",
+        "title": "Join BizerOS Dash",
+        "subtitle": "Welcome to BizerOS Dash! Please create your account",
         "description": "You were invited by {username}"
       },
       "init": {
-        "title": "New Homarr installation",
+        "title": "New BizerOS Dash installation",
         "subtitle": "Please create the initial administrator user"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Use different URL for ping",
-          "description": "Useful if Homarr can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
+          "description": "Useful if BizerOS Dash can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you."
+      "header": "Type name or objects to filter for icons... BizerOS Dash will search through {countIcons} icons for you."
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. BizerOS Dash was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
+      "domainsTooltip": "Due to multiple integrations BizerOS Dash can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Welcome to Homarr",
+        "title": "Welcome to BizerOS Dash",
         "description": "A sleek,  modern dashboard that puts all of your apps and services at your fingertips.",
         "link": "Create your first board",
         "notice": "To make this page disappear, create a board and set it as the home board"
@@ -3495,7 +3495,7 @@
             "title": "Analytics",
             "general": {
               "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
+              "text": "BizerOS Dash will send anonymized analytics using the open source software Umami. When enabled, we collect: BizerOS Dash version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
             },
             "widgetData": {
               "title": "Widget data",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "No follow",
-              "text": "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on Homarr."
+              "text": "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on BizerOS Dash."
             },
             "noTranslate": {
               "title": "No translate",
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "Version {version}",
-        "text": "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
+        "text": "BizerOS Dash is a community driven open source project that is being maintained by volunteers. Thanks to these people, BizerOS Dash has been a growing project since 2021. Our team is working completely remote from many different countries on BizerOS Dash in their leisure time for no compensation.",
         "accordion": {
           "contributors": {
             "title": "Contributors",
-            "subtitle": "{count} maintaining code & Homarr"
+            "subtitle": "{count} maintaining code & BizerOS Dash"
           },
           "translators": {
             "title": "Translators",
@@ -3792,7 +3792,7 @@
           },
           "libraries": {
             "title": "Libraries",
-            "subtitle": "{count} used in the Code of Homarr"
+            "subtitle": "{count} used in the Code of BizerOS Dash"
           },
           "hotkeys": {
             "title": "Hotkeys",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "Add to Homarr",
+        "label": "Add to BizerOS Dash",
         "notification": {
           "success": {
-            "title": "Added to Homarr",
-            "message": "Selected apps have been added to Homarr"
+            "title": "Added to BizerOS Dash",
+            "message": "Selected apps have been added to BizerOS Dash"
           },
           "error": {
-            "title": "Could not add to Homarr",
-            "message": "Selected apps could not be added to Homarr"
+            "title": "Could not add to BizerOS Dash",
+            "message": "Selected apps could not be added to BizerOS Dash"
           }
         },
         "modal": {
-          "title": "Add docker container(-s) to Homarr"
+          "title": "Add docker container(-s) to BizerOS Dash"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "Trusted certificates",
-        "description": "Used by Homarr to request data from integrations.",
+        "description": "Used by BizerOS Dash to request data from integrations.",
         "noResults": {
           "title": "There are no certificates yet"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "Trusted certificate hostnames",
-        "description": "Some certificates do not allow the specific domain Homarr uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
+        "description": "Some certificates do not allow the specific domain BizerOS Dash uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
         "noResults": {
           "title": "There are no hostnames yet"
         },

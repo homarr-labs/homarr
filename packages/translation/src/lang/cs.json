@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vítejte v Homarru",
-        "subtitle": "Pojďme začít nastavením instance Homarru.",
-        "description": "Chcete-li začít, zvolte, jak chcete nastavit instanci Homarru.",
+        "title": "Vítejte v BizerOS Dashu",
+        "subtitle": "Pojďme začít nastavením instance BizerOS Dashu.",
+        "description": "Chcete-li začít, zvolte, jak chcete nastavit instanci BizerOS Dashu.",
         "action": {
           "scratch": "Začít od začátku",
-          "importOldmarr": "Import z Homarru před verzí 1.0"
+          "importOldmarr": "Import z BizerOS Dashu před verzí 1.0"
         }
       },
       "import": {
         "title": "Import dat",
-        "subtitle": "Můžete importovat data z existující instance Homarru.",
+        "subtitle": "Můžete importovat data z existující instance BizerOS Dashu.",
         "dropzone": {
           "title": "Přetáhněte zip soubor sem nebo klikněte pro procházení souborů",
           "description": "Nahraný zip soubor bude zpracován a budete si moci vybrat, co chcete importovat"
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Dokončit nastavení",
         "subtitle": "Jste připraveni začít!",
-        "description": "Úspěšně jste dokončili proces nastavení. Nyní můžete začít používat Homarr. Vyberte další akci:",
+        "description": "Úspěšně jste dokončili proces nastavení. Nyní můžete začít používat BizerOS Dash. Vyberte další akci:",
         "action": {
           "goToBoard": "Přejít na plochu {name}",
           "createBoard": "Vytvořte svou první plochu",
@@ -113,12 +113,12 @@
         "subtitle": "Vítejte zpět! Zadejte prosím Vaše přihlašovací údaje"
       },
       "invite": {
-        "title": "Připojit se k Homarrovi",
-        "subtitle": "Vítejte v Homarru! Vytvořte si prosím svůj účet",
+        "title": "Připojit se k BizerOS Dashovi",
+        "subtitle": "Vítejte v BizerOS Dashu! Vytvořte si prosím svůj účet",
         "description": "Byli jste pozváni {username}"
       },
       "init": {
-        "title": "Nová instalace Homarru",
+        "title": "Nová instalace BizerOS Dashu",
         "subtitle": "Vytvořte prosím původního administrátora"
       }
     },
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Vítejte v Homarru",
+        "title": "Vítejte v BizerOS Dashu",
         "description": "",
         "link": "",
         "notice": ""
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "",
-        "text": "Homarr je komunitou řízený open source projekt, který je udržován dobrovolníky. Díky těmto lidem je Homarr od roku 2021 neustále rostoucím projektem. Náš tým na Homarru pracuje zcela na dálku z mnoha různých zemí ve svém volném čase bez jakékoli kompenzace.",
+        "text": "BizerOS Dash je komunitou řízený open source projekt, který je udržován dobrovolníky. Díky těmto lidem je BizerOS Dash od roku 2021 neustále rostoucím projektem. Náš tým na BizerOS Dashu pracuje zcela na dálku z mnoha různých zemí ve svém volném čase bez jakékoli kompenzace.",
         "accordion": {
           "contributors": {
             "title": "Přispěvatelé",
-            "subtitle": "{count} udržuje kód & Homarr"
+            "subtitle": "{count} udržuje kód & BizerOS Dash"
           },
           "translators": {
             "title": "Překladatelé",

@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Welcome to Homarr",
-        "subtitle": "Let's start setting your Homarr instance up.",
+        "title": "Welcome to BizerOS Dash",
+        "subtitle": "Let's start setting your BizerOS Dash instance up.",
         "description": "To get started, please select how you want to continue.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from a Homarr version before v1.0"
+          "importOldmarr": "Import from a BizerOS Dash version before v1.0"
         }
       },
       "import": {
         "title": "Import data",
-        "subtitle": "You can import data from an existing Homarr instance.",
+        "subtitle": "You can import data from an existing BizerOS Dash instance.",
         "dropzone": {
           "title": "Drag your ZIP file here or click to browse your files",
           "description": "The ZIP file you uploaded will be processed and you will be able to select what you would like to import"
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": "Enter the import token shown in your previous Homarr instance"
+              "description": "Enter the import token shown in your previous BizerOS Dash instance"
             }
           },
           "notification": {
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Finish set-up",
         "subtitle": "Congratulations, you are ready to go!",
-        "description": "You have successfully finished the setup process. You can now start using Homarr. Please select your next action:",
+        "description": "You have successfully finished the setup process. You can now start using BizerOS Dash. Please select your next action:",
         "action": {
           "goToBoard": "Go to {name} board",
           "createBoard": "Create your first board",
@@ -113,12 +113,12 @@
         "subtitle": "Welcome back! Please enter your credentials"
       },
       "invite": {
-        "title": "Join Homarr",
-        "subtitle": "Welcome to Homarr! Please create an account",
+        "title": "Join BizerOS Dash",
+        "subtitle": "Welcome to BizerOS Dash! Please create an account",
         "description": "You were invited by {username}"
       },
       "init": {
-        "title": "New Homarr installation",
+        "title": "New BizerOS Dash installation",
         "subtitle": "Please create the initial administrator user"
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one."
+      "header": "Please enter a name or object to filter for the icon. BizerOS Dash will search throughout {countIcons} different icons to find the right one."
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. BizerOS Dash was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
+      "domainsTooltip": "Due to multiple integrations BizerOS Dash can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "Trusted certificates",
-        "description": "Used by Homarr to request data from integrations.",
+        "description": "Used by BizerOS Dash to request data from integrations.",
         "noResults": {
           "title": "There are no certificates yet"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "Trusted certificate hostnames",
-        "description": "Some certificates do not allow the specific domain Homarr uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
+        "description": "Some certificates do not allow the specific domain BizerOS Dash uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
         "noResults": {
           "title": "There are no hostnames yet"
         },

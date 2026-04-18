@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Homarr에 오신 것을 환영합니다",
-        "subtitle": "Homarr 인스턴스 설정을 시작합니다.",
-        "description": "시작하기 전에, Homarr 인스턴스를 어떻게 설정할지 선택해주세요.",
+        "title": "BizerOS Dash에 오신 것을 환영합니다",
+        "subtitle": "BizerOS Dash 인스턴스 설정을 시작합니다.",
+        "description": "시작하기 전에, BizerOS Dash 인스턴스를 어떻게 설정할지 선택해주세요.",
         "action": {
           "scratch": "처음부터 시작하기",
-          "importOldmarr": "1.0 이전의 Homarr에서 불러오기"
+          "importOldmarr": "1.0 이전의 BizerOS Dash에서 불러오기"
         }
       },
       "import": {
         "title": "데이터 불러오기",
-        "subtitle": "기존 Homarr 인스턴스에서 데이터를 불러올 수 있습니다.",
+        "subtitle": "기존 BizerOS Dash 인스턴스에서 데이터를 불러올 수 있습니다.",
         "dropzone": {
           "title": "zip 파일 드롭 또는 클릭해서 찾아보기",
           "description": ""
@@ -93,7 +93,7 @@
       "finish": {
         "title": "설정 완료",
         "subtitle": "모든 준비가 끝났습니다!",
-        "description": "설정 과정을 성공적으로 완료했습니다. 이제 Homarr을 사용할 수 있습니다. 다음 작업을 선택해주세요:",
+        "description": "설정 과정을 성공적으로 완료했습니다. 이제 BizerOS Dash을 사용할 수 있습니다. 다음 작업을 선택해주세요:",
         "action": {
           "goToBoard": "{name} 보드로 가기",
           "createBoard": "첫 번째 보드 만들기",
@@ -113,12 +113,12 @@
         "subtitle": "돌아오신 것을 환영합니다! 계정 정보를 입력해주세요"
       },
       "invite": {
-        "title": "Homarr 참여하기",
-        "subtitle": "Homarr에 오신 것을 환영합니다! 계정을 생성해주세요",
+        "title": "BizerOS Dash 참여하기",
+        "subtitle": "BizerOS Dash에 오신 것을 환영합니다! 계정을 생성해주세요",
         "description": "{username}가 초대했습니다"
       },
       "init": {
-        "title": "새로운 Homarr 설치",
+        "title": "새로운 BizerOS Dash 설치",
         "subtitle": "초기 관리자 계정을 생성해주세요"
       }
     },

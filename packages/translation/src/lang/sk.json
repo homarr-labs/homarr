@@ -7,12 +7,12 @@
         "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
-          "importOldmarr": "Import z Homarr pred 1.0"
+          "importOldmarr": "Import z BizerOS Dash pred 1.0"
         }
       },
       "import": {
         "title": "Importovať dáta",
-        "subtitle": "Údaje môžete importovať z existujúcej inštancie aplikácie Homarr.",
+        "subtitle": "Údaje môžete importovať z existujúcej inštancie aplikácie BizerOS Dash.",
         "dropzone": {
           "title": "Potiahnite súbor ZIP sem alebo kliknite na tlačidlo prehľadávania",
           "description": "Nahraný súbor zip sa spracuje a vy si budete môcť vybrať, čo chcete importovať."
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Dokončiť nastavenie",
         "subtitle": "Ste pripravení vyraziť!",
-        "description": "Úspešne ste dokončili proces nastavenia. Teraz môžete začať používať Homarr. Vyberte ďalšiu akciu:",
+        "description": "Úspešne ste dokončili proces nastavenia. Teraz môžete začať používať BizerOS Dash. Vyberte ďalšiu akciu:",
         "action": {
           "goToBoard": "Prejdite na nástenku {name}",
           "createBoard": "Vytvorte si svoju prvú nástenku",
@@ -113,12 +113,12 @@
         "subtitle": "Vitajte späť! Zadajte svoje poverenia"
       },
       "invite": {
-        "title": "Pridajte sa k Homarrovi",
-        "subtitle": "Vítajte v Homarr! Prosím, vytvorte si účet",
+        "title": "Pridajte sa k BizerOS Dashovi",
+        "subtitle": "Vítajte v BizerOS Dash! Prosím, vytvorte si účet",
         "description": "Pozval vás {username}"
       },
       "init": {
-        "title": "Nová inštalácia Homarr",
+        "title": "Nová inštalácia BizerOS Dash",
         "subtitle": "Vytvorte počiatočného administrátora"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Na ping použite inú adresu URL",
-          "description": "Užitočné, ak môže Homarr priamo pristupovať pomocou interného názvu hostiteľa alebo siete, aby sa zabránilo využívaniu šírky pásma ISP"
+          "description": "Užitočné, ak môže BizerOS Dash priamo pristupovať pomocou interného názvu hostiteľa alebo siete, aby sa zabránilo využívaniu šírky pásma ISP"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "tu",
     "iconPicker": {
       "label": "URL ikony",
-      "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} ."
+      "header": "Zadajte názov alebo objekty na filtrovanie ikon... BizerOS Dash pre vás vyhľadá ikony na stránke {countIcons} ."
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "Otvoriť všetko na kartách",
-        "text": "Niektoré prehliadače môžu z bezpečnostných dôvodov blokovať hromadné otváranie kariet. Homarr nemohol otvoriť všetky okná, pretože váš prehliadač túto akciu zablokoval. Povoľte možnosť „Otvoriť kontextové okná“ a skúste to znova."
+        "text": "Niektoré prehliadače môžu z bezpečnostných dôvodov blokovať hromadné otváranie kariet. BizerOS Dash nemohol otvoriť všetky okná, pretože váš prehliadač túto akciu zablokoval. Povoľte možnosť „Otvoriť kontextové okná“ a skúste to znova."
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Poziadavky dnes",
         "domainsBeingBlocked": "Domény na adlistoch"
       },
-      "domainsTooltip": "Kvôli viacerým integráciám nemôže Homarr vypočítať presný počet blokovaných domén"
+      "domainsTooltip": "Kvôli viacerým integráciám nemôže BizerOS Dash vypočítať presný počet blokovaných domén"
     },
     "dnsHoleControls": {
       "name": "Kontrola diery DNS",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Vitajte na stránke Homarr",
+        "title": "Vitajte na stránke BizerOS Dash",
         "description": "Elegantný moderný prístrojový panel, ktorý dáva všetky vaše aplikácie a služby na dosah ruky.",
         "link": "Vytvorte si svoju prvú nástenku",
         "notice": "Aby táto stránka zmizla, vytvorte nástenku a nastavte ju ako domácu nástenku"
@@ -3495,7 +3495,7 @@
             "title": "Analytika",
             "general": {
               "title": "Odoslať anonymné analýzy",
-              "text": "Homarr bude posielať anonymizované analýzy pomocou open source softvéru Umami. Nikdy nezhromažďuje žiadne osobné údaje, a preto je plne v súlade s GDPR a CCPA. Odporúčame vám povoliť analýzu, pretože pomáha nášmu tímu s otvoreným zdrojom identifikovať problémy a uprednostňovať naše nevybavené veci."
+              "text": "BizerOS Dash bude posielať anonymizované analýzy pomocou open source softvéru Umami. Nikdy nezhromažďuje žiadne osobné údaje, a preto je plne v súlade s GDPR a CCPA. Odporúčame vám povoliť analýzu, pretože pomáha nášmu tímu s otvoreným zdrojom identifikovať problémy a uprednostňovať naše nevybavené veci."
             },
             "widgetData": {
               "title": "Údaje widgetu",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "Žiadne sledovanie",
-              "text": "Počas indexovania nesledujte žiadne odkazy. Zakázanie tohto povedie k tomu, že sa prehľadávače pokúsia sledovať všetky odkazy na Homarr."
+              "text": "Počas indexovania nesledujte žiadne odkazy. Zakázanie tohto povedie k tomu, že sa prehľadávače pokúsia sledovať všetky odkazy na BizerOS Dash."
             },
             "noTranslate": {
               "title": "Žiadny preklad",
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "Verzia {version}",
-        "text": "Homarr je komunitou riadený open source projekt, ktorý spravujú dobrovoľníci. Vďaka týmto ľuďom je Homarr rastúcim projektom od roku 2021. Náš tím pracuje na Homarre úplne ďaleko od mnohých rôznych krajín vo svojom voľnom čase bez akejkoľvek kompenzácie.",
+        "text": "BizerOS Dash je komunitou riadený open source projekt, ktorý spravujú dobrovoľníci. Vďaka týmto ľuďom je BizerOS Dash rastúcim projektom od roku 2021. Náš tím pracuje na BizerOS Dashe úplne ďaleko od mnohých rôznych krajín vo svojom voľnom čase bez akejkoľvek kompenzácie.",
         "accordion": {
           "contributors": {
             "title": "Prispievatelia",
-            "subtitle": "{count} udržiavanie kódu & Homarr"
+            "subtitle": "{count} udržiavanie kódu & BizerOS Dash"
           },
           "translators": {
             "title": "Prekladatelia",
@@ -3792,7 +3792,7 @@
           },
           "libraries": {
             "title": "Knižnice",
-            "subtitle": "{count} používané v Homarrskom kódexe"
+            "subtitle": "{count} používané v BizerOS Dashskom kódexe"
           },
           "hotkeys": {
             "title": "",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "Pridať do Homarr",
+        "label": "Pridať do BizerOS Dash",
         "notification": {
           "success": {
-            "title": "Pridané do Homarr",
-            "message": "Vybrané aplikácie boli pridané do Homarr"
+            "title": "Pridané do BizerOS Dash",
+            "message": "Vybrané aplikácie boli pridané do BizerOS Dash"
           },
           "error": {
-            "title": "Nepodarilo sa pridať do Homarr",
-            "message": "Vybrané aplikácie nebolo možné pridať do Homarr"
+            "title": "Nepodarilo sa pridať do BizerOS Dash",
+            "message": "Vybrané aplikácie nebolo možné pridať do BizerOS Dash"
           }
         },
         "modal": {
-          "title": "Pridajte docker kontajner/y do Homarr"
+          "title": "Pridajte docker kontajner/y do BizerOS Dash"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "Dôveryhodné certifikáty",
-        "description": "Používa ho Homarr na vyžiadanie údajov z integrácií.",
+        "description": "Používa ho BizerOS Dash na vyžiadanie údajov z integrácií.",
         "noResults": {
           "title": "Zatiaľ neexistujú žiadne certifikáty"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "Názvy hostiteľov dôveryhodných certifikátov",
-        "description": "Niektoré certifikáty neumožňujú špecifickú doménu, ktorú Homarr používa na ich vyžiadanie, z tohto dôvodu sa všetky dôveryhodné názvy hostiteľov s ich odtlačkami certifikátov používajú na obídenie týchto obmedzení.",
+        "description": "Niektoré certifikáty neumožňujú špecifickú doménu, ktorú BizerOS Dash používa na ich vyžiadanie, z tohto dôvodu sa všetky dôveryhodné názvy hostiteľov s ich odtlačkami certifikátov používajú na obídenie týchto obmedzení.",
         "noResults": {
           "title": "Zatiaľ neexistujú žiadne názvy hostiteľov"
         },

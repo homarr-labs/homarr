@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Chào mừng đến với Homarr",
-        "subtitle": "Hãy bắt đầu cài đặt ứng dụng Homarr của bạn.",
-        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt ứng dụng Homarr của mình.",
+        "title": "Chào mừng đến với BizerOS Dash",
+        "subtitle": "Hãy bắt đầu cài đặt ứng dụng BizerOS Dash của bạn.",
+        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt ứng dụng BizerOS Dash của mình.",
         "action": {
           "scratch": "Bắt đầu từ đầu",
-          "importOldmarr": "Nhập dữ liệu từ Homarr phiên bản trước 1.0"
+          "importOldmarr": "Nhập dữ liệu từ BizerOS Dash phiên bản trước 1.0"
         }
       },
       "import": {
         "title": "Nhập dữ liệu",
-        "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản Homarr có sẵn.",
+        "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản BizerOS Dash có sẵn.",
         "dropzone": {
           "title": "Kéo tệp tin zip vào đây hoặc nhấp chuột để chọn",
           "description": "Tệp tin zip đã tải lên sẽ được xử lý và bạn sẽ có thể chọn những gì bạn muốn nhập"
@@ -113,12 +113,12 @@
         "subtitle": "Chào mừng trở lại! Hãy nhập thông tin đăng nhập của bạn"
       },
       "invite": {
-        "title": "Tham gia Homarr",
-        "subtitle": "Chào mừng đến với Homarr! Hãy tạo tài khoản của bạn",
+        "title": "Tham gia BizerOS Dash",
+        "subtitle": "Chào mừng đến với BizerOS Dash! Hãy tạo tài khoản của bạn",
         "description": "Bạn được mời bởi {username}"
       },
       "init": {
-        "title": "Cài đặt Homarr mới",
+        "title": "Cài đặt BizerOS Dash mới",
         "subtitle": "Hãy tạo tài khoản quản trị ban đầu"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "",
-          "description": "Hữu ích nếu Homarr có thể truy cập trực tiếp bằng tên máy chủ nội bộ hoặc mạng để tránh sử dụng băng thông của ISP"
+          "description": "Hữu ích nếu BizerOS Dash có thể truy cập trực tiếp bằng tên máy chủ nội bộ hoặc mạng để tránh sử dụng băng thông của ISP"
         }
       }
     },

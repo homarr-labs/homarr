@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Üdvözöljük a Homarrban",
-        "subtitle": "Kezdjük el a Homarr-példány beállítását.",
-        "description": "A kezdéshez válassza ki, hogyan szeretné beállítani a Homarr-példányt.",
+        "title": "Üdvözöljük a BizerOS Dashban",
+        "subtitle": "Kezdjük el a BizerOS Dash-példány beállítását.",
+        "description": "A kezdéshez válassza ki, hogyan szeretné beállítani a BizerOS Dash-példányt.",
         "action": {
           "scratch": "Kezdjük a legelejétől",
-          "importOldmarr": "Importálás Homarr 1.0 előtti verzióból"
+          "importOldmarr": "Importálás BizerOS Dash 1.0 előtti verzióból"
         }
       },
       "import": {
         "title": "Importálás",
-        "subtitle": "Importálhat adatokat egy meglévő Homarr-példányból.",
+        "subtitle": "Importálhat adatokat egy meglévő BizerOS Dash-példányból.",
         "dropzone": {
           "title": "Húzza ide a zip fájlt, vagy kattintson a böngészéshez",
           "description": "A feltöltött zip fájlt feldolgozzuk, és kiválaszthatja, hogy mit szeretne importálni"
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Beállítás befejezése",
         "subtitle": "Készen állsz!",
-        "description": "Sikeresen befejezte a beállítási folyamatot. Most már használhatja a Homarr-t. Válassza ki a következő műveletet:",
+        "description": "Sikeresen befejezte a beállítási folyamatot. Most már használhatja a BizerOS Dash-t. Válassza ki a következő műveletet:",
         "action": {
           "goToBoard": "Tovább a {name} oldalra",
           "createBoard": "Az első tábla létrehozása",
@@ -113,12 +113,12 @@
         "subtitle": "Üdvözöljük újra! Kérjük, adja meg hitelesítő adatait"
       },
       "invite": {
-        "title": "Csatlakozz Homarrhoz",
-        "subtitle": "Üdvözöljük a Homarrban! Kérjük, hozza létre fiókját",
+        "title": "Csatlakozz BizerOS Dashhoz",
+        "subtitle": "Üdvözöljük a BizerOS Dashban! Kérjük, hozza létre fiókját",
         "description": "{username} meghívott"
       },
       "init": {
-        "title": "Új Homarr telepítés",
+        "title": "Új BizerOS Dash telepítés",
         "subtitle": "Kérjük, hozza létre a kezdeti rendszergazda felhasználót"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Más URL használata a ping-hez",
-          "description": "Hasznos, ha a Homarr közvetlenül, egy belső hosztnév vagy hálózaton keresztül fér hozzá, hogy elkerülje az internetszolgáltató által használt sávszélesség terhelését"
+          "description": "Hasznos, ha a BizerOS Dash közvetlenül, egy belső hosztnév vagy hálózaton keresztül fér hozzá, hogy elkerülje az internetszolgáltató által használt sávszélesség terhelését"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "itt",
     "iconPicker": {
       "label": "Ikonhivatkozás",
-      "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres."
+      "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A BizerOS Dash a {countIcons} ikonok között keres."
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "Mindet lapokban megnyitni",
-        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A Homarr nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
+        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A BizerOS Dash nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Mai lekérdezések",
         "domainsBeingBlocked": "Domainek a tiltólistán"
       },
-      "domainsTooltip": "A számos integráció miatt a Homarr nem tudja kiszámítani a blokkolt domainek pontos számát"
+      "domainsTooltip": "A számos integráció miatt a BizerOS Dash nem tudja kiszámítani a blokkolt domainek pontos számát"
     },
     "dnsHoleControls": {
       "name": "DNS blokkolók ellenőrzése",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Üdvözöljük a Homarrban",
+        "title": "Üdvözöljük a BizerOS Dashban",
         "description": "",
         "link": "Az első tábla létrehozása",
         "notice": ""
@@ -3495,7 +3495,7 @@
             "title": "",
             "general": {
               "title": "",
-              "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (MySQL/PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
+              "text": "A BizerOS Dash az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a BizerOS Dash verziója, az adatbázis típusa (MySQL/PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
             },
             "widgetData": {
               "title": "",
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "Megbízható tanúsítványok",
-        "description": "A Homarr ezt használja az integrációkból származó adatok lekérésére.",
+        "description": "A BizerOS Dash ezt használja az integrációkból származó adatok lekérésére.",
         "noResults": {
           "title": "Még nincsenek tanúsítványok"
         },

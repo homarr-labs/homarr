@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Us donem la benvinguda a Homarr",
-        "subtitle": "Comencem configurant la vostra instància de Homarr.",
-        "description": "Per començar, seleccioneu com voleu configurar la vostra instància de Homarr.",
+        "title": "Us donem la benvinguda a BizerOS Dash",
+        "subtitle": "Comencem configurant la vostra instància de BizerOS Dash.",
+        "description": "Per començar, seleccioneu com voleu configurar la vostra instància de BizerOS Dash.",
         "action": {
           "scratch": "Comença des de zero",
-          "importOldmarr": "Importa des d'una versió de Homarr anterior a 1.0"
+          "importOldmarr": "Importa des d'una versió de BizerOS Dash anterior a 1.0"
         }
       },
       "import": {
         "title": "Importa dades",
-        "subtitle": "Pot importar dades des d'una instància de Homarr existent.",
+        "subtitle": "Pot importar dades des d'una instància de BizerOS Dash existent.",
         "dropzone": {
           "title": "Arrossegueu el fitxer zip aquí o feu clic per navegar",
           "description": "El fitxer zip carregat es processarà i podreu seleccionar què voleu importar"
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": "Introduïu el token d'importació mostrat a la instància prèvia de Homarr"
+              "description": "Introduïu el token d'importació mostrat a la instància prèvia de BizerOS Dash"
             }
           },
           "notification": {
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Finalitza la configuració",
         "subtitle": "Ja està tot llest!",
-        "description": "El procés de configuració s'ha completat correctament. Podeu començar a utilitzar Homarr. Escolliu la vostra propera acció:",
+        "description": "El procés de configuració s'ha completat correctament. Podeu començar a utilitzar BizerOS Dash. Escolliu la vostra propera acció:",
         "action": {
           "goToBoard": "Ves al tauler {name}",
           "createBoard": "Creeu el vostre primer tauler",
@@ -113,12 +113,12 @@
         "subtitle": "Benvingut de nou! Si us plau, introduïu les credencials"
       },
       "invite": {
-        "title": "Uneix-te a Homarr",
-        "subtitle": "Benvingut a Homarr! Si us plau, crea el teu compte",
+        "title": "Uneix-te a BizerOS Dash",
+        "subtitle": "Benvingut a BizerOS Dash! Si us plau, crea el teu compte",
         "description": "Has sigut invitat per {username}"
       },
       "init": {
-        "title": "Nova instal·lació de Homarr",
+        "title": "Nova instal·lació de BizerOS Dash",
         "subtitle": "Creeu l'usuari administrador inicial"
       }
     },

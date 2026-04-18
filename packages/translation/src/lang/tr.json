@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Homarr'a Hoş Geldiniz",
-        "subtitle": "Homarr örneğinizi kurmaya başlayalım.",
-        "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
+        "title": "BizerOS Dash'a Hoş Geldiniz",
+        "subtitle": "BizerOS Dash örneğinizi kurmaya başlayalım.",
+        "description": "Başlamak için lütfen BizerOS Dash örneğinizi nasıl kurmak istediğinizi seçin.",
         "action": {
           "scratch": "Sıfırdan Başla",
-          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın"
+          "importOldmarr": "BizerOS Dash 1.0'dan Önceki Yedeğinizi İçe Aktarın"
         }
       },
       "import": {
         "title": "Verileri İçe Aktar",
-        "subtitle": "Mevcut bir Homarr örneğinden veri içe aktarabilirsiniz.",
+        "subtitle": "Mevcut bir BizerOS Dash örneğinden veri içe aktarabilirsiniz.",
         "dropzone": {
           "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
           "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token Anahtarı",
-              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Anahtarı girin"
+              "description": "Önceki BizerOS Dash Örneğinizden Aldığınız İçe Aktarma Anahtarı girin"
             }
           },
           "notification": {
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Kurulumu Bitir",
         "subtitle": "Başlamaya Hazırsınız!",
-        "description": "Kurulum sürecini başarıyla tamamladınız. Artık Homarr'ı kullanmaya başlayabilirsiniz. Sonraki eyleminizi seçin:",
+        "description": "Kurulum sürecini başarıyla tamamladınız. Artık BizerOS Dash'ı kullanmaya başlayabilirsiniz. Sonraki eyleminizi seçin:",
         "action": {
           "goToBoard": "{name} Paneline Git",
           "createBoard": "İlk Panelinizi Oluşturun",
@@ -113,12 +113,12 @@
         "subtitle": "Tekrar hoş geldiniz! Lütfen kimlik bilgilerinizi girin"
       },
       "invite": {
-        "title": "Homarr'a Katıl",
-        "subtitle": "Homarr'a hoş geldiniz! Lütfen hesabınızı oluşturun",
+        "title": "BizerOS Dash'a Katıl",
+        "subtitle": "BizerOS Dash'a hoş geldiniz! Lütfen hesabınızı oluşturun",
         "description": "{username} tarafından davet edildiniz"
       },
       "init": {
-        "title": "Yeni Homarr Kurulumu",
+        "title": "Yeni BizerOS Dash Kurulumu",
         "subtitle": "Lütfen yönetici için kullanıcı oluşturun"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Ping için farklı URL kullan",
-          "description": "Homarr, İSS'nın bant genişliği kullanımını önlemek için dahili ana bilgisayar adı veya ağ kullanarak doğrudan erişebiliyorsa yararlıdır"
+          "description": "BizerOS Dash, İSS'nın bant genişliği kullanımını önlemek için dahili ana bilgisayar adı veya ağ kullanarak doğrudan erişebiliyorsa yararlıdır"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "buraya",
     "iconPicker": {
       "label": "Simge URL'si",
-      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır."
+      "header": "Simgeleri filtrelemek için isim veya nesne yazın... BizerOS Dash sizin için {countIcons} simge arasında arama yapacaktır."
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "Tümünü sekmelerde aç",
-        "text": "Bazı tarayıcılar güvenlik nedeniyle sekmelerin toplu olarak açılmasını engelleyebilir. Homarr tüm pencereleri açamadı, çünkü tarayıcınız bu eylemi engelledi. Lütfen \"Açılır pencereleri aç\"a izin verin ve tekrar deneyin."
+        "text": "Bazı tarayıcılar güvenlik nedeniyle sekmelerin toplu olarak açılmasını engelleyebilir. BizerOS Dash tüm pencereleri açamadı, çünkü tarayıcınız bu eylemi engelledi. Lütfen \"Açılır pencereleri aç\"a izin verin ve tekrar deneyin."
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "Bugünkü Sorgular",
         "domainsBeingBlocked": "Engelleme listesindeki alan adları"
       },
-      "domainsTooltip": "Birden fazla entegrasyon nedeniyle Homarr, engellenen alan adlarının tam sayısını hesaplayamıyor"
+      "domainsTooltip": "Birden fazla entegrasyon nedeniyle BizerOS Dash, engellenen alan adlarının tam sayısını hesaplayamıyor"
     },
     "dnsHoleControls": {
       "name": "DNS Çözümleyici Kontrolleri",
@@ -2907,7 +2907,7 @@
         }
       },
       "oldImport": {
-        "label": "Homarr 1.0'dan önceki yedeğinizi içe aktarın",
+        "label": "BizerOS Dash 1.0'dan önceki yedeğinizi içe aktarın",
         "notification": {
           "success": {
             "title": "İçe aktarma başarılı",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Homarr'a Hoş Geldiniz",
+        "title": "BizerOS Dash'a Hoş Geldiniz",
         "description": "Tüm uygulamalarınızı ve hizmetlerinizi parmaklarınızın ucuna getiren şık ve modern kontrol paneli.",
         "link": "İlk panelinizi oluşturun",
         "notice": "Bu sayfanın kaybolmasını sağlamak için bir panel oluşturun ve bunu ön tanımlı panel olarak atayın"
@@ -3495,7 +3495,7 @@
             "title": "Analiz",
             "general": {
               "title": "Anonim analizler gönder",
-              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
+              "text": "BizerOS Dash, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
             },
             "widgetData": {
               "title": "Araç verileri",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "Bağlantıları Takip Etme",
-              "text": "İndeksleme sırasında bağlantıları takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları izlemeye çalışmasına neden olur."
+              "text": "İndeksleme sırasında bağlantıları takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların BizerOS Dash'daki tüm bağlantıları izlemeye çalışmasına neden olur."
             },
             "noTranslate": {
               "title": "Çeviri Yapma",
@@ -3780,19 +3780,19 @@
       },
       "about": {
         "version": "Sürüm {version}",
-        "text": "Homarr, gönüllüler tarafından sürdürülen topluluk odaklı bir açık kaynak projesidir. Bu kişiler sayesinde Homarr, 2021'den bugüne büyüyerek ilerleyen bir projedir. Ekibimiz, boş zamanlarında Homarr üzerinde birçok farklı ülkeden tamamen uzaktan, hiçbir ücret almadan çalışmaktadır.",
+        "text": "BizerOS Dash, gönüllüler tarafından sürdürülen topluluk odaklı bir açık kaynak projesidir. Bu kişiler sayesinde BizerOS Dash, 2021'den bugüne büyüyerek ilerleyen bir projedir. Ekibimiz, boş zamanlarında BizerOS Dash üzerinde birçok farklı ülkeden tamamen uzaktan, hiçbir ücret almadan çalışmaktadır.",
         "accordion": {
           "contributors": {
             "title": "Katkıda Bulunanlar",
-            "subtitle": "{count} kod & Homarr yazarı"
+            "subtitle": "{count} kod & BizerOS Dash yazarı"
           },
           "translators": {
             "title": "Çevirmenler",
-            "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
+            "subtitle": "Birçok kişi BizerOS Dash'ın {count} dile çevrilmesine katkı sağlıyor"
           },
           "libraries": {
             "title": "Kütüphaneler",
-            "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
+            "subtitle": "BizerOS Dash kodlamasında {count} kütüphane kullanılıyor"
           },
           "hotkeys": {
             "title": "Kısayollar",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "Homarr'a Ekle",
+        "label": "BizerOS Dash'a Ekle",
         "notification": {
           "success": {
-            "title": "Homarr'a Eklendi",
-            "message": "Seçili uygulamalar Homarr'a eklendi"
+            "title": "BizerOS Dash'a Eklendi",
+            "message": "Seçili uygulamalar BizerOS Dash'a eklendi"
           },
           "error": {
-            "title": "Homarr'a Eklenemedi",
-            "message": "Seçilen uygulamalar Homarr'a eklenemedi"
+            "title": "BizerOS Dash'a Eklenemedi",
+            "message": "Seçilen uygulamalar BizerOS Dash'a eklenemedi"
           }
         },
         "modal": {
-          "title": "Docker Konteynerleri Homarr'a Ekle"
+          "title": "Docker Konteynerleri BizerOS Dash'a Ekle"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "Güvenilen sertifikalar",
-        "description": "Homarr tarafından, Entegrasyonlardan veri çekmek için kullanılır.",
+        "description": "BizerOS Dash tarafından, Entegrasyonlardan veri çekmek için kullanılır.",
         "noResults": {
           "title": "Henüz sertifika yok"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "Güvenilen sertifika ana makine adları",
-        "description": "Bazı sertifikalar, Homarr’ın kullanmak istediği belirli alan adından istek yapılmasına izin vermemektedir. Bu nedenle, bu kısıtlamaları aşmak için tüm güvenilen ana makineler ve onların sertifika parmak izleri kullanılır.",
+        "description": "Bazı sertifikalar, BizerOS Dash’ın kullanmak istediği belirli alan adından istek yapılmasına izin vermemektedir. Bu nedenle, bu kısıtlamaları aşmak için tüm güvenilen ana makineler ve onların sertifika parmak izleri kullanılır.",
         "noResults": {
           "title": "Henüz hiçbir ana makine adı yok"
         },

@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "歡迎使用 Homarr",
-        "subtitle": "讓我們開始設定 Homarr",
-        "description": "請選擇設定 Homarr 方式",
+        "title": "歡迎使用 BizerOS Dash",
+        "subtitle": "讓我們開始設定 BizerOS Dash",
+        "description": "請選擇設定 BizerOS Dash 方式",
         "action": {
           "scratch": "重新開始",
-          "importOldmarr": "從 1.0 版本的 Homarr 匯入設定"
+          "importOldmarr": "從 1.0 版本的 BizerOS Dash 匯入設定"
         }
       },
       "import": {
         "title": "匯入數據",
-        "subtitle": "從現有的 Homarr 匯入數據",
+        "subtitle": "從現有的 BizerOS Dash 匯入數據",
         "dropzone": {
           "title": "將 ZIP 壓縮檔拖曳至此處或點擊瀏覽",
           "description": "上傳的壓縮檔將被處理，您可以選擇要匯入的內容"
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "密鑰",
-              "description": "輸入之前 Homarr 中顯示導入之密鑰匙"
+              "description": "輸入之前 BizerOS Dash 中顯示導入之密鑰匙"
             }
           },
           "notification": {
@@ -93,7 +93,7 @@
       "finish": {
         "title": "設定完成",
         "subtitle": "已設定完成",
-        "description": "已成功完成設定，開始使用 Homarr，請選擇下一步操作",
+        "description": "已成功完成設定，開始使用 BizerOS Dash，請選擇下一步操作",
         "action": {
           "goToBoard": "進入 {name} 面板",
           "createBoard": "創建第一個面板",
@@ -113,12 +113,12 @@
         "subtitle": "歡迎回來！請輸入憑證"
       },
       "invite": {
-        "title": "加入 Homarr",
-        "subtitle": "歡迎來到 Homarr！請創建帳戶",
+        "title": "加入 BizerOS Dash",
+        "subtitle": "歡迎來到 BizerOS Dash！請創建帳戶",
         "description": "您受到 {username} 的邀請"
       },
       "init": {
-        "title": "新建 Homarr 安裝",
+        "title": "新建 BizerOS Dash 安裝",
         "subtitle": "請創建初始管理員"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "使用不同的 URL 進行 Ping",
-          "description": "如果 Homarr 能夠直接透過內部主機名稱或網路存取，則可避免消耗 ISP 的頻寬，這將會很有幫助"
+          "description": "如果 BizerOS Dash 能夠直接透過內部主機名稱或網路存取，則可避免消耗 ISP 的頻寬，這將會很有幫助"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "此處",
     "iconPicker": {
       "label": "Icon 網址",
-      "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}"
+      "header": "輸入名稱或物件來篩選 icons，BizerOS Dash 會自動搜尋 {countIcons}"
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "於分頁中開啟全部",
-        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
+        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，BizerOS Dash 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "今日查詢",
         "domainsBeingBlocked": "黑名單的網域"
       },
-      "domainsTooltip": "由於多個集成，Homarr 無法精準計算被阻擋的網域數量"
+      "domainsTooltip": "由於多個集成，BizerOS Dash 無法精準計算被阻擋的網域數量"
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
@@ -2907,7 +2907,7 @@
         }
       },
       "oldImport": {
-        "label": "從 1.0.0 之前的 Homarr 匯入",
+        "label": "從 1.0.0 之前的 BizerOS Dash 匯入",
         "notification": {
           "success": {
             "title": "匯入成功",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "歡迎來到 Homarr",
+        "title": "歡迎來到 BizerOS Dash",
         "description": "時尚、現代的儀表板，讓所有應用程式和伺服器觸手可及",
         "link": "創建第一個面板",
         "notice": "要讓這個頁面消失，請創建一個面板並將其設定為主面板"
@@ -3495,7 +3495,7 @@
             "title": "分析",
             "general": {
               "title": "發送匿名分析",
-              "text": "Homarr 使用開源軟體 Umami 發送匿名分析，他從不收集任何個人資料，因此完全符合 GDPR 和 CCPA 要求，我們鼓勵啟用分析，因為可以幫助我們的團隊識別問題，並確認待辦事項的優先級別"
+              "text": "BizerOS Dash 使用開源軟體 Umami 發送匿名分析，他從不收集任何個人資料，因此完全符合 GDPR 和 CCPA 要求，我們鼓勵啟用分析，因為可以幫助我們的團隊識別問題，並確認待辦事項的優先級別"
             },
             "widgetData": {
               "title": "小工具數據",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "不要追蹤",
-              "text": "索引不要追蹤任何鏈結，禁用此功能將導致爬蟲程式試圖跟蹤 Homarr 上的全部鏈結"
+              "text": "索引不要追蹤任何鏈結，禁用此功能將導致爬蟲程式試圖跟蹤 BizerOS Dash 上的全部鏈結"
             },
             "noTranslate": {
               "title": "不要翻譯",
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "版本 {version}",
-        "text": "Homarr 是由社區推動的開源項目，是志願者們在維護，多虧了這些人，從 2021 年起，Homarr 一直在發展壯大，我們團隊來自許多不同的國家，完全遠程工作，於空閒時無償維護 Homarr",
+        "text": "BizerOS Dash 是由社區推動的開源項目，是志願者們在維護，多虧了這些人，從 2021 年起，BizerOS Dash 一直在發展壯大，我們團隊來自許多不同的國家，完全遠程工作，於空閒時無償維護 BizerOS Dash",
         "accordion": {
           "contributors": {
             "title": "貢獻人員",
-            "subtitle": "{count} 維護代碼 & Homarr"
+            "subtitle": "{count} 維護代碼 & BizerOS Dash"
           },
           "translators": {
             "title": "翻譯人員",
@@ -3792,7 +3792,7 @@
           },
           "libraries": {
             "title": "資料庫",
-            "subtitle": "{count} 於 Homarr 待碼中使用"
+            "subtitle": "{count} 於 BizerOS Dash 待碼中使用"
           },
           "hotkeys": {
             "title": "",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "新增至 Homarr",
+        "label": "新增至 BizerOS Dash",
         "notification": {
           "success": {
-            "title": "已新增至 Homarr",
-            "message": "已選擇的應用程式已新增至 Homarr"
+            "title": "已新增至 BizerOS Dash",
+            "message": "已選擇的應用程式已新增至 BizerOS Dash"
           },
           "error": {
-            "title": "無法新增至 Homarr",
-            "message": "已選擇的應用程式無法新增至 Homarr"
+            "title": "無法新增至 BizerOS Dash",
+            "message": "已選擇的應用程式無法新增至 BizerOS Dash"
           }
         },
         "modal": {
-          "title": "新增 Docker 容器至 Homarr"
+          "title": "新增 Docker 容器至 BizerOS Dash"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "可信任的憑證",
-        "description": "由 Homarr 用於集成中請求數據",
+        "description": "由 BizerOS Dash 用於集成中請求數據",
         "noResults": {
           "title": "尚無憑證"
         },

@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Välkommen till Homarr",
-        "subtitle": "Låt oss komma igång med att sätta upp din installation av Homarr.",
-        "description": "För att komma igång, välj hur du vill ställa in din Homarr-installation.",
+        "title": "Välkommen till BizerOS Dash",
+        "subtitle": "Låt oss komma igång med att sätta upp din installation av BizerOS Dash.",
+        "description": "För att komma igång, välj hur du vill ställa in din BizerOS Dash-installation.",
         "action": {
           "scratch": "Börja från början",
-          "importOldmarr": "Importera från Homarr äldre än version 1.0"
+          "importOldmarr": "Importera från BizerOS Dash äldre än version 1.0"
         }
       },
       "import": {
         "title": "Importera data",
-        "subtitle": "Du kan importera data från en befintlig installation av Homarr.",
+        "subtitle": "Du kan importera data från en befintlig installation av BizerOS Dash.",
         "dropzone": {
           "title": "Dra ZIP-filen hit eller klicka för att bläddra",
           "description": "Den uppladdade ZIP-filen kommer att bearbetas och du kommer att kunna välja vad du vill importera"
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": "Ange 'import-token' från din tidigare installation av Homarr"
+              "description": "Ange 'import-token' från din tidigare installation av BizerOS Dash"
             }
           },
           "notification": {
@@ -93,7 +93,7 @@
       "finish": {
         "title": "Slutför installationen",
         "subtitle": "Du är redo att sätta igång!",
-        "description": "Du har slutfört installationen. Du kan nu börja använda Homarr. Välj din nästa åtgärd:",
+        "description": "Du har slutfört installationen. Du kan nu börja använda BizerOS Dash. Välj din nästa åtgärd:",
         "action": {
           "goToBoard": "Gå till tavlan {name}",
           "createBoard": "Addera din första tavla",
@@ -113,12 +113,12 @@
         "subtitle": "Välkommen tillbaka! Vänligen ange dina inloggningsuppgifter"
       },
       "invite": {
-        "title": "Gå med i Homarr",
-        "subtitle": "Välkommen till Homarr! Vänligen addera ditt konto",
+        "title": "Gå med i BizerOS Dash",
+        "subtitle": "Välkommen till BizerOS Dash! Vänligen addera ditt konto",
         "description": "Du har blivit inbjuden av {username}"
       },
       "init": {
-        "title": "Ny installation av Homarr",
+        "title": "Ny installation av BizerOS Dash",
         "subtitle": "Vänligen addera den första administratören"
       }
     },
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Välkommen till Homarr",
+        "title": "Välkommen till BizerOS Dash",
         "description": "",
         "link": "",
         "notice": ""
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "",
-        "text": "Homarr är ett open source-projekt som underhålls av volontärer. Tack vare dessa människor har Homarr vuxit och utvecklats sedan 2021. Vårt team arbetar på distans från många olika länder med Homarr på sin fritid utan ersättning.",
+        "text": "BizerOS Dash är ett open source-projekt som underhålls av volontärer. Tack vare dessa människor har BizerOS Dash vuxit och utvecklats sedan 2021. Vårt team arbetar på distans från många olika länder med BizerOS Dash på sin fritid utan ersättning.",
         "accordion": {
           "contributors": {
             "title": "Medarbetare",
-            "subtitle": "{count} upprätthåller kod & Homarr"
+            "subtitle": "{count} upprätthåller kod & BizerOS Dash"
           },
           "translators": {
             "title": "Översättare",
@@ -3923,7 +3923,7 @@
         "label": "",
         "notification": {
           "success": {
-            "title": "Adderades till Homarr",
+            "title": "Adderades till BizerOS Dash",
             "message": ""
           },
           "error": {

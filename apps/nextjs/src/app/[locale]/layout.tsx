@@ -40,22 +40,22 @@ const fontSans = Inter({
 
 // eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
-  title: "Homarr",
+  title: "BizerOS Dash",
   description:
-    "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+    "Simplify the management of your server with BizerOS Dash - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
   openGraph: {
-    title: "Homarr Dashboard",
+    title: "BizerOS Dash",
     description:
-      "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+      "Simplify the management of your server with BizerOS Dash - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
     url: "https://homarr.dev",
-    siteName: "Homarr Documentation",
+    siteName: "BizerOS Dash",
   },
   icons: {
     icon: "/logo/logo.png",
     apple: "/logo/logo.png",
   },
   appleWebApp: {
-    title: "Homarr",
+    title: "BizerOS Dash",
     capable: true,
     startupImage: { url: "/logo/logo.png" },
     statusBarStyle: (await getCurrentColorSchemeAsync()) === "dark" ? "black-translucent" : "default",

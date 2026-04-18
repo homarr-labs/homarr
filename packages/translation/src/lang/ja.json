@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "Homarrへようこそ",
-        "subtitle": "Homarrインスタンスの設定を始めましょう。",
-        "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
+        "title": "BizerOS Dashへようこそ",
+        "subtitle": "BizerOS Dashインスタンスの設定を始めましょう。",
+        "description": "始めるには、BizerOS Dashインスタンスの設定方法を選択してください。",
         "action": {
           "scratch": "自分でゼロから作成",
-          "importOldmarr": "1.0 より前の Homarr からインポート"
+          "importOldmarr": "1.0 より前の BizerOS Dash からインポート"
         }
       },
       "import": {
         "title": "データのインポート",
-        "subtitle": "既存のHomarrインスタンスからデータをインポートできます。",
+        "subtitle": "既存のBizerOS Dashインスタンスからデータをインポートできます。",
         "dropzone": {
           "title": "ここにzipファイルをドラッグするか、クリックして参照してください",
           "description": "アップロードされたzipファイルは処理され、インポートするものを選択することができます"
@@ -93,7 +93,7 @@
       "finish": {
         "title": "設定終了",
         "subtitle": "準備ができています！",
-        "description": "セットアッププロセスが正常に完了しました。今すぐHomarrの使用を開始できます。次のアクションを選択してください：",
+        "description": "セットアッププロセスが正常に完了しました。今すぐBizerOS Dashの使用を開始できます。次のアクションを選択してください：",
         "action": {
           "goToBoard": "{name} ボードへ移動",
           "createBoard": "あなたの最初のボードを作成する",
@@ -113,12 +113,12 @@
         "subtitle": "おかえりなさい！認証情報を入力してください"
       },
       "invite": {
-        "title": "Homarrに参加",
-        "subtitle": "Homarrへようこそ！アカウントを作成してください",
+        "title": "BizerOS Dashに参加",
+        "subtitle": "BizerOS Dashへようこそ！アカウントを作成してください",
         "description": "あなたは {username} に招待されました"
       },
       "init": {
-        "title": "新しいHomarrのインストール",
+        "title": "新しいBizerOS Dashのインストール",
         "subtitle": "最初の管理者ユーザーを作成してください"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "ping に 別の URL を使用する",
-          "description": "Homarr が内部ホスト名やネットワークを使って ISP の帯域幅使用を避けるために直接アクセスできる場合に便利です"
+          "description": "BizerOS Dash が内部ホスト名やネットワークを使って ISP の帯域幅使用を避けるために直接アクセスできる場合に便利です"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "こちら",
     "iconPicker": {
       "label": "アイコン URL",
-      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。"
+      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... BizerOS Dashは {countIcons} アイコンを検索します。"
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "すべてのタブを開く",
-        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarr はすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
+        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、BizerOS Dash はすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": "ブロックリストにあるドメイン"
       },
-      "domainsTooltip": "複数の連携機能により、Homarr はブロックされているドメインの正確な数を計算できません"
+      "domainsTooltip": "複数の連携機能により、BizerOS Dash はブロックされているドメインの正確な数を計算できません"
     },
     "dnsHoleControls": {
       "name": "DNS Hole の 制御",
@@ -2907,7 +2907,7 @@
         }
       },
       "oldImport": {
-        "label": "1.0.0 より前の Homarr からインポート",
+        "label": "1.0.0 より前の BizerOS Dash からインポート",
         "notification": {
           "success": {
             "title": "インポート成功",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "Homarrへようこそ",
+        "title": "BizerOS Dashへようこそ",
         "description": "あなたの指先にすべてのアプリやサービスを置く洗練されたモダンなダッシュボード。",
         "link": "最初のボードを作成",
         "notice": "このページを消去するには、ボードを作成し、ホームボードとして設定します"
@@ -3495,7 +3495,7 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": "Homarr はオープンソースソフトウェア Umami を使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
+              "text": "BizerOS Dash はオープンソースソフトウェア Umami を使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
             },
             "widgetData": {
               "title": "ウィジェットのデータ",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "フォローしない",
-              "text": "インデックス登録中はリンクを追跡しない。これを無効にすると、クローラーが、Homarr 上のすべてのリンクを追跡しようとします。"
+              "text": "インデックス登録中はリンクを追跡しない。これを無効にすると、クローラーが、BizerOS Dash 上のすべてのリンクを追跡しようとします。"
             },
             "noTranslate": {
               "title": "翻訳しない",
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "バージョン {version}",
-        "text": "Homarrは、ボランティアによって運営されているコミュニティ主導のオープンソースプロジェクトです。 これらの人々のおかげで、Homarrは2021年から成長を続けてきました。 私たちのチームは、余暇に報酬なしで 多くの異なる国からフルリモートでHomarr に取り組んでいます。",
+        "text": "BizerOS Dashは、ボランティアによって運営されているコミュニティ主導のオープンソースプロジェクトです。 これらの人々のおかげで、BizerOS Dashは2021年から成長を続けてきました。 私たちのチームは、余暇に報酬なしで 多くの異なる国からフルリモートでBizerOS Dash に取り組んでいます。",
         "accordion": {
           "contributors": {
             "title": "貢献者",
-            "subtitle": "{count} メンテナンスコード & Homarr"
+            "subtitle": "{count} メンテナンスコード & BizerOS Dash"
           },
           "translators": {
             "title": "翻訳者",
@@ -3792,7 +3792,7 @@
           },
           "libraries": {
             "title": "ライブラリ",
-            "subtitle": "{count} 個が Homarr のコードで使用されています"
+            "subtitle": "{count} 個が BizerOS Dash のコードで使用されています"
           },
           "hotkeys": {
             "title": "ホットキー",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "Homarrに追加する",
+        "label": "BizerOS Dashに追加する",
         "notification": {
           "success": {
-            "title": "Homarrに追加しました",
-            "message": "選択したアプリを Homarr に追加しました"
+            "title": "BizerOS Dashに追加しました",
+            "message": "選択したアプリを BizerOS Dash に追加しました"
           },
           "error": {
             "title": "Homar に追加できませんでした",
-            "message": "選択したアプリを Homarr に追加できませんでした"
+            "message": "選択したアプリを BizerOS Dash に追加できませんでした"
           }
         },
         "modal": {
-          "title": "Homarr に docker コンテナを追加"
+          "title": "BizerOS Dash に docker コンテナを追加"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "信頼できる証明書",
-        "description": "連携機能からデータを要求するために、Homarr が使用します。",
+        "description": "連携機能からデータを要求するために、BizerOS Dash が使用します。",
         "noResults": {
           "title": "証明書はまだありません"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "信頼できる証明書のホスト名",
-        "description": "いくつかの証明書は特定のドメインを許可していません Homarr がそれらを要求するために使用します。 このため、証明書のサムネイルを持つすべての信頼されたホスト名は、これらの制限を回避するために使用されます。",
+        "description": "いくつかの証明書は特定のドメインを許可していません BizerOS Dash がそれらを要求するために使用します。 このため、証明書のサムネイルを持つすべての信頼されたホスト名は、これらの制限を回避するために使用されます。",
         "noResults": {
           "title": "ホスト名がまだありません"
         },

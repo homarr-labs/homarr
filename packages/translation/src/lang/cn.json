@@ -2,17 +2,17 @@
   "init": {
     "step": {
       "start": {
-        "title": "欢迎使用 Homarr",
-        "subtitle": "让我们开始设置您的 Homarr 实例。",
-        "description": "首先，请选择您想要如何设置您的 Homarr 实例。",
+        "title": "欢迎使用 BizerOS Dash",
+        "subtitle": "让我们开始设置您的 BizerOS Dash 实例。",
+        "description": "首先，请选择您想要如何设置您的 BizerOS Dash 实例。",
         "action": {
           "scratch": "从零开始",
-          "importOldmarr": "从 1.0 之前的 Homarr 导入"
+          "importOldmarr": "从 1.0 之前的 BizerOS Dash 导入"
         }
       },
       "import": {
         "title": "导入数据",
-        "subtitle": "您可以从已有的 Homarr 实例导入数据。",
+        "subtitle": "您可以从已有的 BizerOS Dash 实例导入数据。",
         "dropzone": {
           "title": "将 zip 文件拖到此处或单击浏览",
           "description": "上传的压缩包将被处理，您可以选择要导入的内容"
@@ -93,7 +93,7 @@
       "finish": {
         "title": "完成设置",
         "subtitle": "你已设置完成！",
-        "description": "您已成功完成设置过程。现在您可以开始使用 Homarr 了。选择下一步操作：",
+        "description": "您已成功完成设置过程。现在您可以开始使用 BizerOS Dash 了。选择下一步操作：",
         "action": {
           "goToBoard": "转到 {name} 面板",
           "createBoard": "创建您的第一个面板",
@@ -113,12 +113,12 @@
         "subtitle": "欢迎回来！请输入您的凭证"
       },
       "invite": {
-        "title": "加入 Homarr",
-        "subtitle": "欢迎来到 Homarr！请创建您的账户",
+        "title": "加入 BizerOS Dash",
+        "subtitle": "欢迎来到 BizerOS Dash！请创建您的账户",
         "description": "您受到了 {username} 的邀请。"
       },
       "init": {
-        "title": "新建 Homarr 安装",
+        "title": "新建 BizerOS Dash 安装",
         "subtitle": "请创建初始管理员用户"
       }
     },
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "为ping使用不同的 URL",
-          "description": "Homarr 可以使用内部主机名或网络直接访问以避免ISP的带宽使用"
+          "description": "BizerOS Dash 可以使用内部主机名或网络直接访问以避免ISP的带宽使用"
         }
       }
     },
@@ -1076,7 +1076,7 @@
     "here": "这里",
     "iconPicker": {
       "label": "图标 URL",
-      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。"
+      "header": "输入名称或对象来筛选图标… BizerOS Dash 将为您搜索 {countIcons} 图标。"
     },
     "colorScheme": {
       "options": {
@@ -1240,7 +1240,7 @@
       },
       "openAllInNewTabs": {
         "title": "在标签中打开全部",
-        "text": "某些浏览器可能出于安全原因阻止大批打开标签页。 Homarr 无法打开所有窗口，因为您的浏览器屏蔽了此操作。请允许“打开弹出窗口”并重试。"
+        "text": "某些浏览器可能出于安全原因阻止大批打开标签页。 BizerOS Dash 无法打开所有窗口，因为您的浏览器屏蔽了此操作。请允许“打开弹出窗口”并重试。"
       }
     }
   },
@@ -1423,7 +1423,7 @@
         "dnsQueriesToday": "今日查询",
         "domainsBeingBlocked": "黑名单上的域"
       },
-      "domainsTooltip": "由于多个集成，Homarr 无法计算被阻止的域的准确数量"
+      "domainsTooltip": "由于多个集成，BizerOS Dash 无法计算被阻止的域的准确数量"
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
@@ -2907,7 +2907,7 @@
         }
       },
       "oldImport": {
-        "label": "从 1.0.0 之前的 Homarr 导入",
+        "label": "从 1.0.0 之前的 BizerOS Dash 导入",
         "notification": {
           "success": {
             "title": "导入成功",
@@ -3180,7 +3180,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "欢迎使用 Homarr",
+        "title": "欢迎使用 BizerOS Dash",
         "description": "一个时尚、现代的仪表盘，让你的所有应用和服务触手可及。",
         "link": "创建您的第一个面板",
         "notice": "要使这个页面消失，请创建一个面板并将其设置为主面板"
@@ -3495,7 +3495,7 @@
             "title": "分析",
             "general": {
               "title": "发送匿名分析",
-              "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
+              "text": "BizerOS Dash 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：BizerOS Dash 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
             },
             "widgetData": {
               "title": "组件数据",
@@ -3519,7 +3519,7 @@
             },
             "noFollow": {
               "title": "不要追踪",
-              "text": "索引时不要追踪任何链接。禁用此功能将导致爬虫程序试图跟踪Homarr上的所有链接。"
+              "text": "索引时不要追踪任何链接。禁用此功能将导致爬虫程序试图跟踪BizerOS Dash上的所有链接。"
             },
             "noTranslate": {
               "title": "不要翻译",
@@ -3780,11 +3780,11 @@
       },
       "about": {
         "version": "版本 {version}",
-        "text": "Homarr 是一个由社区驱动的开源项目，由志愿者们维护。多亏了这些人，自2021年以来，Homarr 一直是一个不断发展的项目。我们的团队完全远程工作，来自许多不同的国家，在闲暇时间无偿地为 Homarr 贡献力量。",
+        "text": "BizerOS Dash 是一个由社区驱动的开源项目，由志愿者们维护。多亏了这些人，自2021年以来，BizerOS Dash 一直是一个不断发展的项目。我们的团队完全远程工作，来自许多不同的国家，在闲暇时间无偿地为 BizerOS Dash 贡献力量。",
         "accordion": {
           "contributors": {
             "title": "贡献人员",
-            "subtitle": "{count} 维护代码和 Homarr"
+            "subtitle": "{count} 维护代码和 BizerOS Dash"
           },
           "translators": {
             "title": "翻译人员",
@@ -3792,7 +3792,7 @@
           },
           "libraries": {
             "title": "相关的库",
-            "subtitle": "{count} 用于 Homarr 代码中"
+            "subtitle": "{count} 用于 BizerOS Dash 代码中"
           },
           "hotkeys": {
             "title": "快捷键",
@@ -3920,19 +3920,19 @@
         }
       },
       "addToHomarr": {
-        "label": "添加到 Homarr",
+        "label": "添加到 BizerOS Dash",
         "notification": {
           "success": {
-            "title": "已添加到 Homarr",
-            "message": "所选应用已被添加到 Homarr"
+            "title": "已添加到 BizerOS Dash",
+            "message": "所选应用已被添加到 BizerOS Dash"
           },
           "error": {
-            "title": "无法添加到 Homarr",
-            "message": "所选应用无法添加到 Homarr"
+            "title": "无法添加到 BizerOS Dash",
+            "message": "所选应用无法添加到 BizerOS Dash"
           }
         },
         "modal": {
-          "title": "将 docker 容器添加到 Homarr"
+          "title": "将 docker 容器添加到 BizerOS Dash"
         }
       }
     },
@@ -4726,7 +4726,7 @@
     "page": {
       "list": {
         "title": "可信证书",
-        "description": "Homarr 用于从集成请求数据。",
+        "description": "BizerOS Dash 用于从集成请求数据。",
         "noResults": {
           "title": "还没有证书"
         },
@@ -4739,7 +4739,7 @@
       },
       "hostnames": {
         "title": "信任的证书主机名",
-        "description": "某些证书不允许指定域名使用 Homarr 请求他们， 由于这个原因，所有信任的主机名及其证书缩略图都被用来绕过这些限制。",
+        "description": "某些证书不允许指定域名使用 BizerOS Dash 请求他们， 由于这个原因，所有信任的主机名及其证书缩略图都被用来绕过这些限制。",
         "noResults": {
           "title": "还没有主机名"
         },
