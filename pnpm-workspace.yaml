@@ -8,7 +8,7 @@ minimumReleaseAgeExclude:
   - "@next/*"
 catalogMode: strict
 catalog:
-  "@auth/core": ^0.41.1
+  "@auth/core": ^0.41.2
   "@auth/drizzle-adapter": ^1.11.1
   "@ctrl/deluge": ^8.0.0
   "@ctrl/qbittorrent": ^9.11.2
