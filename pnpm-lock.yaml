@@ -379,7 +379,7 @@ catalogs:
       specifier: ^6.1.1
       version: 6.1.1
     fast-xml-parser:
-      specifier: ^5.5.12
+      specifier: ^5.6.0
       version: 5.6.0
     fastify:
       specifier: ^5.8.4
@@ -7415,10 +7415,6 @@ packages:
   fast-xml-builder@1.1.4:
     resolution: {integrity: sha512-f2jhpN4Eccy0/Uz9csxh3Nu6q4ErKxf0XIsasomfOihuSUa3/xw6w8dnOtCDgEItQFJG8KyXPzQXzcODDrrbOg==}
 
-  fast-xml-parser@5.5.11:
-    resolution: {integrity: sha512-QL0eb0YbSTVWF6tTf1+LEMSgtCEjBYPpnAjoLC8SscESlAjXEIRJ7cHtLG0pLeDFaZLa4VKZLArtA/60ZS7vyA==}
-    hasBin: true
-
   fast-xml-parser@5.6.0:
     resolution: {integrity: sha512-5G+uaEBbOm9M4dgMOV3K/rBzfUNGqGqoUTaYJM3hBwM8t71w07gxLQZoTsjkY8FtfjabqgQHEkeIySBDYeBmJw==}
     hasBin: true
@@ -11916,7 +11912,7 @@ snapshots:
     dependencies:
       '@ndaidong/bellajs': 12.0.1
       cross-fetch: 4.1.0
-      fast-xml-parser: 5.5.11
+      fast-xml-parser: 5.6.0
       html-entities: 2.6.0
     transitivePeerDependencies:
       - encoding
@@ -16045,12 +16041,6 @@ snapshots:
   fast-xml-builder@1.1.4:
     dependencies:
       path-expression-matcher: 1.5.0
-
-  fast-xml-parser@5.5.11:
-    dependencies:
-      fast-xml-builder: 1.1.4
-      path-expression-matcher: 1.5.0
-      strnum: 2.2.3
 
   fast-xml-parser@5.6.0:
     dependencies:
