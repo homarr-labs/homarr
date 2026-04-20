@@ -451,8 +451,8 @@ catalogs:
       specifier: ^1.18.0
       version: 1.18.0
     prettier:
-      specifier: ^3.8.2
-      version: 3.8.2
+      specifier: ^3.8.3
+      version: 3.8.3
     prettier-plugin-packagejson:
       specifier: ^3.0.2
       version: 3.0.2
@@ -645,7 +645,7 @@ importers:
         version: 2.2.3
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       semantic-release:
         specifier: 'catalog:'
         version: 25.0.3(typescript@5.9.3)
@@ -928,7 +928,7 @@ importers:
         version: 2.1.0(webpack@5.94.0)
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1025,7 +1025,7 @@ importers:
         version: 9.39.4
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       tsx:
         specifier: 'catalog:'
         version: 4.20.4
@@ -1089,7 +1089,7 @@ importers:
         version: 9.39.4
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1250,7 +1250,7 @@ importers:
         version: 9.39.4
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1323,7 +1323,7 @@ importers:
         version: 9.39.4
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1764,7 +1764,7 @@ importers:
         version: 9.39.4
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
       tsx:
         specifier: 'catalog:'
         version: 4.20.4
@@ -2965,17 +2965,17 @@ importers:
     dependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
-        version: 4.7.1(prettier@3.8.2)
+        version: 4.7.1(prettier@3.8.3)
       prettier:
         specifier: 'catalog:'
-        version: 3.8.2
+        version: 3.8.3
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
       prettier-plugin-packagejson:
         specifier: 'catalog:'
-        version: 3.0.2(prettier@3.8.2)
+        version: 3.0.2(prettier@3.8.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -9353,8 +9353,8 @@ packages:
       prettier:
         optional: true
 
-  prettier@3.8.2:
-    resolution: {integrity: sha512-8c3mgTe0ASwWAJK+78dpviD+A8EqhndQPUBpNUIPt6+xWlIigCwfN01lWr9MAede4uqXGTEKeQWTvzb3vjia0Q==}
+  prettier@3.8.3:
+    resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -12061,13 +12061,13 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.7.1(prettier@3.8.2)':
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(prettier@3.8.3)':
     dependencies:
       '@babel/generator': 7.29.0
       '@babel/parser': 7.29.2
       '@babel/traverse': 7.29.0
       '@babel/types': 7.29.0
-      prettier: 3.8.2
+      prettier: 3.8.3
       semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
@@ -18039,13 +18039,13 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-packagejson@3.0.2(prettier@3.8.2):
+  prettier-plugin-packagejson@3.0.2(prettier@3.8.3):
     dependencies:
       sort-package-json: 3.6.0
     optionalDependencies:
-      prettier: 3.8.2
+      prettier: 3.8.3
 
-  prettier@3.8.2: {}
+  prettier@3.8.3: {}
 
   pretty-ms@8.0.0:
     dependencies:
