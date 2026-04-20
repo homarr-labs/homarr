@@ -499,7 +499,7 @@ catalogs:
       specifier: ^5.3.1
       version: 5.3.1
     swagger-ui-react:
-      specifier: ^5.32.3
+      specifier: ^5.32.4
       version: 5.32.4
     testcontainers:
       specifier: ^11.14.0
