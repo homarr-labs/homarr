@@ -42,8 +42,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // eslint-disable-next-line no-restricted-syntax
-  // skipcq: JS-0116
+  // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
     return [
       {
