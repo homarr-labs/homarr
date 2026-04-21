@@ -5,7 +5,7 @@ import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
-import { hashPasswordAsync } from "../security";
+import { comparePasswordsAsync } from "../security";
 import { createSessionAsync } from "../server";
 
 const logger = createLogger({ module: "apiKeyAuth" });
@@ -41,7 +41,6 @@ export const getSessionFromApiKeyAsync = async (
     columns: {
       id: true,
       apiKey: true,
-      salt: true,
     },
     with: {
       user: {
@@ -60,9 +59,9 @@ export const getSessionFromApiKeyAsync = async (
     return null;
   }
 
-  const hashedApiKey = await hashPasswordAsync(apiKey, apiKeyFromDb.salt);
+  const isValid = await comparePasswordsAsync(apiKey, apiKeyFromDb.apiKey);
 
-  if (apiKeyFromDb.apiKey !== hashedApiKey) {
+  if (!isValid) {
     logger.warn("Failed to authenticate with api-key", { ipAddress, userAgent, reason: "API_KEY_MISMATCH" });
     return null;
   }

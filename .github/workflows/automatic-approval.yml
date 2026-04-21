@@ -9,7 +9,12 @@ jobs:
   approve-automatic-prs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    if: github.actor_id == 158783068 || github.actor_id == 190541745 || github.actor_id == 210161987 # Id of renovate bot and crowdin bot see https://api.github.com/users/homarr-renovate%5Bbot%5D and https://api.github.com/users/homarr-crowdin%5Bbot%5D and https://api.github.com/users/homarr-update-contributors%5Bbot%5D
+    # 158783068: homarr-renovate[bot]
+    # 190541745: homarr-crowdin[bot]
+    # 210161987: homarr-update-contributors[bot]
+    # 175486441: homarr-releases[bot]
+    # Extracted from https://api.github.com/users/<username>
+    if: github.actor_id == 158783068 || github.actor_id == 190541745 || github.actor_id == 210161987 || github.actor_id == 175486441
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

@@ -7,15 +7,15 @@
         "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
           "scratch": "Começar do zero",
-          "importOldmarr": "Importe de uma instância Homarr anterior a 1.0"
+          "importOldmarr": "Importe de uma instância do Homarr anterior a 1.0"
         }
       },
       "import": {
         "title": "Importar dados",
         "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
         "dropzone": {
-          "title": "Arraste o arquivo zip aqui ou clique para procurar",
-          "description": "O arquivo zip enviado será processado e você poderá selecionar o que deseja importar"
+          "title": "Arraste o arquivo ZIP aqui ou clique para procurar",
+          "description": "O arquivo ZIP enviado será processado e você poderá selecionar o que deseja importar"
         },
         "fileInfo": {
           "action": {
@@ -27,7 +27,7 @@
           "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "{count} painéis encontrados",
+          "title": "{count} Painéis encontrados",
           "description": "Escolha todos os painéis com o tamanho que você deseja importar",
           "action": {
             "selectAll": "Selecionar todos",
@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Calendário",
+      "description": "Mostra os horários de partida de uma estação",
+      "title": "Partidas {station}",
+      "noStation": "Nenhuma estação selecionada",
       "option": {
         "station": {
-          "label": ""
+          "label": "Estação"
         }
       }
     },
@@ -1605,6 +1605,34 @@
           "keepEditing": "Continuar editando"
         }
       }
+    },
+    "anchorNote": {
+      "name": "Nota do Anchor",
+      "description": "Exibe a nota selecionada do Anchor",
+      "option": {
+        "noteId": {
+          "label": "Nota"
+        },
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showUpdatedAt": {
+          "label": "Exibir última atualização"
+        }
+      },
+      "empty": "Selecione uma nota para exibir",
+      "emptyContent": "Essa nota esta vazia",
+      "notFound": "Nenhuma nota encontrada",
+      "noNotes": "Nenhuma nota encontrada",
+      "integrationRequired": "Selecione primeiro uma integração do Anchor",
+      "updatedAt": "Atualizado em {date}",
+      "untitled": "Sem título",
+      "edit": "Editar",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "readOnlyViewer": "Você tem acesso de visualização a esta nota. A edição está desativada.",
+      "saveForbidden": "Você não tem permissão para editar essa nota.",
+      "saveFailed": "Não foi possível salvar a nota. Tente novamente."
     },
     "iframe": {
       "name": "iFrame",
@@ -2516,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Ocultar descrição"
+        },
+        "showPosterImage": {
+          "label": "Exibir pôster"
         }
       }
     },
@@ -2728,6 +2759,45 @@
       "description": "Exibe histórico de notificações de uma integração",
       "noItems": "Nenhuma notificação para exibir.",
       "option": {}
+    },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Exibe os resultados do teste de velocidade da sua instância do Speedtest Tracker.",
+      "option": {
+        "showLatestResult": {
+          "label": "Mostrar último resultado"
+        },
+        "showStats": {
+          "label": "Exibir médias"
+        },
+        "showRecentResults": {
+          "label": "Mostrar resultados recentes"
+        },
+        "showPingGraph": {
+          "label": "Exibir gráfico de ping"
+        }
+      },
+      "latestResult": "Último resultado",
+      "averages": "Médias",
+      "tests": "Testes",
+      "recentResults": "Resultados recentes",
+      "recentResultsSpeed": "Velocidade",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Download médio",
+      "avgUpload": "Upload médio",
+      "avgPing": "Ping médio",
+      "healthy": "Saudável",
+      "unhealthy": "Com problemas",
+      "ok": "Ok",
+      "fail": "Falhou",
+      "noSectionsEnabled": "Habilite ao menos uma seção nas opções do widget.",
+      "error": {
+        "internalServerError": "Falha ao obter dados do Speedtest"
+      }
     },
     "systemResources": {
       "name": "Recursos do Sistema",
@@ -3036,7 +3106,7 @@
           }
         },
         "background": {
-          "title": "Antecedentes"
+          "title": "Imagem de fundo"
         },
         "appearance": {
           "title": "Aparência"
@@ -3525,7 +3595,7 @@
               "label": "Status do servidor Minecraft"
             },
             "timetable": {
-              "label": ""
+              "label": "Horários"
             },
             "iconsUpdater": {
               "label": "Atualizador de Ícones"
