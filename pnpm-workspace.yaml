@@ -106,7 +106,7 @@ catalog:
   adm-zip: 0.5.17
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
-  better-sqlite3: ^12.8.0
+  better-sqlite3: ^12.9.0
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   concurrently: ^9.2.1
