@@ -1138,9 +1138,9 @@
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "サーバー",
+    "applications": "アプリケーション",
+    "services": "サービス",
     "preview": {
       "show": "プレビューを表示",
       "hide": "プレビューを閉じる"
@@ -1526,13 +1526,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "タイムテーブル",
+      "description": "駅の出発時刻を表示します",
+      "title": "{station} 出発時刻",
+      "noStation": "駅が選択されていません",
       "option": {
         "station": {
-          "label": ""
+          "label": "駅"
         }
       }
     },
@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "アンカーノート",
+      "description": "アンカーから選択したノートを表示する",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "ノート"
         },
         "showTitle": {
-          "label": ""
+          "label": "タイトルを表示"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "最終更新を表示"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "表示するノートを選択",
+      "emptyContent": "このノートにはコンテンツがありません",
+      "notFound": "ノートが見つかりません",
+      "noNotes": "ノートがありません",
+      "integrationRequired": "アンカー統合を最初に選択してください",
+      "updatedAt": "{date} に更新しました",
+      "untitled": "タイトルなし",
+      "edit": "編集",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "readOnlyViewer": "このノートを閲覧することができます。編集は無効になっています",
+      "saveForbidden": "このノートを編集する権限がありません。",
+      "saveFailed": "このノートを保存できませんでした。もう一度やり直してください。"
     },
     "iframe": {
       "name": "iFrame",
@@ -1666,7 +1666,7 @@
           "label": "位置情報を許可する"
         },
         "allowModals": {
-          "label": ""
+          "label": "モーダルを許可"
         }
       },
       "error": {
@@ -1901,7 +1901,7 @@
           "label": "メモリー情報を表示"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU情報を表示"
         },
         "showUptime": {
           "label": "稼働時間を表示"
@@ -2009,91 +2009,91 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "サーバーとアプリケーションを使用した Coolify インスタンスの概要",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "サーバーを表示"
         },
         "showApplications": {
-          "label": ""
+          "label": "アプリケーションを表示"
         },
         "showServices": {
-          "label": ""
+          "label": "サービスを表示"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "サーバーが見つかりません",
+        "applications": "アプリケーションが見つかりません",
+        "services": "サービスが見つかりません"
       },
       "footer": {
-        "updated": ""
+        "updated": "{when} に更新しました"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Coolify 統合が設定されていません",
+        "internalServerError": "Coolify データの取得に失敗しました"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "ビルド"
       },
       "instances": {
-        "title": ""
+        "title": "インスタンス"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "詳細なストリームとトランスコーディングデータによるメディアサーバーのモニタリングの強化",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "アクティブなストリームを表示"
         },
         "showStats": {
-          "label": ""
+          "label": "統計情報の概要を表示"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "最近のアクティビティを表示"
         },
         "showViolations": {
-          "label": ""
+          "label": "違反を表示"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "アクティブなストリーム",
+        "totalUsers": "総ユーザー数",
+        "transcodes": "トランスコード",
+        "bandwidth": "帯域幅"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "アクティブなストリームがありません",
+        "user": "ユーザー",
+        "media": "メディア",
+        "state": "状態",
+        "quality": "品質",
+        "device": "デバイス",
+        "progress": "進捗状況",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "ダイレクトプレイ",
+          "transcode": "トランスコード",
+          "directStream": "ダイレクトストリーム"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "最近のアクティビティ",
+        "empty": "最近のアクティビティなし",
+        "watched": "視聴済",
+        "partial": "一部"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "違反",
+        "empty": "最近の違反はありません",
+        "rule": "ルール",
+        "user": "ユーザー"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "有効なセクションがありません",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Tracearrとの連携が設定されていません",
+        "internalServerError": "Tracearrデータの取得に失敗しました"
       }
     },
     "common": {
@@ -2192,50 +2192,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich サーバーの統計",
+      "description": "Immich インスタンスに関する情報",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "ユーザを表示",
+          "description": "インスタンスにユーザー数を表示する"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "写真を表示",
+          "description": "インスタンス上の写真数を表示する"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "動画を表示",
+          "description": "インスタンスに動画の数を表示する"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "ストレージを表示",
+          "description": "使用されたストレージの合計容量を表示します"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "ユーザー",
+      "photos": "写真",
+      "videos": "動画",
+      "storage": "ストレージ使用量"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich アルバム",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "アルバム ID",
+          "description": "これはImmichのアルバムを示す固有のIDです。 「a21aca09-9f05-47dc-b1a1-7b53c547226e」など、アルバムを開いてURLから一意の文字列をコピーすることでこのIDを見つけることができます。"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "間隔 (秒)",
+          "description": "アルバム内の写真をX秒ごとに回転させます。少なくとも1でなければなりません。3600未満でなければなりません。"
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "写真情報を表示",
+          "description": "スライドショーの下部に画像の日付と現在の索引を表示します"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Immichアルバムの写真のスライド",
+      "noAlbumSelected": "アルバムが選択されていない、ウィジェットを編集してアルバムを選択してください",
+      "noPhotos": "このアルバムには写真がありません"
     },
     "downloads": {
       "name": "クライアントをダウンロード",
@@ -2546,7 +2546,7 @@
           "label": "詳細を非表示"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "ポスターの画像を表示"
         }
       }
     },
@@ -2761,42 +2761,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "スピードテストトラッカー",
+      "description": "Speedtest Trackerインスタンスからスピードテストの結果を表示します。",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "最新の結果を表示"
         },
         "showStats": {
-          "label": ""
+          "label": "平均を表示"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "最近の結果を表示"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "ping グラフを表示"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "直近の結果",
+      "averages": "平均値",
+      "tests": "{count} 回テスト",
+      "recentResults": "最近の結果",
+      "recentResultsSpeed": "スピード",
+      "recentResultsPing": "Ping",
+      "download": "ダウンロード",
+      "upload": "アップロード",
+      "ping": "Ping",
+      "status": "ステータス",
+      "avgDownload": "平均ダウンロード",
+      "avgUpload": "平均アップロード",
+      "avgPing": "平均 Ping",
+      "healthy": "正常",
+      "unhealthy": "異常",
+      "ok": "成功",
+      "fail": "失敗",
+      "noSectionsEnabled": "ウィジェットオプションで少なくとも1つのセクションを有効にします。",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "スピードテストデータの取得に失敗しました"
       }
     },
     "systemResources": {
@@ -2812,7 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "メモリ",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "ネットワーク"
           }
         },
@@ -2829,39 +2829,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "システムディスク",
+      "description": "システムのディスク使用量",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "利用可能な場合は温度を表示"
         },
         "displayMode": {
-          "label": "",
+          "label": "表示モード",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "割合 (例 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "絶対値（例：800GB / 1TB）"
             },
             "free": {
-              "label": ""
+              "label": "空き領域の割合（例：24%空き）"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "バックグラウンドの使用状況バーを表示"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "異常"
       }
     }
   },
@@ -3495,7 +3495,7 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": "Homarr はオープンソースソフトウェア Umami を使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
+              "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(MySQL/PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
             },
             "widgetData": {
               "title": "ウィジェットのデータ",
@@ -3595,7 +3595,7 @@
               "label": "Minecraft サーバーの状態"
             },
             "timetable": {
-              "label": ""
+              "label": "タイムテーブル"
             },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
@@ -3667,7 +3667,7 @@
               "label": "天気"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
