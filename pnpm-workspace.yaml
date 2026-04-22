@@ -125,7 +125,7 @@ catalog:
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
-  eslint: ^9.39.4
+  eslint: ^10.2.1
   eslint-config-prettier: ^10.1.8
   eslint-config-turbo: ^2.9.6
   eslint-plugin-import: ^2.32.0
