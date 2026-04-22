@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.59.1",
+  "version": "1.59.2",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -61,7 +61,7 @@
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=24.14.1",
+    "node": ">=24.15.0",
     "pnpm": ">=10.33.0"
   },
   "pnpm": {
@@ -84,9 +84,9 @@
       "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.5",
       "esbuild@<=0.24.2": ">=0.28.0",
       "form-data@>=4.0.0 <4.0.4": ">=4.0.5",
-      "hono@<4.6.5": ">=4.12.12",
+      "hono@<4.6.5": ">=4.12.14",
       "linkifyjs@<4.3.2": ">=4.3.2",
-      "nanoid@>=4.0.0 <5.0.9": ">=5.1.7",
+      "nanoid@>=4.0.0 <5.0.9": ">=5.1.9",
       "prismjs@<1.30.0": ">=1.30.0",
       "proxmox-api>undici": "7.24.6",
       "react-is": "^19.2.5",
