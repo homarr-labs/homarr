@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
+import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
 
 import { notFound } from "next/navigation";
