@@ -264,9 +264,6 @@ catalogs:
     '@types/video.js':
       specifier: ^7.3.58
       version: 7.3.58
-    '@types/ws':
-      specifier: ^8.18.1
-      version: 8.18.1
     '@types/xml2js':
       specifier: ^0.4.14
       version: 0.4.14
@@ -886,6 +883,9 @@ importers:
       use-deep-compare-effect:
         specifier: 'catalog:'
         version: 1.8.1(react@19.2.5)
+      ws:
+        specifier: 'catalog:'
+        version: 8.20.0
       yaml:
         specifier: 'catalog:'
         version: 2.8.3
@@ -929,67 +929,6 @@ importers:
       node-loader:
         specifier: 'catalog:'
         version: 2.1.0(webpack@5.94.0)
-      prettier:
-        specifier: 'catalog:'
-        version: 3.8.3
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
-  apps/websocket:
-    dependencies:
-      '@homarr/api':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/api
-      '@homarr/auth':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/auth
-      '@homarr/common':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/common
-      '@homarr/core':
-        specifier: workspace:^
-        version: link:../../packages/core
-      '@homarr/db':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/db
-      '@homarr/definitions':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/definitions
-      '@homarr/redis':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/redis
-      '@homarr/validation':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/validation
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.4.2
-      tsx:
-        specifier: 'catalog:'
-        version: 4.20.4
-      ws:
-        specifier: 'catalog:'
-        version: 8.20.0
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      '@types/ws':
-        specifier: 'catalog:'
-        version: 8.18.1
-      esbuild:
-        specifier: 'catalog:'
-        version: 0.28.0
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.4
       prettier:
         specifier: 'catalog:'
         version: 3.8.3
@@ -5670,9 +5609,6 @@ packages:
 
   '@types/video.js@7.3.58':
     resolution: {integrity: sha512-1CQjuSrgbv1/dhmcfQ83eVyYbvGyqhTvb2Opxr0QCV+iJ4J6/J+XWQ3Om59WiwCd1MN3rDUHasx5XRrpUtewYQ==}
-
-  '@types/ws@8.18.1':
-    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@types/xml2js@0.4.14':
     resolution: {integrity: sha512-4YnrRemBShWRO2QjvUin8ESA41rH+9nQGLUGZV/1IDhi3SL9OhdpNC/MrulTWuptXKwhx/aDxE7toV0f/ypIXQ==}
@@ -13955,10 +13891,6 @@ snapshots:
   '@types/use-sync-external-store@0.0.6': {}
 
   '@types/video.js@7.3.58': {}
-
-  '@types/ws@8.18.1':
-    dependencies:
-      '@types/node': 24.12.2
 
   '@types/xml2js@0.4.14':
     dependencies:
