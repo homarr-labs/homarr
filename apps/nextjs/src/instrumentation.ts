@@ -53,16 +53,70 @@ export async function register() {
       },
     });
 
+    // Idle detection: pause integration cron jobs when no clients are connected
+    const IDLE_GRACE_MS = 60_000;
+    type JobKey = Parameters<typeof jobGroup.stopAsync>[0];
+    const INTEGRATION_JOB_KEYS: JobKey[] = [
+      "ping", "smartHomeEntityState", "mediaServer", "mediaOrganizer", "downloads",
+      "dnsHole", "mediaRequestStats", "mediaRequestList", "rssFeeds", "indexerManager",
+      "healthMonitoring", "mediaTranscoding", "minecraftServerStatus", "dockerContainers",
+      "networkController", "firewallCpu", "firewallMemory", "firewallVersion",
+      "firewallInterfaces", "refreshNotifications", "weather", "timetable", "tracearr",
+    ];
+
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+    let isIdle = false;
+
+    const pauseIntegrationJobs = async () => {
+      if (isIdle) return;
+      isIdle = true;
+      logger.info("No active clients - pausing integration cron jobs");
+      for (const name of INTEGRATION_JOB_KEYS) {
+        await jobGroup.stopAsync(name);
+      }
+    };
+
+    const resumeIntegrationJobs = async () => {
+      if (!isIdle) return;
+      isIdle = false;
+      logger.info("Client connected - resuming integration cron jobs");
+      for (const name of INTEGRATION_JOB_KEYS) {
+        await jobGroup.startAsync(name);
+      }
+    };
+
+    // Start idle timer immediately - pause jobs if no client connects within grace period
+    idleTimer = setTimeout(() => {
+      idleTimer = null;
+      void pauseIntegrationJobs();
+    }, IDLE_GRACE_MS);
+
     wss.on("connection", (websocket, incomingMessage) => {
       logger.info(`Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
+
+      if (idleTimer !== null) {
+        clearTimeout(idleTimer);
+        idleTimer = null;
+      }
+      void resumeIntegrationJobs();
+
       websocket.once("close", (code, reason) => {
         logger.info(`Disconnected (${wss.clients.size}) ${code} ${reason.toString()}`);
+        if (wss.clients.size === 0) {
+          idleTimer = setTimeout(() => {
+            idleTimer = null;
+            void pauseIntegrationJobs();
+          }, IDLE_GRACE_MS);
+        }
       });
     });
 
     logger.info("WebSocket server listening on ws://localhost:3001");
 
     process.on("SIGTERM", () => {
+      if (idleTimer !== null) {
+        clearTimeout(idleTimer);
+      }
       wss.clients.forEach((ws) => ws.close());
       wss.close();
     });
