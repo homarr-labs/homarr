@@ -1,38 +1,43 @@
-// General integrations
-export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
-export { AnchorIntegration } from "./anchor/anchor-integration";
-export { Aria2Integration } from "./download-client/aria2/aria2-integration";
-export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
-export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
-export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
-export { SabnzbdIntegration } from "./download-client/sabnzbd/sabnzbd-integration";
-export { SlskdIntegration } from "./download-client/slskd/slskd-integration";
-export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
-export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
-export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
-export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
-export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
-export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
-export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
-export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
-export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
-export { NTFYIntegration } from "./ntfy/ntfy-integration";
-export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
-export { GlancesIntegration } from "./glances/glances-integration";
-export { OverseerrIntegration } from "./overseerr/overseerr-integration";
-export { SeerrIntegration } from "./seerr/seerr-integration";
-export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
-export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
-export { PlexIntegration } from "./plex/plex-integration";
-export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
-export { TrueNasIntegration } from "./truenas/truenas-integration";
-export { UnraidIntegration } from "./unraid/unraid-integration";
-export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
-export { ICalIntegration } from "./ical/ical-integration";
-export { CoolifyIntegration } from "./coolify/coolify-integration";
-export { ImmichIntegration } from "./immich/immich-integration";
-export { TracearrIntegration } from "./tracearr/tracearr-integration";
-export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
+// Integration class values are intentionally NOT re-exported here.
+// They are loaded lazily via createIntegrationAsync to avoid loading ~12K lines
+// of integration code at startup for integrations that are never used.
+// Type-only exports are kept for type-checking purposes.
+
+// Type-only exports (these are erased at runtime and don't trigger module loading)
+export type { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
+export type { AnchorIntegration } from "./anchor/anchor-integration";
+export type { Aria2Integration } from "./download-client/aria2/aria2-integration";
+export type { DelugeIntegration } from "./download-client/deluge/deluge-integration";
+export type { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
+export type { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
+export type { SabnzbdIntegration } from "./download-client/sabnzbd/sabnzbd-integration";
+export type { SlskdIntegration } from "./download-client/slskd/slskd-integration";
+export type { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
+export type { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
+export type { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
+export type { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
+export type { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
+export type { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
+export type { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
+export type { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
+export type { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
+export type { NTFYIntegration } from "./ntfy/ntfy-integration";
+export type { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
+export type { GlancesIntegration } from "./glances/glances-integration";
+export type { OverseerrIntegration } from "./overseerr/overseerr-integration";
+export type { SeerrIntegration } from "./seerr/seerr-integration";
+export type { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
+export type { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
+export type { PlexIntegration } from "./plex/plex-integration";
+export type { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
+export type { TrueNasIntegration } from "./truenas/truenas-integration";
+export type { UnraidIntegration } from "./unraid/unraid-integration";
+export type { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export type { ICalIntegration } from "./ical/ical-integration";
+export type { CoolifyIntegration } from "./coolify/coolify-integration";
+export type { ImmichIntegration } from "./immich/immich-integration";
+export type { TracearrIntegration } from "./tracearr/tracearr-integration";
+export type { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
