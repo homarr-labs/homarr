@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary } from "@homarr/integrations";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/create";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 

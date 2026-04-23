@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/create";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
