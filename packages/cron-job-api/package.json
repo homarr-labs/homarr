@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
     "./constants": "./src/constants.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./job-manager": "./src/job-manager.ts"
   },
   "typesVersions": {
     "*": {
@@ -28,6 +29,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
