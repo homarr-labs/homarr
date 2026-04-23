@@ -58,6 +58,7 @@ COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf
 
 
+ENV NODE_OPTIONS='--max-old-space-size=400 --expose-gc'
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'

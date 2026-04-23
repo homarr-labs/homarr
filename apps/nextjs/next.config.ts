@@ -26,9 +26,8 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
-   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
+  serverExternalPackages: ["dockerode"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,

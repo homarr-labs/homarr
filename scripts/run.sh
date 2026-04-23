@@ -41,7 +41,7 @@ else
     REDIS_PID=$!
 fi
 
-node apps/nextjs/server.js &
+node --max-old-space-size=400 --expose-gc apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services

@@ -1,10 +1,18 @@
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import DOMPurify from "isomorphic-dompurify";
 
 import { db, eq } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
+
+// Lightweight SVG sanitizer (This replaces DOMPurify!!)
+function sanitizeSvg(svg: string): string {
+  return svg
+    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+    .replace(/<foreignObject\b[\s\S]*?<\/foreignObject>/gi, "")
+    .replace(/\s+on[a-z][a-z0-9]*\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "")
+    .replace(/(href|xlink:href|src|action)\s*=\s*["']?\s*javascript:[^"'\s>]*/gi, '$1="#"');
+}
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -22,13 +30,9 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ id: stri
 
   let content = new Uint8Array(image.content);
 
-  // Sanitize SVG content to prevent XSS attacks
   if (image.contentType === "image/svg+xml" || image.contentType === "image/svg") {
     const svgText = new TextDecoder().decode(content);
-    const sanitized = DOMPurify.sanitize(svgText, {
-      USE_PROFILES: { svg: true, svgFilters: true },
-    });
-    content = new TextEncoder().encode(sanitized);
+    content = new TextEncoder().encode(sanitizeSvg(svgText));
   }
 
   const headers = new Headers();

@@ -66,5 +66,13 @@ export async function register() {
       wss.clients.forEach((ws) => ws.close());
       wss.close();
     });
+
+    // Hint V8 to collect garbage that accumulates from cron jobs and request handlers. 
+	// --expose-gc must be set in NODE_OPTIONS for this to work
+    if (typeof global.gc === "function") {
+      setInterval(() => {
+        global.gc?.();
+      }, 5 * 60 * 1000);
+    }
   }
 }
