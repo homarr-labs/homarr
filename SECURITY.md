@@ -20,8 +20,8 @@ As a general guideline; please provide as much detail as possible and provide re
 You may also provide a fork with a fix for the vulnerability.
 See https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html for guidelines regarding disclosure.
 
-If you're unable / unwilling (or it's not safe) to disclose vulnerabilites via GitHub, please report them with the subject "Security advisory - CVEXXX" to our email homarr-labs@proton.me.
-Please never disclose security vulnerabilits on your own publicly - we'd like to search for a dimplomatic solution that is also safe for our users.
+If you're unable / unwilling (or it's not safe) to disclose vulnerabilities via GitHub, please report them with the subject "Security advisory - CVEXXX" to our email homarr-labs@proton.me.
+Please never disclose security vulnerability on your own publicly - we'd like to search for a diplomatic solution that is also safe for our users.
 
 In your initial contact with us, please provide details according to the [OWASP guidelines for initial reports](https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html#initial-report).
 
