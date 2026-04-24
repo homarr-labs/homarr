@@ -87,13 +87,14 @@ export async function register() {
       }
     };
 
+    const exitProcess = process.exit;
     const scheduleRestart = async () => {
       const { enabled, gracePeriodMinutes } = await getServerSettingByKeyAsync(db, "idleRestart");
       if (!enabled) return;
       restartTimer = setTimeout(() => {
         restartTimer = null;
         logger.info(`No clients for ${gracePeriodMinutes} minutes - restarting process to free memory`);
-        process.exit(0);
+        exitProcess(0);
       }, gracePeriodMinutes * 60_000);
     };
 

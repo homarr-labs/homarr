@@ -39,11 +39,11 @@ import { serverDefinition as tracearr } from "./tracearr/definition";
 import { serverDefinition as video } from "./video/definition";
 import { serverDefinition as weather } from "./weather/definition";
 
-// These type-only re-exports are erased at runtime. no UI code is bundled.
-export type { inferSupportedIntegrationsStrict } from "./";
+// These type-only re-exports are erased at runtime — no UI code is bundled.
+export type { inferSupportedIntegrationsStrict } from ".";
 export type { WidgetComponentProps } from "./definition";
 
-type AnyServerDefinition = { createOptions: (settings?: any) => Record<string, { defaultValue: unknown }> };
+type AnyServerDefinition = { createOptions: (settings?: unknown) => Record<string, { defaultValue: unknown }> };
 
 const widgetServerImports: Record<WidgetKind, AnyServerDefinition> = {
   clock,
