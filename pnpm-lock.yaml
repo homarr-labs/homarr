@@ -754,6 +754,9 @@ importers:
       '@homarr/spotlight':
         specifier: workspace:^0.1.0
         version: link:../../packages/spotlight
+      '@homarr/tasks':
+        specifier: workspace:^0.1.0
+        version: link:../tasks
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../../packages/translation
@@ -763,6 +766,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
+      '@homarr/websocket':
+        specifier: workspace:^0.1.0
+        version: link:../websocket
       '@homarr/widgets':
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
