@@ -390,9 +390,6 @@ catalogs:
     ioredis:
       specifier: 5.10.1
       version: 5.10.1
-    isomorphic-dompurify:
-      specifier: ^3.9.0
-      version: 3.9.0
     jotai:
       specifier: ^2.19.1
       version: 2.19.1
@@ -841,9 +838,6 @@ importers:
       glob:
         specifier: 'catalog:'
         version: 13.0.6
-      isomorphic-dompurify:
-        specifier: 'catalog:'
-        version: 3.9.0(@noble/hashes@2.0.1)
       jotai:
         specifier: 'catalog:'
         version: 2.19.1(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.5)
@@ -6706,9 +6700,6 @@ packages:
   dompurify@3.3.3:
     resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
 
-  dompurify@3.4.0:
-    resolution: {integrity: sha512-nolgK9JcaUXMSmW+j1yaSvaEaoXYHwWyGJlkoCTghc97KgGDDSnpoU/PlEnw63Ah+TGKFOyY+X5LnxaWbCSfXg==}
-
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
@@ -7930,10 +7921,6 @@ packages:
   isexe@3.1.5:
     resolution: {integrity: sha512-6B3tLtFqtQS4ekarvLVMZ+X+VlvQekbe4taUkf/rhVO3d/h0M2rfARm/pXLcPEsjjMsFgrFgSrhQIxcSVrBz8w==}
     engines: {node: '>=18'}
-
-  isomorphic-dompurify@3.9.0:
-    resolution: {integrity: sha512-3REwJAnIqjWO7qbfyKWMBI7hUHFhqUor7weFG3WbJW6Enq3V7cx60QuurWjGUXxbX57Iy4RJIkAZFObAqiqpxw==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
 
   isomorphic-fetch@3.0.0:
     resolution: {integrity: sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==}
@@ -15097,10 +15084,6 @@ snapshots:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
-  dompurify@3.4.0:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
   dot-prop@5.3.0:
     dependencies:
       is-obj: 2.0.0
@@ -16425,14 +16408,6 @@ snapshots:
 
   isexe@3.1.5:
     optional: true
-
-  isomorphic-dompurify@3.9.0(@noble/hashes@2.0.1):
-    dependencies:
-      dompurify: 3.4.0
-      jsdom: 29.0.2(@noble/hashes@2.0.1)
-    transitivePeerDependencies:
-      - '@noble/hashes'
-      - canvas
 
   isomorphic-fetch@3.0.0:
     dependencies:

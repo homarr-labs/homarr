@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Ponovni pokretanje pri neaktivnosti",
+            "enabled": {
+              "label": "Omogući ponovni pokretanje pri neaktivnosti",
+              "description": "Automatski pokreće serverski proces iznova kada nema povezanih klijenata preglednika u konfiguriranom vremenskom periodu, oslobađajući memoriju korištenu učitanim modulima"
+            },
+            "gracePeriodMinutes": {
+              "label": "Period neaktivnosti (minute)",
+              "description": "Koliko minuta bez povezanih klijenata prije ponovnog pokretanja servera"
+            }
           }
         }
       },

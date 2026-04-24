@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Langue par défaut"
             }
+          },
+          "idleRestart": {
+            "title": "Redémarrage au repos",
+            "enabled": {
+              "label": "Activer le redémarrage au repos",
+              "description": "Redémarre automatiquement le processus serveur lorsqu'aucun client navigateur n'est connecté pendant la période configurée, libérant la mémoire utilisée par les modules chargés"
+            },
+            "gracePeriodMinutes": {
+              "label": "Période d'inactivité (minutes)",
+              "description": "Combien de minutes sans client connecté avant que le serveur redémarre"
+            }
           }
         }
       },

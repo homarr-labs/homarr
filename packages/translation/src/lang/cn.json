@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "默认语言"
             }
+          },
+          "idleRestart": {
+            "title": "空闲重启",
+            "enabled": {
+              "label": "启用空闲重启",
+              "description": "当没有浏览器客户端连接达到配置的时间后，自动重启服务器进程，释放已加载模块占用的内存"
+            },
+            "gracePeriodMinutes": {
+              "label": "空闲时间（分钟）",
+              "description": "在服务器重启之前，没有任何客户端连接的分钟数"
+            }
           }
         }
       },

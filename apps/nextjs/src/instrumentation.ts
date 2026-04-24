@@ -64,7 +64,9 @@ export async function register() {
       "firewallInterfaces", "refreshNotifications", "weather", "timetable", "tracearr",
     ];
 
+    const { getServerSettingByKeyAsync } = await import("@homarr/db/queries");
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
+    let restartTimer: ReturnType<typeof setTimeout> | null = null;
     let isIdle = false;
 
     const pauseIntegrationJobs = async () => {
@@ -85,28 +87,55 @@ export async function register() {
       }
     };
 
+    const scheduleRestart = async () => {
+      const { enabled, gracePeriodMinutes } = await getServerSettingByKeyAsync(db, "idleRestart");
+      if (!enabled) return;
+      restartTimer = setTimeout(() => {
+        restartTimer = null;
+        logger.info(`No clients for ${gracePeriodMinutes} minutes - restarting process to free memory`);
+        process.exit(0);
+      }, gracePeriodMinutes * 60_000);
+    };
+
     // Start idle timer immediately - pause jobs if no client connects within grace period
     idleTimer = setTimeout(() => {
       idleTimer = null;
       void pauseIntegrationJobs();
     }, IDLE_GRACE_MS);
+    void scheduleRestart();
+
+    let externalClients = 0;
+
+    const isLocalhost = (address: string | undefined) =>
+      address === "127.0.0.1" || address === "::1" || address === "::ffff:127.0.0.1";
 
     wss.on("connection", (websocket, incomingMessage) => {
-      logger.info(`Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
+      const remote = incomingMessage.socket.remoteAddress;
+      const external = !isLocalhost(remote);
+      if (external) externalClients++;
+      logger.info(`Connection (external=${externalClients}) ${remote} ${incomingMessage.method} ${incomingMessage.url}`);
 
-      if (idleTimer !== null) {
-        clearTimeout(idleTimer);
-        idleTimer = null;
+      if (external) {
+        if (idleTimer !== null) {
+          clearTimeout(idleTimer);
+          idleTimer = null;
+        }
+        if (restartTimer !== null) {
+          clearTimeout(restartTimer);
+          restartTimer = null;
+        }
+        void resumeIntegrationJobs();
       }
-      void resumeIntegrationJobs();
 
       websocket.once("close", (code, reason) => {
-        logger.info(`Disconnected (${wss.clients.size}) ${code} ${reason.toString()}`);
-        if (wss.clients.size === 0) {
+        if (external) externalClients--;
+        logger.info(`Disconnected (external=${externalClients}) ${code} ${reason.toString()}`);
+        if (external && externalClients === 0) {
           idleTimer = setTimeout(() => {
             idleTimer = null;
             void pauseIntegrationJobs();
           }, IDLE_GRACE_MS);
+          void scheduleRestart();
         }
       });
     });
@@ -114,15 +143,15 @@ export async function register() {
     logger.info("WebSocket server listening on ws://localhost:3001");
 
     process.on("SIGTERM", () => {
-      if (idleTimer !== null) {
-        clearTimeout(idleTimer);
-      }
+      if (idleTimer !== null) clearTimeout(idleTimer);
+      if (restartTimer !== null) clearTimeout(restartTimer);
       wss.clients.forEach((ws) => ws.close());
       wss.close();
     });
 
-    // Hint V8 to collect garbage that accumulates from cron jobs and request handlers. 
-	// --expose-gc must be set in NODE_OPTIONS for this to work
+    // Periodically hint V8 to collect garbage that accumulates from cron jobs and
+    // request handlers. --expose-gc must be set in NODE_OPTIONS for this to work;
+    // if not available it is silently skipped.
     if (typeof global.gc === "function") {
       setInterval(() => {
         global.gc?.();

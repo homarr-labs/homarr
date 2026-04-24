@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Standardsprog"
             }
+          },
+          "idleRestart": {
+            "title": "Genstart ved inaktivitet",
+            "enabled": {
+              "label": "Aktiver genstart ved inaktivitet",
+              "description": "Genstarter automatisk serverprocessen, når ingen browserklienter har været forbundet i den konfigurerede periode, og frigør hukommelse brugt af indlæste moduler"
+            },
+            "gracePeriodMinutes": {
+              "label": "Inaktivitetsperiode (minutter)",
+              "description": "Hvor mange minutter uden forbundne klienter, før serveren genstarter"
+            }
           }
         }
       },

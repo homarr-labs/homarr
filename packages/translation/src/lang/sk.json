@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Predvolený jazyk"
             }
+          },
+          "idleRestart": {
+            "title": "Reštart pri nečinnosti",
+            "enabled": {
+              "label": "Povoliť reštart pri nečinnosti",
+              "description": "Automaticky reštartuje serverový proces, keď nie sú počas nakonfigurovaného obdobia pripojení žiadni klienti prehliadača, a uvoľní pamäť používanú načítanými modulmi"
+            },
+            "gracePeriodMinutes": {
+              "label": "Obdobie nečinnosti (minúty)",
+              "description": "Koľko minút bez pripojených klientov pred reštartom servera"
+            }
           }
         }
       },

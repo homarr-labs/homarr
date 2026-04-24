@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Reinici per inactivitat",
+            "enabled": {
+              "label": "Activa el reinici per inactivitat",
+              "description": "Reinicia automàticament el procés del servidor quan no hi ha cap client del navegador connectat durant el període configurat, alliberant la memòria utilitzada pels mòduls carregats"
+            },
+            "gracePeriodMinutes": {
+              "label": "Període d'inactivitat (minuts)",
+              "description": "Quants minuts sense cap client connectat abans que el servidor es reiniciï"
+            }
           }
         }
       },

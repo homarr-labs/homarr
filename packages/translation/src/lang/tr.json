@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Öntanımlı Dil"
             }
+          },
+          "idleRestart": {
+            "title": "Boşta yeniden başlatma",
+            "enabled": {
+              "label": "Boşta yeniden başlatmayı etkinleştir",
+              "description": "Yapılandırılan süre boyunca hiçbir tarayıcı istemcisi bağlı olmadığında sunucu işlemini otomatik olarak yeniden başlatır ve yüklenen modüller tarafından kullanılan belleği serbest bırakır"
+            },
+            "gracePeriodMinutes": {
+              "label": "Boşta kalma süresi (dakika)",
+              "description": "Sunucu yeniden başlatılmadan önce bağlı istemci olmaksızın geçecek dakika sayısı"
+            }
           }
         }
       },

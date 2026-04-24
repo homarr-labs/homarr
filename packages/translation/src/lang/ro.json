@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Repornire la inactivitate",
+            "enabled": {
+              "label": "Activați repornirea la inactivitate",
+              "description": "Repornește automat procesul serverului când niciun client browser nu a fost conectat pentru perioada configurată, eliberând memoria folosită de modulele încărcate"
+            },
+            "gracePeriodMinutes": {
+              "label": "Perioadă de inactivitate (minute)",
+              "description": "Câte minute fără clienți conectați înainte ca serverul să repornească"
+            }
           }
         }
       },

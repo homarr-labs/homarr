@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Standardsprache"
             }
+          },
+          "idleRestart": {
+            "title": "Neustart bei Inaktivität",
+            "enabled": {
+              "label": "Neustart bei Inaktivität aktivieren",
+              "description": "Startet den Serverprozess automatisch neu, wenn für den konfigurierten Zeitraum keine Browser-Clients verbunden waren, und gibt den von geladenen Modulen verwendeten Speicher frei"
+            },
+            "gracePeriodMinutes": {
+              "label": "Inaktivitätszeitraum (Minuten)",
+              "description": "Wie viele Minuten ohne verbundene Clients vergehen, bevor der Server neu startet"
+            }
           }
         }
       },

@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Idioma predeterminado"
             }
+          },
+          "idleRestart": {
+            "title": "Reinicio por inactividad",
+            "enabled": {
+              "label": "Habilitar reinicio por inactividad",
+              "description": "Reinicia automáticamente el proceso del servidor cuando no hay clientes del navegador conectados durante el período configurado, liberando la memoria utilizada por los módulos cargados"
+            },
+            "gracePeriodMinutes": {
+              "label": "Período de inactividad (minutos)",
+              "description": "Cuántos minutos sin clientes conectados antes de que el servidor se reinicie"
+            }
           }
         }
       },

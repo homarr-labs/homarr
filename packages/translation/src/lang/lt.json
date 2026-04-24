@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Paleidimas iš naujo neaktyvumo metu",
+            "enabled": {
+              "label": "Įjungti paleidimą iš naujo neaktyvumo metu",
+              "description": "Automatiškai paleidžia serverio procesą iš naujo, kai per nustatytą laikotarpį nėra prijungtų naršyklės klientų, atlaisvinant atmintį, naudojamą įkeltų modulių"
+            },
+            "gracePeriodMinutes": {
+              "label": "Neaktyvumo laikotarpis (minutės)",
+              "description": "Kiek minučių be prijungtų klientų prieš serverio paleidimą iš naujo"
+            }
           }
         }
       },

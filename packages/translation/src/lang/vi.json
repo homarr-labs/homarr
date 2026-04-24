@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Khởi động lại khi nhàn rỗi",
+            "enabled": {
+              "label": "Bật khởi động lại khi nhàn rỗi",
+              "description": "Tự động khởi động lại tiến trình máy chủ khi không có máy khách trình duyệt nào được kết nối trong khoảng thời gian đã cấu hình, giải phóng bộ nhớ được sử dụng bởi các mô-đun đã tải"
+            },
+            "gracePeriodMinutes": {
+              "label": "Thời gian nhàn rỗi (phút)",
+              "description": "Bao nhiêu phút không có máy khách kết nối trước khi máy chủ khởi động lại"
+            }
           }
         }
       },
