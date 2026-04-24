@@ -2080,20 +2080,20 @@
       },
       "recentActivity": {
         "title": "Ostatnia aktywność",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "empty": "Brak ostatniej aktywności",
+        "watched": "Obejrzane",
+        "partial": "Częściowo"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Naruszenia",
+        "empty": "Brak ostatnich naruszeń",
+        "rule": "Reguła",
+        "user": "Użytkownik"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Brak włączonych sekcji",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Brak skonfigurowanej integracji Tracearr",
+        "internalServerError": "Nie udało się pobrać danych z Tracearr"
       }
     },
     "common": {
@@ -2192,50 +2192,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Statystyki serwera Immich",
+      "description": "Informacje o Twojej instancji Immich",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż użytkowników",
+          "description": "Pokaż liczbę użytkowników w Twojej instancji"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż zdjęcia",
+          "description": "Pokaż liczbę zdjęć w Twojej instancji"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż filmy",
+          "description": "Pokaż liczbę filmów w Twojej instancji"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż wykorzystanie pamięci",
+          "description": "Pokaż całkowite wykorzystanie pamięci"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Użytkownicy",
+      "photos": "Zdjęcia",
+      "videos": "Filmy",
+      "storage": "Wykorzystana przestrzeń"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Album Immich",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "ID albumu",
+          "description": "To unikalny identyfikator odnoszący się do Twojego albumu w Immich. Możesz go znaleźć, otwierając album i kopiując unikalny ciąg znaków z adresu URL, np. „a21aca09-9f05-47dc-b1a1-7b53c547226e”."
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interwał w sekundach",
+          "description": "Zmieniaj zdjęcia w albumie co X sekund. Wartość musi wynosić co najmniej 1 i mniej niż 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż informacje o zdjęciu",
+          "description": "Wyświetl datę zdjęcia oraz bieżący indeks na dole pokazu slajdów"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Pokaz slajdów zdjęć z Twojego albumu w Immich",
+      "noAlbumSelected": "Nie wybrano albumu. Edytuj widget i wybierz album",
+      "noPhotos": "Brak zdjęć w tym albumie"
     },
     "downloads": {
       "name": "Klient pobierania",
@@ -2488,8 +2488,8 @@
         "title": "Ocena stanu zdrowia",
         "queued": "W kolejce",
         "status": {
-          "healthy": "Zdrowy",
-          "unhealthy": "Niezdrowy"
+          "healthy": "Dobry",
+          "unhealthy": "Zły"
         }
       },
       "panel": {
@@ -2546,7 +2546,7 @@
           "label": "Ukryj opis"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Pokaż obraz okładki"
         }
       }
     },
@@ -2761,42 +2761,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Pokaż ostatni wynik"
         },
         "showStats": {
-          "label": ""
+          "label": "Pokaż średnie"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Pokaż ostatnie wyniki"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Pokaż wykres pingu"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Najnowszy wynik",
+      "averages": "Średnie",
+      "tests": "{count} testów",
+      "recentResults": "Ostatnie wyniki",
+      "recentResultsSpeed": "Prędkość",
+      "recentResultsPing": "Ping",
+      "download": "Pobieranie",
+      "upload": "Wysyłanie",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Średnie pobieranie",
+      "avgUpload": "Średnie wysyłanie",
+      "avgPing": "Średni ping",
+      "healthy": "Dobry",
+      "unhealthy": "Zły",
+      "ok": "Ok",
+      "fail": "Błąd",
+      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać danych testu prędkości"
       }
     },
     "systemResources": {
@@ -2812,7 +2812,7 @@
           "option": {
             "cpu": "Procesor",
             "memory": "Pamięć",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Sieć"
           }
         },
@@ -2829,39 +2829,39 @@
       "card": {
         "cpu": "Procesor",
         "memory": "Pamięć",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "Sieć",
         "up": "Aktywny",
         "down": "Nieaktywny"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Dyski systemowe",
+      "description": "Wykorzystanie dysku w Twoim systemie",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Pokaż temperaturę, jeśli jest dostępna"
         },
         "displayMode": {
-          "label": "",
+          "label": "Tryb wyświetlania",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Procentowo (np. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Wartości bezwzględne (np. 800 GB / 1 TB)"
             },
             "free": {
-              "label": ""
+              "label": "Procent wolnego miejsca (np. 24% wolne)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Pokaż pasek wykorzystania w tle"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Zły"
       }
     }
   },
@@ -3550,10 +3550,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Użytkownicy",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Włącz Gravatar",
+              "description": "Używa awatarów z Libravatar/Gravatar, gdy nie ustawiono własnego awatara i skonfigurowano adres e-mail"
             }
           },
           "search": {
@@ -3595,7 +3595,7 @@
               "label": "Status serwera Minecraft"
             },
             "timetable": {
-              "label": ""
+              "label": "Harmonogram"
             },
             "iconsUpdater": {
               "label": "Aktualizator ikon"
@@ -3667,7 +3667,7 @@
               "label": "Pogoda"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
