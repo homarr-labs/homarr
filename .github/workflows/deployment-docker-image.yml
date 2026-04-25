@@ -270,10 +270,3 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
           gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
-
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
