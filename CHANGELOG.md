@@ -1,3 +1,15 @@
+## [1.59.3](https://github.com/homarr-labs/homarr/compare/v1.59.2...v1.59.3) (2026-04-24)
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.9.0 ([#5531](https://github.com/homarr-labs/homarr/issues/5531)) ([7852f1d](https://github.com/homarr-labs/homarr/commit/7852f1d987d40707ae13494f9c934a563581f97f))
+
+## [1.59.3](https://github.com/homarr-labs/homarr/compare/v1.59.2...v1.59.3) (2026-04-24)
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.9.0 ([#5531](https://github.com/homarr-labs/homarr/issues/5531)) ([7852f1d](https://github.com/homarr-labs/homarr/commit/7852f1d987d40707ae13494f9c934a563581f97f))
+
 ## [1.59.2](https://github.com/homarr-labs/homarr/compare/v1.59.1...v1.59.2) (2026-04-17)
 
 ### Bug Fixes

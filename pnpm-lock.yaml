@@ -130,14 +130,14 @@ catalogs:
       specifier: ^3.41.1
       version: 3.41.1
     '@tanstack/react-query':
-      specifier: ^5.99.0
-      version: 5.99.0
+      specifier: ^5.99.1
+      version: 5.99.2
     '@tanstack/react-query-devtools':
-      specifier: ^5.99.0
-      version: 5.99.0
+      specifier: ^5.99.1
+      version: 5.99.2
     '@tanstack/react-query-next-experimental':
-      specifier: ^5.99.0
-      version: 5.99.0
+      specifier: ^5.99.1
+      version: 5.99.2
     '@testcontainers/mysql':
       specifier: ^11.14.0
       version: 11.14.0
@@ -298,8 +298,8 @@ catalogs:
       specifier: ^6.0.0
       version: 6.0.0
     better-sqlite3:
-      specifier: ^12.8.0
-      version: 12.8.0
+      specifier: ^12.9.0
+      version: 12.9.0
     chroma-js:
       specifier: ^3.2.0
       version: 3.2.0
@@ -376,7 +376,7 @@ catalogs:
       specifier: ^6.1.1
       version: 6.1.1
     fast-xml-parser:
-      specifier: ^5.7.0
+      specifier: ^5.7.1
       version: 5.7.1
     flag-icons:
       specifier: ^7.5.0
@@ -415,8 +415,8 @@ catalogs:
       specifier: ^0.4.1
       version: 0.4.1
     mysql2:
-      specifier: 3.22.1
-      version: 3.22.1
+      specifier: 3.22.2
+      version: 3.22.2
     next:
       specifier: 16.2.4
       version: 16.2.4
@@ -556,7 +556,7 @@ catalogs:
 overrides:
   '@babel/helpers@<7.26.10': '>=7.29.2'
   '@babel/runtime@<7.26.10': '>=7.29.2'
-  axios@>=1.0.0 <1.8.2: '>=1.15.0'
+  axios@>=1.0.0 <1.8.2: '>=1.15.1'
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.5'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.5'
   esbuild@<=0.24.2: '>=0.28.0'
@@ -567,12 +567,12 @@ overrides:
   prismjs@<1.30.0: '>=1.30.0'
   proxmox-api>undici: 7.24.6
   react-is: ^19.2.5
-  rollup@>=4.0.0 <4.22.4: '>=4.60.1'
+  rollup@>=4.0.0 <4.22.4: '>=4.60.2'
   sha.js@<=2.4.11: '>=2.4.12'
   tar-fs@>=3.0.0 <3.0.9: '>=3.1.2'
   tar-fs@>=2.0.0 <2.1.3: '>=3.1.2'
   tmp@<=0.2.3: '>=0.2.5'
-  vite@>=5.0.0 <=5.4.18: '>=8.0.8'
+  vite@>=5.0.0 <=5.4.18: '>=8.0.9'
 
 patchedDependencies:
   '@types/node-unifi':
@@ -789,22 +789,22 @@ importers:
         version: 3.41.1(react@19.2.5)
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.99.0(react@19.2.5)
+        version: 5.99.2(react@19.2.5)
       '@tanstack/react-query-devtools':
         specifier: 'catalog:'
-        version: 5.99.0(@tanstack/react-query@5.99.0(react@19.2.5))(react@19.2.5)
+        version: 5.99.2(@tanstack/react-query@5.99.2(react@19.2.5))(react@19.2.5)
       '@tanstack/react-query-next-experimental':
         specifier: 'catalog:'
-        version: 5.99.0(@tanstack/react-query@5.99.0(react@19.2.5))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react@19.2.5)
+        version: 5.99.2(@tanstack/react-query@5.99.2(react@19.2.5))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react@19.2.5)
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/next':
         specifier: 'catalog:'
-        version: 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/react-query@11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)
+        version: 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/react-query@11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)
       '@trpc/react-query':
         specifier: 'catalog:'
-        version: 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
+        version: 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.16.0(typescript@5.9.3)
@@ -1037,19 +1037,19 @@ importers:
         version: 1.4.0
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.99.0(react@19.2.5)
+        version: 5.99.2(react@19.2.5)
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/react-query':
         specifier: 'catalog:'
-        version: 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
+        version: 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.16.0(typescript@5.9.3)
       '@trpc/tanstack-react-query':
         specifier: 'catalog:'
-        version: 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
+        version: 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
       lodash.clonedeep:
         specifier: 'catalog:'
         version: 4.5.0
@@ -1291,19 +1291,19 @@ importers:
         version: 0.13.11(arktype@2.1.20)(typescript@5.9.3)(zod@4.3.6)
       better-sqlite3:
         specifier: 'catalog:'
-        version: 12.8.0
+        version: 12.9.0
       dns-caching:
         specifier: 'catalog:'
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0)
       ioredis:
         specifier: 'catalog:'
         version: 5.10.1
       mysql2:
         specifier: 'catalog:'
-        version: 3.22.1(@types/node@24.12.2)
+        version: 3.22.2(@types/node@24.12.2)
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -1355,7 +1355,7 @@ importers:
         version: link:../db
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.99.0(react@19.2.5)
+        version: 5.99.2(react@19.2.5)
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
@@ -1364,7 +1364,7 @@ importers:
         version: 11.16.0(typescript@5.9.3)
       '@trpc/tanstack-react-query':
         specifier: 'catalog:'
-        version: 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
+        version: 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
       node-cron:
         specifier: 'catalog:'
         version: 4.2.1
@@ -1554,7 +1554,7 @@ importers:
         version: 11.14.0
       better-sqlite3:
         specifier: 'catalog:'
-        version: 12.8.0
+        version: 12.9.0
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
@@ -1563,13 +1563,13 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0))(zod@4.3.6)
+        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0))(zod@4.3.6)
       mysql2:
         specifier: 'catalog:'
-        version: 3.22.1(@types/node@24.12.2)
+        version: 3.22.2(@types/node@24.12.2)
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -4272,9 +4272,6 @@ packages:
     resolution: {integrity: sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==}
     engines: {node: '>= 20.19.0'}
 
-  '@nodable/entities@1.1.0':
-    resolution: {integrity: sha512-bidpxmTBP0pOsxULw6XlxzQpTgrAGLDHGBK/JuWhPDL6ZV0GZ/PmN9CA9do6e+A9lYI6qx6ikJUtJYRxup141g==}
-
   '@nodable/entities@2.1.0':
     resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
 
@@ -4550,7 +4547,7 @@ packages:
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: '>=4.60.1'
+      rollup: '>=4.60.2'
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -5022,27 +5019,27 @@ packages:
     resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
     engines: {node: '>=12'}
 
-  '@tanstack/query-core@5.99.0':
-    resolution: {integrity: sha512-3Jv3WQG0BCcH7G+7lf/bP8QyBfJOXeY+T08Rin3GZ1bshvwlbPt7NrDHMEzGdKIOmOzvIQmxjk28YEQX60k7pQ==}
+  '@tanstack/query-core@5.99.2':
+    resolution: {integrity: sha512-1HunU0bXVsR1ZJMZbcOPE6VtaBJxsW809RE9xPe4Gz7MlB0GWwQvuTPhMoEmQ/hIzFKJ/DWAuttIe7BOaWx0tA==}
 
-  '@tanstack/query-devtools@5.99.0':
-    resolution: {integrity: sha512-m4ufXaJ8FjWXw7xDtyzE/6fkZAyQFg9WrbMrUpt8ZecRJx58jiFOZ2lxZMphZdIpAnIeto/S8stbwLKLusyckQ==}
+  '@tanstack/query-devtools@5.99.2':
+    resolution: {integrity: sha512-TEF1d+RYO9l8oeCwgzmOHIgKwAzXQmw2s/ny2bW8qeg2OMkkLjALfVEivgCMR3OL/jVdMmeTPX56WrV+uvYJFg==}
 
-  '@tanstack/react-query-devtools@5.99.0':
-    resolution: {integrity: sha512-CqqX7LCU9yOfCY/vBURSx2YSD83ryfX+QkfkaKionTfg1s2Hdm572Ro99gW3QPoJjzvsj1HM4pnN4nbDy3MXKA==}
+  '@tanstack/react-query-devtools@5.99.2':
+    resolution: {integrity: sha512-8txkK9A9XBNTB8RoxVgfp6W3qwBr25tNP10L4yu3KuyhAdEvccECfIRzesSwMVk/wpVVioAr+hbMtUkMMF+WVw==}
     peerDependencies:
-      '@tanstack/react-query': ^5.99.0
+      '@tanstack/react-query': ^5.99.2
       react: ^18 || ^19
 
-  '@tanstack/react-query-next-experimental@5.99.0':
-    resolution: {integrity: sha512-jPKWMKb4LXpsApNoirMCazUEXe1lK3WobVlSgoCIRkygBTzrYw16A4wQubY1vzERp3js55Fqfl+UI0JdVxpCdw==}
+  '@tanstack/react-query-next-experimental@5.99.2':
+    resolution: {integrity: sha512-UarMaRNtIO3PF/KhZaJyxoKuqWLx9VjalgVd30svOlxjVyz9cRgZrr8H5xnFsfSPJkk/KZ/nedmN5cRf9jBwvw==}
     peerDependencies:
-      '@tanstack/react-query': ^5.99.0
+      '@tanstack/react-query': ^5.99.2
       next: ^13 || ^14 || ^15 || ^16
       react: ^18 || ^19
 
-  '@tanstack/react-query@5.99.0':
-    resolution: {integrity: sha512-OY2bCqPemT1LlqJ8Y2CUau4KELnIhhG9Ol3ZndPbdnB095pRbPo1cHuXTndg8iIwtoHTgwZjyaDnQ0xD0mYwAw==}
+  '@tanstack/react-query@5.99.2':
+    resolution: {integrity: sha512-vM91UEe45QUS9ED6OklsVL15i8qKcRqNwpWzPTVWvRPRSEgDudDgHpvyTjcdlwHcrKNa80T+xXYcchT2noPnZA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -5693,7 +5690,7 @@ packages:
     resolution: {integrity: sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: '>=8.0.8'
+      vite: '>=8.0.9'
 
   '@vitest/coverage-v8@4.1.4':
     resolution: {integrity: sha512-x7FptB5oDruxNPDNY2+S8tCh0pcq7ymCe1gTHcsp733jYjrJl8V1gMUlVysuCD9Kz46Xz9t1akkv08dPcYDs1w==}
@@ -6095,8 +6092,8 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-sqlite3@12.8.0:
-    resolution: {integrity: sha512-RxD2Vd96sQDjQr20kdP+F+dK/1OUNiVOl200vKBZY8u0vTwysfolF6Hq+3ZK2+h8My9YvZhHsF+RSGZW2VYrPQ==}
+  better-sqlite3@12.9.0:
+    resolution: {integrity: sha512-wqUv4Gm3toFpHDQmaKD4QhZm3g1DjUBI0yzS4UBl6lElUmXFYdTQmmEDpAFa5o8FiFiymURypEnfVHzILKaxqQ==}
     engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x}
 
   bidi-js@1.0.3:
@@ -7203,15 +7200,8 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-builder@1.1.4:
-    resolution: {integrity: sha512-f2jhpN4Eccy0/Uz9csxh3Nu6q4ErKxf0XIsasomfOihuSUa3/xw6w8dnOtCDgEItQFJG8KyXPzQXzcODDrrbOg==}
-
   fast-xml-builder@1.1.5:
     resolution: {integrity: sha512-4TJn/8FKLeslLAH3dnohXqE3QSoxkhvaMzepOIZytwJXZO69Bfz0HBdDHzOTOon6G59Zrk6VQ2bEiv1t61rfkA==}
-
-  fast-xml-parser@5.6.0:
-    resolution: {integrity: sha512-5G+uaEBbOm9M4dgMOV3K/rBzfUNGqGqoUTaYJM3hBwM8t71w07gxLQZoTsjkY8FtfjabqgQHEkeIySBDYeBmJw==}
-    hasBin: true
 
   fast-xml-parser@5.7.1:
     resolution: {integrity: sha512-8Cc3f8GUGUULg34pBch/KGyPLglS+OFs05deyOlY7fL2MTagYPKrVQNmR1fLF/yJ9PH5ZSTd3YDF6pnmeZU+zA==}
@@ -8467,8 +8457,8 @@ packages:
     engines: {node: '>=8', npm: '>=5'}
     hasBin: true
 
-  mysql2@3.22.1:
-    resolution: {integrity: sha512-48+9UXehKyxxiP2pqCxUq+MSFvX+v41jwsSpFDQO/jAoFuAELutBGJUhWJnDbe82/OBlIhSBMC82WeonmznT/Q==}
+  mysql2@3.22.2:
+    resolution: {integrity: sha512-snC/L6YoCJPFpozZo3p3hiOlt9ItQ7sCnLSziFLlIttEzsPhrdcPT8g21BiQ7Oqif25W4Xq1IFuBzBvoFYDf0Q==}
     engines: {node: '>= 8.0'}
     peerDependencies:
       '@types/node': '>= 8'
@@ -10605,7 +10595,7 @@ packages:
   vite-tsconfig-paths@6.1.1:
     resolution: {integrity: sha512-2cihq7zliibCCZ8P9cKJrQBkfgdvcFkOOc3Y02o3GWUDLgqjWsZudaoiuOwO/gzTzy17cS5F7ZPo4bsnS4DGkg==}
     peerDependencies:
-      vite: '>=8.0.8'
+      vite: '>=8.0.9'
 
   vite@7.1.12:
     resolution: {integrity: sha512-ZWyE8YXEXqJrrSLvYgrRP7p62OziLW7xI5HYGWFzOvupfAlrLvURSzv/FyGyy0eidogEM3ujU+kUG1zuHgb6Ug==}
@@ -11639,7 +11629,7 @@ snapshots:
     dependencies:
       '@ndaidong/bellajs': 12.0.1
       cross-fetch: 4.1.0
-      fast-xml-parser: 5.6.0
+      fast-xml-parser: 5.7.1
       html-entities: 2.6.0
     transitivePeerDependencies:
       - encoding
@@ -12271,8 +12261,6 @@ snapshots:
     optional: true
 
   '@noble/hashes@2.0.1': {}
-
-  '@nodable/entities@1.1.0': {}
 
   '@nodable/entities@2.1.0': {}
 
@@ -13270,25 +13258,25 @@ snapshots:
     dependencies:
       remove-accents: 0.5.0
 
-  '@tanstack/query-core@5.99.0': {}
+  '@tanstack/query-core@5.99.2': {}
 
-  '@tanstack/query-devtools@5.99.0': {}
+  '@tanstack/query-devtools@5.99.2': {}
 
-  '@tanstack/react-query-devtools@5.99.0(@tanstack/react-query@5.99.0(react@19.2.5))(react@19.2.5)':
+  '@tanstack/react-query-devtools@5.99.2(@tanstack/react-query@5.99.2(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@tanstack/query-devtools': 5.99.0
-      '@tanstack/react-query': 5.99.0(react@19.2.5)
+      '@tanstack/query-devtools': 5.99.2
+      '@tanstack/react-query': 5.99.2(react@19.2.5)
       react: 19.2.5
 
-  '@tanstack/react-query-next-experimental@5.99.0(@tanstack/react-query@5.99.0(react@19.2.5))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react@19.2.5)':
+  '@tanstack/react-query-next-experimental@5.99.2(@tanstack/react-query@5.99.2(react@19.2.5))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react@19.2.5)':
     dependencies:
-      '@tanstack/react-query': 5.99.0(react@19.2.5)
+      '@tanstack/react-query': 5.99.2(react@19.2.5)
       next: 16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0)
       react: 19.2.5
 
-  '@tanstack/react-query@5.99.0(react@19.2.5)':
+  '@tanstack/react-query@5.99.2(react@19.2.5)':
     dependencies:
-      '@tanstack/query-core': 5.99.0
+      '@tanstack/query-core': 5.99.2
       react: 19.2.5
 
   '@tanstack/react-table@8.20.5(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
@@ -13567,7 +13555,7 @@ snapshots:
       '@trpc/server': 11.16.0(typescript@5.9.3)
       typescript: 5.9.3
 
-  '@trpc/next@11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/react-query@11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)':
+  '@trpc/next@11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/react-query@11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(next@16.2.4(@babel/core@7.26.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)':
     dependencies:
       '@trpc/client': 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/server': 11.16.0(typescript@5.9.3)
@@ -13576,12 +13564,12 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       typescript: 5.9.3
     optionalDependencies:
-      '@tanstack/react-query': 5.99.0(react@19.2.5)
-      '@trpc/react-query': 11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
+      '@tanstack/react-query': 5.99.2(react@19.2.5)
+      '@trpc/react-query': 11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)
 
-  '@trpc/react-query@11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)':
+  '@trpc/react-query@11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)':
     dependencies:
-      '@tanstack/react-query': 5.99.0(react@19.2.5)
+      '@tanstack/react-query': 5.99.2(react@19.2.5)
       '@trpc/client': 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/server': 11.16.0(typescript@5.9.3)
       react: 19.2.5
@@ -13591,9 +13579,9 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@trpc/tanstack-react-query@11.16.0(@tanstack/react-query@5.99.0(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)':
+  '@trpc/tanstack-react-query@11.16.0(@tanstack/react-query@5.99.2(react@19.2.5))(@trpc/client@11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.16.0(typescript@5.9.3))(react@19.2.5)(typescript@5.9.3)':
     dependencies:
-      '@tanstack/react-query': 5.99.0(react@19.2.5)
+      '@tanstack/react-query': 5.99.2(react@19.2.5)
       '@trpc/client': 11.16.0(@trpc/server@11.16.0(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/server': 11.16.0(typescript@5.9.3)
       react: 19.2.5
@@ -14494,7 +14482,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-sqlite3@12.8.0:
+  better-sqlite3@12.9.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -15114,19 +15102,19 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0):
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.20.0
-      better-sqlite3: 12.8.0
+      better-sqlite3: 12.9.0
       gel: 2.0.0
-      mysql2: 3.22.1(@types/node@24.12.2)
+      mysql2: 3.22.2(@types/node@24.12.2)
       pg: 8.20.0
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0))(zod@4.3.6):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0))(zod@4.3.6):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.8.0)(gel@2.0.0)(mysql2@3.22.1(@types/node@24.12.2))(pg@8.20.0)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.2(@types/node@24.12.2))(pg@8.20.0)
       zod: 4.3.6
 
   dunder-proto@1.0.1:
@@ -15710,20 +15698,9 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-builder@1.1.4:
-    dependencies:
-      path-expression-matcher: 1.5.0
-
   fast-xml-builder@1.1.5:
     dependencies:
       path-expression-matcher: 1.5.0
-
-  fast-xml-parser@5.6.0:
-    dependencies:
-      '@nodable/entities': 1.1.0
-      fast-xml-builder: 1.1.4
-      path-expression-matcher: 1.5.0
-      strnum: 2.2.3
 
   fast-xml-parser@5.7.1:
     dependencies:
@@ -17071,7 +17048,7 @@ snapshots:
       '@babel/runtime': 7.29.2
       global: 4.4.0
 
-  mysql2@3.22.1(@types/node@24.12.2):
+  mysql2@3.22.2(@types/node@24.12.2):
     dependencies:
       '@types/node': 24.12.2
       aws-ssl-profiles: 1.1.2
