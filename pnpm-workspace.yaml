@@ -98,8 +98,8 @@ catalog:
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
   "@vitejs/plugin-react": ^5.2.0
-  "@vitest/coverage-v8": ^4.1.4
-  "@vitest/ui": ^4.1.4
+  "@vitest/coverage-v8": ^4.1.5
+  "@vitest/ui": ^4.1.5
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
@@ -185,7 +185,7 @@ catalog:
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.4
+  vitest: ^4.1.5
   winston: 3.19.0
   ws: ^8.20.0
   xml2js: ^0.6.2
