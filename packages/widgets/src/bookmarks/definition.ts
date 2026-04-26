@@ -17,9 +17,9 @@ export const serverDefinition = {
       openNewTab: factory.switch({ defaultValue: true }),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       items: factory.sortableItemList<any, string>({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment
         ItemComponent: null as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment
         AddButton: null as any,
         uniqueIdentifier: (item: { id: string }) => item.id,
         useData: () => ({ data: undefined, isLoading: false, error: null }),

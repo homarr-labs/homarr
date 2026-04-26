@@ -43,7 +43,7 @@ import { serverDefinition as weather } from "./weather/definition";
 export type { inferSupportedIntegrationsStrict } from ".";
 export type { WidgetComponentProps } from "./definition";
 
-type AnyServerDefinition = { createOptions: (settings?: unknown) => Record<string, { defaultValue: unknown }> };
+interface AnyServerDefinition { createOptions: (settings?: unknown) => Record<string, { defaultValue: unknown }> }
 
 const widgetServerImports: Record<WidgetKind, AnyServerDefinition> = {
   clock,

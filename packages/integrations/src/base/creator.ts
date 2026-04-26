@@ -53,7 +53,7 @@ import type { Integration, IntegrationInput } from "./integration";
 
 type IntegrationConstructor = new (integration: IntegrationInput) => Integration;
 
-type IntegrationCreatorsMap = {
+interface IntegrationCreatorsMap {
   anchor: new (input: IntegrationInput) => AnchorIntegration;
   piHole: [(input: IntegrationInput) => Promise<PiHoleIntegrationV5 | PiHoleIntegrationV6>];
   adGuardHome: new (input: IntegrationInput) => AdGuardHomeIntegration;
@@ -117,6 +117,7 @@ type AnyCreator = IntegrationConstructor | [(input: IntegrationInput) => Promise
 
 const integrationLoaders: Record<IntegrationKind, () => Promise<AnyCreator>> = {
   anchor: () => import("../anchor/anchor-integration").then((m) => m.AnchorIntegration),
+  // eslint-disable-next-line no-restricted-syntax
   piHole: async () => {
     const { createPiHoleIntegrationAsync } = await import("../pi-hole/pi-hole-integration-factory");
     return [createPiHoleIntegrationAsync];
@@ -191,5 +192,5 @@ export const createIntegrationAsync = async <TKind extends IntegrationKind>(
     return (await creator[0](integration)) as IntegrationInstanceOfKind<TKind>;
   }
 
-  return new (creator as IntegrationConstructor)(integration) as IntegrationInstanceOfKind<TKind>;
+  return new (creator)(integration) as IntegrationInstanceOfKind<TKind>;
 };
