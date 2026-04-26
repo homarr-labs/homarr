@@ -11,8 +11,8 @@ import { AnalyticsSettings } from "./_components/analytics.settings";
 import { AppearanceSettingsForm } from "./_components/appearance-settings-form";
 import { BoardSettingsForm } from "./_components/board-settings-form";
 import { CultureSettingsForm } from "./_components/culture-settings-form";
-import { SearchSettingsForm } from "./_components/search-settings-form";
 import { IdleRestartSettingsForm } from "./_components/idle-restart-settings-form";
+import { SearchSettingsForm } from "./_components/search-settings-form";
 import { UserSettingsForm } from "./_components/user-settings-form";
 
 export async function generateMetadata() {

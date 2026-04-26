@@ -6,8 +6,23 @@ import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 import { optionsBuilder } from "../options";
 
 const columnsList = [
-  "id", "actions", "added", "category", "downSpeed", "index", "integration",
-  "name", "progress", "ratio", "received", "sent", "size", "state", "time", "type", "upSpeed",
+  "id",
+  "actions",
+  "added",
+  "category",
+  "downSpeed",
+  "index",
+  "integration",
+  "name",
+  "progress",
+  "ratio",
+  "received",
+  "sent",
+  "size",
+  "state",
+  "time",
+  "type",
+  "upSpeed",
 ] as const satisfies (keyof ExtendedDownloadClientItem)[];
 
 const sortingExclusion = ["actions", "id", "state"] as const satisfies readonly (typeof columnsList)[number][];

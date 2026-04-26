@@ -57,11 +57,29 @@ export async function register() {
     const IDLE_GRACE_MS = 60_000;
     type JobKey = Parameters<typeof jobGroup.stopAsync>[0];
     const INTEGRATION_JOB_KEYS: JobKey[] = [
-      "ping", "smartHomeEntityState", "mediaServer", "mediaOrganizer", "downloads",
-      "dnsHole", "mediaRequestStats", "mediaRequestList", "rssFeeds", "indexerManager",
-      "healthMonitoring", "mediaTranscoding", "minecraftServerStatus", "dockerContainers",
-      "networkController", "firewallCpu", "firewallMemory", "firewallVersion",
-      "firewallInterfaces", "refreshNotifications", "weather", "timetable", "tracearr",
+      "ping",
+      "smartHomeEntityState",
+      "mediaServer",
+      "mediaOrganizer",
+      "downloads",
+      "dnsHole",
+      "mediaRequestStats",
+      "mediaRequestList",
+      "rssFeeds",
+      "indexerManager",
+      "healthMonitoring",
+      "mediaTranscoding",
+      "minecraftServerStatus",
+      "dockerContainers",
+      "networkController",
+      "firewallCpu",
+      "firewallMemory",
+      "firewallVersion",
+      "firewallInterfaces",
+      "refreshNotifications",
+      "weather",
+      "timetable",
+      "tracearr",
     ];
 
     const { getServerSettingByKeyAsync } = await import("@homarr/db/queries");
@@ -114,7 +132,9 @@ export async function register() {
       const remote = incomingMessage.socket.remoteAddress;
       const external = !isLocalhost(remote);
       if (external) externalClients++;
-      logger.info(`Connection (external=${externalClients}) ${remote} ${incomingMessage.method} ${incomingMessage.url}`);
+      logger.info(
+        `Connection (external=${externalClients}) ${remote} ${incomingMessage.method} ${incomingMessage.url}`,
+      );
 
       if (external) {
         if (idleTimer !== null) {
@@ -154,9 +174,12 @@ export async function register() {
     // request handlers. --expose-gc must be set in NODE_OPTIONS for this to work;
     // if not available it is silently skipped.
     if (typeof global.gc === "function") {
-      setInterval(() => {
-        global.gc?.();
-      }, 5 * 60 * 1000);
+      setInterval(
+        () => {
+          global.gc?.();
+        },
+        5 * 60 * 1000,
+      );
     }
   }
 }

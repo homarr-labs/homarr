@@ -6,8 +6,8 @@ import { cronExpressionSchema, jobGroupKeys, jobNameSchema } from "@homarr/cron-
 import { JobManager } from "@homarr/cron-job-api/job-manager";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
-import { db } from "@homarr/db";
 import { jobGroup } from "@homarr/cron-jobs";
+import { db } from "@homarr/db";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 

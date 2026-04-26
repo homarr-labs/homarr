@@ -15,10 +15,22 @@ export const serverDefinition = {
         fileSystem: factory.switch({ defaultValue: true }),
         visibleClusterSections: factory.multiSelect({
           options: [
-            { value: "node", label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.node.name") },
-            { value: "qemu", label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.qemu.name") },
-            { value: "lxc", label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.lxc.name") },
-            { value: "storage", label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.storage.name") },
+            {
+              value: "node",
+              label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.node.name"),
+            },
+            {
+              value: "qemu",
+              label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.qemu.name"),
+            },
+            {
+              value: "lxc",
+              label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.lxc.name"),
+            },
+            {
+              value: "storage",
+              label: (t: (s: string) => string) => t("widget.healthMonitoring.cluster.resource.storage.name"),
+            },
           ] as const,
           defaultValue: ["node", "qemu", "lxc", "storage"] as const,
         }),

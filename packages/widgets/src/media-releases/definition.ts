@@ -7,8 +7,14 @@ export const serverDefinition = {
       layout: factory.select({
         defaultValue: "backdrop" as const,
         options: [
-          { value: "backdrop", label: (t: (s: string) => string) => t("widget.mediaReleases.option.layout.option.backdrop.label") },
-          { value: "poster", label: (t: (s: string) => string) => t("widget.mediaReleases.option.layout.option.poster.label") },
+          {
+            value: "backdrop",
+            label: (t: (s: string) => string) => t("widget.mediaReleases.option.layout.option.backdrop.label"),
+          },
+          {
+            value: "poster",
+            label: (t: (s: string) => string) => t("widget.mediaReleases.option.layout.option.poster.label"),
+          },
         ] as const,
       }),
       showDescriptionTooltip: factory.switch({ defaultValue: true }),

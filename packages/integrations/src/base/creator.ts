@@ -140,8 +140,7 @@ const integrationLoaders: Record<IntegrationKind, () => Promise<AnyCreator>> = {
   seerr: () => import("../seerr/seerr-integration").then((m) => m.SeerrIntegration),
   overseerr: () => import("../overseerr/overseerr-integration").then((m) => m.OverseerrIntegration),
   prowlarr: () => import("../prowlarr/prowlarr-integration").then((m) => m.ProwlarrIntegration),
-  openmediavault: () =>
-    import("../openmediavault/openmediavault-integration").then((m) => m.OpenMediaVaultIntegration),
+  openmediavault: () => import("../openmediavault/openmediavault-integration").then((m) => m.OpenMediaVaultIntegration),
   lidarr: () => import("../media-organizer/lidarr/lidarr-integration").then((m) => m.LidarrIntegration),
   readarr: () => import("../media-organizer/readarr/readarr-integration").then((m) => m.ReadarrIntegration),
   dashDot: () => import("../dashdot/dashdot-integration").then((m) => m.DashDotIntegration),
@@ -181,7 +180,9 @@ export const createIntegrationAsync = async <TKind extends IntegrationKind>(
   integration: IntegrationInput & { kind: TKind },
 ): Promise<IntegrationInstanceOfKind<TKind>> => {
   if (!(integration.kind in integrationLoaders)) {
-    throw new Error(`Unknown integration kind ${integration.kind}. Did you forget to add it to the integration loader?`);
+    throw new Error(
+      `Unknown integration kind ${integration.kind}. Did you forget to add it to the integration loader?`,
+    );
   }
 
   const creator = await integrationLoaders[integration.kind]();
