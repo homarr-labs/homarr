@@ -102,6 +102,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/swagger-ui-react": "catalog:",
+    "@types/ws": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "node-loader": "catalog:",

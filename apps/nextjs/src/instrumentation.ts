@@ -87,7 +87,7 @@ export async function register() {
     let restartTimer: ReturnType<typeof setTimeout> | null = null;
     let isIdle = false;
 
-    const pauseIntegrationJobs = async () => {
+    const pauseIntegrationJobsAsync = async () => {
       if (isIdle) return;
       isIdle = true;
       logger.info("No active clients - pausing integration cron jobs");
@@ -96,7 +96,7 @@ export async function register() {
       }
     };
 
-    const resumeIntegrationJobs = async () => {
+    const resumeIntegrationJobsAsync = async () => {
       if (!isIdle) return;
       isIdle = false;
       logger.info("Client connected - resuming integration cron jobs");
@@ -106,7 +106,7 @@ export async function register() {
     };
 
     const exitProcess = process.exit;
-    const scheduleRestart = async () => {
+    const scheduleRestartAsync = async () => {
       const { enabled, gracePeriodMinutes } = await getServerSettingByKeyAsync(db, "idleRestart");
       if (!enabled) return;
       restartTimer = setTimeout(() => {
@@ -119,9 +119,9 @@ export async function register() {
     // Start idle timer immediately - pause jobs if no client connects within grace period
     idleTimer = setTimeout(() => {
       idleTimer = null;
-      void pauseIntegrationJobs();
+      void pauseIntegrationJobsAsync();
     }, IDLE_GRACE_MS);
-    void scheduleRestart();
+    void scheduleRestartAsync();
 
     let externalClients = 0;
 
@@ -145,7 +145,7 @@ export async function register() {
           clearTimeout(restartTimer);
           restartTimer = null;
         }
-        void resumeIntegrationJobs();
+        void resumeIntegrationJobsAsync();
       }
 
       websocket.once("close", (code, reason) => {
@@ -154,9 +154,9 @@ export async function register() {
         if (external && externalClients === 0) {
           idleTimer = setTimeout(() => {
             idleTimer = null;
-            void pauseIntegrationJobs();
+            void pauseIntegrationJobsAsync();
           }, IDLE_GRACE_MS);
-          void scheduleRestart();
+          void scheduleRestartAsync();
         }
       });
     });
