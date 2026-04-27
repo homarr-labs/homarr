@@ -27,7 +27,7 @@
           "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "{count} Painéis encontrados",
+          "title": "{count} painéis encontrados",
           "description": "Escolha todos os painéis com o tamanho que você deseja importar",
           "action": {
             "selectAll": "Selecionar todos",
@@ -36,13 +36,13 @@
         },
         "summary": {
           "title": "Resumo da importação",
-          "description": "No resumo abaixo, você pode ver o que será importado",
+          "description": "No resumo abaixo você pode ver o que será importado",
           "action": {
             "import": "Confirmar a importação e continuar"
           },
           "entities": {
             "apps": "Aplicativos",
-            "boards": "Placas",
+            "boards": "Painéis",
             "integrations": "Integrações",
             "credentialUsers": "Usuários credenciados"
           }
