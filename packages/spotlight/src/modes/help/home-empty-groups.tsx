@@ -22,7 +22,7 @@ import { externalMode } from "../external";
 import { pageMode } from "../page";
 import { userGroupMode } from "../user-group";
 
-interface QuickLinkOption {
+interface QuickLinkOption extends Record<string, unknown> {
   icon: TablerIcon;
   name: string;
   path: string;

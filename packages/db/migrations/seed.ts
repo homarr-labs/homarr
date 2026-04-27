@@ -1,5 +1,11 @@
 import { createId, objectKeys } from "@homarr/common";
-import { createDocumentationLink, everyoneGroup, getIntegrationDefaultUrl, getIntegrationName, integrationKinds } from "@homarr/definitions";
+import {
+  createDocumentationLink,
+  everyoneGroup,
+  getIntegrationDefaultUrl,
+  getIntegrationName,
+  integrationKinds,
+} from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
