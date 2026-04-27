@@ -135,6 +135,7 @@ export const reduceWidgetOptionsWithDefaultValues = (
   currentValue: Record<string, unknown> = {},
 ) => {
   const definition = widgetImports[kind].definition;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const options = definition.createOptions(settings) as Record<string, WidgetOptionDefinition>;
   return objectEntries(options).reduce(
     (prev, [key, value]) => ({

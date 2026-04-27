@@ -49,9 +49,6 @@ export class LdapClient {
           .map(([key, value]) => [key, LdapClient.convertEntryPropertyToString(value)] as const)
           .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Record<string, string>),
         dn: LdapClient.getEntryDn(entry),
-      } as {
-        [key: string]: string;
-        dn: string;
       };
     });
   }

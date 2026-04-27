@@ -5,11 +5,11 @@ import { MemoryResourceParser } from "../../../kubernetes/resource-parser/memory
 const BYTES_IN_GIB = 1024 ** 3; // 1 GiB in bytes
 const BYTES_IN_MIB = 1024 ** 2; // 1 MiB in bytes
 const BYTES_IN_KIB = 1024; // 1 KiB in bytes
-const KI = "Ki";
-const MI = "Mi";
-const GI = "Gi";
-const TI = "Ti";
-const PI = "Pi";
+const KI_UNIT = "Ki";
+const MI_UNIT = "Mi";
+const GI_UNIT = "Gi";
+const TI_UNIT = "Ti";
+const PI_UNIT = "Pi";
 
 describe("MemoryResourceParser", () => {
   const parser = new MemoryResourceParser();
@@ -20,11 +20,11 @@ describe("MemoryResourceParser", () => {
   });
 
   it("should parse binary units (Ki, Mi, Gi, Ti, Pi) into GiB", () => {
-    expect(parser.parse(`1024${KI}`)).toBeCloseTo(1 / 1024); // 1 MiB = 1/1024 GiB
-    expect(parser.parse(`1${MI}`)).toBeCloseTo(1 / 1024); // 1 MiB = 1/1024 GiB
-    expect(parser.parse(`1${GI}`)).toBe(1); // 1 GiB
-    expect(parser.parse(`1${TI}`)).toBe(BYTES_IN_KIB); // 1 TiB = 1024 GiB
-    expect(parser.parse(`1${PI}`)).toBe(BYTES_IN_MIB); // 1 PiB = 1024^2 GiB
+    expect(parser.parse(`1024${KI_UNIT}`)).toBeCloseTo(1 / 1024); // 1 MiB = 1/1024 GiB
+    expect(parser.parse(`1${MI_UNIT}`)).toBeCloseTo(1 / 1024); // 1 MiB = 1/1024 GiB
+    expect(parser.parse(`1${GI_UNIT}`)).toBe(1); // 1 GiB
+    expect(parser.parse(`1${TI_UNIT}`)).toBe(BYTES_IN_KIB); // 1 TiB = 1024 GiB
+    expect(parser.parse(`1${PI_UNIT}`)).toBe(BYTES_IN_MIB); // 1 PiB = 1024^2 GiB
   });
 
   it("should parse decimal units (K, M, G, T, P) into GiB", () => {

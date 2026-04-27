@@ -45,6 +45,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
     customError: zodErrorMap(t),
   });
   const { definition } = widgetImports[innerProps.kind];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
 
   const form = useForm({

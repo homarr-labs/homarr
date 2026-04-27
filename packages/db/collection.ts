@@ -50,7 +50,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             // Below is actually the mysqlSchema when the driver is mysql
-            await transaction.insert(schema[key] as never).values(values as never);
+            await transaction.insert(schema[key] as never).values(values);
           }
         }
       });

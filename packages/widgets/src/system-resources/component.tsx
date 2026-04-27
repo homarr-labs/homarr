@@ -32,7 +32,8 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
       memory: item.healthInfo.memUsedInBytes,
       gpu:
         item.healthInfo.gpu.length > 0
-          ? item.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / item.healthInfo.gpu.length
+          ? item.healthInfo.gpu.reduce((acc, { processorUtilization }) => acc + processorUtilization, 0) /
+            item.healthInfo.gpu.length
           : 0,
       network: item.healthInfo.network,
     })),
@@ -50,7 +51,8 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             memory: data.healthInfo.memUsedInBytes,
             gpu:
               data.healthInfo.gpu.length > 0
-                ? data.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / data.healthInfo.gpu.length
+                ? data.healthInfo.gpu.reduce((acc, { processorUtilization }) => acc + processorUtilization, 0) /
+                  data.healthInfo.gpu.length
                 : 0,
             network: data.healthInfo.network,
           };
