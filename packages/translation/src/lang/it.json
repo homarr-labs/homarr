@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Lingua predefinita"
             }
+          },
+          "idleRestart": {
+            "title": "Riavvio per inattività",
+            "enabled": {
+              "label": "Abilita riavvio per inattività",
+              "description": "Riavvia automaticamente il processo server quando nessun client browser è connesso per il periodo configurato, liberando la memoria utilizzata dai moduli caricati"
+            },
+            "gracePeriodMinutes": {
+              "label": "Periodo di inattività (minuti)",
+              "description": "Quanti minuti senza client connessi prima che il server si riavvii"
+            }
           }
         }
       },

@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Taaskäivitus jõudeolekus",
+            "enabled": {
+              "label": "Luba jõudeolekus taaskäivitus",
+              "description": "Taaskäivitab serverprotsessi automaatselt, kui seadistatud aja jooksul pole ühtegi brauseri klienti ühendatud, vabastades laaditud moodulite kasutatud mälu"
+            },
+            "gracePeriodMinutes": {
+              "label": "Jõudeoleku periood (minutid)",
+              "description": "Mitu minutit ilma ühendatud klientideta enne serveri taaskäivitust"
+            }
           }
         }
       },

@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Ponovni zagon pri nedejavnosti",
+            "enabled": {
+              "label": "Omogoči ponovni zagon pri nedejavnosti",
+              "description": "Samodejno znova zažene strežniški proces, ko v konfiguriranem obdobju ni priključenih brskalniških odjemalcev, in sprosti pomnilnik, ki ga uporabljajo naloženi moduli"
+            },
+            "gracePeriodMinutes": {
+              "label": "Obdobje nedejavnosti (minute)",
+              "description": "Koliko minut brez priključenih odjemalcev, preden se strežnik znova zažene"
+            }
           }
         }
       },

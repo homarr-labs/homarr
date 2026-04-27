@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Restartēšana dīkstāves laikā",
+            "enabled": {
+              "label": "Iespējot restartēšanu dīkstāves laikā",
+              "description": "Automātiski restartē servera procesu, kad konfigurēto laiku nav pievienotu pārlūkprogrammas klientu, atbrīvojot ielādēto moduļu izmantoto atmiņu"
+            },
+            "gracePeriodMinutes": {
+              "label": "Dīkstāves periods (minūtes)",
+              "description": "Cik minūtes bez pievienotiem klientiem pirms servera restartēšanas"
+            }
           }
         }
       },

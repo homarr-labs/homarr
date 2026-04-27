@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Język domyślny"
             }
+          },
+          "idleRestart": {
+            "title": "Restart po bezczynności",
+            "enabled": {
+              "label": "Włącz restart po bezczynności",
+              "description": "Automatycznie restartuje proces serwera, gdy przez skonfigurowany czas nie ma żadnych połączonych klientów przeglądarki, zwalniając pamięć używaną przez załadowane moduły"
+            },
+            "gracePeriodMinutes": {
+              "label": "Okres bezczynności (minuty)",
+              "description": "Ile minut bez podłączonych klientów przed ponownym uruchomieniem serwera"
+            }
           }
         }
       },

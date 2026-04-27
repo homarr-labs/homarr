@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Idioma padrão"
             }
+          },
+          "idleRestart": {
+            "title": "Reinício por inatividade",
+            "enabled": {
+              "label": "Habilitar reinício por inatividade",
+              "description": "Reinicia automaticamente o processo do servidor quando nenhum cliente do navegador estiver conectado pelo período configurado, liberando memória usada por módulos carregados"
+            },
+            "gracePeriodMinutes": {
+              "label": "Período de inatividade (minutos)",
+              "description": "Quantos minutos sem clientes conectados antes do servidor reiniciar"
+            }
           }
         }
       },

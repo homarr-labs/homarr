@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "預設語言"
             }
+          },
+          "idleRestart": {
+            "title": "閒置重啟",
+            "enabled": {
+              "label": "啟用閒置重啟",
+              "description": "當沒有瀏覽器客戶端連線達到設定時間後，自動重啟伺服器程序，釋放已載入模組佔用的記憶體"
+            },
+            "gracePeriodMinutes": {
+              "label": "閒置時間（分鐘）",
+              "description": "在伺服器重啟前，沒有任何客戶端連線的分鐘數"
+            }
           }
         }
       },

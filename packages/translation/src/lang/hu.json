@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Újraindítás inaktivitás esetén",
+            "enabled": {
+              "label": "Újraindítás inaktivitás esetén engedélyezése",
+              "description": "Automatikusan újraindítja a szerverfolyamatot, ha az beállított ideig nem csatlakozik böngészőkliens, felszabadítva a betöltött modulok által használt memóriát"
+            },
+            "gracePeriodMinutes": {
+              "label": "Inaktivitási időszak (perc)",
+              "description": "Hány percig nem csatlakoznak kliensek, mielőtt a szerver újraindul"
+            }
           }
         }
       },

@@ -9,10 +9,10 @@ import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync, getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 
-// This imports are done that way to avoid circular dependencies.
-import type { inferSupportedIntegrationsStrict } from "../../../widgets/src";
-import { reduceWidgetOptionsWithDefaultValues } from "../../../widgets/src";
-import type { WidgetComponentProps } from "../../../widgets/src/definition";
+// These imports use a relative path to avoid circular package dependencies.
+// server.ts only imports definition.ts files (no React/Mantine/icons).
+import type { inferSupportedIntegrationsStrict, WidgetComponentProps } from "../../../widgets/src/server";
+import { reduceWidgetOptionsWithDefaultValues } from "../../../widgets/src/server";
 import type { createCachedIntegrationRequestHandler } from "./cached-integration-request-handler";
 
 const logger = createLogger({ module: "cachedRequestIntegrationJobHandler" });

@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Default language"
             }
+          },
+          "idleRestart": {
+            "title": "Idle restart",
+            "enabled": {
+              "label": "Enable idle restart",
+              "description": "Automatically restart the server process when no browser clients have been connected for the configured period, freeing memory used by loaded modules"
+            },
+            "gracePeriodMinutes": {
+              "label": "Idle period (minutes)",
+              "description": "How many minutes without any connected clients before the server restarts"
+            }
           }
         }
       },

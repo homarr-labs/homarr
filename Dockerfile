@@ -43,8 +43,6 @@ RUN mkdir -p /var/cache/nginx && \
 COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
-COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
 COPY --from=builder /app/packages/db/migrations ./db/migrations
@@ -60,6 +58,7 @@ COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf
 
 
+ENV NODE_OPTIONS='--max-old-space-size=400 --expose-gc'
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'

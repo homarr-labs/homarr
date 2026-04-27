@@ -1,11 +1,12 @@
 import { schedule, validate as validateCron } from "node-cron";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { IJobManager } from "@homarr/cron-job-api";
 import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
+
+import type { IJobManager } from ".";
 
 const logger = createLogger({ module: "jobManager" });
 
@@ -79,7 +80,6 @@ export class JobManager implements IJobManager {
     if (existingConfig) {
       await this.db
         .update(cronJobConfigurations)
-        // prevent updating the name, as it is the primary key
         .set({ ...configuration, name: undefined })
         .where(eq(cronJobConfigurations.name, name));
       logger.debug("Cron job configuration updated", {

@@ -16,8 +16,6 @@ fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
-# Cron job API key is generated every time the container starts as it is required for communication between nextjs-api and tasks-api
-export CRON_JOB_API_KEY=$(openssl rand -base64 32)
 
 # Support secret file for encryption key (is not empty and file exists)
 if [ -n "$SECRET_ENCRYPTION_KEY_FILE" ] && [ -f "$SECRET_ENCRYPTION_KEY_FILE" ]; then
@@ -43,21 +41,13 @@ else
     REDIS_PID=$!
 fi
 
-
-
-node apps/tasks/tasks.cjs &
-TASKS_PID=$!
-
-node apps/websocket/wssServer.cjs &
-WSS_PID=$!
-
-node apps/nextjs/server.js &
+node --max-old-space-size=400 --expose-gc apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then

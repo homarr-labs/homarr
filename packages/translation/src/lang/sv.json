@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "Omstart vid inaktivitet",
+            "enabled": {
+              "label": "Aktivera omstart vid inaktivitet",
+              "description": "Startar automatiskt om serverprocessen när inga webbläsarklienter har anslutit under den konfigurerade perioden och frigör minne som används av laddade moduler"
+            },
+            "gracePeriodMinutes": {
+              "label": "Inaktivitetsperiod (minuter)",
+              "description": "Hur många minuter utan anslutna klienter innan servern startas om"
+            }
           }
         }
       },

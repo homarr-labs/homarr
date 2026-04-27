@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "crwdns1818:0crwdne1818:0"
             }
+          },
+          "idleRestart": {
+            "title": "crwdns4100:0crwdne4100:0",
+            "enabled": {
+              "label": "crwdns4102:0crwdne4102:0",
+              "description": "crwdns4104:0crwdne4104:0"
+            },
+            "gracePeriodMinutes": {
+              "label": "crwdns4106:0crwdne4106:0",
+              "description": "crwdns4108:0crwdne4108:0"
+            }
           }
         }
       },

@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": ""
             }
+          },
+          "idleRestart": {
+            "title": "유휴 시 재시작",
+            "enabled": {
+              "label": "유휴 시 재시작 활성화",
+              "description": "설정된 기간 동안 브라우저 클라이언트가 연결되지 않으면 서버 프로세스를 자동으로 재시작하여 로드된 모듈이 사용하는 메모리를 해제합니다"
+            },
+            "gracePeriodMinutes": {
+              "label": "유휴 기간 (분)",
+              "description": "서버가 재시작하기 전까지 클라이언트가 연결되지 않는 시간(분)"
+            }
           }
         }
       },

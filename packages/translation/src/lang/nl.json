@@ -3578,6 +3578,17 @@
             "defaultLocale": {
               "label": "Standaard taal"
             }
+          },
+          "idleRestart": {
+            "title": "Herstart bij inactiviteit",
+            "enabled": {
+              "label": "Herstart bij inactiviteit inschakelen",
+              "description": "Herstart het serverproces automatisch wanneer er gedurende de ingestelde periode geen browsercliënten verbonden zijn, waardoor geheugen vrijgemaakt wordt dat door geladen modules wordt gebruikt"
+            },
+            "gracePeriodMinutes": {
+              "label": "Inactiviteitsperiode (minuten)",
+              "description": "Hoeveel minuten zonder verbonden clients voordat de server herstart"
+            }
           }
         }
       },
