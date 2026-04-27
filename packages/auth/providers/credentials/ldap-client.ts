@@ -40,7 +40,12 @@ export class LdapClient {
    * @param options search options
    * @returns list of search results
    */
-  public async searchAsync({ base, options }: SearchOptions) {
+  public async searchAsync({ base, options }: SearchOptions): Promise<
+    {
+      [key: string]: string;
+      dn: string;
+    }[]
+  > {
     const { searchEntries } = await this.client.search(base, options);
 
     return searchEntries.map((entry) => {
