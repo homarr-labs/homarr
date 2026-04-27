@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { openApiDocument } from "@homarr/api";
+import { openApiDocument } from "@homarr/api/open-api";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 
 export function GET(request: Request) {
