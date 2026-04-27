@@ -133,7 +133,7 @@ catalog:
   eslint-plugin-react: ^7.37.5
   eslint-plugin-react-hooks: ^6.1.1
   fast-xml-parser: ^5.7.1
-  fastify: ^5.8.4
+  fastify: ^5.8.5
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
