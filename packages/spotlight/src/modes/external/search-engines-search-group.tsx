@@ -23,31 +23,31 @@ type DuckDuckGoBang = RouterOutputs["bangs"]["search"][number];
 
 type ExternalOption =
   | {
-    key: string;
-    kind: "hint";
-    label: string;
-    description?: string;
-  }
+      key: string;
+      kind: "hint";
+      label: string;
+      description?: string;
+    }
   | {
-    key: string;
-    kind: "search";
-    label: string;
-    description?: string;
-    iconUrl?: string;
-    bang: string;
-    urlTemplate: string;
-    searchText: string;
-  }
+      key: string;
+      kind: "search";
+      label: string;
+      description?: string;
+      iconUrl?: string;
+      bang: string;
+      urlTemplate: string;
+      searchText: string;
+    }
   | {
-    key: string;
-    kind: "engine";
-    engine: SearchEngine;
-  }
+      key: string;
+      kind: "engine";
+      engine: SearchEngine;
+    }
   | {
-    key: string;
-    kind: "ddg";
-    bang: DuckDuckGoBang;
-  };
+      key: string;
+      kind: "ddg";
+      bang: DuckDuckGoBang;
+    };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type MediaRequestChildrenProps = {
