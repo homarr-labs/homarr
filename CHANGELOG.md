@@ -1,3 +1,36 @@
+## [1.59.3](https://github.com/homarr-labs/homarr/compare/v1.59.2...v1.59.3) (2026-04-24)
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.9.0 ([#5531](https://github.com/homarr-labs/homarr/issues/5531)) ([7852f1d](https://github.com/homarr-labs/homarr/commit/7852f1d987d40707ae13494f9c934a563581f97f))
+
+## [1.59.3](https://github.com/homarr-labs/homarr/compare/v1.59.2...v1.59.3) (2026-04-24)
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.9.0 ([#5531](https://github.com/homarr-labs/homarr/issues/5531)) ([7852f1d](https://github.com/homarr-labs/homarr/commit/7852f1d987d40707ae13494f9c934a563581f97f))
+
+## [1.59.2](https://github.com/homarr-labs/homarr/compare/v1.59.1...v1.59.2) (2026-04-17)
+
+### Bug Fixes
+
+* **about:** add missing dependencies ([#5480](https://github.com/homarr-labs/homarr/issues/5480)) ([c48588c](https://github.com/homarr-labs/homarr/commit/c48588c6a748920b05f8afcd79fad17dc65f2930))
+* **deps:** update dependency @drizzle-team/brocli to ^0.12.0 ([#5489](https://github.com/homarr-labs/homarr/issues/5489)) ([74611b7](https://github.com/homarr-labs/homarr/commit/74611b75a736df43a77ebc780d2e0eee5c40e3f3))
+* **deps:** update dependency @immich/sdk to ^2.7.0 ([#5490](https://github.com/homarr-labs/homarr/issues/5490)) ([9cdf2aa](https://github.com/homarr-labs/homarr/commit/9cdf2aa1f2b1477522879095b603b100c1dd3ac0))
+* **deps:** update dependency @immich/sdk to ^2.7.2 ([#5494](https://github.com/homarr-labs/homarr/issues/5494)) ([0927f45](https://github.com/homarr-labs/homarr/commit/0927f45b2573753152fd5e9e318ba62b88abca35))
+* **deps:** update dependency fast-xml-parser to ^5.5.11 ([#5500](https://github.com/homarr-labs/homarr/issues/5500)) ([652ed1a](https://github.com/homarr-labs/homarr/commit/652ed1a5ed0beeb2dbd44976890f24dc12b90cf6))
+* **deps:** update dependency isomorphic-dompurify to ^3.8.0 ([#5503](https://github.com/homarr-labs/homarr/issues/5503)) ([0731b7c](https://github.com/homarr-labs/homarr/commit/0731b7c5ef272bcf69c566cdec723f2696309e67))
+* **deps:** update dependency jotai to ^2.19.1 ([#5487](https://github.com/homarr-labs/homarr/issues/5487)) ([efd8a55](https://github.com/homarr-labs/homarr/commit/efd8a55b6ea113bc42bc90d9ccb0db6c1d2b68ef))
+* **deps:** update dependency next-intl to v4.9.1 [security] ([#5470](https://github.com/homarr-labs/homarr/issues/5470)) ([f2437c4](https://github.com/homarr-labs/homarr/commit/f2437c473106689e9fa93e7dcbea84b00800ea4a))
+* **deps:** update dependency swagger-ui-react to ^5.32.2 ([#5488](https://github.com/homarr-labs/homarr/issues/5488)) ([cf131c5](https://github.com/homarr-labs/homarr/commit/cf131c5c51f6c21f942ab89d02353f93dc05774c))
+* **deps:** update dependency typescript-eslint to ^8.58.1 ([#5496](https://github.com/homarr-labs/homarr/issues/5496)) ([f88984c](https://github.com/homarr-labs/homarr/commit/f88984cda844beb1099a08c9cdeb6691ad13b5a8))
+* **deps:** update react monorepo to v19.2.5 ([#5502](https://github.com/homarr-labs/homarr/issues/5502)) ([c8a61a9](https://github.com/homarr-labs/homarr/commit/c8a61a9df3087de28c76f573623725eec246dd32))
+* **deps:** update testcontainers-node monorepo to ^11.14.0 ([#5498](https://github.com/homarr-labs/homarr/issues/5498)) ([1057b47](https://github.com/homarr-labs/homarr/commit/1057b478c37d02e9de7bcd155f0b3fb764149abe))
+* **deps:** update tiptap monorepo to v3.22.3 ([#5499](https://github.com/homarr-labs/homarr/issues/5499)) ([95abd2c](https://github.com/homarr-labs/homarr/commit/95abd2c9d3a563c7eaebe12f3b8015e3299e27e8))
+* **deps:** update turbo monorepo to ^2.9.4 ([#5476](https://github.com/homarr-labs/homarr/issues/5476)) ([813f2fa](https://github.com/homarr-labs/homarr/commit/813f2fa5efb999d3364882578fdf456537dba3a6))
+* **deps:** update turbo monorepo to ^2.9.5 ([#5491](https://github.com/homarr-labs/homarr/issues/5491)) ([ed24ce6](https://github.com/homarr-labs/homarr/commit/ed24ce6381466fa530ce225363231303be4ed92e))
+* preserve all-day event dates in Nextcloud calendar integration ([#5523](https://github.com/homarr-labs/homarr/issues/5523)) ([2e78979](https://github.com/homarr-labs/homarr/commit/2e789795ed11c816550b6a3ce88fe92a360ede9c))
+
 ## [1.59.1](https://github.com/homarr-labs/homarr/compare/v1.59.0...v1.59.1) (2026-04-10)
 
 ### Bug Fixes

@@ -4,10 +4,10 @@ description: "Common setup steps for Actions"
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v5
+    - uses: pnpm/action-setup@v6
     - uses: actions/setup-node@v6
       with:
-        node-version: 24.14.1
+        node-version: 24.15.0
         cache: "pnpm"
 
     - shell: bash
