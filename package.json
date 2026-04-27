@@ -59,10 +59,10 @@
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.33.1",
   "engines": {
     "node": ">=24.15.0",
-    "pnpm": ">=10.33.0"
+    "pnpm": ">=10.33.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -79,7 +79,7 @@
     "overrides": {
       "@babel/helpers@<7.26.10": ">=7.29.2",
       "@babel/runtime@<7.26.10": ">=7.29.2",
-      "axios@>=1.0.0 <1.8.2": ">=1.15.1",
+      "axios@>=1.0.0 <1.8.2": ">=1.15.2",
       "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.5",
       "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.5",
       "esbuild@<=0.24.2": ">=0.28.0",
