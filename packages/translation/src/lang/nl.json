@@ -3790,6 +3790,10 @@
             "title": "Vertalers",
             "subtitle": "{count} bijdragen aan vertalingen in vele talen"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Bibliotheken",
             "subtitle": "{count} gebruikt in de code van Homarr"

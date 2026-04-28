@@ -3790,6 +3790,10 @@
             "title": "מתרגמים",
             "subtitle": "{count} תורמים בתרגום לשפות שונות"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "ספריות",
             "subtitle": "{count} בשימוש בקוד של Homarr"

@@ -3790,6 +3790,10 @@
             "title": "Översättare",
             "subtitle": "{count} bidrar med översättningar på flera olika språk"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "",
             "subtitle": ""
