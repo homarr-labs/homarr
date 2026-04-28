@@ -118,7 +118,7 @@ catalog:
   dayjs: ^1.11.20
   deepmerge: 4.3.1
   dns-caching: ^0.2.9
-  dockerode: ^4.0.10
+  dockerode: ^4.0.12
   dotenv: ^17.4.2
   dotenv-cli: ^11.0.0
   drizzle-kit: ^0.31.10
