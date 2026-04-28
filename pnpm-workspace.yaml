@@ -97,7 +97,7 @@ catalog:
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
-  "@vitejs/plugin-react": ^5.2.0
+  "@vitejs/plugin-react": ^6.0.1
   "@vitest/coverage-v8": ^4.1.5
   "@vitest/ui": ^4.1.5
   "@xterm/addon-canvas": ^0.7.0
