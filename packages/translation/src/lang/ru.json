@@ -3790,6 +3790,10 @@
             "title": "Переводчики",
             "subtitle": "{count} помогают с переводами на разные языки"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Библиотеки",
             "subtitle": "{count} используются в коде Homarr"

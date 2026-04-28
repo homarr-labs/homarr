@@ -3790,6 +3790,10 @@
             "title": "Traducteurs",
             "subtitle": "{count} ont contribué à des traductions dans de nombreuses langues"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Bibliothèques",
             "subtitle": "{count} utilisés dans le Code d'Homarr"

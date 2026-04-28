@@ -3790,6 +3790,10 @@
             "title": "Traduttori",
             "subtitle": "{count} contribuendo alle traduzioni in molte lingue"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Librerie",
             "subtitle": "{count} utilizzato nel Codice di Homarr"

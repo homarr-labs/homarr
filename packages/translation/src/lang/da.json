@@ -3790,6 +3790,10 @@
             "title": "Oversættere",
             "subtitle": "{count} bidragende oversættere på mange sprog"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Biblioteker",
             "subtitle": "{count} brugt i koden for Homarr"
