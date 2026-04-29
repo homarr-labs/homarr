@@ -11,6 +11,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
+import { getHrefSubLabel } from "./sub-label";
 
 export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
@@ -232,7 +233,7 @@ const VerticalItem = ({
       )}
       {!hideHostname && (
         <Anchor ta="center" component="span" size="xs">
-          {app.href ? new URL(app.href).hostname : undefined}
+          {getHrefSubLabel(app.href)}
         </Anchor>
       )}
     </Stack>
@@ -279,7 +280,7 @@ const HorizontalItem = ({
 
             {!hideHostname && (
               <Anchor component="span" size="xs">
-                {app.href ? new URL(app.href).hostname : undefined}
+                {getHrefSubLabel(app.href)}
               </Anchor>
             )}
           </Stack>
