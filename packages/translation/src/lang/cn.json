@@ -3790,6 +3790,10 @@
             "title": "翻译人员",
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "相关的库",
             "subtitle": "{count} 用于 Homarr 代码中"

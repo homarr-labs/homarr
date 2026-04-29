@@ -3790,6 +3790,10 @@
             "title": "翻訳者",
             "subtitle": "{count} の多くの言語で翻訳を行っている"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "ライブラリ",
             "subtitle": "{count} 個が Homarr のコードで使用されています"
