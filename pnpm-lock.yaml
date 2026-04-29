@@ -337,8 +337,8 @@ catalogs:
       specifier: ^0.2.9
       version: 0.2.9
     dockerode:
-      specifier: ^4.0.10
-      version: 4.0.10
+      specifier: ^5.0.0
+      version: 5.0.0
     dotenv:
       specifier: ^17.4.2
       version: 17.4.2
@@ -1813,7 +1813,7 @@ importers:
         version: link:../core
       dockerode:
         specifier: 'catalog:'
-        version: 4.0.10
+        version: 5.0.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6871,6 +6871,10 @@ packages:
   dockerode@4.0.10:
     resolution: {integrity: sha512-8L/P9JynLBiG7/coiA4FlQXegHltRqS0a+KqI44P1zgQh8QLHTg7FKOwhkBgSJwZTeHsq30WRoVFLuwkfK0YFg==}
     engines: {node: '>= 8.0'}
+
+  dockerode@5.0.0:
+    resolution: {integrity: sha512-C52mvJ+7lcyhWNfrzVfFsbTrBfy/ezE9FGEYLpu17FUeBcCkxERk9nN7uDl/478ynDiQ4U+5DbQC2vENHkVEtQ==}
+    engines: {node: '>= 14.17'}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -15305,6 +15309,17 @@ snapshots:
       protobufjs: 7.4.0
       tar-fs: 2.1.4
       uuid: 10.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  dockerode@5.0.0:
+    dependencies:
+      '@balena/dockerignore': 1.0.2
+      '@grpc/grpc-js': 1.12.5
+      '@grpc/proto-loader': 0.7.13
+      docker-modem: 5.0.7
+      protobufjs: 7.4.0
+      tar-fs: 2.1.4
     transitivePeerDependencies:
       - supports-color
 
