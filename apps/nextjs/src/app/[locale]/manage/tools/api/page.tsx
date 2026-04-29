@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
 
-import { openApiDocument } from "@homarr/api";
+import { openApiDocument } from "@homarr/api/open-api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";

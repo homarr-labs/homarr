@@ -9,7 +9,8 @@
     "./client": "./src/client.ts",
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
-    "./shared": "./src/shared.ts"
+    "./shared": "./src/shared.ts",
+    "./open-api": "./src/open-api.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
