@@ -179,7 +179,7 @@ catalog:
   tsdav: ^2.1.8
   tsx: 4.20.4
   turbo: ^2.9.6
-  typescript: ^5.9.3
+  typescript: ^6.0.3
   typescript-eslint: ^8.58.2
   undici: 7.24.6
   use-deep-compare-effect: ^1.8.1
