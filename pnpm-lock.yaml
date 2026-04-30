@@ -379,8 +379,8 @@ catalogs:
       specifier: ^6.1.1
       version: 6.1.1
     fast-xml-parser:
-      specifier: ^5.7.1
-      version: 5.7.1
+      specifier: ^5.7.2
+      version: 5.7.2
     fastify:
       specifier: ^5.8.5
       version: 5.8.5
@@ -1779,7 +1779,7 @@ importers:
         version: link:../common
       fast-xml-parser:
         specifier: 'catalog:'
-        version: 5.7.1
+        version: 5.7.2
       zod:
         specifier: 'catalog:'
         version: 4.3.6
@@ -7405,6 +7405,10 @@ packages:
 
   fast-xml-parser@5.7.1:
     resolution: {integrity: sha512-8Cc3f8GUGUULg34pBch/KGyPLglS+OFs05deyOlY7fL2MTagYPKrVQNmR1fLF/yJ9PH5ZSTd3YDF6pnmeZU+zA==}
+    hasBin: true
+
+  fast-xml-parser@5.7.2:
+    resolution: {integrity: sha512-P7oW7tLbYnhOLQk/Gv7cZgzgMPP/XN03K02/Jy6Y/NHzyIAIpxuZIM/YqAkfiXFPxA2CTm7NtCijK9EDu09u2w==}
     hasBin: true
 
   faster-babel-types@0.1.0:
@@ -15988,6 +15992,13 @@ snapshots:
       path-expression-matcher: 1.5.0
 
   fast-xml-parser@5.7.1:
+    dependencies:
+      '@nodable/entities': 2.1.0
+      fast-xml-builder: 1.1.5
+      path-expression-matcher: 1.5.0
+      strnum: 2.2.3
+
+  fast-xml-parser@5.7.2:
     dependencies:
       '@nodable/entities': 2.1.0
       fast-xml-builder: 1.1.5
