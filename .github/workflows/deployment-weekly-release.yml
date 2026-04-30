@@ -53,7 +53,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
           permission-pull-requests: write
       - name: Approve PR
         env:
@@ -65,7 +65,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # write to main branch (due to merge)
           permission-pull-requests: write # merge pull request
       - id: automerge
