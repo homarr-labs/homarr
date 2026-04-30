@@ -22,6 +22,29 @@ export const extractBaseUrlFromHeaders = (
   return `${protocol}://${host}`;
 };
 
+/**
+ * Resolves an app to the absolute URL the server should use, or null.
+ *   1. explicit `pingUrl`        -> as-is
+ *   2. absolute `href`           -> as-is
+ *   3. path-only or null `href`  -> null
+ *
+ * Path-only hrefs are intentionally null server-side: synthesizing them from
+ * request headers would be a header-spoofing vector, and the browser already
+ * resolves them against the current origin natively. Apps that need
+ * server-side ping coverage should carry an explicit `pingUrl`.
+ */
+export const resolveServerUrl = (app: { href: string | null; pingUrl: string | null }): string | null => {
+  if (app.pingUrl) {
+    return app.pingUrl;
+  }
+
+  if (app.href && !app.href.startsWith("/")) {
+    return app.href;
+  }
+
+  return null;
+};
+
 export const getPortFromUrl = (url: URL): number => {
   const port = url.port;
   if (port) {

@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
+import { resolveServerUrl } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
@@ -66,7 +67,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
       ctx: {
         integration: {
           ...rest,
-          externalUrl: rest.app?.href ?? null,
+          externalUrl: rest.app ? resolveServerUrl(rest.app) : null,
           kind: kind as TKind,
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
@@ -128,7 +129,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
         integrations: dbIntegrations.map(
           ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
             ...rest,
-            externalUrl: rest.app?.href ?? null,
+            externalUrl: rest.app ? resolveServerUrl(rest.app) : null,
             kind: kind as TKind,
             decryptedSecrets: secrets.map((secret) => ({
               ...secret,
