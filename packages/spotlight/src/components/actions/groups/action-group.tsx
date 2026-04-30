@@ -11,6 +11,7 @@ import { SpotlightGroupActions } from "../group-actions";
 interface SpotlightActionGroupsProps {
   groups: SearchGroup[];
   query: string;
+  setQuery: (query: string) => void;
   setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
@@ -19,7 +20,10 @@ export const SpotlightActionGroups = ({ groups, ...others }: SpotlightActionGrou
   const t = useI18n();
 
   return groups.map((group) => (
-    <Spotlight.ActionsGroup key={translateIfNecessary(t, group.title)} label={translateIfNecessary(t, group.title)}>
+    <Spotlight.ActionsGroup
+      key={`${translateIfNecessary(t, group.title)}::${String(group.keyPath)}`}
+      label={translateIfNecessary(t, group.title)}
+    >
       {/*eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <SpotlightGroupActions<any> group={group} {...others} />
     </Spotlight.ActionsGroup>

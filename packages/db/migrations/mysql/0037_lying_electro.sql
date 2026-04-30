@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `ddg_bangs` boolean DEFAULT true NOT NULL;

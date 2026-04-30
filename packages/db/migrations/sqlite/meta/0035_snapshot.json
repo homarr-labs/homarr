@@ -129,6 +129,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "salt": {
+          "name": "salt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -1865,6 +1872,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "salt": {
+          "name": "salt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "provider": {
           "name": "provider",
           "type": "text",
@@ -1896,6 +1910,14 @@
         },
         "open_search_in_new_tab": {
           "name": "open_search_in_new_tab",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "ddg_bangs": {
+          "name": "ddg_bangs",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
