@@ -16,8 +16,6 @@ fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
-# Cron job API key is generated every time the container starts as it is required for communication between nextjs-api and tasks-api
-export CRON_JOB_API_KEY=$(openssl rand -base64 32)
 
 # Support secret file for encryption key (is not empty and file exists)
 if [ -n "$SECRET_ENCRYPTION_KEY_FILE" ] && [ -f "$SECRET_ENCRYPTION_KEY_FILE" ]; then
