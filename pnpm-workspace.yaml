@@ -166,7 +166,7 @@ catalog:
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
-  recharts: ^2.15.4
+  recharts: ^3.8.1
   sass: ^1.99.0
   semantic-release: ^25.0.3
   semver-parser: ^4.1.8
