@@ -46,6 +46,7 @@ import { SeerrIntegration } from "../seerr/seerr-integration";
 import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
+import { UmamiIntegration } from "../umami/umami-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
@@ -121,6 +122,7 @@ export const integrationCreators = {
   searchCh: SearchChIntegration,
   immich: ImmichIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
+  umami: UmamiIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

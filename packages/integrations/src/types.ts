@@ -16,3 +16,4 @@ export * from "./anchor/anchor-types";
 export * from "./interfaces/timetable/timetable-types";
 export * from "./tracearr/tracearr-types";
 export * from "./speedtest-tracker/speedtest-tracker-types";
+export * from "./umami/umami-types";

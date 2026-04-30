@@ -37,5 +37,6 @@ export const widgetKinds = [
   "immich-albumCarousel",
   "tracearr",
   "speedtestTracker",
+  "umami",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
