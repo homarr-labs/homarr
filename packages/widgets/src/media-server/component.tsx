@@ -126,6 +126,7 @@ export default function MediaServerWidget({
 
   const { openModal } = useModalAction(ItemInfoModal);
   const table = useTranslatedMantineReactTable({
+    id: "widget-media-server",
     columns,
     data: flatSessions,
     enablePagination: false,

@@ -50,6 +50,7 @@ export function ConfigmapsTable(initialData: ConfigMapsTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-configmaps",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,
