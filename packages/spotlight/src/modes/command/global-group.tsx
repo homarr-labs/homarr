@@ -1,7 +1,8 @@
-import { Group, Text, useMantineColorScheme } from "@mantine/core";
+import { Group, Text, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
+  IconDeviceDesktop,
   IconFileImport,
   IconLanguage,
   IconMailForward,
@@ -52,13 +53,17 @@ export const globalCommandGroup = createGroup<Command>({
   useOptions() {
     const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
     const { colorScheme } = useMantineColorScheme();
+    const computedColorScheme = useComputedColorScheme("light");
     const { data: session } = useSession();
 
     const commands: (Command & { hidden?: boolean })[] = [
       {
         commandKey: "colorScheme",
-        icon: colorScheme === "dark" ? IconSun : IconMoon,
-        name: tOption(`colorScheme.${colorScheme === "dark" ? "light" : "dark"}`),
+        icon: colorScheme === "auto" ? IconDeviceDesktop : computedColorScheme === "dark" ? IconSun : IconMoon,
+        name:
+          colorScheme === "auto"
+            ? tOption("colorScheme.auto")
+            : tOption(`colorScheme.${computedColorScheme === "dark" ? "light" : "dark"}`),
         useInteraction: () => {
           const { toggleColorScheme } = useMantineColorScheme();
 

@@ -1080,6 +1080,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Light",
         "dark": "Dark"
       }
@@ -3568,6 +3569,7 @@
             "defaultColorScheme": {
               "label": "Default color scheme",
               "options": {
+                "auto": "Auto",
                 "light": "Light",
                 "dark": "Dark"
               }
@@ -4380,6 +4382,7 @@
             "title": "Global commands",
             "option": {
               "colorScheme": {
+                "auto": "Toggle appearance mode",
                 "light": "Switch to light mode",
                 "dark": "Switch to dark mode"
               },

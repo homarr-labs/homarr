@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
-import { Card, Center, Group, Loader, Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
+import { Card, Center, Group, Loader, Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
@@ -36,14 +36,13 @@ export const CommonChart = ({
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
-  const scheme = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme("light");
   const board = useRequiredBoard();
   const { hovered, ref: hoverRef } = useHover();
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
   const opacity = board.opacity / 100;
-  const backgroundColor =
-    scheme.colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  const backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
 
   const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
