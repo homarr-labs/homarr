@@ -23,7 +23,9 @@ describe("appHrefSchema", () => {
   });
 
   test.each([
+    // skipcq: JS-0087 — fixture asserts that javascript: scheme is rejected by the schema
     ["javascript:alert(1)"],
+    // skipcq: JS-0087 — fixture asserts that JavaScript: (mixed case) is rejected by the schema
     ["JavaScript:alert(1)"],
     ["//evil.example.com/path"],
     ["/"],
