@@ -130,13 +130,13 @@ catalogs:
       specifier: ^3.41.1
       version: 3.41.1
     '@tanstack/react-query':
-      specifier: ^5.100.4
+      specifier: ^5.100.5
       version: 5.100.5
     '@tanstack/react-query-devtools':
-      specifier: ^5.100.4
+      specifier: ^5.100.5
       version: 5.100.5
     '@tanstack/react-query-next-experimental':
-      specifier: ^5.100.4
+      specifier: ^5.100.5
       version: 5.100.5
     '@testcontainers/mysql':
       specifier: ^11.14.0
