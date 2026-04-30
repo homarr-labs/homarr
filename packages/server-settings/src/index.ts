@@ -36,9 +36,13 @@ export const defaultServerSettings = {
     enableGravatar: true,
   },
   appearance: {
+    // We want to force the type to be bigger than just "light" to allow other values
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     defaultColorScheme: "light" as ColorScheme,
   },
   culture: {
+    // We want to force the type to be bigger than just "light" to allow other values
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     defaultLocale: "en" as SupportedLanguage,
   },
   search: {

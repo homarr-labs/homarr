@@ -41,12 +41,12 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
   const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
   const relativeTime = useTimeAgo(instance.updatedAt);
 
-  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
+  const onlineServers = instance.instanceInfo.servers.filter(({ is_reachable }) => is_reachable !== false).length;
   const runningApps = instance.instanceInfo.applications.filter(
-    (a) => parseStatus(a.status ?? "") === "running",
+    ({ status }) => parseStatus(status ?? "") === "running",
   ).length;
   const runningServices = instance.instanceInfo.services.filter(
-    (s) => parseStatus(s.status ?? "") === "running",
+    ({ status }) => parseStatus(status ?? "") === "running",
   ).length;
 
   return (

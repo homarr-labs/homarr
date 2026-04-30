@@ -40,7 +40,12 @@ export class LdapClient {
    * @param options search options
    * @returns list of search results
    */
-  public async searchAsync({ base, options }: SearchOptions) {
+  public async searchAsync({ base, options }: SearchOptions): Promise<
+    {
+      [key: string]: string;
+      dn: string;
+    }[]
+  > {
     const { searchEntries } = await this.client.search(base, options);
 
     return searchEntries.map((entry) => {
@@ -49,9 +54,6 @@ export class LdapClient {
           .map(([key, value]) => [key, LdapClient.convertEntryPropertyToString(value)] as const)
           .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Record<string, string>),
         dn: LdapClient.getEntryDn(entry),
-      } as {
-        [key: string]: string;
-        dn: string;
       };
     });
   }

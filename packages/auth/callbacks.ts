@@ -38,7 +38,7 @@ export const createSessionAsync = async (
       permissions: await getCurrentUserPermissionsAsync(db, user.id),
       colorScheme: "dark",
     },
-  } as Session;
+  };
 };
 
 export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {

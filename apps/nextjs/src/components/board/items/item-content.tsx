@@ -122,7 +122,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           />
           <BoardItemMenu offset={4} item={newItem} />
           <Comp
-            options={options as never}
+            options={options}
             integrationIds={item.integrationIds}
             isEditMode={isEditMode}
             boardId={board.id}

@@ -36,7 +36,7 @@ const setupMockFetch = (responses: Record<string, MockResponseData>) => {
         new Response(body, {
           status: 200,
           headers: { "content-type": "application/json" },
-        }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        }),
       );
     }
 
@@ -44,7 +44,7 @@ const setupMockFetch = (responses: Record<string, MockResponseData>) => {
       new Response(JSON.stringify({ error: "Not Found" }), {
         status: 404,
         headers: { "content-type": "application/json" },
-      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+      }),
     );
   });
 };
@@ -82,7 +82,7 @@ describe("CoolifyIntegration", () => {
         new Response("Unauthorized", {
           status: 401,
           headers: { "content-type": "text/plain" },
-        }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        }),
       );
 
       const integration = createCoolifyIntegration();

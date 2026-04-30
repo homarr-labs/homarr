@@ -198,25 +198,23 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
       shadow="xs"
       padding="sm"
       radius="md"
-      style={
-        {
-          transition: [transition].filter(Boolean).join(", "),
-          "--translate-x": transform ? `${Math.round(transform.x)}px` : undefined,
-          "--translate-y": transform ? `${Math.round(transform.y)}px` : undefined,
-          "--scale-x": transform?.scaleX ? `${transform.scaleX}` : undefined,
-          "--scale-y": transform?.scaleY ? `${transform.scaleY}` : undefined,
-          "--index": index,
-          transform:
-            "translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1))",
-          transformOrigin: "0 0",
-          ...(isDragging
-            ? {
-                opacity: "var(--dragging-opacity, 0.5)",
-                zIndex: 0,
-              }
-            : {}),
-        } as React.CSSProperties
-      }
+      style={{
+        transition: [transition].filter(Boolean).join(", "),
+        "--translate-x": transform ? `${Math.round(transform.x)}px` : undefined,
+        "--translate-y": transform ? `${Math.round(transform.y)}px` : undefined,
+        "--scale-x": transform?.scaleX ? `${transform.scaleX}` : undefined,
+        "--scale-y": transform?.scaleY ? `${transform.scaleY}` : undefined,
+        "--index": index,
+        transform:
+          "translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1))",
+        transformOrigin: "0 0",
+        ...(isDragging
+          ? {
+              opacity: "var(--dragging-opacity, 0.5)",
+              zIndex: 0,
+            }
+          : {}),
+      }}
       ref={setNodeRef}
     >
       <options.itemComponent

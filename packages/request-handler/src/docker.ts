@@ -73,6 +73,8 @@ async function getContainersWithStatsAsync() {
       cpuUsage,
       memoryUsage,
       image: container.Image,
+      // In some cases the type of Ports can also be undefined
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       ports: container.Ports as Dockerode.Port[] | undefined,
     };
   });

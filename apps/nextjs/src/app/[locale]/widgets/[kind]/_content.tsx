@@ -109,7 +109,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
               )}
             >
               <Comp
-                options={state.options as never}
+                options={state.options}
                 integrationIds={state.integrationIds}
                 width={dimensions.width}
                 height={dimensions.height}
