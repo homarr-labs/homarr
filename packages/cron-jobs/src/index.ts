@@ -27,33 +27,45 @@ import { updateCheckerJob } from "./jobs/update-checker";
 import { weatherJob } from "./jobs/weather";
 import { createCronJobGroup } from "./lib";
 
-export const jobGroup = createCronJobGroup({
-  analytics: analyticsJob,
-  iconsUpdater: iconsUpdaterJob,
-  ping: pingJob,
-  smartHomeEntityState: smartHomeEntityStateJob,
-  mediaServer: mediaServerJob,
-  mediaOrganizer: mediaOrganizerJob,
-  downloads: downloadsJob,
-  dnsHole: dnsHoleJob,
-  mediaRequestStats: mediaRequestStatsJob,
-  mediaRequestList: mediaRequestListJob,
-  rssFeeds: rssFeedsJob,
-  indexerManager: indexerManagerJob,
-  healthMonitoring: healthMonitoringJob,
-  updateChecker: updateCheckerJob,
-  mediaTranscoding: mediaTranscodingJob,
-  minecraftServerStatus: minecraftServerStatusJob,
-  dockerContainers: dockerContainersJob,
-  networkController: networkControllerJob,
-  firewallCpu: firewallCpuJob,
-  firewallMemory: firewallMemoryJob,
-  firewallVersion: firewallVersionJob,
-  firewallInterfaces: firewallInterfacesJob,
-  refreshNotifications: refreshNotificationsJob,
-  weather: weatherJob,
-  timetable: timetableJob,
-  tracearr: tracearrJob,
-});
+const getJobGroup = () => {
+  return createCronJobGroup({
+    analytics: analyticsJob,
+    iconsUpdater: iconsUpdaterJob,
+    ping: pingJob,
+    smartHomeEntityState: smartHomeEntityStateJob,
+    mediaServer: mediaServerJob,
+    mediaOrganizer: mediaOrganizerJob,
+    downloads: downloadsJob,
+    dnsHole: dnsHoleJob,
+    mediaRequestStats: mediaRequestStatsJob,
+    mediaRequestList: mediaRequestListJob,
+    rssFeeds: rssFeedsJob,
+    indexerManager: indexerManagerJob,
+    healthMonitoring: healthMonitoringJob,
+    updateChecker: updateCheckerJob,
+    mediaTranscoding: mediaTranscodingJob,
+    minecraftServerStatus: minecraftServerStatusJob,
+    dockerContainers: dockerContainersJob,
+    networkController: networkControllerJob,
+    firewallCpu: firewallCpuJob,
+    firewallMemory: firewallMemoryJob,
+    firewallVersion: firewallVersionJob,
+    firewallInterfaces: firewallInterfacesJob,
+    refreshNotifications: refreshNotificationsJob,
+    weather: weatherJob,
+    timetable: timetableJob,
+    tracearr: tracearrJob,
+  });
+};
+
+// Add global type augmentation for homarr
+declare global {
+  var cronJobs: ReturnType<typeof getJobGroup> | undefined;
+}
+
+global.cronJobs ??= getJobGroup();
+
+export const jobGroup = global.cronJobs;
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
+export * from "./schemas";
