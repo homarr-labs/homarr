@@ -1,10 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { Button, Card, Divider, Group, Radio, Select, SimpleGrid, Stack, Switch, Text, TextInput, Title } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Divider,
+  Group,
+  Radio,
+  Select,
+  SimpleGrid,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -20,7 +34,6 @@ import {
   userFirstDayOfWeekSchema,
   userPingIconsEnabledSchema,
 } from "@homarr/validation/user";
-import { z } from "zod/v4";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 import { BoardSelect } from "~/components/board/board-select";
@@ -93,7 +106,13 @@ export const UserGeneralSettingsForm = ({
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
-  const mutations = [editProfileMutation, changeHomeBoardsMutation, changeSearchPreferencesMutation, changeFirstDayOfWeekMutation, changePingIconsEnabledMutation];
+  const mutations = [
+    editProfileMutation,
+    changeHomeBoardsMutation,
+    changeSearchPreferencesMutation,
+    changeFirstDayOfWeekMutation,
+    changePingIconsEnabledMutation,
+  ];
   const isPending = mutations.some((m) => m.isPending);
 
   useEffect(() => {
@@ -116,23 +135,36 @@ export const UserGeneralSettingsForm = ({
     const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
       {
         when: isCredentialsUser && changed("name", "email"),
-        action: () => editProfileMutation.mutateAsync({ id: user.id, name: parsed.data.name, email: parsed.data.email ?? "" }),
+        action: () =>
+          editProfileMutation.mutateAsync({ id: user.id, name: parsed.data.name, email: parsed.data.email ?? "" }),
       },
       {
         when: changed("homeBoardId", "mobileHomeBoardId"),
-        action: () => changeHomeBoardsMutation.mutateAsync({ userId: user.id, homeBoardId: parsed.data.homeBoardId, mobileHomeBoardId: parsed.data.mobileHomeBoardId }),
+        action: () =>
+          changeHomeBoardsMutation.mutateAsync({
+            userId: user.id,
+            homeBoardId: parsed.data.homeBoardId,
+            mobileHomeBoardId: parsed.data.mobileHomeBoardId,
+          }),
       },
       {
         when: changed("defaultSearchEngineId", "openInNewTab"),
-        action: () => changeSearchPreferencesMutation.mutateAsync({ userId: user.id, defaultSearchEngineId: parsed.data.defaultSearchEngineId, openInNewTab: parsed.data.openInNewTab }),
+        action: () =>
+          changeSearchPreferencesMutation.mutateAsync({
+            userId: user.id,
+            defaultSearchEngineId: parsed.data.defaultSearchEngineId,
+            openInNewTab: parsed.data.openInNewTab,
+          }),
       },
       {
         when: changed("firstDayOfWeek"),
-        action: () => changeFirstDayOfWeekMutation.mutateAsync({ id: user.id, firstDayOfWeek: parsed.data.firstDayOfWeek }),
+        action: () =>
+          changeFirstDayOfWeekMutation.mutateAsync({ id: user.id, firstDayOfWeek: parsed.data.firstDayOfWeek }),
       },
       {
         when: changed("pingIconsEnabled"),
-        action: () => changePingIconsEnabledMutation.mutateAsync({ id: user.id, pingIconsEnabled: parsed.data.pingIconsEnabled }),
+        action: () =>
+          changePingIconsEnabledMutation.mutateAsync({ id: user.id, pingIconsEnabled: parsed.data.pingIconsEnabled }),
       },
     ];
 
