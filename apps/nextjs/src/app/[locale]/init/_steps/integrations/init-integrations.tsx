@@ -57,8 +57,13 @@ export const InitIntegrations = () => {
   if (phase === "configure") {
     const currentKind = selectedKinds[currentIndex];
     if (currentKind === undefined) {
-      setPhase("done");
-      return <></>;
+      return (
+        <Card w={64 * 14} maw="90vw" withBorder>
+          <Center py="xl">
+            <Loader />
+          </Center>
+        </Card>
+      );
     }
 
     return (

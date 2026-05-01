@@ -177,6 +177,6 @@ export const onboardRouter = createTRPCRouter({
       }
     }
 
-    await nextOnboardingStepAsync(db, undefined);
+    await nextOnboardingStepAsync(db);
   }),
 });
