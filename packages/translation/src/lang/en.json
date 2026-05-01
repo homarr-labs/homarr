@@ -90,6 +90,20 @@
         "title": "Settings",
         "subtitle": "Configure server settings."
       },
+      "integrations": {
+        "title": "Integrations",
+        "subtitle": "Select the services you use.",
+        "description": "Choose the integrations you'd like to connect. We'll set up your dashboard with matching widgets automatically.",
+        "action": {
+          "continue": "Continue",
+          "skip": "Skip for now"
+        },
+        "configure": {
+          "progress": "{current} of {total}",
+          "skip": "Skip this integration",
+          "finishing": "Setting up your dashboard..."
+        }
+      },
       "finish": {
         "title": "Finish setup",
         "subtitle": "You are ready to go!",
