@@ -1,7 +1,3 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
-
-const logger = createLogger({ module: "instrumentation" });
-
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const { setGlobalDispatcher } = await import("undici");
@@ -19,6 +15,5 @@ export async function register() {
 
     const { initWebSocketServerAsync } = await import("./server/websocket");
     await initWebSocketServerAsync();
-
   }
 }

@@ -41,7 +41,7 @@ export async function initWebSocketServerAsync() {
   logger.info("WebSocket server listening on ws://localhost:3001");
 
   process.on("SIGTERM", () => {
-    wss.clients.forEach((ws) => ws.close());
+    wss.clients.forEach((client) => client.close());
     wss.close();
   });
 }
