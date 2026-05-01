@@ -30,7 +30,7 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
     },
     onSuccess(_, variables) {
       form.setInitialValues({
-        firstDayOfWeek: variables.firstDayOfWeek,
+        firstDayOfWeek: variables.firstDayOfWeek as DayOfWeek,
       });
       showSuccessNotification({
         message: t("user.action.changeFirstDayOfWeek.notification.success.message"),

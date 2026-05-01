@@ -1,3 +1,4 @@
+import { observable } from "@trpc/server/observable";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -5,45 +6,59 @@ import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { items, users } from "@homarr/db/schema";
+import type { ExtendedFeedEntry } from "@homarr/request-handler/rss-feeds";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
+const feedsInput = z.object({
+  urls: z.array(z.string()).max(100),
+  maximumAmountPosts: z.number(),
+});
+
 export const rssFeedRouter = createTRPCRouter({
-  getFeeds: publicProcedure
-    .input(
-      z.object({
-        urls: z.array(z.string()).max(100),
-        maximumAmountPosts: z.number(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
-        ? input.urls
-        : await restrictUrlsAsync(ctx.db, input.urls);
+  getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
+    const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
+      ? input.urls
+      : await restrictUrlsAsync(ctx.db, input.urls);
 
-      const rssFeeds = await Promise.all(
-        urls.map(async (url) => {
-          const innerHandler = rssFeedsRequestHandler.handler({
-            url,
-            count: input.maximumAmountPosts,
-          });
-          return await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
-        }),
-      );
-
-      return rssFeeds
-        .flatMap((rssFeed) => rssFeed.data.entries)
-        .slice(0, input.maximumAmountPosts)
-        .sort((entryA, entryB) => {
-          return entryA.published && entryB.published
-            ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-            : 0;
+    const rssFeeds = await Promise.all(
+      urls.map(async (url) => {
+        const innerHandler = rssFeedsRequestHandler.handler({
+          url,
+          count: input.maximumAmountPosts,
         });
-    }),
+        return await innerHandler.getCachedOrUpdatedDataAsync({
+          forceUpdate: false,
+        });
+      }),
+    );
+
+    return rssFeeds
+      .flatMap((rssFeed) => rssFeed.data.entries)
+      .slice(0, input.maximumAmountPosts)
+      .sort((entryA, entryB) => {
+        return entryA.published && entryB.published
+          ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
+          : 0;
+      });
+  }),
+  subscribeFeeds: publicProcedure.input(feedsInput).subscription(({ input }) => {
+    // It is not necessary to check access to all feeds here, as the client will only subscribe to feeds which already exist
+    return observable<{ url: string; entries: ExtendedFeedEntry[] }>((emit) => {
+      const unsubscribes = input.urls.map((url) => {
+        const innerHandler = rssFeedsRequestHandler.handler({ url, count: input.maximumAmountPosts });
+        return innerHandler.subscribe((data) => {
+          emit.next({ url, entries: data.entries });
+        });
+      });
+
+      return () => {
+        unsubscribes.forEach((unsubscribe) => unsubscribe());
+      };
+    });
+  }),
 });
 
 export async function canAccessAllFeedsAsync(db: Database, session: Session | null) {

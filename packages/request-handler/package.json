@@ -22,7 +22,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@extractus/feed-extractor": "7.1.7",
+    "@extractus/feed-extractor": "catalog:",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -30,17 +30,17 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "dayjs": "^1.11.20",
-    "octokit": "^5.0.5",
-    "superjson": "2.2.6",
-    "undici": "7.24.6",
-    "zod": "^4.3.6"
+    "dayjs": "catalog:",
+    "octokit": "catalog:",
+    "superjson": "catalog:",
+    "undici": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.4",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

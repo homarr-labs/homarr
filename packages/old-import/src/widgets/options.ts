@@ -122,6 +122,7 @@ const optionMapping: OptionMapping = {
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
     hideDescription: () => undefined,
+    showPosterImage: () => true, // This was the default in oldmarr
   },
   notebook: {
     allowReadOnlyCheck: (oldOptions) => oldOptions.allowReadOnlyCheck,

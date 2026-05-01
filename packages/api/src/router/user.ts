@@ -3,7 +3,7 @@ import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
 import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
@@ -11,8 +11,8 @@ import { and, eq, handleTransactionsAsync, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
-import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
+import { credentialsAdminGroup } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -92,15 +92,13 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-      const salt = await createSaltAsync();
-      const hashedPassword = await hashPasswordAsync(input.password, salt);
+      const hashedPassword = await hashPasswordAsync(input.password);
 
       const userId = createId();
       const user = {
         id: userId,
         name: input.username,
         password: hashedPassword,
-        salt,
       };
 
       await handleTransactionsAsync(ctx.db, {
@@ -393,7 +391,6 @@ export const userRouter = createTRPCRouter({
         columns: {
           id: true,
           password: true,
-          salt: true,
           provider: true,
         },
         where: eq(users.id, input.userId),
@@ -423,8 +420,7 @@ export const userRouter = createTRPCRouter({
       });
 
       if (isPreviousPasswordRequired) {
-        const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");
-        const isValid = previousPasswordHash === dbUser.password;
+        const isValid = await comparePasswordsAsync(input.previousPassword, dbUser.password ?? "");
 
         if (!isValid) {
           throw new TRPCError({
@@ -434,8 +430,7 @@ export const userRouter = createTRPCRouter({
         }
       }
 
-      const salt = await createSaltAsync();
-      const hashedPassword = await hashPasswordAsync(input.password, salt);
+      const hashedPassword = await hashPasswordAsync(input.password);
       await ctx.db
         .update(users)
         .set({
@@ -583,8 +578,7 @@ export const userRouter = createTRPCRouter({
 });
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
-  const salt = await createSaltAsync();
-  const hashedPassword = await hashPasswordAsync(input.password, salt);
+  const hashedPassword = await hashPasswordAsync(input.password);
 
   const userId = createId();
   await db.insert(users).values({
@@ -592,7 +586,6 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBase
     name: input.username,
     email: input.email,
     password: hashedPassword,
-    salt,
   });
   return userId;
 };

@@ -25,16 +25,16 @@ body:
       label: Public API available?
       description: Is there a public API available, that we can consume in Homarr?
       options:
-        - Yes, available on a website
-        - Yes, available in the application itself
-        - No
+        - "Yes, available on a website"
+        - "Yes, available in the application itself"
+        - "No"
     validations:
       required: true
   - type: dropdown
     attributes:
       label: Are you willing to contribute this yourself?
       options:
-      - Yes
-      - No
+        - "Yes"
+        - "No"
     validations:
       required: true

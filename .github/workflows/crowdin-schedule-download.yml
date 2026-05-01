@@ -22,7 +22,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
-          app-id: ${{ secrets.CROWDIN_APP_ID }}
+          client-id: ${{ secrets.CROWDIN_APP_ID }}
           permission-contents: write # required to commit to crowdin branch
           permission-pull-requests: write # required to create pull request
 
