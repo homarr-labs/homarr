@@ -3790,6 +3790,10 @@
             "title": "翻譯人員",
             "subtitle": "{count} 翻譯了許多語言"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "資料庫",
             "subtitle": "{count} 於 Homarr 待碼中使用"

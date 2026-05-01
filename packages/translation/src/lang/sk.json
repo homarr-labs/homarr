@@ -3790,6 +3790,10 @@
             "title": "Prekladatelia",
             "subtitle": "{count} prispievanie prekladmi do mnohých jazykov"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Knižnice",
             "subtitle": "{count} používané v Homarrskom kódexe"
