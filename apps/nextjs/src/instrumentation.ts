@@ -150,16 +150,5 @@ export async function register() {
       wss.close();
     });
 
-    // Periodically hint V8 to collect garbage that accumulates from cron jobs and
-    // request handlers. --expose-gc must be set in NODE_OPTIONS for this to work;
-    // if not available it is silently skipped.
-    if (typeof global.gc === "function") {
-      setInterval(
-        () => {
-          global.gc?.();
-        },
-        5 * 60 * 1000,
-      );
-    }
   }
 }
