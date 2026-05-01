@@ -1,4 +1,4 @@
-import { createTask, validate } from "node-cron";
+import { Cron } from "croner";
 
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
@@ -83,10 +83,15 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
           ? defaultCronExpression
           : (configuration?.cronExpression ?? defaultCronExpression);
 
-        const scheduledTask = createTask(cronExpression, () => void catchingCallbackAsync(), {
-          name,
-          timezone: creatorOptions.timezone,
-        });
+        const scheduledTask = new Cron(
+          cronExpression,
+          {
+            name,
+            timezone: creatorOptions.timezone,
+            paused: true,
+          },
+          () => void catchingCallbackAsync(),
+        );
         creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
           name,
           cronExpression: defaultCronExpression,
@@ -116,6 +121,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
       },
       preventManualExecution: options.preventManualExecution ?? false,
       preventCustomInterval: options.preventCustomInterval ?? false,
+      timezone: creatorOptions.timezone,
     };
   };
 };
@@ -132,13 +138,6 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     defaultCronExpression: TExpression,
     options: CreateCronJobOptions = { runOnStart: false },
   ) => {
-    creatorOptions.logger.logDebug("Validating cron expression for cron job", {
-      name,
-      cronExpression: defaultCronExpression,
-    });
-    if (!validate(defaultCronExpression)) {
-      throw new Error(`Invalid cron expression '${defaultCronExpression}' for job '${name}'`);
-    }
     creatorOptions.logger.logDebug("Cron job expression for cron job is valid", {
       name,
       cronExpression: defaultCronExpression,

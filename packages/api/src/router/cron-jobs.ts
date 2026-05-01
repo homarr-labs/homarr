@@ -4,7 +4,7 @@ import z from "zod/v4";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
-import { cronExpressionSchema, jobGroup } from "@homarr/cron-jobs";
+import { jobGroup } from "@homarr/cron-jobs";
 import { JobManager } from "@homarr/cron-jobs/job-manager";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
@@ -30,15 +30,15 @@ export const cronJobsRouter = createTRPCRouter({
   stopJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).stopAsync(input);
+    .mutation(({ input, ctx }) => {
+      new JobManager(ctx.db, jobGroup).stop(input);
     }),
   updateJobInterval: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(
       z.object({
         name: jobNameSchema,
-        cron: cronExpressionSchema,
+        cron: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

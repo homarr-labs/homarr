@@ -1607,32 +1607,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor Note",
+      "description": "Displays a selected note from Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Note"
         },
         "showTitle": {
-          "label": ""
+          "label": "Show title"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Show last updated"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Select a note to display",
+      "emptyContent": "This note has no content",
+      "notFound": "Note not found",
+      "noNotes": "No notes found",
+      "integrationRequired": "Select an Anchor integration first",
+      "updatedAt": "Updated {date}",
+      "untitled": "Untitled",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
+      "saveForbidden": "You do not have permission to edit this note.",
+      "saveFailed": "Failed to save this note. Please try again."
     },
     "iframe": {
       "name": "iFrame",
@@ -3787,6 +3787,10 @@
             "subtitle": ""
           },
           "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "sponsors": {
             "title": "",
             "subtitle": ""
           },

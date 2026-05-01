@@ -164,7 +164,7 @@
     },
     "action": {
       "login": {
-        "label": "“Login”",
+        "label": "Login",
         "labelWith": "Iniciar sessão com {provider}",
         "notification": {
           "success": {
@@ -3789,6 +3789,10 @@
           "translators": {
             "title": "Tradutores",
             "subtitle": "{count} traduções contribuídas em vários idiomas"
+          },
+          "sponsors": {
+            "title": "Apoiadores",
+            "subtitle": "{count} apoiando o projeto financeiramente"
           },
           "libraries": {
             "title": "Bibliotecas",
