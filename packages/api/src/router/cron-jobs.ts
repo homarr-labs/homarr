@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 import z from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { cronExpressionSchema, jobGroupKeys, jobNameSchema } from "@homarr/cron-job-api";
+import { jobGroupKeys, jobNameSchema } from "@homarr/cron-job-api";
 import { JobManager } from "@homarr/cron-job-api/job-manager";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
@@ -30,8 +30,8 @@ export const cronJobsRouter = createTRPCRouter({
   stopJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await manager.stopAsync(input);
+    .mutation(({ input }) => {
+      manager.stop(input);
     }),
   updateJobInterval: permissionRequiredProcedure
     .requiresPermission("admin")
