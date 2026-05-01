@@ -12,5 +12,6 @@ export * from "./docs";
 export * from "./cookie";
 export * from "./search-engine";
 export * from "./onboarding";
+export * from "./widget-integration-map";
 export * from "./emptysuperjson";
 export * from "./hotkeys";
