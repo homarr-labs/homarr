@@ -1,3 +1,4 @@
+// File: packages/api/src/router/test/kubernetes/resource-parser/memory-resource-parser.spec.ts
 import { describe, expect, it } from "vitest";
 
 import { MemoryResourceParser } from "../../../kubernetes/resource-parser/memory-resource-parser";
@@ -31,11 +32,11 @@ describe("MemoryResourceParser", () => {
   });
 
   it("should parse values with Ti unit correctly", () => {
-    expect(parser.parse(`1${TI}`)).toBe(1024 * BYTES_IN_GIB * 1024);
+    expect(parser.parse(`1${TI}`)).toBe(1024 * 1024 * BYTES_IN_GIB);
   });
 
   it("should parse values with Pi unit correctly", () => {
-    expect(parser.parse(`1${PI}`)).toBe(1024 * BYTES_IN_GIB * 1024 * 1024);
+    expect(parser.parse(`1${PI}`)).toBe(1024 * 1024 * 1024 * BYTES_IN_GIB);
   });
 
   it("should parse decimal values correctly", () => {
