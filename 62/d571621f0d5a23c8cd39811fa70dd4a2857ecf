@@ -1,0 +1,25 @@
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  4ce654cf70f9902c 58-67
+packages/api/src/router/onboard/onboard-router.ts
+  4ce654cf70f9902c 180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "62d571621f0d5a23c8cd39811fa70dd4a2857ecf",
+  "prompts": {
+    "4ce654cf70f9902c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7cdaa66a-445e-4f22-9e7a-578bc0f0c13b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 6,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    }
+  }
+}
