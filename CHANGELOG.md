@@ -1,3 +1,9 @@
+## [1.60.1-beta.1](https://github.com/homarr-labs/homarr/compare/v1.60.0...v1.60.1-beta.1) (2026-05-01)
+
+### Performance Improvements
+
+* **memory:** combine 3 node processes into one ([#5600](https://github.com/homarr-labs/homarr/issues/5600)) ([a1aa550](https://github.com/homarr-labs/homarr/commit/a1aa5505a365688b456090a882770e561479833e))
+
 ## [1.60.0](https://github.com/homarr-labs/homarr/compare/v1.59.3...v1.60.0) (2026-05-01)
 
 ### Features
