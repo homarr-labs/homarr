@@ -3790,6 +3790,10 @@
             "title": "crwdns1884:0crwdne1884:0",
             "subtitle": "crwdns1886:0{count}crwdne1886:0"
           },
+          "sponsors": {
+            "title": "crwdns4100:0crwdne4100:0",
+            "subtitle": "crwdns4102:0{count}crwdne4102:0"
+          },
           "libraries": {
             "title": "crwdns1888:0crwdne1888:0",
             "subtitle": "crwdns1890:0{count}crwdne1890:0"

@@ -38,7 +38,7 @@ export const cronJobsRouter = createTRPCRouter({
     .input(
       z.object({
         name: jobNameSchema,
-        cron: cronExpressionSchema,
+        cron: z.string(),
       }),
     )
     .mutation(async ({ input }) => {

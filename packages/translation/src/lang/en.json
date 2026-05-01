@@ -3790,6 +3790,10 @@
             "title": "Translators",
             "subtitle": "{count} contributing translations in many languages"
           },
+          "sponsors": {
+            "title": "Sponsors",
+            "subtitle": "{count} supporting the project financially"
+          },
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"

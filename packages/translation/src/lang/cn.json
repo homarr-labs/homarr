@@ -1614,22 +1614,22 @@
           "label": ""
         },
         "showTitle": {
-          "label": ""
+          "label": "显示标题"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "显示最近更新"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
+      "empty": "选择要显示的笔记",
+      "emptyContent": "此笔记没有内容",
+      "notFound": "未找到笔记",
       "noNotes": "",
       "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
+      "updatedAt": "更新时间：{date}",
+      "untitled": "未命名",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消",
       "readOnlyViewer": "",
       "saveForbidden": "",
       "saveFailed": ""
@@ -1901,7 +1901,7 @@
           "label": "显示内存信息"
         },
         "gpu": {
-          "label": ""
+          "label": "显示 GPU 信息"
         },
         "showUptime": {
           "label": "显示运行时间"
@@ -2200,15 +2200,15 @@
           "description": ""
         },
         "showPhotos": {
-          "label": "",
+          "label": "显示图片",
           "description": ""
         },
         "showVideos": {
-          "label": "",
+          "label": "显示视频",
           "description": ""
         },
         "showStorage": {
-          "label": "",
+          "label": "显示存储",
           "description": ""
         }
       },
@@ -2229,7 +2229,7 @@
           "description": ""
         },
         "showPhotoInfo": {
-          "label": "",
+          "label": "显示图片信息",
           "description": ""
         }
       },
@@ -2783,17 +2783,17 @@
       "recentResults": "",
       "recentResultsSpeed": "",
       "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
+      "download": "下载",
+      "upload": "上传",
+      "ping": "Ping",
+      "status": "状态",
+      "avgDownload": "平均下载",
+      "avgUpload": "平均上传",
+      "avgPing": "平均Ping",
       "healthy": "",
       "unhealthy": "",
       "ok": "",
-      "fail": "",
+      "fail": "失败",
       "noSectionsEnabled": "",
       "error": {
         "internalServerError": ""
@@ -2812,7 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "内存",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "网络"
           }
         },
@@ -2829,7 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "内存",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "网络",
         "up": "上传",
         "down": "下载"
@@ -3789,6 +3789,10 @@
           "translators": {
             "title": "翻译人员",
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "相关的库",
