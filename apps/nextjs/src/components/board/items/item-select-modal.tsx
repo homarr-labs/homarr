@@ -70,7 +70,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   );
 }).withOptions({
   defaultTitle: (t) => t("item.create.title"),
-  size: "xl",
+  size: 1200,
 });
 
 const WidgetItem = ({

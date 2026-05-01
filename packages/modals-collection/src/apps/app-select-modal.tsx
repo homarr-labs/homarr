@@ -1,13 +1,15 @@
 import { useMemo, useState } from "react";
-import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { Button, Card, Center, Grid, Group, Input, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
+import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
-
-import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
+import { AppForm } from "@homarr/forms-collection";
+import { createModal } from "@homarr/modals";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { appManageSchema } from "@homarr/validation/app";
 
 interface AppSelectModalProps {
   onSelect?: (app: RouterOutputs["app"]["selectable"][number]) => void;
@@ -15,10 +17,20 @@ interface AppSelectModalProps {
 }
 
 export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, innerProps }) => {
+  const [step, setStep] = useState<"select" | "form">("select");
   const [search, setSearch] = useState("");
   const t = useI18n();
-  const { data: apps = [], isPending } = clientApi.app.selectable.useQuery();
-  const { openModal: openQuickAddAppModal } = useModalAction(QuickAddAppModal);
+  const tScoped = useScopedI18n("app.page.create.notification");
+  const { data: apps = [], isPending: isLoadingApps } = clientApi.app.selectable.useQuery();
+
+  const { mutate, isPending: isCreating } = clientApi.app.create.useMutation({
+    onError: () => {
+      showErrorNotification({
+        title: tScoped("error.title"),
+        message: tScoped("error.message"),
+      });
+    },
+  });
 
   const filteredApps = useMemo(
     () =>
@@ -29,22 +41,41 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   );
 
   const handleSelect = (app: RouterOutputs["app"]["selectable"][number]) => {
-    if (innerProps.onSelect) {
-      innerProps.onSelect(app);
-    }
+    innerProps.onSelect?.(app);
     actions.closeModal();
   };
 
-  const handleAddNewApp = () => {
-    openQuickAddAppModal({
-      onClose(app) {
-        if (innerProps.onSelect) {
-          innerProps.onSelect(app);
-        }
+  const handleCreateSubmit = (values: z.infer<typeof appManageSchema>) => {
+    mutate(values, {
+      onSuccess(app) {
+        showSuccessNotification({
+          title: tScoped("success.title"),
+          message: tScoped("success.message"),
+        });
+        innerProps.onSelect?.(app);
         actions.closeModal();
       },
     });
   };
+
+  if (step === "form") {
+    return (
+      <ScrollArea.Autosize mah="80vh">
+        <Group gap="xs" mb="md" style={{ cursor: "pointer" }} onClick={() => setStep("select")}>
+          <IconArrowLeft size={18} />
+          <Title order={4}>{t("app.action.create.title")}</Title>
+        </Group>
+        <AppForm
+          buttonLabels={{
+            submit: t("board.action.quickCreateApp.modal.createAndUse"),
+          }}
+          showBackToOverview={false}
+          handleSubmit={handleCreateSubmit}
+          isPending={isCreating}
+        />
+      </ScrollArea.Autosize>
+    );
+  }
 
   return (
     <Stack>
@@ -77,7 +108,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                     {t("app.action.create.description")}
                   </Text>
                 </Stack>
-                <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+                <Button onClick={() => setStep("form")} variant="light" size="xs" mt="auto" radius="md" fullWidth>
                   {t("app.action.create.action")}
                 </Button>
               </Stack>
@@ -108,7 +139,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
           </Grid.Col>
         ))}
 
-        {filteredApps.length === 0 && !isPending && (
+        {filteredApps.length === 0 && !isLoadingApps && (
           <Grid.Col span={12}>
             <Center p="xl">
               <Text c="dimmed">{t("app.action.select.noResults")}</Text>
@@ -120,5 +151,5 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   );
 }).withOptions({
   defaultTitle: (t) => t("app.action.select.title"),
-  size: "xl",
+  size: 1200,
 });

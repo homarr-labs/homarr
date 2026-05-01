@@ -45,9 +45,11 @@ import { IntegrationTestConnectionError } from "../_components/test-connection/i
 import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
 interface NewIntegrationFormProps {
-  searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {
-    kind: IntegrationKind;
-  };
+  kind: IntegrationKind;
+  initialUrl?: string;
+  initialName?: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
@@ -58,29 +60,28 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
   const t = useI18n();
-  const secretKinds = getAllSecretKindOptions(searchParams.kind);
+  const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const router = useRouter();
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
-  let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
+  let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
-    // Placeholder Url, replaced with origin of the secret Url on submit
     url = "http://localhost";
   }
   const form = useZodForm(formSchema, {
     initialValues: {
-      name: searchParams.name ?? getIntegrationName(searchParams.kind),
+      name: initialName ?? getIntegrationName(kind),
       url,
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
       })),
       attemptSearchEngineCreation: true,
-      hasApp: false,
+      hasApp: true,
       appHref: url,
       appId: null,
     },
@@ -106,7 +107,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         : {
             name: values.name,
             href: hasCustomHref ? appHref : url,
-            iconUrl: getIconUrl(searchParams.kind),
+            iconUrl: getIconUrl(kind),
             description: null,
             pingUrl: url,
           }
@@ -114,7 +115,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
 
     await createIntegrationAsync(
       {
-        kind: searchParams.kind,
+        kind,
         ...values,
         url,
         app,
@@ -136,7 +137,11 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             message: t("integration.page.create.notification.success.message"),
           });
 
-          router.push("/manage/integrations");
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.push("/manage/integrations");
+          }
         },
         onError: () => {
           showErrorNotification({
@@ -148,7 +153,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     );
   };
 
-  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
+  const supportsSearchEngine = integrationDefs[kind].category.flat().includes("search");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
@@ -184,7 +189,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           <Checkbox
             label={t("integration.field.attemptSearchEngineCreation.label")}
             description={t("integration.field.attemptSearchEngineCreation.description", {
-              kind: getIntegrationName(searchParams.kind),
+              kind: getIntegrationName(kind),
             })}
             {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
           />
@@ -193,9 +198,15 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         <AppForm form={form} canCreateApps={canCreateApps} />
 
         <Group justify="end" align="center">
-          <Button variant="default" component={Link} href="/manage/integrations">
-            {t("common.action.backToOverview")}
-          </Button>
+          {onCancel ? (
+            <Button variant="default" onClick={onCancel}>
+              {t("common.action.backToOverview")}
+            </Button>
+          ) : (
+            <Button variant="default" component={Link} href="/manage/integrations">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
           <Button type="submit" loading={isPending}>
             {t("integration.testConnection.action.create")}
           </Button>
