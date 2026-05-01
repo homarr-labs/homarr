@@ -82,9 +82,7 @@ export async function register() {
       "tracearr",
     ];
 
-    const { getServerSettingByKeyAsync } = await import("@homarr/db/queries");
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
-    let restartTimer: ReturnType<typeof setTimeout> | null = null;
     let isIdle = false;
 
     const pauseIntegrationJobsAsync = async () => {
@@ -105,23 +103,11 @@ export async function register() {
       }
     };
 
-    const exitProcess = process.exit;
-    const scheduleRestartAsync = async () => {
-      const { enabled, gracePeriodMinutes } = await getServerSettingByKeyAsync(db, "idleRestart");
-      if (!enabled) return;
-      restartTimer = setTimeout(() => {
-        restartTimer = null;
-        logger.info(`No clients for ${gracePeriodMinutes} minutes - restarting process to free memory`);
-        exitProcess(0);
-      }, gracePeriodMinutes * 60_000);
-    };
-
     // Start idle timer immediately - pause jobs if no client connects within grace period
     idleTimer = setTimeout(() => {
       idleTimer = null;
       void pauseIntegrationJobsAsync();
     }, IDLE_GRACE_MS);
-    void scheduleRestartAsync();
 
     let externalClients = 0;
 
@@ -141,10 +127,6 @@ export async function register() {
           clearTimeout(idleTimer);
           idleTimer = null;
         }
-        if (restartTimer !== null) {
-          clearTimeout(restartTimer);
-          restartTimer = null;
-        }
         void resumeIntegrationJobsAsync();
       }
 
@@ -156,7 +138,6 @@ export async function register() {
             idleTimer = null;
             void pauseIntegrationJobsAsync();
           }, IDLE_GRACE_MS);
-          void scheduleRestartAsync();
         }
       });
     });
@@ -165,7 +146,6 @@ export async function register() {
 
     process.on("SIGTERM", () => {
       if (idleTimer !== null) clearTimeout(idleTimer);
-      if (restartTimer !== null) clearTimeout(restartTimer);
       wss.clients.forEach((ws) => ws.close());
       wss.close();
     });

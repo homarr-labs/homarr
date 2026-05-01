@@ -9,7 +9,6 @@ export const defaultServerSettingsKeys = [
   "appearance",
   "culture",
   "search",
-  "idleRestart",
 ] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
@@ -44,10 +43,6 @@ export const defaultServerSettings = {
   },
   search: {
     defaultSearchEngineId: null as string | null,
-  },
-  idleRestart: {
-    enabled: false,
-    gracePeriodMinutes: 5,
   },
 } satisfies ServerSettingsRecord;
 

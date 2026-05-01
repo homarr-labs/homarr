@@ -75,6 +75,7 @@
     "dotenv": "catalog:",
     "flag-icons": "catalog:",
     "glob": "catalog:",
+    "isomorphic-dompurify": "catalog:",
     "jotai": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
