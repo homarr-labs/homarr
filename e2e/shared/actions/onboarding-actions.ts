@@ -51,4 +51,9 @@ export class OnboardingActions {
     await this.page.waitForSelector("text=Analytics");
     await this.page.locator("css=button[type='submit']").click();
   }
+
+  public async processIntegrationsStepAsync() {
+    await this.page.waitForSelector("text=integrations you'd like to connect");
+    await this.page.locator("button", { hasText: "Skip for now" }).click();
+  }
 }

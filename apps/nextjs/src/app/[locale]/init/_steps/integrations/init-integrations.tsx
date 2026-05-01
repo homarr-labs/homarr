@@ -57,7 +57,8 @@ export const InitIntegrations = () => {
   if (phase === "configure") {
     const currentKind = selectedKinds[currentIndex];
     if (currentKind === undefined) {
-      return null;
+      setPhase("done");
+      return <></>;
     }
 
     return (

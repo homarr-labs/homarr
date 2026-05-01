@@ -31,6 +31,7 @@ describe("Onboarding", () => {
       confirmPassword: "Comp(exP4sswOrd",
     });
     await actions.processSettingsStepAsync();
+    await actions.processIntegrationsStepAsync();
 
     // Assert
     await assertions.assertFinishStepVisibleAsync();
@@ -72,6 +73,7 @@ describe("Onboarding", () => {
       name: externalGroupName,
     });
     await actions.processSettingsStepAsync();
+    await actions.processIntegrationsStepAsync();
 
     // Assert
     await assertions.assertFinishStepVisibleAsync();

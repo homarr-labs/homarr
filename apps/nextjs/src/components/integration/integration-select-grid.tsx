@@ -16,8 +16,8 @@ interface IntegrationSelectGridProps {
 }
 
 const getWidgetsByIntegration = () => {
-  const map: Record<IntegrationKind, WidgetKind[]> = Object.fromEntries(
-    integrationKinds.map((kind) => [kind, []]),
+  const map = Object.fromEntries(
+    integrationKinds.map((kind) => [kind, [] as WidgetKind[]]),
   ) as Record<IntegrationKind, WidgetKind[]>;
 
   for (const [widgetKind, widget] of Object.entries(widgetImports) as [
