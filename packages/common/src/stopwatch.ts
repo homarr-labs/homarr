@@ -41,6 +41,10 @@ export class Stopwatch {
     return dayjs().millisecond(this.startTime).fromNow(true);
   }
 
+  getElapsedInFormattedMilliseconds() {
+    return `${this.getElapsedInMilliseconds().toFixed(0)}ms`;
+  }
+
   getElapsedInMilliseconds() {
     return performance.now() - this.startTime;
   }

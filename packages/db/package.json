@@ -37,6 +37,8 @@
     "push:sqlite": "pnpm with-env drizzle-kit push --config ./configs/sqlite.config.ts",
     "seed": "pnpm with-env tsx ./migrations/run-seed.ts",
     "studio": "pnpm with-env drizzle-kit studio --config ./configs/sqlite.config.ts",
+    "studio:mysql": "pnpm with-env drizzle-kit studio --config ./configs/mysql.config.ts",
+    "studio:postgresql": "pnpm with-env drizzle-kit studio --config ./configs/postgresql.config.ts",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
