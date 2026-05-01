@@ -19,6 +19,9 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         memory: factory.switch({
           defaultValue: true,
         }),
+        gpu: factory.switch({
+          defaultValue: true,
+        }),
         showUptime: factory.switch({
           defaultValue: true,
         }),

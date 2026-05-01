@@ -33,7 +33,6 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
-  salt: text().notNull(),
   userId: text()
     .notNull()
     .references((): AnySQLiteColumn => users.id, {
@@ -48,7 +47,6 @@ export const users = sqliteTable("user", {
   emailVerified: int({ mode: "timestamp_ms" }),
   image: text(),
   password: text(),
-  salt: text(),
   provider: text().$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",

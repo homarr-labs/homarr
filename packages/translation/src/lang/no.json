@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Notisbok",
       "description": "En enkel notatbok widget som støtter markdown",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Tillat geolokalisering"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1899,9 @@
         },
         "memory": {
           "label": "Vis minneinfo"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "Vis oppetid"
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Skjul beskrivelse"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "Ingen varsler å vise.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Systemressurser",
       "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Minne",
+            "gpu": "",
             "network": "Nettverk"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Minne",
+        "gpu": "",
         "network": "NETT",
         "up": "OPP",
         "down": "NED"
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Minecraft serverstatus"
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
             },
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "Oversettere",
             "subtitle": "{count} bidrar med oversettelser på mange språk"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "Biblioteker",

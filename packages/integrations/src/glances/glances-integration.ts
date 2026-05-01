@@ -59,6 +59,14 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       loadAverage: null,
       smart: [],
       cpuTemp: undefined,
+      gpu: stats.gpu.map((gpu) => ({
+        gpuId: gpu.gpu_id,
+        name: gpu.name,
+        memoryUtilization: gpu.mem ?? 0,
+        processorUtilization: gpu.proc ?? 0,
+        temperature: gpu.temperature ?? null,
+        fanSpeed: gpu.fan_speed ?? null,
+      })),
     };
   }
 
@@ -150,4 +158,16 @@ const allSchema = z.object({
   quicklook: z.object({
     cpu_name: z.string(),
   }),
+  gpu: z
+    .array(
+      z.object({
+        gpu_id: z.string(),
+        name: z.string(),
+        mem: z.number().nullable().optional(),
+        proc: z.number().nullable().optional(),
+        temperature: z.number().nullable().optional(),
+        fan_speed: z.number().nullable().optional(),
+      }),
+    )
+    .default([]),
 });

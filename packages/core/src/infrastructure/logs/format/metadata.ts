@@ -1,7 +1,10 @@
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 export const formatMetadata = (metadata: Record<string, unknown> | Error, ignoreKeys?: string[]) => {
-  const metadataObject = metadata instanceof ErrorWithMetadata ? metadata.metadata : metadata;
+  const metadataObject =
+    metadata instanceof ErrorWithMetadata || ("metadata" in metadata && typeof metadata.metadata === "object")
+      ? (metadata.metadata as Record<string, unknown>)
+      : metadata;
 
   const filteredMetadata = Object.keys(metadataObject)
     .filter((key) => !ignoreKeys?.includes(key))

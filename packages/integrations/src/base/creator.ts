@@ -1,6 +1,7 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { AnchorIntegration } from "../anchor/anchor-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -40,7 +41,9 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { SearchChIntegration } from "../search-ch/search-ch-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
+import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
@@ -70,6 +73,7 @@ type IntegrationInstance = new (integration: IntegrationInput) => Integration;
 
 // factories are an array, to differentiate in js between class constructors and functions
 export const integrationCreators = {
+  anchor: AnchorIntegration,
   piHole: [createPiHoleIntegrationAsync],
   adGuardHome: AdGuardHomeIntegration,
   homeAssistant: HomeAssistantIntegration,
@@ -114,7 +118,9 @@ export const integrationCreators = {
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
+  searchCh: SearchChIntegration,
   immich: ImmichIntegration,
+  speedtestTracker: SpeedtestTrackerIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

@@ -1525,6 +1525,17 @@
         "offline": "Не в сети"
       }
     },
+    "timetable": {
+      "name": "Расписание",
+      "description": "Отображает время отправления со станции",
+      "title": "Отправления {station}",
+      "noStation": "Станция не выбрана",
+      "option": {
+        "station": {
+          "label": "Станция"
+        }
+      }
+    },
     "notebook": {
       "name": "Блокнот",
       "description": "Простой виджет заметок с поддержкой markdown",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Встраивает любой контент из интернета. Некоторые сайты могут ограничивать доступ.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Разрешить геолокацию"
+        },
+        "allowModals": {
+          "label": "Разрешить модальные окна"
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "Показать информацию о памяти"
         },
+        "gpu": {
+          "label": "Показать информацию о GPU"
+        },
         "showUptime": {
           "label": "Показывать время работы"
         },
@@ -1997,58 +2042,58 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Мониторинг медиасервера с детальной информацией о потоках и транскодировании",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Показать активные потоки"
         },
         "showStats": {
-          "label": ""
+          "label": "Показать сводку статистики"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Показать недавнюю активность"
         },
         "showViolations": {
-          "label": ""
+          "label": "Показать нарушения"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Активные потоки",
+        "totalUsers": "Всего пользователей",
+        "transcodes": "Транскодирования",
+        "bandwidth": "Пропускная способность"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Нет активных потоков",
+        "user": "Пользователь",
+        "media": "Медиа",
+        "state": "Состояние",
+        "quality": "Качество",
+        "device": "Устройство",
+        "progress": "Прогресс",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Прямое воспроизведение",
+          "transcode": "Транскодирование",
+          "directStream": "Прямой поток"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Недавняя активность",
+        "empty": "Нет недавней активности",
+        "watched": "Просмотрено",
+        "partial": "Частично"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Нарушения",
+        "empty": "Нет недавних нарушений",
+        "rule": "Правило",
+        "user": "Пользователь"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Секции не включены",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Интеграция Tracearr не настроена",
+        "internalServerError": "Не удалось получить данные Tracearr"
       }
     },
     "common": {
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Скрыть описание"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "Нет уведомлений для отображения.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Системные ресурсы",
       "description": "Использование ЦП, памяти, сети и другого оборудования вашей системы",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "ЦП",
             "memory": "Память",
+            "gpu": "GPU",
             "network": "Сеть"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "ЦП",
         "memory": "ОЗУ",
+        "gpu": "GPU",
         "network": "Сеть",
         "up": "Исх.",
         "down": "Вх."
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Статус сервера Minecraft"
             },
+            "timetable": {
+              "label": "Расписание"
+            },
             "iconsUpdater": {
               "label": "Обновление иконок"
             },
@@ -3575,7 +3667,7 @@
               "label": "Погода"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "Переводчики",
             "subtitle": "{count} помогают с переводами на разные языки"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "Библиотеки",

@@ -1525,6 +1525,17 @@
         "offline": "离线"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "笔记",
       "description": "支持 Markdown 的简单笔记本小部件",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showUpdatedAt": {
+          "label": "显示最近更新"
+        }
+      },
+      "empty": "选择要显示的笔记",
+      "emptyContent": "此笔记没有内容",
+      "notFound": "未找到笔记",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "更新时间：{date}",
+      "untitled": "未命名",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "嵌入互联网上的任何内容。某些网站可能限制访问。",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "允许地理位置"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1857,6 +1899,9 @@
         },
         "memory": {
           "label": "显示内存信息"
+        },
+        "gpu": {
+          "label": "显示 GPU 信息"
         },
         "showUptime": {
           "label": "显示运行时间"
@@ -2155,15 +2200,15 @@
           "description": ""
         },
         "showPhotos": {
-          "label": "",
+          "label": "显示图片",
           "description": ""
         },
         "showVideos": {
-          "label": "",
+          "label": "显示视频",
           "description": ""
         },
         "showStorage": {
-          "label": "",
+          "label": "显示存储",
           "description": ""
         }
       },
@@ -2184,7 +2229,7 @@
           "description": ""
         },
         "showPhotoInfo": {
-          "label": "",
+          "label": "显示图片信息",
           "description": ""
         }
       },
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "隐藏描述"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "没有可显示的通知。",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "下载",
+      "upload": "上传",
+      "ping": "Ping",
+      "status": "状态",
+      "avgDownload": "平均下载",
+      "avgUpload": "平均上传",
+      "avgPing": "平均Ping",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "失败",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "系统资源",
       "description": "您系统的 CPU、内存、磁盘及其他硬件使用情况",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "内存",
+            "gpu": "GPU",
             "network": "网络"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "内存",
+        "gpu": "GPU",
         "network": "网络",
         "up": "上传",
         "down": "下载"
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Minecraft 服务状态"
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "图标更新"
             },
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "翻译人员",
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "相关的库",

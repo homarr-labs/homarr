@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import type { ContainerInfo, ContainerStats } from "dockerode";
+import type Dockerode from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
@@ -72,7 +73,7 @@ async function getContainersWithStatsAsync() {
       cpuUsage,
       memoryUsage,
       image: container.Image,
-      ports: container.Ports,
+      ports: container.Ports as Dockerode.Port[] | undefined,
     };
   });
 

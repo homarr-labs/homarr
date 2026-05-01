@@ -1525,6 +1525,17 @@
         "offline": ""
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Ghi chú",
       "description": "",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "",
       "description": "Nhúng bất kỳ nội dung nào từ internet. Một số trang web có thể hạn chế quyền truy cập.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Cho phép định vị"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1856,6 +1898,9 @@
           "label": ""
         },
         "memory": {
+          "label": ""
+        },
+        "gpu": {
           "label": ""
         },
         "showUptime": {
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "",
       "description": "",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "",
             "memory": "",
+            "gpu": "",
             "network": ""
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "",
         "memory": "",
+        "gpu": "",
         "network": "",
         "up": "",
         "down": ""
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": ""
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -3695,6 +3787,10 @@
             "subtitle": ""
           },
           "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "sponsors": {
             "title": "",
             "subtitle": ""
           },

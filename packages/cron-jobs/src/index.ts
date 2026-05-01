@@ -18,6 +18,7 @@ import { mediaServerJob } from "./jobs/integrations/media-server";
 import { mediaTranscodingJob } from "./jobs/integrations/media-transcoding";
 import { networkControllerJob } from "./jobs/integrations/network-controller";
 import { refreshNotificationsJob } from "./jobs/integrations/notifications";
+import { timetableJob } from "./jobs/integrations/timetable";
 import { tracearrJob } from "./jobs/integrations/tracearr";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
@@ -51,6 +52,7 @@ export const jobGroup = createCronJobGroup({
   firewallInterfaces: firewallInterfacesJob,
   refreshNotifications: refreshNotificationsJob,
   weather: weatherJob,
+  timetable: timetableJob,
   tracearr: tracearrJob,
 });
 

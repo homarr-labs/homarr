@@ -117,7 +117,6 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             when={
               widgetSupportsIntegrations &&
               item.integrationIds.length === 0 &&
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />

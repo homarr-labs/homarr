@@ -1,5 +1,7 @@
 import type { WidgetOptionType } from "../options";
+import { WidgetAnchorNoteInput } from "./widget-anchor-note-input";
 import { WidgetAppInput } from "./widget-app-input";
+import { WidgetDynamicSelectInput } from "./widget-dynamic-select-input";
 import { WidgetLocationInput } from "./widget-location-input";
 import { WidgetMultiTextInput } from "./widget-multi-text-input";
 import { WidgetMultiReleasesRepositoriesInput } from "./widget-multiReleasesRepositories-input";
@@ -12,6 +14,7 @@ import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
 
 const mapping = {
+  anchorNote: WidgetAnchorNoteInput,
   text: WidgetTextInput,
   location: WidgetLocationInput,
   multiSelect: WidgetMultiSelectInput,
@@ -23,6 +26,7 @@ const mapping = {
   app: WidgetAppInput,
   sortableItemList: WidgetSortedItemListInput,
   multiReleasesRepositories: WidgetMultiReleasesRepositoriesInput,
+  dynamicSelect: WidgetDynamicSelectInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

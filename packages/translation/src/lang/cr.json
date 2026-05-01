@@ -1525,6 +1525,17 @@
         "offline": "crwdns2494:0crwdne2494:0"
       }
     },
+    "timetable": {
+      "name": "crwdns4000:0crwdne4000:0",
+      "description": "crwdns4002:0crwdne4002:0",
+      "title": "crwdns4004:0{station}crwdne4004:0",
+      "noStation": "crwdns4006:0crwdne4006:0",
+      "option": {
+        "station": {
+          "label": "crwdns4008:0crwdne4008:0"
+        }
+      }
+    },
     "notebook": {
       "name": "crwdns860:0crwdne860:0",
       "description": "crwdns862:0crwdne862:0",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "crwdns4064:0crwdne4064:0",
+      "description": "crwdns4066:0crwdne4066:0",
+      "option": {
+        "noteId": {
+          "label": "crwdns4068:0crwdne4068:0"
+        },
+        "showTitle": {
+          "label": "crwdns4070:0crwdne4070:0"
+        },
+        "showUpdatedAt": {
+          "label": "crwdns4072:0crwdne4072:0"
+        }
+      },
+      "empty": "crwdns4074:0crwdne4074:0",
+      "emptyContent": "crwdns4076:0crwdne4076:0",
+      "notFound": "crwdns4078:0crwdne4078:0",
+      "noNotes": "crwdns4080:0crwdne4080:0",
+      "integrationRequired": "crwdns4082:0crwdne4082:0",
+      "updatedAt": "crwdns4084:0{date}crwdne4084:0",
+      "untitled": "crwdns4086:0crwdne4086:0",
+      "edit": "crwdns4088:0crwdne4088:0",
+      "save": "crwdns4090:0crwdne4090:0",
+      "cancel": "crwdns4092:0crwdne4092:0",
+      "readOnlyViewer": "crwdns4094:0crwdne4094:0",
+      "saveForbidden": "crwdns4096:0crwdne4096:0",
+      "saveFailed": "crwdns4098:0crwdne4098:0"
+    },
     "iframe": {
       "name": "crwdns950:0crwdne950:0",
       "description": "crwdns952:0crwdne952:0",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "crwdns970:0crwdne970:0"
+        },
+        "allowModals": {
+          "label": "crwdns3992:0crwdne3992:0"
         }
       },
       "error": {
@@ -1857,6 +1899,9 @@
         },
         "memory": {
           "label": "crwdns1080:0crwdne1080:0"
+        },
+        "gpu": {
+          "label": "crwdns3994:0crwdne3994:0"
         },
         "showUptime": {
           "label": "crwdns3446:0crwdne3446:0"
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "crwdns3674:0crwdne3674:0"
+        },
+        "showPosterImage": {
+          "label": "crwdns4012:0crwdne4012:0"
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "crwdns3480:0crwdne3480:0",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "crwdns4014:0crwdne4014:0",
+      "description": "crwdns4016:0crwdne4016:0",
+      "option": {
+        "showLatestResult": {
+          "label": "crwdns4018:0crwdne4018:0"
+        },
+        "showStats": {
+          "label": "crwdns4020:0crwdne4020:0"
+        },
+        "showRecentResults": {
+          "label": "crwdns4022:0crwdne4022:0"
+        },
+        "showPingGraph": {
+          "label": "crwdns4024:0crwdne4024:0"
+        }
+      },
+      "latestResult": "crwdns4026:0crwdne4026:0",
+      "averages": "crwdns4028:0crwdne4028:0",
+      "tests": "crwdns4030:0{count}crwdne4030:0",
+      "recentResults": "crwdns4032:0crwdne4032:0",
+      "recentResultsSpeed": "crwdns4034:0crwdne4034:0",
+      "recentResultsPing": "crwdns4036:0crwdne4036:0",
+      "download": "crwdns4038:0crwdne4038:0",
+      "upload": "crwdns4040:0crwdne4040:0",
+      "ping": "crwdns4042:0crwdne4042:0",
+      "status": "crwdns4044:0crwdne4044:0",
+      "avgDownload": "crwdns4046:0crwdne4046:0",
+      "avgUpload": "crwdns4048:0crwdne4048:0",
+      "avgPing": "crwdns4050:0crwdne4050:0",
+      "healthy": "crwdns4052:0crwdne4052:0",
+      "unhealthy": "crwdns4054:0crwdne4054:0",
+      "ok": "crwdns4056:0crwdne4056:0",
+      "fail": "crwdns4058:0crwdne4058:0",
+      "noSectionsEnabled": "crwdns4060:0crwdne4060:0",
+      "error": {
+        "internalServerError": "crwdns4062:0crwdne4062:0"
+      }
+    },
     "systemResources": {
       "name": "crwdns3600:0crwdne3600:0",
       "description": "crwdns3602:0crwdne3602:0",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "crwdns3700:0crwdne3700:0",
             "memory": "crwdns3702:0crwdne3702:0",
+            "gpu": "crwdns3996:0crwdne3996:0",
             "network": "crwdns3704:0crwdne3704:0"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "crwdns3604:0crwdne3604:0",
         "memory": "crwdns3606:0crwdne3606:0",
+        "gpu": "crwdns3998:0crwdne3998:0",
         "network": "crwdns3608:0crwdne3608:0",
         "up": "crwdns3610:0crwdne3610:0",
         "down": "crwdns3612:0crwdne3612:0"
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "crwdns2496:0crwdne2496:0"
             },
+            "timetable": {
+              "label": "crwdns4010:0crwdne4010:0"
+            },
             "iconsUpdater": {
               "label": "crwdns1828:0crwdne1828:0"
             },
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "crwdns1884:0crwdne1884:0",
             "subtitle": "crwdns1886:0{count}crwdne1886:0"
+          },
+          "sponsors": {
+            "title": "crwdns4100:0crwdne4100:0",
+            "subtitle": "crwdns4102:0{count}crwdne4102:0"
           },
           "libraries": {
             "title": "crwdns1888:0crwdne1888:0",

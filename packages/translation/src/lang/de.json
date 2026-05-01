@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Notizbuch",
       "description": "Ein einfaches Notizbuch Widget, das Markdown unterstützt",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Geolokalisierung zulassen"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Laufzeit anzeigen"
         },
@@ -2001,7 +2046,7 @@
       "description": "",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Aktive Streams anzeigen"
         },
         "showStats": {
           "label": ""
@@ -2014,7 +2059,7 @@
         }
       },
       "stats": {
-        "activeStreams": "",
+        "activeStreams": "Aktive Streams",
         "totalUsers": "",
         "transcodes": "",
         "bandwidth": ""
@@ -2151,7 +2196,7 @@
       "description": "",
       "option": {
         "showUsers": {
-          "label": "",
+          "label": "Benutzer anzeigen",
           "description": ""
         },
         "showPhotos": {
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Beschreibung ausblenden"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "Keine Benachrichtigungen zum Anzeigen.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Systemressourcen",
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Speicher",
+            "gpu": "",
             "network": "Netzwerk"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Arbeitsspeicher",
+        "gpu": "",
         "network": "Netzwerk",
         "up": "OBEN",
         "down": "UNTEN"
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Status des Minecraft Servers"
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Symbol Updater"
             },
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "Übersetzer",
             "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "Bibliotheken",

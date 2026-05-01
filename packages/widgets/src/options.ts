@@ -6,6 +6,7 @@ import type { ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 
+import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
 
@@ -17,6 +18,8 @@ interface CommonInput<TType> {
 interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
+
+type AnchorNoteInput = CommonInput<string>;
 
 interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
   inferSelectOptionValue<TOptions[number]>[]
@@ -47,6 +50,16 @@ interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonIn
   searchable?: boolean;
 }
 
+interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
+  useOptions: (
+    query: string,
+    integrationIds: string[],
+  ) => {
+    isPending: boolean;
+    options: DynamicSelectOption[];
+  };
+}
+
 interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
@@ -75,11 +88,22 @@ const optionsFactory = {
     withDescription: input?.withDescription ?? false,
     validate: input?.validate,
   }),
+  anchorNote: (input?: AnchorNoteInput) => ({
+    type: "anchorNote" as const,
+    defaultValue: input?.defaultValue ?? "",
+    withDescription: input?.withDescription ?? false,
+  }),
   multiSelect: <const TOptions extends SelectOption[]>(input: MultiSelectInput<TOptions>) => ({
     type: "multiSelect" as const,
     defaultValue: input.defaultValue ?? [],
     options: input.options,
     searchable: input.searchable ?? false,
+    withDescription: input.withDescription ?? false,
+  }),
+  dynamicSelect: (input: DynamicSelectInput) => ({
+    type: "dynamicSelect" as const,
+    defaultValue: input.defaultValue ?? null,
+    useOptions: input.useOptions,
     withDescription: input.withDescription ?? false,
   }),
   select: <const TOptions extends SelectOption[]>(input: SelectInput<TOptions>) => ({

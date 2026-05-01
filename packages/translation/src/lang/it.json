@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Orario",
+      "description": "Visualizza gli orari di partenza per una stazione",
+      "title": "Partenze {station}",
+      "noStation": "Nessuna stazione selezionata",
+      "option": {
+        "station": {
+          "label": "Stazione"
+        }
+      }
+    },
     "notebook": {
       "name": "Blocco note",
       "description": "Un semplice widget notebook che supporta markdown",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Nota Anchor",
+      "description": "Visualizza una nota selezionata da Ancoraggio",
+      "option": {
+        "noteId": {
+          "label": "Nota"
+        },
+        "showTitle": {
+          "label": "Mostra titolo"
+        },
+        "showUpdatedAt": {
+          "label": "Mostra ultimo aggiornamento"
+        }
+      },
+      "empty": "Seleziona una nota da visualizzare",
+      "emptyContent": "Questa nota non ha nessun contenuto",
+      "notFound": "Nota non trovata",
+      "noNotes": "Nessuna nota trovata",
+      "integrationRequired": "Seleziona prima l'integrazione di Anchor",
+      "updatedAt": "Aggiornato {date}",
+      "untitled": "Senza titolo",
+      "edit": "Modifica",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "readOnlyViewer": "Hai accesso in modalità visualizzazione a questa nota. La modifica è disabilitata.",
+      "saveForbidden": "Non hai i permessi per modificare questa nota.",
+      "saveFailed": "Impossibile salvare questa nota. Per favore, riprova."
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Incorpora qualsiasi contenuto da Internet. Alcuni siti web possono limitare l'accesso.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Consenti geo-localizzazione"
+        },
+        "allowModals": {
+          "label": "Consenti modali"
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "Mostra Informazioni Memoria"
         },
+        "gpu": {
+          "label": "Mostra informazioni sulla GPU"
+        },
         "showUptime": {
           "label": "Mostra Uptime"
         },
@@ -1997,46 +2042,46 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Monitoraggio avanzato del server multimediale con dati dettagliati su streaming e transcodifica",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Mostra stream attivo"
         },
         "showStats": {
-          "label": ""
+          "label": "Mostra riepilogo statistiche"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Mostra attività recenti"
         },
         "showViolations": {
-          "label": ""
+          "label": "Visualizza violazioni"
         }
       },
       "stats": {
-        "activeStreams": "",
+        "activeStreams": "Stream Attivi",
         "totalUsers": "Utenti Totali",
-        "transcodes": "",
-        "bandwidth": ""
+        "transcodes": "Transcodifiche",
+        "bandwidth": "Larghezza banda"
       },
       "streams": {
-        "empty": "",
+        "empty": "Nessun stream attivo",
         "user": "Utente",
-        "media": "",
-        "state": "",
-        "quality": "",
+        "media": "Multimedia",
+        "state": "Stato",
+        "quality": "Qualità",
         "device": "Dispositivo",
         "progress": "Avanzamento",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Riproduzione diretta",
+          "transcode": "Transcodifica",
+          "directStream": "Streaming Diretto"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
+        "title": "Attività recenti",
+        "empty": "Nessuna attività recente",
+        "watched": "Guardato",
         "partial": "Parziale"
       },
       "violations": {
@@ -2047,8 +2092,8 @@
       },
       "noSectionsEnabled": "Nessuna sezione abilitata",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nessuna integrazione Tracearr configurata",
+        "internalServerError": "Impossibile recuperare i dati di Tracearr"
       }
     },
     "common": {
@@ -2499,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Nascondi descrizione"
+        },
+        "showPosterImage": {
+          "label": "Mostra immagine poster"
         }
       }
     },
@@ -2712,6 +2760,45 @@
       "noItems": "Nessuna notifica da visualizzare.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "SpeedTest Tracker",
+      "description": "Visualizza i risultati del test di velocità della tua istanza di Speedtest Tracker.",
+      "option": {
+        "showLatestResult": {
+          "label": "Mostra l'ultimo risultato"
+        },
+        "showStats": {
+          "label": "Mostra medie"
+        },
+        "showRecentResults": {
+          "label": "Mostra risultati recenti"
+        },
+        "showPingGraph": {
+          "label": "Mostra grafico di ping"
+        }
+      },
+      "latestResult": "Ultima Risultato",
+      "averages": "Medie",
+      "tests": "{count} test",
+      "recentResults": "Risultati Recenti",
+      "recentResultsSpeed": "Velocità",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Stato",
+      "avgDownload": "Media di Download",
+      "avgUpload": "Media di Upload",
+      "avgPing": "Media di Ping",
+      "healthy": "Normale funzionamento",
+      "unhealthy": "Compromesso",
+      "ok": "OK",
+      "fail": "Fallito",
+      "noSectionsEnabled": "Abilita almeno una sezione nelle opzioni del widget.",
+      "error": {
+        "internalServerError": "Recupero dei dati di speedtest non riuscito"
+      }
+    },
     "systemResources": {
       "name": "Risorse di sistema",
       "description": "CPU, memoria, disco e altro utilizzo hardware del sistema",
@@ -2725,6 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Memoria",
+            "gpu": "GPU",
             "network": "Rete"
           }
         },
@@ -2741,6 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "SU",
         "down": "DOWN"
@@ -3505,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Stato del server Minecraft"
             },
+            "timetable": {
+              "label": "Orario"
+            },
             "iconsUpdater": {
               "label": "Aggiornatore Icone"
             },
@@ -3575,7 +3667,7 @@
               "label": "Meteo"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             }
           },
           "interval": {
@@ -3697,6 +3789,10 @@
           "translators": {
             "title": "Traduttori",
             "subtitle": "{count} contribuendo alle traduzioni in molte lingue"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "Librerie",
