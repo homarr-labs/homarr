@@ -1525,6 +1525,17 @@
         "offline": "לא מקוון"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "פנקס רשימות",
       "description": "ווידג'ט פשוט של מחברת התומך ב-markdown",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "אפשר מיקום גיאוגרפי"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "הצג מידע זיכרון"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "הצג זמן פעולה"
         },
@@ -1996,6 +2041,61 @@
         "title": ""
       }
     },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "עיר / מיקוד",
@@ -2090,6 +2190,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "הורדת לקוח",
@@ -2398,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "הסתר תיאור"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2611,6 +2760,45 @@
       "noItems": "אין התראות להצגה.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "משאבי מערכת",
       "description": "שימוש במעבד, זיכרון, דיסק וחומרה אחרת של המערכת שלך",
@@ -2624,6 +2812,7 @@
           "option": {
             "cpu": "מעבד",
             "memory": "זיכרון",
+            "gpu": "",
             "network": "רשת"
           }
         },
@@ -2640,6 +2829,7 @@
       "card": {
         "cpu": "מעבד",
         "memory": "זיכרון",
+        "gpu": "",
         "network": "רשת",
         "up": "העלאה",
         "down": "הורדה"
@@ -3404,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "סטטוס שרת מיינקראפט"
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "עדכון אייקונים"
             },
@@ -3472,6 +3665,9 @@
             },
             "weather": {
               "label": "מזג אוויר"
+            },
+            "tracearr": {
+              "label": ""
             }
           },
           "interval": {
@@ -3593,6 +3789,10 @@
           "translators": {
             "title": "מתרגמים",
             "subtitle": "{count} תורמים בתרגום לשפות שונות"
+          },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
             "title": "ספריות",

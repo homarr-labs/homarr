@@ -1525,6 +1525,17 @@
         "offline": ""
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Piezīmes",
       "description": "",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "",
       "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Atļaut ģeogrāfiskās atrašanās vietas noteikšanu"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "Rādīt atmiņas informāciju"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": ""
         },
@@ -1996,6 +2041,61 @@
         "title": ""
       }
     },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "",
@@ -2090,6 +2190,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "",
@@ -2398,6 +2544,9 @@
         },
         "hideDescription": {
           "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2611,6 +2760,45 @@
       "noItems": "",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "",
       "description": "",
@@ -2624,6 +2812,7 @@
           "option": {
             "cpu": "",
             "memory": "",
+            "gpu": "",
             "network": ""
           }
         },
@@ -2640,6 +2829,7 @@
       "card": {
         "cpu": "",
         "memory": "",
+        "gpu": "",
         "network": "",
         "up": "",
         "down": ""
@@ -3404,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": ""
             },
+            "timetable": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -3471,6 +3664,9 @@
               "label": ""
             },
             "weather": {
+              "label": ""
+            },
+            "tracearr": {
               "label": ""
             }
           },
@@ -3591,6 +3787,10 @@
             "subtitle": ""
           },
           "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "sponsors": {
             "title": "",
             "subtitle": ""
           },

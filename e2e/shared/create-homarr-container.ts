@@ -18,6 +18,11 @@ export const createHomarrContainer = (
     .withExposedPorts(7575)
     .withEnvironment({
       ...options.environment,
+      // We disable external connections due to the following reasons:
+      // - No icons have to be downloaded (11k)
+      // - No analytics data is sent
+      // - It is just faster and makes the tests more reliable (better performance)
+      NO_EXTERNAL_CONNECTION: true.toString(),
       SECRET_ENCRYPTION_KEY: "0".repeat(64),
     })
     .withBindMounts(

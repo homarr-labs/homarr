@@ -5,7 +5,7 @@ import { createId } from "@homarr/common";
 import { apiKeys, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
-import { createSaltAsync, hashPasswordAsync } from "../../security";
+import { hashPasswordAsync } from "../../security";
 import { getSessionFromApiKeyAsync } from "../get-api-key-session";
 
 // Mock the logger to avoid console output during tests
@@ -118,11 +118,9 @@ const setupAsync = async (options?: SetupOptions) => {
   });
 
   if (options?.token) {
-    const salt = await createSaltAsync();
     await db.insert(apiKeys).values({
       id: defaultApiKeyId,
-      apiKey: await hashPasswordAsync(options.token, salt),
-      salt,
+      apiKey: await hashPasswordAsync(options.token),
       userId: defaultUserId,
     });
   }

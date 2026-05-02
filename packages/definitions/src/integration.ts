@@ -73,6 +73,13 @@ export const integrationDefs = {
     category: ["downloadClient", "torrent", "miscellaneous"],
     documentationUrl: createDocumentationLink("/docs/integrations/aria2"),
   },
+  slskd: {
+    name: "Slskd",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
+    category: ["downloadClient", "miscellaneous"],
+    documentationUrl: createDocumentationLink("/docs/integrations/slskd"),
+  },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
@@ -136,6 +143,13 @@ export const integrationDefs = {
     category: ["mediaSearch", "mediaRequest", "search"],
     documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr"),
   },
+  seerr: {
+    name: "Seerr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
+    category: ["mediaSearch", "mediaRequest", "search"],
+    documentationUrl: createDocumentationLink("/docs/integrations/seerr"),
+  },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
@@ -178,6 +192,13 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
   },
+  glances: {
+    name: "Glances",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: null,
+  },
   tdarr: {
     name: "Tdarr",
     secretKinds: [[], ["apiKey"]],
@@ -196,7 +217,7 @@ export const integrationDefs = {
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
-    category: ["calendar"],
+    category: ["calendar", "notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/nextcloud"),
   },
   unifiController: {
@@ -291,6 +312,13 @@ export const integrationDefs = {
     category: ["calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/ical"),
   },
+  anchor: {
+    name: "Anchor",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
+    category: ["notes"],
+    documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
+  },
   truenas: {
     name: "TrueNAS",
     secretKinds: [["username", "password"]],
@@ -312,6 +340,35 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
+  },
+  searchCh: {
+    name: "Search.ch",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/search-ch.png",
+    defaultUrl: "https://search.ch",
+    category: ["timetable"],
+    documentationUrl: createDocumentationLink("/docs/integrations/search-ch"),
+  },
+  immich: {
+    name: "Immich",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
+    category: ["photoService"],
+    documentationUrl: createDocumentationLink("/docs/integrations/immich"),
+  },
+  tracearr: {
+    name: "Tracearr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
+    category: ["mediaMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+  },
+  speedtestTracker: {
+    name: "Speedtest Tracker",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
+    category: ["speedtest"],
+    documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -399,6 +456,11 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "timetable",
+  "photoService",
+  "notes",
+  "mediaMonitoring",
+  "speedtest",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

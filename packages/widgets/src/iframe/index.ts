@@ -17,6 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
       allowMicrophone: factory.switch(),
       allowCamera: factory.switch(),
       allowGeolocation: factory.switch(),
+      allowModals: factory.switch(),
     }));
   },
 }).withDynamicImport(() => import("./component"));

@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.HOMARR_DOCS_RELEASE_APP_PRIVATE_KEY }}
-          app-id: ${{ vars.HOMARR_DOCS_RELEASE_APP_ID }}
+          client-id: ${{ vars.HOMARR_DOCS_RELEASE_APP_ID }}
           owner: homarr-labs
           repositories: |
             documentation
@@ -45,10 +45,10 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code
@@ -64,7 +64,7 @@ jobs:
 
       - name: Create Pull Request
         id: create-pull-request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           add-paths: .github/ISSUE_TEMPLATE/bug_report.yml
           commit-message: "chore: update bug report template"

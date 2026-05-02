@@ -1525,6 +1525,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timeplan",
+      "description": "Viser avgangstid for en stasjon",
+      "title": "Avganger {station}",
+      "noStation": "Ingen stasjon valgt",
+      "option": {
+        "station": {
+          "label": "Stasjon"
+        }
+      }
+    },
     "notebook": {
       "name": "Notisbok",
       "description": "En enkel notatbok widget som støtter markdown",
@@ -1595,6 +1606,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Ankermerknad",
+      "description": "Viser et valgt notat fra anker",
+      "option": {
+        "noteId": {
+          "label": "Notat"
+        },
+        "showTitle": {
+          "label": "Vis tittel"
+        },
+        "showUpdatedAt": {
+          "label": "Vis sist oppdatert"
+        }
+      },
+      "empty": "Velg et notat som skal vises",
+      "emptyContent": "Dette notatet har ikke innhold",
+      "notFound": "Notat ikke funnet",
+      "noNotes": "Fant ingen notater",
+      "integrationRequired": "Velg en ankerintegrasjon først",
+      "updatedAt": "Oppdatert {date}",
+      "untitled": "Uten navn",
+      "edit": "Rediger",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "readOnlyViewer": "Du har seertilgang til dette notatet. Redigering er deaktivert.",
+      "saveForbidden": "Du har ikke tillatelse til å redigere dette notatet.",
+      "saveFailed": "Kunne ikke lagre dette notatet. Prøv på nytt."
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
@@ -1625,6 +1664,9 @@
         },
         "allowGeolocation": {
           "label": "Tillat geolokalisering"
+        },
+        "allowModals": {
+          "label": "Tillat modaler"
         }
       },
       "error": {
@@ -1858,6 +1900,9 @@
         "memory": {
           "label": "Vis minneinfo"
         },
+        "gpu": {
+          "label": "Vis CPU-info"
+        },
         "showUptime": {
           "label": "Vis oppetid"
         },
@@ -1996,6 +2041,61 @@
         "title": "Instanser"
       }
     },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Forbedret medieserverovervåking med detaljert strøm- og transkodingsdata",
+      "option": {
+        "showStreams": {
+          "label": "Vis aktive strømmer"
+        },
+        "showStats": {
+          "label": "Vis statistikksammendrag"
+        },
+        "showRecentActivity": {
+          "label": "Vis nylig aktivitet"
+        },
+        "showViolations": {
+          "label": "Vis brudd"
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktive strømmninger",
+        "totalUsers": "Totalt antall brukere",
+        "transcodes": "Transkoder",
+        "bandwidth": "Båndbredde"
+      },
+      "streams": {
+        "empty": "Ingen aktive strømminger",
+        "user": "Bruker",
+        "media": "Media",
+        "state": "Tilstand",
+        "quality": "Kvalitet",
+        "device": "Enhet",
+        "progress": "Fremgang",
+        "videoDecision": {
+          "directPlay": "Direkte avspilling",
+          "transcode": "Transkode",
+          "directStream": "Direktestrøm"
+        }
+      },
+      "recentActivity": {
+        "title": "Nylig aktivitet",
+        "empty": "Ingen nylig aktivitet",
+        "watched": "Sett",
+        "partial": "Delvis"
+      },
+      "violations": {
+        "title": "Brudd",
+        "empty": "Ingen nylige brudd",
+        "rule": "Regel",
+        "user": "Bruker"
+      },
+      "noSectionsEnabled": "Ingen seksjoner aktivert",
+      "error": {
+        "noIntegration": "Ingen Tracearr-integrasjon konfigurert",
+        "internalServerError": "Kunne ikke hente Tracearr data"
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -2090,6 +2190,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich-serverstatistikk",
+      "description": "Informasjon om din Immich-instans",
+      "option": {
+        "showUsers": {
+          "label": "Vis brukere",
+          "description": "Vis antall brukere på din instans"
+        },
+        "showPhotos": {
+          "label": "Vis bilder",
+          "description": "Vis antall bilder på din instans"
+        },
+        "showVideos": {
+          "label": "Vis videoer",
+          "description": "Vis antall videoer på din instans"
+        },
+        "showStorage": {
+          "label": "Vis lagring",
+          "description": "Vis total mengde lagringsplass brukt"
+        }
+      },
+      "users": "Brukere",
+      "photos": "Bilder",
+      "videos": "Videoer",
+      "storage": "Brukt lagringsplass"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "Dette er en unik ID som refererer til ditt Immich-album. Du kan finne denne ID-en ved å åpne et album og kopiere den unike strengen fra URL-en, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervall i sekunder",
+          "description": "Roter mellom bilder i albumet hvert X. sekund. Må være minst 1. Må være under 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Vis bildeinformasjon",
+          "description": "Vis datoen for bildet og gjeldende indeks nederst i lysbildeserien"
+        }
+      },
+      "description": "Lysbildefremvisning av bilder i ditt Immich-album",
+      "noAlbumSelected": "Ingen album valgt, rediger widgeten og velg et album",
+      "noPhotos": "Ingen bilder i dette albumet"
     },
     "downloads": {
       "name": "Nedlastings-klient",
@@ -2398,6 +2544,9 @@
         },
         "hideDescription": {
           "label": "Skjul beskrivelse"
+        },
+        "showPosterImage": {
+          "label": "Vis plakatbilde"
         }
       }
     },
@@ -2611,6 +2760,45 @@
       "noItems": "Ingen varsler å vise.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest tracker",
+      "description": "Viser hastighetstesten i fra din Speedtest Tracker-instans.",
+      "option": {
+        "showLatestResult": {
+          "label": "Vis siste resultat"
+        },
+        "showStats": {
+          "label": "Vis gjennomsnitt"
+        },
+        "showRecentResults": {
+          "label": "Vis nylige resultater"
+        },
+        "showPingGraph": {
+          "label": "Vis ping-graf"
+        }
+      },
+      "latestResult": "Siste resultat",
+      "averages": "Gjennomsnitt",
+      "tests": "{count} tester",
+      "recentResults": "Nylige resultater",
+      "recentResultsSpeed": "Hastighet",
+      "recentResultsPing": "Ping",
+      "download": "Nedlasting",
+      "upload": "Opplastning",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Snitt nedlasting",
+      "avgUpload": "Snitt opplasting",
+      "avgPing": "Snitt ping",
+      "healthy": "Frisk",
+      "unhealthy": "Usunn",
+      "ok": "OK",
+      "fail": "Feil",
+      "noSectionsEnabled": "Aktiver minst ett avsnitt i widgetalternativer.",
+      "error": {
+        "internalServerError": "Kunne ikke hente hastighetsteste data"
+      }
+    },
     "systemResources": {
       "name": "Systemressurser",
       "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
@@ -2624,6 +2812,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Minne",
+            "gpu": "GPU",
             "network": "Nettverk"
           }
         },
@@ -2640,6 +2829,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Minne",
+        "gpu": "GPU",
         "network": "NETT",
         "up": "OPP",
         "down": "NED"
@@ -3404,6 +3594,9 @@
             "minecraftServerStatus": {
               "label": "Minecraft serverstatus"
             },
+            "timetable": {
+              "label": "Timeplan"
+            },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
             },
@@ -3472,6 +3665,9 @@
             },
             "weather": {
               "label": "Vær"
+            },
+            "tracearr": {
+              "label": "Tracearr"
             }
           },
           "interval": {
@@ -3593,6 +3789,10 @@
           "translators": {
             "title": "Oversettere",
             "subtitle": "{count} bidrar med oversettelser på mange språk"
+          },
+          "sponsors": {
+            "title": "Sponsorer",
+            "subtitle": "{count} støtter prosjektet økonomisk"
           },
           "libraries": {
             "title": "Biblioteker",
