@@ -32,11 +32,11 @@ describe("MemoryResourceParser", () => {
   });
 
   it("should parse values with Ti unit correctly", () => {
-    expect(parser.parse(`1${TI}`)).toBe(1024 * 1024 * BYTES_IN_GIB);
+    expect(parser.parse(`1${TI}`)).toBe(1024 * BYTES_IN_GIB * 1024);
   });
 
   it("should parse values with Pi unit correctly", () => {
-    expect(parser.parse(`1${PI}`)).toBe(1024 * 1024 * 1024 * BYTES_IN_GIB);
+    expect(parser.parse(`1${PI}`)).toBe(1024 * 1024 * BYTES_IN_GIB * 1024);
   });
 
   it("should parse decimal values correctly", () => {
