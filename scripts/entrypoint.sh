@@ -18,9 +18,9 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     echo "Changing owner to $PUID:$PGID, done."
 fi
 
-# support __FILE Suffix for environment variables
-for file_var in $(env | grep '__FILE='); do
-    target_var=$(echo "$file_var" | cut -d'=' -f1 | sed 's/__FILE//')
+# support _FILE Suffix for environment variables
+for file_var in $(env | cut -d '=' -f 1 | grep "_FILE$"); do
+    target_var=$(echo "$file_var" | cut -d'=' -f1 | sed 's/_FILE//')
     file_path=$(echo "$file_var" | cut -d'=' -f2)
 
     if [ -f "$file_path" ]; then
