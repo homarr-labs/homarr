@@ -206,7 +206,7 @@ export class UmamiIntegration extends Integration {
       logger.warn("Failed to load active visitors", { status: response.status, websiteId });
       return 0;
     }
-    return umamiActiveVisitorsSchema.parse(await response.json()).x;
+    return umamiActiveVisitorsSchema.parse(await response.json()).visitors;
   }
 
   /**

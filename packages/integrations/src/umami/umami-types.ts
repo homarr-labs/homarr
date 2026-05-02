@@ -58,7 +58,7 @@ export const umamiEventRecordSchema = z.object({
 export type UmamiEventRecord = z.infer<typeof umamiEventRecordSchema>;
 
 export const umamiActiveVisitorsSchema = z.object({
-  x: z.number(),
+  visitors: z.number(),
 });
 
 export type UmamiActiveVisitors = z.infer<typeof umamiActiveVisitorsSchema>;
