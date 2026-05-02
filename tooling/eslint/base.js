@@ -1,10 +1,9 @@
-/// <reference types="./types.d.ts" />
-
 import eslint from "@eslint/js";
 import importPlugin from "eslint-plugin-import";
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   {
     // Globally ignored files
     ignores: ["**/*.config.js", "**/*.cjs", "**/lang/*.d.json.ts"],
