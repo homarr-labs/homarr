@@ -1,52 +1,18 @@
 import type { ContainerStats } from "dockerode";
 import { describe, expect, test, vi } from "vitest";
 
-// Mock dayjs.duration which is called at module scope
-vi.mock("dayjs", () => {
-  const dayjs = vi.fn();
-  dayjs.duration = vi.fn();
-  return { default: dayjs };
-});
-
-// Mock modules that trigger server-side env validation on import
-vi.mock("@homarr/core/infrastructure/logs", () => ({
-  createLogger: () => ({
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  }),
-}));
-
-vi.mock("@homarr/db", () => ({
-  db: {},
-  like: vi.fn(),
-  or: vi.fn(),
-}));
-
-vi.mock("@homarr/db/schema", () => ({
-  icons: { name: "name" },
-}));
-
-vi.mock("@homarr/docker", () => ({
-  dockerLabels: { hide: "homarr.hide" },
-  DockerSingleton: { getInstances: () => [] },
-}));
-
-vi.mock("@homarr/redis", () => ({
-  createCacheChannel: vi.fn(),
-  createWidgetOptionsChannel: vi.fn(),
-}));
-
-vi.mock("@homarr/definitions", () => ({
-  widgetKinds: [],
-}));
-
-vi.mock("../lib/cached-widget-request-handler", () => ({
-  createCachedWidgetRequestHandler: vi.fn(() => ({ handler: vi.fn() })),
-}));
+import { createDb } from "@homarr/db/test";
 
 import { calculateCpuUsage, calculateMemoryUsage } from "../docker";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 // Helper to create a partial stats object, cast to ContainerStats.
 // This mirrors what Podman and other Docker-compatible runtimes may return

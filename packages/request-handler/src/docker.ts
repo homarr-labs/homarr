@@ -3,6 +3,7 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
@@ -36,8 +37,17 @@ async function getContainersWithStatsAsync() {
 
   const containers = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return result.value;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    logger.warn(`Failed to list containers from Docker host '${dockerInstances[index]!.host}': ${String(result.reason)}`);
+    logger.warn(
+      new ErrorWithMetadata(
+        "Failed to list containers from Docker host",
+        {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          host: dockerInstances[index]!.host,
+        },
+        { cause: result.reason },
+      ),
+    );
+
     return [];
   });
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));

@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
+import { DockerSingleton } from "../singleton";
+
 const mockEnv = vi.hoisted(() => ({
   DOCKER_SOCKET_PATHS: undefined as string | undefined,
   DOCKER_HOSTNAMES: undefined as string | undefined,
@@ -20,12 +22,10 @@ vi.mock("../env", () => ({
   env: mockEnv,
 }));
 
-import { DockerSingleton } from "../singleton";
-
 describe("DockerSingleton", () => {
   beforeEach(() => {
     // Reset singleton cache between tests
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     (DockerSingleton as any).instances = null;
 
     // Reset env to defaults
