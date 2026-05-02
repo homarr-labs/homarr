@@ -32,7 +32,6 @@
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
-    "node-cron": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },
@@ -40,7 +39,6 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node-cron": "catalog:",
     "@types/react": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"

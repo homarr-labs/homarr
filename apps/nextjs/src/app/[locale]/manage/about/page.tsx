@@ -25,7 +25,14 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import { IconKeyboard, IconLanguage, IconLibrary, IconPackage, IconUsers } from "@tabler/icons-react";
+import {
+  IconKeyboard,
+  IconLanguage,
+  IconLibrary,
+  IconMoneybagHeart,
+  IconPackage,
+  IconUsers,
+} from "@tabler/icons-react";
 
 import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
@@ -37,6 +44,7 @@ import { createMetaTitle } from "~/metadata";
 import type { PackageJsonDependencies } from "~/versions/package-reader";
 import { getPackageVersion } from "~/versions/package-reader";
 import type githubContributorsJson from "../../../../../../../static-data/contributors.json";
+import type openCollectiveContributorsJson from "../../../../../../../static-data/opencollective-contributors.json";
 import type crowdinContributorsJson from "../../../../../../../static-data/translators.json";
 import classes from "./about.module.css";
 
@@ -70,6 +78,10 @@ export default async function AboutPage() {
   const crowdinContributors = (await fetch(`${baseServerUrl}/api/about/contributors/crowdin`).then((res) =>
     res.json(),
   )) as typeof crowdinContributorsJson;
+
+  const openCollectiveContributors = (await fetch(`${baseServerUrl}/api/about/contributors/opencollective`).then(
+    (res) => res.json(),
+  )) as typeof openCollectiveContributorsJson;
 
   return (
     <div>
@@ -131,6 +143,30 @@ export default async function AboutPage() {
                   link={`https://crowdin.com/profile/${translator.username}`}
                   image={translator.avatarUrl}
                   name={translator.username}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="sponsors">
+          <AccordionControl icon={<IconMoneybagHeart size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.sponsors.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.sponsors.subtitle", {
+                  count: String(openCollectiveContributors.length),
+                })}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {openCollectiveContributors.map((sponsor) => (
+                <GenericContributorLinkCard
+                  key={sponsor.slug}
+                  link={`https://opencollective.com/${sponsor.slug}`}
+                  image={sponsor.imageUrl}
+                  name={sponsor.name}
                 />
               ))}
             </Flex>

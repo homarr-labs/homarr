@@ -37,6 +37,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
+    "croner": "catalog:",
     "dayjs": "catalog:",
     "dotenv": "catalog:",
     "fastify": "catalog:",
