@@ -11,11 +11,12 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { UmamiEventsContent } from "./umami-events-content";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
 import { formatTimeFrameLabel, formatXLabel } from "./umami-utils";
+import type { TimeFrame } from "./umami-utils";
 
 interface UmamiContentProps {
   integrationIds: string[];
   websiteId: string;
-  timeFrame: string;
+  timeFrame: TimeFrame;
   eventName?: string;
   eventNames: string[];
   chartStyle: string;
@@ -47,7 +48,7 @@ export function UmamiContent({
   });
 
   const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
-  const { data: activeVisitors } = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput);
+  const [activeVisitors] = clientApi.widget.umami.getActiveVisitors.useSuspenseQuery(activeVisitorsInput);
   const utils = clientApi.useUtils();
   clientApi.widget.umami.subscribeActiveVisitors.useSubscription(activeVisitorsInput, {
     onData(count) {
@@ -61,7 +62,7 @@ export function UmamiContent({
   );
 
   const multiEventTotal = multiEventSeries
-    ? multiEventSeries.flatMap((s) => s.dataPoints).reduce((sum, p) => sum + p.y, 0)
+    ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints).reduce((sum, { y }) => sum + y, 0)
     : undefined;
 
   const firstResult = results[0];
@@ -83,7 +84,7 @@ export function UmamiContent({
     ...(point.events !== undefined ? { events: point.events } : {}),
   }));
 
-  const hasEventSeries = visitorStats.dataPoints.some((p) => p.events !== undefined);
+  const hasEventSeries = visitorStats.dataPoints.some(({ events }) => events !== undefined);
   const series = [
     { name: "visitors", color: "blue.5" },
     ...(hasEventSeries ? [{ name: "events", color: "orange.5" }] : []),
@@ -135,11 +136,9 @@ export function UmamiContent({
         )}
       </Group>
       <Group wrap="wrap" style={{ columnGap: 12, rowGap: 4 }}>
-        {activeVisitors !== undefined && (
-          <Text size="xs" c="green">
-            ● {activeVisitors.toLocaleString()} {t("active")}
-          </Text>
-        )}
+        <Text size="xs" c="green">
+          ● {activeVisitors.toLocaleString()} {t("active")}
+        </Text>
         <Text size="xs" c="dimmed">
           {visitorStats.totalPageviews.toLocaleString()} {t("pageviews")}
         </Text>

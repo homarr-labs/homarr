@@ -142,10 +142,10 @@ export class UmamiIntegration extends Integration {
         : Promise.resolve(null),
     ]);
 
-    const eventCount = eventName && eventMetrics ? (eventMetrics.find((m) => m.x === eventName)?.y ?? 0) : undefined;
+    const eventCount = eventName && eventMetrics ? (eventMetrics.find(({ x }) => x === eventName)?.y ?? 0) : undefined;
 
     const eventByTimestamp = new Map<number, number>(
-      (eventTimeSeries ?? []).map((e) => [this.parseUmamiDate(e.x), e.y]),
+      (eventTimeSeries ?? []).map(({ x, y }) => [this.parseUmamiDate(x), y]),
     );
     const dataPoints = pageviews.sessions.map((point) => ({
       timestamp: point.x,
@@ -213,8 +213,8 @@ export class UmamiIntegration extends Integration {
    * Umami self-hosted returns "YYYY-MM-DD HH:MM:SS"; Umami Cloud returns ISO 8601.
    * Normalise both to epoch ms so timestamps from /pageviews and /events join.
    */
-  private parseUmamiDate(s: string): number {
-    return new Date(s.includes("T") ? s : `${s.replace(" ", "T")}Z`).getTime();
+  private parseUmamiDate(dateString: string): number {
+    return new Date(dateString.includes("T") ? dateString : `${dateString.replace(" ", "T")}Z`).getTime();
   }
 
   private async getWebsiteByIdAsync(websiteId: string, authHeaders: Record<string, string>): Promise<UmamiWebsite> {
@@ -348,31 +348,34 @@ export class UmamiIntegration extends Integration {
 
     // Raw event records — aggregate by time bucket (Umami Cloud)
     if ("createdAt" in firstItem) {
-      const pad = (n: number) => String(n).padStart(2, "0");
+      const pad = (number: number) => String(number).padStart(2, "0");
       // Format must match Umami's pageview x-axis timestamps: "YYYY-MM-DD HH:MM:SS"
       const truncate = (isoDate: string): string => {
-        const d = new Date(isoDate);
-        const date = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+        const date = new Date(isoDate);
+        const dateString = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
         if (unit === "hour") {
-          return `${date} ${pad(d.getUTCHours())}:00:00`;
+          return `${dateString} ${pad(date.getUTCHours())}:00:00`;
         }
         if (unit === "month") {
-          return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-01 00:00:00`;
+          return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01 00:00:00`;
         }
-        return `${date} 00:00:00`;
+        return `${dateString} 00:00:00`;
       };
 
       const buckets = new Map<string, number>();
       for (const item of rawArray) {
-        const e = item as { eventType?: number; eventName?: string; createdAt: string };
-        if (e.eventType !== UMAMI_CUSTOM_EVENT_TYPE || e.eventName !== eventName) continue;
-        const bucket = truncate(e.createdAt);
+        const event = item as { eventType?: number; eventName?: string; createdAt: string };
+        if (event.eventType !== UMAMI_CUSTOM_EVENT_TYPE || event.eventName !== eventName) continue;
+        const bucket = truncate(event.createdAt);
         buckets.set(bucket, (buckets.get(bucket) ?? 0) + 1);
       }
       if (buckets.size === 0) return undefined;
-      return Array.from(buckets.entries())
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([x, y]) => ({ x, y }));
+      return (
+        Array.from(buckets.entries())
+          .sort(([itemA], [itemB]) => itemA.localeCompare(itemB))
+          // eslint-disable-next-line id-length
+          .map(([x, y]) => ({ x, y }))
+      );
     }
 
     return undefined;

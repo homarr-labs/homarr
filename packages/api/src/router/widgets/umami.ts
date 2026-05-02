@@ -2,6 +2,7 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createIntegrationAsync } from "@homarr/integrations";
 import {
   umamiActiveVisitorsRequestHandler,
@@ -22,8 +23,8 @@ export const umamiRouter = createTRPCRouter({
     try {
       const instance = await createIntegrationAsync(ctx.integration);
       return await instance.getWebsitesAsync();
-    } catch (e) {
-      logger.warn("Failed to load websites", { error: e });
+    } catch (error) {
+      logger.warn(new Error("Failed to load websites", { cause: error }));
       return [];
     }
   }),
@@ -68,8 +69,10 @@ export const umamiRouter = createTRPCRouter({
         const innerHandler = umamiEventNamesRequestHandler.handler(ctx.integration, { websiteId: input.websiteId });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch (e) {
-        logger.warn("Failed to load event names", { error: e });
+      } catch (error) {
+        logger.warn(
+          new ErrorWithMetadata("Failed to load event names", { websiteId: input.websiteId }, { cause: error }),
+        );
         return [];
       }
     }),
@@ -92,8 +95,14 @@ export const umamiRouter = createTRPCRouter({
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch (e) {
-        logger.warn("Failed to load top pages", { error: e });
+      } catch (error) {
+        logger.warn(
+          new ErrorWithMetadata(
+            "Failed to load top pages",
+            { websiteId: input.websiteId, timeFrame: input.timeFrame, limit: input.limit },
+            { cause: error },
+          ),
+        );
         return [];
       }
     }),
@@ -116,8 +125,14 @@ export const umamiRouter = createTRPCRouter({
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch (e) {
-        logger.warn("Failed to load top referrers", { error: e });
+      } catch (error) {
+        logger.warn(
+          new ErrorWithMetadata(
+            "Failed to load top referrers",
+            { websiteId: input.websiteId, timeFrame: input.timeFrame, limit: input.limit },
+            { cause: error },
+          ),
+        );
         return [];
       }
     }),
@@ -141,8 +156,14 @@ export const umamiRouter = createTRPCRouter({
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch (e) {
-        logger.warn("Failed to load multi-event time series", { error: e });
+      } catch (error) {
+        logger.warn(
+          new ErrorWithMetadata(
+            "Failed to load multi-event time series",
+            { websiteId: input.websiteId, timeFrame: input.timeFrame, eventNames: JSON.stringify(input.eventNames) },
+            { cause: error },
+          ),
+        );
         return [];
       }
     }),
@@ -157,8 +178,10 @@ export const umamiRouter = createTRPCRouter({
         });
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
-      } catch (e) {
-        logger.warn("Failed to load active visitors", { error: e });
+      } catch (error) {
+        logger.warn(
+          new ErrorWithMetadata("Failed to load active visitors", { websiteId: input.websiteId }, { cause: error }),
+        );
         return 0;
       }
     }),

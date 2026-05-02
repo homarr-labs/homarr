@@ -46,43 +46,48 @@ export function UmamiEventsContent({
   }
 
   // Collect all unique timestamps across all series
-  const allTimestamps = Array.from(new Set(series.flatMap((s) => s.dataPoints.map((p) => p.x)))).sort();
+  const allTimestamps = Array.from(
+    new Set(series.flatMap(({ dataPoints }) => dataPoints.map(({ x: xPoint }) => xPoint))),
+  ).sort();
 
   // Build per-event lookup by timestamp string
   const byEvent = new Map(
-    series.map((s: UmamiEventSeries) => [s.eventName, new Map(s.dataPoints.map((p) => [p.x, p.y]))]),
+    series.map((serie: UmamiEventSeries) => [
+      serie.eventName,
+      new Map(serie.dataPoints.map((point) => [point.x, point.y])),
+    ]),
   );
 
-  const chartData = allTimestamps.map((ts) => {
-    const row: Record<string, string | number> = { label: formatXLabel(ts, timeFrame) };
-    for (const s of series) {
-      row[s.eventName] = byEvent.get(s.eventName)?.get(ts) ?? 0;
+  const chartData = allTimestamps.map((timestamp) => {
+    const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame) };
+    for (const serie of series) {
+      row[serie.eventName] = byEvent.get(serie.eventName)?.get(timestamp) ?? 0;
     }
     return row;
   });
 
-  const chartSeries = series.map((s: UmamiEventSeries, i: number) => ({
-    name: s.eventName,
-    color: EVENT_COLORS[i % EVENT_COLORS.length] ?? "blue.5",
+  const chartSeries = series.map((serie: UmamiEventSeries, index: number) => ({
+    name: serie.eventName,
+    color: EVENT_COLORS[index % EVENT_COLORS.length] ?? "blue.5",
   }));
 
   return (
     <Stack gap={4} h="100%">
       {chartSeries.length > 1 && (
         <Group gap={12} justify="center" wrap="wrap" style={{ flexShrink: 0, rowGap: 2 }}>
-          {chartSeries.map((s) => (
-            <Group key={s.name} gap={4} align="center" wrap="nowrap">
+          {chartSeries.map((serie) => (
+            <Group key={serie.name} gap={4} align="center" wrap="nowrap">
               <Box
                 w={8}
                 h={8}
                 style={{
                   borderRadius: "50%",
-                  backgroundColor: `var(--mantine-color-${s.color.replace(".", "-")})`,
+                  backgroundColor: `var(--mantine-color-${serie.color.replace(".", "-")})`,
                   flexShrink: 0,
                 }}
               />
               <Text size="xs" c="dimmed" truncate>
-                {s.name}
+                {serie.name}
               </Text>
             </Group>
           ))}

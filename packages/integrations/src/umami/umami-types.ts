@@ -43,7 +43,7 @@ export const umamiMetricItemSchema = z.object({
   x: z
     .string()
     .nullable()
-    .transform((v) => v ?? ""),
+    .transform((value) => value ?? ""),
   y: z.number(),
 });
 

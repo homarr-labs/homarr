@@ -20,11 +20,14 @@ export function formatXLabel(timestamp: string, timeFrame: string): string {
   }
 }
 
-type TimeFrame = (typeof timeFrameValues)[number];
+export type TimeFrame = (typeof timeFrameValues)[number];
 
-export function formatTimeFrameLabel(timeFrame: string, t: ReturnType<typeof useScopedI18n<"widget.umami">>): string {
-  if ((timeFrameValues as readonly string[]).includes(timeFrame)) {
-    return t(`option.timeFrame.option.${timeFrame as TimeFrame}`);
+export function formatTimeFrameLabel(
+  timeFrame: TimeFrame,
+  t: ReturnType<typeof useScopedI18n<"widget.umami">>,
+): string {
+  if (timeFrameValues.includes(timeFrame)) {
+    return t(`option.timeFrame.option.${timeFrame}`);
   }
   return timeFrame;
 }
