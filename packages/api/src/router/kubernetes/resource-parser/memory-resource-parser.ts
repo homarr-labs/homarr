@@ -14,6 +14,10 @@ const unitToBytes: Record<MemoryUnit, number> = {
 
 export class MemoryResourceParser {
   parse(value: string): number {
+    if (typeof value !== 'string') {
+      throw new Error(`Invalid memory resource value: ${value}. Expected a string`);
+    }
+
     const match = value.match(/^(\d+(?:\.\d+)?)(Ki|Mi|Gi|Ti|Pi)?$/);
     if (!match) {
       throw new Error(`Invalid memory resource value: ${value}. Expected format: '<number>(<unit>)?' where <unit> is one of Ki, Mi, Gi, Ti, Pi`);
@@ -25,7 +29,7 @@ export class MemoryResourceParser {
       throw new Error(`Invalid memory resource value: ${value}. Failed to parse amount as a number`);
     }
 
-    const multiplier = unit ? unitToBytes[unit as MemoryUnit] : 1; // Treat unitless as bytes
+    const multiplier = unit ? unitToBytes[unit as MemoryUnit] : 1;
 
     return amount * multiplier;
   }
