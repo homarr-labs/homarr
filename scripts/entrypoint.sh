@@ -21,7 +21,7 @@ fi
 # support _FILE Suffix for environment variables
 for file_var in $(env | cut -d '=' -f 1 | grep "_FILE$"); do
     target_var=$(echo "$file_var" | cut -d'=' -f1 | sed 's/_FILE//')
-    file_path=$(echo "$file_var" | cut -d'=' -f2)
+    file_path=$(echo "${!file_var}")
 
     if [ -f "$file_path" ]; then
         export "$target_var"=$(cat "$file_path" | tr -d '\n\r')
