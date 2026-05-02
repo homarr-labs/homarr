@@ -36,6 +36,9 @@ catalogs:
     '@drizzle-team/brocli':
       specifier: ^0.12.0
       version: 0.12.0
+    '@eslint/js':
+      specifier: 10.0.1
+      version: 10.0.1
     '@extractus/feed-extractor':
       specifier: 7.1.7
       version: 7.1.7
@@ -2946,6 +2949,9 @@ importers:
         specifier: 'catalog:'
         version: 8.58.2(eslint@10.2.1)(typescript@5.9.3)
     devDependencies:
+      '@eslint/js':
+        specifier: 'catalog:'
+        version: 10.0.1(eslint@10.2.1)
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../prettier
@@ -3773,6 +3779,15 @@ packages:
   '@eslint/core@1.2.1':
     resolution: {integrity: sha512-MwcE1P+AZ4C6DWlpin/OmOA54mmIZ/+xZuJiQd4SyB29oAJjN30UW9wkKNptW2ctp4cEsvhlLY/CsQ1uoHDloQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@eslint/js@10.0.1':
+    resolution: {integrity: sha512-zeR9k5pd4gxjZ0abRoIaxdc7I3nDktoXZk2qOv9gCNWx3mVwEn32VRhyLaRsDiJjTs0xq/T8mfPtyuXu7GWBcA==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+    peerDependencies:
+      eslint: ^10.0.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   '@eslint/object-schema@3.0.5':
     resolution: {integrity: sha512-vqTaUEgxzm+YDSdElad6PiRoX4t8VGDjCtt05zn4nU810UIx/uNEV7/lZJ6KwFThKZOzOxzXy48da+No7HZaMw==}
@@ -11881,6 +11896,10 @@ snapshots:
   '@eslint/core@1.2.1':
     dependencies:
       '@types/json-schema': 7.0.15
+
+  '@eslint/js@10.0.1(eslint@10.2.1)':
+    optionalDependencies:
+      eslint: 10.2.1
 
   '@eslint/object-schema@3.0.5': {}
 

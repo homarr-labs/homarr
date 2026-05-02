@@ -2,11 +2,6 @@ packages:
   - apps/*
   - packages/*
   - tooling/*
-minimumReleaseAge: 4320
-minimumReleaseAgeExclude:
-  - next
-  - "@next/*"
-catalogMode: strict
 catalog:
   "@auth/core": ^0.41.2
   "@auth/drizzle-adapter": ^1.11.2
@@ -18,6 +13,7 @@ catalog:
   "@dnd-kit/sortable": ^10.0.0
   "@dnd-kit/utilities": ^3.2.2
   "@drizzle-team/brocli": ^0.12.0
+  '@eslint/js': 10.0.1
   "@extractus/feed-extractor": 7.1.7
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
@@ -193,3 +189,8 @@ catalog:
   zod: ^4.3.6
   zod-form-data: ^3.0.1
   zod-validation-error: ^5.0.0
+catalogMode: strict
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - next
+  - "@next/*"
