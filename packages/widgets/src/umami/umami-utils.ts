@@ -1,5 +1,7 @@
 import type { useScopedI18n } from "@homarr/translation/client";
 
+import { timeFrameValues } from "./index";
+
 export const EVENT_COLORS = ["blue.5", "orange.5", "green.5", "red.5", "violet.5", "teal.5", "yellow.5", "pink.5"];
 
 export function formatXLabel(timestamp: string, timeFrame: string): string {
@@ -18,11 +20,10 @@ export function formatXLabel(timestamp: string, timeFrame: string): string {
   }
 }
 
-const validTimeFrames = ["today", "24h", "7d", "30d", "month", "lastMonth"] as const;
-type TimeFrame = (typeof validTimeFrames)[number];
+type TimeFrame = (typeof timeFrameValues)[number];
 
 export function formatTimeFrameLabel(timeFrame: string, t: ReturnType<typeof useScopedI18n<"widget.umami">>): string {
-  if ((validTimeFrames as readonly string[]).includes(timeFrame)) {
+  if ((timeFrameValues as readonly string[]).includes(timeFrame)) {
     return t(`option.timeFrame.option.${timeFrame as TimeFrame}`);
   }
   return timeFrame;

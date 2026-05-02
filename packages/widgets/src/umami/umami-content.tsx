@@ -46,10 +46,14 @@ export function UmamiContent({
     eventName,
   });
 
-  const { data: activeVisitors } = clientApi.widget.umami.getActiveVisitors.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId },
-    { refetchInterval: 30_000 },
-  );
+  const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
+  const { data: activeVisitors } = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput);
+  const utils = clientApi.useUtils();
+  clientApi.widget.umami.subscribeActiveVisitors.useSubscription(activeVisitorsInput, {
+    onData(count) {
+      utils.widget.umami.getActiveVisitors.setData(activeVisitorsInput, () => count);
+    },
+  });
 
   const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
     { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].sort() },

@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth"] as const;
+export const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth"] as const;
 
 export const { definition, componentLoader } = createWidgetDefinition("umami", {
   icon: IconChartBar,

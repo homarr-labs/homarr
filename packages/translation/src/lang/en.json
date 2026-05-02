@@ -3766,6 +3766,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami Active Visitors"
             }
           },
           "interval": {

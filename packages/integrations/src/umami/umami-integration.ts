@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -29,6 +30,8 @@ import {
 // Umami event type ID for custom events (type 1 = page view, type 2 = custom event)
 const UMAMI_CUSTOM_EVENT_TYPE = 2;
 
+const logger = createLogger({ module: "umami-integration" });
+
 export class UmamiIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = await this.getAuthHeadersAsync();
@@ -50,47 +53,74 @@ export class UmamiIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
     if (!response.ok) throw new ResponseError(response);
     const json = await response.json();
+    // Response envelope differs by hosting:
+    //   - Umami self-hosted returns the array directly: [website, ...]
+    //   - Umami Cloud wraps it: { data: [website, ...] }
+    // Same divergence applies to the /events list responses below.
     return Array.isArray(json)
       ? umamiWebsiteSchema.array().parse(json)
       : umamiWebsiteSchema.array().parse((json as { data: unknown }).data);
   }
 
-  // Note: dayjs() uses the server's local timezone. Callers needing user-local
+  // Server-side timeFrame resolution is intentional. Keeping `timeFrame` (a
+  // stable string like "7d") in the cache key means all users viewing the same
+  // dashboard share one Redis cache entry per (integration, website, timeFrame)
+  // for the 5-minute TTL. Client-supplied startAt/endAt would include a
+  // per-second `now` and fragment the cache one-per-user-per-second.
+  //
+  // Window bounds mirror Umami UI preset semantics, verified against the
+  // Umami Cloud dashboard for the same site and timeFrame: each "Last N"
+  // preset includes the in-progress period as one of N + 1 buckets, snapped
+  // to bucket boundaries.
+  //   - "24h":  current hour  + 24 prior hours (25-bucket hour grid)
+  //   - "7d":   current day   +  7 prior days  ( 8-bucket day grid)
+  //   - "30d":  current day   + 30 prior days  (31-bucket day grid)
+  //   - "today" / "month" / "lastMonth": calendar-aligned windows.
+  //
+  // Caveat: dayjs() uses the server's local timezone. Callers needing user-local
   // boundaries (e.g. "today") may see off-by-one behaviour when the server
   // runs in UTC but the user is in a different timezone.
   private computeTimeRange(timeFrame: string): { startAt: number; endAt: number; unit: string } {
-    let endAt = Date.now();
-    let startAt: number;
-    let unit: string;
+    const startOfToday = dayjs().startOf("day");
+    const endOfToday = dayjs().endOf("day");
 
     switch (timeFrame) {
       case "today":
-        startAt = dayjs().startOf("day").valueOf();
-        unit = "hour";
-        break;
+        return { startAt: startOfToday.valueOf(), endAt: endOfToday.valueOf(), unit: "hour" };
       case "7d":
-        startAt = dayjs().subtract(7, "day").valueOf();
-        unit = "day";
-        break;
+        return {
+          startAt: startOfToday.subtract(7, "day").valueOf(),
+          endAt: endOfToday.valueOf(),
+          unit: "day",
+        };
       case "30d":
-        startAt = dayjs().subtract(30, "day").valueOf();
-        unit = "day";
-        break;
+        return {
+          startAt: startOfToday.subtract(30, "day").valueOf(),
+          endAt: endOfToday.valueOf(),
+          unit: "day",
+        };
       case "month":
-        startAt = dayjs().startOf("month").valueOf();
-        unit = "day";
-        break;
-      case "lastMonth":
-        startAt = dayjs().subtract(1, "month").startOf("month").valueOf();
-        endAt = dayjs().subtract(1, "month").endOf("month").valueOf();
-        unit = "day";
-        break;
-      default: // "24h"
-        startAt = endAt - 24 * 60 * 60 * 1000;
-        unit = "hour";
+        return {
+          startAt: dayjs().startOf("month").valueOf(),
+          endAt: dayjs().endOf("month").valueOf(),
+          unit: "day",
+        };
+      case "lastMonth": {
+        const lastMonth = dayjs().subtract(1, "month");
+        return {
+          startAt: lastMonth.startOf("month").valueOf(),
+          endAt: lastMonth.endOf("month").valueOf(),
+          unit: "day",
+        };
+      }
+      case "24h":
+      default:
+        return {
+          startAt: dayjs().subtract(24, "hour").startOf("hour").valueOf(),
+          endAt: dayjs().endOf("hour").valueOf(),
+          unit: "hour",
+        };
     }
-
-    return { startAt, endAt, unit };
   }
 
   public async getVisitorStatsAsync(
@@ -114,15 +144,13 @@ export class UmamiIntegration extends Integration {
 
     const eventCount = eventName && eventMetrics ? (eventMetrics.find((m) => m.x === eventName)?.y ?? 0) : undefined;
 
-    // Umami instances return timestamps in different formats ("YYYY-MM-DD HH:MM:SS" vs ISO 8601).
-    // Normalise to epoch ms for a format-agnostic lookup.
-    const parseUmamiDate = (s: string) => new Date(s.includes("T") ? s : `${s.replace(" ", "T")}Z`).getTime();
-
-    const eventByTimestamp = new Map<number, number>((eventTimeSeries ?? []).map((e) => [parseUmamiDate(e.x), e.y]));
+    const eventByTimestamp = new Map<number, number>(
+      (eventTimeSeries ?? []).map((e) => [this.parseUmamiDate(e.x), e.y]),
+    );
     const dataPoints = pageviews.sessions.map((point) => ({
       timestamp: point.x,
       visitors: point.y,
-      ...(eventTimeSeries ? { events: eventByTimestamp.get(parseUmamiDate(point.x)) ?? 0 } : {}),
+      ...(eventTimeSeries ? { events: eventByTimestamp.get(this.parseUmamiDate(point.x)) ?? 0 } : {}),
     }));
 
     return {
@@ -150,7 +178,10 @@ export class UmamiIntegration extends Integration {
       pageSize: "100000",
     });
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) return [];
+    if (!response.ok) {
+      logger.warn("Failed to load event names", { status: response.status, websiteId });
+      return [];
+    }
     const json = await response.json();
     const rawArray: unknown[] = Array.isArray(json)
       ? json
@@ -171,8 +202,19 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const url = this.url(`/websites/${websiteId}/active`);
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) return 0;
+    if (!response.ok) {
+      logger.warn("Failed to load active visitors", { status: response.status, websiteId });
+      return 0;
+    }
     return umamiActiveVisitorsSchema.parse(await response.json()).x;
+  }
+
+  /**
+   * Umami self-hosted returns "YYYY-MM-DD HH:MM:SS"; Umami Cloud returns ISO 8601.
+   * Normalise both to epoch ms so timestamps from /pageviews and /events join.
+   */
+  private parseUmamiDate(s: string): number {
+    return new Date(s.includes("T") ? s : `${s.replace(" ", "T")}Z`).getTime();
   }
 
   private async getWebsiteByIdAsync(websiteId: string, authHeaders: Record<string, string>): Promise<UmamiWebsite> {
@@ -245,10 +287,14 @@ export class UmamiIntegration extends Integration {
       headers: authHeaders,
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+      logger.warn("Failed to load website metrics", { status: response.status, websiteId, type });
+      return [];
+    }
 
     const json = await response.json();
     if (Array.isArray(json)) return umamiMetricItemSchema.array().parse(json);
+    logger.warn("Unexpected metrics response shape", { websiteId, type });
     return [];
   }
 
@@ -272,7 +318,10 @@ export class UmamiIntegration extends Integration {
       headers: authHeaders,
     });
 
-    if (!response.ok) return undefined;
+    if (!response.ok) {
+      logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName });
+      return undefined;
+    }
 
     const json = await response.json();
     const rawArray: unknown[] = Array.isArray(json)
@@ -284,6 +333,12 @@ export class UmamiIntegration extends Integration {
     if (rawArray.length === 0) return undefined;
 
     const firstItem = rawArray[0] as Record<string, unknown>;
+
+    // Two response shapes coexist:
+    //   - Umami self-hosted returns aggregated buckets: { x: timestamp, y: count }
+    //   - Umami Cloud returns raw event records: { createdAt, eventName, eventType }
+    // We aggregate the raw Cloud records ourselves into the same bucket grid so
+    // the result joins cleanly with /pageviews timestamps.
 
     // Aggregated { x, y } format — parse directly (self-hosted instances)
     if ("x" in firstItem && "y" in firstItem) {

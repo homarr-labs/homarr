@@ -5,14 +5,9 @@ import { Stack, Text } from "@mantine/core";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { UmamiContent } from "./umami-content";
 
 export default function UmamiWidget({ options, integrationIds }: WidgetComponentProps<"umami">) {
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationDataError();
-  }
-
   if (!options.websiteId || options.websiteId.trim() === "") {
     return <NoWebsiteConfigured />;
   }

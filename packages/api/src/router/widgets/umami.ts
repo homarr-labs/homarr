@@ -1,3 +1,4 @@
+import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -17,18 +18,15 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 const logger = createLogger({ module: "umami-router" });
 
 export const umamiRouter = createTRPCRouter({
-  getWebsites: publicProcedure
-    .input(z.object({ integrationId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx }) => {
-      try {
-        const instance = await createIntegrationAsync(ctx.integration);
-        return await instance.getWebsitesAsync();
-      } catch (e) {
-        logger.warn("umami: getWebsites failed", { error: e });
-        return [];
-      }
-    }),
+  getWebsites: publicProcedure.concat(createOneIntegrationMiddleware("query", "umami")).query(async ({ ctx }) => {
+    try {
+      const instance = await createIntegrationAsync(ctx.integration);
+      return await instance.getWebsitesAsync();
+    } catch (e) {
+      logger.warn("Failed to load websites", { error: e });
+      return [];
+    }
+  }),
 
   getVisitorStats: publicProcedure
     .input(
@@ -63,7 +61,7 @@ export const umamiRouter = createTRPCRouter({
     }),
 
   getEventNames: publicProcedure
-    .input(z.object({ integrationId: z.string(), websiteId: z.string() }))
+    .input(z.object({ websiteId: z.string() }))
     .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
@@ -71,7 +69,7 @@ export const umamiRouter = createTRPCRouter({
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
       } catch (e) {
-        logger.warn("umami: getEventNames failed", { error: e });
+        logger.warn("Failed to load event names", { error: e });
         return [];
       }
     }),
@@ -79,7 +77,6 @@ export const umamiRouter = createTRPCRouter({
   getTopPages: publicProcedure
     .input(
       z.object({
-        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         limit: z.number().int().min(1).max(500),
@@ -96,7 +93,7 @@ export const umamiRouter = createTRPCRouter({
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
       } catch (e) {
-        logger.warn("umami: getTopPages failed", { error: e });
+        logger.warn("Failed to load top pages", { error: e });
         return [];
       }
     }),
@@ -104,7 +101,6 @@ export const umamiRouter = createTRPCRouter({
   getTopReferrers: publicProcedure
     .input(
       z.object({
-        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         limit: z.number().int().min(1).max(500),
@@ -121,7 +117,7 @@ export const umamiRouter = createTRPCRouter({
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
       } catch (e) {
-        logger.warn("umami: getTopReferrers failed", { error: e });
+        logger.warn("Failed to load top referrers", { error: e });
         return [];
       }
     }),
@@ -129,7 +125,6 @@ export const umamiRouter = createTRPCRouter({
   getMultiEventTimeSeries: publicProcedure
     .input(
       z.object({
-        integrationId: z.string(),
         websiteId: z.string(),
         timeFrame: z.string(),
         eventNames: z.array(z.string()),
@@ -147,13 +142,13 @@ export const umamiRouter = createTRPCRouter({
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
       } catch (e) {
-        logger.warn("umami: getMultiEventTimeSeries failed", { error: e });
+        logger.warn("Failed to load multi-event time series", { error: e });
         return [];
       }
     }),
 
   getActiveVisitors: publicProcedure
-    .input(z.object({ integrationId: z.string(), websiteId: z.string() }))
+    .input(z.object({ websiteId: z.string() }))
     .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
@@ -163,8 +158,25 @@ export const umamiRouter = createTRPCRouter({
         const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
         return data;
       } catch (e) {
-        logger.warn("umami: getActiveVisitors failed", { error: e });
+        logger.warn("Failed to load active visitors", { error: e });
         return 0;
       }
+    }),
+
+  subscribeActiveVisitors: publicProcedure
+    .input(z.object({ websiteId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .subscription(({ ctx, input }) => {
+      return observable<number>((emit) => {
+        const innerHandler = umamiActiveVisitorsRequestHandler.handler(ctx.integration, {
+          websiteId: input.websiteId,
+        });
+        const unsubscribe = innerHandler.subscribe((count) => {
+          emit.next(count);
+        });
+        return () => {
+          unsubscribe();
+        };
+      });
     }),
 });
