@@ -146,7 +146,7 @@ catalog:
   mysql2: 3.22.3
   next: 16.2.4
   next-auth: 5.0.0-beta.31
-  next-intl: 4.9.2
+  next-intl: 4.10.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
   pg: ^8.20.0
