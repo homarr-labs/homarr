@@ -67,11 +67,11 @@ catalog:
   "@tiptap/extension-underline": 3.22.5
   "@tiptap/react": ^3.22.5
   "@tiptap/starter-kit": ^3.22.5
-  "@trpc/client": ^11.16.0
-  "@trpc/next": ^11.16.0
-  "@trpc/react-query": ^11.16.0
-  "@trpc/server": ^11.16.0
-  "@trpc/tanstack-react-query": ^11.16.0
+  "@trpc/client": ^11.17.0
+  "@trpc/next": ^11.17.0
+  "@trpc/react-query": ^11.17.0
+  "@trpc/server": ^11.17.0
+  "@trpc/tanstack-react-query": ^11.17.0
   "@turbo/gen": ^2.9.6
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
