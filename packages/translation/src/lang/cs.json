@@ -3790,6 +3790,10 @@
             "title": "Překladatelé",
             "subtitle": "{count} přispívá překladem do mnoha jazyků"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "",
             "subtitle": ""

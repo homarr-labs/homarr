@@ -3790,6 +3790,10 @@
             "title": "Çevirmenler",
             "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Kütüphaneler",
             "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
