@@ -77,7 +77,7 @@ export class AnchorIntegration extends Integration {
     });
 
     if (!response.ok) {
-      let errorBody: string | null = null;
+      let errorBody: string | null;
       try {
         errorBody = await response.text();
       } catch {
