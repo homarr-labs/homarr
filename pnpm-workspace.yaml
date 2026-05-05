@@ -136,7 +136,7 @@ catalog:
   ioredis: 5.10.1
   isomorphic-dompurify: ^3.11.0
   jotai: ^2.19.1
-  jsdom: ^29.1.0
+  jsdom: ^29.1.1
   json5: ^2.2.3
   ldapts: 8.1.7
   lodash.clonedeep: ^4.5.0
