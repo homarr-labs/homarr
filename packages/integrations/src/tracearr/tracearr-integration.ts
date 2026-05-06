@@ -208,7 +208,9 @@ export class TracearrIntegration extends Integration {
       // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.
       // Without this, all long avatar/poster URLs from the same session hash identically
       // since they share the same first 72+ bytes.
-      const baseUrl = this.url(cleanUrl as `/${string}`).toString();
+      const baseUrl = cleanUrl.startsWith("http://") || cleanUrl.startsWith("https://")
+        ? cleanUrl
+        : this.url(cleanUrl as `/${string}`).toString();
       const prefix = `_uid=${discriminator}_${uniqueId}&`;
       const fullUrl = baseUrl.includes("?") ? baseUrl.replace("?", `?${prefix}`) : `${baseUrl}?${prefix}`;
 
