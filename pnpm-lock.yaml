@@ -553,7 +553,7 @@ catalogs:
       specifier: 2.8.3
       version: 2.8.3
     zod:
-      specifier: ^4.4.1
+      specifier: ^4.4.2
       version: 4.4.2
     zod-form-data:
       specifier: ^3.0.1
@@ -11188,9 +11188,6 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.3.6:
-    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
-
   zod@4.4.2:
     resolution: {integrity: sha512-IynmDyxsEsb9RKzO3J9+4SxXnl2FTFSzNBaKKaMV6tsSk0rw9gYw9gs+JFCq/qk2LCZ78KDwyj+Z289TijSkUw==}
 
@@ -15753,8 +15750,8 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/parser': 7.29.2
       eslint: 10.3.0
-      zod: 4.3.6
-      zod-validation-error: 4.0.2(zod@4.3.6)
+      zod: 4.4.2
+      zod-validation-error: 4.0.2(zod@4.4.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -20198,15 +20195,13 @@ snapshots:
     dependencies:
       zod: 4.4.2
 
-  zod-validation-error@4.0.2(zod@4.3.6):
+  zod-validation-error@4.0.2(zod@4.4.2):
     dependencies:
-      zod: 4.3.6
+      zod: 4.4.2
 
   zod-validation-error@5.0.0(zod@4.4.2):
     dependencies:
       zod: 4.4.2
-
-  zod@4.3.6: {}
 
   zod@4.4.2: {}
 
