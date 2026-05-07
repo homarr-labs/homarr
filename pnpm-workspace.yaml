@@ -45,9 +45,9 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.0
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.41.1
-  "@tanstack/react-query": ^5.100.7
-  "@tanstack/react-query-devtools": ^5.100.7
-  "@tanstack/react-query-next-experimental": ^5.100.7
+  "@tanstack/react-query": ^5.100.8
+  "@tanstack/react-query-devtools": ^5.100.8
+  "@tanstack/react-query-next-experimental": ^5.100.8
   "@testcontainers/mysql": ^11.14.0
   "@testcontainers/postgresql": ^11.14.0
   "@testcontainers/redis": ^11.14.0
@@ -134,7 +134,7 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.10.1
-  isomorphic-dompurify: ^3.11.0
+  isomorphic-dompurify: ^3.12.0
   jotai: ^2.19.1
   jsdom: ^29.1.1
   json5: ^2.2.3
@@ -184,7 +184,7 @@ catalog:
   winston: 3.19.0
   ws: ^8.20.0
   xml2js: ^0.6.2
-  yaml: 2.8.3
+  yaml: 2.8.4
   zod: ^4.4.2
   zod-form-data: ^3.0.1
   zod-validation-error: ^5.0.0
