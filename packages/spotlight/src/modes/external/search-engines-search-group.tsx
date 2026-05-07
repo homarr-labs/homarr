@@ -466,7 +466,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
         key: "hint",
         kind: "hint",
         label: "Type a bang, e.g. !yt, then press Space to select",
-        description: ddgBangs ? tExternal("tip.ddgBangs") : undefined,
+        description: ddgBangs ? (tExternal as (key: string) => string)("tipDdgBangs") : undefined,
       });
     }
 

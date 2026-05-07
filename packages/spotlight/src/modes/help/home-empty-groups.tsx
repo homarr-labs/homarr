@@ -23,6 +23,7 @@ import { pageMode } from "../page";
 import { userGroupMode } from "../user-group";
 
 interface QuickLinkOption {
+  [key: string]: unknown;
   icon: TablerIcon;
   name: string;
   path: string;
