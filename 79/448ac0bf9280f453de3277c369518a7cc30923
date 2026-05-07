@@ -1,0 +1,19 @@
+packages/api/src/router/user.ts
+  s_61c7b6e1cafadf::t_4d32e2bca04559 548-549
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "79448ac0bf9280f453de3277c369518a7cc30923",
+  "prompts": {},
+  "sessions": {
+    "s_61c7b6e1cafadf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed2ef1ca-8df6-4b45-acdd-1af69e8322dc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
