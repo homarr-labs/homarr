@@ -378,13 +378,13 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
 
     if (option.kind === "engine") {
       const nextBang = option.engine.short;
-      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
+      const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
       return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
     }
 
     if (option.kind === "ddg") {
       const nextBang = option.bang.t;
-      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
+      const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
       return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
     }
 
