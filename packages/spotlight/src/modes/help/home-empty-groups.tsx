@@ -22,6 +22,8 @@ import { externalMode } from "../external";
 import { pageMode } from "../page";
 import { userGroupMode } from "../user-group";
 
+// We need type to allow it as generic type for Record<string, unknown>
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type QuickLinkOption = {
   icon: TablerIcon;
   name: string;
