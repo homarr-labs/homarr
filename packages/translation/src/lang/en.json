@@ -4445,6 +4445,13 @@
           "searchEngine": {
             "title": "Search engines",
             "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
+            "bang": {
+              "searchWithQuery": "Search \"{query}\" with {label}",
+              "pressEnterToOpen": "Press Enter to open",
+              "engineSelected": "{label} selected (!{bang})",
+              "typeQueryToContinue": "Type your search query to continue",
+              "emptyBangHint": "Type a bang, e.g. !yt, then press Space to select"
+            },
             "children": {
               "action": {
                 "search": {

@@ -444,8 +444,11 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
           searchActions.push({
             key: "search-action",
             kind: "search",
-            label: `Search "${searchText.trim()}" with ${label}`,
-            description: "Press Enter to open",
+            label: tExternal("bang.searchWithQuery", {
+              query: searchText.trim(),
+              label,
+            }),
+            description: tExternal("bang.pressEnterToOpen"),
             bang: bangToken,
             iconUrl,
             urlTemplate,
@@ -455,8 +458,8 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
           searchActions.push({
             key: "search-hint",
             kind: "hint",
-            label: `${label} selected (!${bangToken})`,
-            description: "Type your search query to continue",
+            label: tExternal("bang.engineSelected", { label, bang: bangToken }),
+            description: tExternal("bang.typeQueryToContinue"),
           });
         }
       }
@@ -465,7 +468,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
       searchActions.push({
         key: "hint",
         kind: "hint",
-        label: "Type a bang, e.g. !yt, then press Space to select",
+        label: tExternal("bang.emptyBangHint"),
         description: ddgBangs ? tExternal("tipDdgBangs") : undefined,
       });
     }
