@@ -22,12 +22,11 @@ import { externalMode } from "../external";
 import { pageMode } from "../page";
 import { userGroupMode } from "../user-group";
 
-interface QuickLinkOption {
-  [key: string]: unknown;
+type QuickLinkOption = {
   icon: TablerIcon;
   name: string;
   path: string;
-}
+};
 
 export const useHomeEmptyGroups = () => {
   const { data: session } = useSession();
