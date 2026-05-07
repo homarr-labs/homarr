@@ -22,7 +22,7 @@
       automerge: true,
     },
     {
-      // disallow automerge for onlyBuiltDependencies
+      // disallow automerge for dependencies requiring postinstall scripts
       matchPackageNames: [
         "@tree-sitter-grammars/tree-sitter-yaml",
         "bcrypt",
