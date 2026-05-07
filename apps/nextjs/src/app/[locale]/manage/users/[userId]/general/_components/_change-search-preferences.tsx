@@ -67,7 +67,7 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
           {...form.getInputProps("openInNewTab", { type: "checkbox" })}
         />
         <Switch
-          label={(t as (key: string) => string)("user.field.ddgBangs.label")}
+          label={t("user.field.ddgBangs.label")}
           {...form.getInputProps("ddgBangsEnabled", { type: "checkbox" })}
         />
 
