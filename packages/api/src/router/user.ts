@@ -545,7 +545,8 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, ctx.session.user.id));
     }),
   changeDdgBangs: protectedProcedure
-    .input(userDdgBangsSchema.and(byIdSchema))
+    .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
+    .output(z.void())
     .meta({
       openapi: {
         method: "PATCH",
@@ -556,7 +557,6 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      // Only admins can change other users DDG bang preference
       if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
         throw new TRPCError({
           code: "NOT_FOUND",
