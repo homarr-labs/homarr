@@ -372,6 +372,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/umami" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/umami.svg" alt="Umami" width="90" height="90" />
+  <br/>  
+  <p align="center">Umami</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/unifi-controller" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png" alt="Unifi Controller" width="90" height="90" />
   <br/>  
