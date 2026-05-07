@@ -24,7 +24,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
-          app-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
+          client-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code

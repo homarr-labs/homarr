@@ -12,6 +12,7 @@ import { SpotlightGroupActionItem } from "./items/group-action-item";
 interface GroupActionsProps<TOption extends Record<string, unknown>> {
   group: SearchGroup<TOption>;
   query: string;
+  setQuery: (query: string) => void;
   setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
@@ -19,6 +20,7 @@ interface GroupActionsProps<TOption extends Record<string, unknown>> {
 export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
   group,
   query,
+  setQuery,
   setMode,
   setChildrenOptions,
 }: GroupActionsProps<TOption>) => {
@@ -58,6 +60,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
         option={option}
         group={group}
         query={query}
+        setQuery={setQuery}
         setMode={setMode}
         setChildrenOptions={setChildrenOptions}
       />
@@ -90,6 +93,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
       option={option}
       group={group}
       query={query}
+      setQuery={setQuery}
       setMode={setMode}
       setChildrenOptions={setChildrenOptions}
     />

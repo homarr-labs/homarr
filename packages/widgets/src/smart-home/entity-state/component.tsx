@@ -76,6 +76,7 @@ export default function SmartHomeEntityStateWidget({
 
   return (
     <UnstyledButton
+      mod={{ "entity-state": entityState, "entity-id": options.entityId }}
       onClick={handleClick}
       w="100%"
       h="100%"

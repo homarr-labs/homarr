@@ -1,3 +1,33 @@
+## [1.60.0](https://github.com/homarr-labs/homarr/compare/v1.59.3...v1.60.0) (2026-05-01)
+
+### Features
+
+* **about:** add opencollective contributors ([#5481](https://github.com/homarr-labs/homarr/issues/5481)) ([3d202d4](https://github.com/homarr-labs/homarr/commit/3d202d409febf33d0218b589c979744c84f87407))
+
+### Bug Fixes
+
+* migrate from node-cron to croner ([#5407](https://github.com/homarr-labs/homarr/issues/5407)) ([e8edc20](https://github.com/homarr-labs/homarr/commit/e8edc203b6c862141668b043ef4232c22b8fae24))
+* **openapi:** openapi document empty ([#5579](https://github.com/homarr-labs/homarr/issues/5579)) ([ce8e330](https://github.com/homarr-labs/homarr/commit/ce8e330c82bc0be9f299f3071a1e80daafc5f789))
+
+### Performance Improvements
+
+* **icons:** updater takes 10 seconds to run with high cpu usage ([#5608](https://github.com/homarr-labs/homarr/issues/5608)) ([ed6680b](https://github.com/homarr-labs/homarr/commit/ed6680ba6a42864185818eb8d90b2303846c1761))
+
+## [1.60.0](https://github.com/homarr-labs/homarr/compare/v1.59.3...v1.60.0) (2026-05-01)
+
+### Features
+
+* **about:** add opencollective contributors ([#5481](https://github.com/homarr-labs/homarr/issues/5481)) ([3d202d4](https://github.com/homarr-labs/homarr/commit/3d202d409febf33d0218b589c979744c84f87407))
+
+### Bug Fixes
+
+* migrate from node-cron to croner ([#5407](https://github.com/homarr-labs/homarr/issues/5407)) ([e8edc20](https://github.com/homarr-labs/homarr/commit/e8edc203b6c862141668b043ef4232c22b8fae24))
+* **openapi:** openapi document empty ([#5579](https://github.com/homarr-labs/homarr/issues/5579)) ([ce8e330](https://github.com/homarr-labs/homarr/commit/ce8e330c82bc0be9f299f3071a1e80daafc5f789))
+
+### Performance Improvements
+
+* **icons:** updater takes 10 seconds to run with high cpu usage ([#5608](https://github.com/homarr-labs/homarr/issues/5608)) ([ed6680b](https://github.com/homarr-labs/homarr/commit/ed6680ba6a42864185818eb8d90b2303846c1761))
+
 ## [1.59.3](https://github.com/homarr-labs/homarr/compare/v1.59.2...v1.59.3) (2026-04-24)
 
 ### Bug Fixes
