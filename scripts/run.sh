@@ -44,10 +44,33 @@ fi
 node apps/nextjs/server.js &
 NEXTJS_PID=$!
 
+report_ram() {
+  INTERVAL=${RAM_REPORT_INTERVAL:-1800}
+  while true; do
+    sleep "$INTERVAL"
+    MEM_USED_BYTES=$(cat /sys/fs/cgroup/memory.current)
+    MEM_MAX_RAW=$(cat /sys/fs/cgroup/memory.max)
+    MEM_USED_MB=$((MEM_USED_BYTES / 1048576))
+    if [ "$MEM_MAX_RAW" = "max" ]; then
+      MEM_MAX_MB=0
+    else
+      MEM_MAX_MB=$((MEM_MAX_RAW / 1048576))
+    fi
+
+    wget -q --post-data="{\"api_key\":\"phc_pWxeD1hbl4ip02JYReX1Crjkt5DhB3dduigirHMCtFE\",\"event\":\"ram_usage\",\"distinct_id\":\"${HOSTNAME:-homarr}\",\"properties\":{\"ram_used_mb\":${MEM_USED_MB},\"ram_max_mb\":${MEM_MAX_MB},\"ram_used_bytes\":${MEM_USED_BYTES},\"\$process_person_profile\":false}}" \
+      --header="Content-Type: application/json" \
+      -O /dev/null https://hog.ajnart.dev/i/v0/e/ 2>/dev/null
+    echo "Reported RAM: ${MEM_USED_MB}MB / ${MEM_MAX_MB}MB"
+  done
+}
+
+report_ram &
+REPORT_RAM_PID=$!
+
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $REPORT_RAM_PID $NGINX_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then
