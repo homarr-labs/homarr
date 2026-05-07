@@ -267,6 +267,13 @@
       "when": 1775399941430,
       "tag": "0037_remove_salt",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1775400000000,
+      "tag": "0038_add_user_ddg_bangs",
+      "breakpoints": true
     }
   ]
 }

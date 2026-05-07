@@ -3791,8 +3791,8 @@
             "subtitle": "{count} współtworzy tłumaczenia w wielu językach"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsorzy",
+            "subtitle": "{count} wspiera finansowo projekt"
           },
           "libraries": {
             "title": "Biblioteki",
