@@ -69,9 +69,9 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
           variant="default"
           onClick={() =>
             openModal({
-              onClose(createdAppId) {
+              onClose({ id }) {
                 void refetch().then(() => {
-                  form.setFieldValue(`options.${property}`, createdAppId);
+                  form.setFieldValue(`options.${property}`, id);
                 });
               },
             })
