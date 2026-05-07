@@ -1,3 +1,9 @@
+## [1.60.1-beta.2](https://github.com/homarr-labs/homarr/compare/v1.60.1-beta.1...v1.60.1-beta.2) (2026-05-07)
+
+### Performance Improvements
+
+* (next branch) reduce idle memory on startup ([#5637](https://github.com/homarr-labs/homarr/issues/5637)) ([5ee84f8](https://github.com/homarr-labs/homarr/commit/5ee84f8cf464c308729281cb4db572950ba85a82))
+
 ## [1.60.1-beta.1](https://github.com/homarr-labs/homarr/compare/v1.60.0...v1.60.1-beta.1) (2026-05-01)
 
 ### Performance Improvements
