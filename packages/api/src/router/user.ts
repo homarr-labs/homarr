@@ -110,7 +110,7 @@ export const userRouter = createTRPCRouter({
             const queryResult = (await trx.delete(schema.invites).where(inviteWhere)) as
               | QueryResult
               | MySqlRawQueryResult;
-            let count = 0;
+            let count: number;
             if (Array.isArray(queryResult)) {
               count = queryResult[0].affectedRows;
             } else {
