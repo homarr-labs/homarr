@@ -1,0 +1,191 @@
+---
+description: Comprehensive Homarr codebase architecture and conventions reference
+alwaysApply: true
+---
+
+# Homarr Codebase Context
+
+Homarr is an open-source, self-hosted dashboard for managing homelab services. It integrates with 50+ self-hosted apps (media servers, download clients, DNS, NAS, etc.) and provides a drag-and-drop widget-based UI.
+
+## Tech Stack
+
+- **Monorepo**: pnpm workspaces + Turborepo
+- **Framework**: Next.js (App Router, `output: "standalone"`) — T3 Stack
+- **Language**: TypeScript throughout
+- **ORM**: Drizzle (supports SQLite via better-sqlite3, MySQL, PostgreSQL)
+- **API**: tRPC (HTTP + WebSocket subscriptions) with superjson + OpenAPI bridge via `trpc-to-openapi`
+- **Auth**: NextAuth v5 (database sessions, Credentials/LDAP/OIDC providers)
+- **UI**: Mantine v7 (not Tailwind) + Tabler icons
+- **State**: Jotai (atoms), TanStack Query (server state via tRPC)
+- **Realtime**: WebSocket server (`ws`) for tRPC subscriptions, backed by Redis pub/sub
+- **Cron**: `node-cron` in a standalone Fastify service (`apps/tasks`)
+- **i18n**: next-intl with `[locale]` dynamic segment (prefix mode: `"never"`, locale from cookie)
+- **Testing**: Vitest + jsdom, Playwright for E2E
+- **Package manager**: pnpm 10.33.2, Node >= 24.15.0
+
+## Repository Structure
+
+```
+homarr/
+├── apps/
+│   ├── nextjs/          # Main Next.js application (port 3000)
+│   ├── tasks/           # Cron job runner + Fastify tRPC API (port 3002)
+│   └── websocket/       # Standalone tRPC WebSocket server (port 3001)
+├── packages/
+│   ├── api/             # tRPC appRouter, procedures, OpenAPI
+│   ├── auth/            # NextAuth config, providers, session, API keys
+│   ├── db/              # Drizzle schema (3 DB drivers), migrations, queries
+│   ├── core/            # Env validation, DB/Redis driver factories, logging
+│   ├── definitions/     # Domain enums: WidgetKind, IntegrationKind, permissions
+│   ├── widgets/         # All 39 dashboard widgets (definitions + components)
+│   ├── integrations/    # Integration classes (HTTP clients to external apps)
+│   ├── redis/           # Redis pub/sub channels, caching abstractions
+│   ├── translation/     # next-intl setup, locale configs, lang JSON files
+│   ├── ui/              # Shared Mantine components, theme, hooks
+│   ├── validation/      # Shared zod schemas for API/forms
+│   ├── common/          # Shared utilities, IDs, errors
+│   ├── cron-jobs/       # Cron job implementations (25+ jobs)
+│   ├── cron-jobs-core/  # Cron scheduling primitives
+│   ├── cron-job-api/    # tRPC router for job management (start/stop/trigger)
+│   ├── cron-job-status/ # Cron status via Redis
+│   ├── boards/          # Board context, edit mode, cache updater
+│   ├── modals/          # Modal primitives on Mantine
+│   ├── modals-collection/ # Feature modals (apps, boards, docker, etc.)
+│   ├── form/            # useZodForm (Mantine + zod resolver)
+│   ├── forms-collection/# Reusable form UIs (new app, icon picker, upload)
+│   ├── spotlight/       # Command palette / search with multiple modes
+│   ├── request-handler/ # Server request handlers (feeds, integrations)
+│   ├── notifications/   # Mantine notifications wrapper
+│   ├── docker/          # Dockerode-based Docker access
+│   ├── icons/           # Icon DB/repo integration
+│   ├── image-proxy/     # Image proxy + caching
+│   ├── ping/            # Reachability / ping utilities
+│   ├── analytics/       # Server-side analytics (Umami)
+│   ├── server-settings/ # Server setting keys/types
+│   ├── settings/        # User-facing settings UI context
+│   ├── old-import/      # Legacy Homarr import
+│   ├── old-schema/      # Legacy Homarr zod schemas
+│   └── cli/             # Node CLI for ops (brocli)
+├── tooling/
+│   ├── eslint/          # Shared ESLint configs
+│   ├── prettier/        # Shared Prettier config
+│   ├── typescript/      # Base tsconfig
+│   └── github/          # CI setup action
+├── development/         # Dev docker-compose (Redis, MySQL, PostgreSQL)
+├── e2e/                 # E2E test specs
+└── Dockerfile           # Multi-stage production build
+```
+
+## Three Runtime Services
+
+| Service | Port | Role |
+|---------|------|------|
+| Next.js | 3000 | Main web app (SSR + API routes) |
+| WebSocket | 3001 | tRPC subscriptions via `ws` |
+| Tasks | 3002 | Cron job runner + management API via Fastify |
+
+In Docker, nginx listens on **7575** and proxies to all three. The tasks service authenticates via `CRON_JOB_API_KEY` header.
+
+## Package Dependency Layers
+
+1. **Foundation**: `core` (env, DB drivers, Redis client, logging) → no `@homarr` deps
+2. **Domain**: `definitions` → `common` → `core`
+3. **Data**: `db` → `core`, `definitions`, `common`
+4. **Auth**: `auth` → `db`, `definitions`, `core`, `validation`
+5. **Cross-cutting**: `translation`, `validation`, `redis`, `server-settings`
+6. **Feature backends**: `integrations`, `request-handler`, `cron-jobs`, `docker`, `ping`
+7. **API surface**: `api` → pulls in auth, db, redis, integrations, etc.
+8. **UI stack**: `ui`, `modals`, `form`, `notifications`, `boards`, `spotlight`
+9. **Composed features**: `widgets`, `modals-collection`, `forms-collection`
+
+## Key Patterns
+
+### tRPC
+
+- **Server caller** (RSC): `import { api } from "@homarr/api/server"` → cached caller with auth context
+- **Client hooks**: `import { clientApi } from "@homarr/api/client"` → React Query hooks
+- **Router structure**: `packages/api/src/root.ts` defines top-level namespaces (`user`, `board`, `widget`, `integration`, `docker`, `kubernetes`, etc.)
+- **Procedures**: `publicProcedure`, `protectedProcedure`, `permissionRequiredProcedure`, `onboardingProcedure`
+- **WebSocket subscriptions**: Client uses `wsLink` when `type === "subscription"`, connects to port 3001
+
+### Multi-Database Support
+
+Drizzle schemas exist in three parallel implementations:
+- `packages/db/schema/sqlite.ts`
+- `packages/db/schema/mysql.ts`
+- `packages/db/schema/postgresql.ts`
+
+Selected at runtime via `DB_DRIVER` env (`better-sqlite3` | `mysql2` | `node-postgres`). Migrations are per-engine in `packages/db/migrations/{sqlite,mysql,postgresql}/`.
+
+### Widget System
+
+Widgets are registered in `packages/widgets/src/index.tsx` as `widgetImports` (must satisfy `Record<WidgetKind, ...>`). Each widget:
+- Has a `definition` created via `createWidgetDefinition(kind, { icon, createOptions, supportedIntegrations? })`
+- Uses `optionsBuilder.from(factory => ({ ... }))` for typed options
+- Loads dynamically via `next/dynamic`
+- Fetches data via tRPC client hooks (backed by cron job caches)
+
+### Integration System
+
+Integrations are defined in `packages/definitions/src/integration.ts` (`integrationDefs`) and instantiated via `createIntegrationAsync` in `packages/integrations/src/base/creator.ts`. Each extends abstract `Integration` class with `testConnectionAsync` and typed methods.
+
+### Cron Job System
+
+Jobs defined in `packages/cron-jobs/src/jobs/`. Each job:
+- Uses `createCronJob` with a cron expression
+- Publishes results to Redis channels
+- Widget subscriptions consume those channels via tRPC subscriptions
+- Job management (start/stop/trigger) via `cronJobApi` HTTP client to port 3002
+
+### Modals
+
+Created with `createModal(component).withOptions({ defaultTitle })` from `@homarr/modals`. Opened via `useModalAction(SomeModal)`. Feature modals live in `packages/modals-collection/`.
+
+### Forms
+
+`useZodForm` from `@homarr/form` wraps Mantine `useForm` with zod validation. Shared form UIs in `packages/forms-collection/`.
+
+### Routing (App Router)
+
+- `apps/nextjs/src/app/[locale]/` — all UI routes under locale segment
+- Route groups: `(home)`, `(content)`, `(board)` — don't affect URLs
+- Key routes: `boards/[name]`, `manage/...` (admin), `auth/login`, `init` (onboarding), `widgets/[kind]`
+- Locale driven by cookie (no URL prefix)
+
+### Auth Providers
+
+Configured via `AUTH_PROVIDERS` env. Supports: `credentials` (local), `ldap`, `oidc`. Database sessions with httpOnly cookies. API key auth for programmatic access.
+
+## Environment Variables
+
+Key env vars (from `.env.example`):
+- `DB_DRIVER`: `better-sqlite3` | `mysql2` | `node-postgres`
+- `DB_URL`: Database connection string
+- `AUTH_SECRET`: NextAuth secret
+- `SECRET_ENCRYPTION_KEY`: AES-256-CBC for integration secrets
+- `AUTH_PROVIDERS`: Comma-separated (`credentials`, `ldap`, `oidc`)
+- `CRON_JOB_API_KEY`: Shared key between Next.js and tasks service
+- `REDIS_*`: Redis connection (host, port, password)
+- `ENABLE_KUBERNETES`: Optional Kubernetes integration
+
+## Development Commands
+
+- `pnpm dev` — runs all three services in parallel via Turborepo
+- `pnpm docker:dev` — starts Redis + MySQL + PostgreSQL containers
+- `pnpm db:push` — push schema to SQLite (dev)
+- `pnpm db:studio` — Drizzle Studio
+- `pnpm test` — Vitest unit tests
+- `pnpm test:e2e` — Playwright E2E
+- `pnpm lint` / `pnpm format` — ESLint + Prettier
+- `pnpm typecheck` — tsc --noEmit across all packages
+
+## Conventions
+
+- Workspace packages use `@homarr/` scope
+- All versions managed via pnpm `catalog:` in workspace
+- Path alias `~/*` → `./src/*` in Next.js app
+- Mantine for all UI (no Tailwind) — primary color is red, `autoContrast: true`
+- Icons from `@tabler/icons-react`
+- Drag-and-drop via `@dnd-kit/*`
+- `typescript.ignoreBuildErrors: true` in next.config (types checked separately via `typecheck`)
+- `serverExternalPackages`: `dockerode`, `isomorphic-dompurify`, `jsdom`

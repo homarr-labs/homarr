@@ -2,6 +2,8 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -11,6 +13,8 @@ import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "calendarRouter" });
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
@@ -24,7 +28,7 @@ export const calendarRouter = createTRPCRouter({
     )
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx, input }) => {
-      return await Promise.all(
+      const settled = await Promise.allSettled(
         ctx.integrations.map(async (integration) => {
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
@@ -40,6 +44,24 @@ export const calendarRouter = createTRPCRouter({
           };
         }),
       );
+
+      return settled.flatMap((result, index) => {
+        if (result.status === "fulfilled") {
+          return [result.value];
+        }
+        const integration = ctx.integrations[index];
+        logger.warn(
+          new ErrorWithMetadata(
+            "Calendar integration request failed; skipping events for this integration",
+            {
+              integrationId: integration?.id,
+              integrationKind: integration?.kind,
+            },
+            { cause: result.reason },
+          ),
+        );
+        return [];
+      });
     }),
   subscribeToEvents: publicProcedure
     .input(

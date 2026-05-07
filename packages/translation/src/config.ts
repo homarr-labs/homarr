@@ -284,6 +284,17 @@ export const localeConfigurations = {
       return import("dayjs/locale/pt").then((module) => module.default);
     },
   },
+  "pt-br": {
+    name: "Português (Brasil)",
+    translatedName: "Portuguese (Brazil)",
+    icon: flagIcon("br"),
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/pt-BR/index.esm.mjs").then((module) => module.MRT_Localization_PT_BR);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/pt-br").then((module) => module.default);
+    },
+  },
   ro: {
     name: "Românesc",
     translatedName: "Romanian",
