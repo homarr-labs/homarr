@@ -1,0 +1,19 @@
+packages/integrations/test/nextcloud.spec.ts
+  s_b8505d07512b78::t_05dff28bd57077 300
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "3652df502733374fef490c545d9789a3b96bd154",
+  "prompts": {},
+  "sessions": {
+    "s_b8505d07512b78": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1fcc7d2a3ffe4lEpAyj6yeqU8r",
+        "model": "openai/gpt-oss-120b"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
