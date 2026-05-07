@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -49,11 +50,16 @@ export const calendarRouter = createTRPCRouter({
           return [result.value];
         }
         const integration = ctx.integrations[index];
-        logger.warn("Calendar integration request failed; skipping events for this integration", {
-          integrationId: integration?.id,
-          integrationKind: integration?.kind,
-          error: result.reason instanceof Error ? result.reason.message : String(result.reason),
-        });
+        logger.warn(
+          new ErrorWithMetadata(
+            "Calendar integration request failed; skipping events for this integration",
+            {
+              integrationId: integration?.id,
+              integrationKind: integration?.kind,
+            },
+            { cause: result.reason },
+          ),
+        );
         return [];
       });
     }),
