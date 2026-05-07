@@ -11,6 +11,12 @@
       matchPackageNames: ["tsx"],
       enabled: false,
     },
+    // Reenable once bug with undici v8 is fixed (https://github.com/homarr-labs/homarr/issues/5467)
+    {
+      matchPackageNames: ["undici"],
+      matchNewValue: "8.*",
+      enabled: false,
+    },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
@@ -31,6 +37,12 @@
       automerge: false,
     },
   ],
+  // Updates lockfile for prebuilt-debian after if package.json is updated, otherwise only root lockfile is updated
+  postUpgradeTasks: {
+    commands: ["cd deployments/prebuilt-debian && pnpm install --ignore-workspace --lockfile-only"],
+    fileFilters: ["deployments/prebuilt-debian/pnpm-lock.yaml"],
+    executionMode: "update",
+  },
   updateInternalDeps: true,
   rangeStrategy: "bump",
   automerge: false,

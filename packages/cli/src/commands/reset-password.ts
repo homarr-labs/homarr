@@ -22,7 +22,7 @@ export const resetPassword = command({
       where: and(eq(users.name, options.username), eq(users.provider, "credentials")),
     });
 
-    if (!user?.salt) {
+    if (!user?.password) {
       console.error(`User ${options.username} not found`);
       return;
     }
@@ -33,7 +33,7 @@ export const resetPassword = command({
     await db
       .update(users)
       .set({
-        password: await hashPasswordAsync(newPassword, user.salt),
+        password: await hashPasswordAsync(newPassword),
       })
       .where(eq(users.id, user.id));
 

@@ -21,7 +21,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
     {
       initialValues: {
         containerUrls: innerProps.selectedContainers.map((container) => {
-          if (container.ports[0]) {
+          if (Array.isArray(container.ports) && container.ports[0]) {
             return `http://${container.ports[0].IP}:${container.ports[0].PublicPort}`;
           }
 

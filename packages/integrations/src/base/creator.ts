@@ -1,6 +1,7 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { AnchorIntegration } from "../anchor/anchor-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -10,13 +11,16 @@ import { DelugeIntegration } from "../download-client/deluge/deluge-integration"
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
+import { SlskdIntegration } from "../download-client/slskd/slskd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
 import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
+import { GlancesIntegration } from "../glances/glances-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
+import { ImmichIntegration } from "../immich/immich-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -37,6 +41,10 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { SearchChIntegration } from "../search-ch/search-ch-integration";
+import { SeerrIntegration } from "../seerr/seerr-integration";
+import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
+import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
@@ -65,6 +73,7 @@ type IntegrationInstance = new (integration: IntegrationInput) => Integration;
 
 // factories are an array, to differentiate in js between class constructors and functions
 export const integrationCreators = {
+  anchor: AnchorIntegration,
   piHole: [createPiHoleIntegrationAsync],
   adGuardHome: AdGuardHomeIntegration,
   homeAssistant: HomeAssistantIntegration,
@@ -77,8 +86,10 @@ export const integrationCreators = {
   qBittorrent: QBitTorrentIntegration,
   deluge: DelugeIntegration,
   transmission: TransmissionIntegration,
+  slskd: SlskdIntegration,
   aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
+  seerr: SeerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
@@ -105,6 +116,11 @@ export const integrationCreators = {
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  tracearr: TracearrIntegration,
+  glances: GlancesIntegration,
+  searchCh: SearchChIntegration,
+  immich: ImmichIntegration,
+  speedtestTracker: SpeedtestTrackerIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

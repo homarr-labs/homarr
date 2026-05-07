@@ -1,5 +1,4 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { validate } from "node-cron";
 import { z } from "zod/v4";
 
 import type { JobGroupKeys } from "@homarr/cron-jobs";
@@ -13,11 +12,19 @@ export const jobNameSchema = z.enum(jobGroup.getKeys());
 export interface IJobManager {
   startAsync(name: JobGroupKeys): Promise<void>;
   triggerAsync(name: JobGroupKeys): Promise<void>;
-  stopAsync(name: JobGroupKeys): Promise<void>;
+  stop(name: JobGroupKeys): void;
   updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void>;
   disableAsync(name: JobGroupKeys): Promise<void>;
   enableAsync(name: JobGroupKeys): Promise<void>;
-  getAllAsync(): Promise<{ name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]>;
+  getAllAsync(): Promise<
+    {
+      name: JobGroupKeys;
+      cron: string;
+      preventManualExecution: boolean;
+      preventCustomInterval: boolean;
+      isEnabled: boolean;
+    }[]
+  >;
 }
 
 const t = initTRPC
@@ -44,10 +51,6 @@ const apiKeyProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
-export const cronExpressionSchema = z.string().refine((expression) => validate(expression), {
-  error: "Invalid cron expression",
-});
-
 export const jobRouter = createTrpcRouter({
   start: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.startAsync(input);
@@ -55,14 +58,14 @@ export const jobRouter = createTrpcRouter({
   trigger: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.triggerAsync(input);
   }),
-  stop: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
-    await ctx.manager.stopAsync(input);
+  stop: apiKeyProcedure.input(jobNameSchema).mutation(({ input, ctx }) => {
+    ctx.manager.stop(input);
   }),
   updateInterval: apiKeyProcedure
     .input(
       z.object({
         name: jobNameSchema,
-        cron: cronExpressionSchema,
+        cron: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

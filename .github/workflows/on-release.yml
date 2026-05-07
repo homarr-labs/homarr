@@ -2,7 +2,7 @@ permissions: {}
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   trigger-docs-release:
@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.HOMARR_DOCS_RELEASE_APP_PRIVATE_KEY }}
-          app-id: ${{ vars.HOMARR_DOCS_RELEASE_APP_ID }}
+          client-id: ${{ vars.HOMARR_DOCS_RELEASE_APP_ID }}
           owner: homarr-labs
           repositories: |
             documentation
@@ -37,6 +37,7 @@ jobs:
             }
           }
           EOF
+
   update-bug-report-template:
     name: Update Bug Report Template
     runs-on: ubuntu-latest
@@ -44,33 +45,30 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           token: ${{ steps.obtainToken.outputs.token }}
+          ref: dev
       - name: Setup
         uses: ./tooling/github/setup
       - run: pnpm run scripts:update-bug-report-template
         env:
           NEXT_VERSION: ${{ github.event.release.tag_name }}
-      - name: Commit changes
-        run: |
-          git config --global user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
-          git config --global user.name "Releases Homarr"
-          git checkout -b update-bug-report-template
-          git add .
-          git commit -m "chore: update bug report template"
 
       - name: Create Pull Request
         id: create-pull-request
         uses: peter-evans/create-pull-request@v8
         with:
+          add-paths: .github/ISSUE_TEMPLATE/bug_report.yml
+          commit-message: "chore: update bug report template"
+          author: Releases Homarr <175486441+homarr-releases[bot]@users.noreply.github.com>
           token: ${{ steps.obtainToken.outputs.token }}
           branch: update-bug-report-template
           base: dev

@@ -58,24 +58,30 @@ export abstract class Integration {
   private createUrl(
     inputUrl: string,
     path: `/${string}`,
-    queryParams?: Record<string, string | Date | number | boolean>,
+    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
   ) {
     const baseUrl = removeTrailingSlash(inputUrl);
     const url = new URL(`${baseUrl}${path}`);
 
     if (queryParams) {
       for (const [key, value] of Object.entries(queryParams)) {
+        if (value === null || value === undefined) {
+          continue;
+        }
         url.searchParams.set(key, value instanceof Date ? value.toISOString() : value.toString());
       }
     }
 
     return url;
   }
-  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean | null | undefined>) {
     return this.createUrl(this.integration.url, path, queryParams);
   }
 
-  protected externalUrl(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+  protected externalUrl(
+    path: `/${string}`,
+    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
+  ) {
     return this.createUrl(this.integration.externalUrl ?? this.integration.url, path, queryParams);
   }
 

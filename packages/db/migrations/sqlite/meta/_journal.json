@@ -250,8 +250,15 @@
     {
       "idx": 35,
       "version": "6",
-      "when": 1769351238802,
-      "tag": "0035_chunky_zombie",
+      "when": 1775399918831,
+      "tag": "0035_remove_salt",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "6",
+      "when": 1775400000000,
+      "tag": "0036_add_user_ddg_bangs",
       "breakpoints": true
     }
   ]

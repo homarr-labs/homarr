@@ -7,6 +7,7 @@ import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 
+import * as anchorNote from "./anchor-note";
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
@@ -20,6 +21,8 @@ import * as downloads from "./downloads";
 import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
+import * as immichAlbumCarousel from "./immich/album-carousel";
+import * as immichServerStats from "./immich/server-stats";
 import type { WidgetImportRecord } from "./import";
 import * as indexerManager from "./indexer-manager";
 import * as mediaReleases from "./media-releases";
@@ -37,9 +40,12 @@ import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
+import * as speedtestTracker from "./speedtest-tracker";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
+import * as timetable from "./timetable";
+import * as tracearr from "./tracearr";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -50,6 +56,7 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  anchorNote,
   notebook,
   iframe,
   video,
@@ -79,6 +86,11 @@ export const widgetImports = {
   systemResources,
   coolify,
   systemDisks,
+  timetable,
+  "immich-serverStats": immichServerStats,
+  "immich-albumCarousel": immichAlbumCarousel,
+  tracearr,
+  speedtestTracker,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

@@ -1,6 +1,6 @@
 import { command, string } from "@drizzle-team/brocli";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { and, count, db, eq } from "@homarr/db";
@@ -67,9 +67,8 @@ export const recreateAdmin = command({
       permission: "admin",
     });
 
-    const salt = await createSaltAsync();
     const password = generateSecureRandomToken(24);
-    const hashedPassword = await hashPasswordAsync(password, salt);
+    const hashedPassword = await hashPasswordAsync(password);
 
     const userId = createId();
     await db.insert(users).values({
@@ -77,7 +76,6 @@ export const recreateAdmin = command({
       name: result.data,
       provider: "credentials",
       password: hashedPassword,
-      salt,
     });
 
     await db.insert(groupMembers).values({

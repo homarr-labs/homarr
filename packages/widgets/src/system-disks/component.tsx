@@ -4,6 +4,7 @@ import { Box, Card, Group, Stack, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { humanFileSize } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -15,8 +16,13 @@ const getDisplayText = (item: { used: string; available: string; percentage: num
   switch (displayMode) {
     case "percentage":
       return `${Math.round(item.percentage)}%`;
-    case "absolute":
-      return `${item.used} / ${item.available}`;
+    case "absolute": {
+      const availableInBytes = Number(item.available);
+      const availableText = Number.isFinite(availableInBytes)
+        ? humanFileSize(Math.round(availableInBytes))
+        : item.available;
+      return `${item.used} / ${availableText}`;
+    }
     case "free":
       return `${Math.round(100 - item.percentage)}% free`;
     default:

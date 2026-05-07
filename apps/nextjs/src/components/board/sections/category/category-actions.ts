@@ -58,6 +58,7 @@ export const useCategoryActions = () => {
               ...section,
               yOffset: section.yOffset + 2,
             })),
+          ...previous.sections.filter((section) => section.kind !== "category" && section.kind !== "empty"),
         ] satisfies Section[],
       }));
     },

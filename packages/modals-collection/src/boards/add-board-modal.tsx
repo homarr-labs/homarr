@@ -57,10 +57,12 @@ export const AddBoardModal = createModal(({ actions }) => {
           {...form.getInputProps("name")}
           description={
             boardNameStatus.description ? (
-              <Group c={boardNameStatus.description.color} gap="xs" align="center">
-                {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
-                <span>{boardNameStatus.description.label}</span>
-              </Group>
+              <span>
+                <Group c={boardNameStatus.description.color} gap="xs" align="center">
+                  {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
+                  <span>{boardNameStatus.description.label}</span>
+                </Group>
+              </span>
             ) : null
           }
         />

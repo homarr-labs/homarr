@@ -1,14 +1,12 @@
 import fs from "fs/promises";
 
 const sources = {
-  crowdin: [
-    { projectId: 534422 },
-    { projectId: 742587 },
-  ],
+  crowdin: [{ projectId: 534422 }, { projectId: 742587 }],
   github: [
     { slug: "ajnart", repository: "homarr" },
     { slug: "homarr-labs", repository: "homarr" },
   ],
+  opencollective: [{ slug: "homarr" }],
 };
 
 const env = {
@@ -47,11 +45,55 @@ const fetchCrowdinMembers = async (projectId) => {
   };
 
   const response = await fetch(url, options);
-  const data = await response.json();
+  const result = await response.json();
 
-  return data.data.flatMap((data) => data.data).map(contributor => ({
-    username: contributor.username,
-    avatarUrl: contributor.avatarUrl,
+  return result.data
+    .flatMap(({ data }) => data)
+    .map((contributor) => ({
+      username: contributor.username,
+      avatarUrl: contributor.avatarUrl,
+    }));
+};
+
+const fetchOpenCollectiveContributors = async (slug) => {
+  const query = `
+    query($slug: String!) {
+      account(slug: $slug) {
+        ... on Organization {
+          members(role: [BACKER]) {
+            nodes {
+              role
+              account {
+                id
+                name
+                slug
+                imageUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetch("https://api.opencollective.com/graphql/v2", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables: { slug },
+    }),
+  });
+
+  const result = await response.json();
+  const members = result.data?.account?.members?.nodes || [];
+  return members.map((member) => ({
+    id: member.account.id,
+    name: member.account.name,
+    slug: member.account.slug,
+    imageUrl: member.account.imageUrl,
   }));
 };
 
@@ -61,6 +103,7 @@ const distinctBy = (callback) => (value, index, self) => {
 
 const githubContributors = [];
 const crowdinContributors = [];
+const opencollectiveContributors = [];
 
 for (const { repository, slug } of sources.github) {
   githubContributors.push(...(await fetchGithubContributors(slug, repository)));
@@ -77,3 +120,14 @@ for (const { projectId } of sources.crowdin) {
 }
 const distinctCrowdinContributors = crowdinContributors.filter(distinctBy((contributor) => contributor.username));
 await fs.writeFile("./static-data/translators.json", JSON.stringify(distinctCrowdinContributors));
+
+for (const { slug } of sources.opencollective) {
+  opencollectiveContributors.push(...(await fetchOpenCollectiveContributors(slug)));
+}
+const distinctOpenCollectiveContributors = opencollectiveContributors.filter(
+  distinctBy((contributor) => contributor.slug),
+);
+await fs.writeFile(
+  "./static-data/opencollective-contributors.json",
+  JSON.stringify(distinctOpenCollectiveContributors),
+);

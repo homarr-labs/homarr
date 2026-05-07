@@ -101,6 +101,7 @@ const optionMapping: OptionMapping = {
     allowMicrophone: (oldOptions) => oldOptions.allowMicrophone,
     allowGeolocation: (oldOptions) => oldOptions.allowGeolocation,
     allowScrolling: (oldOptions) => oldOptions.allowScrolling,
+    allowModals: () => undefined,
   },
   video: {
     feedUrl: (oldOptions) => oldOptions.FeedUrl,
@@ -121,6 +122,7 @@ const optionMapping: OptionMapping = {
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
     hideDescription: () => undefined,
+    showPosterImage: () => true, // This was the default in oldmarr
   },
   notebook: {
     allowReadOnlyCheck: (oldOptions) => oldOptions.allowReadOnlyCheck,
@@ -161,6 +163,7 @@ const optionMapping: OptionMapping = {
     sectionIndicatorRequirement: (oldOptions) =>
       "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
     showUptime: () => undefined,
+    gpu: () => undefined,
     visibleClusterSections: (oldOptions) => {
       if (!("showNode" in oldOptions)) return undefined;
 

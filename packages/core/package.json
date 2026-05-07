@@ -37,24 +37,24 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.10",
-    "better-sqlite3": "^12.6.2",
-    "dns-caching": "^0.2.9",
-    "drizzle-orm": "^0.45.1",
-    "ioredis": "5.9.2",
-    "mysql2": "3.16.1",
-    "pg": "^8.17.1",
-    "superjson": "2.2.6",
-    "winston": "3.19.0",
-    "zod": "^4.2.1"
+    "@t3-oss/env-nextjs": "catalog:",
+    "better-sqlite3": "catalog:",
+    "dns-caching": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ioredis": "catalog:",
+    "mysql2": "catalog:",
+    "pg": "catalog:",
+    "superjson": "catalog:",
+    "winston": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.16.0",
-    "eslint": "^9.39.2",
-    "typescript": "^5.9.3"
+    "@types/better-sqlite3": "catalog:",
+    "@types/pg": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }
