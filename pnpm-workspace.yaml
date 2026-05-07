@@ -4,7 +4,7 @@ packages:
   - tooling/*
 allowBuilds:
   "@scarf/scarf": false
-  '@swc/core': false
+  "@swc/core": false
   "@tree-sitter-grammars/tree-sitter-yaml": true
   bcrypt: true
   better-sqlite3: true
@@ -16,6 +16,7 @@ allowBuilds:
   ssh2: true
   tree-sitter: true
   tree-sitter-json: true
+  nice-napi: false
 allowUnusedPatches: true
 catalog:
   "@auth/core": ^0.41.2
