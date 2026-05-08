@@ -40,8 +40,8 @@ catalogs:
       specifier: 10.0.1
       version: 10.0.1
     '@extractus/feed-extractor':
-      specifier: 7.1.7
-      version: 7.1.7
+      specifier: 7.2.1
+      version: 7.2.1
     '@gitbeaker/rest':
       specifier: ^43.8.0
       version: 43.8.0
@@ -2387,7 +2387,7 @@ importers:
     dependencies:
       '@extractus/feed-extractor':
         specifier: 'catalog:'
-        version: 7.1.7
+        version: 7.2.1
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -3801,8 +3801,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@extractus/feed-extractor@7.1.7':
-    resolution: {integrity: sha512-eNeddvKK9rBxWSHj5zBo6ODihJqJtq+QzEQdVeadkOK48avmdela+c2JAfMcPEBMFaWcAYV4bUMhI9Tqi8mX2Q==}
+  '@extractus/feed-extractor@7.2.1':
+    resolution: {integrity: sha512-vc84NZST31wLDTesAkmHL8GBxSB2zw2/h9ZKiQMB71az13sC65EeAcDeLJ2z3atsIhtxESnCMaKmQdOrFiFLcg==}
     engines: {node: '>= 20'}
 
   '@fastify/ajv-compiler@4.0.5':
@@ -4388,9 +4388,6 @@ packages:
     deprecated: This package is no longer maintained
     hasBin: true
 
-  '@ndaidong/bellajs@12.0.1':
-    resolution: {integrity: sha512-1iY42uiHz0cxNMbde7O3zVN+ZX1viOOUOBRt6ht6lkRZbSjwOnFV34Zv4URp3hGzEe6L9Byk7BOq/41H0PzAOQ==}
-
   '@next/env@16.2.4':
     resolution: {integrity: sha512-dKkkOzOSwFYe5RX6y26fZgkSpVAlIOJKQHIiydQcrWH6y/97+RceSOAdjZ14Qa3zLduVUy0TXcn+EiM6t4rPgw==}
 
@@ -4720,6 +4717,10 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
+
+  '@pwshub/bellajs@13.0.2':
+    resolution: {integrity: sha512-OWOaE7Ieufo7VMv957iahOzv/w5oXyyXO28Jh2x6rLU96ZLqC508kAKTgdMJRXgVjda2s+/0C6Kno+k16OmJsQ==}
+    engines: {bun: '>=1.0.0', node: '>=20.0.0'}
 
   '@reduxjs/toolkit@2.11.2':
     resolution: {integrity: sha512-Kd6kAHTA6/nUpp8mySPqj3en3dm0tdMIgbttnQ1xFMVpufoj+ADi8pXLBsd4xzTRHQa7t/Jv8W5UnCuW4kuWMQ==}
@@ -6660,9 +6661,6 @@ packages:
     resolution: {integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==}
     engines: {node: '>=20'}
     hasBin: true
-
-  cross-fetch@4.1.0:
-    resolution: {integrity: sha512-uKm5PU+MHTootlWEY+mZ4vvXoCn4fLQxT9dSc1sXVMSFkINTJVN8cAQROpwcKm8bJ/c7rgZVIBWzH5T78sNZZw==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -11848,14 +11846,11 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 2.0.1
 
-  '@extractus/feed-extractor@7.1.7':
+  '@extractus/feed-extractor@7.2.1':
     dependencies:
-      '@ndaidong/bellajs': 12.0.1
-      cross-fetch: 4.1.0
+      '@pwshub/bellajs': 13.0.2
       fast-xml-parser: 5.7.2
       html-entities: 2.6.0
-    transitivePeerDependencies:
-      - encoding
 
   '@fastify/ajv-compiler@4.0.5':
     dependencies:
@@ -12474,8 +12469,6 @@ snapshots:
       - utf-8-validate
       - webpack-sources
 
-  '@ndaidong/bellajs@12.0.1': {}
-
   '@next/env@16.2.4': {}
 
   '@next/eslint-plugin-next@16.2.4':
@@ -12779,6 +12772,8 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
+
+  '@pwshub/bellajs@13.0.2': {}
 
   '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)':
     dependencies:
@@ -15108,12 +15103,6 @@ snapshots:
     dependencies:
       '@epic-web/invariant': 1.0.0
       cross-spawn: 7.0.6
-
-  cross-fetch@4.1.0:
-    dependencies:
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
 
   cross-spawn@7.0.6:
     dependencies:
