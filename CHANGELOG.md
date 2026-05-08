@@ -1,3 +1,28 @@
+## [1.61.0](https://github.com/homarr-labs/homarr/compare/v1.60.0...v1.61.0) (2026-05-08)
+
+### Features
+
+* add auto/system appearance mode + fix dark mode system resources charts ([#5492](https://github.com/homarr-labs/homarr/issues/5492)) ([831b622](https://github.com/homarr-labs/homarr/commit/831b6221fdf21fe4913b0f165ef551afeada4f33))
+* add pwa support ([#5530](https://github.com/homarr-labs/homarr/issues/5530)) ([277a509](https://github.com/homarr-labs/homarr/commit/277a509f490d57bb6547c86c417c29c0e7af7e40))
+* add Umami Analytics integration and widget ([#5362](https://github.com/homarr-labs/homarr/issues/5362)) ([43cc68b](https://github.com/homarr-labs/homarr/commit/43cc68bdd49c4877012e39e23355f6506aea7f4e))
+* **docker:** Podman compatibility, multi-socket support, per-host error isolation ([#5425](https://github.com/homarr-labs/homarr/issues/5425)) ([56af6bc](https://github.com/homarr-labs/homarr/commit/56af6bcaf00e980e4c7a40d8e912901cd1395f5a))
+* **entity-state:** add data attributes for custom-css styling ([#5655](https://github.com/homarr-labs/homarr/issues/5655)) ([0937555](https://github.com/homarr-labs/homarr/commit/0937555d49c29455bc33307ae5e50bf5b812c7c7))
+* **installations:** support secrets file for all environment variables ([#5125](https://github.com/homarr-labs/homarr/issues/5125)) ([4d30a2e](https://github.com/homarr-labs/homarr/commit/4d30a2e8c48f818bb4947a651b0fec5f64cbf569))
+* **qbittorrent:** add api-key support ([#5677](https://github.com/homarr-labs/homarr/issues/5677)) ([756e8d1](https://github.com/homarr-labs/homarr/commit/756e8d172455f91e40cd8fb5faff6953cc9778c5))
+* **spotlight:** rework !bang search UX ([#4813](https://github.com/homarr-labs/homarr/issues/4813)) ([b5c316b](https://github.com/homarr-labs/homarr/commit/b5c316b825bdffa267fd173a3c39a12269142665))
+
+### Bug Fixes
+
+* **apps:** creation on the fly broken ([#5605](https://github.com/homarr-labs/homarr/issues/5605)) ([3183914](https://github.com/homarr-labs/homarr/commit/3183914a1502555681b73975062ed6ca8a48cb75))
+* **calendar:** keep working integrations when one fails ([#5629](https://github.com/homarr-labs/homarr/issues/5629)) ([44bd16d](https://github.com/homarr-labs/homarr/commit/44bd16d6770d289054df6c7c93adff42d2243252))
+* **lang:** portuguese is linked to brazilian portuguese on crowdin ([#5622](https://github.com/homarr-labs/homarr/issues/5622)) ([62be81e](https://github.com/homarr-labs/homarr/commit/62be81ea607a609a816157686700c54540e1568b))
+* **qbittorrent:** support version 5.2 ([#5672](https://github.com/homarr-labs/homarr/issues/5672)) ([00a0552](https://github.com/homarr-labs/homarr/commit/00a055283e8848542b67d88a656a99fdd0bcb444))
+* **update-checker:** hide prereleases on non-prerelease versions ([#5645](https://github.com/homarr-labs/homarr/issues/5645)) ([b07a4a0](https://github.com/homarr-labs/homarr/commit/b07a4a0f3e3af384ec477bf5c505a705b003de47))
+
+### Reverts
+
+* **deps:** downgrade pnpm to v10 ([#5673](https://github.com/homarr-labs/homarr/issues/5673)) ([44a2973](https://github.com/homarr-labs/homarr/commit/44a2973b1aba1e2c6bd818be022205f3cdb7c943))
+
 ## [1.60.0](https://github.com/homarr-labs/homarr/compare/v1.59.3...v1.60.0) (2026-05-01)
 
 ### Features
