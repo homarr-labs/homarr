@@ -20,6 +20,7 @@ import { networkControllerJob } from "./jobs/integrations/network-controller";
 import { refreshNotificationsJob } from "./jobs/integrations/notifications";
 import { timetableJob } from "./jobs/integrations/timetable";
 import { tracearrJob } from "./jobs/integrations/tracearr";
+import { umamiActiveVisitorsJob } from "./jobs/integrations/umami";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
@@ -55,6 +56,7 @@ const getJobGroup = () => {
     weather: weatherJob,
     timetable: timetableJob,
     tracearr: tracearrJob,
+    umamiActiveVisitors: umamiActiveVisitorsJob,
   });
 };
 
