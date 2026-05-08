@@ -10,4 +10,21 @@ export default [
   ...baseConfig,
   ...reactConfig,
   ...nextjsConfig,
+  {
+    files: ["public/sw.js"],
+    languageOptions: {
+      globals: {
+        self: "readonly",
+        clients: "readonly",
+        skipWaiting: "readonly",
+        importScripts: "readonly",
+        caches: "readonly",
+        fetch: "readonly",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+    },
+  },
 ];
