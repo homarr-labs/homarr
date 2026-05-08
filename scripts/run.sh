@@ -17,11 +17,6 @@ fi
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
 
-# Support secret file for encryption key (is not empty and file exists)
-if [ -n "$SECRET_ENCRYPTION_KEY_FILE" ] && [ -f "$SECRET_ENCRYPTION_KEY_FILE" ]; then
-    export SECRET_ENCRYPTION_KEY=$(cat $SECRET_ENCRYPTION_KEY_FILE)
-fi
-
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
 # 2. Create the nginx configuration file from the template

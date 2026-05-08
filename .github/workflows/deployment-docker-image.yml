@@ -193,7 +193,7 @@ jobs:
     name: Extract amd64 asset from docker image
     needs: [release, build-amd64]
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
@@ -209,7 +209,7 @@ jobs:
     name: Extract arm64 asset from docker image
     needs: [release, build-arm64]
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'

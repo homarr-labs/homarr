@@ -34,9 +34,6 @@ export const SystemResourceGPUChart = ({
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{
         content: ({ payload }) => {
-          if (!payload) {
-            return null;
-          }
           const value = payload[0] ? Number(payload[0].value) : 0;
           return (
             <Paper px={3} py={2} withBorder shadow="md" radius="md">

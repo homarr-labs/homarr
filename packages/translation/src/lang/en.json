@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Open search results in new tab"
+      },
+      "ddgBangs": {
+        "label": "Enable DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Unable to toggle ping icons"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs toggled successfully"
+          },
+          "error": {
+            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Light",
         "dark": "Dark"
       }
@@ -2094,6 +2108,104 @@
       "error": {
         "noIntegration": "No Tracearr integration configured",
         "internalServerError": "Failed to fetch Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Display visitor stats from your Umami analytics instance",
+      "visitors": "visitors",
+      "active": "active",
+      "pageviews": "pageviews",
+      "visits": "visits",
+      "bounceRate": "bounce",
+      "avgDuration": "avg",
+      "option": {
+        "websiteId": {
+          "label": "Website",
+          "description": "Select a website tracked by your Umami instance",
+          "placeholder": "Select a website",
+          "loading": "Loading websites...",
+          "noWebsites": "No websites found",
+          "configureIntegrationFirst": "Connect a Umami integration first"
+        },
+        "timeFrame": {
+          "label": "Time frame",
+          "description": "The time period to display visitor data for",
+          "option": {
+            "today": "Today",
+            "24h": "Last 24 hours",
+            "7d": "Last 7 days",
+            "30d": "Last 30 days",
+            "month": "This month",
+            "lastMonth": "Last month"
+          }
+        },
+        "eventName": {
+          "label": "Event",
+          "description": "Show total occurrences of a specific event",
+          "placeholder": "Select an event",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "none": "No event",
+          "configureWebsiteFirst": "Select a website first to load events"
+        },
+        "chartType": {
+          "label": "Chart type",
+          "description": "Display style for the chart",
+          "option": {
+            "bar": "Bar chart",
+            "sparkline": "Sparkline"
+          }
+        },
+        "chartStyle": {
+          "label": "Chart style",
+          "description": "How to display the event series in the chart",
+          "option": {
+            "grouped": "Side by side",
+            "overlay": "Overlay (subset)"
+          }
+        },
+        "viewMode": {
+          "label": "View",
+          "description": "What to display in the widget body",
+          "option": {
+            "chart": "Chart",
+            "events": "Events chart",
+            "topPages": "Top pages",
+            "topReferrers": "Top referrers"
+          }
+        },
+        "eventNames": {
+          "label": "Events",
+          "description": "Select one or more events to chart",
+          "placeholder": "Select events...",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "configureWebsiteFirst": "Select a website first to load events"
+        },
+        "topCount": {
+          "label": "Items to show",
+          "description": "Number of top items to display (max 500)"
+        }
+      },
+      "event": {
+        "occurrences": "events",
+        "label": "events"
+      },
+      "topPages": {
+        "direct": "Direct"
+      },
+      "topReferrers": {
+        "direct": "Direct"
+      },
+      "events": {
+        "selectPrompt": "Select events to chart"
+      },
+      "error": {
+        "noIntegration": "No Umami integration configured",
+        "noWebsite": "No website configured",
+        "noData": "No data available",
+        "internalServerError": "Failed to fetch Umami data"
       }
     },
     "common": {
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Default color scheme",
               "options": {
+                "auto": "Auto",
                 "light": "Light",
                 "dark": "Dark"
               }
@@ -3668,6 +3781,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami Active Visitors"
             }
           },
           "interval": {
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": "Host"
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "Global commands",
             "option": {
               "colorScheme": {
+                "auto": "Toggle appearance mode",
                 "light": "Switch to light mode",
                 "dark": "Switch to dark mode"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Search engines",
+            "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
+            "bang": {
+              "searchWithQuery": "Search \"{query}\" with {label}",
+              "pressEnterToOpen": "Press Enter to open",
+              "engineSelected": "{label} selected (!{bang})",
+              "typeQueryToContinue": "Type your search query to continue",
+              "emptyBangHint": "Type a bang, e.g. !yt, then press Space to select"
+            },
             "children": {
               "action": {
                 "search": {
