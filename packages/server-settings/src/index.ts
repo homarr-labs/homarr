@@ -36,7 +36,7 @@ export const defaultServerSettings = {
     enableGravatar: true,
   },
   appearance: {
-    defaultColorScheme: "light" as ColorScheme,
+    defaultColorScheme: "auto" as ColorScheme,
   },
   culture: {
     defaultLocale: "en" as SupportedLanguage,
