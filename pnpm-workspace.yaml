@@ -2,6 +2,22 @@ packages:
   - apps/*
   - packages/*
   - tooling/*
+allowBuilds:
+  "@scarf/scarf": false
+  "@swc/core": false
+  "@tree-sitter-grammars/tree-sitter-yaml": true
+  bcrypt: true
+  better-sqlite3: true
+  core-js-pure: false
+  cpu-features: true
+  esbuild: true
+  protobufjs: false
+  sharp: true
+  ssh2: true
+  tree-sitter: true
+  tree-sitter-json: true
+  nice-napi: false
+allowUnusedPatches: true
 catalog:
   "@auth/core": ^0.41.2
   "@auth/drizzle-adapter": ^1.11.2
@@ -13,7 +29,7 @@ catalog:
   "@dnd-kit/sortable": ^10.0.0
   "@dnd-kit/utilities": ^3.2.2
   "@drizzle-team/brocli": ^0.12.0
-  '@eslint/js': 10.0.1
+  "@eslint/js": 10.0.1
   "@extractus/feed-extractor": 7.1.7
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
@@ -189,7 +205,32 @@ catalog:
   zod-form-data: ^3.0.1
   zod-validation-error: ^5.0.0
 catalogMode: strict
+engineStrict: true
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+nodeLinker: hoisted
+overrides:
+  "@babel/helpers@<7.26.10": ">=7.29.2"
+  "@babel/runtime@<7.26.10": ">=7.29.2"
+  "axios@>=1.0.0 <1.8.2": ">=1.16.0"
+  "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.5"
+  "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.5"
+  "esbuild@<=0.24.2": ">=0.28.0"
+  "form-data@>=4.0.0 <4.0.4": ">=4.0.5"
+  "hono@<4.6.5": ">=4.12.16"
+  "linkifyjs@<4.3.2": ">=4.3.2"
+  "nanoid@>=4.0.0 <5.0.9": ">=5.1.11"
+  "prismjs@<1.30.0": ">=1.30.0"
+  "proxmox-api>undici": "7.24.6"
+  "react-is": "^19.2.5"
+  "rollup@>=4.0.0 <4.22.4": ">=4.60.2"
+  "sha.js@<=2.4.11": ">=2.4.12"
+  "tar-fs@>=2.0.0 <2.1.3": ">=3.1.2"
+  "tar-fs@>=3.0.0 <3.0.9": ">=3.1.2"
+  "tmp@<=0.2.3": ">=0.2.5"
+  "vite@>=5.0.0 <=5.4.18": ">=8.0.10"
+patchedDependencies:
+  "@types/node-unifi": "patches/@types__node-unifi.patch"
+  trpc-to-openapi: "patches/trpc-to-openapi.patch"

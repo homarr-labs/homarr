@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Ouvrir les résultats de recherche dans un nouvel onglet"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Impossible d'activer les icônes de ping"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Clair",
         "dark": "Sombre"
       }
@@ -2094,6 +2108,104 @@
       "error": {
         "noIntegration": "Aucune intégration Tracearr configurée",
         "internalServerError": "Impossible de récupérer les données de Tracearr"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut",
               "options": {
+                "auto": "",
                 "light": "Clair",
                 "dark": "Sombre"
               }
@@ -3668,6 +3781,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -4380,6 +4496,7 @@
             "title": "Commandes globales",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Activer le mode clair",
                 "dark": "Activer le mode sombre"
               },
@@ -4431,6 +4548,14 @@
         "group": {
           "searchEngine": {
             "title": "Moteurs de recherche",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

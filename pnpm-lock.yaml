@@ -565,9 +565,9 @@ catalogs:
 overrides:
   '@babel/helpers@<7.26.10': '>=7.29.2'
   '@babel/runtime@<7.26.10': '>=7.29.2'
-  axios@>=1.0.0 <1.8.2: '>=1.15.2'
-  brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.5'
+  axios@>=1.0.0 <1.8.2: '>=1.16.0'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.5'
+  brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.5'
   esbuild@<=0.24.2: '>=0.28.0'
   form-data@>=4.0.0 <4.0.4: '>=4.0.5'
   hono@<4.6.5: '>=4.12.16'
@@ -578,18 +578,14 @@ overrides:
   react-is: ^19.2.5
   rollup@>=4.0.0 <4.22.4: '>=4.60.2'
   sha.js@<=2.4.11: '>=2.4.12'
-  tar-fs@>=3.0.0 <3.0.9: '>=3.1.2'
   tar-fs@>=2.0.0 <2.1.3: '>=3.1.2'
+  tar-fs@>=3.0.0 <3.0.9: '>=3.1.2'
   tmp@<=0.2.3: '>=0.2.5'
   vite@>=5.0.0 <=5.4.18: '>=8.0.10'
 
 patchedDependencies:
-  '@types/node-unifi':
-    hash: 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
-    path: patches/@types__node-unifi.patch
-  trpc-to-openapi:
-    hash: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
-    path: patches/trpc-to-openapi.patch
+  '@types/node-unifi': 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
+  trpc-to-openapi: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
 
 importers:
 
@@ -664,6 +660,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.5(@types/node@24.12.2)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+      yaml:
+        specifier: 'catalog:'
+        version: 2.8.4
 
   apps/nextjs:
     dependencies:
@@ -1455,7 +1454,7 @@ importers:
     dependencies:
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
-        version: 0.13.11(arktype@2.1.20)(typescript@5.9.3)(zod@4.4.2)
+        version: 0.13.11(typescript@5.9.3)(zod@4.4.2)
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.9.0
@@ -1464,7 +1463,7 @@ importers:
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
       ioredis:
         specifier: 'catalog:'
         version: 5.10.1
@@ -1718,10 +1717,10 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.2)
+        version: 0.8.3(drizzle-orm@0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.2)
       mysql2:
         specifier: 'catalog:'
         version: 3.22.3(@types/node@24.12.2)
@@ -3001,12 +3000,6 @@ packages:
     resolution: {integrity: sha512-2aDL3WUv8hMJb2L3r/PIQWsTLyq7RQr3v9xD16fiz6O8ys1xEyLhhTOv8gxtZvJiTzjTF5pHoArvRdesGL1DMQ==}
     hasBin: true
 
-  '@ark/schema@0.46.0':
-    resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
-
-  '@ark/util@0.46.0':
-    resolution: {integrity: sha512-JPy/NGWn/lvf1WmGCPw2VGpBg5utZraE84I7wli18EDF3p3zc/e9WolT35tINeZO3l7C77SjqRJeAUoT0CvMRg==}
-
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
@@ -4283,14 +4276,6 @@ packages:
   '@kwsites/file-exists@1.1.1':
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
 
-  '@libsql/client-wasm@0.14.0':
-    resolution: {integrity: sha512-gB/jtz0xuwrqAHApBv9e9JSew2030Fhj2edyZ83InZ4yPj/Q2LTUlEhaspEYT0T0xsAGqPy38uGrmq/OGS+DdQ==}
-    bundledDependencies:
-      - '@libsql/libsql-wasm-experimental'
-
-  '@libsql/core@0.14.0':
-    resolution: {integrity: sha512-nhbuXf7GP3PSZgdCY2Ecj8vz187ptHlZQ0VRc751oB2C1W8jQUXKKklvt7t1LJiUTQBVJuadF628eUk+3cRi4Q==}
-
   '@mantine/charts@8.3.18':
     resolution: {integrity: sha512-oudif3EUH7Nb9DPm0abAPxpFYDWWjR3k2S5ll0/CcB+pJzlhwaBG19QwpOJaRA6VAvAXDDKOXCO4mi9XCEN78g==}
     peerDependencies:
@@ -4665,9 +4650,6 @@ packages:
   '@parcel/watcher@2.4.1':
     resolution: {integrity: sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==}
     engines: {node: '>= 10.0.0'}
-
-  '@petamoriken/float16@3.9.3':
-    resolution: {integrity: sha512-8awtpHXCx/bNpFt4mt2xdkgtgVvKqty8VbjHI/WWWQuEw+KLzFot3f4+LkQY9YmOtq7A5GdOnqoIC8Pdygjk2g==}
 
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
@@ -6126,9 +6108,6 @@ packages:
     resolution: {integrity: sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==}
     engines: {node: '>= 0.4'}
 
-  arktype@2.1.20:
-    resolution: {integrity: sha512-IZCEEXaJ8g+Ijd59WtSYwtjnqXiwM8sWQ5EjGamcto7+HVN9eK0C4p0zDlCuAwWhpqr6fIBkxPuYDl4/Mcj/+Q==}
-
   array-buffer-byte-length@1.0.2:
     resolution: {integrity: sha512-LHE+8BuR7RYGDKvnrmcuSq3tDcKv9OFEXQt/HpbZhY7V6h0zlUXutnAD82GiFx9rdieCMjkvtcsPqBwgUl1Iiw==}
     engines: {node: '>= 0.4'}
@@ -6907,9 +6886,6 @@ packages:
   dom-walk@0.1.2:
     resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
 
-  dompurify@3.4.1:
-    resolution: {integrity: sha512-JahakDAIg1gyOm7dlgWSDjV4n7Ip2PKR55NIT6jrMfIgLFgWo81vdr1/QGqWtFNRqXP9UV71oVePtjqS2ebnPw==}
-
   dompurify@3.4.2:
     resolution: {integrity: sha512-lHeS9SA/IKeIFFyYciHBr2n0v1VMPlSj843HdLOwjb2OxNwdq9Xykxqhk+FE42MzAdHvInbAolSE4mhahPpjXA==}
 
@@ -7107,10 +7083,6 @@ packages:
   env-paths@2.2.1:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
     engines: {node: '>=6'}
-
-  env-paths@3.0.0:
-    resolution: {integrity: sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   environment@1.1.0:
     resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
@@ -7574,11 +7546,6 @@ packages:
 
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
-
-  gel@2.0.0:
-    resolution: {integrity: sha512-Oq3Fjay71s00xzDc0BF/mpcLmnA+uRqMEJK8p5K4PaZjUEsxaeo+kR9OHBVAf289/qPd+0OcLOLUN0UhqiUCog==}
-    engines: {node: '>= 18.0.0'}
-    hasBin: true
 
   generate-function@2.3.1:
     resolution: {integrity: sha512-eeB5GfMNeevm/GRYq20ShmsaGcmI81kIX2K9XQx5miC8KdHaC6Jm0qQ8ZNeGOi7wYB8OsdxKs+Y2oVuTFuVwKQ==}
@@ -8129,10 +8096,6 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isexe@3.1.5:
-    resolution: {integrity: sha512-6B3tLtFqtQS4ekarvLVMZ+X+VlvQekbe4taUkf/rhVO3d/h0M2rfARm/pXLcPEsjjMsFgrFgSrhQIxcSVrBz8w==}
-    engines: {node: '>=18'}
-
   isomorphic-dompurify@3.12.0:
     resolution: {integrity: sha512-8n+j+6ypTHvriJwFOQ2qusQ6bzGjZVcR3jbe1pBpLcGI1dn4WIl0ctLBngqE5QttquQBAlKXwJeTMw+X7x7qKw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
@@ -8200,9 +8163,6 @@ packages:
         optional: true
       react:
         optional: true
-
-  js-base64@3.7.8:
-    resolution: {integrity: sha512-hNngCeKxIUQiEUN3GPJOkz4wF/YvdUdbNL9hsBcMQTkKzboD7T/q3OYOuuPZLUE6dBxSGpwhk5mwuDud7JVAow==}
 
   js-file-download@0.4.12:
     resolution: {integrity: sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg==}
@@ -8409,10 +8369,6 @@ packages:
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
-
-  lru-cache@11.2.7:
-    resolution: {integrity: sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA==}
-    engines: {node: 20 || >=22}
 
   lru-cache@11.3.5:
     resolution: {integrity: sha512-NxVFwLAnrd9i7KUBxC4DrUhmgjzOs+1Qm50D3oF1/oL+r1NpZ4gA7xvG0/zJ8evR7zIKn4vLf7qTNduWFtCrRw==}
@@ -8621,10 +8577,6 @@ packages:
   minim@0.23.8:
     resolution: {integrity: sha512-bjdr2xW1dBCMsMGGsUeqM4eFI60m94+szhxWys+B1ztIt6gWSfeGBdSVCIawezeHYLYn0j6zrsXdQS/JllBzww==}
     engines: {node: '>=6'}
-
-  minimatch@10.2.2:
-    resolution: {integrity: sha512-+G4CpNBxa5MprY+04MbgOw1v7So6n5JY166pFi9KfYwT78fxScCeSNQSNzp6dpPSW2rONOps6Ocam1wFhCgoVw==}
-    engines: {node: 18 || 20 || >=22}
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
@@ -10997,11 +10949,6 @@ packages:
     engines: {node: '>= 8'}
     hasBin: true
 
-  which@4.0.0:
-    resolution: {integrity: sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==}
-    engines: {node: ^16.13.0 || >=18.0.0}
-    hasBin: true
-
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
     engines: {node: '>=8'}
@@ -11128,11 +11075,6 @@ packages:
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
-  yaml@2.8.3:
-    resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
-    engines: {node: '>= 14.6'}
-    hasBin: true
-
   yaml@2.8.4:
     resolution: {integrity: sha512-ml/JPOj9fOQK8RNnWojA67GbZ0ApXAUlN2UQclwv2eVgTgn7O9gg9o7paZWKMp4g0H3nTLtS9LVzhkpOFIKzog==}
     engines: {node: '>= 14.6'}
@@ -11234,14 +11176,6 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
 
   '@antfu/ni@0.21.12': {}
-
-  '@ark/schema@0.46.0':
-    dependencies:
-      '@ark/util': 0.46.0
-    optional: true
-
-  '@ark/util@0.46.0':
-    optional: true
 
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
@@ -12336,17 +12270,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@libsql/client-wasm@0.14.0':
-    dependencies:
-      '@libsql/core': 0.14.0
-      js-base64: 3.7.8
-    optional: true
-
-  '@libsql/core@0.14.0':
-    dependencies:
-      js-base64: 3.7.8
-    optional: true
-
   '@mantine/charts@8.3.18(@mantine/core@8.3.18(@mantine/hooks@8.3.18(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@mantine/hooks@8.3.18(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1))':
     dependencies:
       '@mantine/core': 8.3.18(@mantine/hooks@8.3.18(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -12751,9 +12674,6 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
 
-  '@petamoriken/float16@3.9.3':
-    optional: true
-
   '@pinojs/redact@0.4.0': {}
 
   '@pkgjs/parseargs@0.11.0':
@@ -12966,7 +12886,7 @@ snapshots:
       p-filter: 4.1.0
       semantic-release: 25.0.3(typescript@5.9.3)
       tinyglobby: 0.2.15
-      undici: 7.24.6
+      undici: 7.25.0
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -13509,17 +13429,15 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-  '@t3-oss/env-core@0.13.11(arktype@2.1.20)(typescript@5.9.3)(zod@4.4.2)':
+  '@t3-oss/env-core@0.13.11(typescript@5.9.3)(zod@4.4.2)':
     optionalDependencies:
-      arktype: 2.1.20
       typescript: 5.9.3
       zod: 4.4.2
 
-  '@t3-oss/env-nextjs@0.13.11(arktype@2.1.20)(typescript@5.9.3)(zod@4.4.2)':
+  '@t3-oss/env-nextjs@0.13.11(typescript@5.9.3)(zod@4.4.2)':
     dependencies:
-      '@t3-oss/env-core': 0.13.11(arktype@2.1.20)(typescript@5.9.3)(zod@4.4.2)
+      '@t3-oss/env-core': 0.13.11(typescript@5.9.3)(zod@4.4.2)
     optionalDependencies:
-      arktype: 2.1.20
       typescript: 5.9.3
       zod: 4.4.2
 
@@ -14558,12 +14476,6 @@ snapshots:
 
   aria-query@5.3.2: {}
 
-  arktype@2.1.20:
-    dependencies:
-      '@ark/schema': 0.46.0
-      '@ark/util': 0.46.0
-    optional: true
-
   array-buffer-byte-length@1.0.2:
     dependencies:
       call-bound: 1.0.4
@@ -15308,11 +15220,11 @@ snapshots:
 
   dns-caching@0.2.9:
     dependencies:
-      lru-cache: 11.2.7
+      lru-cache: 11.3.5
 
   docker-compose@1.4.2:
     dependencies:
-      yaml: 2.8.3
+      yaml: 2.8.4
 
   docker-modem@5.0.7:
     dependencies:
@@ -15357,10 +15269,6 @@ snapshots:
 
   dom-walk@0.1.2: {}
 
-  dompurify@3.4.1:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
   dompurify@3.4.2:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -15395,19 +15303,17 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0):
+  drizzle-orm@0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0):
     optionalDependencies:
-      '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.20.0
       better-sqlite3: 12.9.0
-      gel: 2.0.0
       mysql2: 3.22.3(@types/node@24.12.2)
       pg: 8.20.0
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.2):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.2):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+      drizzle-orm: 0.45.2(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
       zod: 4.4.2
 
   dunder-proto@1.0.1:
@@ -15489,9 +15395,6 @@ snapshots:
       java-properties: 1.0.2
 
   env-paths@2.2.1: {}
-
-  env-paths@3.0.0:
-    optional: true
 
   environment@1.1.0: {}
 
@@ -16163,18 +16066,6 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  gel@2.0.0:
-    dependencies:
-      '@petamoriken/float16': 3.9.3
-      debug: 4.4.3
-      env-paths: 3.0.0
-      semver: 7.7.4
-      shell-quote: 1.8.3
-      which: 4.0.0
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
   generate-function@2.3.1:
     dependencies:
       is-property: 1.0.2
@@ -16262,7 +16153,7 @@ snapshots:
 
   glob@13.0.6:
     dependencies:
-      minimatch: 10.2.2
+      minimatch: 10.2.5
       minipass: 7.1.3
       path-scurry: 2.0.2
 
@@ -16711,9 +16602,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isexe@3.1.5:
-    optional: true
-
   isomorphic-dompurify@3.12.0(@noble/hashes@2.0.1):
     dependencies:
       dompurify: 3.4.2
@@ -16796,9 +16684,6 @@ snapshots:
       '@babel/template': 7.28.6
       '@types/react': 19.2.14
       react: 19.2.5
-
-  js-base64@3.7.8:
-    optional: true
 
   js-file-download@0.4.12: {}
 
@@ -17003,8 +16888,6 @@ snapshots:
       highlight.js: 10.7.3
 
   lru-cache@10.4.3: {}
-
-  lru-cache@11.2.7: {}
 
   lru-cache@11.3.5: {}
 
@@ -17332,10 +17215,6 @@ snapshots:
   minim@0.23.8:
     dependencies:
       lodash: 4.18.1
-
-  minimatch@10.2.2:
-    dependencies:
-      brace-expansion: 5.0.5
 
   minimatch@10.2.5:
     dependencies:
@@ -17680,7 +17559,7 @@ snapshots:
 
   openapi3-ts@4.4.0:
     dependencies:
-      yaml: 2.8.3
+      yaml: 2.8.4
 
   openid-client@6.3.3:
     dependencies:
@@ -19225,7 +19104,7 @@ snapshots:
       classnames: 2.5.1
       css.escape: 1.5.1
       deep-extend: 0.6.0
-      dompurify: 3.4.1
+      dompurify: 3.4.2
       ieee754: 1.2.1
       immutable: 3.8.2
       js-file-download: 0.4.12
@@ -19337,7 +19216,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.1.2
       tmp: 0.2.5
-      undici: 7.24.6
+      undici: 7.25.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -20027,11 +19906,6 @@ snapshots:
     dependencies:
       isexe: 2.0.0
 
-  which@4.0.0:
-    dependencies:
-      isexe: 3.1.5
-    optional: true
-
   why-is-node-running@2.3.0:
     dependencies:
       siginfo: 2.0.0
@@ -20145,8 +20019,6 @@ snapshots:
   y18n@5.0.8: {}
 
   yallist@3.1.1: {}
-
-  yaml@2.8.3: {}
 
   yaml@2.8.4: {}
 
