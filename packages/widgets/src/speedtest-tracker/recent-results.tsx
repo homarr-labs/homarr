@@ -46,7 +46,7 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
 }
 
 function makeXTickRenderer(midnightTs: number | null) {
-  return ({ x, y, payload }: { x: number; y: number; payload: { value: number } }) => {
+  return ({ x, y, payload }: { x: number | string; y: number | string; payload: { value: number } }) => {
     const date = new Date(payload.value);
     const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const isMidnight = midnightTs !== null && payload.value === midnightTs;
@@ -67,7 +67,12 @@ function makeXTickRenderer(midnightTs: number | null) {
   };
 }
 
-function renderTopDateTick(props: { x: number; y: number; payload: { value: number }; index: number }) {
+function renderTopDateTick(props: {
+  x: number | string;
+  y: number | string;
+  payload: { value: number };
+  index: number;
+}) {
   const { x, y, payload, index } = props;
   const date = new Date(payload.value);
   const dateStr = date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
