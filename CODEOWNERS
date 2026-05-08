@@ -3,7 +3,11 @@
 
 # Exempt Renovate‑managed files (no owners)
 package.json
+**/package.json
 package-lock.json
+**/package-lock.json
 pnpm-lock.yaml
+**/pnpm-lock.yaml
+pnpm-workspace.yaml
 Dockerfile
 docker-compose.yml
