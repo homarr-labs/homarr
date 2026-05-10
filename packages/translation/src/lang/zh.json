@@ -3970,6 +3970,9 @@
       },
       "ports": {
         "label": "端口"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {

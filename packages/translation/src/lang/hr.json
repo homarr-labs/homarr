@@ -3970,6 +3970,9 @@
       },
       "ports": {
         "label": "Portovi"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
