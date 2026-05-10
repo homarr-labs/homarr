@@ -159,7 +159,7 @@
         "label": "Åpne søkeresultater i ny fane"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Aktiver DuckDuckGo bangs"
       }
     },
     "error": {
@@ -252,10 +252,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs er endret vellykket"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke slå av/på DuckDuckGo bangs"
           }
         }
       },
@@ -1093,7 +1093,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "Lys",
         "dark": "Mørk"
       }
@@ -2111,101 +2111,101 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analytics",
+      "description": "Vise besøkende statistikk fra din Umami-analyseinstans",
+      "visitors": "besøkende",
+      "active": "aktiv",
+      "pageviews": "sidevisninger",
+      "visits": "besøk",
+      "bounceRate": "tilbakesende",
+      "avgDuration": "gjennomsnitt",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Nettsted",
+          "description": "Velg et nettsted som spores av Umami-instansen din",
+          "placeholder": "Velg en nettside",
+          "loading": "Laster inn nettsteder...",
+          "noWebsites": "Ingen nettsteder ble funnet",
+          "configureIntegrationFirst": "Koble til en Umami integrasjon først"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Tidsramme",
+          "description": "Tidsperiode som skal vise besøkende data for",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "I dag",
+            "24h": "Siste 24 timer",
+            "7d": "Siste 7 dager",
+            "30d": "Siste 30 dager",
+            "month": "Denne måneden",
+            "lastMonth": "Siste måned"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Hendelse",
+          "description": "Vis totale forekomster av en bestemt hendelse",
+          "placeholder": "Velg en hendelse",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "none": "Ingen hendelser",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Diagramtype",
+          "description": "Vis stil for diagrammet",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Søylediagram",
+            "sparkline": "Minigraf"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Diagramtype",
+          "description": "Hvordan vise hendelsesserier i diagrammet",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Side om side",
+            "overlay": "Overlegg (delmengde)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Visning",
+          "description": "Hva skal vises i widgetkroppen",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Diagram",
+            "events": "Hendelser diagram",
+            "topPages": "Toppsider",
+            "topReferrers": "Topp referenter"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Hendelser",
+          "description": "Velg ett eller flere hendelser i diagrammet",
+          "placeholder": "Velg en hendelse...",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Gjenstander å vise",
+          "description": "Antall oppføringer som skal vises (maks 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "hendelser",
+        "label": "hendelser"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direkte"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direkte"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Velg hendelser for å diagram"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Ingen Umami integrasjon konfigurert",
+        "noWebsite": "Ingen nettsted konfigurert",
+        "noData": "Ingen data tilgjengelig",
+        "internalServerError": "Kunne ikke hente Umami data"
       }
     },
     "common": {
@@ -3680,7 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard fargetema",
               "options": {
-                "auto": "",
+                "auto": "Auto",
                 "light": "Lys",
                 "dark": "Mørk"
               }
@@ -3783,7 +3783,7 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
-              "label": ""
+              "label": "Umami Aktive Besøkende"
             }
           },
           "interval": {
@@ -3970,6 +3970,9 @@
       },
       "ports": {
         "label": "Porter"
+      },
+      "host": {
+        "label": "Vert"
       }
     },
     "action": {
@@ -4496,7 +4499,7 @@
             "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Bytt visningsmodus",
                 "light": "Bytt til lys modus",
                 "dark": "Bytt til mørk modus"
               },
@@ -4548,13 +4551,13 @@
         "group": {
           "searchEngine": {
             "title": "Søkemotorer",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Tips: Du kan også bruke DuckDuckGo-bangs her, f.eks. !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Søk etter \"{query}\" med {label}",
+              "pressEnterToOpen": "Trykk på Enter for å åpne",
+              "engineSelected": "{label} valgt (!{bang})",
+              "typeQueryToContinue": "Skriv inn søkeordet for å fortsette",
+              "emptyBangHint": "Skriv inn en bang, f.eks. !yt, og trykk deretter på mellomrom for å velge"
             },
             "children": {
               "action": {

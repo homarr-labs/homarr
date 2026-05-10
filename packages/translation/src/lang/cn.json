@@ -159,7 +159,7 @@
         "label": "在新标签页中打开搜索结果"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "启用 DuckDuckGo bangs"
       }
     },
     "error": {
@@ -252,10 +252,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs 切换成功"
           },
           "error": {
-            "message": ""
+            "message": "无法切换 DuckDuckGo bangs"
           }
         }
       },
@@ -1093,7 +1093,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "自动",
         "light": "日间",
         "dark": "暗黑"
       }
@@ -1540,13 +1540,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "时刻表",
+      "description": "显示车站的出发时间",
+      "title": "出发时间 {station}",
+      "noStation": "未选择车站",
       "option": {
         "station": {
-          "label": ""
+          "label": "车站"
         }
       }
     },
@@ -1621,11 +1621,11 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "锚点笔记",
+      "description": "显示来自锚点的所选笔记",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "笔记"
         },
         "showTitle": {
           "label": "显示标题"
@@ -1637,16 +1637,16 @@
       "empty": "选择要显示的笔记",
       "emptyContent": "此笔记没有内容",
       "notFound": "未找到笔记",
-      "noNotes": "",
-      "integrationRequired": "",
+      "noNotes": "未找到笔记",
+      "integrationRequired": "请先选择锚点集成",
       "updatedAt": "更新时间：{date}",
       "untitled": "未命名",
       "edit": "编辑",
       "save": "保存",
       "cancel": "取消",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "readOnlyViewer": "您对该笔记只有查看权限，编辑已禁用。",
+      "saveForbidden": "您没有编辑此笔记的权限。",
+      "saveFailed": "保存此笔记失败，请重试。"
     },
     "iframe": {
       "name": "iFrame",
@@ -1680,7 +1680,7 @@
           "label": "允许地理位置"
         },
         "allowModals": {
-          "label": ""
+          "label": "允许弹窗"
         }
       },
       "error": {
@@ -2056,156 +2056,156 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "增强型媒体服务器监控，提供详细的流与转码数据",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "显示活跃流"
         },
         "showStats": {
-          "label": ""
+          "label": "显示统计摘要"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "显示近期活动"
         },
         "showViolations": {
-          "label": ""
+          "label": "显示违规记录"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "活跃流",
+        "totalUsers": "总用户数",
+        "transcodes": "转码数",
+        "bandwidth": "带宽"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "无活跃流",
+        "user": "用户",
+        "media": "媒体",
+        "state": "状态",
+        "quality": "画质",
+        "device": "设备",
+        "progress": "进度",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "直接播放",
+          "transcode": "转码",
+          "directStream": "直接串流"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "近期活动",
+        "empty": "暂无近期活动",
+        "watched": "已观看",
+        "partial": "部分观看"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "违规记录",
+        "empty": "暂无近期违规",
+        "rule": "规则",
+        "user": "用户"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "未启用任何分区",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "未配置 Tracearr 集成",
+        "internalServerError": "获取 Tracearr 数据失败"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami 分析",
+      "description": "显示来自 Umami 分析实例的访客统计",
+      "visitors": "访客",
+      "active": "活跃",
+      "pageviews": "浏览量",
+      "visits": "访问数",
+      "bounceRate": "跳出率",
+      "avgDuration": "平均",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "网站",
+          "description": "选择您的 Umami 实例所追踪的网站",
+          "placeholder": "选择一个网站",
+          "loading": "正在加载网站……",
+          "noWebsites": "未找到网站",
+          "configureIntegrationFirst": "请先添加 Umami 集成"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "时间范围",
+          "description": "用于展示访客数据的时间段",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "今天",
+            "24h": "过去 24 小时",
+            "7d": "过去 7 天",
+            "30d": "过去 30 天",
+            "month": "本月",
+            "lastMonth": "上月"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "事件",
+          "description": "显示特定事件的总发生次数",
+          "placeholder": "选择一个事件",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "none": "无事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "图表类型",
+          "description": "图表的显示样式",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "条形图",
+            "sparkline": "迷你趋势图"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "图表样式",
+          "description": "如何在图表中显示事件序列",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "并排",
+            "overlay": "叠加（子集）"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "视图",
+          "description": "组件主体中要显示的内容",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "图表",
+            "events": "事件图表",
+            "topPages": "热门页面",
+            "topReferrers": "热门来源"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "事件",
+          "description": "选择一个或多个要图表化的事件",
+          "placeholder": "选择事件……",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "显示数量",
+          "description": "要显示的热门项目数量（最大 500）"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "事件",
+        "label": "事件"
       },
       "topPages": {
-        "direct": ""
+        "direct": "直接"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "直接"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "选择要图表化的事件"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "未配置 Umami 集成",
+        "noWebsite": "未配置网站",
+        "noData": "无可用数据",
+        "internalServerError": "获取 Umami 数据失败"
       }
     },
     "common": {
@@ -2304,50 +2304,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich 服务器统计",
+      "description": "有关您的 Immich 实例的信息",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "显示用户",
+          "description": "显示实例上的用户数量"
         },
         "showPhotos": {
           "label": "显示图片",
-          "description": ""
+          "description": "显示实例上的照片数量"
         },
         "showVideos": {
           "label": "显示视频",
-          "description": ""
+          "description": "显示实例上的视频数量"
         },
         "showStorage": {
           "label": "显示存储",
-          "description": ""
+          "description": "显示已使用的总存储空间"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "用户",
+      "photos": "照片",
+      "videos": "视频",
+      "storage": "已用存储"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich 相册",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "相册ID",
+          "description": "这是一个唯一标识符，用于指向您的 Immich 相册。您可以通过打开相册并从 URL 中复制那段唯一字符串来找到该 ID，例如：'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "间隔（秒）",
+          "description": "每 X 秒切换一次相册中的图片。最小为 1，最大不得超过 3600。"
         },
         "showPhotoInfo": {
           "label": "显示图片信息",
-          "description": ""
+          "description": "在幻灯片底部显示图片日期和当前索引"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Immich 相册图片幻灯片",
+      "noAlbumSelected": "未选择相册，请编辑组件并选择一个相册",
+      "noPhotos": "此相册中没有照片"
     },
     "downloads": {
       "name": "下载客户端",
@@ -2658,7 +2658,7 @@
           "label": "隐藏描述"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "显示封面图"
         }
       }
     },
@@ -2873,28 +2873,28 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "网速测试追踪器",
+      "description": "显示 网速测试追踪器 实例中的测速结果。",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "显示最新结果"
         },
         "showStats": {
-          "label": ""
+          "label": "显示平均值"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "显示近期结果"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "显示 Ping 图表"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
+      "latestResult": "最新结果",
+      "averages": "平均值",
+      "tests": "{count}次测试",
+      "recentResults": "近期结果",
+      "recentResultsSpeed": "速度",
+      "recentResultsPing": "Ping",
       "download": "下载",
       "upload": "上传",
       "ping": "Ping",
@@ -2902,13 +2902,13 @@
       "avgDownload": "平均下载",
       "avgUpload": "平均上传",
       "avgPing": "平均Ping",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
+      "healthy": "健康",
+      "unhealthy": "不健康",
+      "ok": "正常",
       "fail": "失败",
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "请在组件选项中至少启用一个模块。",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "获取测速数据失败"
       }
     },
     "systemResources": {
@@ -3680,7 +3680,7 @@
             "defaultColorScheme": {
               "label": "默认配色方案",
               "options": {
-                "auto": "",
+                "auto": "自动",
                 "light": "日间",
                 "dark": "暗黑"
               }
@@ -3708,7 +3708,7 @@
               "label": "Minecraft 服务状态"
             },
             "timetable": {
-              "label": ""
+              "label": "时刻表"
             },
             "iconsUpdater": {
               "label": "图标更新"
@@ -3780,10 +3780,10 @@
               "label": "天气"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
             },
             "umamiActiveVisitors": {
-              "label": ""
+              "label": "Umami 活跃访客"
             }
           },
           "interval": {
@@ -3907,8 +3907,8 @@
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "赞助商",
+            "subtitle": "{count}人通过财务方式支持该项目"
           },
           "libraries": {
             "title": "相关的库",
@@ -3970,6 +3970,9 @@
       },
       "ports": {
         "label": "端口"
+      },
+      "host": {
+        "label": "宿主机"
       }
     },
     "action": {
@@ -4496,7 +4499,7 @@
             "title": "全局命令",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "切换外观模式",
                 "light": "切换到日间模式",
                 "dark": "切换到暗黑模式"
               },
@@ -4548,13 +4551,13 @@
         "group": {
           "searchEngine": {
             "title": "搜索引擎",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "提示：你也可以在此使用任何 DuckDuckGo Bangs，例如 !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "使用“‘’{query}”搜索“{label}”",
+              "pressEnterToOpen": "按 Enter 键打开",
+              "engineSelected": "已选择{label}（{bang}）",
+              "typeQueryToContinue": "输入搜索查询以继续",
+              "emptyBangHint": "输入 bang，例如 !yt，然后按空格键进行选择"
             },
             "children": {
               "action": {
