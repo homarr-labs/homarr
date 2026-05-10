@@ -59,10 +59,10 @@
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@10.33.3",
   "engines": {
     "node": ">=24.15.0",
-    "pnpm": ">=10.33.2"
+    "pnpm": ">=10.33.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
