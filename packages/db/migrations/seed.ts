@@ -4,6 +4,7 @@ import {
   everyoneGroup,
   getIntegrationDefaultUrl,
   getIntegrationName,
+  integrationDefs,
   integrationKinds,
 } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
@@ -143,8 +144,9 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
   const defaultIntegrations = integrationKinds.reduce<Integration[]>((acc, kind) => {
     const name = getIntegrationName(kind);
     const defaultUrl = getIntegrationDefaultUrl(kind);
+    const hasNoAuthOption = integrationDefs[kind].secretKinds.some((kinds) => kinds.length === 0);
 
-    if (defaultUrl !== undefined) {
+    if (defaultUrl !== undefined && hasNoAuthOption) {
       acc.push({
         id: "new",
         name: `${name} Default`,

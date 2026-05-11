@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "新しいタブで検索結果を見る"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Pingアイコンを切り替えることができません"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "ライト",
         "dark": "ダーク"
       }
@@ -2094,6 +2108,104 @@
       "error": {
         "noIntegration": "Tracearrとの連携が設定されていません",
         "internalServerError": "Tracearrデータの取得に失敗しました"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "既定の配色設定",
               "options": {
+                "auto": "",
                 "light": "ライト",
                 "dark": "ダーク"
               }
@@ -3668,6 +3781,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "ポート"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "グローバルコマンド",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "ライトモードに切り替え",
                 "dark": "ダークモードに切り替え"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "検索エンジン",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

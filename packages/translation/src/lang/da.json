@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Åben søgeresultater i en ny fane"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Kan ikke skifte ping-ikoner"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Lys",
         "dark": "Mørk"
       }
@@ -2094,6 +2108,104 @@
       "error": {
         "noIntegration": "Ingen Tracearr integration konfigureret",
         "internalServerError": "Kunne ikke hente Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard farvetema",
               "options": {
+                "auto": "",
                 "light": "Lys",
                 "dark": "Mørk"
               }
@@ -3668,6 +3781,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "Porte"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Skift til lys tilstand",
                 "dark": "Skift til mørk tilstand"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Søgemaskiner",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
