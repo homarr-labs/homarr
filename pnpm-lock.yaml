@@ -16030,13 +16030,6 @@ snapshots:
       '@types/react': 19.2.14
       react: 19.2.5
 
-  jotai@2.20.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.5):
-    optionalDependencies:
-      '@babel/core': 7.29.0
-      '@babel/template': 7.28.6
-      '@types/react': 19.2.14
-      react: 19.2.5
-
   js-base64@3.7.8:
     optional: true
 
