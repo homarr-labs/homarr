@@ -171,7 +171,7 @@ catalog:
   testcontainers: ^11.14.0
   timezones-ical-library: ^2.2.0
   trpc-to-openapi: ^3.2.0
-  tsdav: ^2.2.0
+  tsdav: ^2.2.1
   tsx: 4.20.4
   turbo: ^2.9.9
   typescript: ^5.9.3
