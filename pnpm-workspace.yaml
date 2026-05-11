@@ -44,7 +44,7 @@ catalog:
   "@semantic-release/npm": ^13.1.5
   "@semantic-release/release-notes-generator": ^14.1.0
   "@t3-oss/env-nextjs": ^0.13.11
-  "@tabler/icons-react": ^3.41.1
+  "@tabler/icons-react": ^3.42.0
   "@tanstack/react-query": ^5.100.9
   "@tanstack/react-query-devtools": ^5.100.9
   "@tanstack/react-query-next-experimental": ^5.100.9
@@ -72,7 +72,7 @@ catalog:
   "@trpc/react-query": ^11.17.0
   "@trpc/server": ^11.17.0
   "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.8
+  "@turbo/gen": ^2.9.9
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -123,12 +123,12 @@ catalog:
   esbuild: ^0.28.0
   eslint: ^10.3.0
   eslint-config-prettier: ^10.1.8
-  eslint-config-turbo: ^2.9.8
+  eslint-config-turbo: ^2.9.9
   eslint-plugin-import: ^2.32.0
   eslint-plugin-jsx-a11y: ^6.10.2
   eslint-plugin-react: ^7.37.5
   eslint-plugin-react-hooks: ^6.1.1
-  fast-xml-parser: ^5.7.2
+  fast-xml-parser: ^5.7.3
   fastify: ^5.8.5
   flag-icons: ^7.5.0
   glob: ^13.0.6
@@ -173,7 +173,7 @@ catalog:
   trpc-to-openapi: ^3.2.0
   tsdav: ^2.2.0
   tsx: 4.20.4
-  turbo: ^2.9.8
+  turbo: ^2.9.9
   typescript: ^5.9.3
   typescript-eslint: ^8.58.2
   undici: 7.24.6
