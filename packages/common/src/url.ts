@@ -38,3 +38,9 @@ export const getPortFromUrl = (url: URL): number => {
 
   throw new Error(`Unsupported protocol: ${url.protocol}`);
 };
+
+const absoluteUrlRegex = /^[a-z]+:(?:\/\/)?/gi;
+
+export const isAbsoluteUrl = (urlOrPath: string): boolean => {
+  return absoluteUrlRegex.test(urlOrPath);
+};
