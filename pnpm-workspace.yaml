@@ -155,8 +155,8 @@ catalog:
   prettier-plugin-packagejson: ^3.0.2
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
-  react: 19.2.5
-  react-dom: 19.2.5
+  react: 19.2.6
+  react-dom: 19.2.6
   react-error-boundary: ^6.1.1
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
