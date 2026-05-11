@@ -130,7 +130,7 @@ catalogs:
       specifier: ^0.13.11
       version: 0.13.11
     '@tabler/icons-react':
-      specifier: ^3.42.0
+      specifier: ^3.43.0
       version: 3.43.0
     '@tanstack/react-query':
       specifier: ^5.100.9
