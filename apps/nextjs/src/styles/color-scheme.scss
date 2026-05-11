@@ -1,0 +1,12 @@
+// Prevent flash of white background when color scheme is "auto" and OS prefers dark.
+// CSS media queries are evaluated synchronously during the browser's initial paint,
+// before any JavaScript executes, so this eliminates the white→dark flicker.
+html[data-mantine-color-scheme="auto"] {
+  background-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-mantine-color-scheme="auto"] {
+    background-color: #242424;
+  }
+}

@@ -11,6 +11,7 @@ const createSearchInteraction = <TType extends string>(type: TType) => ({
 const searchInteractions = [
   createSearchInteraction("link").optionsType<{ href: string; newTab?: boolean }>(),
   createSearchInteraction("javaScript").optionsType<{ onSelect: () => MaybePromise<void> }>(),
+  createSearchInteraction("setQuery").optionsType<{ query: string }>(),
   createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

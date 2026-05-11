@@ -1,7 +1,7 @@
 "use client";
 
 import { Group, Text } from "@mantine/core";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
@@ -34,6 +34,7 @@ export const AppearanceSettingsForm = ({ defaultValues }: { defaultValues: Serve
 };
 
 const appearanceIcons = {
+  auto: IconDeviceDesktop,
   light: IconSun,
   dark: IconMoon,
 };

@@ -29,6 +29,13 @@
       "when": 1775399963041,
       "tag": "0003_remove_salt",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775400000000,
+      "tag": "0004_add_user_ddg_bangs",
+      "breakpoints": true
     }
   ]
 }

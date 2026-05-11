@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "於新分頁中開啟搜尋結果"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "無法切換 Pings icon"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "日間",
         "dark": "暗黑"
       }
@@ -2093,6 +2107,104 @@
       "noSectionsEnabled": "",
       "error": {
         "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
         "internalServerError": ""
       }
     },
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "預設配色方案",
               "options": {
+                "auto": "",
                 "light": "日間",
                 "dark": "暗黑"
               }
@@ -3667,6 +3780,9 @@
               "label": ""
             },
             "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "端口"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "全局命令",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "切換日間模式",
                 "dark": "切換暗黑模式"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "搜尋引擎",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

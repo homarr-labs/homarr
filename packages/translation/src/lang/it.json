@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Apri risultati di ricerca in una nuova scheda"
+      },
+      "ddgBangs": {
+        "label": "Abilita bangs DuckDuckGo"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Impossibile attivare o disattivare le icone di ping"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs attivato con successo"
+          },
+          "error": {
+            "message": "Impossibile attivare i bangs DuckDuckGo"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Automatico",
         "light": "Chiaro",
         "dark": "Scuro"
       }
@@ -2094,6 +2108,104 @@
       "error": {
         "noIntegration": "Nessuna integrazione Tracearr configurata",
         "internalServerError": "Impossibile recuperare i dati di Tracearr"
+      }
+    },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Visualizza le statistiche dei visitatori dall'istanza Umami analytics",
+      "visitors": "visitatori",
+      "active": "attivo",
+      "pageviews": "pagine viste",
+      "visits": "visite",
+      "bounceRate": "rimbalzo",
+      "avgDuration": "media",
+      "option": {
+        "websiteId": {
+          "label": "Sito web",
+          "description": "Seleziona un sito web tracciato dalla tua istanza di Umami",
+          "placeholder": "Seleziona un sito web",
+          "loading": "Caricamento siti web...",
+          "noWebsites": "Nessun sito web trovato",
+          "configureIntegrationFirst": "Connetti prima un'integrazione Umami"
+        },
+        "timeFrame": {
+          "label": "Intervallo di tempo",
+          "description": "Il periodo di tempo per visualizzare i dati dei visitatori per",
+          "option": {
+            "today": "Oggi",
+            "24h": "Ultime 24 ore",
+            "7d": "Ultimi 7 giorni",
+            "30d": "Ultimi 30 giorni",
+            "month": "Questo mese",
+            "lastMonth": "Mese precedente"
+          }
+        },
+        "eventName": {
+          "label": "Evento",
+          "description": "Mostra le occorrenze totali di un evento specifico",
+          "placeholder": "Seleziona un evento",
+          "loading": "Caricamento eventi...",
+          "noEvents": "Nessun evento trovato",
+          "none": "Nessun evento",
+          "configureWebsiteFirst": "Seleziona un sito web prima di caricare gli eventi"
+        },
+        "chartType": {
+          "label": "Tipo di grafico",
+          "description": "Stile di visualizzazione del grafico",
+          "option": {
+            "bar": "Grafico a barre",
+            "sparkline": "Grafico a linee compatto"
+          }
+        },
+        "chartStyle": {
+          "label": "Stile del grafico",
+          "description": "Come visualizzare la serie di eventi nel grafico",
+          "option": {
+            "grouped": "Affiancati",
+            "overlay": "Sovrapponi (subset)"
+          }
+        },
+        "viewMode": {
+          "label": "Vista",
+          "description": "Cosa mostrare nel corpo del widget",
+          "option": {
+            "chart": "Grafico",
+            "events": "Grafico degli eventi",
+            "topPages": "Pagine più visitate",
+            "topReferrers": "Referrer principali"
+          }
+        },
+        "eventNames": {
+          "label": "Eventi",
+          "description": "Scegli uno o più eventi per il grafico",
+          "placeholder": "Seleziona eventi...",
+          "loading": "Caricamento eventi...",
+          "noEvents": "Nessun evento trovato",
+          "configureWebsiteFirst": "Seleziona prima un sito web per caricare gli eventi"
+        },
+        "topCount": {
+          "label": "Elementi da mostrare",
+          "description": "Numero di elementi principali da visualizzare (max 500)"
+        }
+      },
+      "event": {
+        "occurrences": "eventi",
+        "label": "eventi"
+      },
+      "topPages": {
+        "direct": "Diretto"
+      },
+      "topReferrers": {
+        "direct": "Diretto"
+      },
+      "events": {
+        "selectPrompt": "Seleziona gli eventi per il grafico"
+      },
+      "error": {
+        "noIntegration": "Nessuna integrazione di Umami configurata",
+        "noWebsite": "Nessun sito web configurato",
+        "noData": "Nessun dato disponibile",
+        "internalServerError": "Recupero dati Umami fallito"
       }
     },
     "common": {
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Schema colore predefinito",
               "options": {
+                "auto": "Automatico",
                 "light": "Chiaro",
                 "dark": "Scuro"
               }
@@ -3668,6 +3781,9 @@
             },
             "tracearr": {
               "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Visitatori Attivi Umami"
             }
           },
           "interval": {
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "Porte"
+      },
+      "host": {
+        "label": "Host"
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "Comandi generali",
             "option": {
               "colorScheme": {
+                "auto": "Attiva/Disattiva modalità aspetto",
                 "light": "Passa al tema chiaro",
                 "dark": "Passa al tema scuro"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Motori di ricerca",
+            "tipDdgBangs": "Suggerimento: puoi usare anche i bang di DuckDuckGo, ad esempio !qualcosa",
+            "bang": {
+              "searchWithQuery": "Cerca \"{query}\" con {label}",
+              "pressEnterToOpen": "Premere Invio per aprire",
+              "engineSelected": "{label} selezionato (!{bang})",
+              "typeQueryToContinue": "Digita la tua query di ricerca per continuare",
+              "emptyBangHint": "Digita un bang, ad es. !yt, poi premi Spazio per selezionare"
+            },
             "children": {
               "action": {
                 "search": {
