@@ -1,4 +1,5 @@
-import { IconCheck, IconMinus, IconX } from "@tabler/icons-react";
+import { IconCheck, IconLoader, IconMinus, IconX } from "@tabler/icons-react";
+import { TRPCClientError } from "@trpc/client";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
@@ -11,7 +12,14 @@ interface PingIndicatorProps {
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
   const t = useI18n();
-  const { data: pingResult } = clientApi.widget.app.ping.useQuery({ id: appId }, { refetchOnMount: false });
+  const { data: pingResult, error } = clientApi.widget.app.ping.useQuery({ id: appId }, { refetchOnMount: false });
+
+  // Apps without a server-pingable URL (e.g. a path-only href without an
+  // explicit pingUrl) yield a CONFLICT. Show an indeterminate orange dot for
+  // that case so the card stays usable instead of a perpetual loading state.
+  if (error instanceof TRPCClientError && error.data?.code === "CONFLICT") {
+    return <PingDot icon={IconLoader} color="orange" tooltip={error.message} />;
+  }
 
   if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />;
 

@@ -1513,7 +1513,9 @@
           "invalidFileName": "無効なファイル名です",
           "fileTooLarge": "ファイルが大きすぎます。最大サイズは {maxSize} です",
           "invalidConfiguration": "無効な設定",
-          "groupNameTaken": "グループ名は、既に使用されています"
+          "groupNameTaken": "グループ名は、既に使用されています",
+          "appHrefInvalid": "絶対URL（https://example.com）または / で始まるパス（例: /cockpit/）を指定してください",
+          "appHrefConsecutiveSlashes": "パスに連続するスラッシュを含めることはできません"
         }
       }
     },

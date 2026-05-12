@@ -1513,7 +1513,9 @@
           "invalidFileName": "Geçersiz dosya adı",
           "fileTooLarge": "Dosya çok büyük, azami boyut {maxSize}",
           "invalidConfiguration": "Geçersiz yapılandırma",
-          "groupNameTaken": "Grup adı zaten alınmış"
+          "groupNameTaken": "Grup adı zaten alınmış",
+          "appHrefInvalid": "Mutlak bir URL (https://example.com) veya / ile başlayan bir yol (ör. /cockpit/) olmalıdır",
+          "appHrefConsecutiveSlashes": "Yol ardışık eğik çizgiler içermemelidir"
         }
       }
     },

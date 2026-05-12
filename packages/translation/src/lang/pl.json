@@ -1513,7 +1513,9 @@
           "invalidFileName": "Nieprawidłowa nazwa pliku",
           "fileTooLarge": "Plik jest zbyt duży, maksymalny rozmiar to {maxSize}",
           "invalidConfiguration": "Nieprawidłowa konfiguracja",
-          "groupNameTaken": "Nazwa użytkownika jest już zajęta"
+          "groupNameTaken": "Nazwa użytkownika jest już zajęta",
+          "appHrefInvalid": "Musi być pełnym adresem URL (https://example.com) lub ścieżką zaczynającą się od / (np. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Ścieżka nie może zawierać następujących po sobie ukośników"
         }
       }
     },
