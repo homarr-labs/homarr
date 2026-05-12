@@ -81,8 +81,18 @@ export abstract class Integration {
   protected externalUrl(
     path: `/${string}`,
     queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
-  ) {
-    return this.createUrl(this.integration.externalUrl ?? this.integration.url, path, queryParams);
+  ): URL | RenderablePath {
+    const base = this.integration.externalUrl ?? this.integration.url;
+    // Path-only externalUrl (e.g. "/cockpit/") cannot be parsed by `new URL`,
+    // but the rendered href ends up on the client where the browser resolves
+    // it against the current origin. Build a hostless RenderablePath instead.
+    // Scheme-relative bases ("//host/...") are rejected at the schema layer
+    // (packages/validation/src/app.ts) but explicitly excluded here too so
+    // that a malformed value can't cross-origin-escape through this branch.
+    if (base.startsWith("/") && !base.startsWith("//")) {
+      return new RenderablePath(base, path, queryParams);
+    }
+    return this.createUrl(base, path, queryParams);
   }
 
   protected webSocketUrl(
@@ -134,4 +144,70 @@ export abstract class Integration {
    * @returns {Promise<TestingResult>}
    */
   protected abstract testingAsync(input: IntegrationTestingInput): Promise<TestingResult>;
+}
+
+/**
+ * URL-shaped wrapper for path-only externalUrl bases (e.g. "/cockpit/").
+ *
+ * Path-only externalUrl is meaningful only on the client, where the browser
+ * resolves it against the current origin. The integration helpers can't use
+ * `new URL` server-side because there's no host to parse. RenderablePath
+ * mirrors just enough of the `URL` surface — `toString()`, `pathname`,
+ * `hostname`, `searchParams` — to keep the 19 caller sites of
+ * `super.externalUrl(...)` working unchanged. `hostname` is always the empty
+ * string for a path-only base; `pathname` is the joined base + path.
+ *
+ * Fragment handling note: the constructor splits on the first `?` only, not
+ * `#`. Path arguments that contain a fragment (e.g. Jellyfin / Emby hash-bang
+ * routes like `/web/index.html#!/details?id=abc`) keep the fragment as part
+ * of `pathname`, and any `?` inside the hash-bang is treated as the query
+ * separator. This matches what Jellyfin / Emby SPA routers expect: the
+ * post-`?` params must stay inside the hash, not be hoisted before it. Don't
+ * combine fragment-containing paths with extra `queryParams` here — the
+ * merged params would land inside the hash too. WHATWG URL behaves
+ * differently (it places `.hash` after `.search`), but mirroring that would
+ * break the SPA-routing callers this method exists to serve.
+ */
+export class RenderablePath {
+  public readonly searchParams: URLSearchParams;
+  private readonly pathOnly: string;
+
+  constructor(
+    base: string,
+    path: `/${string}`,
+    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
+  ) {
+    const trimmedBase = removeTrailingSlash(base);
+    const combined = `${trimmedBase}${path}`;
+    const queryIndex = combined.indexOf("?");
+    if (queryIndex === -1) {
+      this.pathOnly = combined;
+      this.searchParams = new URLSearchParams();
+    } else {
+      this.pathOnly = combined.substring(0, queryIndex);
+      this.searchParams = new URLSearchParams(combined.substring(queryIndex + 1));
+    }
+
+    if (queryParams) {
+      for (const [key, value] of Object.entries(queryParams)) {
+        if (value === null || value === undefined) {
+          continue;
+        }
+        this.searchParams.set(key, value instanceof Date ? value.toISOString() : value.toString());
+      }
+    }
+  }
+
+  public get hostname(): string {
+    return "";
+  }
+
+  public get pathname(): string {
+    return this.pathOnly;
+  }
+
+  public toString(): string {
+    const query = this.searchParams.toString();
+    return query ? `${this.pathOnly}?${query}` : this.pathOnly;
+  }
 }
