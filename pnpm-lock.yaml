@@ -100,8 +100,8 @@ catalogs:
       specifier: 1.0.14
       version: 1.0.14
     '@next/eslint-plugin-next':
-      specifier: 16.2.5
-      version: 16.2.5
+      specifier: 16.2.6
+      version: 16.2.6
     '@octokit/auth-app':
       specifier: ^8.2.0
       version: 8.2.0
@@ -2917,7 +2917,7 @@ importers:
     dependencies:
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
-        version: 16.2.5
+        version: 16.2.6
       eslint-config-prettier:
         specifier: 'catalog:'
         version: 10.1.8(eslint@10.3.0)
@@ -4391,8 +4391,8 @@ packages:
   '@next/env@16.2.6':
     resolution: {integrity: sha512-gd8HoHN4ufj73WmR3JmVolrpJR47ILK6LouP5xElPglaVxir6e1a7VzvTvDWkOoPXT9rkkTzyCxBu4yeZfZwcw==}
 
-  '@next/eslint-plugin-next@16.2.5':
-    resolution: {integrity: sha512-PyILm/cw2u5gEG5xOjqFbALUAl/erAqtM47iZtP9lXiSzin+eOIf3KRi+CBC/mFG9j7Iz3JDqCOY94nFLUCccg==}
+  '@next/eslint-plugin-next@16.2.6':
+    resolution: {integrity: sha512-Z8l6o4JWKUl755x4R+wogD86KPeU+Ckw4K+SYG4kHeOJtRenDeK+OSbGcqZpDtbwn9DsJVdir2UxmwXuinUbUw==}
 
   '@next/swc-darwin-arm64@16.2.6':
     resolution: {integrity: sha512-ZJGkkcNfYgrrMkqOdZ7zoLa1TOy0qpcMfk/z4Mh/FKUz40gVO+HNQWqmLxf67Z5WB64DRp0dhEbyHfel+6sJUg==}
@@ -12478,7 +12478,7 @@ snapshots:
 
   '@next/env@16.2.6': {}
 
-  '@next/eslint-plugin-next@16.2.5':
+  '@next/eslint-plugin-next@16.2.6':
     dependencies:
       fast-glob: 3.3.1
 
