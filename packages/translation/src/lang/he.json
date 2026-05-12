@@ -1513,7 +1513,9 @@
           "invalidFileName": "שם קובץ לא חוקי",
           "fileTooLarge": "הקובץ גדול מדי, הגודל המרבי הוא {maxSize}",
           "invalidConfiguration": "תצורה לא חוקית",
-          "groupNameTaken": "שם הקבוצה כבר תפוס"
+          "groupNameTaken": "שם הקבוצה כבר תפוס",
+          "appHrefInvalid": "חייב להיות כתובת URL מוחלטת (https://example.com) או נתיב שמתחיל ב-/ (לדוגמה /cockpit/)",
+          "appHrefConsecutiveSlashes": "הנתיב לא יכול להכיל קווים נטויים עוקבים"
         }
       }
     },

@@ -1513,7 +1513,9 @@
           "invalidFileName": "Érvénytelen fájlnév",
           "fileTooLarge": "A fájl túl nagy, a maximális méret {maxSize}",
           "invalidConfiguration": "Érvénytelen konfiguráció",
-          "groupNameTaken": "A felhasználónév már foglalt"
+          "groupNameTaken": "A felhasználónév már foglalt",
+          "appHrefInvalid": "Abszolút URL (https://example.com) vagy / jellel kezdődő útvonal (pl. /cockpit/) szükséges",
+          "appHrefConsecutiveSlashes": "Az útvonal nem tartalmazhat egymást követő perjeleket"
         }
       }
     },

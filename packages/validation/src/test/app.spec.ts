@@ -1,0 +1,61 @@
+import { describe, expect, test } from "vitest";
+
+import { appHrefSchema } from "../app";
+
+describe("appHrefSchema", () => {
+  test.each([
+    "https://example.com/path",
+    "http://example.com/path",
+    "https://example.com",
+    "/cockpit/",
+    "/signalk-server/@signalk/freeboard-sk/",
+    "/x",
+  ])("accepts %s", (input) => {
+    expect(appHrefSchema.parse(input)).toBe(input);
+  });
+
+  test("transforms empty string to null", () => {
+    expect(appHrefSchema.parse("")).toBeNull();
+  });
+
+  test("accepts null", () => {
+    expect(appHrefSchema.parse(null)).toBeNull();
+  });
+
+  test.each([
+    ["javascript:alert(1)"],
+    ["JavaScript:alert(1)"],
+    ["//evil.example.com/path"],
+    ["/"],
+    ["cockpit/"],
+    ["not-a-url"],
+    ["./relative"],
+    ["../relative"],
+    // Browser-normalized cross-origin escapes — WHATWG URL parser collapses
+    // backslash to forward slash for http(s), so these would navigate
+    // off-origin if rendered into <a href>. Reject up front.
+    ["/\\evil.example.com/x"],
+    ["/\\\\evil.example.com/x"],
+    // Whitespace / control characters anywhere in the path.
+    ["/foo bar"],
+    ["/foo\tbar"],
+    ["/foo\nbar"],
+    ["/\tfoo"],
+    // C0 / C1 controls (invisible).
+    ["/foo"],
+    ["/foo"],
+    ["/foo"],
+    ["/foo"],
+    // Zero-width / bidi / formatting characters (display-spoofing class).
+    ["/​foo"], // ZWSP
+    ["/‌foo"], // ZWNJ
+    ["/‍foo"], // ZWJ
+    ["/‮foo"], // RTL override
+    ["/﻿foo"], // BOM
+    // Consecutive slashes mid-path.
+    ["/foo//bar"],
+    ["/cockpit//"],
+  ])("rejects %s", (input) => {
+    expect(() => appHrefSchema.parse(input)).toThrow();
+  });
+});

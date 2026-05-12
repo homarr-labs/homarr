@@ -1513,7 +1513,9 @@
           "invalidFileName": "Ongeldige bestandsnaam",
           "fileTooLarge": "Bestand is te groot, maximale grootte is {maxSize}",
           "invalidConfiguration": "Ongeldige configuratie",
-          "groupNameTaken": "Groepsnaam al in gebruik"
+          "groupNameTaken": "Groepsnaam al in gebruik",
+          "appHrefInvalid": "Moet een absolute URL zijn (https://example.com) of een pad dat begint met / (bijv. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Pad mag geen opeenvolgende schuine strepen bevatten"
         }
       }
     },

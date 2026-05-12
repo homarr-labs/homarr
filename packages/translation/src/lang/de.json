@@ -1513,7 +1513,9 @@
           "invalidFileName": "Ungültiger Dateiname",
           "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
-          "groupNameTaken": "Gruppenname bereits vergeben"
+          "groupNameTaken": "Gruppenname bereits vergeben",
+          "appHrefInvalid": "Muss eine absolute URL (https://example.com) oder ein Pfad sein, der mit / beginnt (z. B. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Pfad darf keine aufeinanderfolgenden Schrägstriche enthalten"
         }
       }
     },

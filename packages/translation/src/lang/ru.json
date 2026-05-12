@@ -1513,7 +1513,9 @@
           "invalidFileName": "Недопустимое имя файла",
           "fileTooLarge": "Файл слишком большой, максимальный размер {maxSize}",
           "invalidConfiguration": "Неверная конфигурация",
-          "groupNameTaken": "Имя группы уже занято"
+          "groupNameTaken": "Имя группы уже занято",
+          "appHrefInvalid": "Должен быть абсолютный URL (https://example.com) или путь, начинающийся с / (например, /cockpit/)",
+          "appHrefConsecutiveSlashes": "Путь не должен содержать подряд идущих слешей"
         }
       }
     },

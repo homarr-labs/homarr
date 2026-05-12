@@ -1513,7 +1513,9 @@
           "invalidFileName": "Neplatný názov súboru",
           "fileTooLarge": "Súbor je príliš veľký, maximálna veľkosť je {maxSize}",
           "invalidConfiguration": "Neplatná konfigurácia",
-          "groupNameTaken": "Názov skupiny je už obsadený"
+          "groupNameTaken": "Názov skupiny je už obsadený",
+          "appHrefInvalid": "Musí byť absolútna URL (https://example.com) alebo cesta začínajúca znakom / (napr. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Cesta nesmie obsahovať po sebe nasledujúce lomky"
         }
       }
     },

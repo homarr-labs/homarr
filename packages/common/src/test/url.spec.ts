@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getPortFromUrl, isAbsoluteUrl } from "../url.js";
+import { getPortFromUrl, isAbsoluteUrl, resolveServerUrl } from "../url.js";
 
 describe("getPortFromUrl", () => {
   test.each([
@@ -54,5 +54,31 @@ describe("isAbsoluteUrl", () => {
 
     // Assert
     expect(result).toBe(expected);
+  });
+});
+
+describe("resolveServerUrl", () => {
+  test("returns explicit pingUrl when set", () => {
+    expect(resolveServerUrl({ pingUrl: "http://x.local/ping", href: "/anything/" })).toBe("http://x.local/ping");
+  });
+
+  test("returns absolute href as-is when no pingUrl", () => {
+    expect(resolveServerUrl({ pingUrl: null, href: "https://abs.example.com/x" })).toBe("https://abs.example.com/x");
+  });
+
+  test("returns null for path-only href (no server-side expansion)", () => {
+    expect(resolveServerUrl({ pingUrl: null, href: "/cockpit/" })).toBeNull();
+  });
+
+  test("returns null when both pingUrl and href are null", () => {
+    expect(resolveServerUrl({ pingUrl: null, href: null })).toBeNull();
+  });
+
+  test("path-only href with explicit pingUrl returns the pingUrl", () => {
+    // The HaLOS-shipped-card scenario: adapter sets explicit pingUrl while
+    // href stays path-only for browser-side multi-hostname resolution.
+    expect(resolveServerUrl({ pingUrl: "https://host.docker.internal/cockpit/", href: "/cockpit/" })).toBe(
+      "https://host.docker.internal/cockpit/",
+    );
   });
 });

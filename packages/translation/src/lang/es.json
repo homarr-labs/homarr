@@ -1513,7 +1513,9 @@
           "invalidFileName": "Nombre de archivo no válido",
           "fileTooLarge": "El archivo es demasiado grande, el tamaño máximo es {maxSize}",
           "invalidConfiguration": "Configuración no válida",
-          "groupNameTaken": "Nombre del grupo en uso"
+          "groupNameTaken": "Nombre del grupo en uso",
+          "appHrefInvalid": "Debe ser una URL absoluta (https://example.com) o una ruta que comience con / (p. ej. /cockpit/)",
+          "appHrefConsecutiveSlashes": "La ruta no debe contener barras consecutivas"
         }
       }
     },

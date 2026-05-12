@@ -1,5 +1,10 @@
-import { IconCheck, IconMinus, IconX } from "@tabler/icons-react";
+import { Suspense, useState } from "react";
+import { IconCheck, IconLoader, IconX } from "@tabler/icons-react";
+import { TRPCClientError } from "@trpc/client";
+import type { FallbackProps } from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
@@ -11,22 +16,49 @@ interface PingIndicatorProps {
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
   const t = useI18n();
-  const { data: pingResult } = clientApi.widget.app.ping.useQuery(
+  const loadingDot = <PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />;
+
+  return (
+    <ErrorBoundary fallbackRender={PingIndicatorErrorFallback}>
+      <Suspense fallback={loadingDot}>
+        {/* Key by appId so a changed app remounts with fresh ping state
+            instead of showing the previous app's status. */}
+        <PingIndicatorInner key={appId} appId={appId} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+// Apps without a server-pingable URL (e.g. path-only href without an explicit
+// pingUrl) yield a CONFLICT. Render an indeterminate orange dot for that case
+// so the card stays usable. Other tRPC errors (FORBIDDEN, NOT_FOUND, …) are
+// re-thrown so the widget's outer error boundary handles them as before.
+const PingIndicatorErrorFallback = ({ error }: FallbackProps) => {
+  if (error instanceof TRPCClientError && error.data?.code === "CONFLICT") {
+    return <PingDot icon={IconLoader} color="orange" tooltip={error.message} />;
+  }
+  throw error;
+};
+
+const PingIndicatorInner = ({ appId }: PingIndicatorProps) => {
+  const [ping] = clientApi.widget.app.ping.useSuspenseQuery(
     { id: appId },
-    { refetchOnMount: false, refetchOnWindowFocus: false },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
   );
 
-  const utils = clientApi.useUtils();
+  const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"]>(ping);
+
   clientApi.widget.app.updatedPing.useSubscription(
     { id: appId },
     {
       onData(data) {
-        utils.widget.app.ping.setData({ id: appId }, data);
+        setPingResult(data);
       },
     },
   );
-
-  if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />;
 
   const isError = "error" in pingResult || pingResult.statusCode >= 500;
 
