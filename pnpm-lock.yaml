@@ -241,8 +241,8 @@ catalogs:
       specifier: ^4.0.1
       version: 4.0.1
     '@types/node':
-      specifier: ^24.12.2
-      version: 24.12.2
+      specifier: ^24.12.3
+      version: 24.12.3
     '@types/node-unifi':
       specifier: ^2.5.1
       version: 2.5.1
@@ -621,10 +621,10 @@ importers:
         version: 11.14.0
       '@turbo/gen':
         specifier: 'catalog:'
-        version: 2.9.12(@types/node@24.12.2)
+        version: 2.9.12(@types/node@24.12.3)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 5.2.0(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+        version: 5.2.0(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.5(vitest@4.1.5)
@@ -660,10 +660,10 @@ importers:
         version: 5.9.3
       vite-tsconfig-paths:
         specifier: 'catalog:'
-        version: 6.1.1(typescript@5.9.3)(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+        version: 6.1.1(typescript@5.9.3)(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
       vitest:
         specifier: 'catalog:'
-        version: 4.1.5(@types/node@24.12.2)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+        version: 4.1.5(@types/node@24.12.3)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
 
   apps/nextjs:
     dependencies:
@@ -904,7 +904,7 @@ importers:
         version: 3.1.2
       '@types/node':
         specifier: 'catalog:'
-        version: 24.12.2
+        version: 24.12.3
       '@types/prismjs':
         specifier: 'catalog:'
         version: 1.26.6
@@ -1016,7 +1016,7 @@ importers:
         version: link:../../tooling/typescript
       '@types/node':
         specifier: 'catalog:'
-        version: 24.12.2
+        version: 24.12.3
       dotenv-cli:
         specifier: 'catalog:'
         version: 11.0.0
@@ -1464,13 +1464,13 @@ importers:
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0)
       ioredis:
         specifier: 'catalog:'
         version: 5.10.1
       mysql2:
         specifier: 'catalog:'
-        version: 3.22.3(@types/node@24.12.2)
+        version: 3.22.3(@types/node@24.12.3)
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -1718,13 +1718,13 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.3)
+        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0))(zod@4.4.3)
       mysql2:
         specifier: 'catalog:'
-        version: 3.22.3(@types/node@24.12.2)
+        version: 3.22.3(@types/node@24.12.3)
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -5719,6 +5719,9 @@ packages:
 
   '@types/node@24.12.2':
     resolution: {integrity: sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g==}
+
+  '@types/node@24.12.3':
+    resolution: {integrity: sha512-8oljBDGun9cIsZRJR6fkihn0TSXJI0UDOOhncYaERq6M0JMDoPLxyscwruJcb4GKS6dvK/d8xebYBg27h/duaQ==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -12117,128 +12120,128 @@ snapshots:
 
   '@inquirer/ansi@1.0.2': {}
 
-  '@inquirer/checkbox@4.3.2(@types/node@24.12.2)':
+  '@inquirer/checkbox@4.3.2(@types/node@24.12.3)':
     dependencies:
       '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
       '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/confirm@5.1.21(@types/node@24.12.2)':
+  '@inquirer/confirm@5.1.21(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/core@10.3.2(@types/node@24.12.2)':
+  '@inquirer/core@10.3.2(@types/node@24.12.3)':
     dependencies:
       '@inquirer/ansi': 1.0.2
       '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
       cli-width: 4.1.0
       mute-stream: 2.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/editor@4.2.23(@types/node@24.12.2)':
+  '@inquirer/editor@4.2.23(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/external-editor': 1.0.3(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/external-editor': 1.0.3(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/expand@4.0.23(@types/node@24.12.2)':
+  '@inquirer/expand@4.0.23(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/external-editor@1.0.3(@types/node@24.12.2)':
+  '@inquirer/external-editor@1.0.3(@types/node@24.12.3)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
   '@inquirer/figures@1.0.15': {}
 
-  '@inquirer/input@4.3.1(@types/node@24.12.2)':
+  '@inquirer/input@4.3.1(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/number@3.0.23(@types/node@24.12.2)':
+  '@inquirer/number@3.0.23(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/password@4.0.23(@types/node@24.12.2)':
-    dependencies:
-      '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
-    optionalDependencies:
-      '@types/node': 24.12.2
-
-  '@inquirer/prompts@7.10.1(@types/node@24.12.2)':
-    dependencies:
-      '@inquirer/checkbox': 4.3.2(@types/node@24.12.2)
-      '@inquirer/confirm': 5.1.21(@types/node@24.12.2)
-      '@inquirer/editor': 4.2.23(@types/node@24.12.2)
-      '@inquirer/expand': 4.0.23(@types/node@24.12.2)
-      '@inquirer/input': 4.3.1(@types/node@24.12.2)
-      '@inquirer/number': 3.0.23(@types/node@24.12.2)
-      '@inquirer/password': 4.0.23(@types/node@24.12.2)
-      '@inquirer/rawlist': 4.1.11(@types/node@24.12.2)
-      '@inquirer/search': 3.2.2(@types/node@24.12.2)
-      '@inquirer/select': 4.4.2(@types/node@24.12.2)
-    optionalDependencies:
-      '@types/node': 24.12.2
-
-  '@inquirer/rawlist@4.1.11(@types/node@24.12.2)':
-    dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 24.12.2
-
-  '@inquirer/search@3.2.2(@types/node@24.12.2)':
-    dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 24.12.2
-
-  '@inquirer/select@4.4.2(@types/node@24.12.2)':
+  '@inquirer/password@4.0.23(@types/node@24.12.3)':
     dependencies:
       '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@24.12.2)
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@24.12.2)
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
+    optionalDependencies:
+      '@types/node': 24.12.3
+
+  '@inquirer/prompts@7.10.1(@types/node@24.12.3)':
+    dependencies:
+      '@inquirer/checkbox': 4.3.2(@types/node@24.12.3)
+      '@inquirer/confirm': 5.1.21(@types/node@24.12.3)
+      '@inquirer/editor': 4.2.23(@types/node@24.12.3)
+      '@inquirer/expand': 4.0.23(@types/node@24.12.3)
+      '@inquirer/input': 4.3.1(@types/node@24.12.3)
+      '@inquirer/number': 3.0.23(@types/node@24.12.3)
+      '@inquirer/password': 4.0.23(@types/node@24.12.3)
+      '@inquirer/rawlist': 4.1.11(@types/node@24.12.3)
+      '@inquirer/search': 3.2.2(@types/node@24.12.3)
+      '@inquirer/select': 4.4.2(@types/node@24.12.3)
+    optionalDependencies:
+      '@types/node': 24.12.3
+
+  '@inquirer/rawlist@4.1.11(@types/node@24.12.3)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
-  '@inquirer/type@3.0.10(@types/node@24.12.2)':
+  '@inquirer/search@3.2.2(@types/node@24.12.3)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
+      yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
+
+  '@inquirer/select@4.4.2(@types/node@24.12.3)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.2(@types/node@24.12.3)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.12.3)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 24.12.3
+
+  '@inquirer/type@3.0.10(@types/node@24.12.3)':
+    optionalDependencies:
+      '@types/node': 24.12.3
 
   '@ioredis/commands@1.5.1': {}
 
@@ -13851,9 +13854,9 @@ snapshots:
   '@turbo/darwin-arm64@2.9.12':
     optional: true
 
-  '@turbo/gen@2.9.12(@types/node@24.12.2)':
+  '@turbo/gen@2.9.12(@types/node@24.12.3)':
     dependencies:
-      '@inquirer/prompts': 7.10.1(@types/node@24.12.2)
+      '@inquirer/prompts': 7.10.1(@types/node@24.12.3)
       esbuild: 0.25.12
     transitivePeerDependencies:
       - '@types/node'
@@ -13931,7 +13934,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
 
   '@types/crypto-js@4.2.2': {}
 
@@ -14038,6 +14041,10 @@ snapshots:
       undici-types: 5.26.5
 
   '@types/node@24.12.2':
+    dependencies:
+      undici-types: 7.16.0
+
+  '@types/node@24.12.3':
     dependencies:
       undici-types: 7.16.0
 
@@ -14245,7 +14252,7 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@5.2.0(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))':
+  '@vitejs/plugin-react@5.2.0(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -14253,7 +14260,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
+      vite: 7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -14269,7 +14276,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@types/node@24.12.2)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+      vitest: 4.1.5(@types/node@24.12.3)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
 
   '@vitest/expect@4.1.5':
     dependencies:
@@ -14280,13 +14287,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.5(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))':
+  '@vitest/mocker@4.1.5(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
+      vite: 7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
 
   '@vitest/pretty-format@4.1.5':
     dependencies:
@@ -14315,7 +14322,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@types/node@24.12.2)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+      vitest: 4.1.5(@types/node@24.12.3)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
 
   '@vitest/utils@4.1.5':
     dependencies:
@@ -15371,19 +15378,19 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0):
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.20.0
       better-sqlite3: 12.9.0
       gel: 2.0.0
-      mysql2: 3.22.3(@types/node@24.12.2)
+      mysql2: 3.22.3(@types/node@24.12.3)
       pg: 8.20.0
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0))(zod@4.4.3):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0))(zod@4.4.3):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.2))(pg@8.20.0)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(gel@2.0.0)(mysql2@3.22.3(@types/node@24.12.3))(pg@8.20.0)
       zod: 4.4.3
 
   dunder-proto@1.0.1:
@@ -15439,7 +15446,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2
@@ -17364,9 +17371,9 @@ snapshots:
       '@babel/runtime': 7.29.2
       global: 4.4.0
 
-  mysql2@3.22.3(@types/node@24.12.2):
+  mysql2@3.22.3(@types/node@24.12.3):
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
       aws-ssl-profiles: 1.1.2
       denque: 2.1.0
       generate-function: 2.3.1
@@ -19835,17 +19842,17 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)):
+  vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.9.3)
-      vite: 7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
+      vite: 7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4):
+  vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
@@ -19854,7 +19861,7 @@ snapshots:
       rollup: 4.60.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
       fsevents: 2.3.3
       sass: 1.99.0
       sugarss: 5.0.0(postcss@8.5.8)
@@ -19862,10 +19869,10 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.8.4
 
-  vitest@4.1.5(@types/node@24.12.2)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)):
+  vitest@4.1.5(@types/node@24.12.3)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
+      '@vitest/mocker': 4.1.5(vite@7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4))
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5
@@ -19882,10 +19889,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 7.1.12(@types/node@24.12.2)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
+      vite: 7.1.12(@types/node@24.12.3)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.4)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 24.12.2
+      '@types/node': 24.12.3
       '@vitest/coverage-v8': 4.1.5(vitest@4.1.5)
       '@vitest/ui': 4.1.5(vitest@4.1.5)
       jsdom: 29.1.1(@noble/hashes@2.0.1)
