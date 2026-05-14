@@ -1,0 +1,25 @@
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_0d1d16cf775ae9::t_fd3d4d2578e957 16-18
+  s_0d1d16cf775ae9::t_1834eb39ca95b7 2-13,15,19-20,22-84
+  s_0d1d16cf775ae9::t_e404cd82c6c785 1,14,21
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 3,7,10-16,31-33,39-42,45-47,90,109,114
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 7,10-16,27-28,63,82,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "bfa2295a7cc7db9758685731ca2590ab8f39ee32",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
