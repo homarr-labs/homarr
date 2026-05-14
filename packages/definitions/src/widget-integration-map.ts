@@ -60,7 +60,6 @@ export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "clock", width: 2, height: 1 },
   { kind: "weather", width: 2, height: 1, options: { showCity: true, hasForecast: true, forecastDayCount: 3 } },
   { kind: "bookmarks", width: 2, height: 1, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
-  { kind: "timetable", width: 2, height: 2, skip: true },
 ];
 
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
@@ -73,7 +72,7 @@ export const featuredIntegrations: readonly IntegrationKind[] = [
   "prowlarr",
   "sabNzbd",
   "qBittorrent",
-  "jellyseerr",
+  "seerr",
   "jellyfin",
 ];
 
@@ -92,5 +91,10 @@ export const defaultBookmarkApps = [
     name: "Help Translate",
     href: createDocumentationLink("/docs/community/translations"),
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+  },
+  {
+    name: "Support Homarr",
+    href: "https://opencollective.com/homarr",
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/open-collective.svg",
   },
 ];
