@@ -151,5 +151,5 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   );
 }).withOptions({
   defaultTitle: (t) => t("app.action.select.title"),
-  size: 1200,
+  size: "xxl",
 });

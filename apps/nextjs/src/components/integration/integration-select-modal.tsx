@@ -52,5 +52,5 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   return <IntegrationSelectGrid onSelect={handleSelect} enableMockIntegration={innerProps.enableMockIntegration} />;
 }).withOptions({
   defaultTitle: (t) => t("integration.action.create"),
-  size: 1200,
+  size: "xxl",
 });
