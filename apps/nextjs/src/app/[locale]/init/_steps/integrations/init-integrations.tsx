@@ -16,6 +16,8 @@ import { IntegrationMultiSelectGrid } from "~/components/integration/integration
 
 type Phase = "select" | "configure" | "done";
 
+const CARD_WIDTH = 64 * 16;
+
 export const InitIntegrations = () => {
   const [phase, setPhase] = useState<Phase>("select");
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
@@ -55,7 +57,7 @@ export const InitIntegrations = () => {
 
   if (phase === "done") {
     return (
-      <Card w={64 * 8} maw="90vw" withBorder>
+      <Card w={CARD_WIDTH} maw="90vw" withBorder>
         <Center py="xl">
           <Stack align="center" gap="md">
             <Loader size="lg" />
@@ -72,7 +74,7 @@ export const InitIntegrations = () => {
     const progress = ((currentIndex + 1) / selectedKinds.length) * 100;
 
     return (
-      <Card w={64 * 14} maw="90vw" withBorder>
+      <Card w={CARD_WIDTH} maw="90vw" withBorder>
         <Stack>
           <Stack gap="xs">
             <Group gap="xs" justify="center">
@@ -99,7 +101,7 @@ export const InitIntegrations = () => {
   }
 
   return (
-    <Card w={64 * 16} maw="90vw" withBorder>
+    <Card w={CARD_WIDTH} maw="90vw" withBorder>
       <Stack>
         <Text>{t("description")}</Text>
 
