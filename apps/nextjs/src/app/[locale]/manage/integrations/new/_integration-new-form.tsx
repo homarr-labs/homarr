@@ -218,7 +218,7 @@ export const NewIntegrationForm = ({
             </Button>
           )}
           {onSkip && (
-            <Button variant="subtle" onClick={onSkip}>
+            <Button variant="default" onClick={onSkip}>
               {t("common.action.skip")}
             </Button>
           )}
