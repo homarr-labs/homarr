@@ -40,9 +40,9 @@ catalog:
   "@semantic-release/changelog": ^6.0.3
   "@semantic-release/commit-analyzer": ^13.0.1
   "@semantic-release/git": ^10.0.1
-  "@semantic-release/github": ^12.0.6
+  "@semantic-release/github": ^12.0.8
   "@semantic-release/npm": ^13.1.5
-  "@semantic-release/release-notes-generator": ^14.1.0
+  "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
   "@tanstack/react-query": ^5.100.9
