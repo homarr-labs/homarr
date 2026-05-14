@@ -1,0 +1,20 @@
+packages/api/src/router/onboard/onboard-router.ts
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 5-6,8-16,23-24,31-32,39-90,92-95,103,122-176,190-193,195-224,226-240,242,244-247,249-250,252-255,257,259-260,262-266,270
+  s_0d1d16cf775ae9::t_84fbd0359e6622 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "bef275804cc982fc753710742125cce0796c02f8",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}
