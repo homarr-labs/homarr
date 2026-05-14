@@ -38,8 +38,12 @@ export const InitIntegrations = () => {
 
   const finishSetupAsync = async () => {
     setPhase("done");
-    await setupIntegrations();
-    router.refresh();
+    try {
+      await setupIntegrations();
+      router.refresh();
+    } catch {
+      setPhase("select");
+    }
   };
 
   const advanceOrFinish = () => {

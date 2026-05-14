@@ -96,6 +96,6 @@ export const defaultBookmarkApps = [
   {
     name: "Support Homarr",
     href: "https://opencollective.com/homarr",
-    iconUrl: "https://avatars.githubusercontent.com/u/13403593?v=4",
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/open-collective.svg",
   },
 ];
