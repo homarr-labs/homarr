@@ -90,6 +90,7 @@ export const InitIntegrations = () => {
             kind={currentKind}
             onSuccess={advanceOrFinish}
             onCancel={backToSelect}
+            onSkip={advanceOrFinish}
             isOnboarding
           />
         </Stack>

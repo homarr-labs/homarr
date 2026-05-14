@@ -49,6 +49,7 @@ interface NewIntegrationFormProps {
   initialName?: string;
   onSuccess: () => void;
   onCancel?: () => void;
+  onSkip?: () => void;
   isOnboarding?: boolean;
 }
 
@@ -66,6 +67,7 @@ export const NewIntegrationForm = ({
   initialName,
   onSuccess,
   onCancel,
+  onSkip,
   isOnboarding = false,
 }: NewIntegrationFormProps) => {
   const t = useI18n();
@@ -213,6 +215,11 @@ export const NewIntegrationForm = ({
           ) : (
             <Button variant="default" component={Link} href="/manage/integrations">
               {t("common.action.backToOverview")}
+            </Button>
+          )}
+          {onSkip && (
+            <Button variant="subtle" onClick={onSkip}>
+              {t("common.action.skip")}
             </Button>
           )}
           <Button type="submit" loading={isPending}>
