@@ -17,15 +17,17 @@ import {
 
 interface IntegrationMultiSelectGridProps {
   onSelectionChange: (kinds: IntegrationKind[]) => void;
+  initialSelection?: IntegrationKind[];
   enableMockIntegration?: boolean;
 }
 
 export const IntegrationMultiSelectGrid = ({
   onSelectionChange,
+  initialSelection = [],
   enableMockIntegration = false,
 }: IntegrationMultiSelectGridProps) => {
   const [search, setSearch] = useState("");
-  const [selectedKinds, setSelectedKinds] = useState<Set<IntegrationKind>>(new Set());
+  const [selectedKinds, setSelectedKinds] = useState<Set<IntegrationKind>>(() => new Set(initialSelection));
   const t = useI18n();
 
   const toggleKind = useCallback(

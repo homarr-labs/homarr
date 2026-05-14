@@ -102,7 +102,7 @@ export const InitIntegrations = () => {
       <Stack>
         <Text>{t("description")}</Text>
 
-        <IntegrationMultiSelectGrid onSelectionChange={handleSelectionChange} />
+        <IntegrationMultiSelectGrid onSelectionChange={handleSelectionChange} initialSelection={selectedKinds} />
 
         <Group justify="space-between">
           <Button variant="subtle" onClick={() => void finishSetupAsync()}>
