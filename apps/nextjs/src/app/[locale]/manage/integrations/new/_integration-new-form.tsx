@@ -1,7 +1,6 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Alert,
   Button,
@@ -48,8 +47,9 @@ interface NewIntegrationFormProps {
   kind: IntegrationKind;
   initialUrl?: string;
   initialName?: string;
-  onSuccess?: () => void;
+  onSuccess: () => void;
   onCancel?: () => void;
+  isOnboarding?: boolean;
 }
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
@@ -60,13 +60,19 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({
+  kind,
+  initialUrl,
+  initialName,
+  onSuccess,
+  onCancel,
+  isOnboarding = false,
+}: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
-  const router = useRouter();
   const { data: session } = useSession();
-  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
+  const canCreateApps = !isOnboarding && (session?.user.permissions.includes("app-create") ?? false);
 
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
@@ -80,24 +86,60 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         kind,
         value: "",
       })),
-      attemptSearchEngineCreation: true,
-      hasApp: true,
-      appHref: url,
+      attemptSearchEngineCreation: !isOnboarding,
+      hasApp: !isOnboarding,
+      appHref: isOnboarding ? null : url,
       appId: null,
     },
   });
 
-  const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation({
+  const { mutateAsync: createIntegrationAsync, isPending: isCreatePending } = clientApi.integration.create.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/integrations");
     },
   });
+  const { mutateAsync: createOnboardingIntegrationAsync, isPending: isOnboardingCreatePending } =
+    clientApi.onboard.createIntegration.useMutation();
+  const isPending = isCreatePending || isOnboardingCreatePending;
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
+
+    const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
+      if (data && "error" in data && data.error) {
+        setError(data.error);
+        showErrorNotification({
+          title: t("integration.page.create.notification.error.title"),
+          message: t("integration.page.create.notification.error.message"),
+        });
+        return;
+      }
+
+      showSuccessNotification({
+        title: t("integration.page.create.notification.success.title"),
+        message: t("integration.page.create.notification.success.message"),
+      });
+
+      onSuccess();
+    };
+
+    const onMutationError = () => {
+      showErrorNotification({
+        title: t("integration.page.create.notification.error.title"),
+        message: t("integration.page.create.notification.error.message"),
+      });
+    };
+
+    if (isOnboarding) {
+      await createOnboardingIntegrationAsync(
+        { kind, name: values.name, url, secrets: values.secrets },
+        { onSuccess: onMutationSuccess, onError: onMutationError },
+      );
+      return;
+    }
 
     const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
 
@@ -114,42 +156,8 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       : undefined;
 
     await createIntegrationAsync(
-      {
-        kind,
-        ...values,
-        url,
-        app,
-      },
-      {
-        onSuccess(data) {
-          // We do it this way as we are unable to send a typesafe error through onError
-          if (data?.error) {
-            setError(data.error);
-            showErrorNotification({
-              title: t("integration.page.create.notification.error.title"),
-              message: t("integration.page.create.notification.error.message"),
-            });
-            return;
-          }
-
-          showSuccessNotification({
-            title: t("integration.page.create.notification.success.title"),
-            message: t("integration.page.create.notification.success.message"),
-          });
-
-          if (onSuccess) {
-            onSuccess();
-          } else {
-            router.push("/manage/integrations");
-          }
-        },
-        onError: () => {
-          showErrorNotification({
-            title: t("integration.page.create.notification.error.title"),
-            message: t("integration.page.create.notification.error.message"),
-          });
-        },
-      },
+      { kind, ...values, url, app },
+      { onSuccess: onMutationSuccess, onError: onMutationError },
     );
   };
 
@@ -185,7 +193,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 
         {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
-        {supportsSearchEngine && (
+        {!isOnboarding && supportsSearchEngine && (
           <Checkbox
             label={t("integration.field.attemptSearchEngineCreation.label")}
             description={t("integration.field.attemptSearchEngineCreation.description", {
@@ -195,7 +203,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
           />
         )}
 
-        <AppForm form={form} canCreateApps={canCreateApps} />
+        {!isOnboarding && <AppForm form={form} canCreateApps={canCreateApps} />}
 
         <Group justify="end" align="center">
           {onCancel ? (
