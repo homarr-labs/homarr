@@ -1,71 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Badge, Card, Center, Group, Input, ScrollArea, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { IconCheck, IconPuzzle, IconSearch } from "@tabler/icons-react";
 
-import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { featuredIntegrations, getIntegrationName, integrationDefs, integrationKinds } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
-import { widgetImports } from "@homarr/widgets";
+
+import {
+  buildSortedIntegrations,
+  CARD_HEIGHT,
+  categoryTranslationKeys,
+  filterIntegrations,
+} from "./integration-grid-shared";
 
 interface IntegrationMultiSelectGridProps {
   onSelectionChange: (kinds: IntegrationKind[]) => void;
   enableMockIntegration?: boolean;
 }
-
-const getWidgetsByIntegration = () => {
-  const map = Object.fromEntries(integrationKinds.map((kind) => [kind, [] as WidgetKind[]])) as Record<
-    IntegrationKind,
-    WidgetKind[]
-  >;
-
-  for (const [widgetKind, widget] of Object.entries(widgetImports) as [
-    WidgetKind,
-    (typeof widgetImports)[WidgetKind],
-  ][]) {
-    const supported =
-      "supportedIntegrations" in widget.definition ? (widget.definition.supportedIntegrations as string[]) : [];
-    for (const kind of supported) {
-      if (kind in map) {
-        map[kind as IntegrationKind].push(widgetKind);
-      }
-    }
-  }
-  return map;
-};
-
-const widgetsByIntegration = getWidgetsByIntegration();
-
-const categoryLabels: Record<string, string> = {
-  dnsHole: "DNS",
-  mediaService: "Media",
-  calendar: "Calendar",
-  mediaSearch: "Search",
-  mediaRelease: "Releases",
-  mediaRequest: "Requests",
-  downloadClient: "Downloads",
-  usenet: "Usenet",
-  torrent: "Torrent",
-  miscellaneous: "Misc",
-  smartHomeServer: "Smart Home",
-  indexerManager: "Indexer",
-  healthMonitoring: "Health",
-  search: "Search",
-  mediaTranscoding: "Transcoding",
-  networkController: "Network",
-  releasesProvider: "Releases",
-  notifications: "Notifications",
-  firewall: "Firewall",
-  timetable: "Timetable",
-  photoService: "Photos",
-  notes: "Notes",
-  mediaMonitoring: "Monitoring",
-  speedtest: "Speed Test",
-};
-
-const CARD_HEIGHT = 180;
 
 export const IntegrationMultiSelectGrid = ({
   onSelectionChange,
@@ -75,45 +28,22 @@ export const IntegrationMultiSelectGrid = ({
   const [selectedKinds, setSelectedKinds] = useState<Set<IntegrationKind>>(new Set());
   const t = useI18n();
 
-  useEffect(() => {
-    onSelectionChange(Array.from(selectedKinds));
-  }, [selectedKinds, onSelectionChange]);
-
-  const toggleKind = useCallback((kind: IntegrationKind) => {
-    setSelectedKinds((prev) => {
-      const next = new Set(prev);
+  const toggleKind = useCallback(
+    (kind: IntegrationKind) => {
+      const next = new Set(selectedKinds);
       if (next.has(kind)) {
         next.delete(kind);
       } else {
         next.add(kind);
       }
-      return next;
-    });
-  }, []);
-
-  const integrations = useMemo(() => {
-    return integrationKinds
-      .filter((kind) => enableMockIntegration || kind !== "mock")
-      .map((kind) => ({
-        kind,
-        name: getIntegrationName(kind),
-        categories: [...new Set(integrationDefs[kind].category.flat())] as string[],
-        widgets: widgetsByIntegration[kind],
-      }))
-      .sort((left, right) => {
-        const leftIdx = featuredIntegrations.indexOf(left.kind);
-        const rightIdx = featuredIntegrations.indexOf(right.kind);
-        if (leftIdx !== -1 && rightIdx !== -1) return leftIdx - rightIdx;
-        if (leftIdx !== -1) return -1;
-        if (rightIdx !== -1) return 1;
-        return right.widgets.length - left.widgets.length || left.name.localeCompare(right.name);
-      });
-  }, [enableMockIntegration]);
-
-  const filtered = useMemo(
-    () => integrations.filter((i) => i.name.toLowerCase().includes(search.toLowerCase().trim())),
-    [integrations, search],
+      setSelectedKinds(next);
+      onSelectionChange(Array.from(next));
+    },
+    [selectedKinds, onSelectionChange],
   );
+
+  const integrations = useMemo(() => buildSortedIntegrations(enableMockIntegration), [enableMockIntegration]);
+  const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
     <Stack>
@@ -157,7 +87,7 @@ export const IntegrationMultiSelectGrid = ({
                     <Group gap={4} justify="center" wrap="wrap">
                       {integration.categories.slice(0, 2).map((cat) => (
                         <Badge key={cat} variant="light" size="xs">
-                          {categoryLabels[cat] ?? cat}
+                          {categoryTranslationKeys[cat] ? t(categoryTranslationKeys[cat] as never) : cat}
                         </Badge>
                       ))}
                     </Group>
@@ -176,12 +106,12 @@ export const IntegrationMultiSelectGrid = ({
                         }
                       >
                         <Badge variant="light" color="blue" size="sm" leftSection={<IconPuzzle size={12} />}>
-                          {integration.widgets.length} {integration.widgets.length === 1 ? "widget" : "widgets"}
+                          {t("integration.grid.widgetCount", { count: String(integration.widgets.length) })}
                         </Badge>
                       </Tooltip>
                     ) : (
                       <Badge variant="light" color="gray" size="sm">
-                        No widgets
+                        {t("integration.grid.noWidgets")}
                       </Badge>
                     )}
                   </Stack>
