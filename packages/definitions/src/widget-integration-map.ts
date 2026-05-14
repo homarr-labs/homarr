@@ -59,7 +59,8 @@ export interface DefaultWidgetConfig {
 export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "clock", width: 2, height: 1 },
   { kind: "weather", width: 2, height: 1, options: { showCity: true, hasForecast: true, forecastDayCount: 3 } },
-  { kind: "bookmarks", width: 2, height: 1, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
+  { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
+  { kind: "timetable", width: 2, height: 2, skip: true },
 ];
 
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
@@ -95,6 +96,6 @@ export const defaultBookmarkApps = [
   {
     name: "Support Homarr",
     href: "https://opencollective.com/homarr",
-    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/open-collective.svg",
+    iconUrl: "https://avatars.githubusercontent.com/u/13403593?v=4",
   },
 ];
