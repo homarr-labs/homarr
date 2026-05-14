@@ -1,0 +1,26 @@
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_0d1d16cf775ae9::t_fb6f2f39a819d0 20,26,30
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_0d1d16cf775ae9::t_80ec91da86fe2a 105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "c7300aee76a21032de393fd861eb40940fffcbbf",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
