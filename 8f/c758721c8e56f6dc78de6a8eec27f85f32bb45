@@ -1,0 +1,20 @@
+packages/definitions/src/widget-integration-map.ts
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 75,95-98
+  s_0d1d16cf775ae9::t_8d86ea3d6391e6 99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8fc758721c8e56f6dc78de6a8eec27f85f32bb45",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
