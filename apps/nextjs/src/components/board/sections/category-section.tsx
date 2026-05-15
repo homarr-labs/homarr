@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
@@ -10,21 +12,39 @@ import { CategoryMenu } from "./category/category-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";
 
+const localStorageKey = (sectionId: string) => `homarr-section-collapsed-${sectionId}`;
+
 interface Props {
   section: CategorySection;
 }
 
 export const BoardCategorySection = ({ section }: Props) => {
+  const { status } = useSession();
   const { mutate } = clientApi.section.changeCollapsed.useMutation();
   const board = useRequiredBoard();
-  const [opened, { toggle }] = useDisclosure(section.collapsed, {
+  const [opened, { toggle, open, close }] = useDisclosure(section.collapsed, {
     onOpen() {
-      mutate({ sectionId: section.id, collapsed: true });
+      if (status === "authenticated") {
+        mutate({ sectionId: section.id, collapsed: true });
+      } else if (status === "unauthenticated") {
+        localStorage.setItem(localStorageKey(section.id), "true");
+      }
     },
     onClose() {
-      mutate({ sectionId: section.id, collapsed: false });
+      if (status === "authenticated") {
+        mutate({ sectionId: section.id, collapsed: false });
+      } else if (status === "unauthenticated") {
+        localStorage.setItem(localStorageKey(section.id), "false");
+      }
     },
   });
+
+  useEffect(() => {
+    if (status !== "unauthenticated") return;
+    const stored = localStorage.getItem(localStorageKey(section.id));
+    if (stored === "true") open();
+    else if (stored === "false") close();
+  }, [status, section.id, open, close]);
 
   return (
     <Card
