@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,
+    preloadEntriesOnStart: false,
+    webpackMemoryOptimizations: true,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
