@@ -37,9 +37,6 @@ export const CombinedNetworkTrafficChart = ({
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{
         content: ({ payload }) => {
-          if (!payload) {
-            return null;
-          }
           return (
             <Paper px={3} py={2} withBorder shadow="md" radius="md">
               <Stack gap={0}>
@@ -50,7 +47,7 @@ export const CombinedNetworkTrafficChart = ({
                       {payloadData.value === undefined ? (
                         <>N/A</>
                       ) : (
-                        <>{humanFileSize(Math.round(payloadData.value))}/s</>
+                        <>{humanFileSize(Math.round(Number(payloadData.value)))}/s</>
                       )}
                     </Text>
                   </Group>
