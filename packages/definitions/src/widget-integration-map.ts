@@ -60,7 +60,6 @@ export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "clock", width: 2, height: 1 },
   { kind: "weather", width: 2, height: 1, options: { showCity: true, hasForecast: true, forecastDayCount: 3 } },
   { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
-  { kind: "timetable", width: 2, height: 2, skip: true },
 ];
 
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
