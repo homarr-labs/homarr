@@ -544,8 +544,8 @@ catalogs:
       specifier: 3.19.0
       version: 3.19.0
     ws:
-      specifier: ^8.20.0
-      version: 8.20.0
+      specifier: ^8.20.1
+      version: 8.20.1
     xml2js:
       specifier: ^0.6.2
       version: 0.6.2
@@ -1073,7 +1073,7 @@ importers:
         version: 4.20.4
       ws:
         specifier: 'catalog:'
-        version: 8.20.0
+        version: 8.20.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -11003,6 +11003,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xcase@2.0.1:
     resolution: {integrity: sha512-UmFXIPU+9Eg3E9m/728Bii0lAIuoc+6nbrNUKaRPJOFp91ih44qqGlWtxMB6kXFrRD6po+86ksHM5XHCfk6iPw==}
 
@@ -20012,6 +20024,8 @@ snapshots:
   ws@8.17.1: {}
 
   ws@8.20.0: {}
+
+  ws@8.20.1: {}
 
   xcase@2.0.1: {}
 
