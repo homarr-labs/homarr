@@ -182,7 +182,7 @@ catalog:
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.1.6
   winston: 3.19.0
-  ws: ^8.20.0
+  ws: ^8.20.1
   xml2js: ^0.6.2
   yaml: 2.9.0
   zod: ^4.4.3
