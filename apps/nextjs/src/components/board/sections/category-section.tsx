@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
@@ -22,7 +21,13 @@ export const BoardCategorySection = ({ section }: Props) => {
   const { status } = useSession();
   const { mutate } = clientApi.section.changeCollapsed.useMutation();
   const board = useRequiredBoard();
-  const [opened, { toggle, open, close }] = useDisclosure(section.collapsed, {
+
+  const initialCollapsed =
+    typeof window !== "undefined"
+      ? (localStorage.getItem(localStorageKey(section.id)) ?? String(section.collapsed)) === "true"
+      : section.collapsed;
+
+  const [opened, { toggle }] = useDisclosure(initialCollapsed, {
     onOpen() {
       if (status === "authenticated") {
         mutate({ sectionId: section.id, collapsed: true });
@@ -38,13 +43,6 @@ export const BoardCategorySection = ({ section }: Props) => {
       }
     },
   });
-
-  useEffect(() => {
-    if (status !== "unauthenticated") return;
-    const stored = localStorage.getItem(localStorageKey(section.id));
-    if (stored === "true") open();
-    else if (stored === "false") close();
-  }, [status, section.id, open, close]);
 
   return (
     <Card
