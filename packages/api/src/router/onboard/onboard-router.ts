@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
@@ -26,8 +27,6 @@ import {
 } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
-
-import { TRPCError } from "@trpc/server";
 
 import { createTRPCRouter, onboardingProcedure, publicProcedure } from "../../trpc";
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
