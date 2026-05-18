@@ -27,6 +27,8 @@ import {
 import type { WidgetKind } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
+import { TRPCError } from "@trpc/server";
+
 import { createTRPCRouter, onboardingProcedure, publicProcedure } from "../../trpc";
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
 import { mapTestConnectionError } from "../integration/map-test-connection-error";
@@ -145,10 +147,12 @@ export const onboardRouter = createTRPCRouter({
         kind: input.kind,
         secrets: input.secrets,
       }).catch((error) => {
-        if (error instanceof MissingSecretError) {
-          return { success: false as const, error };
-        }
-        throw error;
+        if (!(error instanceof MissingSecretError)) throw error;
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error.message,
+        });
       });
 
       if (!result.success) {
