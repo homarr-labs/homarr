@@ -48,6 +48,7 @@ const userGeneralSettingsSchema = z.object({
   mobileHomeBoardId: userChangeHomeBoardsSchema.shape.mobileHomeBoardId,
   defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
   openInNewTab: userChangeSearchPreferencesSchema.shape.openInNewTab,
+  ddgBangsEnabled: userChangeSearchPreferencesSchema.shape.ddgBangsEnabled,
   firstDayOfWeek: userFirstDayOfWeekSchema.shape.firstDayOfWeek,
   pingIconsEnabled: userPingIconsEnabledSchema.shape.pingIconsEnabled,
 });
@@ -74,6 +75,7 @@ const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues 
   mobileHomeBoardId: user.mobileHomeBoardId,
   defaultSearchEngineId: user.defaultSearchEngineId,
   openInNewTab: user.openSearchInNewTab,
+  ddgBangsEnabled: user.ddgBangs,
   firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
   pingIconsEnabled: user.pingIconsEnabled,
 });
@@ -124,7 +126,7 @@ export const UserGeneralSettingsForm = ({
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmitAsync = async (values: FormValues) => {
     const parsed = userGeneralSettingsSchema.safeParse(values);
     if (!parsed.success) return;
 
@@ -148,12 +150,13 @@ export const UserGeneralSettingsForm = ({
           }),
       },
       {
-        when: changed("defaultSearchEngineId", "openInNewTab"),
+        when: changed("defaultSearchEngineId", "openInNewTab", "ddgBangsEnabled"),
         action: () =>
           changeSearchPreferencesMutation.mutateAsync({
             userId: user.id,
             defaultSearchEngineId: parsed.data.defaultSearchEngineId,
             openInNewTab: parsed.data.openInNewTab,
+            ddgBangsEnabled: parsed.data.ddgBangsEnabled,
           }),
       },
       {
@@ -196,7 +199,7 @@ export const UserGeneralSettingsForm = ({
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
+    <form onSubmit={form.onSubmit(handleSubmitAsync)}>
       <Stack gap="lg">
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" verticalSpacing="lg">
           <Card withBorder bg="transparent">
@@ -262,6 +265,10 @@ export const UserGeneralSettingsForm = ({
               <Switch
                 label={t("user.field.openSearchInNewTab.label")}
                 {...form.getInputProps("openInNewTab", { type: "checkbox" })}
+              />
+              <Switch
+                label={t("user.field.ddgBangs.label")}
+                {...form.getInputProps("ddgBangsEnabled", { type: "checkbox" })}
               />
             </Stack>
           </Card>
