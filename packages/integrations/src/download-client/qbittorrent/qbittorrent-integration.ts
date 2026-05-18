@@ -90,10 +90,18 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
   }
 
   private async getClientAsync(dispatcher?: Dispatcher) {
+    const credentials = this.hasSecretValue("apiKey")
+      ? {
+          apiKey: this.getSecretValue("apiKey"),
+        }
+      : {
+          username: this.getSecretValue("username"),
+          password: this.getSecretValue("password"),
+        };
+
     return new QBittorrent({
+      ...credentials,
       baseUrl: this.url("/").toString(),
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
       dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
   }

@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Open the search results in a new tab"
+      },
+      "ddgBangs": {
+        "label": "Enable DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Unable to toggle the ping icons"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs toggled successfully"
+          },
+          "error": {
+            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Light",
         "dark": "Dark"
       }
@@ -2096,6 +2110,104 @@
         "internalServerError": "Failed to fetch Tracearr data"
       }
     },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Display visitor stats from your Umami analytics instance",
+      "visitors": "visitors",
+      "active": "active",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "City / Postal code",
@@ -2178,55 +2290,55 @@
             "resolution": "Resolution"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Audio",
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transcoding",
+            "container": "Container",
+            "resolution": "Resolution",
+            "target": "Target codec"
           }
         }
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich Server Stats",
+      "description": "Information about your Immich instance",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Show users",
+          "description": "Show count of users on your instance"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Show photos",
+          "description": "Show count of photos on your instance"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Show videos",
+          "description": "Show count of videos on your instance"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Show storage",
+          "description": "Show the total amount of storage used"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Users",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Used Storage"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album ID",
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval in seconds",
+          "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
         },
         "showPhotoInfo": {
           "label": "",
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Default colour scheme",
               "options": {
+                "auto": "",
                 "light": "",
                 "dark": ""
               }
@@ -3667,6 +3780,9 @@
               "label": ""
             },
             "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -3853,6 +3969,9 @@
         "label": ""
       },
       "ports": {
+        "label": ""
+      },
+      "host": {
         "label": ""
       }
     },
@@ -4380,6 +4499,7 @@
             "title": "",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "",
                 "dark": ""
               },
@@ -4401,10 +4521,10 @@
                 "label": ""
               },
               "newIntegration": {
-                "label": "",
+                "label": "Create a new integration",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select the integration type you want to create"
                   }
                 }
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

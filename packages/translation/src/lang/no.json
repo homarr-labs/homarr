@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Åpne søkeresultater i ny fane"
+      },
+      "ddgBangs": {
+        "label": "Aktiver DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Kunne ikke endre ping av ikoner"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs er endret vellykket"
+          },
+          "error": {
+            "message": "Kan ikke slå av/på DuckDuckGo bangs"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Lys",
         "dark": "Mørk"
       }
@@ -1526,13 +1540,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Timeplan",
+      "description": "Viser avgangstid for en stasjon",
+      "title": "Avganger {station}",
+      "noStation": "Ingen stasjon valgt",
       "option": {
         "station": {
-          "label": ""
+          "label": "Stasjon"
         }
       }
     },
@@ -1607,32 +1621,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Ankermerknad",
+      "description": "Viser et valgt notat fra anker",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Notat"
         },
         "showTitle": {
-          "label": ""
+          "label": "Vis tittel"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Vis sist oppdatert"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Velg et notat som skal vises",
+      "emptyContent": "Dette notatet har ikke innhold",
+      "notFound": "Notat ikke funnet",
+      "noNotes": "Fant ingen notater",
+      "integrationRequired": "Velg en ankerintegrasjon først",
+      "updatedAt": "Oppdatert {date}",
+      "untitled": "Uten navn",
+      "edit": "Rediger",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "readOnlyViewer": "Du har seertilgang til dette notatet. Redigering er deaktivert.",
+      "saveForbidden": "Du har ikke tillatelse til å redigere dette notatet.",
+      "saveFailed": "Kunne ikke lagre dette notatet. Prøv på nytt."
     },
     "iframe": {
       "name": "iFrame",
@@ -1666,7 +1680,7 @@
           "label": "Tillat geolokalisering"
         },
         "allowModals": {
-          "label": ""
+          "label": "Tillat modaler"
         }
       },
       "error": {
@@ -1901,7 +1915,7 @@
           "label": "Vis minneinfo"
         },
         "gpu": {
-          "label": ""
+          "label": "Vis CPU-info"
         },
         "showUptime": {
           "label": "Vis oppetid"
@@ -2042,58 +2056,156 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Forbedret medieserverovervåking med detaljert strøm- og transkodingsdata",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Vis aktive strømmer"
         },
         "showStats": {
-          "label": ""
+          "label": "Vis statistikksammendrag"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Vis nylig aktivitet"
         },
         "showViolations": {
-          "label": ""
+          "label": "Vis brudd"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Aktive strømmninger",
+        "totalUsers": "Totalt antall brukere",
+        "transcodes": "Transkoder",
+        "bandwidth": "Båndbredde"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Ingen aktive strømminger",
+        "user": "Bruker",
+        "media": "Media",
+        "state": "Tilstand",
+        "quality": "Kvalitet",
+        "device": "Enhet",
+        "progress": "Fremgang",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direkte avspilling",
+          "transcode": "Transkode",
+          "directStream": "Direktestrøm"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Nylig aktivitet",
+        "empty": "Ingen nylig aktivitet",
+        "watched": "Sett",
+        "partial": "Delvis"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Brudd",
+        "empty": "Ingen nylige brudd",
+        "rule": "Regel",
+        "user": "Bruker"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Ingen seksjoner aktivert",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Ingen Tracearr-integrasjon konfigurert",
+        "internalServerError": "Kunne ikke hente Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Vise besøkende statistikk fra din Umami-analyseinstans",
+      "visitors": "besøkende",
+      "active": "aktiv",
+      "pageviews": "sidevisninger",
+      "visits": "besøk",
+      "bounceRate": "tilbakesende",
+      "avgDuration": "gjennomsnitt",
+      "option": {
+        "websiteId": {
+          "label": "Nettsted",
+          "description": "Velg et nettsted som spores av Umami-instansen din",
+          "placeholder": "Velg en nettside",
+          "loading": "Laster inn nettsteder...",
+          "noWebsites": "Ingen nettsteder ble funnet",
+          "configureIntegrationFirst": "Koble til en Umami integrasjon først"
+        },
+        "timeFrame": {
+          "label": "Tidsramme",
+          "description": "Tidsperiode som skal vise besøkende data for",
+          "option": {
+            "today": "I dag",
+            "24h": "Siste 24 timer",
+            "7d": "Siste 7 dager",
+            "30d": "Siste 30 dager",
+            "month": "Denne måneden",
+            "lastMonth": "Siste måned"
+          }
+        },
+        "eventName": {
+          "label": "Hendelse",
+          "description": "Vis totale forekomster av en bestemt hendelse",
+          "placeholder": "Velg en hendelse",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "none": "Ingen hendelser",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
+        },
+        "chartType": {
+          "label": "Diagramtype",
+          "description": "Vis stil for diagrammet",
+          "option": {
+            "bar": "Søylediagram",
+            "sparkline": "Minigraf"
+          }
+        },
+        "chartStyle": {
+          "label": "Diagramtype",
+          "description": "Hvordan vise hendelsesserier i diagrammet",
+          "option": {
+            "grouped": "Side om side",
+            "overlay": "Overlegg (delmengde)"
+          }
+        },
+        "viewMode": {
+          "label": "Visning",
+          "description": "Hva skal vises i widgetkroppen",
+          "option": {
+            "chart": "Diagram",
+            "events": "Hendelser diagram",
+            "topPages": "Toppsider",
+            "topReferrers": "Topp referenter"
+          }
+        },
+        "eventNames": {
+          "label": "Hendelser",
+          "description": "Velg ett eller flere hendelser i diagrammet",
+          "placeholder": "Velg en hendelse...",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
+        },
+        "topCount": {
+          "label": "Gjenstander å vise",
+          "description": "Antall oppføringer som skal vises (maks 500)"
+        }
+      },
+      "event": {
+        "occurrences": "hendelser",
+        "label": "hendelser"
+      },
+      "topPages": {
+        "direct": "Direkte"
+      },
+      "topReferrers": {
+        "direct": "Direkte"
+      },
+      "events": {
+        "selectPrompt": "Velg hendelser for å diagram"
+      },
+      "error": {
+        "noIntegration": "Ingen Umami integrasjon konfigurert",
+        "noWebsite": "Ingen nettsted konfigurert",
+        "noData": "Ingen data tilgjengelig",
+        "internalServerError": "Kunne ikke hente Umami data"
       }
     },
     "common": {
@@ -2546,7 +2658,7 @@
           "label": "Skjul beskrivelse"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Vis plakatbilde"
         }
       }
     },
@@ -2761,42 +2873,42 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest tracker",
+      "description": "Viser hastighetstesten i fra din Speedtest Tracker-instans.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Vis siste resultat"
         },
         "showStats": {
-          "label": ""
+          "label": "Vis gjennomsnitt"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Vis nylige resultater"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Vis ping-graf"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Siste resultat",
+      "averages": "Gjennomsnitt",
+      "tests": "{count} tester",
+      "recentResults": "Nylige resultater",
+      "recentResultsSpeed": "Hastighet",
+      "recentResultsPing": "Ping",
+      "download": "Nedlasting",
+      "upload": "Opplastning",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Snitt nedlasting",
+      "avgUpload": "Snitt opplasting",
+      "avgPing": "Snitt ping",
+      "healthy": "Frisk",
+      "unhealthy": "Usunn",
+      "ok": "OK",
+      "fail": "Feil",
+      "noSectionsEnabled": "Aktiver minst ett avsnitt i widgetalternativer.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente hastighetsteste data"
       }
     },
     "systemResources": {
@@ -2812,7 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Minne",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Nettverk"
           }
         },
@@ -2829,7 +2941,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Minne",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "NETT",
         "up": "OPP",
         "down": "NED"
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard fargetema",
               "options": {
+                "auto": "Auto",
                 "light": "Lys",
                 "dark": "Mørk"
               }
@@ -3595,7 +3708,7 @@
               "label": "Minecraft serverstatus"
             },
             "timetable": {
-              "label": ""
+              "label": "Timeplan"
             },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
@@ -3667,7 +3780,10 @@
               "label": "Vær"
             },
             "tracearr": {
-              "label": ""
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami Aktive Besøkende"
             }
           },
           "interval": {
@@ -3791,8 +3907,8 @@
             "subtitle": "{count} bidrar med oversettelser på mange språk"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsorer",
+            "subtitle": "{count} støtter prosjektet økonomisk"
           },
           "libraries": {
             "title": "Biblioteker",
@@ -3854,6 +3970,9 @@
       },
       "ports": {
         "label": "Porter"
+      },
+      "host": {
+        "label": "Vert"
       }
     },
     "action": {
@@ -4380,6 +4499,7 @@
             "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
+                "auto": "Bytt visningsmodus",
                 "light": "Bytt til lys modus",
                 "dark": "Bytt til mørk modus"
               },
@@ -4431,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Søkemotorer",
+            "tipDdgBangs": "Tips: Du kan også bruke DuckDuckGo-bangs her, f.eks. !something",
+            "bang": {
+              "searchWithQuery": "Søk etter \"{query}\" med {label}",
+              "pressEnterToOpen": "Trykk på Enter for å åpne",
+              "engineSelected": "{label} valgt (!{bang})",
+              "typeQueryToContinue": "Skriv inn søkeordet for å fortsette",
+              "emptyBangHint": "Skriv inn en bang, f.eks. !yt, og trykk deretter på mellomrom for å velge"
+            },
             "children": {
               "action": {
                 "search": {

@@ -30,4 +30,5 @@ export const widgetRouter = createTRPCRouter({
   timetable: lazy(() => import("./timetable").then((mod) => mod.timetableRouter)),
   tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
   speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
+  umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
 });
