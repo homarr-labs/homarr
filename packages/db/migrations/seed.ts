@@ -273,5 +273,7 @@ const seedDemoUserAsync = async (db: Database) => {
   });
   await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, userId));
 
-  console.log("Your instance has enabled demo mode. Homarr therefore created example data for your demo. You can disable demo mode anytime by setting the env 'DEMO_MODE' to 'false' or unset it.");
+  console.log(
+    "Your instance has enabled demo mode. Homarr therefore created example data for your demo. You can disable demo mode anytime by setting the env 'DEMO_MODE' to 'false' or unset it.",
+  );
 };
