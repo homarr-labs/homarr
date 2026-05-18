@@ -36,6 +36,7 @@
   "prettier": "@homarr/prettier-config",
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
+    "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/commit-analyzer": "catalog:",
     "@semantic-release/git": "catalog:",
@@ -104,6 +105,7 @@
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
+      "@swc/core",
       "core-js-pure",
       "protobufjs"
     ]
