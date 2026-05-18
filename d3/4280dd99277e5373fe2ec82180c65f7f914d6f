@@ -1,0 +1,19 @@
+.dockerignore
+  s_0bc28c7da85a1f::t_eb384c1b042961 12-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "d34280dd99277e5373fe2ec82180c65f7f914d6f",
+  "prompts": {},
+  "sessions": {
+    "s_0bc28c7da85a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1f87fc49-f346-47f1-ab20-ba38733680b7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
