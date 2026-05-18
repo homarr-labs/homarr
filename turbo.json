@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "remoteCache": { "signature": true },
   "globalEnv": ["CI", "NODE_ENV", "SKIP_ENV_VALIDATION"],
   "ui": "stream",
   "futureFlags": {

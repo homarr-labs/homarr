@@ -16,6 +16,10 @@ concurrency:
 env:
   FORCE_COLOR: 3
   SKIP_ENV_VALIDATION: true
+  TURBO_API: ${{ secrets.TURBO_API }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
 
 jobs:
   lint:
