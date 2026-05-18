@@ -1,35 +1,14 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { createContext, useCallback, useContext } from "react";
 
 const BoardReadyContext = createContext<{
   markAsReady: (id: string) => void;
 } | null>(null);
 
 export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
-  const pathname = usePathname();
-  const utils = clientApi.useUtils();
-  const board = useRequiredBoard();
-  const [readySections, setReadySections] = useState<string[]>([]);
-
-  useEffect(() => {
-    return () => {
-      setReadySections([]);
-    };
-  }, [pathname, utils]);
-
-  useEffect(() => {
-    setReadySections((previous) => previous.filter((id) => board.sections.some((section) => section.id === id)));
-  }, [board.sections.length, setReadySections]);
-
-  const markAsReady = useCallback((id: string) => {
-    setReadySections((previous) => (previous.includes(id) ? previous : [...previous, id]));
-  }, []);
+  const markAsReady = useCallback((_id: string) => {}, []);
 
   return (
     <BoardReadyContext.Provider
