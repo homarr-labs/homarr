@@ -1,0 +1,106 @@
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  s_aeafc49ade5052::t_e84cfb39262705 27
+packages/modals-collection/src/docker/add-docker-app-to-homarr.tsx
+  s_aeafc49ade5052::t_3305065960492b 61
+packages/ui/src/components/user-avatar-group.tsx
+  s_aeafc49ade5052::t_48b582a76f5d9c 15
+packages/widgets/src/tracearr/violations-section.tsx
+  s_aeafc49ade5052::t_bb6251f6f5a736 22
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_aeafc49ade5052::t_96471992bfcf58 86
+packages/translation/src/lang/en.json
+  s_aeafc49ade5052::t_c748ece4770f6a 1087-1089
+  s_aeafc49ade5052::t_d5aad580b3d111 1254-1255
+packages/widgets/src/media-releases/component.tsx
+  s_aeafc49ade5052::t_875713b1b7a199 4-15
+packages/ui/src/theme.ts
+  s_aeafc49ade5052::t_2513e805eb6484 1,59,64-65,70-71,75-76,80-81,85-86,90-91,95-96,101
+  s_aeafc49ade5052::t_d54f121c849e9b 4-5
+  s_aeafc49ade5052::t_11ab2ad349bcf7 6-58,60-63,66-69,72-74,77-79,82-84,87-89,92-94,97-100
+packages/old-import/src/components/initial/import-settings-card.tsx
+  s_aeafc49ade5052::t_82dfc2602a10d6 20
+packages/widgets/src/system-resources/chart/memory-chart.tsx
+  s_aeafc49ade5052::t_525f0bac047a53 45
+packages/ui/src/index.ts
+  s_aeafc49ade5052::t_750fb1e1ae46a7 5
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_aeafc49ade5052::t_13256ae64ba3e5 81
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_aeafc49ade5052::t_81b5802911f08e 113
+packages/widgets/src/media-transcoding/panels/queue.panel.tsx
+  s_aeafc49ade5052::t_d4695a1183977b 55,79
+  s_aeafc49ade5052::t_cdc6851ace5d66 1-14
+  s_aeafc49ade5052::t_55b7234396caa0 41,54
+packages/widgets/src/media-transcoding/panels/statistics.panel.tsx
+  s_aeafc49ade5052::t_3685c292724856 94
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_aeafc49ade5052::t_dd78a402cf74bc 103
+  s_aeafc49ade5052::t_c77acf80e0b9db 80
+packages/widgets/src/system-resources/chart/network-traffic.tsx
+  s_aeafc49ade5052::t_3d89e7d2a53b88 42
+packages/spotlight/src/components/spotlight.tsx
+  s_aeafc49ade5052::t_2a8c5e9f69ab41 113
+packages/widgets/src/notifications/component.tsx
+  s_aeafc49ade5052::t_ccd3f334ce686e 70
+packages/old-import/src/components/initial/import-summary-card.tsx
+  s_aeafc49ade5052::t_f26ed2cbf9990f 16
+  s_aeafc49ade5052::t_ee9c606ba59140 27
+packages/widgets/src/tracearr/streams-section.tsx
+  s_aeafc49ade5052::t_f04666b454d558 103
+  s_aeafc49ade5052::t_84e396f8942586 48
+packages/widgets/src/docker/component.tsx
+  s_aeafc49ade5052::t_fc27015783e5cf 65
+packages/widgets/src/coolify/instance-card.tsx
+  s_aeafc49ade5052::t_74f7fe26fef45f 53
+packages/widgets/src/downloads/component.tsx
+  s_aeafc49ade5052::t_ed9cd311dd7280 867
+packages/widgets/src/releases/component.module.scss
+  s_aeafc49ade5052::t_a0c26fb8265ab1 5
+packages/widgets/src/media-transcoding/health-check-status.tsx
+  s_aeafc49ade5052::t_30a26a30b9e36d 30-34
+packages/widgets/src/media-transcoding/panels/workers.panel.tsx
+  s_aeafc49ade5052::t_fa232177e27432 7,10
+  s_aeafc49ade5052::t_c709569d7af0fc 40,58
+  s_aeafc49ade5052::t_321ded6ec445ff 59,106
+packages/widgets/src/tracearr/stats-section.tsx
+  s_aeafc49ade5052::t_5af9ba44937b61 35
+packages/old-import/src/components/initial/board-selection-card.tsx
+  s_aeafc49ade5052::t_84f90d30bae550 41
+  s_aeafc49ade5052::t_65f948b0470529 60
+packages/widgets/src/media-requests/stats/component.tsx
+  s_aeafc49ade5052::t_a9c8acdf37239c 154
+packages/widgets/src/system-resources/chart/gpu-chart.tsx
+  s_aeafc49ade5052::t_581ecea64d1c9c 39
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  s_aeafc49ade5052::t_6e25a90d4d58dc 1-11
+  s_aeafc49ade5052::t_e311ab19f2797b 30,32,34,36,39,41,44,46
+packages/widgets/src/system-resources/chart/cpu-chart.tsx
+  s_aeafc49ade5052::t_c343ff5f479e32 39
+packages/widgets/src/system-resources/chart/combined-network-traffic.tsx
+  s_aeafc49ade5052::t_fb6cfe0582bdd7 41
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_aeafc49ade5052::t_d0c24768470a0d 47-52
+  s_aeafc49ade5052::t_63590f48b1c934 55
+  s_aeafc49ade5052::t_97ad6988fc808e 83-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "0a4a9f98ab62217ab961e713ecc06005c1758071",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_aeafc49ade5052": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a85d005f-1ea5-47e0-8bd5-c264d2f9b82e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
