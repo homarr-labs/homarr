@@ -21,7 +21,6 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -29,6 +28,8 @@ import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+
+import { invalidateBoardCacheAsync } from "../_invalidate-board-cache";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
@@ -153,7 +154,7 @@ const EditModeMenu = () => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
-      void revalidatePathActionAsync(`/boards/${board.name}`);
+      void invalidateBoardCacheAsync(board.name);
       close();
     },
     onError() {

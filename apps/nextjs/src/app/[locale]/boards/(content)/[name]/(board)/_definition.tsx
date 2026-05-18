@@ -6,4 +6,7 @@ export default createBoardContentPage<{ locale: string; name: string }>({
   async getInitialBoardAsync({ name }) {
     return await api.board.getBoardByName({ name });
   },
+  getBoardName({ name }) {
+    return name;
+  },
 });

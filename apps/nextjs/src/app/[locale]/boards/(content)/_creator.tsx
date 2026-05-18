@@ -18,6 +18,7 @@ import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
 import { createMetaTitle } from "~/metadata";
+import { getCachedBoardByName } from "../_cached-board";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
@@ -29,10 +30,12 @@ export type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  getBoardName: (params: TParams) => string | undefined;
 }
 
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
+  getBoardName,
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
@@ -42,9 +45,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
+      const boardName = getBoardName(resolvedParams);
       const queryClient = getQueryClient();
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const [board, session] = await Promise.all([
+        boardName ? getCachedBoardByName(boardName) : getInitialBoard(resolvedParams),
+        auth(),
+      ]);
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -81,7 +88,12 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
-        const board = await getInitialBoard(await params);
+        const resolvedParams = await params;
+        const boardName = getBoardName(resolvedParams);
+
+        const board = boardName
+          ? await getCachedBoardByName(boardName)
+          : await getInitialBoard(resolvedParams);
         const t = await getI18n();
 
         return {

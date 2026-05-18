@@ -9,6 +9,7 @@ import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
+import { invalidateBoardCacheAsync } from "../../_invalidate-board-cache";
 
 interface Props {
   board: Board;
@@ -20,6 +21,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
     onSettled() {
       void utils.board.getBoardByName.invalidate({ name: board.name });
       void utils.board.getHomeBoard.invalidate();
+      void invalidateBoardCacheAsync(board.name);
     },
   });
   const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {

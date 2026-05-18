@@ -1527,6 +1527,93 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
   return [...itemElements, ...sectionElements];
 };
 
+/**
+ * Fetches the board structure without per-user data (collapse states, permissions).
+ * This result is safe to cache because it's identical for all viewers.
+ */
+export const getSharedBoardWithWhereAsync = async (db: Database, where: SQL<unknown>) => {
+  const board = await db.query.boards.findFirst({
+    where,
+    with: {
+      creator: {
+        columns: {
+          id: true,
+          name: true,
+          image: true,
+          email: true,
+        },
+      },
+      sections: {
+        with: {
+          layouts: true,
+        },
+      },
+      items: {
+        with: {
+          integrations: {
+            with: {
+              integration: true,
+            },
+          },
+          layouts: true,
+        },
+      },
+      layouts: true,
+    },
+  });
+
+  if (!board) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Board not found",
+    });
+  }
+
+  const { sections, items, layouts, ...otherBoardProperties } = board;
+
+  return {
+    ...otherBoardProperties,
+    userPermissions: [] as { permission: string }[],
+    groupPermissions: [] as unknown[],
+    layouts: layouts
+      .map(({ boardId: _, ...layout }) => layout)
+      .sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
+    sections: sections.map((section) =>
+      parseSection({
+        ...section,
+        xOffset: section.xOffset,
+        yOffset: section.yOffset,
+        options: superjson.parse(section.options ?? emptySuperJSON),
+        layouts: section.layouts.map((layout) => ({
+          xOffset: layout.xOffset,
+          yOffset: layout.yOffset,
+          width: layout.width,
+          height: layout.height,
+          parentSectionId: layout.parentSectionId,
+          layoutId: layout.layoutId,
+        })),
+        collapsed: false,
+      }),
+    ),
+    items: items.map(({ integrations: itemIntegrations, ...item }) =>
+      parseItem({
+        ...item,
+        layouts: item.layouts.map((layout) => ({
+          xOffset: layout.xOffset,
+          yOffset: layout.yOffset,
+          width: layout.width,
+          height: layout.height,
+          layoutId: layout.layoutId,
+          sectionId: layout.sectionId,
+        })),
+        integrationIds: itemIntegrations.map((item) => item.integration.id),
+        advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+        options: superjson.parse<Record<string, unknown>>(item.options),
+      }),
+    ),
+  };
+};
+
 const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, userId: string | null) => {
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId ?? ""),

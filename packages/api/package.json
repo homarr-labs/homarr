@@ -10,7 +10,8 @@
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
-    "./open-api": "./src/open-api.ts"
+    "./open-api": "./src/open-api.ts",
+    "./router/board": "./src/router/board-exports.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
