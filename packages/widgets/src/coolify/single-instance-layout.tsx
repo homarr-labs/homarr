@@ -44,10 +44,15 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
-        <Group p="xs" justify="center" gap="xs" style={{ borderBottom: "2px solid #8B5CF6" }}>
+        <Group
+          p="xs"
+          justify="center"
+          gap="xs"
+          style={{ borderBottom: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+        >
           <Group gap={2}>
             <Image src={COOLIFY_ICON_URL} alt="Coolify" w={isTiny ? 18 : 24} h={isTiny ? 18 : 24} />
-            <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
+            <Text fz={isTiny ? "xs" : "sm"} fw={700} c="dimmed">
               oolify
             </Text>
           </Group>
@@ -75,7 +80,11 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
           )}
         </Accordion>
 
-        <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+        <Group
+          justify="space-between"
+          p={4}
+          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+        >
           <Group gap={2}>
             <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
             <Text size="xs" c="dimmed">

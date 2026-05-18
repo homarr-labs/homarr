@@ -78,7 +78,7 @@ export default function SmartHomeTriggerAutomationWidget({
           </Center>
         </Overlay>
       )}
-      <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+      <LoadingOverlay visible={isPending} />
       <Center w="100%" h="100%">
         <Stack align="center" gap="md">
           <IconAutomation size={isTiny ? 16 : undefined} />

@@ -1,7 +1,18 @@
 "use client";
 
 import { Fragment } from "react";
-import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  Group,
+  Image,
+  Stack,
+  Text,
+  TooltipFloating,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";

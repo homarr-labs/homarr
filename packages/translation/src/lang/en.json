@@ -1084,7 +1084,9 @@
       "checkoutDocs": "Check out the documentation",
       "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
-      "loading": "Loading"
+      "loading": "Loading",
+      "show": "Show",
+      "hide": "Hide"
     },
     "here": "here",
     "iconPicker": {
@@ -1249,7 +1251,8 @@
       "menu": {
         "label": {
           "create": "New category",
-          "changePosition": "Change position"
+          "changePosition": "Change position",
+          "settings": "Settings"
         }
       },
       "openAllInNewTabs": {

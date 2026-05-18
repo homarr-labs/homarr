@@ -151,7 +151,7 @@ export default function MediaServerWidget({
                       className="mediaRequests-stats-users-user-avatar"
                       size={20}
                       src={user.avatar}
-                      bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                      bd={`2px solid var(--mantine-color-${user.integration.kind === "overseerr" ? "yellow-6" : "blue-5"})`}
                     />
                   </Tooltip>
                   <Text className="mediaRequests-stats-users-user-userName" size="sm">
