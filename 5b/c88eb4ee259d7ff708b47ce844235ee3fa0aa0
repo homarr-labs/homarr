@@ -1,0 +1,21 @@
+packages/api/src/router/onboard/onboard-router.ts
+  s_ea5d3d99866f02::t_d1fd2a8e4d6bd0 30
+  s_ea5d3d99866f02::t_bb4e697cd5f22a 31
+  s_ea5d3d99866f02::t_64000d56184a61 150-155
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "5bc88eb4ee259d7ff708b47ce844235ee3fa0aa0",
+  "prompts": {},
+  "sessions": {
+    "s_ea5d3d99866f02": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1c4c95f89ffeovXNd7saVhjN6r",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
