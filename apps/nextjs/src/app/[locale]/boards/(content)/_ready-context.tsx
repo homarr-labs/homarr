@@ -8,6 +8,7 @@ const BoardReadyContext = createContext<{
 } | null>(null);
 
 export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const markAsReady = useCallback((_id: string) => {}, []);
 
   return (
