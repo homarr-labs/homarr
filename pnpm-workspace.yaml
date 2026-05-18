@@ -51,22 +51,22 @@ catalog:
   "@testcontainers/mysql": ^11.14.0
   "@testcontainers/postgresql": ^11.14.0
   "@testcontainers/redis": ^11.14.0
-  "@tiptap/extension-color": 3.23.2
-  "@tiptap/extension-highlight": 3.23.2
-  "@tiptap/extension-image": 3.23.2
-  "@tiptap/extension-link": ^3.23.2
-  "@tiptap/extension-placeholder": ^3.23.2
-  "@tiptap/extension-table": 3.23.2
-  "@tiptap/extension-table-cell": 3.23.2
-  "@tiptap/extension-table-header": 3.23.2
-  "@tiptap/extension-table-row": 3.23.2
-  "@tiptap/extension-task-item": 3.23.2
-  "@tiptap/extension-task-list": 3.23.2
-  "@tiptap/extension-text-align": 3.23.2
-  "@tiptap/extension-text-style": 3.23.2
-  "@tiptap/extension-underline": 3.23.2
-  "@tiptap/react": ^3.23.2
-  "@tiptap/starter-kit": ^3.23.2
+  "@tiptap/extension-color": 3.23.4
+  "@tiptap/extension-highlight": 3.23.4
+  "@tiptap/extension-image": 3.23.4
+  "@tiptap/extension-link": ^3.23.4
+  "@tiptap/extension-placeholder": ^3.23.4
+  "@tiptap/extension-table": 3.23.4
+  "@tiptap/extension-table-cell": 3.23.4
+  "@tiptap/extension-table-header": 3.23.4
+  "@tiptap/extension-table-row": 3.23.4
+  "@tiptap/extension-task-item": 3.23.4
+  "@tiptap/extension-task-list": 3.23.4
+  "@tiptap/extension-text-align": 3.23.4
+  "@tiptap/extension-text-style": 3.23.4
+  "@tiptap/extension-underline": 3.23.4
+  "@tiptap/react": ^3.23.4
+  "@tiptap/starter-kit": ^3.23.4
   "@trpc/client": ^11.17.0
   "@trpc/next": ^11.17.0
   "@trpc/react-query": ^11.17.0
