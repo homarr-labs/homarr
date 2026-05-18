@@ -18,8 +18,8 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
   const isRTL = Boolean(isLocaleRTL(currentLocale));
 
   return (
-    <Paper radius="md" withBorder className={classes.paper} mt={20}>
-      <ThemeIcon className={classes.icon} size={60} radius={60} bg={"#326ce5"}>
+    <Paper className={classes.paper} mt={20}>
+      <ThemeIcon className={classes.icon} size={60} radius={60} bg="blue.7">
         <ResourceIcon type={props.kubernetesCapacity.type} />
       </ThemeIcon>
 

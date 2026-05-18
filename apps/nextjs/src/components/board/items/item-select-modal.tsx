@@ -104,7 +104,7 @@ const WidgetItem = ({
             </Text>
           </Stack>
           <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
-          <Button onClick={onSelect} variant="light" size="xs" radius="md" fullWidth>
+          <Button onClick={onSelect} variant="light" size="xs" fullWidth>
             {t(`item.create.addToBoard`)}
           </Button>
         </Stack>
@@ -129,7 +129,7 @@ const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps)
 
   return (
     <Center mt={mt}>
-      <Tooltip.Group openDelay={300} closeDelay={100}>
+      <Tooltip.Group closeDelay={100}>
         <Group gap={2}>
           {integrations.slice(0, countToShow).map((integration) => (
             <Tooltip key={integration} label={getIntegrationName(integration)} withArrow>
