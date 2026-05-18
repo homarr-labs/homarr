@@ -8,7 +8,6 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 
 const BoardReadyContext = createContext<{
-  isReady: boolean;
   markAsReady: (id: string) => void;
 } | null>(null);
 
@@ -18,7 +17,6 @@ export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const [readySections, setReadySections] = useState<string[]>([]);
 
-  // Reset sections required for ready state
   useEffect(() => {
     return () => {
       setReadySections([]);
@@ -36,7 +34,6 @@ export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
   return (
     <BoardReadyContext.Provider
       value={{
-        isReady: board.sections.length === readySections.length,
         markAsReady,
       }}
     >
@@ -53,14 +50,4 @@ export const useMarkSectionAsReady = () => {
   }
 
   return context.markAsReady;
-};
-
-export const useIsBoardReady = () => {
-  const context = useContext(BoardReadyContext);
-
-  if (!context) {
-    throw new Error("BoardReadyProvider is required");
-  }
-
-  return context.isReady;
 };
