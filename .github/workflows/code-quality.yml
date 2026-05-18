@@ -20,6 +20,8 @@ env:
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+  TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
   lint:
