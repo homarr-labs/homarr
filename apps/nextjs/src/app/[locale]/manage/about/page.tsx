@@ -182,7 +182,6 @@ export default async function AboutPage() {
             </Stack>
           </AccordionControl>
           <AccordionPanel>
-            {" "}
             <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
               {Object.entries(dependencies)
                 .filter(([, value]) => !value.includes("workspace:"))
