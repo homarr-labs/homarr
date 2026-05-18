@@ -91,9 +91,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         const resolvedParams = await params;
         const boardName = getBoardName(resolvedParams);
 
-        const board = boardName
-          ? await getCachedBoardByName(boardName)
-          : await getInitialBoard(resolvedParams);
+        const board = boardName ? await getCachedBoardByName(boardName) : await getInitialBoard(resolvedParams);
         const t = await getI18n();
 
         return {

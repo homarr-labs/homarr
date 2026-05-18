@@ -1,9 +1,8 @@
 import { unstable_cache } from "next/cache";
 
+import { getSharedBoardWithWhereAsync } from "@homarr/api/router/board";
 import { db, eq, sql } from "@homarr/db";
 import { boards } from "@homarr/db/schema";
-
-import { getSharedBoardWithWhereAsync } from "@homarr/api/router/board";
 
 export function getCachedBoardByName(name: string) {
   const tag = `board-${name.toLowerCase()}`;

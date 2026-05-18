@@ -29,8 +29,6 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
-import { invalidateBoardCacheAsync } from "../_invalidate-board-cache";
-
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
@@ -38,6 +36,7 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
+import { invalidateBoardCacheAsync } from "../_invalidate-board-cache";
 
 export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();

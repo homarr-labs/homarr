@@ -1,7 +1,7 @@
 import { clientApi } from "@homarr/api/client";
 
-import type { Board } from "../../_types";
 import { invalidateBoardCacheAsync } from "../../_invalidate-board-cache";
+import type { Board } from "../../_types";
 
 export const useSavePartialSettingsMutation = (board: Board) => {
   const utils = clientApi.useUtils();
