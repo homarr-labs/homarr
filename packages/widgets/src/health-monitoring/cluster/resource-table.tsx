@@ -1,14 +1,4 @@
-import {
-  Group,
-  Indicator,
-  Popover,
-  Table,
-  TableTbody,
-  TableTh,
-  TableThead,
-  TableTr,
-  Text,
-} from "@mantine/core";
+import { Group, Indicator, Popover, Table, TableTbody, TableTh, TableThead, TableTr, Text } from "@mantine/core";
 
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
