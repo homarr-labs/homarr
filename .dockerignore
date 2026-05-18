@@ -10,3 +10,5 @@ README.md
 dev
 .build
 e2e
+apps/nextjs/.next
+.env
