@@ -193,3 +193,5 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  # Renovate security update: hono@<4.6.5@4.12.19
+  - hono@<4.6.5@4.12.19
