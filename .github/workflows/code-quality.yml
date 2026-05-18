@@ -15,6 +15,7 @@ concurrency:
 
 env:
   FORCE_COLOR: 3
+  SKIP_ENV_VALIDATION: true
 
 jobs:
   lint:
@@ -22,6 +23,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -31,31 +34,35 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws
+        run: pnpm turbo lint --affected && pnpm lint:ws
 
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
       - name: Format
-        run: pnpm format
+        run: pnpm turbo format --affected --continue -- --cache --cache-location node_modules/.cache/.prettiercache
 
   typecheck:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: pnpm turbo typecheck --affected
 
   test:
     runs-on: ubuntu-latest
@@ -70,19 +77,18 @@ jobs:
         run: pnpm test
 
       - name: "Report Coverage"
-        # Set if: always() to also generate the report if tests are failing
-        # Only works if you set `reportOnFailure: true` in your vite config as specified above
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
 
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
       - uses: actions/checkout@v6
       - name: Setup
         uses: ./tooling/github/setup
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
       - name: Build docker image
         id: build-docker-image
         uses: docker/build-push-action@v7
@@ -90,8 +96,11 @@ jobs:
           platforms: linux/amd64
           context: .
           push: false
+          load: true
           tags: homarr-e2e
           network: host
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         env:
           SKIP_ENV_VALIDATION: true
       - name: Install playwright browsers
@@ -105,10 +114,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Setup
         uses: ./tooling/github/setup
       - name: Copy env
         shell: bash
         run: cp .env.example .env
       - name: Build
-        run: pnpm build
+        run: pnpm turbo build --affected
