@@ -8,7 +8,8 @@
   },
   "tasks": {
     "topo": {
-      "dependsOn": ["^topo"]
+      "dependsOn": ["^topo"],
+      "inputs": ["package.json"]
     },
     "build": {
       "dependsOn": ["^build"],
