@@ -24,10 +24,11 @@
     "react-hooks/exhaustive-deps": "warn",
     "react/no-children-prop": "warn",
     "jsx-a11y/no-autofocus": "warn",
-    "jsx-a11y/img-redundant-alt": "warn"
+    "jsx-a11y/img-redundant-alt": "warn",
+    "react/react-in-jsx-scope": "off"
   },
   "options": {
-    "reportUnusedDisableDirectives": "warn"
+    "reportUnusedDisableDirectives": "off"
   },
   "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", "**/lang/*.d.json.ts", ".next/**"],
   "settings": {
