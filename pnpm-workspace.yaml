@@ -140,7 +140,6 @@ catalog:
   json5: ^2.2.3
   ldapts: 8.1.7
   lodash.clonedeep: ^4.5.0
-  mantine-form-zod-resolver: ^1.3.0
   mantine-react-table: 2.0.0-beta.9
   maria2: ^0.4.1
   mysql2: 3.22.3

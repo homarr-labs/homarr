@@ -198,7 +198,7 @@ const PasswordForgottenCollapse = ({ username }: PasswordForgottenCollapseProps)
         {tForgotPassword("label")}
       </Anchor>
 
-      <Collapse in={visible}>
+      <Collapse expanded={visible}>
         <Card>
           <Stack gap="xs">
             <Text size="sm">{tForgotPassword("description")}</Text>
