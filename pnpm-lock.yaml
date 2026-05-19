@@ -511,8 +511,8 @@ catalogs:
       specifier: ^3.2.0
       version: 3.2.0
     tsdav:
-      specifier: ^2.2.1
-      version: 2.2.1
+      specifier: ^2.2.2
+      version: 2.2.2
     tsx:
       specifier: 4.20.4
       version: 4.20.4
@@ -2000,7 +2000,7 @@ importers:
         version: 2.2.0
       tsdav:
         specifier: 'catalog:'
-        version: 2.2.1
+        version: 2.2.2
       undici:
         specifier: 'catalog:'
         version: 7.24.6
@@ -10079,8 +10079,8 @@ packages:
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
 
-  tsdav@2.2.1:
-    resolution: {integrity: sha512-Vo8Ro0TgDfs6WNZ3ePx4rF+n46jUMjj1rJNx+QUjiys8K1n7ya5W/EfcUMHnfqG6TcKAwFNJnBKBhb2HB5Ns4w==}
+  tsdav@2.2.2:
+    resolution: {integrity: sha512-/uC/RItcdYVxUj8b2gT4CorAkUmDFUuzhgS4XVT+OVzGRE80hH5ldubcWH13dHa2T9rNaXu6UIEWHlQ1UL7H1Q==}
     engines: {node: '>=18'}
 
   tslib@2.8.1:
@@ -18472,7 +18472,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdav@2.2.1:
+  tsdav@2.2.2:
     dependencies:
       base-64: 1.0.0
       debug: 4.4.3
