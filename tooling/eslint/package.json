@@ -27,6 +27,7 @@
     "typescript-eslint": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "catalog:",

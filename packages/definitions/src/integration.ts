@@ -61,7 +61,7 @@ export const integrationDefs = {
   },
   qBittorrent: {
     name: "qBittorrent",
-    secretKinds: [["username", "password"]],
+    secretKinds: [["apiKey"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
     category: ["downloadClient", "torrent"],
     documentationUrl: createDocumentationLink("/docs/integrations/q-bittorent"),
@@ -370,6 +370,14 @@ export const integrationDefs = {
     category: ["speedtest"],
     documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
   },
+  umami: {
+    name: "Umami",
+    secretKinds: [["username", "password"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/umami.svg",
+    category: ["analytics"],
+    defaultUrl: "https://api.umami.is/v1",
+    documentationUrl: createDocumentationLink("/docs/integrations/umami"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -461,6 +469,7 @@ export const integrationCategories = [
   "notes",
   "mediaMonitoring",
   "speedtest",
+  "analytics",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

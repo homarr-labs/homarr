@@ -130,6 +130,7 @@ export const userChangeHomeBoardsSchema = z.object({
 export const userChangeSearchPreferencesSchema = z.object({
   defaultSearchEngineId: z.string().min(1).nullable(),
   openInNewTab: z.boolean(),
+  ddgBangsEnabled: z.boolean(),
 });
 
 export const userChangeColorSchemeSchema = z.object({
@@ -138,16 +139,16 @@ export const userChangeColorSchemeSchema = z.object({
 
 export const userFirstDayOfWeekSchema = z.object({
   firstDayOfWeek: z
-    .custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success)
-    .meta({
-      override: {
-        type: "integer",
-        minimum: 0,
-        maximum: 6,
-      },
-    }),
+    .number()
+    .min(0)
+    .max(6)
+    .transform((value) => value as DayOfWeek),
 });
 
 export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
+});
+
+export const userDdgBangsSchema = z.object({
+  ddgBangs: z.boolean(),
 });

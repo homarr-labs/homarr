@@ -24,7 +24,7 @@ body:
     attributes:
       label: Are you willing to contribute this yourself?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
     validations:
       required: true

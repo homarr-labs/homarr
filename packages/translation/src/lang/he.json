@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "פתיחת תוצאות חיפוש בכרטיסיה חדשה"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "לא ניתן לשנות את סמלי הפינג"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "בהיר",
         "dark": "כהה"
       }
@@ -2093,6 +2107,104 @@
       "noSectionsEnabled": "",
       "error": {
         "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
         "internalServerError": ""
       }
     },
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "סכמת צבעים ברירת מחדל",
               "options": {
+                "auto": "",
                 "light": "בהיר",
                 "dark": "כהה"
               }
@@ -3667,6 +3780,9 @@
               "label": "מזג אוויר"
             },
             "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -3790,6 +3906,10 @@
             "title": "מתרגמים",
             "subtitle": "{count} תורמים בתרגום לשפות שונות"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "ספריות",
             "subtitle": "{count} בשימוש בקוד של Homarr"
@@ -3850,6 +3970,9 @@
       },
       "ports": {
         "label": "יציאות"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4376,6 +4499,7 @@
             "title": "פקודות גלובליות",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "עבור למצב בהיר",
                 "dark": "עבור למצב כהה"
               },
@@ -4427,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "מנועי חיפוש",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
+import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
 
 import { notFound } from "next/navigation";
@@ -25,6 +26,7 @@ import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
@@ -129,7 +131,7 @@ export default async function Layout(props: {
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{
-        backgroundColor: colorScheme === "dark" ? "#242424" : "#fff",
+        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
       }}
       suppressHydrationWarning
     >
@@ -141,6 +143,7 @@ export default async function Layout(props: {
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>
           <Notifications />
+          <ServiceWorkerRegistration />
           {props.children}
         </StackedProvider>
       </body>

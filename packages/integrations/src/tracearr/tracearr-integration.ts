@@ -1,3 +1,4 @@
+import { isAbsoluteUrl } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ImageProxy } from "@homarr/image-proxy";
@@ -85,10 +86,10 @@ export class TracearrIntegration extends Integration {
       data: await Promise.all(
         json.data.map(async (stream) => {
           if (stream.userAvatarUrl) {
-            stream.userAvatarUrl = await this.proxyImageAsync(imageProxy, stream.userAvatarUrl, stream.id, "avatar");
+            stream.userAvatarUrl = await this.proxyImageAsync(imageProxy, stream.userAvatarUrl);
           }
           if (stream.posterUrl) {
-            stream.posterUrl = await this.proxyImageAsync(imageProxy, stream.posterUrl, stream.id, "poster");
+            stream.posterUrl = await this.proxyImageAsync(imageProxy, stream.posterUrl);
           }
           return stream;
         }),
@@ -120,12 +121,7 @@ export class TracearrIntegration extends Integration {
       ...json,
       data: await Promise.all(
         json.data.map(async (violation) => {
-          violation.user.avatarUrl = await this.proxyImageAsync(
-            imageProxy,
-            violation.user.avatarUrl,
-            violation.user.id,
-            "avatar",
-          );
+          violation.user.avatarUrl = await this.proxyImageAsync(imageProxy, violation.user.avatarUrl);
           return violation;
         }),
       ),
@@ -156,12 +152,7 @@ export class TracearrIntegration extends Integration {
       ...json,
       data: await Promise.all(
         json.data.map(async (session) => {
-          session.user.avatarUrl = await this.proxyImageAsync(
-            imageProxy,
-            session.user.avatarUrl,
-            session.user.id,
-            "avatar",
-          );
+          session.user.avatarUrl = await this.proxyImageAsync(imageProxy, session.user.avatarUrl);
           return session;
         }),
       ),
@@ -194,23 +185,12 @@ export class TracearrIntegration extends Integration {
     };
   }
 
-  private async proxyImageAsync(
-    imageProxy: ImageProxy,
-    url: string | null | undefined,
-    uniqueId: string,
-    discriminator: string,
-  ): Promise<string | null> {
-    if (!url) return null;
+  private async proxyImageAsync(imageProxy: ImageProxy, urlOrPath: string | null | undefined): Promise<string | null> {
+    if (!urlOrPath) return null;
     try {
       // ImageProxy doesn't support fallback urls so we need to remove them
-      const cleanUrl = url.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
-      // Build the full URL, then inject _uid as the FIRST query param.
-      // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.
-      // Without this, all long avatar/poster URLs from the same session hash identically
-      // since they share the same first 72+ bytes.
-      const baseUrl = this.url(cleanUrl as `/${string}`).toString();
-      const prefix = `_uid=${discriminator}_${uniqueId}&`;
-      const fullUrl = baseUrl.includes("?") ? baseUrl.replace("?", `?${prefix}`) : `${baseUrl}?${prefix}`;
+      const cleanUrl = urlOrPath.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
+      const fullUrl = isAbsoluteUrl(urlOrPath) ? cleanUrl : this.url(cleanUrl as `/${string}`).toString();
 
       return await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
     } catch {

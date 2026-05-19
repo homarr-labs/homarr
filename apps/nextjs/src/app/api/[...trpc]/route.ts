@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 import { userAgent } from "next/server";
 import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
-import { appRouter, createTRPCContext } from "@homarr/api";
+import { createTRPCContext } from "@homarr/api";
+import { openApiRouter } from "@homarr/api/open-api";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -30,7 +31,7 @@ const handlerAsync = async (req: NextRequest) => {
   return createOpenApiFetchHandler({
     req,
     endpoint: "/",
-    router: appRouter,
+    router: openApiRouter,
     createContext: () => createTRPCContext({ session, headers: req.headers }),
     onError({ error, path, type }) {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));

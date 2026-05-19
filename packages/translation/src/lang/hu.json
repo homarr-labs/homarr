@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Nyissa meg a keresési eredményeket új ablakban"
+      },
+      "ddgBangs": {
+        "label": "DuckDuckGo parancsok engedélyezése"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Nem lehet ping ikonokat megváltoztatni"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo parancsok sikeresen bekapcsolódott"
+          },
+          "error": {
+            "message": "DuckDuckGo parancsokkat nem sikerült bekapcsolni"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Automatikus",
         "light": "Világos",
         "dark": "Sötét"
       }
@@ -2096,6 +2110,104 @@
         "internalServerError": "Nem sikerült letölteni a Tracearr-adatokat"
       }
     },
+    "umami": {
+      "name": "Umami Analitika",
+      "description": "Umami elemzési rendszeréből származó látogatói statisztikák megjelenítése",
+      "visitors": "látogatók",
+      "active": "aktív",
+      "pageviews": "oldalletöltések",
+      "visits": "látogatások",
+      "bounceRate": "visszapattan",
+      "avgDuration": "átl",
+      "option": {
+        "websiteId": {
+          "label": "Honlap",
+          "description": "Válasszon ki egy olyan webhelyet, amelyet az Ön Umami-példánya követ",
+          "placeholder": "Válasszon ki egy weboldalt",
+          "loading": "Weboldalak betöltése...",
+          "noWebsites": "Nem található weboldal",
+          "configureIntegrationFirst": "Először csatlakoztassa az Umami integrációt"
+        },
+        "timeFrame": {
+          "label": "Időkeret",
+          "description": "Látogatói adatok megjelenítésének időtartama",
+          "option": {
+            "today": "Ma",
+            "24h": "Elmúlt 24 óra",
+            "7d": "Elmúlt 7 nap",
+            "30d": "Elmúlt 30 nap",
+            "month": "Ez a hónap",
+            "lastMonth": "Előző hónap"
+          }
+        },
+        "eventName": {
+          "label": "Esemény",
+          "description": "Egy adott esemény összes előfordulásának megjelenítése",
+          "placeholder": "Válasszon ki egy eseményt",
+          "loading": "Események betöltése...",
+          "noEvents": "Nem található esemény",
+          "none": "Nincs esemény",
+          "configureWebsiteFirst": "Először válasszon ki egy weboldalt az események betöltéséhez"
+        },
+        "chartType": {
+          "label": "Diagramtípus",
+          "description": "A diagram megjelenítési stílusa",
+          "option": {
+            "bar": "Oszlopdiagram",
+            "sparkline": "Mikrodiagram"
+          }
+        },
+        "chartStyle": {
+          "label": "Diagramstílus",
+          "description": "Hogyan jeleníthetjük meg az eseménysorozatot a diagramon",
+          "option": {
+            "grouped": "Egymás mellett",
+            "overlay": "Átfedés (részhalmaz)"
+          }
+        },
+        "viewMode": {
+          "label": "Megtekintés",
+          "description": "Mit jelenítsen meg a widget törzse",
+          "option": {
+            "chart": "Ábra",
+            "events": "Eseménynaptár",
+            "topPages": "Legnépszerűbb oldalak",
+            "topReferrers": "Legjobb hivatkozások"
+          }
+        },
+        "eventNames": {
+          "label": "Események",
+          "description": "Válasszon ki egy vagy több eseményt a grafikonhoz",
+          "placeholder": "Események kiválasztása...",
+          "loading": "Események betöltése...",
+          "noEvents": "Nem található esemény",
+          "configureWebsiteFirst": "Először válasszon ki egy weboldalt az események betöltéséhez"
+        },
+        "topCount": {
+          "label": "Items to show",
+          "description": "Megjelenítendő legnépszerűbb elemek száma (max. 500)"
+        }
+      },
+      "event": {
+        "occurrences": "események",
+        "label": "események"
+      },
+      "topPages": {
+        "direct": "Közvetlen"
+      },
+      "topReferrers": {
+        "direct": "Közvetlen"
+      },
+      "events": {
+        "selectPrompt": "Válassza ki a grafikonra felveendő eseményeket"
+      },
+      "error": {
+        "noIntegration": "Nincs beállítva az Umami-integráció",
+        "noWebsite": "Nincs beállított webhely",
+        "noData": "Nincs elérhető adat",
+        "internalServerError": "Umami-adatok letöltése nem sikerült"
+      }
+    },
     "common": {
       "location": {
         "query": "Város / Irányítószám",
@@ -2633,15 +2745,15 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importálás a Docker-ből"
           },
           "example": {
-            "label": ""
+            "label": "Példa"
           },
-          "invalid": "",
+          "invalid": "A tároló meghatározása érvénytelen, kérjük, ellenőrizze az értékeket",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Nincs Szolgáltató",
+            "tooltip": "A szolgáltató adatai nem értelmezhetők; kérjük, az importálás után állítsa be azokat manuálisan"
           }
         }
       },
@@ -2714,34 +2826,34 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Nincs elérhető adat, az összes integráció le van választva",
+        "unknownContentOption": "A hálózati állapot-widget ismeretlen tartalmi beállítása: "
       },
-      "name": "",
-      "description": ""
+      "name": "Hálózat állapota",
+      "description": "A hálózathoz csatlakozó eszközök megjelenítése"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "A hálózati vezérlő összefoglalójának letöltése nem sikerült"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Tűzfal-felügyelet",
+      "description": "Megjeleníti a tűzfalak összefoglalóját",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Rendszer",
+        "interfaces": "Interfészek"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült adatokat lekérni a tűzfalról"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Megjelenítendő hálózati interfészek"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
+        "fwname": "Név",
+        "version": "Verzió",
+        "versiontitle": "Verziók",
         "cputitle": "CPU használat",
         "memorytitle": "Memória használat",
         "cpu": "CPU",
@@ -2830,63 +2942,63 @@
         "cpu": "CPU",
         "memory": "RAM",
         "gpu": "GPU",
-        "network": "",
-        "up": "",
-        "down": ""
+        "network": "NET",
+        "up": "FÖNN",
+        "down": "LENN"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Rendszer lemezek",
+      "description": "A rendszer lemezhasználata",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Ha elérhető, mutassa a hőmérsékletet"
         },
         "displayMode": {
-          "label": "",
+          "label": "Megjelenítési mód",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Százalék (pl: 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Abszolút értékek (pl. 800 Gb / 1 Tb)"
             },
             "free": {
-              "label": ""
+              "label": "A szabad hely aránya (pl. 24% szabad)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Háttérhasználati sáv megjelenítése"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Hibás"
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Szerkesztési mód engedélyezve",
+      "disabled": "Szerkesztési mód tiltva"
     },
     "dimensions": {
-      "title": ""
+      "title": "Dimenzió váltása"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Tábla duplikálása",
+        "message": "Ezzel a {name} tábla teljes tartalmával együtt duplikálódik. Ha a widgetek olyan integrációkra hivatkoznak, amelyek használata nem engedélyezett, azok eltávolításra kerülnek.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Tábla duplikálva",
+            "message": "A tábla sikeresen duplikálódott"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nem lehet duplikálni a táblát",
+            "message": "Nem tudtam duplikálni a táblát"
           }
         }
       },
@@ -2894,44 +3006,44 @@
         "notification": {
           "success": {
             "title": "A módosítások sikeresen alkalmazva",
-            "message": ""
+            "message": "A tábla sikeresen elmentve"
           },
           "error": {
             "title": "Nem sikerült alkalmazni a változtatásokat",
-            "message": ""
+            "message": "A táblát nem sikerült elmenteni"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Mentetlen változtatások",
+          "message": "Nem mentett változtatásai vannak, biztosan el akarja hagyni az oldalt?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Importálás a homarr 1.0.0 előtti verzióból",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres importálás",
+            "message": "A tábla sikeresen importálva"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Importálás nem sikerült",
+            "message": "Táblát nem sikerült importálni; további részletekért nézd meg a naplófájlokat"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "JSON fájl kiválasztása",
+            "invalidError": "Érvénytelen konfigurációs fájl"
           },
           "apps": {
             "label": "Alkalmazások",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Kerülje az ismétlődéseket",
+              "description": "Nem veszi figyelembe azokat az alkalmazásokat, amelyeknél már létezik azonos href-vel rendelkező alkalmazás"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Csak alkalmazások importálása",
+              "description": "Csak az alkalmazásokat adja hozzá, a táblát manuálisan kell újra létrehozni"
             }
           },
           "name": {
@@ -3160,15 +3272,15 @@
                   "description": ""
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Nyilvános tábla készítése",
+                  "description": "Biztosan nyilvánossá szeretnéd tenni ezt a fórumot? Ezzel a fórum mindenki számára elérhetővé válik."
                 }
               }
             },
             "delete": {
-              "label": "",
+              "label": "Törölje ezt a táblát",
               "description": "",
-              "button": "",
+              "button": "Törölje ezt a táblát",
               "confirm": {
                 "title": "Tábla törlése",
                 "description": ""
@@ -3568,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
+                "auto": "",
                 "light": "Világos",
                 "dark": "Sötét"
               }
@@ -3667,6 +3780,9 @@
               "label": ""
             },
             "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -3790,6 +3906,10 @@
             "title": "",
             "subtitle": ""
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "",
             "subtitle": ""
@@ -3850,6 +3970,9 @@
       },
       "ports": {
         "label": "Portok"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4376,6 +4499,7 @@
             "title": "",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "",
                 "dark": ""
               },
@@ -4427,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Keresőmotorok",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
