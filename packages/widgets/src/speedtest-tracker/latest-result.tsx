@@ -18,7 +18,7 @@ export function LatestResultSection({ result }: { result: SpeedtestTrackerResult
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(result.created_at);
+  }).format(new Date(result.created_at));
   const cols = result.healthy !== null ? 4 : 3;
 
   return (

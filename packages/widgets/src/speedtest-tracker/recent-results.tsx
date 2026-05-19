@@ -156,10 +156,10 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const data = useMemo(
     () =>
       [...results]
-        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
+        .sort((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
         .filter((result) => (result.download_bits ?? 0) > 0)
         .map((result) => ({
-          ts: result.created_at.getTime(),
+          ts: new Date(result.created_at).getTime(),
           Download: parseFloat(((result.download_bits ?? 0) / 1_000_000).toFixed(2)),
           Upload:
             result.upload_bits != null && result.upload_bits > 0
@@ -268,12 +268,12 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
   const data = useMemo(
     () =>
       [...results]
-        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
+        .sort((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
         .map((result) =>
           result.ping === null
             ? null
             : {
-                ts: result.created_at.getTime(),
+                ts: new Date(result.created_at).getTime(),
                 Ping: result.ping,
               },
         )

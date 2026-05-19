@@ -53,7 +53,7 @@ export default function SpeedtestTrackerWidget({
   );
 
   const twelveHoursAgo = Date.now() - 12 * 60 * 60 * 1000;
-  const recentFiltered = combined.recentResults.filter((result) => result.created_at.getTime() > twelveHoursAgo);
+  const recentFiltered = combined.recentResults.filter((result) => new Date(result.created_at).getTime() > twelveHoursAgo);
 
   const hasStatSection =
     (options.showLatestResult && combined.latestResult !== null) || (options.showStats && combined.stats !== null);

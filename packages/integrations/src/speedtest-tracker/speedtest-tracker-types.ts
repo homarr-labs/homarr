@@ -2,15 +2,13 @@ import { z } from "zod/v4";
 
 const createEnvelopeSchema = <T extends z.ZodType>(dataSchema: T) => z.object({ data: dataSchema });
 
-const parseTimestamp = (timestamp: string): Date => new Date(`${timestamp.replace(" ", "T")}Z`);
-
 export const speedtestTrackerResultSchema = z.object({
   id: z.number().int(),
   ping: z.number().nullable(),
   download_bits: z.number().int().nullish(),
   upload_bits: z.number().int().nullish(),
   healthy: z.boolean().nullable(),
-  created_at: z.string().transform(parseTimestamp),
+  created_at: z.string().transform((ts) => ts.replace(" ", "T")),
 });
 
 export type SpeedtestTrackerResult = z.infer<typeof speedtestTrackerResultSchema>;
