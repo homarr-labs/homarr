@@ -9,4 +9,5 @@ export const theme = createTheme({
     secondaryColor,
   },
   primaryColor: "primaryColor",
+  defaultRadius: "sm",
 });

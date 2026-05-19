@@ -23,6 +23,7 @@ export const CustomMantineProvider = ({
         theme={createTheme({
           primaryColor: "red",
           autoContrast: true,
+          defaultRadius: "sm",
         })}
       >
         {children}

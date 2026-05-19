@@ -143,7 +143,7 @@ export default async function Layout(props: {
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>
-          <Notifications />
+          <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />
           {props.children}
         </StackedProvider>

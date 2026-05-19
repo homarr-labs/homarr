@@ -44,7 +44,7 @@ export const BoardCategorySection = ({ section }: Props) => {
           </UnstyledButton>
           <CategoryMenu category={section} />
         </Group>
-        <Collapse in={opened} p="sm" pt={0}>
+        <Collapse expanded={opened} p="sm" pt={0}>
           <GridStack section={section} />
         </Collapse>
       </Stack>

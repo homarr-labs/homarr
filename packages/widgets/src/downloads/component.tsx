@@ -805,7 +805,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             <Chip.Group
               multiple
               value={filters.statuses}
-              onChange={(statuses) => setFilters({ ...filters, statuses: statuses as typeof filters.statuses })}
+              onChange={(statuses) => setFilters({ ...filters, statuses: statuses })}
             >
               {availableStatuses.map((status) => (
                 <Chip key={status} value={status}>
