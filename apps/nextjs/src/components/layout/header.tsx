@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
+import { AppShellHeader, Box, Group, UnstyledButton } from "@mantine/core";
 
 import { Spotlight } from "@homarr/spotlight";
 import { Link } from "@homarr/ui";
@@ -25,11 +25,15 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
             {logo ?? <HomarrLogoWithTitle size="md" />}
           </UnstyledButton>
         </Group>
-        <DesktopSearchInput />
+        <Box data-onboarding-tour-id="board-search">
+          <DesktopSearchInput />
+        </Box>
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
           {actions}
           <MobileSearchButton />
-          <UserButton />
+          <Box data-onboarding-tour-id="board-user-menu">
+            <UserButton />
+          </Box>
         </Group>
       </Group>
       <Spotlight />

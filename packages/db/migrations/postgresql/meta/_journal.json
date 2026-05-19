@@ -36,6 +36,13 @@
       "when": 1775400000000,
       "tag": "0004_add_user_ddg_bangs",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1779199097716,
+      "tag": "0005_same_manta",
+      "breakpoints": true
     }
   ]
 }

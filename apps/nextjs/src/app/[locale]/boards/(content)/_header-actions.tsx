@@ -53,7 +53,7 @@ export const BoardContentHeaderActions = () => {
 
       <EditModeMenu />
 
-      <HeaderButton href={`/boards/${board.name}/settings`}>
+      <HeaderButton href={`/boards/${board.name}/settings`} data-onboarding-tour-id="board-settings">
         <IconSettings stroke={1.5} />
       </HeaderButton>
 
@@ -173,7 +173,7 @@ const EditModeMenu = () => {
   usePreventLeaveWithDirty(isEditMode);
 
   return (
-    <HeaderButton onClick={toggle} loading={isPending}>
+    <HeaderButton onClick={toggle} loading={isPending} data-onboarding-tour-id="board-edit-mode">
       {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
     </HeaderButton>
   );
@@ -185,7 +185,7 @@ const SelectBoardsMenu = () => {
   return (
     <Menu position="bottom-end" withArrow>
       <Menu.Target>
-        <HeaderButton w="auto" px={4}>
+        <HeaderButton w="auto" px={4} data-onboarding-tour-id="board-switcher">
           <IconReplace stroke={1.5} />
         </HeaderButton>
       </Menu.Target>

@@ -11,6 +11,7 @@ export const CommonNavLink = (props: ClientNavigationLink) =>
 
 const NavLinkHref = (props: NavigationLinkHref) => {
   const pathname = usePathname();
+  const tourId = props["data-onboarding-tour-id"];
   return props.external ? (
     <NavLink
       component="a"
@@ -21,6 +22,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
         borderRadius: 5,
       }}
       target="_blank"
+      data-onboarding-tour-id={tourId}
     />
   ) : (
     <NavLink
@@ -32,6 +34,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       style={{
         borderRadius: 5,
       }}
+      data-onboarding-tour-id={tourId}
     />
   );
 };
@@ -47,6 +50,7 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
       label={props.label}
       leftSection={props.icon}
       defaultOpened={isActive}
+      data-onboarding-tour-id={props["data-onboarding-tour-id"]}
     >
       {props.items.map((item) => (
         <NavLinkHref key={item.label} {...item} />
@@ -58,6 +62,7 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
 interface CommonNavigationLinkProps {
   label: string;
   icon: ReactNode;
+  "data-onboarding-tour-id"?: string;
 }
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {

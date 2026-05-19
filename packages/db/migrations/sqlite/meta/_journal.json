@@ -260,6 +260,13 @@
       "when": 1775400000000,
       "tag": "0036_add_user_ddg_bangs",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "6",
+      "when": 1779199046805,
+      "tag": "0037_equal_retro_girl",
+      "breakpoints": true
     }
   ]
 }

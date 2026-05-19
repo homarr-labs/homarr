@@ -18,6 +18,7 @@ import { FirstDayOfWeek } from "./_components/_first-day-of-week";
 import { PingIconsEnabled } from "./_components/_ping-icons-enabled";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
+import { ResetTours } from "./_components/_reset-tours";
 
 interface Props {
   params: Promise<{
@@ -117,6 +118,16 @@ export default async function EditUserPage(props: Props) {
         <Title order={2}>{tGeneral("item.accessibility")}</Title>
         <PingIconsEnabled user={user} />
       </Stack>
+
+      {session?.user.id === user.id && (
+        <Stack mb="lg">
+          <Title order={2}>{tGeneral("item.onboardingTours.title")}</Title>
+          <ResetTours
+            completedManageTour={user.completedManageTour}
+            completedBoardTour={user.completedBoardTour}
+          />
+        </Stack>
+      )}
 
       <DangerZoneRoot>
         <DangerZoneItem
