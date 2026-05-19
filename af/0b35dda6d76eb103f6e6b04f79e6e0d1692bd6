@@ -1,0 +1,20 @@
+.oxlintrc.json
+  s_58c3289739dea6::t_b14e9ae170647d 27-28
+  s_58c3289739dea6::t_dc6609a8c50b87 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "af0b35dda6d76eb103f6e6b04f79e6e0d1692bd6",
+  "prompts": {},
+  "sessions": {
+    "s_58c3289739dea6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1c33c814bffeMn7JGv3RDL6KCM",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
