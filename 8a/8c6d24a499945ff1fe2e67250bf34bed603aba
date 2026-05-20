@@ -1,0 +1,35 @@
+apps/nextjs/src/app/[locale]/manage/users/page.tsx
+  s_a3055e40d16f76::t_37e840b423255d 10
+  s_a3055e40d16f76::t_30ff453dcce0ec 7,9,32,37-40,44-49
+  s_a3055e40d16f76::t_b322959a3248c1 41-43
+apps/nextjs/src/app/[locale]/manage/users/invites/page.tsx
+  s_a3055e40d16f76::t_fae28f5e43370c 6,8-10,23,25,27-35,37
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  s_a3055e40d16f76::t_56a1deb01f0bc0 4,11,19,75
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  s_a3055e40d16f76::t_473d4cc55c7ee0 4,13,75
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-create-button.tsx
+  s_a3055e40d16f76::t_697dfbf1ebe490 9-10,15-19
+  s_a3055e40d16f76::t_4ebf1bd1105f0c 1-8,11-14,20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "8a8c6d24a499945ff1fe2e67250bf34bed603aba",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_a3055e40d16f76": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "62ac77f0-9510-4c61-82de-45df0f952cdc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
