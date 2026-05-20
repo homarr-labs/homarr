@@ -193,3 +193,5 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  # Renovate security update: turbo@2.9.14
+  - turbo@2.9.14
