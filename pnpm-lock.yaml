@@ -214,8 +214,8 @@ catalogs:
       specifier: ^11.17.0
       version: 11.17.0
     '@turbo/gen':
-      specifier: ^2.9.12
-      version: 2.9.12
+      specifier: ^2.9.14
+      version: 2.9.14
     '@types/adm-zip':
       specifier: 0.5.8
       version: 0.5.8
@@ -367,8 +367,8 @@ catalogs:
       specifier: ^10.1.8
       version: 10.1.8
     eslint-config-turbo:
-      specifier: ^2.9.12
-      version: 2.9.12
+      specifier: ^2.9.14
+      version: 2.9.14
     eslint-plugin-import:
       specifier: ^2.32.0
       version: 2.32.0
@@ -624,7 +624,7 @@ importers:
         version: 11.14.0
       '@turbo/gen':
         specifier: 'catalog:'
-        version: 2.9.12(@types/node@24.12.4)
+        version: 2.9.14(@types/node@24.12.4)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@7.1.12(@types/node@24.12.4)(sass@1.99.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
@@ -2877,7 +2877,7 @@ importers:
         version: 10.1.8(eslint@10.3.0)
       eslint-config-turbo:
         specifier: 'catalog:'
-        version: 2.9.12(eslint@10.3.0)(turbo@2.9.14)
+        version: 2.9.14(eslint@10.3.0)(turbo@2.9.14)
       eslint-plugin-import:
         specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.58.2(eslint@10.3.0)(typescript@5.9.3))(eslint@10.3.0)
@@ -5443,8 +5443,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/gen@2.9.12':
-    resolution: {integrity: sha512-p0lmM+9SR9hO8L+7ta13YAdOg4lQOkNKR5o+/jY6cqc/8FGDbPrwOT3+K1xd6LRSnXEdtRGFWPi8n7XOfPHHRw==}
+  '@turbo/gen@2.9.14':
+    resolution: {integrity: sha512-TkvUzfbJj2zB0WaybYd/hzADLqq97ru0OQCiQ1DDnul5spSTq5I8If21K3vUAjKIWAQbCjDqZIPrS1IPG5bLyA==}
     hasBin: true
 
   '@turbo/linux-64@2.9.14':
@@ -6713,9 +6713,6 @@ packages:
   dom-walk@0.1.2:
     resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
 
-  dompurify@3.4.2:
-    resolution: {integrity: sha512-lHeS9SA/IKeIFFyYciHBr2n0v1VMPlSj843HdLOwjb2OxNwdq9Xykxqhk+FE42MzAdHvInbAolSE4mhahPpjXA==}
-
   dompurify@3.4.3:
     resolution: {integrity: sha512-VVwJidIJcp1hpg2OMXML3ZVRPYSZiq4aX7qBh83BSIpOaRDqI+qxhXjjIWnpzkOXhmp0L81lnoME1mnCc9H48A==}
 
@@ -6992,8 +6989,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-config-turbo@2.9.12:
-    resolution: {integrity: sha512-QnAiTMzCz2mP2EGGVLx1j6mDsKRhMaY424IqJql3z1AQ06OSlXYl3aSIQEwQJEH5RgW/fHx9VK213BF3ZwO8Sw==}
+  eslint-config-turbo@2.9.14:
+    resolution: {integrity: sha512-8bAXNDwtmHV7CuSDX+FB9+TslZEP8qJoNWY9FQTEhyO42bRimcExxwOh1+K2H2JV2VFXJrkt1KxyJmy2xm8Ukw==}
     peerDependencies:
       eslint: '>6.6.0'
       turbo: '>2.0.0'
@@ -7050,8 +7047,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-turbo@2.9.12:
-    resolution: {integrity: sha512-Ilv1DTYyghdIdTUsW/VbjVTYKt1Hfs7X2C+rq/i4u7ZVofzcHZwk/3QwrV5UyOGADmxmWNyD+xcRS7+ZE5arQg==}
+  eslint-plugin-turbo@2.9.14:
+    resolution: {integrity: sha512-ROTlsO1JBJLATxtDNd7t22vviSb0hD8fKnjOO0WRgtxJW3VBRNO3BLAC129GPZSvEvtMH/f71Y2TzrqGPjLpEw==}
     peerDependencies:
       eslint: '>6.6.0'
       turbo: '>2.0.0'
@@ -10574,18 +10571,6 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  ws@8.20.0:
-    resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.20.1:
     resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
@@ -11441,7 +11426,7 @@ snapshots:
       eventemitter2: 6.4.9
       http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.24.6)
       tough-cookie: 5.1.2
-      ws: 8.20.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -11757,7 +11742,7 @@ snapshots:
       '@types/stream-buffers': 3.0.7
       form-data: 4.0.5
       hpagent: 1.2.0
-      isomorphic-ws: 5.0.0(ws@8.20.0)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       js-yaml: 4.1.1
       jsonpath-plus: 10.3.0
       node-fetch: 2.7.0
@@ -11766,7 +11751,7 @@ snapshots:
       socks-proxy-agent: 8.0.5
       stream-buffers: 3.0.3
       tar-fs: 3.1.2
-      ws: 8.20.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bare-buffer
       - bufferutil
@@ -13244,7 +13229,7 @@ snapshots:
   '@turbo/darwin-arm64@2.9.14':
     optional: true
 
-  '@turbo/gen@2.9.12(@types/node@24.12.4)':
+  '@turbo/gen@2.9.14(@types/node@24.12.4)':
     dependencies:
       '@inquirer/prompts': 7.10.1(@types/node@24.12.4)
       esbuild: 0.25.12
@@ -14647,10 +14632,6 @@ snapshots:
 
   dom-walk@0.1.2: {}
 
-  dompurify@3.4.2:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
   dompurify@3.4.3:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -14961,10 +14942,10 @@ snapshots:
     dependencies:
       eslint: 10.3.0
 
-  eslint-config-turbo@2.9.12(eslint@10.3.0)(turbo@2.9.14):
+  eslint-config-turbo@2.9.14(eslint@10.3.0)(turbo@2.9.14):
     dependencies:
       eslint: 10.3.0
-      eslint-plugin-turbo: 2.9.12(eslint@10.3.0)(turbo@2.9.14)
+      eslint-plugin-turbo: 2.9.14(eslint@10.3.0)(turbo@2.9.14)
       turbo: 2.9.14
 
   eslint-import-resolver-node@0.3.9:
@@ -15065,7 +15046,7 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-turbo@2.9.12(eslint@10.3.0)(turbo@2.9.14):
+  eslint-plugin-turbo@2.9.14(eslint@10.3.0)(turbo@2.9.14):
     dependencies:
       dotenv: 16.0.3
       eslint: 10.3.0
@@ -15913,9 +15894,9 @@ snapshots:
       - '@noble/hashes'
       - canvas
 
-  isomorphic-ws@5.0.0(ws@8.20.0):
+  isomorphic-ws@5.0.0(ws@8.20.1):
     dependencies:
-      ws: 8.20.0
+      ws: 8.20.1
 
   issue-parser@7.0.1:
     dependencies:
@@ -18214,7 +18195,7 @@ snapshots:
       classnames: 2.5.1
       css.escape: 1.5.1
       deep-extend: 0.6.0
-      dompurify: 3.4.2
+      dompurify: 3.4.3
       ieee754: 1.2.1
       immutable: 3.8.2
       js-file-download: 0.4.12
@@ -19029,8 +19010,6 @@ snapshots:
       strip-ansi: 7.1.2
 
   wrappy@1.0.2: {}
-
-  ws@8.20.0: {}
 
   ws@8.20.1: {}
 
