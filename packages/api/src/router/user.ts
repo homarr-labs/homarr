@@ -612,15 +612,12 @@ export const userRouter = createTRPCRouter({
   completeTour: protectedProcedure
     .input(z.object({ tour: z.enum(["manage", "board"]) }))
     .mutation(async ({ input, ctx }) => {
-      const columnMap: Record<string, Record<string, boolean>> = {
+      const columnByTour = {
         manage: { completedManageTour: true },
         board: { completedBoardTour: true },
-      };
+      } as const;
 
-      await ctx.db
-        .update(users)
-        .set(columnMap[input.tour]!)
-        .where(eq(users.id, ctx.session.user.id));
+      await ctx.db.update(users).set(columnByTour[input.tour]).where(eq(users.id, ctx.session.user.id));
     }),
   resetTours: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db
