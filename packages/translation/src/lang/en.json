@@ -4950,76 +4950,69 @@
     }
   },
   "onboardingTour": {
-    "skipHold": "Hold to skip — I know what I'm doing",
-    "learnMore": "Learn more in the docs",
-    "forkYes": "Yes, let's go!",
-    "forkNo": "Not now",
+    "learnMore": "Read the docs",
+    "next": "Next",
+    "prev": "Back",
+    "done": "Done",
+    "skip": "Skip tour",
     "manage": {
       "welcome": {
-        "title": "Welcome to Management",
-        "description": "This is the management area where you configure everything in Homarr — boards, apps, integrations, users, and server settings. Let's walk through what each section does."
+        "title": "Welcome to Homarr!",
+        "description": "This is your control center. From here you manage boards, apps, integrations, users, and server settings. Let's take a tour of each section."
       },
-      "boards": {
-        "title": "Boards",
-        "description": "Boards are your dashboards. Each board has a unique name that becomes part of its URL. Boards can be public or private and support responsive layouts, background images, custom CSS, and per-user access control."
+      "boardsList": {
+        "title": "Your Boards",
+        "description": "Here are all your dashboards. Each board has its own layout, background, and access settings. You can see who created each one and whether it's public or private."
       },
-      "apps": {
-        "title": "Apps",
-        "description": "Apps represent links to your services. Each app needs a name and icon (choose from 11K+ built-in icons). You can set a separate ping URL for health checks and add apps to boards as widgets or bookmarks."
+      "boardsCreate": {
+        "title": "Create a Board",
+        "description": "Click here to create a new dashboard or import one from a previous Homarr installation. Each board gets its own URL you can share."
       },
-      "integrations": {
-        "title": "Integrations",
-        "description": "Integrations connect Homarr to third-party apps you run — like Sonarr, Radarr, Plex, and 50+ more. Secrets are encrypted and never exposed to the client. Connections are validated before saving."
+      "appsList": {
+        "title": "Your Apps",
+        "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
       },
-      "integrationsFork": {
-        "title": "Try it now?",
-        "question": "Would you like to add your first integration?"
+      "appsCreate": {
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
       },
-      "searchEngines": {
-        "title": "Search Engines",
-        "description": "Configure custom search providers accessible via the search bar or Ctrl+K. Define a name, shortcut prefix, and URL template. Supports integration-based search for apps like Jellyseerr and Overseerr."
+      "integrationsList": {
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
       },
-      "medias": {
-        "title": "Media",
-        "description": "Upload custom images for app icons or board branding. Media is stored in the database and available in the icon picker when creating apps."
+      "integrationsCreate": {
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
       },
-      "users": {
-        "title": "Users & Groups",
-        "description": "Manage users, groups, and permissions. Users can belong to multiple groups. Groups control board access, integration permissions, and admin privileges. You can also create invite links for self-onboarding."
+      "usersList": {
+        "title": "Your Users",
+        "description": "See everyone who has access. Organize users into groups and control who can view or edit each board."
       },
-      "usersFork": {
-        "title": "Try it now?",
-        "question": "Would you like to create a new user?"
-      },
-      "settings": {
-        "title": "Server Settings",
-        "description": "Configure global defaults — analytics, SEO/crawling directives, default home boards, color scheme, language, and app status behavior. These apply across the entire Homarr instance."
-      },
-      "complete": {
-        "title": "You're all set!",
-        "description": "You've seen everything in the management area. Next, head to your board to start adding apps and widgets, or explore the docs for advanced topics like the API, certificates, and background tasks."
+      "usersCreate": {
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
       }
     },
     "board": {
       "welcome": {
-        "title": "Welcome to your Board",
-        "description": "This is your dashboard — a drag-and-drop canvas where you organize apps and widgets. Use the search bar or Ctrl+K to quickly find apps, integrations, boards, and actions."
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
       },
       "editMode": {
         "title": "Edit Mode",
-        "description": "Toggle edit mode to add, move, and resize items. In edit mode you can add widgets, apps, categories, and dynamic sections. Drag items to reposition, use the corner handle to resize. Don't forget to exit edit mode to save!"
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
       },
       "settings": {
         "title": "Board Settings",
-        "description": "Customize this board's name, layout columns, background image, colors, custom CSS, and access control. You can set boards as public or private and control who can view or modify them."
+        "description": "Change this board's name, columns, background, colors, and who can access it. Each board can be public or private."
       },
       "switcher": {
-        "title": "Board Switcher",
-        "description": "Switch between your boards. You can create multiple boards for different purposes — one for media, one for networking, or one per user."
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
       },
       "userMenu": {
         "title": "Your Profile",
-        "description": "Quick access to your preferences — change color scheme, language, home board, and search settings. You can also navigate to the management area from here."
+        "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }
