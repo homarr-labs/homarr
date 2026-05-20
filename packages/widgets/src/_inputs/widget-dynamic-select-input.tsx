@@ -56,9 +56,7 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
         .concat(
           currentOption !== null &&
             !selectOptions.some((option) =>
-              typeof option === "string"
-                ? option === currentOption.value
-                : option.value === currentOption.value,
+              typeof option === "string" ? option === currentOption.value : option.value === currentOption.value,
             )
             ? {
                 value: currentOption.value,
