@@ -279,7 +279,7 @@
       "idx": 39,
       "version": "5",
       "when": 1779199104477,
-      "tag": "0039_strong_lizard",
+      "tag": "0039_add_user_onboarding_tour_status",
       "breakpoints": true
     }
   ]
