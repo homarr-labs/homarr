@@ -72,7 +72,7 @@ catalog:
   "@trpc/react-query": ^11.17.0
   "@trpc/server": ^11.17.0
   "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.12
+  "@turbo/gen": ^2.9.14
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -121,9 +121,9 @@ catalog:
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
-  eslint: ^10.3.0
+  eslint: ^10.4.0
   eslint-config-prettier: ^10.1.8
-  eslint-config-turbo: ^2.9.12
+  eslint-config-turbo: ^2.9.14
   eslint-plugin-import: ^2.32.0
   eslint-plugin-jsx-a11y: ^6.10.2
   eslint-plugin-react: ^7.37.5
@@ -173,7 +173,7 @@ catalog:
   trpc-to-openapi: ^3.2.0
   tsdav: ^2.2.2
   tsx: 4.20.4
-  turbo: ^2.9.12
+  turbo: ^2.9.14
   typescript: ^5.9.3
   typescript-eslint: ^8.58.2
   undici: 7.24.6
@@ -193,3 +193,5 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  # Renovate security update: turbo@2.9.14
+  - turbo@2.9.14
