@@ -1,0 +1,28 @@
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_c85821d37d2ac8::t_1eaae793a106b0 136
+  s_c85821d37d2ac8::t_8e19a8aa72d4ac 153
+  s_c85821d37d2ac8::t_ad9eea153fcc33 23
+  s_c85821d37d2ac8::t_5fd96e4878ce14 25-30
+  s_c85821d37d2ac8::t_5e8a8e67eef45a 168
+  s_c85821d37d2ac8::t_3ecb180602965c 6
+  s_c85821d37d2ac8::t_70512d0247c5f2 145
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_c85821d37d2ac8::t_a2d07c9c6bd4b8 39
+  s_c85821d37d2ac8::t_501a6dad7ea13f 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "1220fbf6adb7987ef6b3df6f42de404fb41e3706",
+  "prompts": {},
+  "sessions": {
+    "s_c85821d37d2ac8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f27cd5c6-4a58-411c-af64-0675652a4c37",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
