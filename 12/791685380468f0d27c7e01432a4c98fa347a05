@@ -1,0 +1,25 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  ai_agent 10,13,24-27,32
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  ai_agent 40,88-96,101-103
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  ai_agent 4-5,7-14,17,20,27-46,49,51-65,67-72,74-95,97-98,106-109,113-114,116-120,124-125,127-131,135-141,146-147,149-153,157-158,160-164,168-174,179-180,182,184-188,192-195,198-200,207,210-215,218
+apps/nextjs/src/components/layout/header.tsx
+  ai_agent 2,9,29,31,35,37
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  ai_agent 26,44-48,51-59
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  ai_agent 14,51-55,58,60,65
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  ai_agent 125
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  ai_agent 15-16,81-92
+apps/nextjs/src/components/layout/navigation-link.tsx
+  ai_agent 5,13-17,21,27,37,40,46-47,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "12791685380468f0d27c7e01432a4c98fa347a05",
+  "prompts": {}
+}
