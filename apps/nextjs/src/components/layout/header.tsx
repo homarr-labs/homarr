@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
-import { AppShellHeader, Box, Group, UnstyledButton } from "@mantine/core";
+import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
 import { Spotlight } from "@homarr/spotlight";
 import { Link } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
+import { TourTarget } from "./header/tour-target";
 import { UserButton } from "./header/user";
 import { HomarrLogoWithTitle } from "./logo/homarr-logo";
 
@@ -25,15 +26,15 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
             {logo ?? <HomarrLogoWithTitle size="md" />}
           </UnstyledButton>
         </Group>
-        <Box data-onboarding-tour-id="board-search">
+        <TourTarget id="board-search">
           <DesktopSearchInput />
-        </Box>
+        </TourTarget>
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
           {actions}
           <MobileSearchButton />
-          <Box data-onboarding-tour-id="board-user-menu">
+          <TourTarget id="board-user-menu">
             <UserButton />
-          </Box>
+          </TourTarget>
         </Group>
       </Group>
       <Spotlight />

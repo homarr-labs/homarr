@@ -11,6 +11,7 @@ import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -47,19 +48,21 @@ export default async function AppsPage(props: AppsPageProps) {
         <Group justify="space-between" align="center">
           <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />
           {session.user.permissions.includes("app-create") && (
-            <MobileAffixButton component={Link} href="/manage/apps/new">
-              {t("page.create.title")}
-            </MobileAffixButton>
+            <TourTarget id="manage-apps-create">
+              <MobileAffixButton component={Link} href="/manage/apps/new">
+                {t("page.create.title")}
+              </MobileAffixButton>
+            </TourTarget>
           )}
         </Group>
-        {apps.length === 0 && <AppNoResults />}
-        {apps.length > 0 && (
+        <TourTarget id="manage-apps-list">
           <Stack gap="sm">
+            {apps.length === 0 && <AppNoResults />}
             {apps.map((app) => (
               <AppCard key={app.id} app={app} />
             ))}
           </Stack>
-        )}
+        </TourTarget>
 
         {/* Added margin to not hide pagination behind affix-button */}
         <Group justify="end" mb={48}>

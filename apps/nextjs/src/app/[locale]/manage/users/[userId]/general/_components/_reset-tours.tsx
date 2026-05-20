@@ -7,14 +7,10 @@ import { clientApi } from "@homarr/api/client";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-interface ResetToursProps {
-  completedManageTour: boolean;
-  completedBoardTour: boolean;
-}
-
-export const ResetTours = ({ completedManageTour, completedBoardTour }: ResetToursProps) => {
+export const ResetTours = () => {
   const t = useScopedI18n("management.page.user.setting.general.item.onboardingTours");
   const utils = clientApi.useUtils();
+  const { data: tourStatus } = clientApi.user.getTourStatus.useQuery();
   const { mutate: resetTours, isPending } = clientApi.user.resetTours.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -25,15 +21,15 @@ export const ResetTours = ({ completedManageTour, completedBoardTour }: ResetTou
     },
   });
 
-  const tourStatusMap: Record<string, { key: "management" | "dashboard"; completed: boolean }> = {
-    management: { key: "management", completed: completedManageTour },
-    dashboard: { key: "dashboard", completed: completedBoardTour },
-  };
+  const tours = [
+    { key: "management" as const, completed: tourStatus?.completedManageTour ?? false },
+    { key: "dashboard" as const, completed: tourStatus?.completedBoardTour ?? false },
+  ];
 
   return (
     <Stack gap="xs">
       <Group gap="xs">
-        {Object.values(tourStatusMap).map(({ key, completed }) => (
+        {tours.map(({ key, completed }) => (
           <Badge key={key} color={completed ? "green" : "gray"} variant="light">
             {t(`name.${key}`)}: {completed ? t("status.completed") : t("status.notStarted")}
           </Badge>

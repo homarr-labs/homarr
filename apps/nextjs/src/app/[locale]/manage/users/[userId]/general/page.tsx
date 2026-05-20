@@ -122,10 +122,7 @@ export default async function EditUserPage(props: Props) {
       {session?.user.id === user.id && (
         <Stack mb="lg">
           <Title order={2}>{tGeneral("item.onboardingTours.title")}</Title>
-          <ResetTours
-            completedManageTour={user.completedManageTour}
-            completedBoardTour={user.completedBoardTour}
-          />
+          <ResetTours />
         </Stack>
       )}
 

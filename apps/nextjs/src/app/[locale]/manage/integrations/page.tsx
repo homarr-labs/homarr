@@ -37,6 +37,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
@@ -84,18 +85,22 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
                 </IntegrationSelectMenu>
               </Box>
 
-              <Box visibleFrom="md">
-                <IntegrationSelectMenu>
-                  <MenuTarget>
-                    <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                  </MenuTarget>
-                </IntegrationSelectMenu>
-              </Box>
+              <TourTarget id="manage-integrations-create">
+                <Box visibleFrom="md">
+                  <IntegrationSelectMenu>
+                    <MenuTarget>
+                      <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                    </MenuTarget>
+                  </IntegrationSelectMenu>
+                </Box>
+              </TourTarget>
             </>
           )}
         </Group>
 
-        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+        <TourTarget id="manage-integrations-list">
+          <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+        </TourTarget>
       </Stack>
     </ManageContainer>
   );

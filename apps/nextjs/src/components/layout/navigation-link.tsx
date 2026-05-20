@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { NavLink } from "@mantine/core";
 
 import { Link } from "@homarr/ui";
@@ -9,20 +10,22 @@ import { Link } from "@homarr/ui";
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
 
+const TourTarget = ({ id, children }: { id?: string; children: ReactNode }) => {
+  if (!id) return <>{children}</>;
+  return <OnboardingTour.Target id={id}>{children}</OnboardingTour.Target>;
+};
+
 const NavLinkHref = (props: NavigationLinkHref) => {
   const pathname = usePathname();
   const tourId = props["data-onboarding-tour-id"];
-  return props.external ? (
+  const link = props.external ? (
     <NavLink
       component="a"
       label={props.label}
       leftSection={props.icon}
       href={props.href}
-      style={{
-        borderRadius: 5,
-      }}
+      style={{ borderRadius: 5 }}
       target="_blank"
-      data-onboarding-tour-id={tourId}
     />
   ) : (
     <NavLink
@@ -31,32 +34,23 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       leftSection={props.icon}
       href={props.href}
       active={pathname === props.href}
-      style={{
-        borderRadius: 5,
-      }}
-      data-onboarding-tour-id={tourId}
+      style={{ borderRadius: 5 }}
     />
   );
+  return <TourTarget id={tourId}>{link}</TourTarget>;
 };
 
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   const pathname = usePathname();
   const isActive = props.items.some((item) => item.href === pathname);
-  return (
-    <NavLink
-      style={{
-        borderRadius: 5,
-      }}
-      label={props.label}
-      leftSection={props.icon}
-      defaultOpened={isActive}
-      data-onboarding-tour-id={props["data-onboarding-tour-id"]}
-    >
+  const nav = (
+    <NavLink style={{ borderRadius: 5 }} label={props.label} leftSection={props.icon} defaultOpened={isActive}>
       {props.items.map((item) => (
         <NavLinkHref key={item.label} {...item} />
       ))}
     </NavLink>
   );
+  return <TourTarget id={props["data-onboarding-tour-id"]}>{nav}</TourTarget>;
 };
 
 interface CommonNavigationLinkProps {

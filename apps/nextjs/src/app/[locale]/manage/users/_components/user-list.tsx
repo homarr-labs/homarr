@@ -12,6 +12,8 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
+
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
   credentialsProviderEnabled: boolean;
@@ -69,12 +71,6 @@ export const UserListComponent = ({ initialUserList, credentialsProviderEnabled 
     enableFullScreenToggle: false,
     layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
-    renderTopToolbarCustomActions: () =>
-      credentialsProviderEnabled ? (
-        <Button component={Link} href="/manage/users/create">
-          {t("management.page.user.create.title")}
-        </Button>
-      ) : null,
     state: {
       isLoading,
     },
@@ -82,7 +78,18 @@ export const UserListComponent = ({ initialUserList, credentialsProviderEnabled 
 
   return (
     <>
-      <Title mb="md">{tUserList("title")}</Title>
+      <Group justify="space-between" align="center" mb="md">
+        <TourTarget id="manage-users-list">
+          <Title>{tUserList("title")}</Title>
+        </TourTarget>
+        {credentialsProviderEnabled && (
+          <TourTarget id="manage-users-create">
+            <Button component={Link} href="/manage/users/create">
+              {t("management.page.user.create.title")}
+            </Button>
+          </TourTarget>
+        )}
+      </Group>
       <MantineReactTable table={table} />
     </>
   );

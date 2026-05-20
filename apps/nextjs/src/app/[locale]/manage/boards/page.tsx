@@ -23,6 +23,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
@@ -40,16 +41,22 @@ export default async function ManageBoardsPage() {
       <Stack>
         <Group justify="space-between">
           <Title mb="md">{t("title")}</Title>
-          {canCreateBoards && <CreateBoardButton />}
+          {canCreateBoards && (
+            <TourTarget id="manage-boards-create">
+              <CreateBoardButton />
+            </TourTarget>
+          )}
         </Group>
 
-        <Grid mb={{ base: "xl", md: 0 }}>
-          {boards.map((board) => (
-            <GridCol span={{ base: 12, md: 6 }} key={board.id}>
-              <BoardCard board={board} />
-            </GridCol>
-          ))}
-        </Grid>
+        <TourTarget id="manage-boards-list">
+          <Grid mb={{ base: "xl", md: 0 }}>
+            {boards.map((board) => (
+              <GridCol span={{ base: 12, md: 6 }} key={board.id}>
+                <BoardCard board={board} />
+              </GridCol>
+            ))}
+          </Grid>
+        </TourTarget>
       </Stack>
     </ManageContainer>
   );
