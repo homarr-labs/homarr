@@ -29,11 +29,13 @@ const BoardTourWrapper = ({ hasSession, children }: PropsWithChildren<{ hasSessi
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  withTour?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
   getInitialBoardAsync: getInitialBoard,
+  withTour = false,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -67,7 +69,7 @@ export const createBoardLayout = <TParams extends Params>({
           <EditModeProvider>
             <BoardMantineProvider defaultColorScheme={colorScheme}>
               <CustomCss />
-              <BoardTourWrapper hasSession={!!session}>
+              <BoardTourWrapper hasSession={withTour && !!session}>
                 <ClientShell hasNavigation={false}>
                   <MainHeader
                     logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
