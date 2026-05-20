@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import type { OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
+import type { OnboardingTourFocusRevealProps, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { useMediaQuery } from "@mantine/hooks";
 import {
   IconAffiliateFilled,
@@ -36,7 +36,7 @@ const stepRoutes: Record<string, string> = {
   "manage-users-create": "/manage/users",
 };
 
-const usersStepFocusRevealProps = {
+const usersStepFocusRevealProps: OnboardingTourFocusRevealProps = {
   withReveal: false,
   popoverProps: {
     position: "bottom",

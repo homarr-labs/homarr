@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import type { OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
+import type { OnboardingTourController, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Button, Center, Group, Image, Kbd, Text } from "@mantine/core";
 import type { FloatingPosition } from "@mantine/core";
@@ -20,7 +20,14 @@ interface TourShellProps extends PropsWithChildren {
   position?: FloatingPosition | Record<string, FloatingPosition>;
 }
 
-type TourController = Parameters<NonNullable<React.ComponentProps<typeof OnboardingTour>["nextStepNavigation"]>>[0];
+type TourController = OnboardingTourController;
+
+const stepIndexFromController = (controller: TourController) => controller.currentStepIndex ?? 0;
+
+const stepAtOffset = (controller: TourController, offset: number) => {
+  const index = stepIndexFromController(controller) + offset;
+  return controller.tour[index];
+};
 
 const pollForElement = (targetId: string, callback: () => void) => {
   const interval = setInterval(() => {
@@ -126,7 +133,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         <>
           <Group justify="center" gap={4} py={4}>
             <Text size="sm" fw={600}>
-              {(controller.currentStepIndex ?? 0) + 1}
+              {stepIndexFromController(controller) + 1}
             </Text>
             <Text size="sm" c="dimmed">
               /
@@ -135,7 +142,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
               {controller.tour.length}
             </Text>
           </Group>
-          {controller.currentStepIndex === 0 && (
+          {stepIndexFromController(controller) === 0 && (
             <Center py="xs">
               <Image src={homarrLogoPath} alt="Homarr" w={64} h={64} fit="contain" />
             </Center>
@@ -143,7 +150,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         </>
       )}
       nextStepNavigation={(controller) => {
-        const nextStep = controller.tour[controller.currentStepIndex + 1];
+        const nextStep = stepAtOffset(controller, 1);
         const action = bindForwardAction(controller, () => {
           navigateAndAdvance(controller.currentStep?.id, nextStep?.id, () => controller.nextStep());
         });
@@ -158,7 +165,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
           size="sm"
           variant="default"
           onClick={() => {
-            const prevStep = controller.tour[controller.currentStepIndex - 1];
+            const prevStep = stepAtOffset(controller, -1);
             navigateAndAdvance(controller.currentStep?.id, prevStep?.id, () => controller.prevStep());
           }}
         >
