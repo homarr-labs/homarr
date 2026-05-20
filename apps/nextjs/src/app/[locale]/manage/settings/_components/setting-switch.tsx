@@ -15,7 +15,7 @@ export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
   disabled,
 }: {
   form: Modify<
-    UseFormReturnType<TFormValue, () => TFormValue>,
+    UseFormReturnType<TFormValue, TFormValue>,
     {
       setFieldValue: (key: keyof TFormValue, value: (previous: boolean) => boolean) => void;
     }

@@ -25,8 +25,21 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 300);
   const { isPending, options: selectOptions } = options.useOptions(debouncedSearch, form.values.integrationIds);
-  const value = inputProps.value as DynamicSelectOption | null;
+  const currentOption = inputProps.value as DynamicSelectOption | null;
   const onChange = inputProps.onChange as (value: DynamicSelectOption | null) => void;
+
+  const getLabelForValue = (selectedValue: string) => {
+    const matched = selectOptions.find((option) =>
+      typeof option === "string" ? option === selectedValue : option.value === selectedValue,
+    );
+    if (!matched) {
+      return selectedValue;
+    }
+    if (typeof matched === "string") {
+      return matched;
+    }
+    return translateIfNecessary(t, matched.label) ?? selectedValue;
+  };
 
   return (
     <Select
@@ -41,14 +54,15 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
               },
         )
         .concat(
-          typeof value === "object" &&
-            value !== null &&
+          currentOption !== null &&
             !selectOptions.some((option) =>
-              typeof option === "string" ? option === value.value : option.value === value.value,
+              typeof option === "string"
+                ? option === currentOption.value
+                : option.value === currentOption.value,
             )
             ? {
-                value: value.value,
-                label: value.label,
+                value: currentOption.value,
+                label: currentOption.label,
               }
             : [],
         )}
@@ -74,19 +88,17 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
       description={options.withDescription ? tWidget("description") : undefined}
       searchable
       {...inputProps}
-      value={value?.value ?? null}
-      onChange={(value) =>
-        onChange(
-          value
-            ? {
-                value,
-                label:
-                  selectOptions.filter((option) => typeof option === "object").find((option) => option.value === value)
-                    ?.label ?? value,
-              }
-            : null,
-        )
-      }
+      value={currentOption === null ? null : currentOption.value}
+      onChange={(selectedValue: string | null) => {
+        if (selectedValue === null) {
+          onChange(null);
+          return;
+        }
+        onChange({
+          value: selectedValue,
+          label: getLabelForValue(selectedValue),
+        });
+      }}
     />
   );
 };

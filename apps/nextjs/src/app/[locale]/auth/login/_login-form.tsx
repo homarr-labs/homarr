@@ -9,7 +9,7 @@ import { z } from "zod/v4";
 
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import type { useForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -162,7 +162,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 
 interface SubmitButtonProps {
   isPending: boolean;
-  form: ReturnType<typeof useForm<FormType, (values: FormType) => FormType>>;
+  form: UseFormReturnType<FormType>;
   provider: "credentials" | "ldap";
 }
 
