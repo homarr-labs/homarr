@@ -20,7 +20,7 @@ export const NoResults = ({ icon: Icon, title, action }: NoResultsProps) => {
         <Text fw={500} size="lg">
           {title}
         </Text>
-        {!action?.hidden && <Anchor href={action?.href}>{action?.label}</Anchor>}
+        {action && !action.hidden && <Anchor href={action.href}>{action.label}</Anchor>}
       </Stack>
     </Card>
   );
