@@ -4,6 +4,13 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
   "exports": {
     "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
     "./infrastructure/env": "./src/infrastructure/env/index.ts",
@@ -21,13 +28,6 @@
     "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts",
     "./infrastructure/http": "./src/infrastructure/http/index.ts",
     "./infrastructure/http/timeout": "./src/infrastructure/http/timeout.ts"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

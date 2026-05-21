@@ -4,17 +4,17 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./shared": "./src/shared.ts",
-    "./env": "./src/env.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
         "src/*"
       ]
     }
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./shared": "./src/shared.ts",
+    "./env": "./src/env.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

@@ -27,11 +27,7 @@
   ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.displayLanguage": "en",
-  "i18n-ally.enabledFrameworks": [
-    "custom"
-  ],
-  "i18n-ally.localesPaths": [
-    "packages/translation/src/lang",
-  ],
-  "i18n-ally.keystyle": "nested",
+  "i18n-ally.enabledFrameworks": ["custom"],
+  "i18n-ally.localesPaths": ["packages/translation/src/lang"],
+  "i18n-ally.keystyle": "nested"
 }

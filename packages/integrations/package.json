@@ -4,18 +4,18 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./test-connection": "./src/base/test-connection/index.ts",
-    "./client": "./src/client.ts",
-    "./types": "./src/types.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
         "src/*"
       ]
     }
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./test-connection": "./src/base/test-connection/index.ts",
+    "./client": "./src/client.ts",
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

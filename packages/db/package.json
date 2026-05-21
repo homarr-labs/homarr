@@ -4,6 +4,8 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "exports": {
     ".": "./index.ts",
     "./collection": "./collection.ts",
@@ -12,8 +14,6 @@
     "./queries": "./queries/index.ts",
     "./validationSchemas": "./validationSchemas.ts"
   },
-  "main": "./index.ts",
-  "types": "./index.ts",
   "scripts": {
     "build": "pnpm run build:sqlite && pnpm run build:mysql && pnpm run build:postgresql",
     "build:mysql": "esbuild migrations/mysql/migrate.ts --bundle --platform=node --outfile=migrations/mysql/migrate.cjs",

@@ -4,6 +4,8 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
@@ -12,8 +14,6 @@
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts"
   },
-  "main": "./index.ts",
-  "types": "./index.ts",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt --check .",

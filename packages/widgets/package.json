@@ -4,18 +4,18 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts",
-    "./prefetch": "./src/prefetch.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
         "src/*"
       ]
     }
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./errors": "./src/errors/component.tsx",
+    "./modals": "./src/modals/index.ts",
+    "./prefetch": "./src/prefetch.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

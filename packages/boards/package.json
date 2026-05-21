@@ -4,17 +4,17 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    "./context": "./src/context.tsx",
-    "./updater": "./src/updater.ts",
-    "./edit-mode": "./src/edit-mode.tsx"
-  },
   "typesVersions": {
     "*": {
       "*": [
         "src/*"
       ]
     }
+  },
+  "exports": {
+    "./context": "./src/context.tsx",
+    "./updater": "./src/updater.ts",
+    "./edit-mode": "./src/edit-mode.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

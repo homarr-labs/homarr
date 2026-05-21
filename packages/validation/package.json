@@ -4,15 +4,15 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    "./*": "./src/*.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
         "src/*"
       ]
     }
+  },
+  "exports": {
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

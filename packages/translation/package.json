@@ -4,6 +4,13 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
   "exports": {
     ".": "./index.ts",
     "./client": "./src/client/index.ts",
@@ -11,13 +18,6 @@
     "./middleware": "./src/middleware.ts",
     "./request": "./src/request.ts",
     "./dayjs": "./src/dayjs.ts"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
