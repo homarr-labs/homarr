@@ -1,0 +1,21 @@
+AGENTS.md
+  s_8ed4e617623444::t_03cac0e9f36f22 88-97
+.cursor/rules/habs-monorepo.mdc
+  s_8ed4e617623444::t_519d2b51df353d 58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "2b008b487a7bbcb2fedbaff95fd1a8d70d822095",
+  "prompts": {},
+  "sessions": {
+    "s_8ed4e617623444": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b5feabcefferRxxch6H6eUMAh",
+        "model": "moonshotai/kimi-k2.6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
