@@ -27,11 +27,7 @@ export const UserCreatePasswordFields = ({
         variant={variant}
         {...passwordInputProps}
       />
-      <PasswordInput
-        label={t("passwordConfirm.label")}
-        variant={variant}
-        {...confirmPasswordInputProps}
-      />
+      <PasswordInput label={t("passwordConfirm.label")} variant={variant} {...confirmPasswordInputProps} />
     </Stack>
   );
 };

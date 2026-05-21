@@ -18,8 +18,7 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
   const requirements = useRequirements();
   const strength = useStrength(password);
   const [popoverOpened, setPopoverOpened] = useState(false);
-  const strengthColor =
-    strengthColorMap.find(({ min }) => strength >= min)?.color ?? strengthColorMap[strengthColorMap.length - 1].color;
+  const strengthColor = strengthColorMap.find(({ min }) => strength >= min)?.color ?? "dimmed";
   const checks = (
     <>
       {requirements.map((requirement) => (

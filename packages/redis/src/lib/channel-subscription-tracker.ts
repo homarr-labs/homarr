@@ -42,7 +42,7 @@ export class ChannelSubscriptionTracker {
     // If there are no subscriptions to the channel, subscribe to it
     if (channelSubscriptions.size === 0) {
       logger.debug("Subscribing to redis channel", { channel: channelName });
-      void this.redis.subscribe(channelName);
+      void this.redis?.subscribe(channelName);
     }
 
     logger.debug("Adding redis channel callback", { channel: channelName, id });
@@ -65,7 +65,7 @@ export class ChannelSubscriptionTracker {
       }
 
       logger.debug("Unsubscribing from redis channel", { channel: channelName });
-      void this.redis.unsubscribe(channelName);
+      void this.redis?.unsubscribe(channelName);
       this.subscriptions.delete(channelName);
     };
   }
@@ -75,7 +75,7 @@ export class ChannelSubscriptionTracker {
    */
   private static activateListener() {
     logger.debug("Activating listener");
-    this.redis.on("message", (channel, message) => {
+    this.redis?.on("message", (channel, message) => {
       const channelSubscriptions = this.subscriptions.get(channel);
       if (!channelSubscriptions) {
         logger.warn("Received message on unknown channel", { channel });

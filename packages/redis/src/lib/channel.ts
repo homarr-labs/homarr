@@ -12,7 +12,7 @@ const logger = createLogger({ module: "redisChannel" });
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
 
-const noopSubscription = () => ({ unsubscribe: () => undefined });
+const noopSubscription = (): (() => void) => () => undefined;
 
 /**
  * Creates a new pub/sub channel.
@@ -80,28 +80,28 @@ export const createListChannel = <TItem>(name: string) => {
      * @returns an array of all items
      */
     getAllAsync: async () => {
-      const items = await getSetClient.lrange(listChannelName, 0, -1);
-      return items.map((item) => superjson.parse<TItem>(item));
+      const items = await getSetClient?.lrange(listChannelName, 0, -1);
+      return items?.map((item) => superjson.parse<TItem>(item)) ?? [];
     },
     /**
      * Remove an item from the channels list by item
      * @param item item to remove
      */
     removeAsync: async (item: TItem) => {
-      await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
+      await getSetClient?.lrem(listChannelName, 0, superjson.stringify(item));
     },
     /**
      * Clear all items from the channels list
      */
     clearAsync: async () => {
-      await getSetClient.del(listChannelName);
+      await getSetClient?.del(listChannelName);
     },
     /**
      * Add an item to the channels list
      * @param item item to add
      */
     addAsync: async (item: TItem) => {
-      await getSetClient.lpush(listChannelName, superjson.stringify(item));
+      await getSetClient?.lpush(listChannelName, superjson.stringify(item));
     },
   };
 };
@@ -117,7 +117,7 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @returns data or null if not found
      */
     getAsync: async () => {
-      const data = await getSetClient.get(name);
+      const data = await getSetClient?.get(name);
       return data ? superjson.parse<TData>(data) : null;
     },
     /**
@@ -125,13 +125,13 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @param data data to be stored in the channel
      */
     setAsync: async (data: TData) => {
-      await getSetClient.set(name, superjson.stringify(data));
+      await getSetClient?.set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
-      await getSetClient.del(name);
+      await getSetClient?.del(name);
     },
   };
 };
@@ -151,7 +151,7 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      * @returns data or null if not found or expired
      */
     getAsync: async () => {
-      const data = await getSetClient.get(cacheChannelName);
+      const data = await getSetClient?.get(cacheChannelName);
       if (!data) return null;
 
       const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
@@ -167,13 +167,13 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      * @returns data or new data if not present or expired
      */
     consumeAsync: async (callback: () => Promise<TData>) => {
-      const data = await getSetClient.get(cacheChannelName);
+      const data = await getSetClient?.get(cacheChannelName);
 
       const getNewDataAsync = async () => {
         logger.debug(`Cache miss for channel '${cacheChannelName}'`);
         const newData = await callback();
         const result = { data: newData, timestamp: new Date() };
-        await getSetClient.set(cacheChannelName, superjson.stringify(result));
+        await getSetClient?.set(cacheChannelName, superjson.stringify(result));
         logger.debug(`Cache updated for channel '${cacheChannelName}'`);
         return result;
       };
@@ -208,7 +208,7 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      * @param data data to be stored in the cache channel
      */
     setAsync: async (data: TData) => {
-      await getSetClient.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient?.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
     },
   };
 };
@@ -250,12 +250,12 @@ export const createChannelEventHistory = <TData>(channelName: string, maxElement
       });
     },
     pushAsync: async (data: TData, options = { publish: false }) => {
-      if (options.publish) await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
-      await getSetClient.ltrim(channelName, 0, maxElements);
+      if (options.publish) await publisher?.publish(channelName, superjson.stringify(data));
+      await getSetClient?.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient?.ltrim(channelName, 0, maxElements);
     },
     clearAsync: async () => {
-      await getSetClient.del(channelName);
+      await getSetClient?.del(channelName);
     },
     /**
      * Returns a slice of the available data in the channel.
@@ -264,17 +264,19 @@ export const createChannelEventHistory = <TData>(channelName: string, maxElement
      * @param endIndex End index of the slice, negative values are counted from the end, defaults at end of range.
      */
     getSliceAsync: async (startIndex = 0, endIndex = -1) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
-      return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
+      const range = await getSetClient?.lrange(channelName, startIndex, endIndex);
+      return range?.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item)) ?? [];
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, -1);
-      return itemsInCollection
-        .map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item))
-        .filter((item) => item.timestamp < time);
+      const itemsInCollection = await getSetClient?.lrange(channelName, 0, -1);
+      return (
+        itemsInCollection
+          ?.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item))
+          .filter((item) => item.timestamp < time) ?? []
+      );
     },
     getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
+      return (await getSetClient?.llen(channelName)) ?? 0;
     },
     name: channelName,
   };
@@ -285,11 +287,11 @@ export const createChannelEventHistory = <TData>(channelName: string, maxElement
  */
 export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {
-    const length = await getSetClient.llen(channelName);
-    if (length <= maxElements) {
+    const length = await getSetClient?.llen(channelName);
+    if (!length || length <= maxElements) {
       return;
     }
-    await getSetClient.ltrim(channelName, 0, maxElements - 1);
+    await getSetClient?.ltrim(channelName, 0, maxElements - 1);
   };
 
   return {
@@ -299,37 +301,39 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       });
     },
     publishAndPushAsync: async (data: TData) => {
-      await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await publisher?.publish(channelName, superjson.stringify(data));
+      await getSetClient?.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
       await popElementsOverMaxAsync();
     },
     pushAsync: async (data: TData) => {
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient?.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
       await popElementsOverMaxAsync();
     },
     clearAsync: async () => {
-      await getSetClient.del(channelName);
+      await getSetClient?.del(channelName);
     },
     getLastAsync: async () => {
-      const length = await getSetClient.llen(channelName);
-      const data = await getSetClient.lrange(channelName, length - 1, length);
-      if (data.length !== 1) return null;
+      const length = await getSetClient?.llen(channelName);
+      const data = await getSetClient?.lrange(channelName, (length ?? 0) - 1, length ?? 0);
+      if (data?.length !== 1) return null;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return superjson.parse<{ data: TData; timestamp: Date }>(data[0]!);
     },
     getSliceAsync: async (startIndex: number, endIndex: number) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
-      return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
+      const range = await getSetClient?.lrange(channelName, startIndex, endIndex);
+      return range?.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item)) ?? [];
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      const length = await getSetClient.llen(channelName);
+      const length = await getSetClient?.llen(channelName);
       const items: TData[] = [];
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, length - 1);
+      const itemsInCollection = await getSetClient?.lrange(channelName, 0, (length ?? 0) - 1);
 
-      for (let i = 0; i < length - 1; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(itemsInCollection[i]!);
+      if (!itemsInCollection) return items;
+
+      for (const item of itemsInCollection) {
+        if (!item) continue;
+        const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(item);
         if (deserializedItem.timestamp < time) {
           continue;
         }
@@ -338,7 +342,7 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       return items;
     },
     getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
+      return (await getSetClient?.llen(channelName)) ?? 0;
     },
     name: channelName,
   };
@@ -352,14 +356,14 @@ export const createChannelWithLatestAndEvents = <TData>(channelName: string) => 
       });
     },
     publishAndUpdateLastStateAsync: async (data: TData) => {
-      await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await publisher?.publish(channelName, superjson.stringify(data));
+      await getSetClient?.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
     },
     setAsync: async (data: TData) => {
-      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient?.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
     },
     getAsync: async () => {
-      const data = await getSetClient.get(channelName);
+      const data = await getSetClient?.get(channelName);
       if (!data) return null;
 
       return superjson.parse<{ data: TData; timestamp: Date }>(data);
@@ -380,11 +384,11 @@ type WithId<TItem> = TItem & { _id: string };
 export const createQueueChannel = <TItem>(name: string) => {
   const queueChannelName = `queue:${name}`;
   const getDataAsync = async () => {
-    const data = await queueClient.get(queueChannelName);
+    const data = await queueClient?.get(queueChannelName);
     return data ? superjson.parse<WithId<TItem>[]>(data) : [];
   };
   const setDataAsync = async (data: WithId<TItem>[]) => {
-    await queueClient.set(queueChannelName, superjson.stringify(data));
+    await queueClient?.set(queueChannelName, superjson.stringify(data));
   };
 
   return {
@@ -431,5 +435,5 @@ export const createQueueChannel = <TItem>(name: string) => {
 };
 
 export const handshakeAsync = async () => {
-  await getSetClient.hello();
+  await getSetClient?.hello();
 };

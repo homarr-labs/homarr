@@ -116,11 +116,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         {credentialInputsVisible && (
           <>
             <form
-              onSubmit={form.onSubmit((credentials) =>
-                void signInAsync(credentials.provider, {
-                  name: credentials.name,
-                  password: credentials.password,
-                }),
+              onSubmit={form.onSubmit(
+                (credentials) =>
+                  void signInAsync(credentials.provider, {
+                    name: credentials.name,
+                    password: credentials.password,
+                  }),
               )}
             >
               <Stack gap="lg">

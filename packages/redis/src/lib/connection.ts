@@ -6,7 +6,7 @@ import { createRedisClient } from "@homarr/core/infrastructure/redis";
  * @returns redis client
  */
 export const createRedisConnection = (): RedisClient | null => {
-  const disableRedisLogs = process.env["DISABLE_REDIS_LOGS"] === "true";
+  const disableRedisLogs = process.env.DISABLE_REDIS_LOGS === "true";
 
   if (disableRedisLogs) {
     return null;
