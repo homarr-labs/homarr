@@ -145,7 +145,7 @@ export const dockerRouter = createTRPCRouter({
         let cleanupFn: (() => void) | undefined;
         let isSubscribed = true;
 
-        const initializeStream = async () => {
+        const initializeStreamAsync = async () => {
           try {
             cleanupFn = await streamContainerLogsAsync(
               input.id,
@@ -178,7 +178,7 @@ export const dockerRouter = createTRPCRouter({
           }
         };
 
-        void initializeStream();
+        void initializeStreamAsync();
 
         return () => {
           isSubscribed = false;

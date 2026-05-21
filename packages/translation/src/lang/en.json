@@ -3595,7 +3595,7 @@
       "title": "Actions",
       "logs": {
         "label": "View logs",
-        "modal": {
+        "page": {
           "title": "{name} logs"
         }
       },

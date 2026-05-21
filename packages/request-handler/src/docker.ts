@@ -1,3 +1,4 @@
+import type { Readable } from "node:stream";
 import dayjs from "dayjs";
 import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 
@@ -6,6 +7,7 @@ import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
+import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
@@ -69,87 +71,38 @@ export const streamContainerLogsAsync = async (
     return () => undefined;
   }
 
-  const stream = await container.logs({
+  const stream = (await container.logs({
     tail,
     stdout: true,
     stderr: true,
     follow: true,
-  });
+  })) as Readable;
 
   // Docker uses a multiplexed stream format for logs where each message has an 8-byte header:
   // - 1 byte: stream type (stdout/stderr)
   // - 3 bytes: padding
   // - 4 bytes: payload length (big-endian)
   // We need to process the stream in chunks and extract complete messages from the buffer.
-  const DOCKER_STREAM_HEADER_SIZE = 8;
-  const MAX_MESSAGE_SIZE = 1024 * 1024; // 1MB maximum message size for safety
-  let buffer = Buffer.alloc(0);
+  const MAX_MESSAGE_SIZE = 1024 * 1024;
+  const processChunk = createDockerLogStreamProcessor(onData, onError, MAX_MESSAGE_SIZE);
 
-  const processChunk = (chunk: Buffer) => {
-    buffer = Buffer.concat([buffer, chunk]);
-
-    while (buffer.length >= DOCKER_STREAM_HEADER_SIZE) {
-      const length = buffer.readUInt32BE(4);
-      
-      // Validate message size to prevent memory exhaustion from corrupted data
-      if (length > MAX_MESSAGE_SIZE) {
-        onError(new Error(`Docker log message size (${length} bytes) exceeds maximum allowed (${MAX_MESSAGE_SIZE} bytes)`));
-        return;
-      }
-      
-      const fullMessageSize = DOCKER_STREAM_HEADER_SIZE + length;
-
-      if (buffer.length < fullMessageSize) {
-        // Wait for more data
-        break;
-      }
-
-      const payload = buffer.subarray(DOCKER_STREAM_HEADER_SIZE, fullMessageSize);
-      onData(payload.toString("utf-8"));
-
-      buffer = buffer.subarray(fullMessageSize);
+  const handleChunk = (chunk: Buffer) => {
+    const shouldContinue = processChunk(chunk);
+    if (!shouldContinue) {
+      stream.removeListener("data", handleChunk);
+      stream.removeListener("error", onError);
+      stream.destroy();
     }
   };
 
-  stream.on("data", processChunk);
+  stream.on("data", handleChunk);
   stream.on("error", onError);
 
   return () => {
-    stream.removeListener("data", processChunk);
+    stream.removeListener("data", handleChunk);
     stream.removeListener("error", onError);
     stream.destroy();
   };
-};
-
-const decodeDockerLogs = (logs: Buffer | string) => {
-  if (typeof logs === "string") {
-    return logs;
-  }
-
-  // Docker multiplexed stream: 1 byte stream type, 3 bytes padding, 4 bytes big-endian length, then payload
-  // Repeat until buffer consumed.
-  let cursor = 0;
-  const parts: string[] = [];
-
-  while (cursor < logs.length) {
-    // Defensive: need at least 8 bytes header
-    if (cursor + 8 > logs.length) {
-      break;
-    }
-
-    const length = logs.readUInt32BE(cursor + 4);
-    const start = cursor + 8;
-    const end = start + length;
-    if (end > logs.length) {
-      break;
-    }
-
-    const payload = logs.subarray(start, end);
-    parts.push(payload.toString("utf-8"));
-    cursor = end;
-  }
-
-  return parts.join("");
 };
 
 async function getContainersWithStatsAsync() {
@@ -203,7 +156,8 @@ async function getContainersWithStatsAsync() {
       cpuUsage,
       memoryUsage,
       image: container.Image,
-      ports: container.Ports,
+      // Docker Desktop on macOS can return null instead of an empty ports array
+      ports: (container.Ports as typeof container.Ports | null) ?? [],
     };
   });
 
