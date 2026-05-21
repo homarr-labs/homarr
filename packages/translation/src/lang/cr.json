@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "crwdns2696:0crwdne2696:0"
+      },
+      "ddgBangs": {
+        "label": "crwdns4231:0crwdne4231:0"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "crwdns92:0crwdne92:0"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "crwdns4233:0crwdne4233:0"
+          },
+          "error": {
+            "message": "crwdns4235:0crwdne4235:0"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "crwdns4225:0crwdne4225:0",
         "light": "crwdns2362:0crwdne2362:0",
         "dark": "crwdns2364:0crwdne2364:0"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "crwdns610:0crwdne610:0",
     "noResults": "crwdns612:0crwdne612:0",
     "unsavedChanges": "crwdns2784:0crwdne2784:0",
+    "servers": "crwdns3846:0crwdne3846:0",
+    "applications": "crwdns3848:0crwdne3848:0",
+    "services": "crwdns3850:0crwdne3850:0",
     "preview": {
       "show": "crwdns614:0crwdne614:0",
       "hide": "crwdns616:0crwdne616:0"
@@ -1522,6 +1539,17 @@
         "offline": "crwdns2494:0crwdne2494:0"
       }
     },
+    "timetable": {
+      "name": "crwdns4000:0crwdne4000:0",
+      "description": "crwdns4002:0crwdne4002:0",
+      "title": "crwdns4004:0{station}crwdne4004:0",
+      "noStation": "crwdns4006:0crwdne4006:0",
+      "option": {
+        "station": {
+          "label": "crwdns4008:0crwdne4008:0"
+        }
+      }
+    },
     "notebook": {
       "name": "crwdns860:0crwdne860:0",
       "description": "crwdns862:0crwdne862:0",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "crwdns4064:0crwdne4064:0",
+      "description": "crwdns4066:0crwdne4066:0",
+      "option": {
+        "noteId": {
+          "label": "crwdns4068:0crwdne4068:0"
+        },
+        "showTitle": {
+          "label": "crwdns4070:0crwdne4070:0"
+        },
+        "showUpdatedAt": {
+          "label": "crwdns4072:0crwdne4072:0"
+        }
+      },
+      "empty": "crwdns4074:0crwdne4074:0",
+      "emptyContent": "crwdns4076:0crwdne4076:0",
+      "notFound": "crwdns4078:0crwdne4078:0",
+      "noNotes": "crwdns4080:0crwdne4080:0",
+      "integrationRequired": "crwdns4082:0crwdne4082:0",
+      "updatedAt": "crwdns4084:0{date}crwdne4084:0",
+      "untitled": "crwdns4086:0crwdne4086:0",
+      "edit": "crwdns4088:0crwdne4088:0",
+      "save": "crwdns4090:0crwdne4090:0",
+      "cancel": "crwdns4092:0crwdne4092:0",
+      "readOnlyViewer": "crwdns4094:0crwdne4094:0",
+      "saveForbidden": "crwdns4096:0crwdne4096:0",
+      "saveFailed": "crwdns4098:0crwdne4098:0"
+    },
     "iframe": {
       "name": "crwdns950:0crwdne950:0",
       "description": "crwdns952:0crwdne952:0",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "crwdns970:0crwdne970:0"
+        },
+        "allowModals": {
+          "label": "crwdns3992:0crwdne3992:0"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "crwdns1080:0crwdne1080:0"
         },
+        "gpu": {
+          "label": "crwdns3994:0crwdne3994:0"
+        },
         "showUptime": {
           "label": "crwdns3446:0crwdne3446:0"
         },
@@ -1960,6 +2022,192 @@
         "internalServerError": "crwdns3428:0crwdne3428:0"
       }
     },
+    "coolify": {
+      "name": "crwdns3852:0crwdne3852:0",
+      "description": "crwdns3854:0crwdne3854:0",
+      "option": {
+        "showServers": {
+          "label": "crwdns3856:0crwdne3856:0"
+        },
+        "showApplications": {
+          "label": "crwdns3858:0crwdne3858:0"
+        },
+        "showServices": {
+          "label": "crwdns3860:0crwdne3860:0"
+        }
+      },
+      "empty": {
+        "servers": "crwdns3862:0crwdne3862:0",
+        "applications": "crwdns3864:0crwdne3864:0",
+        "services": "crwdns3866:0crwdne3866:0"
+      },
+      "footer": {
+        "updated": "crwdns3868:0{when}crwdne3868:0"
+      },
+      "error": {
+        "noIntegration": "crwdns3870:0crwdne3870:0",
+        "internalServerError": "crwdns3872:0crwdne3872:0"
+      },
+      "server": {
+        "buildServer": "crwdns3874:0crwdne3874:0"
+      },
+      "instances": {
+        "title": "crwdns3876:0crwdne3876:0"
+      }
+    },
+    "tracearr": {
+      "name": "crwdns3928:0crwdne3928:0",
+      "description": "crwdns3930:0crwdne3930:0",
+      "option": {
+        "showStreams": {
+          "label": "crwdns3932:0crwdne3932:0"
+        },
+        "showStats": {
+          "label": "crwdns3934:0crwdne3934:0"
+        },
+        "showRecentActivity": {
+          "label": "crwdns3936:0crwdne3936:0"
+        },
+        "showViolations": {
+          "label": "crwdns3938:0crwdne3938:0"
+        }
+      },
+      "stats": {
+        "activeStreams": "crwdns3940:0crwdne3940:0",
+        "totalUsers": "crwdns3942:0crwdne3942:0",
+        "transcodes": "crwdns3944:0crwdne3944:0",
+        "bandwidth": "crwdns3946:0crwdne3946:0"
+      },
+      "streams": {
+        "empty": "crwdns3948:0crwdne3948:0",
+        "user": "crwdns3950:0crwdne3950:0",
+        "media": "crwdns3952:0crwdne3952:0",
+        "state": "crwdns3954:0crwdne3954:0",
+        "quality": "crwdns3956:0crwdne3956:0",
+        "device": "crwdns3958:0crwdne3958:0",
+        "progress": "crwdns3960:0crwdne3960:0",
+        "videoDecision": {
+          "directPlay": "crwdns3962:0crwdne3962:0",
+          "transcode": "crwdns3964:0crwdne3964:0",
+          "directStream": "crwdns3966:0crwdne3966:0"
+        }
+      },
+      "recentActivity": {
+        "title": "crwdns3968:0crwdne3968:0",
+        "empty": "crwdns3970:0crwdne3970:0",
+        "watched": "crwdns3972:0crwdne3972:0",
+        "partial": "crwdns3974:0crwdne3974:0"
+      },
+      "violations": {
+        "title": "crwdns3976:0crwdne3976:0",
+        "empty": "crwdns3978:0crwdne3978:0",
+        "rule": "crwdns3980:0crwdne3980:0",
+        "user": "crwdns3982:0crwdne3982:0"
+      },
+      "noSectionsEnabled": "crwdns3984:0crwdne3984:0",
+      "error": {
+        "noIntegration": "crwdns3986:0crwdne3986:0",
+        "internalServerError": "crwdns3988:0crwdne3988:0"
+      }
+    },
+    "umami": {
+      "name": "crwdns4103:0crwdne4103:0",
+      "description": "crwdns4105:0crwdne4105:0",
+      "visitors": "crwdns4107:0crwdne4107:0",
+      "active": "crwdns4109:0crwdne4109:0",
+      "pageviews": "crwdns4111:0crwdne4111:0",
+      "visits": "crwdns4113:0crwdne4113:0",
+      "bounceRate": "crwdns4115:0crwdne4115:0",
+      "avgDuration": "crwdns4117:0crwdne4117:0",
+      "option": {
+        "websiteId": {
+          "label": "crwdns4119:0crwdne4119:0",
+          "description": "crwdns4121:0crwdne4121:0",
+          "placeholder": "crwdns4123:0crwdne4123:0",
+          "loading": "crwdns4125:0crwdne4125:0",
+          "noWebsites": "crwdns4127:0crwdne4127:0",
+          "configureIntegrationFirst": "crwdns4129:0crwdne4129:0"
+        },
+        "timeFrame": {
+          "label": "crwdns4131:0crwdne4131:0",
+          "description": "crwdns4133:0crwdne4133:0",
+          "option": {
+            "today": "crwdns4135:0crwdne4135:0",
+            "24h": "crwdns4137:0crwdne4137:0",
+            "7d": "crwdns4139:0crwdne4139:0",
+            "30d": "crwdns4141:0crwdne4141:0",
+            "month": "crwdns4143:0crwdne4143:0",
+            "lastMonth": "crwdns4145:0crwdne4145:0"
+          }
+        },
+        "eventName": {
+          "label": "crwdns4147:0crwdne4147:0",
+          "description": "crwdns4149:0crwdne4149:0",
+          "placeholder": "crwdns4151:0crwdne4151:0",
+          "loading": "crwdns4153:0crwdne4153:0",
+          "noEvents": "crwdns4155:0crwdne4155:0",
+          "none": "crwdns4157:0crwdne4157:0",
+          "configureWebsiteFirst": "crwdns4159:0crwdne4159:0"
+        },
+        "chartType": {
+          "label": "crwdns4161:0crwdne4161:0",
+          "description": "crwdns4163:0crwdne4163:0",
+          "option": {
+            "bar": "crwdns4165:0crwdne4165:0",
+            "sparkline": "crwdns4167:0crwdne4167:0"
+          }
+        },
+        "chartStyle": {
+          "label": "crwdns4169:0crwdne4169:0",
+          "description": "crwdns4171:0crwdne4171:0",
+          "option": {
+            "grouped": "crwdns4173:0crwdne4173:0",
+            "overlay": "crwdns4175:0crwdne4175:0"
+          }
+        },
+        "viewMode": {
+          "label": "crwdns4177:0crwdne4177:0",
+          "description": "crwdns4179:0crwdne4179:0",
+          "option": {
+            "chart": "crwdns4181:0crwdne4181:0",
+            "events": "crwdns4183:0crwdne4183:0",
+            "topPages": "crwdns4185:0crwdne4185:0",
+            "topReferrers": "crwdns4187:0crwdne4187:0"
+          }
+        },
+        "eventNames": {
+          "label": "crwdns4189:0crwdne4189:0",
+          "description": "crwdns4191:0crwdne4191:0",
+          "placeholder": "crwdns4193:0crwdne4193:0",
+          "loading": "crwdns4195:0crwdne4195:0",
+          "noEvents": "crwdns4197:0crwdne4197:0",
+          "configureWebsiteFirst": "crwdns4199:0crwdne4199:0"
+        },
+        "topCount": {
+          "label": "crwdns4201:0crwdne4201:0",
+          "description": "crwdns4203:0crwdne4203:0"
+        }
+      },
+      "event": {
+        "occurrences": "crwdns4205:0crwdne4205:0",
+        "label": "crwdns4207:0crwdne4207:0"
+      },
+      "topPages": {
+        "direct": "crwdns4209:0crwdne4209:0"
+      },
+      "topReferrers": {
+        "direct": "crwdns4211:0crwdne4211:0"
+      },
+      "events": {
+        "selectPrompt": "crwdns4213:0crwdne4213:0"
+      },
+      "error": {
+        "noIntegration": "crwdns4215:0crwdne4215:0",
+        "noWebsite": "crwdns4217:0crwdne4217:0",
+        "noData": "crwdns4219:0crwdne4219:0",
+        "internalServerError": "crwdns4221:0crwdne4221:0"
+      }
+    },
     "common": {
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "crwdns3880:0crwdne3880:0",
+      "description": "crwdns3882:0crwdne3882:0",
+      "option": {
+        "showUsers": {
+          "label": "crwdns3884:0crwdne3884:0",
+          "description": "crwdns3886:0crwdne3886:0"
+        },
+        "showPhotos": {
+          "label": "crwdns3888:0crwdne3888:0",
+          "description": "crwdns3890:0crwdne3890:0"
+        },
+        "showVideos": {
+          "label": "crwdns3892:0crwdne3892:0",
+          "description": "crwdns3894:0crwdne3894:0"
+        },
+        "showStorage": {
+          "label": "crwdns3896:0crwdne3896:0",
+          "description": "crwdns3898:0crwdne3898:0"
+        }
+      },
+      "users": "crwdns3900:0crwdne3900:0",
+      "photos": "crwdns3902:0crwdne3902:0",
+      "videos": "crwdns3904:0crwdne3904:0",
+      "storage": "crwdns3906:0crwdne3906:0"
+    },
+    "immich-albumCarousel": {
+      "name": "crwdns3908:0crwdne3908:0",
+      "option": {
+        "albumId": {
+          "label": "crwdns3910:0crwdne3910:0",
+          "description": "crwdns3912:0crwdne3912:0"
+        },
+        "rotationIntervalSeconds": {
+          "label": "crwdns3914:0crwdne3914:0",
+          "description": "crwdns3916:0crwdne3916:0"
+        },
+        "showPhotoInfo": {
+          "label": "crwdns3918:0crwdne3918:0",
+          "description": "crwdns3920:0crwdne3920:0"
+        }
+      },
+      "description": "crwdns3922:0crwdne3922:0",
+      "noAlbumSelected": "crwdns3924:0crwdne3924:0",
+      "noPhotos": "crwdns3926:0crwdne3926:0"
     },
     "downloads": {
       "name": "crwdns1170:0crwdne1170:0",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "crwdns3674:0crwdne3674:0"
+        },
+        "showPosterImage": {
+          "label": "crwdns4012:0crwdne4012:0"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "crwdns3480:0crwdne3480:0",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "crwdns4014:0crwdne4014:0",
+      "description": "crwdns4016:0crwdne4016:0",
+      "option": {
+        "showLatestResult": {
+          "label": "crwdns4018:0crwdne4018:0"
+        },
+        "showStats": {
+          "label": "crwdns4020:0crwdne4020:0"
+        },
+        "showRecentResults": {
+          "label": "crwdns4022:0crwdne4022:0"
+        },
+        "showPingGraph": {
+          "label": "crwdns4024:0crwdne4024:0"
+        }
+      },
+      "latestResult": "crwdns4026:0crwdne4026:0",
+      "averages": "crwdns4028:0crwdne4028:0",
+      "tests": "crwdns4030:0{count}crwdne4030:0",
+      "recentResults": "crwdns4032:0crwdne4032:0",
+      "recentResultsSpeed": "crwdns4034:0crwdne4034:0",
+      "recentResultsPing": "crwdns4036:0crwdne4036:0",
+      "download": "crwdns4038:0crwdne4038:0",
+      "upload": "crwdns4040:0crwdne4040:0",
+      "ping": "crwdns4042:0crwdne4042:0",
+      "status": "crwdns4044:0crwdne4044:0",
+      "avgDownload": "crwdns4046:0crwdne4046:0",
+      "avgUpload": "crwdns4048:0crwdne4048:0",
+      "avgPing": "crwdns4050:0crwdne4050:0",
+      "healthy": "crwdns4052:0crwdne4052:0",
+      "unhealthy": "crwdns4054:0crwdne4054:0",
+      "ok": "crwdns4056:0crwdne4056:0",
+      "fail": "crwdns4058:0crwdne4058:0",
+      "noSectionsEnabled": "crwdns4060:0crwdne4060:0",
+      "error": {
+        "internalServerError": "crwdns4062:0crwdne4062:0"
+      }
+    },
     "systemResources": {
       "name": "crwdns3600:0crwdne3600:0",
       "description": "crwdns3602:0crwdne3602:0",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "crwdns3700:0crwdne3700:0",
             "memory": "crwdns3702:0crwdne3702:0",
+            "gpu": "crwdns3996:0crwdne3996:0",
             "network": "crwdns3704:0crwdne3704:0"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "crwdns3604:0crwdne3604:0",
         "memory": "crwdns3606:0crwdne3606:0",
+        "gpu": "crwdns3998:0crwdne3998:0",
         "network": "crwdns3608:0crwdne3608:0",
         "up": "crwdns3610:0crwdne3610:0",
         "down": "crwdns3612:0crwdne3612:0"
+      }
+    },
+    "systemDisks": {
+      "name": "crwdns3828:0crwdne3828:0",
+      "description": "crwdns3830:0crwdne3830:0",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "crwdns3832:0crwdne3832:0"
+        },
+        "displayMode": {
+          "label": "crwdns3834:0crwdne3834:0",
+          "option": {
+            "percentage": {
+              "label": "crwdns3836:0crwdne3836:0"
+            },
+            "absolute": {
+              "label": "crwdns3838:0crwdne3838:0"
+            },
+            "free": {
+              "label": "crwdns3840:0crwdne3840:0"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "crwdns3842:0crwdne3842:0"
+        }
+      },
+      "status": {
+        "unhealthy": "crwdns3844:0crwdne3844:0"
       }
     }
   },
@@ -3240,7 +3607,7 @@
             "title": "crwdns1764:0crwdne1764:0",
             "general": {
               "title": "crwdns1766:0crwdne1766:0",
-              "text": "crwdns1768:0crwdne1768:0"
+              "text": "crwdns3878:0crwdne3878:0"
             },
             "widgetData": {
               "title": "crwdns1770:0crwdne1770:0",
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "crwdns1810:0crwdne1810:0",
               "options": {
+                "auto": "crwdns4227:0crwdne4227:0",
                 "light": "crwdns1812:0crwdne1812:0",
                 "dark": "crwdns1814:0crwdne1814:0"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "crwdns2496:0crwdne2496:0"
+            },
+            "timetable": {
+              "label": "crwdns4010:0crwdne4010:0"
             },
             "iconsUpdater": {
               "label": "crwdns1828:0crwdne1828:0"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "crwdns3724:0crwdne3724:0"
+            },
+            "tracearr": {
+              "label": "crwdns3990:0crwdne3990:0"
+            },
+            "umamiActiveVisitors": {
+              "label": "crwdns4223:0crwdne4223:0"
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "crwdns1884:0crwdne1884:0",
             "subtitle": "crwdns1886:0{count}crwdne1886:0"
           },
+          "sponsors": {
+            "title": "crwdns4100:0crwdne4100:0",
+            "subtitle": "crwdns4102:0{count}crwdne4102:0"
+          },
           "libraries": {
             "title": "crwdns1888:0crwdne1888:0",
             "subtitle": "crwdns1890:0{count}crwdne1890:0"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "crwdns1920:0crwdne1920:0"
+      },
+      "host": {
+        "label": "crwdns4249:0crwdne4249:0"
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "crwdns2072:0crwdne2072:0",
             "option": {
               "colorScheme": {
+                "auto": "crwdns4229:0crwdne4229:0",
                 "light": "crwdns2074:0crwdne2074:0",
                 "dark": "crwdns2076:0crwdne2076:0"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "crwdns2100:0crwdne2100:0",
+            "tipDdgBangs": "crwdns4237:0crwdne4237:0",
+            "bang": {
+              "searchWithQuery": "crwdns4239:0{query}crwdnd4239:0{label}crwdne4239:0",
+              "pressEnterToOpen": "crwdns4241:0crwdne4241:0",
+              "engineSelected": "crwdns4243:0{label}crwdnd4243:0{bang}crwdne4243:0",
+              "typeQueryToContinue": "crwdns4245:0crwdne4245:0",
+              "emptyBangHint": "crwdns4247:0crwdne4247:0"
+            },
             "children": {
               "action": {
                 "search": {

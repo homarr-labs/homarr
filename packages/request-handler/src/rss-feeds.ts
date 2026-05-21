@@ -28,7 +28,7 @@ export const rssFeedsRequestHandler = createCachedWidgetRequestHandler({
 
     return {
       ...result,
-      entries: result.entries?.slice(0, input.count) ?? [],
+      entries: result.entries?.map((entry) => ({ ...entry, feedUrl: input.url })).slice(0, input.count) ?? [],
     };
   },
   cacheDuration: dayjs.duration(5, "minutes"),
@@ -108,7 +108,8 @@ const getFirstMediaProperty = (feedObject: object) => {
  * We extend the feed with custom properties.
  * This interface adds properties on top of the default ones.
  */
-interface ExtendedFeedEntry extends FeedEntry {
+export interface ExtendedFeedEntry extends FeedEntry {
+  feedUrl: string;
   enclosure?: string;
 }
 

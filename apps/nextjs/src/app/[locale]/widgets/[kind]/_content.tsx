@@ -105,7 +105,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
             <ErrorBoundary
               onReset={reset}
               fallbackRender={({ resetErrorBoundary, error }) => (
-                <WidgetError kind={kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+                <WidgetError kind={kind} error={error} resetErrorBoundary={resetErrorBoundary} />
               )}
             >
               <Comp

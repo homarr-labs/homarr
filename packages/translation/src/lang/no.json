@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Åpne søkeresultater i ny fane"
+      },
+      "ddgBangs": {
+        "label": "Aktiver DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Kunne ikke endre ping av ikoner"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs er endret vellykket"
+          },
+          "error": {
+            "message": "Kan ikke slå av/på DuckDuckGo bangs"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Lys",
         "dark": "Mørk"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "unsavedChanges": "Du har ulagrede endringer!",
+    "servers": "Servere",
+    "applications": "Apper",
+    "services": "Tjenester",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -1522,6 +1539,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timeplan",
+      "description": "Viser avgangstid for en stasjon",
+      "title": "Avganger {station}",
+      "noStation": "Ingen stasjon valgt",
+      "option": {
+        "station": {
+          "label": "Stasjon"
+        }
+      }
+    },
     "notebook": {
       "name": "Notisbok",
       "description": "En enkel notatbok widget som støtter markdown",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Ankermerknad",
+      "description": "Viser et valgt notat fra anker",
+      "option": {
+        "noteId": {
+          "label": "Notat"
+        },
+        "showTitle": {
+          "label": "Vis tittel"
+        },
+        "showUpdatedAt": {
+          "label": "Vis sist oppdatert"
+        }
+      },
+      "empty": "Velg et notat som skal vises",
+      "emptyContent": "Dette notatet har ikke innhold",
+      "notFound": "Notat ikke funnet",
+      "noNotes": "Fant ingen notater",
+      "integrationRequired": "Velg en ankerintegrasjon først",
+      "updatedAt": "Oppdatert {date}",
+      "untitled": "Uten navn",
+      "edit": "Rediger",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "readOnlyViewer": "Du har seertilgang til dette notatet. Redigering er deaktivert.",
+      "saveForbidden": "Du har ikke tillatelse til å redigere dette notatet.",
+      "saveFailed": "Kunne ikke lagre dette notatet. Prøv på nytt."
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Tillat geolokalisering"
+        },
+        "allowModals": {
+          "label": "Tillat modaler"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "Vis minneinfo"
         },
+        "gpu": {
+          "label": "Vis CPU-info"
+        },
         "showUptime": {
           "label": "Vis oppetid"
         },
@@ -1960,6 +2022,192 @@
         "internalServerError": "Kunne ikke hente containerstatistikk"
       }
     },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Oversikt over din Coolify-instans med servere og apper",
+      "option": {
+        "showServers": {
+          "label": "Vis servere"
+        },
+        "showApplications": {
+          "label": "Vis applikasjoner"
+        },
+        "showServices": {
+          "label": "Vis tjenester"
+        }
+      },
+      "empty": {
+        "servers": "Ingen server funnet",
+        "applications": "Ingen applikasjoner funnet",
+        "services": "Ingen tjenester funnet"
+      },
+      "footer": {
+        "updated": "Oppdatert {when}"
+      },
+      "error": {
+        "noIntegration": "Ingen Coolify integrasjon konfigurert",
+        "internalServerError": "Kunne ikke hente Coolify data"
+      },
+      "server": {
+        "buildServer": "Bygg"
+      },
+      "instances": {
+        "title": "Instanser"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Forbedret medieserverovervåking med detaljert strøm- og transkodingsdata",
+      "option": {
+        "showStreams": {
+          "label": "Vis aktive strømmer"
+        },
+        "showStats": {
+          "label": "Vis statistikksammendrag"
+        },
+        "showRecentActivity": {
+          "label": "Vis nylig aktivitet"
+        },
+        "showViolations": {
+          "label": "Vis brudd"
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktive strømmninger",
+        "totalUsers": "Totalt antall brukere",
+        "transcodes": "Transkoder",
+        "bandwidth": "Båndbredde"
+      },
+      "streams": {
+        "empty": "Ingen aktive strømminger",
+        "user": "Bruker",
+        "media": "Media",
+        "state": "Tilstand",
+        "quality": "Kvalitet",
+        "device": "Enhet",
+        "progress": "Fremgang",
+        "videoDecision": {
+          "directPlay": "Direkte avspilling",
+          "transcode": "Transkode",
+          "directStream": "Direktestrøm"
+        }
+      },
+      "recentActivity": {
+        "title": "Nylig aktivitet",
+        "empty": "Ingen nylig aktivitet",
+        "watched": "Sett",
+        "partial": "Delvis"
+      },
+      "violations": {
+        "title": "Brudd",
+        "empty": "Ingen nylige brudd",
+        "rule": "Regel",
+        "user": "Bruker"
+      },
+      "noSectionsEnabled": "Ingen seksjoner aktivert",
+      "error": {
+        "noIntegration": "Ingen Tracearr-integrasjon konfigurert",
+        "internalServerError": "Kunne ikke hente Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Vise besøkende statistikk fra din Umami-analyseinstans",
+      "visitors": "besøkende",
+      "active": "aktiv",
+      "pageviews": "sidevisninger",
+      "visits": "besøk",
+      "bounceRate": "tilbakesende",
+      "avgDuration": "gjennomsnitt",
+      "option": {
+        "websiteId": {
+          "label": "Nettsted",
+          "description": "Velg et nettsted som spores av Umami-instansen din",
+          "placeholder": "Velg en nettside",
+          "loading": "Laster inn nettsteder...",
+          "noWebsites": "Ingen nettsteder ble funnet",
+          "configureIntegrationFirst": "Koble til en Umami integrasjon først"
+        },
+        "timeFrame": {
+          "label": "Tidsramme",
+          "description": "Tidsperiode som skal vise besøkende data for",
+          "option": {
+            "today": "I dag",
+            "24h": "Siste 24 timer",
+            "7d": "Siste 7 dager",
+            "30d": "Siste 30 dager",
+            "month": "Denne måneden",
+            "lastMonth": "Siste måned"
+          }
+        },
+        "eventName": {
+          "label": "Hendelse",
+          "description": "Vis totale forekomster av en bestemt hendelse",
+          "placeholder": "Velg en hendelse",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "none": "Ingen hendelser",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
+        },
+        "chartType": {
+          "label": "Diagramtype",
+          "description": "Vis stil for diagrammet",
+          "option": {
+            "bar": "Søylediagram",
+            "sparkline": "Minigraf"
+          }
+        },
+        "chartStyle": {
+          "label": "Diagramtype",
+          "description": "Hvordan vise hendelsesserier i diagrammet",
+          "option": {
+            "grouped": "Side om side",
+            "overlay": "Overlegg (delmengde)"
+          }
+        },
+        "viewMode": {
+          "label": "Visning",
+          "description": "Hva skal vises i widgetkroppen",
+          "option": {
+            "chart": "Diagram",
+            "events": "Hendelser diagram",
+            "topPages": "Toppsider",
+            "topReferrers": "Topp referenter"
+          }
+        },
+        "eventNames": {
+          "label": "Hendelser",
+          "description": "Velg ett eller flere hendelser i diagrammet",
+          "placeholder": "Velg en hendelse...",
+          "loading": "Laster inn hendelser...",
+          "noEvents": "Ingen hendelser funnet",
+          "configureWebsiteFirst": "Velg en nettside først for å laste inn hendelser"
+        },
+        "topCount": {
+          "label": "Gjenstander å vise",
+          "description": "Antall oppføringer som skal vises (maks 500)"
+        }
+      },
+      "event": {
+        "occurrences": "hendelser",
+        "label": "hendelser"
+      },
+      "topPages": {
+        "direct": "Direkte"
+      },
+      "topReferrers": {
+        "direct": "Direkte"
+      },
+      "events": {
+        "selectPrompt": "Velg hendelser for å diagram"
+      },
+      "error": {
+        "noIntegration": "Ingen Umami integrasjon konfigurert",
+        "noWebsite": "Ingen nettsted konfigurert",
+        "noData": "Ingen data tilgjengelig",
+        "internalServerError": "Kunne ikke hente Umami data"
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich-serverstatistikk",
+      "description": "Informasjon om din Immich-instans",
+      "option": {
+        "showUsers": {
+          "label": "Vis brukere",
+          "description": "Vis antall brukere på din instans"
+        },
+        "showPhotos": {
+          "label": "Vis bilder",
+          "description": "Vis antall bilder på din instans"
+        },
+        "showVideos": {
+          "label": "Vis videoer",
+          "description": "Vis antall videoer på din instans"
+        },
+        "showStorage": {
+          "label": "Vis lagring",
+          "description": "Vis total mengde lagringsplass brukt"
+        }
+      },
+      "users": "Brukere",
+      "photos": "Bilder",
+      "videos": "Videoer",
+      "storage": "Brukt lagringsplass"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "Dette er en unik ID som refererer til ditt Immich-album. Du kan finne denne ID-en ved å åpne et album og kopiere den unike strengen fra URL-en, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervall i sekunder",
+          "description": "Roter mellom bilder i albumet hvert X. sekund. Må være minst 1. Må være under 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Vis bildeinformasjon",
+          "description": "Vis datoen for bildet og gjeldende indeks nederst i lysbildeserien"
+        }
+      },
+      "description": "Lysbildefremvisning av bilder i ditt Immich-album",
+      "noAlbumSelected": "Ingen album valgt, rediger widgeten og velg et album",
+      "noPhotos": "Ingen bilder i dette albumet"
     },
     "downloads": {
       "name": "Nedlastings-klient",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Skjul beskrivelse"
+        },
+        "showPosterImage": {
+          "label": "Vis plakatbilde"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "Ingen varsler å vise.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest tracker",
+      "description": "Viser hastighetstesten i fra din Speedtest Tracker-instans.",
+      "option": {
+        "showLatestResult": {
+          "label": "Vis siste resultat"
+        },
+        "showStats": {
+          "label": "Vis gjennomsnitt"
+        },
+        "showRecentResults": {
+          "label": "Vis nylige resultater"
+        },
+        "showPingGraph": {
+          "label": "Vis ping-graf"
+        }
+      },
+      "latestResult": "Siste resultat",
+      "averages": "Gjennomsnitt",
+      "tests": "{count} tester",
+      "recentResults": "Nylige resultater",
+      "recentResultsSpeed": "Hastighet",
+      "recentResultsPing": "Ping",
+      "download": "Nedlasting",
+      "upload": "Opplastning",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Snitt nedlasting",
+      "avgUpload": "Snitt opplasting",
+      "avgPing": "Snitt ping",
+      "healthy": "Frisk",
+      "unhealthy": "Usunn",
+      "ok": "OK",
+      "fail": "Feil",
+      "noSectionsEnabled": "Aktiver minst ett avsnitt i widgetalternativer.",
+      "error": {
+        "internalServerError": "Kunne ikke hente hastighetsteste data"
+      }
+    },
     "systemResources": {
       "name": "Systemressurser",
       "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Minne",
+            "gpu": "GPU",
             "network": "Nettverk"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "Minne",
+        "gpu": "GPU",
         "network": "NETT",
         "up": "OPP",
         "down": "NED"
+      }
+    },
+    "systemDisks": {
+      "name": "Systemdisker",
+      "description": "Disk bruk av systemet",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Vis temperatur hvis tilgjengelig"
+        },
+        "displayMode": {
+          "label": "Visningsmodus",
+          "option": {
+            "percentage": {
+              "label": "Prosentandel (f.eks. 76%)"
+            },
+            "absolute": {
+              "label": "Absolutte verdier (f.eks. 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Prosentandel ledig plass (f.eks. 24% ledig)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Vis bakgrunnsbrukslinje"
+        }
+      },
+      "status": {
+        "unhealthy": "Usunn"
       }
     }
   },
@@ -3240,7 +3607,7 @@
             "title": "Statistikk",
             "general": {
               "title": "Send anonym brukerdata",
-              "text": "Homarr vil sende anonymt brukerdata med åpen kildekode programvaren Umami. Det vil aldri samle inn personlig informasjon og følger derfor GDPR & CCPA fullstendig. Vi oppfordrer deg til å aktivere sending av brukerdata da det hjelper teamet vårt å identifisere problemer og sette prioritering."
+              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
             },
             "widgetData": {
               "title": "Widget data",
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard fargetema",
               "options": {
+                "auto": "Auto",
                 "light": "Lys",
                 "dark": "Mørk"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft serverstatus"
+            },
+            "timetable": {
+              "label": "Timeplan"
             },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Vær"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami Aktive Besøkende"
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Oversettere",
             "subtitle": "{count} bidrar med oversettelser på mange språk"
           },
+          "sponsors": {
+            "title": "Sponsorer",
+            "subtitle": "{count} støtter prosjektet økonomisk"
+          },
           "libraries": {
             "title": "Biblioteker",
             "subtitle": "{count} brukt i koden til Homarr"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Porter"
+      },
+      "host": {
+        "label": "Vert"
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
+                "auto": "Bytt visningsmodus",
                 "light": "Bytt til lys modus",
                 "dark": "Bytt til mørk modus"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Søkemotorer",
+            "tipDdgBangs": "Tips: Du kan også bruke DuckDuckGo-bangs her, f.eks. !something",
+            "bang": {
+              "searchWithQuery": "Søk etter \"{query}\" med {label}",
+              "pressEnterToOpen": "Trykk på Enter for å åpne",
+              "engineSelected": "{label} valgt (!{bang})",
+              "typeQueryToContinue": "Skriv inn søkeordet for å fortsette",
+              "emptyBangHint": "Skriv inn en bang, f.eks. !yt, og trykk deretter på mellomrom for å velge"
+            },
             "children": {
               "action": {
                 "search": {

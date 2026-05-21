@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Arama sonucunu yeni sekmede aç"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Ping simgeleri değiştirilemiyor"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -649,14 +662,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Mevcut",
+              "label": "Mevcut uygulamayı seçin"
             },
             "new": {
-              "title": "",
+              "title": "Yeni",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "Uygulama url  si",
+                "description": "Kontrol panelinden erişildiğinde uygulamanın açılacağı URL"
               }
             }
           }
@@ -676,9 +689,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Bir uygulamayı bağla",
+            "remove": "Bağlantıyı kaldır",
+            "select": "Bağlantı kurmak istediğiniz uygulamayı seçin"
           }
         }
       },
@@ -709,7 +722,7 @@
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Bağlı Uygulama"
       },
       "createApp": {
         "label": "Uygulama oluştur",
@@ -1051,7 +1064,7 @@
       "add": "Ekle",
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
-      "change": "",
+      "change": "Değiştir",
       "create": "Oluştur",
       "createAnother": "Kaydet ve Yeni Oluştur",
       "edit": "Düzenle",
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Aydınlık",
         "dark": "Koyu"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
     "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
+    "servers": "Sunucular",
+    "applications": "Uygulamalar",
+    "services": "Hizmetler",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -1174,8 +1191,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1190,7 +1207,7 @@
           "label": "Başlık"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Özel CSS sınıfları"
         },
         "borderColor": {
           "label": "Kenarlık rengi"
@@ -1522,6 +1539,17 @@
         "offline": "Çevrimdışı"
       }
     },
+    "timetable": {
+      "name": "Zaman Çizelgesi",
+      "description": "Bir istasyon için kalkış saatlerini görüntüler",
+      "title": "{station} kalkışları",
+      "noStation": "İstasyon seçilmedi",
+      "option": {
+        "station": {
+          "label": "İstasyon"
+        }
+      }
+    },
     "notebook": {
       "name": "Not Defteri",
       "description": "Markdown'ı destekleyen basit bir not defteri bileşeni",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Anchor Notu",
+      "description": "Anchor'dan seçilen bir notu görüntüler",
+      "option": {
+        "noteId": {
+          "label": "Not"
+        },
+        "showTitle": {
+          "label": "Başlığı göster"
+        },
+        "showUpdatedAt": {
+          "label": "Son güncellenmeyi göster"
+        }
+      },
+      "empty": "Görüntülenecek bir not seçin",
+      "emptyContent": "Bu notun içeriği yok",
+      "notFound": "Not bulunamadı",
+      "noNotes": "Not bulunamadı",
+      "integrationRequired": "Önce bir Anchor entegrasyonu seçin",
+      "updatedAt": "Güncellendi: {date}",
+      "untitled": "Başlıksız",
+      "edit": "Düzenle",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "readOnlyViewer": "Bu nota görüntüleyici erişiminiz var. Düzenleme devre dışı bırakıldı.",
+      "saveForbidden": "Bu notu düzenleme izniniz yok.",
+      "saveFailed": "Not kaydedilemedi. Lütfen tekrar deneyin."
+    },
     "iframe": {
       "name": "iFrame",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Coğrafi konuma izin ver (geolocation)"
+        },
+        "allowModals": {
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1780,7 +1839,7 @@
           "description": "Yalnızca mevcut hava durumunda"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Use mph for windspeed"
         },
         "location": {
           "label": "Hava durumu konumu"
@@ -1854,6 +1913,9 @@
         },
         "memory": {
           "label": "Bellek Bilgilerini Göster"
+        },
+        "gpu": {
+          "label": "Show GPU Info"
         },
         "showUptime": {
           "label": "Çalışma Süresini Göster"
@@ -1941,23 +2003,209 @@
       "description": "Konteynerlerinizin istatistikleri (Bu widget yalnızca yönetici ayrıcalıklarıyla eklenebilir)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Column used for sorting by default",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         }
       },
       "error": {
         "internalServerError": "Konteyner istatistikleri alınamadı"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
+      "option": {
+        "showServers": {
+          "label": "Show servers"
+        },
+        "showApplications": {
+          "label": "Show applications"
+        },
+        "showServices": {
+          "label": "Show services"
+        }
+      },
+      "empty": {
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
+      },
+      "footer": {
+        "updated": "Updated {when}"
+      },
+      "error": {
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
+      },
+      "server": {
+        "buildServer": "Build"
+      },
+      "instances": {
+        "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
+      "option": {
+        "showStreams": {
+          "label": "Show active streams"
+        },
+        "showStats": {
+          "label": "Show stats summary"
+        },
+        "showRecentActivity": {
+          "label": "Show recent activity"
+        },
+        "showViolations": {
+          "label": "Show violations"
+        }
+      },
+      "stats": {
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
+      },
+      "streams": {
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
+        "videoDecision": {
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
+      },
+      "noSectionsEnabled": "No sections enabled",
+      "error": {
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich Server Stats",
+      "description": "Information about your Immich instance",
+      "option": {
+        "showUsers": {
+          "label": "Show users",
+          "description": "Show count of users on your instance"
+        },
+        "showPhotos": {
+          "label": "Show photos",
+          "description": "Show count of photos on your instance"
+        },
+        "showVideos": {
+          "label": "Show videos",
+          "description": "Show count of videos on your instance"
+        },
+        "showStorage": {
+          "label": "Show storage",
+          "description": "Show the total amount of storage used"
+        }
+      },
+      "users": "Users",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Used Storage"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Interval in seconds",
+          "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Show photo info",
+          "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        }
+      },
+      "description": "Slideshow of pictures in your Immich album",
+      "noAlbumSelected": "No album selected, edit widget and choose an album",
+      "noPhotos": "No photos in this album"
     },
     "downloads": {
       "name": "İndirme İstemcisi",
@@ -2248,7 +2542,7 @@
         "unknown": "Bilinmeyen",
         "pending": "Bekleyen",
         "processing": "İşlemde",
-        "requested": "",
+        "requested": "Requested",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut",
         "blacklisted": "Engellenenler",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Açıklamayı gizle"
+        },
+        "showPosterImage": {
+          "label": "Show poster image"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "Görüntülenecek bildirim yok.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Displays speed test results from your Speedtest Tracker instance.",
+      "option": {
+        "showLatestResult": {
+          "label": "Show latest result"
+        },
+        "showStats": {
+          "label": "Show averages"
+        },
+        "showRecentResults": {
+          "label": "Show recent results"
+        },
+        "showPingGraph": {
+          "label": "Show ping graph"
+        }
+      },
+      "latestResult": "Latest Result",
+      "averages": "Averages",
+      "tests": "{count} tests",
+      "recentResults": "Recent Results",
+      "recentResultsSpeed": "Speed",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Avg Download",
+      "avgUpload": "Avg Upload",
+      "avgPing": "Avg Ping",
+      "healthy": "Healthy",
+      "unhealthy": "Unhealthy",
+      "ok": "OK",
+      "fail": "Fail",
+      "noSectionsEnabled": "Enable at least one section in widget options.",
+      "error": {
+        "internalServerError": "Failed to fetch speedtest data"
+      }
+    },
     "systemResources": {
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "İşlemci",
             "memory": "Bellek",
+            "gpu": "GPU",
             "network": "Ağ"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "İşlemci",
         "memory": "BELLEK",
+        "gpu": "GPU",
         "network": "AĞ",
         "up": "YÜKLEME",
         "down": "İNDİRME"
+      }
+    },
+    "systemDisks": {
+      "name": "System disks",
+      "description": "Disk usage of your system",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Show temperature if available"
+        },
+        "displayMode": {
+          "label": "Display mode",
+          "option": {
+            "percentage": {
+              "label": "Percentage (e.g., 76%)"
+            },
+            "absolute": {
+              "label": "Absolute values (e.g., 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Free space percentage (e.g., 24% free)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Show background usage bar"
+        }
+      },
+      "status": {
+        "unhealthy": "Unhealthy"
       }
     }
   },
@@ -3030,8 +3397,8 @@
           "integration": "Entegrasyonlar",
           "app": "Uygulamalar",
           "group": "Gruplar",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Paneller",
@@ -3040,8 +3407,8 @@
           "authorization": "Yetkilendirme"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Kullanıcılar",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar'ı etkinleştir",
+              "description": "Özel avatar ayarlanmadığında ve bir e-posta adresi tanımlandığında Libravatar/Gravatar kullanıcı avatarları kullanılır"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {
+                "auto": "",
                 "light": "Aydınlık",
                 "dark": "Koyu"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft sunucu durumu"
+            },
+            "timetable": {
+              "label": "Zaman Çizelgesi"
             },
             "iconsUpdater": {
               "label": "Simge Güncelleme"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Hava Durumu"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Çevirmenler",
             "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Kütüphaneler",
             "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Bağlantı noktaları"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Genel komutlar",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Aydınlık Temaya Geç",
                 "dark": "Koyu Temaya Geç"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Arama Motorları",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

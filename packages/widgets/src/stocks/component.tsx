@@ -33,6 +33,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
 
   const stockValuesMin = Math.min(...data.priceHistory);
   const stockGraphValues = data.priceHistory.map((value) => value - stockValuesMin + 50);
+  const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
 
   return (
     <Flex h="100%" w="100%">
@@ -43,7 +44,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
         h={height > 280 ? "75%" : "50%"}
         data={stockGraphValues}
         curveType="linear"
-        trendColors={{ positive: "green.7", negative: "red.7", neutral: "gray.6" }}
+        color={trendColor}
         fillOpacity={0.6}
         strokeWidth={2.5}
       />

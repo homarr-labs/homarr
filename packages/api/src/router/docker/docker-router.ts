@@ -220,9 +220,10 @@ const getContainerOrThrowAsync = async (id: string) => {
 interface DockerContainer {
   name: string;
   id: string;
+  host: string;
   state: ContainerState;
   image: string;
-  ports: Port[];
+  ports: Port[] | undefined;
   iconUrl: string | null;
   cpuUsage: number;
   memoryUsage: number;

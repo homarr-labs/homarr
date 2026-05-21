@@ -1,16 +1,18 @@
 import { TRPCError } from "@trpc/server";
+import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
+import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
-import { and, eq, like } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
-import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
+import { credentialsAdminGroup } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -19,6 +21,7 @@ import {
   userChangePasswordApiSchema,
   userChangeSearchPreferencesSchema,
   userCreateSchema,
+  userDdgBangsSchema,
   userEditProfileSchema,
   userFirstDayOfWeekSchema,
   userInitSchema,
@@ -90,15 +93,58 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-      await createUserAsync(ctx.db, input);
+      const hashedPassword = await hashPasswordAsync(input.password);
 
-      // Delete invite as it's used
-      await ctx.db.delete(invites).where(inviteWhere);
+      const userId = createId();
+      const user = {
+        id: userId,
+        name: input.username,
+        password: hashedPassword,
+      };
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (trx) => {
+            await trx.insert(schema.users).values(user);
+
+            // Delete invite as it's used
+            const queryResult = (await trx.delete(schema.invites).where(inviteWhere)) as
+              | QueryResult
+              | MySqlRawQueryResult;
+            let count: number;
+            if (Array.isArray(queryResult)) {
+              count = queryResult[0].affectedRows;
+            } else {
+              count = queryResult.rowCount ?? 0;
+            }
+            if (count === 0) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "Invalid invite",
+              });
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((trx) => {
+            trx.insert(users).values(user).run();
+            // Delete invite as it's used
+            const result = trx.delete(invites).where(inviteWhere).run();
+
+            if (result.changes === 0) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "Invalid invite",
+              });
+            }
+          });
+        },
+      });
     }),
   create: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"], protect: true } })
-    .input(userCreateSchema)
+    .input(convertIntersectionToZodObject(userCreateSchema))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
@@ -231,6 +277,7 @@ export const userRouter = createTRPCRouter({
         pingIconsEnabled: true,
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
+        ddgBangs: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -256,6 +303,7 @@ export const userRouter = createTRPCRouter({
           pingIconsEnabled: true,
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
+          ddgBangs: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -329,7 +377,7 @@ export const userRouter = createTRPCRouter({
       await ctx.db.delete(users).where(eq(users.id, input.userId));
     }),
   changePassword: protectedProcedure
-    .input(userChangePasswordApiSchema)
+    .input(convertIntersectionToZodObject(userChangePasswordApiSchema))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/{userId}/changePassword", tags: ["users"], protect: true } })
     .mutation(async ({ ctx, input }) => {
@@ -346,7 +394,6 @@ export const userRouter = createTRPCRouter({
         columns: {
           id: true,
           password: true,
-          salt: true,
           provider: true,
         },
         where: eq(users.id, input.userId),
@@ -376,8 +423,7 @@ export const userRouter = createTRPCRouter({
       });
 
       if (isPreviousPasswordRequired) {
-        const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");
-        const isValid = previousPasswordHash === dbUser.password;
+        const isValid = await comparePasswordsAsync(input.previousPassword, dbUser.password ?? "");
 
         if (!isValid) {
           throw new TRPCError({
@@ -387,8 +433,7 @@ export const userRouter = createTRPCRouter({
         }
       }
 
-      const salt = await createSaltAsync();
-      const hashedPassword = await hashPasswordAsync(input.password, salt);
+      const hashedPassword = await hashPasswordAsync(input.password);
       await ctx.db
         .update(users)
         .set({
@@ -499,6 +544,33 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, ctx.session.user.id));
     }),
+  changeDdgBangs: protectedProcedure
+    .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/ddg-bangs",
+        tags: ["users"],
+        protect: true,
+        deprecated: true,
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          ddgBangs: input.ddgBangs,
+        })
+        .where(eq(users.id, input.id));
+    }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
     .output(z.void())
@@ -536,8 +608,7 @@ export const userRouter = createTRPCRouter({
 });
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
-  const salt = await createSaltAsync();
-  const hashedPassword = await hashPasswordAsync(input.password, salt);
+  const hashedPassword = await hashPasswordAsync(input.password);
 
   const userId = createId();
   await db.insert(users).values({
@@ -545,7 +616,6 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBase
     name: input.username,
     email: input.email,
     password: hashedPassword,
-    salt,
   });
   return userId;
 };

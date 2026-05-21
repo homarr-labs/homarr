@@ -108,7 +108,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
-              <WidgetError kind={item.kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+              <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
         >
@@ -117,7 +117,6 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             when={
               widgetSupportsIntegrations &&
               item.integrationIds.length === 0 &&
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />

@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "פתיחת תוצאות חיפוש בכרטיסיה חדשה"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "לא ניתן לשנות את סמלי הפינג"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "בהיר",
         "dark": "כהה"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
     "unsavedChanges": "ישנם שינויים שלא נשמרו!",
+    "servers": "שרתים",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "הצג תצוגה מקדימה",
       "hide": "הסתר תצוגה המקדימה"
@@ -1522,6 +1539,17 @@
         "offline": "לא מקוון"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "פנקס רשימות",
       "description": "ווידג'ט פשוט של מחברת התומך ב-markdown",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "אפשר מיקום גיאוגרפי"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "הצג מידע זיכרון"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "הצג זמן פעולה"
         },
@@ -1960,6 +2022,192 @@
         "internalServerError": "נכשל באחזור סטטיסטיקות המכולות"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "עיר / מיקוד",
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "הורדת לקוח",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "הסתר תיאור"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "אין התראות להצגה.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "משאבי מערכת",
       "description": "שימוש במעבד, זיכרון, דיסק וחומרה אחרת של המערכת שלך",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "מעבד",
             "memory": "זיכרון",
+            "gpu": "",
             "network": "רשת"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "מעבד",
         "memory": "זיכרון",
+        "gpu": "",
         "network": "רשת",
         "up": "העלאה",
         "down": "הורדה"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -3295,7 +3662,7 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "משתמשים",
             "enableGravatar": {
               "label": "",
               "description": ""
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "סכמת צבעים ברירת מחדל",
               "options": {
+                "auto": "",
                 "light": "בהיר",
                 "dark": "כהה"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "סטטוס שרת מיינקראפט"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "עדכון אייקונים"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "מזג אוויר"
+            },
+            "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "מתרגמים",
             "subtitle": "{count} תורמים בתרגום לשפות שונות"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "ספריות",
             "subtitle": "{count} בשימוש בקוד של Homarr"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "יציאות"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "פקודות גלובליות",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "עבור למצב בהיר",
                 "dark": "עבור למצב כהה"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "מנועי חיפוש",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

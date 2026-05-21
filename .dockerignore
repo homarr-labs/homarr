@@ -5,7 +5,11 @@ node_modules
 npm-debug.log
 README.md
 .next
+.turbo
 .git
 dev
 .build
 e2e
+.env
+.env.*
+!.env.example

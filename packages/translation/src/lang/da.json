@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Åben søgeresultater i en ny fane"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Kan ikke skifte ping-ikoner"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Lys",
         "dark": "Mørk"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Farezone",
     "noResults": "Ingen resultater fundet",
     "unsavedChanges": "Du har ikke gemte ændringer!",
+    "servers": "Servere",
+    "applications": "Apps",
+    "services": "Services",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -1522,6 +1539,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Tidsskema",
+      "description": "Viser afgangstider for en station",
+      "title": "Afgange {station}",
+      "noStation": "Ingen station valgt",
+      "option": {
+        "station": {
+          "label": "Station"
+        }
+      }
+    },
     "notebook": {
       "name": "Notesbog",
       "description": "En simpel notebook widget, der understøtter markdown",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Anchor note",
+      "description": "Viser en valgt note fra Anchor",
+      "option": {
+        "noteId": {
+          "label": "Note"
+        },
+        "showTitle": {
+          "label": "Vis titel"
+        },
+        "showUpdatedAt": {
+          "label": "Vis senest opdateret"
+        }
+      },
+      "empty": "Vælg en note der skal vises",
+      "emptyContent": "Denne note har intet indhold",
+      "notFound": "Note ikke fundet",
+      "noNotes": "Ingen noter fundet",
+      "integrationRequired": "Vælg først en Anchorintegration",
+      "updatedAt": "Opdateret {date}",
+      "untitled": "Unavngivet",
+      "edit": "Rediger",
+      "save": "Gem",
+      "cancel": "Annullér",
+      "readOnlyViewer": "Du har læseadgang til denne note. Redigering er deaktiveret.",
+      "saveForbidden": "Du har ikke adgang til at redigere denne note.",
+      "saveFailed": "Kunne ikke gemme denne note. Prøv igen."
+    },
     "iframe": {
       "name": "indlejret dokument (iframe)",
       "description": "Indlejr ethvert indhold fra internettet. Nogle websteder kan begrænse adgang.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Tillad geolokalisering"
+        },
+        "allowModals": {
+          "label": "Tillad modaler"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "Vis hukommelsesoplysninger"
         },
+        "gpu": {
+          "label": "Vis GPU info"
+        },
         "showUptime": {
           "label": "Vis Oppetid"
         },
@@ -1941,23 +2003,209 @@
       "description": "Statistik for dine containere (Denne widget kan kun tilføjes med administratorrettigheder)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Aktiver sortering"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Kolonne brugt til sortering som standard",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Navn",
+            "state": "Tilstand",
+            "cpuUsage": "CPU-forbrug",
+            "memoryUsage": "Hukommelsesforbrug"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverter sortering"
         }
       },
       "error": {
         "internalServerError": "Kunne ikke hente containerstatistik"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Oversigt over din Coolify instans med servere og applikationer",
+      "option": {
+        "showServers": {
+          "label": "Vis servere"
+        },
+        "showApplications": {
+          "label": "Vis applikationer"
+        },
+        "showServices": {
+          "label": "Vis services"
+        }
+      },
+      "empty": {
+        "servers": "Ingen servere fundet",
+        "applications": "Ingen applikationer fundet",
+        "services": "Ingen services fundet"
+      },
+      "footer": {
+        "updated": "Opdateret {when}"
+      },
+      "error": {
+        "noIntegration": "Ingen Coolify integration konfigureret",
+        "internalServerError": "Kunne ikke hente Coolify data"
+      },
+      "server": {
+        "buildServer": "Byg"
+      },
+      "instances": {
+        "title": "Instanser"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Forbedret overvågning af medieserver med detaljerede stream og omkodningsdata",
+      "option": {
+        "showStreams": {
+          "label": "Vis aktive streams"
+        },
+        "showStats": {
+          "label": "Vis statistikoversigt"
+        },
+        "showRecentActivity": {
+          "label": "Vis seneste aktivitet"
+        },
+        "showViolations": {
+          "label": "Vis overtrædelser"
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktive streams",
+        "totalUsers": "Antal brugere i alt",
+        "transcodes": "Transkodninger",
+        "bandwidth": "Båndbredde"
+      },
+      "streams": {
+        "empty": "Ingen aktive streams",
+        "user": "Bruger",
+        "media": "Medie",
+        "state": "Tilstand",
+        "quality": "Kvalitet",
+        "device": "Enhed",
+        "progress": "Fremskridt",
+        "videoDecision": {
+          "directPlay": "Direkte afspilning",
+          "transcode": "Transkod",
+          "directStream": "Direkte stream"
+        }
+      },
+      "recentActivity": {
+        "title": "Seneste aktivitet",
+        "empty": "Ingen nylig aktivitet",
+        "watched": "Sete",
+        "partial": "Delvis"
+      },
+      "violations": {
+        "title": "Overtrædelser",
+        "empty": "Ingen nylige overtrædelser",
+        "rule": "Regel",
+        "user": "Bruger"
+      },
+      "noSectionsEnabled": "Ingen sektioner aktiveret",
+      "error": {
+        "noIntegration": "Ingen Tracearr integration konfigureret",
+        "internalServerError": "Kunne ikke hente Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich Server Statistik",
+      "description": "Information om din Immich instans",
+      "option": {
+        "showUsers": {
+          "label": "Vis brugere",
+          "description": "Vis antal brugere på din instans"
+        },
+        "showPhotos": {
+          "label": "Vis billeder",
+          "description": "Vis antal billeder på din instans"
+        },
+        "showVideos": {
+          "label": "Vis videoer",
+          "description": "Vis antal videoer på din instans"
+        },
+        "showStorage": {
+          "label": "Vis lagerplads",
+          "description": "Vis den samlede mængde brugte lagerplads"
+        }
+      },
+      "users": "Brugere",
+      "photos": "Billeder",
+      "videos": "Videoer",
+      "storage": "Brugt lagerplads"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "Dette er et unikt ID som refererer til dit Immich album. Du kan finde dette id ved at åbne et album og kopiere den unikke streng fra URL, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Interval i sekunder",
+          "description": "Skift mellem billeder i albummet hvert X sekunder. Skal være mindst 1. Skal være under 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Vis billedinfo",
+          "description": "Vis dato for billedet og det aktuelle indeks i bunden af diasshowet"
+        }
+      },
+      "description": "Diasshow af billeder i dit Immich album",
+      "noAlbumSelected": "Intet album valgt, rediger widget og vælg et album",
+      "noPhotos": "Ingen fotos i dette album"
     },
     "downloads": {
       "name": "Download Klient",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Skjul beskrivelse"
+        },
+        "showPosterImage": {
+          "label": "Vis poster billede"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "Ingen notifikationer at vise.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Viser testresultater for hastighed fra din Speedtest Tracker instans.",
+      "option": {
+        "showLatestResult": {
+          "label": "Vis seneste resultat"
+        },
+        "showStats": {
+          "label": "Vis gennemsnit"
+        },
+        "showRecentResults": {
+          "label": "Vis seneste resultater"
+        },
+        "showPingGraph": {
+          "label": "Vis ping-graf"
+        }
+      },
+      "latestResult": "Seneste resultat",
+      "averages": "Gennemsnit",
+      "tests": "{count} tests",
+      "recentResults": "Seneste resultater",
+      "recentResultsSpeed": "Hastighed",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Gns Download",
+      "avgUpload": "Gns Upload",
+      "avgPing": "Gns Ping",
+      "healthy": "Sund",
+      "unhealthy": "Usund",
+      "ok": "OK",
+      "fail": "Fejl",
+      "noSectionsEnabled": "Aktivér mindst én sektion i widget-indstillinger.",
+      "error": {
+        "internalServerError": "Kunne ikke hente hastighedstestdata"
+      }
+    },
     "systemResources": {
       "name": "Systemressourcer",
       "description": "CPU, Hukommelse, Disk og andet hardwareforbrug af dit system",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Hukommelse",
+            "gpu": "GPU",
             "network": "Netværk"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "OP",
         "down": "NED"
+      }
+    },
+    "systemDisks": {
+      "name": "System diske",
+      "description": "Diskforbrug af dit system",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Vis temperatur, hvis muligt"
+        },
+        "displayMode": {
+          "label": "Visningstilstand",
+          "option": {
+            "percentage": {
+              "label": "Procentdel (f.eks. 76 %)"
+            },
+            "absolute": {
+              "label": "Absolutte værdier (f.eks. 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Fri pladsprocent (fx, 24% fri)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Vis forbrugslinje i baggrunden"
+        }
+      },
+      "status": {
+        "unhealthy": "Usund"
       }
     }
   },
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Brugere",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Aktiver Gravatar",
+              "description": "Falder tilbage til brugernes avatarer fra Libravatar/Gravatar, når ingen brugerdefineret avatar er valgt og en e-mail er konfigureret"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard farvetema",
               "options": {
+                "auto": "",
                 "light": "Lys",
                 "dark": "Mørk"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status for Minecraft server"
+            },
+            "timetable": {
+              "label": "Tidsskema"
             },
             "iconsUpdater": {
               "label": "Opdatering Af Ikoner"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Vejr"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Oversættere",
             "subtitle": "{count} bidragende oversættere på mange sprog"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Biblioteker",
             "subtitle": "{count} brugt i koden for Homarr"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Porte"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Skift til lys tilstand",
                 "dark": "Skift til mørk tilstand"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Søgemaskiner",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

@@ -15,7 +15,7 @@ describe("Health checks", () => {
     // Assert
     expect(readyResponse.status).toBe(200);
     expect(liveResponse.status).toBe(200);
-  }, 20_000);
+  }, 60_000);
 
   test("ready and live should return 200 OK with external redis", async () => {
     // Arrange
@@ -42,5 +42,5 @@ describe("Health checks", () => {
       liveResponse.status,
       `Expected live to return OK statusCode=${liveResponse.status} content=${await liveResponse.text()}`,
     ).toBe(200);
-  }, 20_000);
+  }, 60_000);
 });

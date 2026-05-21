@@ -442,7 +442,7 @@ export const boardRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            transaction.insert(schema.boards).values({
+            await transaction.insert(schema.boards).values({
               ...boardProps,
               id: newBoardId,
               name: input.name,

@@ -1,7 +1,11 @@
 import type { Readable } from "node:stream";
 import dayjs from "dayjs";
 import type { Container, ContainerInfo, ContainerStats } from "dockerode";
+import type Dockerode from "dockerode";
 
+import { bestMatch } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
@@ -9,6 +13,8 @@ import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+
+const logger = createLogger({ module: "dockerRequestHandler" });
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "dockerContainersResult",
@@ -19,11 +25,10 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(20, "seconds"),
 });
 
-const dockerInstances = DockerSingleton.getInstances();
-
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
 
 const findContainerByIdAsync = async (id: string) => {
+  const dockerInstances = DockerSingleton.getInstances();
   const containers = await Promise.all(
     dockerInstances.map(async ({ instance }) => {
       const container = instance.getContainer(id);
@@ -78,11 +83,6 @@ export const streamContainerLogsAsync = async (
     follow: true,
   })) as Readable;
 
-  // Docker uses a multiplexed stream format for logs where each message has an 8-byte header:
-  // - 1 byte: stream type (stdout/stderr)
-  // - 3 bytes: padding
-  // - 4 bytes: payload length (big-endian)
-  // We need to process the stream in chunks and extract complete messages from the buffer.
   const MAX_MESSAGE_SIZE = 1024 * 1024;
   const processChunk = createDockerLogStreamProcessor(onData, onError, MAX_MESSAGE_SIZE);
 
@@ -106,14 +106,31 @@ export const streamContainerLogsAsync = async (
 };
 
 async function getContainersWithStatsAsync() {
-  const containers = await Promise.all(
+  const dockerInstances = DockerSingleton.getInstances();
+  const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
       return instanceContainers
         .filter((container) => !(dockerLabels.hide in container.Labels))
         .map((container) => ({ ...container, instance: host }));
     }),
-  ).then((res) => res.flat());
+  );
+
+  const containers = results.flatMap((result, index) => {
+    if (result.status === "fulfilled") return result.value;
+    logger.warn(
+      new ErrorWithMetadata(
+        "Failed to list containers from Docker host",
+        {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          host: dockerInstances[index]!.host,
+        },
+        { cause: result.reason },
+      ),
+    );
+
+    return [];
+  });
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
 
   const dbIcons =
@@ -127,8 +144,6 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    // Get stats, falling back to an empty stats object if fetch fails
-    // calculateCpuUsage and calculateMemoryUsage will return 0 for invalid/missing stats
     const stats = await instance
       .getContainer(container.Id)
       .stats({ stream: false, "one-shot": true })
@@ -146,27 +161,23 @@ async function getContainersWithStatsAsync() {
     return {
       id: container.Id,
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
+      host: container.instance,
       state: container.State as ContainerState,
-      iconUrl:
-        dbIcons.find((icon) => {
-          const extractedImage = extractImage(container);
-          if (!extractedImage) return false;
-          return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-        })?.url ?? null,
+      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
       cpuUsage,
       memoryUsage,
       image: container.Image,
-      // Docker Desktop on macOS can return null instead of an empty ports array
-      ports: (container.Ports as typeof container.Ports | null) ?? [],
+      ports: container.Ports as Dockerode.Port[] | undefined,
     };
   });
 
   return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
 }
 
-function calculateCpuUsage(stats: ContainerStats): number {
-  // Handle containers with missing or invalid stats (e.g., exited, dead containers)
-  if (!stats.cpu_stats.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage.total_usage) {
+export function calculateCpuUsage(stats: ContainerStats): number {
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!stats.cpu_stats?.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage?.total_usage) {
     return 0;
   }
 
@@ -179,14 +190,13 @@ function calculateCpuUsage(stats: ContainerStats): number {
   return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
 }
 
-function calculateMemoryUsage(stats: ContainerStats): number {
-  // Handle containers with missing or invalid stats (e.g., exited, dead containers)
-  if (!stats.memory_stats.usage) {
+export function calculateMemoryUsage(stats: ContainerStats): number {
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!stats.memory_stats?.usage) {
     return 0;
   }
 
-  // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
-  // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
   return (
     stats.memory_stats.usage -
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

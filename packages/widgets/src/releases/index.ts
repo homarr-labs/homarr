@@ -52,7 +52,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
                 suffix: z.string().optional(),
               })
               .optional(),
-            iconUrl: z.string().url().optional(),
+            iconUrl: z.string().optional(),
           }),
         ),
       }),

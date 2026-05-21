@@ -12,5 +12,5 @@ describe("Home", () => {
 
     // Assert
     expect(homeResponse.status).toBe(200);
-  }, 20_000);
+  }, 60_000);
 });

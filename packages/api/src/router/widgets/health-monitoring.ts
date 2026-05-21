@@ -9,7 +9,9 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "mock"))
+    .concat(
+      createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
+    )
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -26,7 +28,9 @@ export const healthMonitoringRouter = createTRPCRouter({
       );
     }),
   subscribeSystemHealthStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "mock"))
+    .concat(
+      createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
+    )
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; healthInfo: SystemHealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];

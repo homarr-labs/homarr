@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "新しいタブで検索結果を見る"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Pingアイコンを切り替えることができません"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "ライト",
         "dark": "ダーク"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
+    "servers": "サーバー",
+    "applications": "アプリケーション",
+    "services": "サービス",
     "preview": {
       "show": "プレビューを表示",
       "hide": "プレビューを閉じる"
@@ -1522,6 +1539,17 @@
         "offline": "オフライン"
       }
     },
+    "timetable": {
+      "name": "タイムテーブル",
+      "description": "駅の出発時刻を表示します",
+      "title": "{station} 出発時刻",
+      "noStation": "駅が選択されていません",
+      "option": {
+        "station": {
+          "label": "駅"
+        }
+      }
+    },
     "notebook": {
       "name": "メモ帳",
       "description": "マークダウンをサポートするシンプルなノートブックウィジェット",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "アンカーノート",
+      "description": "アンカーから選択したノートを表示する",
+      "option": {
+        "noteId": {
+          "label": "ノート"
+        },
+        "showTitle": {
+          "label": "タイトルを表示"
+        },
+        "showUpdatedAt": {
+          "label": "最終更新を表示"
+        }
+      },
+      "empty": "表示するノートを選択",
+      "emptyContent": "このノートにはコンテンツがありません",
+      "notFound": "ノートが見つかりません",
+      "noNotes": "ノートがありません",
+      "integrationRequired": "アンカー統合を最初に選択してください",
+      "updatedAt": "{date} に更新しました",
+      "untitled": "タイトルなし",
+      "edit": "編集",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "readOnlyViewer": "このノートを閲覧することができます。編集は無効になっています",
+      "saveForbidden": "このノートを編集する権限がありません。",
+      "saveFailed": "このノートを保存できませんでした。もう一度やり直してください。"
+    },
     "iframe": {
       "name": "iFrame",
       "description": "インターネットから任意のコンテンツを埋め込みます。一部のウェブサイトではアクセスが制限される場合があります",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "位置情報を許可する"
+        },
+        "allowModals": {
+          "label": "モーダルを許可"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "メモリー情報を表示"
         },
+        "gpu": {
+          "label": "GPU情報を表示"
+        },
         "showUptime": {
           "label": "稼働時間を表示"
         },
@@ -1941,23 +2003,209 @@
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "アイテムの並び替えを有効にする"
         },
         "defaultSort": {
-          "label": "",
+          "label": "デフォルトで並び替えに使用される列",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "名称",
+            "state": "状態",
+            "cpuUsage": "CPU 使用率",
+            "memoryUsage": "メモリ使用量"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "並び替えを反転"
         }
       },
       "error": {
         "internalServerError": "コンテナステータスの取得に失敗しました"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "サーバーとアプリケーションを使用した Coolify インスタンスの概要",
+      "option": {
+        "showServers": {
+          "label": "サーバーを表示"
+        },
+        "showApplications": {
+          "label": "アプリケーションを表示"
+        },
+        "showServices": {
+          "label": "サービスを表示"
+        }
+      },
+      "empty": {
+        "servers": "サーバーが見つかりません",
+        "applications": "アプリケーションが見つかりません",
+        "services": "サービスが見つかりません"
+      },
+      "footer": {
+        "updated": "{when} に更新しました"
+      },
+      "error": {
+        "noIntegration": "Coolify 統合が設定されていません",
+        "internalServerError": "Coolify データの取得に失敗しました"
+      },
+      "server": {
+        "buildServer": "ビルド"
+      },
+      "instances": {
+        "title": "インスタンス"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "詳細なストリームとトランスコーディングデータによるメディアサーバーのモニタリングの強化",
+      "option": {
+        "showStreams": {
+          "label": "アクティブなストリームを表示"
+        },
+        "showStats": {
+          "label": "統計情報の概要を表示"
+        },
+        "showRecentActivity": {
+          "label": "最近のアクティビティを表示"
+        },
+        "showViolations": {
+          "label": "違反を表示"
+        }
+      },
+      "stats": {
+        "activeStreams": "アクティブなストリーム",
+        "totalUsers": "総ユーザー数",
+        "transcodes": "トランスコード",
+        "bandwidth": "帯域幅"
+      },
+      "streams": {
+        "empty": "アクティブなストリームがありません",
+        "user": "ユーザー",
+        "media": "メディア",
+        "state": "状態",
+        "quality": "品質",
+        "device": "デバイス",
+        "progress": "進捗状況",
+        "videoDecision": {
+          "directPlay": "ダイレクトプレイ",
+          "transcode": "トランスコード",
+          "directStream": "ダイレクトストリーム"
+        }
+      },
+      "recentActivity": {
+        "title": "最近のアクティビティ",
+        "empty": "最近のアクティビティなし",
+        "watched": "視聴済",
+        "partial": "一部"
+      },
+      "violations": {
+        "title": "違反",
+        "empty": "最近の違反はありません",
+        "rule": "ルール",
+        "user": "ユーザー"
+      },
+      "noSectionsEnabled": "有効なセクションがありません",
+      "error": {
+        "noIntegration": "Tracearrとの連携が設定されていません",
+        "internalServerError": "Tracearrデータの取得に失敗しました"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich サーバーの統計",
+      "description": "Immich インスタンスに関する情報",
+      "option": {
+        "showUsers": {
+          "label": "ユーザを表示",
+          "description": "インスタンスにユーザー数を表示する"
+        },
+        "showPhotos": {
+          "label": "写真を表示",
+          "description": "インスタンス上の写真数を表示する"
+        },
+        "showVideos": {
+          "label": "動画を表示",
+          "description": "インスタンスに動画の数を表示する"
+        },
+        "showStorage": {
+          "label": "ストレージを表示",
+          "description": "使用されたストレージの合計容量を表示します"
+        }
+      },
+      "users": "ユーザー",
+      "photos": "写真",
+      "videos": "動画",
+      "storage": "ストレージ使用量"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich アルバム",
+      "option": {
+        "albumId": {
+          "label": "アルバム ID",
+          "description": "これはImmichのアルバムを示す固有のIDです。 「a21aca09-9f05-47dc-b1a1-7b53c547226e」など、アルバムを開いてURLから一意の文字列をコピーすることでこのIDを見つけることができます。"
+        },
+        "rotationIntervalSeconds": {
+          "label": "間隔 (秒)",
+          "description": "アルバム内の写真をX秒ごとに回転させます。少なくとも1でなければなりません。3600未満でなければなりません。"
+        },
+        "showPhotoInfo": {
+          "label": "写真情報を表示",
+          "description": "スライドショーの下部に画像の日付と現在の索引を表示します"
+        }
+      },
+      "description": "Immichアルバムの写真のスライド",
+      "noAlbumSelected": "アルバムが選択されていない、ウィジェットを編集してアルバムを選択してください",
+      "noPhotos": "このアルバムには写真がありません"
     },
     "downloads": {
       "name": "クライアントをダウンロード",
@@ -2248,7 +2542,7 @@
         "unknown": "不明",
         "pending": "保留中",
         "processing": "処理中",
-        "requested": "",
+        "requested": "要求済み",
         "partiallyAvailable": "一部",
         "available": "利用可能",
         "blacklisted": "ブラックリスト",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "詳細を非表示"
+        },
+        "showPosterImage": {
+          "label": "ポスターの画像を表示"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "表示する通知はありません。",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "スピードテストトラッカー",
+      "description": "Speedtest Trackerインスタンスからスピードテストの結果を表示します。",
+      "option": {
+        "showLatestResult": {
+          "label": "最新の結果を表示"
+        },
+        "showStats": {
+          "label": "平均を表示"
+        },
+        "showRecentResults": {
+          "label": "最近の結果を表示"
+        },
+        "showPingGraph": {
+          "label": "ping グラフを表示"
+        }
+      },
+      "latestResult": "直近の結果",
+      "averages": "平均値",
+      "tests": "{count} 回テスト",
+      "recentResults": "最近の結果",
+      "recentResultsSpeed": "スピード",
+      "recentResultsPing": "Ping",
+      "download": "ダウンロード",
+      "upload": "アップロード",
+      "ping": "Ping",
+      "status": "ステータス",
+      "avgDownload": "平均ダウンロード",
+      "avgUpload": "平均アップロード",
+      "avgPing": "平均 Ping",
+      "healthy": "正常",
+      "unhealthy": "異常",
+      "ok": "成功",
+      "fail": "失敗",
+      "noSectionsEnabled": "ウィジェットオプションで少なくとも1つのセクションを有効にします。",
+      "error": {
+        "internalServerError": "スピードテストデータの取得に失敗しました"
+      }
+    },
     "systemResources": {
       "name": "システムリソース",
       "description": "CPU、メモリ、ディスクなどのシステムハードウェアの使用",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "メモリ",
+            "gpu": "GPU",
             "network": "ネットワーク"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
+        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
+      }
+    },
+    "systemDisks": {
+      "name": "システムディスク",
+      "description": "システムのディスク使用量",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "利用可能な場合は温度を表示"
+        },
+        "displayMode": {
+          "label": "表示モード",
+          "option": {
+            "percentage": {
+              "label": "割合 (例 76%)"
+            },
+            "absolute": {
+              "label": "絶対値（例：800GB / 1TB）"
+            },
+            "free": {
+              "label": "空き領域の割合（例：24%空き）"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "バックグラウンドの使用状況バーを表示"
+        }
+      },
+      "status": {
+        "unhealthy": "異常"
       }
     }
   },
@@ -3240,7 +3607,7 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": "Homarr はオープンソースソフトウェア Umami を使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
+              "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(MySQL/PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
             },
             "widgetData": {
               "title": "ウィジェットのデータ",
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "ユーザー",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar を有効化",
+              "description": "カスタムアバターが設定されておらず、メールが設定されている場合は、Libavatar/Gravatarからユーザーのアバターにフォールバックします"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "既定の配色設定",
               "options": {
+                "auto": "",
                 "light": "ライト",
                 "dark": "ダーク"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft サーバーの状態"
+            },
+            "timetable": {
+              "label": "タイムテーブル"
             },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "天気"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "翻訳者",
             "subtitle": "{count} の多くの言語で翻訳を行っている"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "ライブラリ",
             "subtitle": "{count} 個が Homarr のコードで使用されています"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "ポート"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "グローバルコマンド",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "ライトモードに切り替え",
                 "dark": "ダークモードに切り替え"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "検索エンジン",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

@@ -1,5 +1,7 @@
 import type { WidgetOptionType } from "../options";
+import { WidgetAnchorNoteInput } from "./widget-anchor-note-input";
 import { WidgetAppInput } from "./widget-app-input";
+import { WidgetDynamicSelectInput } from "./widget-dynamic-select-input";
 import { WidgetLocationInput } from "./widget-location-input";
 import { WidgetMultiTextInput } from "./widget-multi-text-input";
 import { WidgetMultiReleasesRepositoriesInput } from "./widget-multiReleasesRepositories-input";
@@ -10,8 +12,12 @@ import { WidgetSliderInput } from "./widget-slider-input";
 import { WidgetSortedItemListInput } from "./widget-sortable-item-list-input";
 import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
+import { WidgetUmamiEventInput } from "./widget-umami-event-input";
+import { WidgetUmamiEventNamesInput } from "./widget-umami-event-names-input";
+import { WidgetUmamiWebsiteInput } from "./widget-umami-website-input";
 
 const mapping = {
+  anchorNote: WidgetAnchorNoteInput,
   text: WidgetTextInput,
   location: WidgetLocationInput,
   multiSelect: WidgetMultiSelectInput,
@@ -23,6 +29,10 @@ const mapping = {
   app: WidgetAppInput,
   sortableItemList: WidgetSortedItemListInput,
   multiReleasesRepositories: WidgetMultiReleasesRepositoriesInput,
+  dynamicSelect: WidgetDynamicSelectInput,
+  umamiEventName: WidgetUmamiEventInput,
+  umamiEventNames: WidgetUmamiEventNamesInput,
+  umamiWebsite: WidgetUmamiWebsiteInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

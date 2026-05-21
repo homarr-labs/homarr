@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Suchergebnisse in neuem Tab öffnen"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Konnte Ping-Icons nicht umschalten"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Hell",
         "dark": "Dunkel"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "unsavedChanges": "Sie haben ungespeicherte Änderungen!",
+    "servers": "Server",
+    "applications": "Apps",
+    "services": "Dienste",
     "preview": {
       "show": "Vorschau ansehen",
       "hide": "Vorschau ausblenden"
@@ -1522,6 +1539,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Notizbuch",
       "description": "Ein einfaches Notizbuch Widget, das Markdown unterstützt",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Geolokalisierung zulassen"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Laufzeit anzeigen"
         },
@@ -1960,6 +2022,192 @@
         "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
     },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Übersicht Ihrer Coolify-Instanz mit Servern und Anwendungen",
+      "option": {
+        "showServers": {
+          "label": "Server anzeigen"
+        },
+        "showApplications": {
+          "label": "Anwendungen anzeigen"
+        },
+        "showServices": {
+          "label": "Dienste anzeigen"
+        }
+      },
+      "empty": {
+        "servers": "Keine Server gefunden",
+        "applications": "Keine Anwendungen gefunden",
+        "services": "Keine Dienste gefunden"
+      },
+      "footer": {
+        "updated": "Aktualisiert {when}"
+      },
+      "error": {
+        "noIntegration": "Keine Coolify-Integration konfiguriert",
+        "internalServerError": "Fehler beim Abrufen der Coolify-Daten"
+      },
+      "server": {
+        "buildServer": "Version"
+      },
+      "instances": {
+        "title": "Instanzen"
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": "Aktive Streams anzeigen"
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktive Streams",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Stadt / Postleitzahl",
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "Benutzer anzeigen",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "Download Client",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Beschreibung ausblenden"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "Keine Benachrichtigungen zum Anzeigen.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Systemressourcen",
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Speicher",
+            "gpu": "",
             "network": "Netzwerk"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "Arbeitsspeicher",
+        "gpu": "",
         "network": "Netzwerk",
         "up": "OBEN",
         "down": "UNTEN"
+      }
+    },
+    "systemDisks": {
+      "name": "Systemdatenträger",
+      "description": "Festplattennutzung Ihres Systems",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Zeige Temperatur, falls verfügbar"
+        },
+        "displayMode": {
+          "label": "Anzeigemodus",
+          "option": {
+            "percentage": {
+              "label": "Prozentsatz (z.B. 76%)"
+            },
+            "absolute": {
+              "label": "Absolute Werte (z.B. 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Prozentsatz freier Speicherplatz (z. B. 24% frei)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Zeige Hintergrundnutzungsleiste"
+        }
+      },
+      "status": {
+        "unhealthy": "Fehlerhaft"
       }
     }
   },
@@ -3240,7 +3607,7 @@
             "title": "Nutzungsdaten",
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
-              "text": "Homarr schickt anonymisierte Nutzungsdaten mit der Open-Source-Software Umami. Es sammelt zu keinem Zeitpunkt personenbezogene Daten und ist daher vollständig DPR & CCPA konform. Wir empfehlen diese Nutzungsdaten zu aktivieren, da es unserem Open-Source-Team hilft Probleme zu identifizieren und unserem Backlog ermöglicht Priorität einzuräumen."
+              "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
             },
             "widgetData": {
               "title": "Widget Daten",
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Benutzer",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar aktivieren",
+              "description": "Falls kein benutzerdefinierter Avatar gesetzt ist und eine E-Mail konfiguriert wurde, ist ein nutzen der Avatare von Libravatar/Gravatar möglich"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Standard Farbschema",
               "options": {
+                "auto": "",
                 "light": "Hell",
                 "dark": "Dunkel"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status des Minecraft Servers"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Symbol Updater"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Wetter"
+            },
+            "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Übersetzer",
             "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Bibliotheken",
             "subtitle": "{count} im Code von Homarr verwendet"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Globale Befehle",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Zum hellen Design wechseln",
                 "dark": "Zum dunklen Design wechseln"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Suchmaschinen",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

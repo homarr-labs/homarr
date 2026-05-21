@@ -51,7 +51,6 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/mysql";
 export const apiKeys = mysqlTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
-  salt: text().notNull(),
   userId: varchar({ length: 64 })
     .notNull()
     .references((): AnyMySqlColumn => users.id, {
@@ -66,7 +65,6 @@ export const users = mysqlTable("user", {
   emailVerified: timestamp(),
   image: text(),
   password: text(),
-  salt: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
@@ -78,6 +76,7 @@ export const users = mysqlTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: boolean().default(false).notNull(),
+  ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),

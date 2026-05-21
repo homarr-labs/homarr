@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Otwórz wyniki wyszukiwania w nowej karcie"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Nie można włączyć pingowania ikon"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Jasny",
         "dark": "Ciemny"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
     "unsavedChanges": "Masz niezapisane zmiany!",
+    "servers": "Serwery",
+    "applications": "Aplikacje",
+    "services": "Usługi",
     "preview": {
       "show": "Pokaż podgląd",
       "hide": "Ukryj podgląd"
@@ -1522,6 +1539,17 @@
         "offline": "Niedostępny"
       }
     },
+    "timetable": {
+      "name": "Rozkład",
+      "description": "Wyświetla czas odjazdu dla stacji",
+      "title": "Odjazdy {station}",
+      "noStation": "Nie wybrano stacji",
+      "option": {
+        "station": {
+          "label": "Stacja"
+        }
+      }
+    },
     "notebook": {
       "name": "Notatnik",
       "description": "Prosty widżet notatnika obsługujący markdown",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Notatka z Anchor",
+      "description": "Wyświetla wybraną notatkę z Anchor",
+      "option": {
+        "noteId": {
+          "label": "Notatka"
+        },
+        "showTitle": {
+          "label": "Pokaż tytuł"
+        },
+        "showUpdatedAt": {
+          "label": "Pokaż ostatnią aktualizację"
+        }
+      },
+      "empty": "Wybierz notatkę do wyświetlenia",
+      "emptyContent": "Ta notatka nie ma zawartości",
+      "notFound": "Nie znaleziono notatki",
+      "noNotes": "Nie znaleziono notatek",
+      "integrationRequired": "Najpierw wybierz integrację z Anchor",
+      "updatedAt": "Zaktualizowano {date}",
+      "untitled": "Bez tytułu",
+      "edit": "Edytuj",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "readOnlyViewer": "Masz dostęp tylko do odczytu tej notatki. Edycja jest wyłączona.",
+      "saveForbidden": "Nie masz uprawnień do edycji tej notatki.",
+      "saveFailed": "Nie udało się zapisać tej notatki. Spróbuj ponownie."
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Zezwalaj na geolokalizację"
+        },
+        "allowModals": {
+          "label": "Zezwól na okna modalne"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "Pokaż informacje o pamięci"
         },
+        "gpu": {
+          "label": "Pokaż informacje o GPU"
+        },
         "showUptime": {
           "label": "Pokaż czas pracy"
         },
@@ -1941,23 +2003,209 @@
       "description": "Statystyki Twoich kontenerów (ten widżet można dodać tylko z uprawnieniami administratora)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Włącz sortowanie elementów"
         },
         "defaultSort": {
-          "label": "",
+          "label": "👉 Kolumna używana domyślnie do sortowania",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nazwa",
+            "state": "Stan",
+            "cpuUsage": "Użycie CPU",
+            "memoryUsage": "Użycie pamięci"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Odwróć sortowanie"
         }
       },
       "error": {
         "internalServerError": "Nie udało się pobrać statystyk kontenerów"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Przegląd instancji Coolify z serwerami i aplikacjami",
+      "option": {
+        "showServers": {
+          "label": "Pokaż serwery"
+        },
+        "showApplications": {
+          "label": "Pokaż aplikacje"
+        },
+        "showServices": {
+          "label": "Pokaż usługi"
+        }
+      },
+      "empty": {
+        "servers": "Nie znaleziono serwerów",
+        "applications": "Nie znaleziono aplikacji",
+        "services": "Nie znaleziono usług"
+      },
+      "footer": {
+        "updated": "Zaktualizowano {when}"
+      },
+      "error": {
+        "noIntegration": "Brak skonfigurowanej integracji Coolify",
+        "internalServerError": "Nie udało się pobrać danych z Coolify"
+      },
+      "server": {
+        "buildServer": "Build"
+      },
+      "instances": {
+        "title": "Instancje"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Rozszerzone monitorowanie serwera multimediów z szczegółowymi danymi o strumieniach i transkodowaniu",
+      "option": {
+        "showStreams": {
+          "label": "Pokaż aktywne strumienie"
+        },
+        "showStats": {
+          "label": "Pokaż podsumowanie statystyk"
+        },
+        "showRecentActivity": {
+          "label": "Pokaż ostatnią aktywność"
+        },
+        "showViolations": {
+          "label": "Pokaż naruszenia"
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktywne strumienie",
+        "totalUsers": "Łączna liczba użytkowników",
+        "transcodes": "Transkodowanie",
+        "bandwidth": "Przepustowość"
+      },
+      "streams": {
+        "empty": "Brak aktywnych strumieni",
+        "user": "Użytkownik",
+        "media": "Media",
+        "state": "Status",
+        "quality": "Jakość",
+        "device": "Urządzenie",
+        "progress": "Postęp",
+        "videoDecision": {
+          "directPlay": "Direct Play",
+          "transcode": "Transkodowanie",
+          "directStream": "Direct Stream"
+        }
+      },
+      "recentActivity": {
+        "title": "Ostatnia aktywność",
+        "empty": "Brak ostatniej aktywności",
+        "watched": "Obejrzane",
+        "partial": "Częściowo"
+      },
+      "violations": {
+        "title": "Naruszenia",
+        "empty": "Brak ostatnich naruszeń",
+        "rule": "Reguła",
+        "user": "Użytkownik"
+      },
+      "noSectionsEnabled": "Brak włączonych sekcji",
+      "error": {
+        "noIntegration": "Brak skonfigurowanej integracji Tracearr",
+        "internalServerError": "Nie udało się pobrać danych z Tracearr"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Statystyki serwera Immich",
+      "description": "Informacje o Twojej instancji Immich",
+      "option": {
+        "showUsers": {
+          "label": "Pokaż użytkowników",
+          "description": "Pokaż liczbę użytkowników w Twojej instancji"
+        },
+        "showPhotos": {
+          "label": "Pokaż zdjęcia",
+          "description": "Pokaż liczbę zdjęć w Twojej instancji"
+        },
+        "showVideos": {
+          "label": "Pokaż filmy",
+          "description": "Pokaż liczbę filmów w Twojej instancji"
+        },
+        "showStorage": {
+          "label": "Pokaż wykorzystanie pamięci",
+          "description": "Pokaż całkowite wykorzystanie pamięci"
+        }
+      },
+      "users": "Użytkownicy",
+      "photos": "Zdjęcia",
+      "videos": "Filmy",
+      "storage": "Wykorzystana przestrzeń"
+    },
+    "immich-albumCarousel": {
+      "name": "Album Immich",
+      "option": {
+        "albumId": {
+          "label": "ID albumu",
+          "description": "To unikalny identyfikator odnoszący się do Twojego albumu w Immich. Możesz go znaleźć, otwierając album i kopiując unikalny ciąg znaków z adresu URL, np. „a21aca09-9f05-47dc-b1a1-7b53c547226e”."
+        },
+        "rotationIntervalSeconds": {
+          "label": "Interwał w sekundach",
+          "description": "Zmieniaj zdjęcia w albumie co X sekund. Wartość musi wynosić co najmniej 1 i mniej niż 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Pokaż informacje o zdjęciu",
+          "description": "Wyświetl datę zdjęcia oraz bieżący indeks na dole pokazu slajdów"
+        }
+      },
+      "description": "Pokaz slajdów zdjęć z Twojego albumu w Immich",
+      "noAlbumSelected": "Nie wybrano albumu. Edytuj widget i wybierz album",
+      "noPhotos": "Brak zdjęć w tym albumie"
     },
     "downloads": {
       "name": "Klient pobierania",
@@ -2306,8 +2600,8 @@
         "title": "Ocena stanu zdrowia",
         "queued": "W kolejce",
         "status": {
-          "healthy": "Zdrowy",
-          "unhealthy": "Niezdrowy"
+          "healthy": "Dobry",
+          "unhealthy": "Zły"
         }
       },
       "panel": {
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Ukryj opis"
+        },
+        "showPosterImage": {
+          "label": "Pokaż obraz okładki"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "Brak powiadomień do wyświetlenia.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker",
+      "option": {
+        "showLatestResult": {
+          "label": "Pokaż ostatni wynik"
+        },
+        "showStats": {
+          "label": "Pokaż średnie"
+        },
+        "showRecentResults": {
+          "label": "Pokaż ostatnie wyniki"
+        },
+        "showPingGraph": {
+          "label": "Pokaż wykres pingu"
+        }
+      },
+      "latestResult": "Najnowszy wynik",
+      "averages": "Średnie",
+      "tests": "{count} testów",
+      "recentResults": "Ostatnie wyniki",
+      "recentResultsSpeed": "Prędkość",
+      "recentResultsPing": "Ping",
+      "download": "Pobieranie",
+      "upload": "Wysyłanie",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Średnie pobieranie",
+      "avgUpload": "Średnie wysyłanie",
+      "avgPing": "Średni ping",
+      "healthy": "Dobry",
+      "unhealthy": "Zły",
+      "ok": "Ok",
+      "fail": "Błąd",
+      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu",
+      "error": {
+        "internalServerError": "Nie udało się pobrać danych testu prędkości"
+      }
+    },
     "systemResources": {
       "name": "Zasoby systemowe",
       "description": "Wykorzystanie CPU, pamięci, dysku i innych zasobów sprzętowych system",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "Procesor",
             "memory": "Pamięć",
+            "gpu": "GPU",
             "network": "Sieć"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "Procesor",
         "memory": "Pamięć",
+        "gpu": "GPU",
         "network": "Sieć",
         "up": "Aktywny",
         "down": "Nieaktywny"
+      }
+    },
+    "systemDisks": {
+      "name": "Dyski systemowe",
+      "description": "Wykorzystanie dysku w Twoim systemie",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Pokaż temperaturę, jeśli jest dostępna"
+        },
+        "displayMode": {
+          "label": "Tryb wyświetlania",
+          "option": {
+            "percentage": {
+              "label": "Procentowo (np. 76%)"
+            },
+            "absolute": {
+              "label": "Wartości bezwzględne (np. 800 GB / 1 TB)"
+            },
+            "free": {
+              "label": "Procent wolnego miejsca (np. 24% wolne)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Pokaż pasek wykorzystania w tle"
+        }
+      },
+      "status": {
+        "unhealthy": "Zły"
       }
     }
   },
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Użytkownicy",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Włącz Gravatar",
+              "description": "Używa awatarów z Libravatar/Gravatar, gdy nie ustawiono własnego awatara i skonfigurowano adres e-mail"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Domyślny schemat kolorów",
               "options": {
+                "auto": "",
                 "light": "Jasny",
                 "dark": "Ciemny"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Status serwera Minecraft"
+            },
+            "timetable": {
+              "label": "Harmonogram"
             },
             "iconsUpdater": {
               "label": "Aktualizator ikon"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Pogoda"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Tłumacze",
             "subtitle": "{count} współtworzy tłumaczenia w wielu językach"
           },
+          "sponsors": {
+            "title": "Sponsorzy",
+            "subtitle": "{count} wspiera finansowo projekt"
+          },
           "libraries": {
             "title": "Biblioteki",
             "subtitle": "{count} używanych w kodzie Homarr"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Porty"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Polecenia globalne",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Przełącz na tryb jasny",
                 "dark": "Przełącz na tryb ciemny"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Wyszukiwarki",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {

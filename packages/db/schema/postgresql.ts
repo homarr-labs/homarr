@@ -50,7 +50,6 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql"
 export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
-  salt: text().notNull(),
   userId: varchar({ length: 64 })
     .notNull()
     .references((): AnyPgColumn => users.id, {
@@ -65,7 +64,6 @@ export const users = pgTable("user", {
   emailVerified: timestamp(),
   image: text(),
   password: text(),
-  salt: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyPgColumn => boards.id, {
     onDelete: "set null",
@@ -77,6 +75,7 @@ export const users = pgTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: boolean().default(false).notNull(),
+  ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: smallint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),

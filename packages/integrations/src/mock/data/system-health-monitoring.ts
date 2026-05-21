@@ -33,6 +33,17 @@ export class SystemHealthMonitoringMockService implements ISystemHealthMonitorin
           deviceName: "Mock Device",
           temperature: Math.floor(Math.random() * 100), // Random temperature between 0 and 99
           overallStatus: "OK",
+          healthy: true,
+        },
+      ],
+      gpu: [
+        {
+          gpuId: "mock0",
+          name: "Mock GPU RTX 4090",
+          memoryUtilization: Math.floor(Math.random() * 100),
+          processorUtilization: Math.floor(Math.random() * 100),
+          temperature: Math.floor(Math.random() * 90),
+          fanSpeed: Math.floor(Math.random() * 2000),
         },
       ],
     });

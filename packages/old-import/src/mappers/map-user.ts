@@ -16,7 +16,7 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
     ({
       id,
       password,
-      salt,
+      salt: _saltIsNotNeededAsPartOfPassword,
       settings,
       ...user
     }): InferInsertModel<typeof users> & { oldId: string; isAdmin: boolean } => ({
@@ -24,13 +24,12 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
       oldId: id,
       id: createId(),
       name: user.name.toLowerCase(),
-      colorScheme: settings?.colorScheme === "environment" ? undefined : settings?.colorScheme,
+      colorScheme: settings?.colorScheme === "environment" ? "auto" : settings?.colorScheme,
       firstDayOfWeek: settings?.firstDayOfWeek === "sunday" ? 0 : settings?.firstDayOfWeek === "monday" ? 1 : 6,
       provider: "credentials",
       pingIconsEnabled: settings?.replacePingWithIcons,
       isAdmin: user.isAdmin || user.isOwner,
       password: decryptSecretWithKey(password, key),
-      salt: decryptSecretWithKey(salt, key),
     }),
   );
 };

@@ -43,15 +43,15 @@ import { mapTestConnectionError } from "./map-test-connection-error";
 const logger = createLogger({ module: "integrationRouter" });
 
 export const integrationRouter = createTRPCRouter({
-  all: publicProcedure.query(async ({ ctx }) => {
+  all: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      where: eq(groupMembers.userId, ctx.session.user.id),
     });
 
     const integrations = await ctx.db.query.integrations.findMany({
       with: {
         userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
         },
         groupPermissions: {
           where: inArray(
@@ -85,15 +85,15 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
-  allThatSupportSearch: publicProcedure.query(async ({ ctx }) => {
+  allThatSupportSearch: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      where: eq(groupMembers.userId, ctx.session.user.id),
     });
 
     const integrationsFromDb = await ctx.db.query.integrations.findMany({
       with: {
         userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
         },
         groupPermissions: {
           where: inArray(
@@ -133,7 +133,7 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
-  allOfGivenCategory: publicProcedure
+  allOfGivenCategory: protectedProcedure
     .input(
       z.object({
         category: z.enum(integrationCategories),
@@ -141,7 +141,7 @@ export const integrationRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+        where: eq(groupMembers.userId, ctx.session.user.id),
       });
 
       const intergrationKinds = getIntegrationKindsByCategory(input.category);
@@ -149,7 +149,7 @@ export const integrationRouter = createTRPCRouter({
       const integrationsFromDb = await ctx.db.query.integrations.findMany({
         with: {
           userPermissions: {
-            where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+            where: eq(integrationUserPermissions.userId, ctx.session.user.id),
           },
           groupPermissions: {
             where: inArray(

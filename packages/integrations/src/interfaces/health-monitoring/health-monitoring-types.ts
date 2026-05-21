@@ -29,6 +29,15 @@ export interface SystemHealthMonitoring {
     deviceName: string;
     temperature: number | null;
     overallStatus: string;
+    healthy: boolean;
+  }[];
+  gpu: {
+    gpuId: string;
+    name: string;
+    memoryUtilization: number;
+    processorUtilization: number;
+    temperature: number | null;
+    fanSpeed: number | null;
   }[];
 }
 

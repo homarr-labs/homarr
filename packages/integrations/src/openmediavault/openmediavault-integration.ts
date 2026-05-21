@@ -62,6 +62,8 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     const smart = smartResult.data.response.map((smart) => ({
       deviceName: smart.devicename,
       temperature: smart.temperature,
+      // https://github.com/openmediavault/openmediavault/blob/2eb871d05cec6ff49603134d3acead561da01e4d/deb/openmediavault/usr/share/php/openmediavault/system/storage/smartinformation.inc#L592-L605
+      healthy: smart.overallstatus === "GOOD",
       overallStatus: smart.overallstatus,
     }));
 
@@ -84,6 +86,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
       cpuTemp: cpuTempResult.success ? cpuTempResult.data.response.cputemp : undefined,
       fileSystem,
       smart,
+      gpu: [], // OpenMediaVault does not expose GPU monitoring via its RPC API.
     };
   }
 

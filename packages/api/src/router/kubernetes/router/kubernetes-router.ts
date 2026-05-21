@@ -1,22 +1,15 @@
+import { lazy } from "@trpc/server";
+
 import { createTRPCRouter } from "../../../trpc";
-import { clusterRouter } from "./cluster";
-import { configMapsRouter } from "./configMaps";
-import { ingressesRouter } from "./ingresses";
-import { namespacesRouter } from "./namespaces";
-import { nodesRouter } from "./nodes";
-import { podsRouter } from "./pods";
-import { secretsRouter } from "./secrets";
-import { servicesRouter } from "./services";
-import { volumesRouter } from "./volumes";
 
 export const kubernetesRouter = createTRPCRouter({
-  nodes: nodesRouter,
-  cluster: clusterRouter,
-  namespaces: namespacesRouter,
-  ingresses: ingressesRouter,
-  services: servicesRouter,
-  pods: podsRouter,
-  secrets: secretsRouter,
-  configMaps: configMapsRouter,
-  volumes: volumesRouter,
+  nodes: lazy(() => import("./nodes").then((mod) => mod.nodesRouter)),
+  cluster: lazy(() => import("./cluster").then((mod) => mod.clusterRouter)),
+  namespaces: lazy(() => import("./namespaces").then((mod) => mod.namespacesRouter)),
+  ingresses: lazy(() => import("./ingresses").then((mod) => mod.ingressesRouter)),
+  services: lazy(() => import("./services").then((mod) => mod.servicesRouter)),
+  pods: lazy(() => import("./pods").then((mod) => mod.podsRouter)),
+  secrets: lazy(() => import("./secrets").then((mod) => mod.secretsRouter)),
+  configMaps: lazy(() => import("./configMaps").then((mod) => mod.configMapsRouter)),
+  volumes: lazy(() => import("./volumes").then((mod) => mod.volumesRouter)),
 });

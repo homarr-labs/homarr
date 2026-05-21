@@ -66,6 +66,18 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
     },
   },
   {
+    accessorKey: "host",
+    header: t("docker.field.host.label"),
+    size: 140,
+    Cell({ row }) {
+      return (
+        <Text truncate="end" title={row.original.host}>
+          {row.original.host}
+        </Text>
+      );
+    },
+  },
+  {
     accessorKey: "image",
     header: t("docker.field.containerImage.label"),
     maxSize: 200,
@@ -83,6 +95,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
     accessorKey: "ports",
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
+      if (!cell.row.original.ports) return null;
       if (!cell.row.original.ports.length) return null;
       return (
         <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />

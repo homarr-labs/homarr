@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "在新标签页中打开搜索结果"
+      },
+      "ddgBangs": {
+        "label": "启用 DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "无法切换 ping 图标"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs 切换成功"
+          },
+          "error": {
+            "message": "无法切换 DuckDuckGo bangs"
           }
         }
       },
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "自动",
         "light": "日间",
         "dark": "暗黑"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "危险",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改 ！",
+    "servers": "服务",
+    "applications": "应用",
+    "services": "服务",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1522,6 +1539,17 @@
         "offline": "离线"
       }
     },
+    "timetable": {
+      "name": "时刻表",
+      "description": "显示车站的出发时间",
+      "title": "出发时间 {station}",
+      "noStation": "未选择车站",
+      "option": {
+        "station": {
+          "label": "车站"
+        }
+      }
+    },
     "notebook": {
       "name": "笔记",
       "description": "支持 Markdown 的简单笔记本小部件",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "锚点笔记",
+      "description": "显示来自锚点的所选笔记",
+      "option": {
+        "noteId": {
+          "label": "笔记"
+        },
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showUpdatedAt": {
+          "label": "显示最近更新"
+        }
+      },
+      "empty": "选择要显示的笔记",
+      "emptyContent": "此笔记没有内容",
+      "notFound": "未找到笔记",
+      "noNotes": "未找到笔记",
+      "integrationRequired": "请先选择锚点集成",
+      "updatedAt": "更新时间：{date}",
+      "untitled": "未命名",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消",
+      "readOnlyViewer": "您对该笔记只有查看权限，编辑已禁用。",
+      "saveForbidden": "您没有编辑此笔记的权限。",
+      "saveFailed": "保存此笔记失败，请重试。"
+    },
     "iframe": {
       "name": "iFrame",
       "description": "嵌入互联网上的任何内容。某些网站可能限制访问。",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "允许地理位置"
+        },
+        "allowModals": {
+          "label": "允许弹窗"
         }
       },
       "error": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "显示内存信息"
         },
+        "gpu": {
+          "label": "显示 GPU 信息"
+        },
         "showUptime": {
           "label": "显示运行时间"
         },
@@ -1960,6 +2022,192 @@
         "internalServerError": "获取容器统计信息失败"
       }
     },
+    "coolify": {
+      "name": "Coolify",
+      "description": "您的 Coolify 实例及其服务器和应用一览",
+      "option": {
+        "showServers": {
+          "label": "显示服务"
+        },
+        "showApplications": {
+          "label": "显示应用程序"
+        },
+        "showServices": {
+          "label": "显示服务"
+        }
+      },
+      "empty": {
+        "servers": "未找到服务",
+        "applications": "未找到应用程序",
+        "services": "未找到服务"
+      },
+      "footer": {
+        "updated": "已更新 {when}"
+      },
+      "error": {
+        "noIntegration": "未配置 Coolify 集成",
+        "internalServerError": "获取 Coolify 数据失败"
+      },
+      "server": {
+        "buildServer": "编译"
+      },
+      "instances": {
+        "title": "实例"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "增强型媒体服务器监控，提供详细的流与转码数据",
+      "option": {
+        "showStreams": {
+          "label": "显示活跃流"
+        },
+        "showStats": {
+          "label": "显示统计摘要"
+        },
+        "showRecentActivity": {
+          "label": "显示近期活动"
+        },
+        "showViolations": {
+          "label": "显示违规记录"
+        }
+      },
+      "stats": {
+        "activeStreams": "活跃流",
+        "totalUsers": "总用户数",
+        "transcodes": "转码数",
+        "bandwidth": "带宽"
+      },
+      "streams": {
+        "empty": "无活跃流",
+        "user": "用户",
+        "media": "媒体",
+        "state": "状态",
+        "quality": "画质",
+        "device": "设备",
+        "progress": "进度",
+        "videoDecision": {
+          "directPlay": "直接播放",
+          "transcode": "转码",
+          "directStream": "直接串流"
+        }
+      },
+      "recentActivity": {
+        "title": "近期活动",
+        "empty": "暂无近期活动",
+        "watched": "已观看",
+        "partial": "部分观看"
+      },
+      "violations": {
+        "title": "违规记录",
+        "empty": "暂无近期违规",
+        "rule": "规则",
+        "user": "用户"
+      },
+      "noSectionsEnabled": "未启用任何分区",
+      "error": {
+        "noIntegration": "未配置 Tracearr 集成",
+        "internalServerError": "获取 Tracearr 数据失败"
+      }
+    },
+    "umami": {
+      "name": "Umami 分析",
+      "description": "显示来自 Umami 分析实例的访客统计",
+      "visitors": "访客",
+      "active": "活跃",
+      "pageviews": "浏览量",
+      "visits": "访问数",
+      "bounceRate": "跳出率",
+      "avgDuration": "平均",
+      "option": {
+        "websiteId": {
+          "label": "网站",
+          "description": "选择您的 Umami 实例所追踪的网站",
+          "placeholder": "选择一个网站",
+          "loading": "正在加载网站……",
+          "noWebsites": "未找到网站",
+          "configureIntegrationFirst": "请先添加 Umami 集成"
+        },
+        "timeFrame": {
+          "label": "时间范围",
+          "description": "用于展示访客数据的时间段",
+          "option": {
+            "today": "今天",
+            "24h": "过去 24 小时",
+            "7d": "过去 7 天",
+            "30d": "过去 30 天",
+            "month": "本月",
+            "lastMonth": "上月"
+          }
+        },
+        "eventName": {
+          "label": "事件",
+          "description": "显示特定事件的总发生次数",
+          "placeholder": "选择一个事件",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "none": "无事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
+        },
+        "chartType": {
+          "label": "图表类型",
+          "description": "图表的显示样式",
+          "option": {
+            "bar": "条形图",
+            "sparkline": "迷你趋势图"
+          }
+        },
+        "chartStyle": {
+          "label": "图表样式",
+          "description": "如何在图表中显示事件序列",
+          "option": {
+            "grouped": "并排",
+            "overlay": "叠加（子集）"
+          }
+        },
+        "viewMode": {
+          "label": "视图",
+          "description": "组件主体中要显示的内容",
+          "option": {
+            "chart": "图表",
+            "events": "事件图表",
+            "topPages": "热门页面",
+            "topReferrers": "热门来源"
+          }
+        },
+        "eventNames": {
+          "label": "事件",
+          "description": "选择一个或多个要图表化的事件",
+          "placeholder": "选择事件……",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
+        },
+        "topCount": {
+          "label": "显示数量",
+          "description": "要显示的热门项目数量（最大 500）"
+        }
+      },
+      "event": {
+        "occurrences": "事件",
+        "label": "事件"
+      },
+      "topPages": {
+        "direct": "直接"
+      },
+      "topReferrers": {
+        "direct": "直接"
+      },
+      "events": {
+        "selectPrompt": "选择要图表化的事件"
+      },
+      "error": {
+        "noIntegration": "未配置 Umami 集成",
+        "noWebsite": "未配置网站",
+        "noData": "无可用数据",
+        "internalServerError": "获取 Umami 数据失败"
+      }
+    },
     "common": {
       "location": {
         "query": "城市/邮编",
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich 服务器统计",
+      "description": "有关您的 Immich 实例的信息",
+      "option": {
+        "showUsers": {
+          "label": "显示用户",
+          "description": "显示实例上的用户数量"
+        },
+        "showPhotos": {
+          "label": "显示图片",
+          "description": "显示实例上的照片数量"
+        },
+        "showVideos": {
+          "label": "显示视频",
+          "description": "显示实例上的视频数量"
+        },
+        "showStorage": {
+          "label": "显示存储",
+          "description": "显示已使用的总存储空间"
+        }
+      },
+      "users": "用户",
+      "photos": "照片",
+      "videos": "视频",
+      "storage": "已用存储"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich 相册",
+      "option": {
+        "albumId": {
+          "label": "相册ID",
+          "description": "这是一个唯一标识符，用于指向您的 Immich 相册。您可以通过打开相册并从 URL 中复制那段唯一字符串来找到该 ID，例如：'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "间隔（秒）",
+          "description": "每 X 秒切换一次相册中的图片。最小为 1，最大不得超过 3600。"
+        },
+        "showPhotoInfo": {
+          "label": "显示图片信息",
+          "description": "在幻灯片底部显示图片日期和当前索引"
+        }
+      },
+      "description": "Immich 相册图片幻灯片",
+      "noAlbumSelected": "未选择相册，请编辑组件并选择一个相册",
+      "noPhotos": "此相册中没有照片"
     },
     "downloads": {
       "name": "下载客户端",
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "隐藏描述"
+        },
+        "showPosterImage": {
+          "label": "显示封面图"
         }
       }
     },
@@ -2575,6 +2872,45 @@
       "noItems": "没有可显示的通知。",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "网速测试追踪器",
+      "description": "显示 网速测试追踪器 实例中的测速结果。",
+      "option": {
+        "showLatestResult": {
+          "label": "显示最新结果"
+        },
+        "showStats": {
+          "label": "显示平均值"
+        },
+        "showRecentResults": {
+          "label": "显示近期结果"
+        },
+        "showPingGraph": {
+          "label": "显示 Ping 图表"
+        }
+      },
+      "latestResult": "最新结果",
+      "averages": "平均值",
+      "tests": "{count}次测试",
+      "recentResults": "近期结果",
+      "recentResultsSpeed": "速度",
+      "recentResultsPing": "Ping",
+      "download": "下载",
+      "upload": "上传",
+      "ping": "Ping",
+      "status": "状态",
+      "avgDownload": "平均下载",
+      "avgUpload": "平均上传",
+      "avgPing": "平均Ping",
+      "healthy": "健康",
+      "unhealthy": "不健康",
+      "ok": "正常",
+      "fail": "失败",
+      "noSectionsEnabled": "请在组件选项中至少启用一个模块。",
+      "error": {
+        "internalServerError": "获取测速数据失败"
+      }
+    },
     "systemResources": {
       "name": "系统资源",
       "description": "您系统的 CPU、内存、磁盘及其他硬件使用情况",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "内存",
+            "gpu": "GPU",
             "network": "网络"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "内存",
+        "gpu": "GPU",
         "network": "网络",
         "up": "上传",
         "down": "下载"
+      }
+    },
+    "systemDisks": {
+      "name": "系统磁盘",
+      "description": "您系统的磁盘使用",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "如果可用则显示温度"
+        },
+        "displayMode": {
+          "label": "显示模式",
+          "option": {
+            "percentage": {
+              "label": "百分比 (例如76%)"
+            },
+            "absolute": {
+              "label": "绝对值 (例如，800GB / 1TB)"
+            },
+            "free": {
+              "label": "空闲空间百分比(例如24%空闲)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "显示背景使用栏"
+        }
+      },
+      "status": {
+        "unhealthy": "异常"
       }
     }
   },
@@ -3240,7 +3607,7 @@
             "title": "分析",
             "general": {
               "title": "发送匿名分析",
-              "text": "Homarr 将使用开源软件 Umami 发送匿名分析。它从不收集任何个人信息，因此完全符合 GDPR 和 CCPA 要求。我们鼓励您启用分析，因为它可以帮助我们的开源团队识别问题并确定待办事项的优先级。"
+              "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
             },
             "widgetData": {
               "title": "组件数据",
@@ -3295,10 +3662,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "用户",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "启用Gravatar",
+              "description": "未设置自定义头像时，若用户有邮箱，则自动采用其 Libravatar/Gravatar 头像"
             }
           },
           "search": {
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "默认配色方案",
               "options": {
+                "auto": "自动",
                 "light": "日间",
                 "dark": "暗黑"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft 服务状态"
+            },
+            "timetable": {
+              "label": "时刻表"
             },
             "iconsUpdater": {
               "label": "图标更新"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "天气"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami 活跃访客"
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "翻译人员",
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
           },
+          "sponsors": {
+            "title": "赞助商",
+            "subtitle": "{count}人通过财务方式支持该项目"
+          },
           "libraries": {
             "title": "相关的库",
             "subtitle": "{count} 用于 Homarr 代码中"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "端口"
+      },
+      "host": {
+        "label": "宿主机"
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "全局命令",
             "option": {
               "colorScheme": {
+                "auto": "切换外观模式",
                 "light": "切换到日间模式",
                 "dark": "切换到暗黑模式"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "搜索引擎",
+            "tipDdgBangs": "提示：你也可以在此使用任何 DuckDuckGo Bangs，例如 !something",
+            "bang": {
+              "searchWithQuery": "使用“‘’{query}”搜索“{label}”",
+              "pressEnterToOpen": "按 Enter 键打开",
+              "engineSelected": "已选择{label}（{bang}）",
+              "typeQueryToContinue": "输入搜索查询以继续",
+              "emptyBangHint": "输入 bang，例如 !yt，然后按空格键进行选择"
+            },
             "children": {
               "action": {
                 "search": {

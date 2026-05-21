@@ -27,7 +27,7 @@
           "description": "Configurer le comportement d'importation"
         },
         "boardSelection": {
-          "title": "Tableaux {count} trouvés",
+          "title": "{count} tableaux trouvés",
           "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
           "action": {
             "selectAll": "Tout sélectionner",
@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "Rejoignez Homarr",
-        "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
+        "subtitle": "Bienvenue sur Homarr ! Veuillez créer votre compte",
         "description": "Vous avez été invité par {username}"
       },
       "init": {
@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Ouvrir les résultats de recherche dans un nouvel onglet"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -177,7 +180,7 @@
           }
         },
         "forgotPassword": {
-          "label": "Mot de passe oublié?",
+          "label": "Mot de passe oublié ?",
           "description": "Un administrateur peut utiliser la commande suivante pour réinitialiser votre mot de passe :"
         }
       },
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Impossible d'activer les icônes de ping"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -578,7 +591,7 @@
       },
       "delete": {
         "title": "Supprimer l'app",
-        "message": "Êtes-vous sûr de vouloir supprimer l'app {name}?",
+        "message": "Êtes-vous sûr de vouloir supprimer l'app {name} ?",
         "notification": {
           "success": {
             "title": "Suppression effectuée avec succès",
@@ -684,7 +697,7 @@
       },
       "delete": {
         "title": "Supprimer l'intégration",
-        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name}?",
+        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name} ?",
         "notification": {
           "success": {
             "title": "Suppression réussie",
@@ -742,7 +755,7 @@
           "description": "La réponse n'a pas pu être analysée. Veuillez vérifier que l'URL pointe vers l'URL de base du service."
         },
         "authorization": {
-          "title": "",
+          "title": "Erreur d'autorisation",
           "description": "La requête n'a pas été autorisée. Veuillez vérifier que les informations d'identification sont correctes et que vous les avez configurées avec suffisamment d'autorisations."
         },
         "statusCode": {
@@ -794,7 +807,7 @@
           "hostnameMismatch": {
             "confirm": {
               "title": "Faire confiant à l'incohérence du nom d'hôte",
-              "message": ""
+              "message": "Êtes-vous sûr de vouloir faire confiance ce certificat avec un nom d'hôte incohérent ?"
             },
             "notification": {
               "success": {
@@ -1080,6 +1093,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Clair",
         "dark": "Sombre"
       }
@@ -1138,6 +1152,9 @@
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
+    "servers": "Serveurs",
+    "applications": "Applications",
+    "services": "Services",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -1161,8 +1178,8 @@
           "number": "Ce champ doit être inférieur ou égal à {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
-          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises.",
+          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises",
           "boardAlreadyExists": "Un tableau avec ce nom existe déjà",
           "invalidFileType": "Type de fichier invalide, {expected} attendu",
           "invalidFileName": "Nom de fichier invalide",
@@ -1245,7 +1262,7 @@
     "action": {
       "create": "Nouvel élément",
       "import": "Importer un élément",
-      "edit": "Editer l'élément",
+      "edit": "Éditer l'élément",
       "moveResize": "Déplacer / redimensionner l'élément",
       "duplicate": "Dupliquer l'élément",
       "remove": "Supprimer l'élément"
@@ -1278,7 +1295,7 @@
       }
     },
     "edit": {
-      "title": "Editer l'élément",
+      "title": "Éditer l'élément",
       "advancedOptions": {
         "label": "Options avancées",
         "title": "Options avancées de l'élément"
@@ -1306,7 +1323,7 @@
   "widget": {
     "app": {
       "name": "App",
-      "description": "Intégre une application dans le tableau.",
+      "description": "Intègre une application dans le tableau.",
       "option": {
         "appId": {
           "label": "Choisir une application"
@@ -1522,6 +1539,17 @@
         "offline": "Hors ligne"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Bloc-notes",
       "description": "Un simple widget bloc-notes qui supporte le markdown",
@@ -1592,6 +1620,34 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Intégrer n'importe quel contenu à partir d'Internet. Certains sites Web peuvent restreindre l'accès.",
@@ -1622,6 +1678,9 @@
         },
         "allowGeolocation": {
           "label": "Autoriser la géolocalisation"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1631,7 +1690,7 @@
       }
     },
     "smartHome-entityState": {
-      "name": "Etat de l'entité",
+      "name": "État de l'entité",
       "description": "Affichez l'état d'une entité et optionnellement activez la",
       "option": {
         "entityId": {
@@ -1855,6 +1914,9 @@
         "memory": {
           "label": "Afficher les infos de la mémoire"
         },
+        "gpu": {
+          "label": ""
+        },
         "showUptime": {
           "label": "Afficher le temps de disponibilité"
         },
@@ -1874,16 +1936,16 @@
       "popover": {
         "information": "Information",
         "processor": "Processeur : {cpuModelName}",
-        "memory": "Mémoire: {memory}GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Mémoire : {memory}GiB",
+        "memoryAvailable": "Disponible : {memoryAvailable}GiB ({percent}%)",
         "version": "Version : {version}",
-        "uptime": "Disponibilité: {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
-        "loadAverage": "Charge moyenne:",
+        "uptime": "Disponibilité : {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
+        "loadAverage": "Charge moyenne :",
         "minute": "1 minute",
         "minutes": "{count} minutes",
         "used": "Utilisé ",
         "available": "Disponible",
-        "lastSeen": "Dernière mise à jour de statut: {lastSeen}"
+        "lastSeen": "Dernière mise à jour de statut : {lastSeen}"
       },
       "memory": {},
       "error": {
@@ -1919,7 +1981,7 @@
             "memory": "Mémoire",
             "storage": "Stockage",
             "uptime": "Disponibilité",
-            "haState": "Etat HA",
+            "haState": "État HA",
             "storageType": {
               "local": "Stockage local",
               "shared": "Stockage partagé"
@@ -1960,12 +2022,198 @@
         "internalServerError": "Impossible de récupérer les statistiques des conteneurs"
       }
     },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Aperçu de votre instance Coolify avec les serveurs et les applications",
+      "option": {
+        "showServers": {
+          "label": "Afficher les serveurs"
+        },
+        "showApplications": {
+          "label": "Afficher les applications"
+        },
+        "showServices": {
+          "label": "Afficher les services"
+        }
+      },
+      "empty": {
+        "servers": "Aucun serveur trouvé",
+        "applications": "Aucune application trouvée",
+        "services": "Aucun service trouvé"
+      },
+      "footer": {
+        "updated": "Mis à jour {when}"
+      },
+      "error": {
+        "noIntegration": "Aucune intégration de Coolify configurée",
+        "internalServerError": "Impossible de récupérer les données de Coolify"
+      },
+      "server": {
+        "buildServer": "Version"
+      },
+      "instances": {
+        "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Surveillance avancée du serveur multimédia avec des données détaillées de flux et de transcodage",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": "Afficher le résumé des statistiques"
+        },
+        "showRecentActivity": {
+          "label": "Afficher l'activité récente"
+        },
+        "showViolations": {
+          "label": "Afficher les violations"
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "Utilisateurs totaux",
+        "transcodes": "",
+        "bandwidth": "Bande passante"
+      },
+      "streams": {
+        "empty": "",
+        "user": "Utilisateur",
+        "media": "Média",
+        "state": "",
+        "quality": "Qualité",
+        "device": "Appareil",
+        "progress": "Progression",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "Activité récente",
+        "empty": "Aucune activité récente",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "Aucune violation récente",
+        "rule": "Règle",
+        "user": "Utilisateur"
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "Aucune intégration Tracearr configurée",
+        "internalServerError": "Impossible de récupérer les données de Tracearr"
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Ville / Code Postal",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "disabledTooltip": "Veuillez saisir une ville ou un code postal.",
+        "disabledTooltip": "Veuillez saisir une ville ou un code postal",
         "unknownLocation": "Lieu inconnu",
         "search": "Rechercher",
         "table": {
@@ -1984,7 +2232,7 @@
         }
       },
       "integration": {
-        "noData": "Aucune intégration trouvée.",
+        "noData": "Aucune intégration trouvée",
         "description": "Cliquez sur <here></here> pour créer une nouvelle intégration"
       },
       "app": {
@@ -2000,7 +2248,7 @@
     },
     "video": {
       "name": "Flux vidéo",
-      "description": "Intégre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
+      "description": "Intègre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
       "option": {
         "feedUrl": {
           "label": "URL du flux"
@@ -2013,7 +2261,7 @@
           "label": "Muet"
         },
         "hasControls": {
-          "label": "Afficher les controles"
+          "label": "Afficher les contrôles"
         }
       },
       "error": {
@@ -2054,6 +2302,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "Statistiques du serveur Immich",
+      "description": "Informations sur votre instance Immich",
+      "option": {
+        "showUsers": {
+          "label": "Afficher les utilisateurs",
+          "description": "Afficher le nombre d'utilisateurs de l'instance"
+        },
+        "showPhotos": {
+          "label": "Afficher les photos",
+          "description": "Afficher le nombre de photos de l'instance"
+        },
+        "showVideos": {
+          "label": "Afficher les vidéos",
+          "description": "Afficher le nombre de vidéos de l'instance"
+        },
+        "showStorage": {
+          "label": "Affiche le stockage",
+          "description": "Afficher le stockage total utilisé"
+        }
+      },
+      "users": "Utilisateurs",
+      "photos": "Photos",
+      "videos": "Vidéos",
+      "storage": "Stockage utilisé"
+    },
+    "immich-albumCarousel": {
+      "name": "Album Immich",
+      "option": {
+        "albumId": {
+          "label": "Identifiant de l'album",
+          "description": "C'est l'identifiant unique qui correspond à l'album Immich. Vous pouvez le trouver en ouvrant un album et copiant l'identifiant unique depuis l'URL, par exemple 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervalle en secondes",
+          "description": "Rotation entre les images de l'album chaque X secondes. Doit être entre 1 et 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Afficher les informations de la photo",
+          "description": "Afficher la date et l'index de la photo en bas du diaporama"
+        }
+      },
+      "description": "Diaporama de photos dans votre album Immich",
+      "noAlbumSelected": "Aucun album sélectionné, modifier le widget et choisissez un album",
+      "noPhotos": "Aucune photo dans cet album"
     },
     "downloads": {
       "name": "Client de téléchargement",
@@ -2193,7 +2487,7 @@
           "pause": "Mettre en pause l'élément",
           "resume": "Reprendre l'élément",
           "delete": {
-            "title": "Supprimer l'élement",
+            "title": "Supprimer l'élément",
             "modalTitle": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
             "entry": "Supprimer l'entrée",
             "entryAndFiles": "Supprimer l'entrée et le(s) fichier(s)"
@@ -2362,6 +2656,9 @@
         },
         "hideDescription": {
           "label": "Masquer la description"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2405,7 +2702,7 @@
             "allImagesAlreadyImported": "Toutes les images déjà importées",
             "onlyAdminCanImport": "Seuls les administrateurs peuvent importer depuis docker",
             "selectAll": "Tout sélectionner",
-            "deselectAll": "Tout déselectionner"
+            "deselectAll": "Tout désélectionner"
           },
           "provider": {
             "label": "Fournisseur"
@@ -2530,7 +2827,7 @@
       },
       "error": {
         "integrationsDisconnected": "Aucune donnée disponible, toutes les intégrations sont déconnectées",
-        "unknownContentOption": "Option de contenu inconnue pour le widget d'état du réseau: "
+        "unknownContentOption": "Option de contenu inconnue pour le widget d'état du réseau : "
       },
       "name": "État du réseau",
       "description": "Afficher les périphériques connectés sur un réseau"
@@ -2575,6 +2872,45 @@
       "noItems": "Aucune notification à afficher.",
       "option": {}
     },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Ressources du système",
       "description": "CPU, Mémoire, Disque et autre utilisation matérielle de votre système",
@@ -2588,6 +2924,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Mémoire",
+            "gpu": "",
             "network": "Réseau"
           }
         },
@@ -2604,9 +2941,39 @@
       "card": {
         "cpu": "CPU",
         "memory": "RAM",
+        "gpu": "",
         "network": "NET",
         "up": "UP",
         "down": "HORS SERVICE"
+      }
+    },
+    "systemDisks": {
+      "name": "Disques système",
+      "description": "Utilisation du disque de votre système",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Afficher la température si disponible"
+        },
+        "displayMode": {
+          "label": "Mode d'affichage",
+          "option": {
+            "percentage": {
+              "label": "Pourcentage (ex : 76%)"
+            },
+            "absolute": {
+              "label": "Valeurs absolues (ex. : 800 Go / 1 To)"
+            },
+            "free": {
+              "label": "Pourcentage d'espace libre (ex. : 24 % libre)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Afficher la barre d'utilisation en arrière-plan"
+        }
+      },
+      "status": {
+        "unhealthy": "Dysfonctionnement"
       }
     }
   },
@@ -2799,7 +3166,7 @@
       },
       "customCss": {
         "label": "CSS personnalisé pour ce tableau",
-        "description": "En outre, vous pouvez personnaliser votre tableau de bord à l'aide de CSS. Réservé aux utilisateurs expérimentés.",
+        "description": "De plus, personnalisez votre tableau de bord à l'aide de CSS, recommandé uniquement pour les utilisateurs expérimentés",
         "customClassesAlert": {
           "title": "Classes personnalisées",
           "description": "Vous pouvez ajouter des classes personnalisées aux éléments de votre tableau dans les options avancées de chaque élément et les utiliser dans le CSS personnalisé ci-dessus."
@@ -3077,7 +3444,7 @@
             "label": "Supprimer définitivement",
             "confirm": {
               "title": "Supprimer le tableau de bord",
-              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name}?"
+              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name} ?"
             }
           }
         },
@@ -3313,6 +3680,7 @@
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut",
               "options": {
+                "auto": "",
                 "light": "Clair",
                 "dark": "Sombre"
               }
@@ -3338,6 +3706,9 @@
           "job": {
             "minecraftServerStatus": {
               "label": "État du serveur Minecraft"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Mise à jour des icônes"
@@ -3407,6 +3778,12 @@
             },
             "weather": {
               "label": "Météo"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": ""
             }
           },
           "interval": {
@@ -3529,6 +3906,10 @@
             "title": "Traducteurs",
             "subtitle": "{count} ont contribué à des traductions dans de nombreuses langues"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Bibliothèques",
             "subtitle": "{count} utilisés dans le Code d'Homarr"
@@ -3589,6 +3970,9 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -4115,6 +4499,7 @@
             "title": "Commandes globales",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Activer le mode clair",
                 "dark": "Activer le mode sombre"
               },
@@ -4166,6 +4551,14 @@
         "group": {
           "searchEngine": {
             "title": "Moteurs de recherche",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
