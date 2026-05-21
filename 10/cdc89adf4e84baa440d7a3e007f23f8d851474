@@ -1,0 +1,96 @@
+packages/api/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+  s_d845807fb8b082::t_f9a844991e784b 16-17
+packages/modals-collection/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/common/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,15-16
+packages/notifications/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/redis/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/old-schema/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/widgets/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,14-15
+packages/cron-jobs/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/auth/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+packages/old-import/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,15-16
+packages/definitions/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/core/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+apps/websocket/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+  s_d845807fb8b082::t_58a36b7938bcd6 26
+packages/server-settings/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/integrations/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,14-15
+packages/docker/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,13-14
+apps/nextjs/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+  s_d845807fb8b082::t_94f41a2efb8d5c 6
+packages/analytics/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/ping/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+apps/tasks/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+  s_d845807fb8b082::t_540548c4ba6082 26
+packages/forms-collection/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/settings/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/form/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/icons/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/spotlight/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/validation/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+packages/boards/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+packages/cron-jobs-core/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,13-14
+packages/cli/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/translation/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,16-17
+packages/modals/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/image-proxy/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,11-12
+packages/cron-job-status/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,12-13
+packages/ui/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5,14-15
+packages/request-handler/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "10cdc89adf4e84baa440d7a3e007f23f8d851474",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
