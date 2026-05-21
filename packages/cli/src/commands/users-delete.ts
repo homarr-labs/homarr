@@ -1,39 +1,47 @@
-import { command, string } from "@drizzle-team/brocli";
+import { parseArgs } from "node:util";
 
-import { db, eq } from "@homarr/db";
+import { eq } from "drizzle-orm";
+
+import type { CliDatabase } from "../cli-db";
+import { getCliDb } from "../cli-db";
+import { CliError } from "../errors";
 import { users } from "@homarr/db/schema";
 
-export const usersDelete = command({
-  name: "delete",
-  desc: "Delete a user by id or username",
-  options: {
-    id: string("id").alias("i").desc("ID of the user"),
-    username: string("username").alias("u").desc("Name of the user"),
-  },
-  // eslint-disable-next-line no-restricted-syntax
-  handler: async (options) => {
-    if (!options.id && !options.username) {
-      console.error("Either --id or --username must be provided");
-      return;
-    }
+const userLookup: Record<"id" | "username", (db: CliDatabase, value: string) => Promise<{ id: string; name: string | null } | undefined>> = {
+  id: (db, value) =>
+    db.query.users.findFirst({
+      where: eq(users.id, value),
+    }),
+  username: (db, value) =>
+    db.query.users.findFirst({
+      where: eq(users.name, value),
+    }),
+};
 
-    let user;
-    if (options.id) {
-      user = await db.query.users.findFirst({
-        where: eq(users.id, options.id),
-      });
-    } else if (options.username) {
-      user = await db.query.users.findFirst({
-        where: eq(users.name, options.username),
-      });
-    }
+export async function usersDeleteHandler(args: string[]): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      id: { type: "string", short: "i" },
+      username: { type: "string", short: "u" },
+    },
+  });
 
-    if (!user) {
-      console.error("User not found");
-      return;
-    }
+  const lookupKey = values.id ? "id" : values.username ? "username" : null;
+  const lookupValue = values.id ?? values.username;
 
-    await db.delete(users).where(eq(users.id, user.id));
-    console.log(`User ${user.name ?? user.id} (${user.id}) deleted`);
-  },
-});
+  if (!lookupKey || !lookupValue) {
+    throw new CliError("Either --id or --username must be provided", 2);
+  }
+
+  const db = getCliDb();
+  const user = await userLookup[lookupKey](db, lookupValue);
+
+  if (!user) {
+    throw new CliError("User not found");
+  }
+
+  await db.delete(users).where(eq(users.id, user.id));
+  console.log(`User ${user.name ?? user.id} (${user.id}) deleted`);
+  return 0;
+}

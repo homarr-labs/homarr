@@ -1,22 +1,35 @@
-import { command } from "@drizzle-team/brocli";
+import { parseArgs } from "node:util";
 
-import { db } from "@homarr/db";
+import { getCliDb } from "../cli-db";
+import { printTable } from "../utils";
 
-export const usersList = command({
-  name: "list",
-  desc: "List all users (id, username, email)",
-  // eslint-disable-next-line no-restricted-syntax
-  handler: async () => {
-    const allUsers = await db.query.users.findMany();
+export async function usersListHandler(args: string[] = []): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      json: { type: "boolean", default: false },
+    },
+    strict: false,
+  });
 
-    if (allUsers.length === 0) {
-      console.log("No users found");
-      return;
-    }
+  const db = getCliDb();
+  const allUsers = await db.query.users.findMany();
 
-    console.log("ID\t\t\t\tUsername\tEmail");
-    for (const user of allUsers) {
-      console.log(`${user.id}\t${user.name ?? ""}\t${user.email ?? ""}`);
-    }
-  },
-});
+  if (values.json) {
+    const output = allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email, provider: u.provider }));
+    console.log(JSON.stringify(output, null, 2));
+    return 0;
+  }
+
+  if (allUsers.length === 0) {
+    console.log("No users found");
+    return 0;
+  }
+
+  printTable(
+    ["ID", "Username", "Email", "Provider"],
+    allUsers.map((u) => [u.id, u.name ?? "", u.email ?? "", u.provider]),
+  );
+  console.log(`\n${allUsers.length} user(s) total`);
+  return 0;
+}

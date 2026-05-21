@@ -1,46 +1,48 @@
-import { command, string } from "@drizzle-team/brocli";
+import { parseArgs } from "node:util";
 
-import { hashPasswordAsync } from "@homarr/auth";
-import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, db, eq } from "@homarr/db";
+import { hashPasswordAsync } from "@homarr/auth/security";
+import { generateSecureRandomToken } from "../utils";
+import { and, eq } from "drizzle-orm";
+
+import { getCliDb } from "../cli-db";
+import { CliError, requireCredentialsProvider } from "../errors";
 import { sessions, users } from "@homarr/db/schema";
 
-export const resetPassword = command({
-  name: "reset-password",
-  desc: "Reset password for a user",
-  options: {
-    username: string("username").required().alias("u").desc("Name of the user"),
-  },
-  // eslint-disable-next-line no-restricted-syntax
-  handler: async (options) => {
-    if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
-      console.error("Credentials provider is not enabled");
-      return;
-    }
+export async function resetPasswordHandler(args: string[]): Promise<number> {
+  requireCredentialsProvider();
 
-    const user = await db.query.users.findFirst({
-      where: and(eq(users.name, options.username), eq(users.provider, "credentials")),
-    });
+  const { values } = parseArgs({
+    args,
+    options: {
+      username: { type: "string", short: "u" },
+    },
+  });
 
-    if (!user?.password) {
-      console.error(`User ${options.username} not found`);
-      return;
-    }
+  if (!values.username) {
+    throw new CliError("Missing required option: --username / -u", 2);
+  }
 
-    // Generates a new password with 48 characters
-    const newPassword = generateSecureRandomToken(24);
+  const db = getCliDb();
+  const user = await db.query.users.findFirst({
+    where: and(eq(users.name, values.username), eq(users.provider, "credentials")),
+  });
 
-    await db
-      .update(users)
-      .set({
-        password: await hashPasswordAsync(newPassword),
-      })
-      .where(eq(users.id, user.id));
+  if (!user?.password) {
+    throw new CliError(`User ${values.username} not found`);
+  }
 
-    await db.delete(sessions).where(eq(sessions.userId, user.id));
-    console.log(`All sessions for user ${options.username} have been deleted`);
+  const newPassword = generateSecureRandomToken(24);
 
-    console.log("You can now login with the new password");
-    console.log(`New password for user ${options.username}: ${newPassword}`);
-  },
-});
+  await db
+    .update(users)
+    .set({
+      password: await hashPasswordAsync(newPassword),
+    })
+    .where(eq(users.id, user.id));
+
+  await db.delete(sessions).where(eq(sessions.userId, user.id));
+  console.log(`All sessions for user ${values.username} have been deleted`);
+  console.log("You can now login with the new password");
+  console.log(`New password for user ${values.username}: ${newPassword}`);
+  return 0;
+}

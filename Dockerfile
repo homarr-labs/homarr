@@ -30,7 +30,7 @@ VOLUME /appdata
 
 # Enable homarr cli
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
-RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+RUN echo $'#!/bin/bash\nexport DISABLE_REDIS_LOGS=true\ncd /app/apps/cli && exec node ./cli.cjs "$@"' > /usr/bin/homarr
 RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root

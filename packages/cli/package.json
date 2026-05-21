@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --external:better-sqlite3 --external:mysql2 --external:pg --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -25,12 +25,16 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@drizzle-team/brocli": "catalog:",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "catalog:"
+    "better-sqlite3": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "mysql2": "catalog:",
+    "pg": "catalog:"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
