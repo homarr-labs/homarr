@@ -12,3 +12,5 @@ dev
 e2e
 apps/nextjs/.next
 .env
+.env.*
+!.env.example
