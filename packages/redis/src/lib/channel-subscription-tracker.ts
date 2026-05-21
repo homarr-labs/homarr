@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 
 import type { MaybePromise } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { RedisClient } from "@homarr/core/infrastructure/redis";
 
 import { createRedisConnection } from "./connection";
 
@@ -18,7 +19,10 @@ type SubscriptionCallback = (message: string) => MaybePromise<void>;
  */
 export class ChannelSubscriptionTracker {
   private static subscriptions = new Map<string, Map<string, SubscriptionCallback>>();
-  private static redis = createRedisConnection();
+  private static _redis: RedisClient | undefined;
+  private static get redis() {
+    return (this._redis ??= createRedisConnection());
+  }
   private static listenerActive = false;
 
   /**
