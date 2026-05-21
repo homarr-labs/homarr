@@ -1,0 +1,391 @@
+apps/web/components/features/protocols/danone/CustomClusterBuilder.tsx
+  s_df7542ffde29df::t_072cec0a96657b 389-391
+apps/web/components/features/protocols/danone/ParticipantTimelineCompare.tsx
+  s_a0651daa3436df::t_443577da770afb 235-237
+apps/web/app/api/cloud/[provider]/browse/route.ts
+  s_342719deabd7d2::t_e8d4f1312f8b06 1-53
+apps/web/components/features/cloud/CloudImportShortcut.tsx
+  s_342719deabd7d2::t_7f8593874a7798 30
+  s_342719deabd7d2::t_a8bb98d0b32cf4 16
+  s_342719deabd7d2::t_56826ffacca917 47,50
+  s_342719deabd7d2::t_2aa75a9e6d21a5 2,5,9,11,15,17,21,24,36-39,42,45,53-73,87-88,96,98-103,105-110,112-128,130-139,141,167,170-171,173-180,182-244,246-249,261-276,286-290,292-294,296,298-302,304-334,336-371
+  s_342719deabd7d2::t_aed22bab84b09e 97,104
+  s_342719deabd7d2::t_c289e2695cc873 250-260
+  s_342719deabd7d2::t_334d985d919dcd 277-285
+  s_342719deabd7d2::t_04f1dd07319f9e 6-7
+  s_342719deabd7d2::t_401cb1c00b02a6 291,295,303
+  s_342719deabd7d2::t_de9bb711c54570 335
+  s_a0651daa3436df::t_901907904f07f8 168
+  s_342719deabd7d2::t_b199afe2659686 245
+  s_342719deabd7d2::t_7e312ffb933f11 297
+  s_342719deabd7d2::t_79db33a4422ae6 140
+  s_df7542ffde29df::t_072cec0a96657b 25
+apps/web/components/features/pilote/BestCandidatePodium.tsx
+  s_a0651daa3436df::t_fd73725a820e10 17,80
+apps/web/lib/admin.ts
+  s_4647a5944836e3::t_f9ccd90678489d 231
+apps/web/components/features/protocols/danone/csv-export.ts
+  s_df7542ffde29df::t_072cec0a96657b 187-193
+apps/web/components/features/protocols/bel/tabs/BelParticipantTimelineCompare.tsx
+  s_a0651daa3436df::t_69293de26e43f0 267-269
+  s_a0651daa3436df::t_cb41f28015d9db 233-235
+apps/web/components/features/pilote/PiloteHero.tsx
+  s_a0651daa3436df::t_c08f2c079ca9ff 65
+  s_a0651daa3436df::t_15527f0efd7502 10
+apps/web/app/rapports/page.tsx
+  s_a0651daa3436df::t_de1710eff97b04 90,93-97,100
+  s_a0651daa3436df::t_fb573831118e29 77-78
+  s_4647a5944836e3::t_f9ccd90678489d 144
+  s_a0651daa3436df::t_1d93515127e58b 148
+  s_a0651daa3436df::t_9c382c043ff20c 67-75
+  s_a0651daa3436df::t_374303a888e909 21-22
+apps/web/components/layout/HeaderBar.tsx
+  s_df7542ffde29df::t_072cec0a96657b 53
+  s_a0651daa3436df::t_f151770ab4c540 43
+apps/web/components/insights/heatmap/GazePathOverlay.tsx
+  s_a0651daa3436df::t_4938361f343677 35
+  s_a0651daa3436df::t_dd89c877cdf54e 67-74
+  s_a0651daa3436df::t_b3f7369d9b03ea 6-7
+apps/web/components/primitives/CollectionChip.tsx
+  s_a0651daa3436df::t_74e9666181a337 5,16-21,23,25-26,57
+apps/web/components/features/protocols/danone/InsightMethodDebugPanel.tsx
+  s_a0651daa3436df::t_8f3a68a0935335 101
+apps/web/components/features/pilote/PiloteBrandIdentity.tsx
+  s_a0651daa3436df::t_ad86c981c5c333 8
+  s_a0651daa3436df::t_39210b267889a1 61
+apps/web/components/charts/DistributionBar.tsx
+  s_a0651daa3436df::t_923891d1472d73 5,13-18,21,38-51
+apps/web/components/features/result/AddToCollectionDialog.tsx
+  s_df7542ffde29df::t_072cec0a96657b 217
+apps/web/app/pilote/[id]/loading.tsx
+  s_a0651daa3436df::t_0478a6865580d4 1-8,10-12
+apps/web/components/features/accueil/RecentAnalyses.tsx
+  s_a0651daa3436df::t_0c8d7ca3ee0f3e 238
+  s_a0651daa3436df::t_8d33647eddabaf 14
+apps/web/components/features/pilote/ingestion/MusicIngestionModal.tsx
+  s_df7542ffde29df::t_072cec0a96657b 191
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_df7542ffde29df::t_072cec0a96657b 543-563
+  s_a0651daa3436df::t_071d43a32c6528 527
+  s_a0651daa3436df::t_35b5913468d21f 246
+apps/web/components/features/accueil/RecentComparaisons.tsx
+  s_a0651daa3436df::t_ab6dd0764f9a96 13
+  s_a0651daa3436df::t_c00724179a266e 51
+apps/web/components/features/pilote/ingestion/TwoLayerClassificationForm.tsx
+  s_df7542ffde29df::t_072cec0a96657b 113,140
+apps/web/lib/routes.ts
+  s_4647a5944836e3::t_f9ccd90678489d 30-32,37,41,46,48-53,60-62,64,90,97
+  s_4647a5944836e3::t_bb81102630a58f 1-29,33-36,38-40,42-45,47,54-59,63,65-89,91-96,98-130
+apps/web/components/insights/charts/ChartCard.tsx
+  s_a0651daa3436df::t_9c8cdb3df4d32c 53
+apps/web/app/pilote/[id]/evolution/page.tsx
+  s_a0651daa3436df::t_6dfda3b38c4b46 1-6,11,16,19,24
+apps/web/components/features/result/SocialPanel.tsx
+  s_a0651daa3436df::t_fb46930b895e77 719
+  s_a0651daa3436df::t_a5ef281716f354 874,882,889
+  s_a0651daa3436df::t_62f7575966a0ad 895
+  s_a0651daa3436df::t_bcf615a0685359 432
+  s_a0651daa3436df::t_41c0655ee25314 847
+  s_df7542ffde29df::t_072cec0a96657b 585-589
+  s_a0651daa3436df::t_c472ce9d30adfa 698
+  s_a0651daa3436df::t_db977facd7e138 24
+  s_a0651daa3436df::t_3467b457c7d31d 606
+apps/web/components/features/result/ImageGazeEnsemblePanel.tsx
+  s_a0651daa3436df::t_fd73725a820e10 15
+  s_a0651daa3436df::t_8d9bcae984d61d 286
+apps/web/components/features/pilote/PiloteApercu.tsx
+  s_a0651daa3436df::t_fd73725a820e10 28,273,348,419
+apps/web/lib/services/detection.ts
+  s_a0651daa3436df::t_e877d84e56cc34 10-16
+  s_a0651daa3436df::t_95883a41a49ee6 54
+  s_a0651daa3436df::t_ac8398ff0f5bcb 1,3
+apps/web/components/primitives/TemplateBadge.tsx
+  s_a0651daa3436df::t_b033be0adac7ec 1-2,4,7,15-20,22,38
+apps/web/components/features/protocols/bel/tabs/BelCustomClusterBuilder.tsx
+  s_df7542ffde29df::t_072cec0a96657b 291-293
+apps/web/components/fx/ComponentErrorBoundary.tsx
+  s_342719deabd7d2::t_63ef0ddda910c1 1-8,11-13,15-21,23-41,44-56,58-74
+  s_4647a5944836e3::t_f9ccd90678489d 57
+apps/web/components/features/pilote/ingestion/VideoIngestionModal.tsx
+  s_df7542ffde29df::t_072cec0a96657b 188
+apps/web/components/features/pilote/ingestion/TextIngestionModal.tsx
+  s_df7542ffde29df::t_072cec0a96657b 201,219
+apps/web/components/ui/tooltip.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 1,3-4,6,8,10,12,27-28,30
+apps/web/components/insights/heatmap/NumberedZoneOverlay.tsx
+  s_a0651daa3436df::t_9efe5f17183d13 10
+  s_a0651daa3436df::t_facd1b31d637bd 65
+  s_a0651daa3436df::t_3c63bdb728cf8b 79
+apps/web/components/features/pilote/SourcesPage.tsx
+  s_a0651daa3436df::t_fd73725a820e10 28,258
+apps/web/components/features/comparaison/ComparePicker.tsx
+  s_a0651daa3436df::t_fd73725a820e10 12,41
+.oxlintrc.json
+  s_df7542ffde29df::t_d12ab09f064004 18,23
+  s_df7542ffde29df::t_081d29c12f542b 19-22
+apps/web/components/ui/separator.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 1,3-4,6,11-24,26
+apps/web/components/features/accueil/PiloteCard.tsx
+  s_a0651daa3436df::t_bac8815644e932 17
+  s_a0651daa3436df::t_a3f521118fe161 37
+apps/web/components/features/result/QAPanel.tsx
+  s_df7542ffde29df::t_072cec0a96657b 133
+apps/web/lib/comparison-url.ts
+  ai_agent 2,4,7,9-10
+apps/web/app/page.tsx
+  s_a0651daa3436df::t_7134d422b7bca4 1-6
+apps/web/components/layout/Logo.tsx
+  s_a0651daa3436df::t_2d536fd47b0912 28-29
+  s_a0651daa3436df::t_b007743d53fcdd 1-8,10,14
+apps/web/components/features/analyse/AnalysisProgress.tsx
+  s_a0651daa3436df::t_d1162e79687a89 109
+  s_a0651daa3436df::t_e6d47adfbf1bf0 246
+  s_a0651daa3436df::t_49d7e60f5d1a4a 16-17
+apps/web/components/features/pilote/KnowledgeGrid.tsx
+  s_a0651daa3436df::t_fd73725a820e10 19,65
+apps/web/components/features/pilote/ingestion/ImageIngestionModal.tsx
+  s_df7542ffde29df::t_072cec0a96657b 189
+apps/web/components/layout/PiloteSectionNav.tsx
+  s_a0651daa3436df::t_9c73921303cb3f 35
+apps/web/components/features/pilote/PiloteResumeOuverture.tsx
+  s_a0651daa3436df::t_fd73725a820e10 29,269
+apps/web/components/charts/GenderDonut.tsx
+  s_a0651daa3436df::t_6fc7e73555a0ac 5,13-18,21,23-24,50-51,54-55
+apps/web/components/features/result/gaze/TemporalGazePathOverlay.tsx
+  s_a0651daa3436df::t_f831c4fdfdcb4a 132
+  s_a0651daa3436df::t_337a83fa7c15b8 15
+apps/web/components/layout/NavShell.tsx
+  s_a0651daa3436df::t_e847b577a684e3 48,50-51
+  s_a0651daa3436df::t_5c8082c3fc5852 10,29
+apps/web/lib/services/cloud.ts
+  s_342719deabd7d2::t_e0c03546cef542 149-176,184,186-222
+  s_4647a5944836e3::t_f9ccd90678489d 177-183,185
+  s_a0651daa3436df::t_98448c854dc3db 2,4-6
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 231
+apps/web/components/features/pilote/LinkedSourcesModule.tsx
+  s_a0651daa3436df::t_fd73725a820e10 17,154
+apps/web/components/features/analyse/SmartDropZone.tsx
+  s_df7542ffde29df::t_072cec0a96657b 105,295,366,372
+  s_a0651daa3436df::t_8d7441a577e9f6 87
+  s_a0651daa3436df::t_5a576c93ba57a7 343
+  s_a0651daa3436df::t_898988abce6440 96
+  s_a0651daa3436df::t_2b40a2261eb3bc 245
+  s_a0651daa3436df::t_271bf791634cd7 19
+  s_a0651daa3436df::t_43b868f12a3490 10
+  s_a0651daa3436df::t_b40f5e675c743c 333
+  s_a0651daa3436df::t_83ed2ad63f45ff 353
+apps/web/components/features/result/HeroBlock.tsx
+  s_a0651daa3436df::t_4dce5bdcffa4fc 22
+  s_a0651daa3436df::t_baf88f76f02703 216
+apps/web/components/features/protocols/danone/DiffClusterLabDashboard.tsx
+  s_df7542ffde29df::t_072cec0a96657b 471-473
+  s_a0651daa3436df::t_d1d8bde899b4c5 356-361
+apps/web/components/layout/nav-items.ts
+  s_4647a5944836e3::t_323f9b644adc2f 13-14,25,32,39,46,53,60,70,77,84,91
+apps/web/app/pilote/new/[template]/page.tsx
+  s_a0651daa3436df::t_4a21a8f5099477 42
+  s_a0651daa3436df::t_d02e22e7751034 5
+  s_a0651daa3436df::t_3a5d35b5bd169e 13
+  s_a0651daa3436df::t_60c39cd9563d1b 75
+apps/web/app/pilote/[id]/take/[takeId]/page.tsx
+  s_a0651daa3436df::t_dbb9b13b48a6b9 1-6,15-16,27,44,49,62,77
+  s_df7542ffde29df::t_072cec0a96657b 69
+apps/web/app/globals.css
+  s_a0651daa3436df::t_eb27aa19c90d16 272-279
+apps/web/components/features/pilote/BestOfModule.tsx
+  s_a0651daa3436df::t_fd73725a820e10 15,103
+apps/web/components/features/protocols/bel/tabs/BelClusterScatterExplorer.tsx
+  s_a0651daa3436df::t_11e4521bf84679 466
+  s_df7542ffde29df::t_072cec0a96657b 150-152
+apps/web/docs/v1/CURSOR_BUILD.md
+  s_df7542ffde29df::t_072cec0a96657b 1736
+apps/web/components/charts/GazePathOverlay.tsx
+  s_a0651daa3436df::t_1b92f91313be2c 16
+  s_a0651daa3436df::t_46b271895de20f 24
+  s_a0651daa3436df::t_521ddbdc388c02 6-7
+apps/web/components/features/pilote/SourceDetailView.tsx
+  s_a0651daa3436df::t_fd73725a820e10 42,247
+apps/web/lib/queries/endpoints.ts
+  s_342719deabd7d2::t_7fac2d104cf8d2 63
+apps/web/components/features/cloud/CloudDriveBrowser.tsx
+  s_a0651daa3436df::t_3c7727ef7024ab 248
+  s_a0651daa3436df::t_b13666674aac16 16
+  s_a0651daa3436df::t_25eb1f97ef1fc5 162
+  s_342719deabd7d2::t_ad731c0f5ea2df 31-40
+  s_342719deabd7d2::t_e622f75e20b8dc 5-6
+  s_342719deabd7d2::t_a65e6679726798 10
+  s_a0651daa3436df::t_40d709852c005a 26
+  s_a0651daa3436df::t_ad3ddd5e632b17 182
+  s_a0651daa3436df::t_34a6b9b61c1961 211
+  s_342719deabd7d2::t_7bd9f91a5ae096 41-43
+  s_a0651daa3436df::t_df92c9113df132 194
+  s_342719deabd7d2::t_442c864826fd68 74-77,79
+  s_df7542ffde29df::t_072cec0a96657b 11,49-67,93-96,102,143,175-177
+  s_342719deabd7d2::t_87afa30ad4299a 13
+  s_a0651daa3436df::t_4a821418f087c7 101
+  s_a0651daa3436df::t_8aac586ce7b313 135-142,144-146
+  s_a0651daa3436df::t_1abda18d970184 246
+  s_342719deabd7d2::t_c091e8e48ca81c 12,14
+  s_a0651daa3436df::t_1499440f7268e4 114
+  s_342719deabd7d2::t_8dd3e9f69ca17b 1-4,7-9,15,17-25,27-30,44-48,68-73,78,80-92,97-100,103-113,115-134,147-161,163-174,178-181,183-193,195-199,201-210,212-225,227-228,230-245,247,249-253
+  s_a0651daa3436df::t_35e2f68ebf7e11 200
+  s_a0651daa3436df::t_889f3446c9da5d 226,229
+apps/web/components/features/pilote/ingestion/SocialAccountConnectModal.tsx
+  s_a0651daa3436df::t_db76d5c9372a41 34-37
+  s_a0651daa3436df::t_a27126a900e6a3 291-297,299-302
+  s_df7542ffde29df::t_072cec0a96657b 102
+  s_a0651daa3436df::t_f1d70e450c97bb 38-39
+apps/web/components/charts/HeatmapOverlay.tsx
+  s_a0651daa3436df::t_ab583580f7d9aa 27
+  s_a0651daa3436df::t_fce4278395a1b0 90
+  s_a0651daa3436df::t_929cfa6a01b63b 7-8
+apps/web/app/pilote/[id]/representants/page.tsx
+  s_a0651daa3436df::t_e0cbc569906553 1-6,12,17,27,30,33
+apps/web/lib/i18n/dictionary.ts
+  s_342719deabd7d2::t_f29f016d240605 7039-7052,7056
+  s_342719deabd7d2::t_d92d3e7be58602 3481-3493,3499
+  s_a0651daa3436df::t_38f765423e1d57 125
+  s_a0651daa3436df::t_984073ea96446e 3973-3983
+  s_a0651daa3436df::t_52298f593bdb95 116,118-124
+  s_a0651daa3436df::t_0af6f34f4afcf5 372-382
+  s_a0651daa3436df::t_381b7de0f63c6c 3722,3724-3730
+  s_342719deabd7d2::t_036e9d2c7370c0 7053
+  s_342719deabd7d2::t_9e3655cc7be3a0 3496
+  s_a0651daa3436df::t_68d82391d8273d 6656-6682
+  s_a0651daa3436df::t_7a67d83cd13810 3091-3117
+  s_a0651daa3436df::t_3e48749e2beae3 3731
+  s_4647a5944836e3::t_f9ccd90678489d 1810,1826,3415,3494-3495,3497-3498,5402,5418,7010,7013,7016,7054-7055
+apps/web/components/features/accueil/UniversalInput.tsx
+  s_df7542ffde29df::t_072cec0a96657b 64
+apps/web/lib/queries/cloud.ts
+  s_342719deabd7d2::t_76e6a35b3c739f 2,4-5,7-11,13-17
+  s_4647a5944836e3::t_f9ccd90678489d 12
+apps/web/components/layout/PiloteSubNav.tsx
+  s_a0651daa3436df::t_ca3c3786879e0a 38
+  s_a0651daa3436df::t_947536530dc493 1-6
+  s_a0651daa3436df::t_9abbe687486629 43
+  s_a0651daa3436df::t_3c314c3e0a850a 24
+apps/web/components/ui/button.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 1-3,5,13-15,31,34-35,40,42-43,45-46,48
+apps/web/components/features/protocols/bel/tabs/BelDiffClusterLabDashboard.tsx
+  s_df7542ffde29df::t_072cec0a96657b 374-376
+apps/web/app/pilote/[id]/decisions/[decisionId]/page.tsx
+  s_a0651daa3436df::t_c22e6282dbcc76 13-19,26-28,37,45-47,55,69,72,75
+apps/web/components/ui/file-tree.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 1,36-41,142,158,168,170,207-223,225,227-229,231,233-263,265-267
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_df7542ffde29df::t_072cec0a96657b 151-153
+apps/web/app/collection/new/page-client.tsx
+  s_df7542ffde29df::t_072cec0a96657b 65
+apps/web/components/features/comparaison/CompareView.tsx
+  s_a0651daa3436df::t_fd73725a820e10 9,103,245
+apps/web/components/features/protocols/danone/ClusterScatterExplorer.tsx
+  s_df7542ffde29df::t_072cec0a96657b 150-152
+  s_a0651daa3436df::t_459ef199d151e3 466
+apps/web/components/layout/TopNav.tsx
+  s_a0651daa3436df::t_f6acb715401c03 45
+apps/web/components/features/pilote/NewPiloteForm.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 79
+apps/web/lib/i18n/thumbnail-alt.ts
+  s_a0651daa3436df::t_78b4ae91625d3d 1-32
+apps/web/components/features/social/SocialCanauxPanel.tsx
+  s_df7542ffde29df::t_072cec0a96657b 23-27
+apps/web/lib/habs/cloud-providers.ts
+  s_a0651daa3436df::t_8ff4ab75e007ad 1-2
+  s_a0651daa3436df::t_fefcfc0c2257c5 120-135
+apps/web/app/compte/recharger/page.tsx
+  s_a0651daa3436df::t_bdfc6f378e9f8b 9-11,14-20
+  s_a0651daa3436df::t_04e6c3e9fab21f 39-43,45-48
+apps/web/components/features/cloud/CloudMediaPicker.tsx
+  s_a0651daa3436df::t_ddcdc2cd14ff0e 274
+  s_a0651daa3436df::t_51d4b02540c043 67
+apps/web/lib/queries/index.ts
+  s_342719deabd7d2::t_783e89897d68c2 64-65
+apps/web/app/pilote/[id]/layout.tsx
+  s_a0651daa3436df::t_b0b729c448ae83 1-6,13,23,37
+apps/web/components/ui/card.tsx
+  s_4647a5944836e3::t_f9ccd90678489d 1-32,38-56
+apps/web/components/layout/SkipToContent.tsx
+  s_a0651daa3436df::t_0922bc3d3fafdb 2-5,7-9,11-19
+apps/web/components/features/accueil/BrainPanelHero.tsx
+  s_df7542ffde29df::t_072cec0a96657b 46
+apps/web/components/features/result/TemplateClassifier.tsx
+  s_a0651daa3436df::t_da741448958597 72-74
+  s_a0651daa3436df::t_84bcebd416b825 30
+  s_a0651daa3436df::t_b78619f6f45098 8
+  s_df7542ffde29df::t_072cec0a96657b 70
+apps/web/components/features/result/InsightEngineDetailPanel.tsx
+  s_a0651daa3436df::t_89567657e5965f 883-889
+  s_a0651daa3436df::t_6d3a9740c00857 353-360
+apps/web/components/layout/BottomTabBar.tsx
+  s_a0651daa3436df::t_a98a5158dc692e 1-6
+  s_a0651daa3436df::t_49665adcc33bba 23
+  s_a0651daa3436df::t_ea60d1d7a3dc12 38
+apps/web/components/primitives/PillarBadge.tsx
+  s_a0651daa3436df::t_51e0d3e8c495d6 1-2,5-6,19-24,26-27,36
+apps/web/app/collection/page.tsx
+  s_a0651daa3436df::t_fd73725a820e10 11,63
+apps/web/components/features/collection/CollectionDetail.tsx
+  s_a0651daa3436df::t_fd73725a820e10 26,122
+apps/web/app/compte/page-client.tsx
+  s_a0651daa3436df::t_e039f3167c0be5 30
+  s_a0651daa3436df::t_fd73725a820e10 34,171
+  s_a0651daa3436df::t_82cd40a9c13cf3 323
+apps/web/components/features/protocols/bel/InsightMethodDebugPanel.tsx
+  s_df7542ffde29df::t_072cec0a96657b 215-236
+apps/web/components/features/accueil/CollectionsGrid.tsx
+  s_a0651daa3436df::t_7b50fa13a631b7 12
+  s_a0651daa3436df::t_dea8f304eac92f 56-62
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_a0651daa3436df::t_9d1bd6369dded4 440
+  s_df7542ffde29df::t_072cec0a96657b 641-660
+apps/web/lib/queries/keys.ts
+  s_342719deabd7d2::t_d7af1b73d98ce8 78-79
+apps/web/components/features/pilote/CandidatesGrid.tsx
+  s_a0651daa3436df::t_fd73725a820e10 18,116
+apps/web/components/layout/MobileHeader.tsx
+  s_a0651daa3436df::t_40fc88f119d94e 1-6,13
+apps/web/components/features/pilote/BestCombinationCard.tsx
+  s_a0651daa3436df::t_fd73725a820e10 17,77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "2a636efcb5e2bbfd43f30f6da04a288dd46944a5",
+  "prompts": {},
+  "sessions": {
+    "s_342719deabd7d2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5e3dc962-ef55-444e-bacf-5be96c62b029",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_4647a5944836e3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b6374667ffe1j46fXegEtt3Ps",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a0651daa3436df": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6727856b-a555-46b0-a5c5-25d332028c93",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_df7542ffde29df": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b62f72fbffexmYMJSebLTA161",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
