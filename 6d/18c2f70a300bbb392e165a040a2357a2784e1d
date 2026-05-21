@@ -1,0 +1,43 @@
+.env.example
+  s_d845807fb8b082::t_9bcb89f2387b92 57-62,64-65,67,70,74-77
+  s_d845807fb8b082::t_cab0ad443dad75 22,24,29-31,33-34,36
+  s_d845807fb8b082::t_38843c7dab595b 51-55,63,66,68-69,71-73,78-104
+.editorconfig
+  s_d845807fb8b082::t_bb3ebe5a20e796 1-10
+.gitignore
+  s_d845807fb8b082::t_7366cfae8dcc69 59
+  s_d845807fb8b082::t_6e80d943982799 3-5
+package.json
+  ai_agent 29
+  s_d845807fb8b082::t_e751a8d9d3b041 30
+  s_d845807fb8b082::t_e1a67021d9dcb4 56
+  s_d845807fb8b082::t_8c3d278193cf91 77
+scripts/setup.sh
+  s_d845807fb8b082::t_3f7b4b6af4cefd 1-10,21-24,27-37
+  s_d845807fb8b082::t_bf1380d1772c36 11-20,25-26
+.devcontainer/devcontainer.json
+  s_d845807fb8b082::t_95ee5c3c200bae 15
+  s_d845807fb8b082::t_c7bc4e073b22fd 7,11-14
+  s_d845807fb8b082::t_ad901750bf6359 1-6,8-10,16-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "6d18c2f70a300bbb392e165a040a2357a2784e1d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
