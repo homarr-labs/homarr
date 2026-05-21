@@ -32,7 +32,7 @@
     },
     "typecheck": {
       "dependsOn": ["^topo"],
-      "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx", "!**/*.spec.ts", "!**/__tests__/**"],
+      "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["node_modules/.cache/tsbuildinfo.json"]
     },
     "clean": {
