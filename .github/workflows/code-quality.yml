@@ -48,8 +48,8 @@ jobs:
       - name: Auto-fix lint + format
         if: steps.changed.outputs.files != ''
         run: |
-          oxlint --fix ${{ steps.changed.outputs.files }} || true
-          oxfmt --write ${{ steps.changed.outputs.files }}
+          pnpm exec oxlint --fix ${{ steps.changed.outputs.files }} || true
+          pnpm exec oxfmt --write ${{ steps.changed.outputs.files }}
 
       - name: Commit fixes
         uses: stefanzweifel/git-auto-commit-action@v5
