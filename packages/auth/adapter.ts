@@ -11,6 +11,19 @@ export const createAdapter = (db: Database, provider: SupportedAuthProvider | "u
 
   return {
     ...drizzleAdapter,
+    createSession: (data) => {
+      const result = db
+        .insert(sessions)
+        .values({
+          sessionToken: data.sessionToken,
+          userId: data.userId,
+          expires: data.expires,
+        })
+        .returning()
+        .get();
+
+      return result;
+    },
     // We override the default implementation as we want to have a provider
     // flag in the user instead of the account to not intermingle users from different providers
     // eslint-disable-next-line no-restricted-syntax

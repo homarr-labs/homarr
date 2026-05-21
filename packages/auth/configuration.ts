@@ -71,6 +71,12 @@ export const createConfiguration = (
 
         const expires = expireDateAfter(env.AUTH_SESSION_EXPIRY_TIME);
         const sessionToken = generateSessionToken();
+
+        if (Number.isNaN(expires.getTime())) {
+          logger.error("Invalid session expiry date", { expirySeconds: env.AUTH_SESSION_EXPIRY_TIME });
+          return false;
+        }
+
         await adapter.createSession({
           sessionToken,
           expires,

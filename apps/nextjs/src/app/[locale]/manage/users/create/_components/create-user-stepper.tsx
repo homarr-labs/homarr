@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   Group,
-  PasswordInput,
   Stack,
   Stepper,
   Table,
@@ -27,7 +26,8 @@ import { useZodForm } from "@homarr/form";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
+import { UserCreatePasswordFields } from "@homarr/forms-collection";
+import { UserAvatar } from "@homarr/ui";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { userPasswordSchema } from "@homarr/validation/user";
 
@@ -167,18 +167,10 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           <form>
             <Card p="xl" shadow="md" withBorder>
               <Stack gap="md">
-                <CustomPasswordInput
-                  withPasswordRequirements
-                  label={tUserField("password.label")}
+                <UserCreatePasswordFields
                   variant="filled"
-                  withAsterisk
-                  {...securityForm.getInputProps("password")}
-                />
-                <PasswordInput
-                  label={tUserField("passwordConfirm.label")}
-                  variant="filled"
-                  withAsterisk
-                  {...securityForm.getInputProps("confirmPassword")}
+                  passwordInputProps={securityForm.getInputProps("password")}
+                  confirmPasswordInputProps={securityForm.getInputProps("confirmPassword")}
                 />
               </Stack>
             </Card>

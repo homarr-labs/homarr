@@ -132,12 +132,13 @@
       },
       "password": {
         "label": "Password",
+        "suggestionsTitle": "Password suggestions",
         "requirement": {
-          "length": "Includes at least 8 characters",
-          "lowercase": "Includes lowercase letter",
-          "uppercase": "Includes uppercase letter",
-          "number": "Includes number",
-          "special": "Includes special symbol"
+          "length": "At least 8 characters",
+          "lowercase": "Suggested: includes lowercase letter",
+          "uppercase": "Suggested: includes uppercase letter",
+          "number": "Suggested: includes number",
+          "special": "Suggested: includes special symbol"
         }
       },
       "passwordConfirm": {

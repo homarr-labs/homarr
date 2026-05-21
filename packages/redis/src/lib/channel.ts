@@ -12,6 +12,8 @@ const logger = createLogger({ module: "redisChannel" });
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
 
+const noopSubscription = () => ({ unsubscribe: () => undefined });
+
 /**
  * Creates a new pub/sub channel.
  * @param name name of the channel
@@ -26,12 +28,15 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      * @param callback callback function to be called when new data is published
      */
     subscribe: (callback: (data: TData) => void) => {
-      if (persist) {
+      if (persist && lastDataClient) {
         void lastDataClient.get(lastChannelName).then((data) => {
           if (data) {
             callback(superjson.parse(data));
           }
         });
+      }
+      if (!publisher) {
+        return noopSubscription();
       }
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
@@ -42,12 +47,18 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
+      if (!publisher || !lastDataClient) {
+        return;
+      }
       if (persist) {
         await lastDataClient.set(lastChannelName, superjson.stringify(data));
       }
       await publisher.publish(channelName, superjson.stringify(data));
     },
     getLastDataAsync: async () => {
+      if (!lastDataClient) {
+        return null;
+      }
       const data = await lastDataClient.get(lastChannelName);
       return data ? superjson.parse<TData>(data) : null;
     },
@@ -187,6 +198,9 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      * Invalidate the cache channels data.
      */
     invalidateAsync: async () => {
+      if (!getSetClient) {
+        return;
+      }
       await getSetClient.del(cacheChannelName);
     },
     /**

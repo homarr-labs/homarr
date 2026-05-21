@@ -1,16 +1,25 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import { Popover, Progress } from "@mantine/core";
+import { Popover, Progress, Text } from "@mantine/core";
 
 import { useScopedI18n } from "@homarr/translation/client";
 import { passwordRequirements } from "@homarr/validation/user";
 
 import { PasswordRequirement } from "./password-requirement";
 
+const strengthColorMap = [
+  { min: 100, color: "teal" },
+  { min: 51, color: "yellow" },
+  { min: 0, color: "dimmed" },
+] as const;
+
 export const PasswordRequirementsPopover = ({ password, children }: PropsWithChildren<{ password: string }>) => {
+  const tPassword = useScopedI18n("user.field.password");
   const requirements = useRequirements();
   const strength = useStrength(password);
   const [popoverOpened, setPopoverOpened] = useState(false);
+  const strengthColor =
+    strengthColorMap.find(({ min }) => strength >= min)?.color ?? strengthColorMap[strengthColorMap.length - 1].color;
   const checks = (
     <>
       {requirements.map((requirement) => (
@@ -18,8 +27,6 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
       ))}
     </>
   );
-
-  const color = strength === 100 ? "teal" : strength > 50 ? "yellow" : "red";
 
   return (
     <Popover opened={popoverOpened} position="bottom" width="target" transitionProps={{ transition: "pop" }}>
@@ -29,7 +36,10 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
         </div>
       </Popover.Target>
       <Popover.Dropdown>
-        <Progress color={color} value={strength} size={5} mb="xs" />
+        <Progress color={strengthColor} value={strength} size={5} mb="xs" />
+        <Text size="sm" c="dimmed" mb="xs">
+          {tPassword("suggestionsTitle")}
+        </Text>
         {checks}
       </Popover.Dropdown>
     </Popover>

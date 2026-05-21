@@ -22,21 +22,7 @@ export const passwordRequirements = [
   value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
 }[];
 
-export const userPasswordSchema = z
-  .string()
-  .min(8)
-  .max(255)
-  .refine(
-    (value) => {
-      return passwordRequirements.every((requirement) => requirement.check(value));
-    },
-    {
-      params: createCustomErrorParams({
-        key: "passwordRequirements",
-        params: {},
-      }),
-    },
-  );
+export const userPasswordSchema = z.string().min(8).max(255);
 
 const addConfirmPasswordRefinement = <
   TSchema extends z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,

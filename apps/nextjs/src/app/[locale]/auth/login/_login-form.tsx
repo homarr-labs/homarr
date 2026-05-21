@@ -115,7 +115,14 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
       <Stack gap="lg">
         {credentialInputsVisible && (
           <>
-            <form onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}>
+            <form
+              onSubmit={form.onSubmit((credentials) =>
+                void signInAsync(credentials.provider, {
+                  name: credentials.name,
+                  password: credentials.password,
+                }),
+              )}
+            >
               <Stack gap="lg">
                 <TextInput
                   label={t("field.username.label")}

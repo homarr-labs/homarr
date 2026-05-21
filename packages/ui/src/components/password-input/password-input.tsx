@@ -20,15 +20,16 @@ export const CustomPasswordInput = ({ withPasswordRequirements, ...props }: Cust
 };
 
 const WithPasswordRequirements = (props: PasswordInputProps) => {
-  const [value, setValue] = useState("");
+  const [internalValue, setInternalValue] = useState("");
+  const password = props.value ?? internalValue;
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.currentTarget.value);
+    setInternalValue(event.currentTarget.value);
     props.onChange?.(event);
   };
 
   return (
-    <PasswordRequirementsPopover password={value}>
+    <PasswordRequirementsPopover password={String(password)}>
       <PasswordInput {...props} onChange={onChange} />
     </PasswordRequirementsPopover>
   );
