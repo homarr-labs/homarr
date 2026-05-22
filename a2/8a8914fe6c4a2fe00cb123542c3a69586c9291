@@ -1,0 +1,35 @@
+package.json
+  s_921c1686f4d42e::t_9ceca603a7859d 38
+  s_2d84b180eabf5c::t_30bcb6716ed189 20
+OPENROUTER-MIGRATION.md
+  s_921c1686f4d42e::t_5e761f290e890f 144-145,149-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "a28a8914fe6c4a2fe00cb123542c3a69586c9291",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_2d84b180eabf5c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8233a5d2-77aa-4fb9-a0bb-71cf37fb0b01",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_921c1686f4d42e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7401be2c-b6f0-40b5-accb-c00d73bc5584",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
