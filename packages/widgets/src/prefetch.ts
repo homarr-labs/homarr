@@ -11,6 +11,8 @@ import prefetchForApps from "./app/prefetch";
 import prefetchForBookmarks from "./bookmarks/prefetch";
 import type { Prefetch, WidgetOptionsRecordOf } from "./definition";
 import type { inferOptionsFromCreator } from "./options";
+import prefetchRssFeedsAsync from "./rssFeed/prefetch";
+import prefetchWeatherAsync from "./weather/prefetch";
 
 const cachedGetServerSettingsAsync = cache(getServerSettingsAsync);
 
@@ -19,6 +21,8 @@ const prefetchCallbacks: Partial<{
 }> = {
   bookmarks: prefetchForBookmarks,
   app: prefetchForApps,
+  weather: prefetchWeatherAsync,
+  rssFeed: prefetchRssFeedsAsync,
 };
 
 export const prefetchForKindAsync = async <TKind extends WidgetKind>(
