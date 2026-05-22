@@ -1,0 +1,40 @@
+apps/api/app/llm/provider.py
+  s_921c1686f4d42e::t_be33858db573b3 1272-1274
+  s_921c1686f4d42e::t_03cbed768150da 1250-1255
+  s_921c1686f4d42e::t_f16b9bdded7045 1350,1352
+  s_921c1686f4d42e::t_74bb30e505357c 1380-1389,1394
+apps/api/app/api/llm.py
+  s_921c1686f4d42e::t_eed7bc1965fd99 109
+  s_921c1686f4d42e::t_fb0ab4b3cb3485 206
+apps/web/lib/ai/llm/provider.ts
+  s_921c1686f4d42e::t_ffc40c7934eb6a 65-69
+  s_921c1686f4d42e::t_dccb5cf5712a84 18-23
+apps/web/app/api/ai/qa/stream/route.ts
+  s_921c1686f4d42e::t_13a6057af45e6f 176
+  s_921c1686f4d42e::t_1c56c28a4306f7 5-7,10
+  s_921c1686f4d42e::t_a07203b4735542 164-165,170,173-174,182-183,188-190,192-193,195-213
+  s_921c1686f4d42e::t_9bdf08f61604a4 12,17,19
+  s_921c1686f4d42e::t_c6a3a1e2b6f28a 167-168
+  s_921c1686f4d42e::t_2ec98bd6452aff 169,187,191,194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "e768ddc4d0b1667df6c34d10eed65029d75f9976",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_921c1686f4d42e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7401be2c-b6f0-40b5-accb-c00d73bc5584",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
