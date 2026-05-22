@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { useMantineTheme } from "@mantine/core";
+import { Box, Loader, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
@@ -39,7 +39,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const [data] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(input, {
+  const { data, isLoading } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -61,9 +61,9 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     },
   });
 
-  const events = useMemo(() => data.flatMap((item) => item.events), [data]);
+  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
-  return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} />;
+  return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} isLoading={isLoading} />;
 };
 
 interface CalendarBaseProps {
@@ -72,9 +72,10 @@ interface CalendarBaseProps {
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
+  isLoading?: boolean;
 }
 
-const CalendarBase = ({ isEditMode, events, month, setMonth, options }: CalendarBaseProps) => {
+const CalendarBase = ({ isEditMode, events, month, setMonth, options, isLoading }: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
@@ -87,22 +88,26 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
 
   return (
-    <Calendar
-      defaultDate={new Date()}
-      onPreviousMonth={(month) => setMonth(new Date(month))}
-      onNextMonth={(month) => setMonth(new Date(month))}
-      highlightToday
-      locale={locale}
-      hideWeekdays={false}
-      date={month}
-      maxLevel="month"
-      firstDayOfWeek={firstDayOfWeek}
-      static={isEditMode}
-      className={classes.calendar}
-      w="100%"
-      h="100%"
-      ref={ref}
-      styles={{
+    <Box pos="relative" w="100%" h="100%">
+      {isLoading && (
+        <Loader size={16} pos="absolute" top={8} right={8} style={{ zIndex: 1 }} />
+      )}
+      <Calendar
+        defaultDate={new Date()}
+        onPreviousMonth={(month) => setMonth(new Date(month))}
+        onNextMonth={(month) => setMonth(new Date(month))}
+        highlightToday
+        locale={locale}
+        hideWeekdays={false}
+        date={month}
+        maxLevel="month"
+        firstDayOfWeek={firstDayOfWeek}
+        static={isEditMode}
+        className={classes.calendar}
+        w="100%"
+        h="100%"
+        ref={ref}
+        styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
           borderRadius: "md",
@@ -168,6 +173,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         );
       }}
     />
+    </Box>
   );
 };
 
