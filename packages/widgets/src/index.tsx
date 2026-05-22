@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import type { Loader } from "next/dynamic";
 import dynamic from "next/dynamic";
-import { Center, Loader as UiLoader } from "@mantine/core";
+import { Skeleton } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -107,11 +107,7 @@ export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
   const newlyLoadedComponent = dynamic<WidgetComponentProps<TKind>>(
     widgetImports[kind].componentLoader as Loader<WidgetComponentProps<TKind>>,
     {
-      loading: () => (
-        <Center w="100%" h="100%">
-          <UiLoader />
-        </Center>
-      ),
+      loading: () => <Skeleton w="100%" h="100%" radius="md" animate />,
     },
   );
 

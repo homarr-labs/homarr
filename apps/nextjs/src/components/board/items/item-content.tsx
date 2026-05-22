@@ -27,9 +27,16 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
+const ASSUMED_VIEWPORT_WIDTH = 900;
+const DEFAULT_COLUMN_COUNT = 12;
+
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
+
+  const estimatedCellSize = ASSUMED_VIEWPORT_WIDTH / DEFAULT_COLUMN_COUNT;
+  const fallbackWidth = item.width * estimatedCellSize - 20;
+  const fallbackHeight = item.height * estimatedCellSize - 20;
 
   return (
     <>
@@ -53,7 +60,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         }}
         p={0}
       >
-        <InnerContent item={item} width={width} height={height} />
+        <InnerContent item={item} width={width || fallbackWidth} height={height || fallbackHeight} />
       </Card>
       {item.advancedOptions.title?.trim() && (
         <Badge
