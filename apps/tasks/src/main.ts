@@ -12,7 +12,7 @@ const logger = createLogger({ module: "tasks" });
 const MAX_RETRIES = 10;
 const RETRY_DELAY_MS = 500;
 
-const waitForRedisAsync = async () => {
+export const waitForRedisAsync = async () => {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       await handshakeAsync();
