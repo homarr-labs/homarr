@@ -1,0 +1,23 @@
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_24ae68eed5c8aa::t_898605e46c7a2a 18,28,32
+  s_24ae68eed5c8aa::t_45ed32fb2b220b 11,14
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_24ae68eed5c8aa::t_59550eea0af210 5-6,9-10,13-14
+  s_24ae68eed5c8aa::t_93029459d03e29 21-24,49-62,64-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "e14da6f747c507ce797da1f28c95f0d7ce4cc7e4",
+  "prompts": {},
+  "sessions": {
+    "s_24ae68eed5c8aa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c10be15c-e085-41f8-b58c-e40d90a7bbac",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
