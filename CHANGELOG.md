@@ -1,3 +1,22 @@
+## [1.62.0](https://github.com/homarr-labs/homarr/compare/v1.61.1...v1.62.0) (2026-05-22)
+
+### Features
+
+* **seed:** add demo mode with pre-seeded user ([#5739](https://github.com/homarr-labs/homarr/issues/5739)) ([dade477](https://github.com/homarr-labs/homarr/commit/dade477b3226765eb614e66588ebee84c45cb688))
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.10.0 ([#5727](https://github.com/homarr-labs/homarr/issues/5727)) ([044ad9e](https://github.com/homarr-labs/homarr/commit/044ad9edf9c1dc9b50b9591dea0b5f0cce4be01a))
+* **docker:** improve icon matching ([#5693](https://github.com/homarr-labs/homarr/issues/5693)) ([7cd30b6](https://github.com/homarr-labs/homarr/commit/7cd30b640cbf47e4678abda18f83c0924f039b1b))
+* exclude .env files from Docker build context ([#5738](https://github.com/homarr-labs/homarr/issues/5738)) ([fa73763](https://github.com/homarr-labs/homarr/commit/fa737638a812372d904207fe7af5bd7c6f53d159))
+* **tracearr:** support absolute image urls ([#5654](https://github.com/homarr-labs/homarr/issues/5654)) ([7a12721](https://github.com/homarr-labs/homarr/commit/7a1272146c597c1f9df89d74b8389f70e7cdd61a))
+
+### Performance Improvements
+
+* (next branch) reduce idle memory on startup ([#5637](https://github.com/homarr-labs/homarr/issues/5637)) ([5ee84f8](https://github.com/homarr-labs/homarr/commit/5ee84f8cf464c308729281cb4db572950ba85a82))
+* **boards:** remove loading overlay and show board immediately ([#5735](https://github.com/homarr-labs/homarr/issues/5735)) ([df4b57b](https://github.com/homarr-labs/homarr/commit/df4b57bd414d4402522f9210b1470d0561c37274))
+* **memory:** combine 3 node processes into one ([#5600](https://github.com/homarr-labs/homarr/issues/5600)) ([a1aa550](https://github.com/homarr-labs/homarr/commit/a1aa5505a365688b456090a882770e561479833e))
+
 ## [1.61.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1) (2026-05-18)
 
 ### Bug Fixes
