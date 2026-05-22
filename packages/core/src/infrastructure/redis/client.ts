@@ -5,6 +5,7 @@ import { redisEnv } from "./env";
 
 const defaultRedisOptions = {
   connectionName: "homarr",
+  lazyConnect: true,
 } satisfies RedisOptions;
 
 export type { Redis as RedisClient } from "ioredis";
