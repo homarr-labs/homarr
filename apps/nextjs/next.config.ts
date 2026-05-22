@@ -6,7 +6,6 @@ import "@homarr/core/infrastructure/logs/env";
 import "@homarr/docker/env";
 
 import type { NextConfig } from "next";
-import MillionLint from "@million/lint";
 import createNextIntlPlugin from "next-intl/plugin";
 
 // Package path does not work... so we need to use relative path
@@ -32,6 +31,8 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,
+    preloadEntriesOnStart: false,
+    webpackMemoryOptimizations: true,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
@@ -82,9 +83,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
-// Skip transform is used because of webpack loader, without it for example 'Tooltip.Floating' will not work and show an error
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const withMillionLint = MillionLint.next({ rsc: true, skipTransform: true, telemetry: false });
 
 export default withNextIntl(nextConfig);

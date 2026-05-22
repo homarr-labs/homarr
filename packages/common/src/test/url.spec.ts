@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getPortFromUrl } from "../url";
+import { getPortFromUrl, isAbsoluteUrl } from "../url.js";
 
 describe("getPortFromUrl", () => {
   test.each([
@@ -36,5 +36,23 @@ describe("getPortFromUrl", () => {
 
     // Act & Assert
     expect(act).toThrowError("Unsupported protocol: ftp:");
+  });
+});
+
+describe("isAbsoluteUrl", () => {
+  test.each([
+    ["http://example.com", true],
+    ["https://example.com", true],
+    ["ftp://example.com", true],
+    ["file:///path/to/file", true],
+    ["mailto:johndoe@example.com", true],
+    ["/relative/path", false],
+    ["relative/path", false],
+  ])("should return %s for URL: %s", (urlString, expected) => {
+    // Act
+    const result = isAbsoluteUrl(urlString);
+
+    // Assert
+    expect(result).toBe(expected);
   });
 });
