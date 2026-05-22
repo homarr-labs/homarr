@@ -1,9 +1,11 @@
+import { cache } from "react";
+
 import { api } from "@homarr/api/server";
 
 import { createBoardContentPage } from "../../_creator";
 
+const getBoardByNameAsync = cache((name: string) => api.board.getBoardByName({ name }));
+
 export default createBoardContentPage<{ locale: string; name: string }>({
-  async getInitialBoardAsync({ name }) {
-    return await api.board.getBoardByName({ name });
-  },
+  getInitialBoardAsync: ({ name }) => getBoardByNameAsync(name),
 });
