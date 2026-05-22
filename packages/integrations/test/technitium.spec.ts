@@ -96,7 +96,7 @@ const makeInput = (
 ): IntegrationInput => ({
   id: INTEGRATION_ID,
   name: "Technitium DNS",
-  url: baseUrl,
+  url: new URL(baseUrl),
   externalUrl: null,
   decryptedSecrets:
     auth.kind === "credentials"

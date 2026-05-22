@@ -39,7 +39,7 @@ export const notificationsRouter = createTRPCRouter({
     .unstable_concat(createNotificationsIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"notifications"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"notifications">; url: URL }>;
         data: Notification[];
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

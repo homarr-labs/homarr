@@ -1,10 +1,11 @@
 import { describe, expect, test, vi } from "vitest";
 
+import { Path, QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createDb } from "@homarr/db/test";
 
-import type { IntegrationTestingInput } from "../src/base/integration";
-import { Integration, RenderablePath } from "../src/base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../src/base/integration";
+import { Integration } from "../src/base/integration";
 import type { TestingResult } from "../src/base/test-connection/test-connection-service";
 
 vi.mock("@homarr/db", async (importActual) => {
@@ -43,46 +44,32 @@ describe("Base integration", () => {
     expect(result.error.data.reason).toBe("internalServerError");
   });
 
-  describe("externalUrl", () => {
-    test("returns a URL for an absolute externalUrl", () => {
-      const integration = new FakeIntegration(undefined, undefined, "https://example.com");
-      const result = integration.callExternalUrl("/items/42");
+  describe("externalUrl should build correct url / path", () => {
+    test("with absolute externalUrl", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: new URL("https://example.com") });
+
+      const result = integration.buildExternalUrl("/items/42", { q: "search" });
+
       expect(result).toBeInstanceOf(URL);
-      expect(result.toString()).toBe("https://example.com/items/42");
+      expect(result.toString()).toBe("https://example.com/items/42?q=search");
     });
-
-    test("merges queryParams onto an absolute externalUrl", () => {
-      const integration = new FakeIntegration(undefined, undefined, "https://example.com");
-      const result = integration.callExternalUrl("/items", { id: "42", since: new Date("2026-01-01T00:00:00Z") });
-      expect(result.toString()).toBe("https://example.com/items?id=42&since=2026-01-01T00%3A00%3A00.000Z");
+    test("with path-only externalUrl", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/cockpit/" });
+      const result = integration.buildExternalUrl("/web/index.html", { id: "42" });
+      expect(result).toBe("/cockpit/web/index.html?id=42");
     });
-
-    test("returns a RenderablePath for a path-only externalUrl", () => {
-      const integration = new FakeIntegration(undefined, undefined, "/cockpit/");
-      const result = integration.callExternalUrl("/web/index.html");
-      expect(result).toBeInstanceOf(RenderablePath);
-      expect(result.toString()).toBe("/cockpit/web/index.html");
-      expect(result.pathname).toBe("/cockpit/web/index.html");
-      expect(result.hostname).toBe("");
+    test("with path-only externalUrl with embedded query and extra queryParams", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/signalk-server/" });
+      const result = integration.buildExternalUrl("/items/42?width=100", { quality: "90" });
+      expect(result).toBe("/signalk-server/items/42?width=100&quality=90");
     });
-
-    test("merges queryParams onto a path-only externalUrl", () => {
-      const integration = new FakeIntegration(undefined, undefined, "/cockpit/");
-      const result = integration.callExternalUrl("/web/index.html", { id: "42" });
-      expect(result.toString()).toBe("/cockpit/web/index.html?id=42");
-    });
-
-    test("merges path-embedded query with extra queryParams on a path-only externalUrl", () => {
-      const integration = new FakeIntegration(undefined, undefined, "/signalk-server/");
-      const result = integration.callExternalUrl("/items/42?width=100", { quality: "90" });
-      expect(result.pathname).toBe("/signalk-server/items/42");
-      expect(result.toString()).toBe("/signalk-server/items/42?width=100&quality=90");
-    });
-
-    test("falls back to integration.url when externalUrl is null and the integration url is absolute", () => {
-      const integration = new FakeIntegration(undefined, undefined, null);
-      const result = integration.callExternalUrl("/items/42");
-      expect(result.toString()).toBe("https://example.com/items/42");
+    test("with null externalUrl should fallback to integration url", () => {
+      const integration = new FakeIntegration(undefined, undefined, {
+        externalUrl: null,
+        url: new URL("https://example.com"),
+      });
+      const result = integration.buildExternalUrl("/items/42", { q: "search" });
+      expect(result).toBe("https://example.com/items/42?q=search");
     });
   });
 });
@@ -91,21 +78,19 @@ class FakeIntegration extends Integration {
   constructor(
     private testingResult?: TestingResult,
     private error?: Error,
-    externalUrl: string | null = null,
+    overrides: Partial<IntegrationInput> = {},
   ) {
     super({
       id: "test",
       name: "Test",
-      url: "https://example.com",
+      url: new URL("https://example.com"),
       decryptedSecrets: [],
-      externalUrl,
+      externalUrl: null,
+      ...overrides,
     });
   }
 
-  public callExternalUrl(
-    path: `/${string}`,
-    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
-  ) {
+  public buildExternalUrl(path: Path, queryParams?: QueryParams) {
     return this.externalUrl(path, queryParams);
   }
 

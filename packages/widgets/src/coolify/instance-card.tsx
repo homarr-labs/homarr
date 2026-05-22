@@ -38,7 +38,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const baseUrl = instance.integrationUrl.toString().replace(/\/+$/, "");
   const relativeTime = useTimeAgo(instance.updatedAt);
 
   const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;

@@ -189,7 +189,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
   private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
-      serverUrl: this.integration.url,
+      serverUrl: this.integration.url.toString(),
       credentials: {
         username: this.getSecretValue("username"),
         password: this.getSecretValue("password"),

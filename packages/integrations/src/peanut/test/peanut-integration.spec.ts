@@ -30,7 +30,7 @@ const createIntegration = (decryptedSecrets: IntegrationSecret[] = []) =>
   new PeaNutIntegration({
     id: "test-peanut",
     name: "Test PeaNUT",
-    url: TEST_URL,
+    url: new URL(TEST_URL),
     externalUrl: null,
     decryptedSecrets,
   });

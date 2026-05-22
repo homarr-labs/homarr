@@ -1,6 +1,7 @@
 import { parseStringPromise } from "xml2js";
 import { z } from "zod/v4";
 
+import { Path } from "@homarr/common";
 import { ParseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -108,7 +109,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
 
     const proxiedImages = await Promise.all(
       images.map(async (image) => {
-        const imageUrl = super.url(image.url as `/${string}`);
+        const imageUrl = super.url(image.url as Path);
         const proxiedImageUrl = await imageProxy
           .createImageAsync(imageUrl.toString(), {
             "X-Plex-Token": token,

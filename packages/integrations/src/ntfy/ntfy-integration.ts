@@ -58,7 +58,7 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
         return {
           id: notification.id,
           time: new Date(notification.time * 1000),
-          title: notification.title ?? topicURL.hostname + topicURL.pathname,
+          title: notification.title ?? notification.topic,
           body: notification.message,
         };
       });

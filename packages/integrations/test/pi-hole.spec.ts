@@ -217,7 +217,7 @@ const createPiHoleIntegrationV5 = (container: StartedTestContainer, apiKey: stri
       },
     ],
     name: "Pi hole",
-    url: `http://${container.getHost()}:${container.getMappedPort(80)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(80)}`),
     externalUrl: null,
   });
 };
@@ -244,7 +244,7 @@ const createPiHoleIntegrationV6 = (container: StartedTestContainer, apiKey: stri
       },
     ],
     name: "Pi hole",
-    url: `http://${container.getHost()}:${container.getMappedPort(80)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(80)}`),
     externalUrl: null,
   });
 };

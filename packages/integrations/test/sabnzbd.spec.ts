@@ -228,7 +228,7 @@ const createSabnzbdIntegration = (container: StartedTestContainer, apiKey: strin
       },
     ],
     name: "Sabnzbd",
-    url: `http://${container.getHost()}:${container.getMappedPort(1212)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(1212)}`),
     externalUrl: null,
   });
 };

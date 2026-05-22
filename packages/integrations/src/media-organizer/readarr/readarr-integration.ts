@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 
+import { Path } from "@homarr/common";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
@@ -103,7 +104,7 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
     if (!bestImage) {
       return undefined;
     }
-    return this.externalUrl(bestImage.url as `/${string}`).toString();
+    return this.externalUrl(bestImage.url as Path).toString();
   };
 }
 

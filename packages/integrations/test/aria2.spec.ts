@@ -144,7 +144,7 @@ const createAria2Intergration = (container: StartedTestContainer, apikey: string
       },
     ],
     name: "Aria2",
-    url: `http://${container.getHost()}:${container.getMappedPort(8080)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(8080)}`),
     externalUrl: null,
   });
 };
