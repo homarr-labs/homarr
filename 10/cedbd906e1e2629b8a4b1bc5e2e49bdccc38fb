@@ -1,0 +1,24 @@
+packages/widgets/src/index.tsx
+  ai_agent 4,110
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_70e268487112ca::t_297749cf76bf49 30
+  s_70e268487112ca::t_7fb161a7556a5f 31,38-40,63
+  s_70e268487112ca::t_42ad469123bb4e 32
+  s_70e268487112ca::t_11d062bd3cfb15 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "10cedbd906e1e2629b8a4b1bc5e2e49bdccc38fb",
+  "prompts": {},
+  "sessions": {
+    "s_70e268487112ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "19d4ce07-a424-49dc-914b-c648208ee784",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
