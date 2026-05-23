@@ -149,7 +149,7 @@ catalog:
   next-intl: 4.12.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  pg: ^8.20.0
+  pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
   prettier: ^3.8.3
   prettier-plugin-packagejson: ^3.0.2
