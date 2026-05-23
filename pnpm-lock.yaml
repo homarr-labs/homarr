@@ -490,8 +490,8 @@ catalogs:
       specifier: ^25.0.3
       version: 25.0.3
     semver-parser:
-      specifier: ^4.1.8
-      version: 4.1.8
+      specifier: ^4.2.0
+      version: 4.2.0
     superjson:
       specifier: 2.2.6
       version: 2.2.6
@@ -1580,7 +1580,7 @@ importers:
         version: link:../validation
       semver-parser:
         specifier: 'catalog:'
-        version: 4.1.8
+        version: 4.2.0
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -9497,8 +9497,8 @@ packages:
     engines: {node: ^22.14.0 || >= 24.10.0}
     hasBin: true
 
-  semver-parser@4.1.8:
-    resolution: {integrity: sha512-VFJx75RLTS4hHoiFG+JzDP5dE89JUQS0+/h4Zvcqw8djO6HInA5N7BtvbYBOD6W1u9eOfax7v3xf6CoSIAQBSg==}
+  semver-parser@4.2.0:
+    resolution: {integrity: sha512-4/Pru3U/BQed3eCHWLS+lCZLrnNbSjEhP/Bk+0Fu0qLiaAE+T9CM6M/ARBo/V1ZqzcqAtFgFU2MdXjSqJ3XBLw==}
 
   semver-regex@4.0.5:
     resolution: {integrity: sha512-hunMQrEy1T6Jr2uEVjrAIqjwWcQTgOAcIM52C8MY1EZSD3DDNft04XzvYKPqjED65bNVVko0YI38nYeEHCX3yw==}
@@ -17755,7 +17755,7 @@ snapshots:
       - supports-color
       - typescript
 
-  semver-parser@4.1.8: {}
+  semver-parser@4.2.0: {}
 
   semver-regex@4.0.5: {}
 
