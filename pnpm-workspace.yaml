@@ -85,7 +85,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.14
+  "@types/react": 19.2.15
   "@types/react-dom": 19.2.3
   "@types/swagger-ui-react": ^5.18.0
   "@types/video.js": ^7.3.58
