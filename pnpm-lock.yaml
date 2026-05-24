@@ -142,14 +142,14 @@ catalogs:
       specifier: ^5.100.11
       version: 5.100.11
     '@testcontainers/mysql':
-      specifier: ^11.14.0
-      version: 11.14.0
+      specifier: ^12.0.0
+      version: 12.0.0
     '@testcontainers/postgresql':
-      specifier: ^11.14.0
-      version: 11.14.0
+      specifier: ^12.0.0
+      version: 12.0.0
     '@testcontainers/redis':
-      specifier: ^11.14.0
-      version: 11.14.0
+      specifier: ^12.0.0
+      version: 12.0.0
     '@tiptap/extension-color':
       specifier: 3.23.5
       version: 3.23.5
@@ -502,8 +502,8 @@ catalogs:
       specifier: ^5.32.6
       version: 5.32.6
     testcontainers:
-      specifier: ^11.14.0
-      version: 11.14.0
+      specifier: ^12.0.0
+      version: 12.0.0
     timezones-ical-library:
       specifier: ^2.2.0
       version: 2.2.0
@@ -621,7 +621,7 @@ importers:
         version: 14.1.1(semantic-release@25.0.3(typescript@5.9.3))
       '@testcontainers/redis':
         specifier: 'catalog:'
-        version: 11.14.0
+        version: 12.0.0
       '@turbo/gen':
         specifier: 'catalog:'
         version: 2.9.14(@types/node@24.12.4)
@@ -654,7 +654,7 @@ importers:
         version: 25.0.3(typescript@5.9.3)
       testcontainers:
         specifier: 'catalog:'
-        version: 11.14.0
+        version: 12.0.0
       turbo:
         specifier: 'catalog:'
         version: 2.9.14
@@ -1657,10 +1657,10 @@ importers:
         version: 3.3.0
       '@testcontainers/mysql':
         specifier: 'catalog:'
-        version: 11.14.0
+        version: 12.0.0
       '@testcontainers/postgresql':
         specifier: 'catalog:'
-        version: 11.14.0
+        version: 12.0.0
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.10.0
@@ -5156,14 +5156,14 @@ packages:
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
-  '@testcontainers/mysql@11.14.0':
-    resolution: {integrity: sha512-0/OKd1gOvnl0qS+RIpmT6J0XKWpjkVyIbOtS3cFTVR8t6Ps7W9TV0U+zp7FPxCmitWuWYPXwH/+RQXF+1jZuZQ==}
+  '@testcontainers/mysql@12.0.0':
+    resolution: {integrity: sha512-ofK3bPWIkqEhwQq5hv31QO3B6AlBGF10wI2QaJDjvDiYr7jQ1WGh1n4S1Eu3xwIWyO8FYSxKjgHgkoaNPPy4Ww==}
 
-  '@testcontainers/postgresql@11.14.0':
-    resolution: {integrity: sha512-wYbJn8GRTj8qfqzfVubxioYWlHJU/ImIjuzPwyy9C5Qfo6g3GLduPZAj+BifvqTZjgT3gd4gFVLCPhBji7dc1w==}
+  '@testcontainers/postgresql@12.0.0':
+    resolution: {integrity: sha512-mqGQHwmY+xLKFvFd3XQYaa0vDJRaJAOUfFWYbgjd4wb6hOlrK7xhszaXB7KuGCGTIJf5jvtoEB8/56oVB5s55w==}
 
-  '@testcontainers/redis@11.14.0':
-    resolution: {integrity: sha512-WX005slz2JMQPw2avbSjf5awVjpmFhOs5xCxeGSYLcV5ia4W1edv/P6MdOw4dZnvDQDuN5LfqNoV/ut3XGb2pA==}
+  '@testcontainers/redis@12.0.0':
+    resolution: {integrity: sha512-VRQ+saEGKyd2CgbsSG/xi74kPUO1hnEYqUdxlMMeT1gcYpSya5n78w7S0B7yuEyRIQcfQaiHiQrTPASNG+Dz5A==}
 
   '@tiptap/core@3.23.5':
     resolution: {integrity: sha512-657Xqcgf1IYWLkAmRDJKNSGdoS1AHJEgK6zHWHFJERQGIqHnwC7Fz7nvWs/NQhQVBkclQd0ERRdTCZ3XwRc1+g==}
@@ -6693,10 +6693,6 @@ packages:
 
   docker-modem@5.0.7:
     resolution: {integrity: sha512-XJgGhoR/CLpqshm4d3L7rzH6t8NgDFUIIpztYlLHIApeJjMZKYJMz2zxPsYxnejq5h3ELYSw/RBsi3t5h7gNTA==}
-    engines: {node: '>= 8.0'}
-
-  dockerode@4.0.10:
-    resolution: {integrity: sha512-8L/P9JynLBiG7/coiA4FlQXegHltRqS0a+KqI44P1zgQh8QLHTg7FKOwhkBgSJwZTeHsq30WRoVFLuwkfK0YFg==}
     engines: {node: '>= 8.0'}
 
   dockerode@5.0.0:
@@ -9916,8 +9912,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  testcontainers@11.14.0:
-    resolution: {integrity: sha512-r9pniwv/iwzyHaI7gwAvAm4Y+IvjJg3vBWdjrUCaDMc2AXIr4jKbq7jJO18Mw2ybs73pZy1Aj7p/4RVBGMRWjg==}
+  testcontainers@12.0.0:
+    resolution: {integrity: sha512-/PdRvFvuHPwX126HR7RO0cEgLD3Nr8sWZyWSv54ei92TT79BubUkOCU5uwTc8ufTsTGQf0v6nyvZJVVVyR9Uqw==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -10347,11 +10343,6 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
@@ -12943,23 +12934,23 @@ snapshots:
 
   '@tanstack/virtual-core@3.11.2': {}
 
-  '@testcontainers/mysql@11.14.0':
+  '@testcontainers/mysql@12.0.0':
     dependencies:
-      testcontainers: 11.14.0
+      testcontainers: 12.0.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/postgresql@11.14.0':
+  '@testcontainers/postgresql@12.0.0':
     dependencies:
-      testcontainers: 11.14.0
+      testcontainers: 12.0.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/redis@11.14.0':
+  '@testcontainers/redis@12.0.0':
     dependencies:
-      testcontainers: 11.14.0
+      testcontainers: 12.0.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -14601,18 +14592,6 @@ snapshots:
       readable-stream: 3.6.2
       split-ca: 1.0.1
       ssh2: 1.16.0
-    transitivePeerDependencies:
-      - supports-color
-
-  dockerode@4.0.10:
-    dependencies:
-      '@balena/dockerignore': 1.0.2
-      '@grpc/grpc-js': 1.12.5
-      '@grpc/proto-loader': 0.7.13
-      docker-modem: 5.0.7
-      protobufjs: 7.4.0
-      tar-fs: 2.1.4
-      uuid: 10.0.0
     transitivePeerDependencies:
       - supports-color
 
@@ -18303,7 +18282,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testcontainers@11.14.0:
+  testcontainers@12.0.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 4.0.1
@@ -18312,7 +18291,7 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.3
       docker-compose: 1.4.2
-      dockerode: 4.0.10
+      dockerode: 5.0.0
       get-port: 7.2.0
       proper-lockfile: 4.1.2
       properties-reader: 3.0.1
@@ -18735,8 +18714,6 @@ snapshots:
       react: 19.2.6
 
   util-deprecate@1.0.2: {}
-
-  uuid@10.0.0: {}
 
   validate-npm-package-license@3.0.4:
     dependencies:
