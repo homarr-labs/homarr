@@ -381,7 +381,7 @@ export const integrationDefs = {
   archiveTeamWarrior: {
     name: "ArchiveTeam Warrior",
     secretKinds: [[], ["username", "password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/archivebox.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
     defaultUrl: "http://localhost:8001",
     documentationUrl: null,

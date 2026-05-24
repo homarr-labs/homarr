@@ -15,6 +15,6 @@ export const archiveTeamWarriorRequestHandler = createCachedIntegrationRequestHa
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatusAsync();
   },
-  cacheDuration: dayjs.duration(10, "seconds"),
+  cacheDuration: dayjs.duration(1, "minute"),
   queryKey: "archiveTeamWarriorStatus",
 });

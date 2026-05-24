@@ -1,6 +1,5 @@
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
-
 import WebSocket from "ws";
 import type { RawData } from "ws";
 import { z } from "zod/v4";
@@ -11,69 +10,30 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import {
+  bandwidthMessageSchema,
+  itemStatusMessageSchema,
+  pipelineStartItemMessageSchema,
+  projectRefreshMessageSchema,
+  seesawFrameSchema,
+  warriorBroadcastMessageSchema,
+  warriorProjectSelectedMessageSchema,
+  warriorStatusMessageSchema,
+} from "./archive-team-warrior-schemas";
+import type { SeesawFrame, WarriorItem, WarriorProject } from "./archive-team-warrior-schemas";
 import type { ArchiveTeamWarriorItem, ArchiveTeamWarriorStatus } from "./archive-team-warrior-types";
 
 const SOCKJS_SNAPSHOT_TIMEOUT_MS = 2500;
 
-const seesawFrameSchema = z.object({
-  event_name: z.string(),
-  message: z.unknown(),
-});
-
-const warriorStatusMessageSchema = z.object({
-  status: z.string(),
-});
-
-const warriorBroadcastMessageSchema = z.object({
-  message: z.string().nullable(),
-});
-
-const warriorProjectSelectedMessageSchema = z.object({
-  project: z.string().nullable(),
-});
-
-const warriorProjectSchema = z.object({
-  project_id: z.number().optional(),
-  title: z.string().optional(),
-  project_html: z.string().optional(),
-  utc_deadline: z.string().nullable().optional(),
-});
-
-const warriorItemSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  status: z.string().nullable().optional(),
-  project: z.string().nullable().optional(),
-  start_time: z.number().optional(),
-});
-
-const projectRefreshMessageSchema = z
-  .object({
-    project: warriorProjectSchema.optional(),
-    status: z.string().optional(),
-    items: z.array(warriorItemSchema).optional(),
-  })
-  .nullable();
-
-const itemStatusMessageSchema = z.object({
-  item_id: z.string(),
-});
-
-const pipelineStartItemMessageSchema = z.object({
-  item: warriorItemSchema,
-});
-
-const bandwidthMessageSchema = z.object({
-  received: z.number().optional(),
-  sent: z.number().optional(),
-  receiving: z.number().optional(),
-  sending: z.number().optional(),
-  session_id: z.string().optional(),
-});
-
-type WarriorProject = z.infer<typeof warriorProjectSchema>;
-type WarriorItem = z.infer<typeof warriorItemSchema>;
-type SeesawFrame = z.infer<typeof seesawFrameSchema>;
+interface WarriorSnapshotState {
+  status: string;
+  runnerStatus?: string;
+  selectedProject: string | null;
+  broadcastMessage: string | null;
+  project: ArchiveTeamWarriorStatus["project"];
+  bandwidth: ArchiveTeamWarriorStatus["bandwidth"];
+  items: Map<string, ArchiveTeamWarriorItem>;
+}
 
 export class ArchiveTeamWarriorIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -97,36 +57,42 @@ export class ArchiveTeamWarriorIntegration extends Integration {
   }
 
   private async readSockJsSnapshotAsync(baseUrl: string): Promise<ArchiveTeamWarriorStatus> {
-    const items = new Map<string, ArchiveTeamWarriorItem>();
-
-    let status = "Unknown";
-    let runnerStatus: string | undefined;
-    let selectedProject: string | null = null;
-    let broadcastMessage: string | null = null;
-    let project: ArchiveTeamWarriorStatus["project"] = null;
-    let bandwidth: ArchiveTeamWarriorStatus["bandwidth"] = null;
+    const snapshot: WarriorSnapshotState = {
+      status: "Unknown",
+      selectedProject: null,
+      broadcastMessage: null,
+      project: null,
+      bandwidth: null,
+      items: new Map<string, ArchiveTeamWarriorItem>(),
+    };
 
     await new Promise<void>((resolve, reject) => {
-      let settled = false;
-
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timeout);
-        socket.close();
-        resolve();
-      };
-
-      const fail = () => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timeout);
-        reject(new Error("Failed to connect to ArchiveTeam Warrior websocket"));
-      };
+      let isSettled = false;
 
       const socket = new WebSocket(this.createSockJsWebSocketUrl(baseUrl), {
         headers: this.createAuthHeaders(),
       });
+
+      const finish = () => {
+        if (isSettled) return;
+
+        isSettled = true;
+        clearTimeout(timeout);
+
+        if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+          socket.close();
+        }
+
+        resolve();
+      };
+
+      const fail = () => {
+        if (isSettled) return;
+
+        isSettled = true;
+        clearTimeout(timeout);
+        reject(new Error("Failed to connect to ArchiveTeam Warrior websocket"));
+      };
 
       const timeout = setTimeout(finish, SOCKJS_SNAPSHOT_TIMEOUT_MS);
 
@@ -134,75 +100,7 @@ export class ArchiveTeamWarriorIntegration extends Integration {
         const frames = this.parseSockJsMessage(this.decodeWebSocketData(data));
 
         for (const frame of frames) {
-          switch (frame.event_name) {
-            case "warrior.status": {
-              const message = warriorStatusMessageSchema.safeParse(frame.message);
-              if (message.success) status = this.normalizeDisplayStatus(message.data.status);
-              break;
-            }
-
-            case "warrior.project_selected": {
-              const message = warriorProjectSelectedMessageSchema.safeParse(frame.message);
-              if (message.success) selectedProject = message.data.project;
-              break;
-            }
-
-            case "warrior.broadcast_message": {
-              const message = warriorBroadcastMessageSchema.safeParse(frame.message);
-              if (message.success) broadcastMessage = message.data.message;
-              break;
-            }
-
-            case "runner.status": {
-              const message = warriorStatusMessageSchema.safeParse(frame.message);
-              if (message.success) runnerStatus = this.normalizeDisplayStatus(message.data.status);
-              break;
-            }
-
-            case "project.refresh": {
-              const message = projectRefreshMessageSchema.safeParse(frame.message);
-              if (!message.success) break;
-
-              project = this.mapProject(message.data?.project);
-              runnerStatus = message.data?.status ? this.normalizeDisplayStatus(message.data.status) : runnerStatus;
-
-              for (const item of message.data?.items ?? []) {
-                items.set(item.id, this.mapItem(item));
-              }
-
-              break;
-            }
-
-            case "pipeline.start_item": {
-              const message = pipelineStartItemMessageSchema.safeParse(frame.message);
-              if (message.success) items.set(message.data.item.id, this.mapItem(message.data.item));
-              break;
-            }
-
-            case "item.complete": {
-              const message = itemStatusMessageSchema.safeParse(frame.message);
-              if (message.success) this.updateItemStatus(items, message.data.item_id, "completed");
-              break;
-            }
-
-            case "item.fail": {
-              const message = itemStatusMessageSchema.safeParse(frame.message);
-              if (message.success) this.updateItemStatus(items, message.data.item_id, "failed");
-              break;
-            }
-
-            case "item.cancel": {
-              const message = itemStatusMessageSchema.safeParse(frame.message);
-              if (message.success) this.updateItemStatus(items, message.data.item_id, "canceled");
-              break;
-            }
-
-            case "bandwidth": {
-              const message = bandwidthMessageSchema.safeParse(frame.message);
-              if (message.success) bandwidth = message.data;
-              break;
-            }
-          }
+          this.applyFrameToSnapshot(frame, snapshot);
         }
       });
 
@@ -210,15 +108,130 @@ export class ArchiveTeamWarriorIntegration extends Integration {
       socket.on("close", finish);
     });
 
-    const itemList = Array.from(items.values());
+    return this.createStatusFromSnapshot(snapshot);
+  }
+
+  private applyFrameToSnapshot(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    switch (frame.event_name) {
+      case "warrior.status":
+        this.applyWarriorStatusFrame(frame, snapshot);
+        break;
+
+      case "warrior.project_selected":
+        this.applyProjectSelectedFrame(frame, snapshot);
+        break;
+
+      case "warrior.broadcast_message":
+        this.applyBroadcastMessageFrame(frame, snapshot);
+        break;
+
+      case "runner.status":
+        this.applyRunnerStatusFrame(frame, snapshot);
+        break;
+
+      case "project.refresh":
+        this.applyProjectRefreshFrame(frame, snapshot);
+        break;
+
+      case "pipeline.start_item":
+        this.applyPipelineStartItemFrame(frame, snapshot);
+        break;
+
+      case "item.complete":
+        this.applyItemStatusFrame(frame, snapshot, "completed");
+        break;
+
+      case "item.fail":
+        this.applyItemStatusFrame(frame, snapshot, "failed");
+        break;
+
+      case "item.cancel":
+        this.applyItemStatusFrame(frame, snapshot, "canceled");
+        break;
+
+      case "bandwidth":
+        this.applyBandwidthFrame(frame, snapshot);
+        break;
+    }
+  }
+
+  private applyWarriorStatusFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = warriorStatusMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.status = this.normalizeDisplayStatus(message.data.status);
+  }
+
+  private applyProjectSelectedFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = warriorProjectSelectedMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.selectedProject = message.data.project;
+  }
+
+  private applyBroadcastMessageFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = warriorBroadcastMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.broadcastMessage = message.data.message;
+  }
+
+  private applyRunnerStatusFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = warriorStatusMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.runnerStatus = this.normalizeDisplayStatus(message.data.status);
+  }
+
+  private applyProjectRefreshFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = projectRefreshMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.project = this.mapProject(message.data?.project);
+    snapshot.runnerStatus = message.data?.status
+      ? this.normalizeDisplayStatus(message.data.status)
+      : snapshot.runnerStatus;
+
+    for (const item of message.data?.items ?? []) {
+      snapshot.items.set(item.id, this.mapItem(item));
+    }
+  }
+
+  private applyPipelineStartItemFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = pipelineStartItemMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.items.set(message.data.item.id, this.mapItem(message.data.item));
+  }
+
+  private applyItemStatusFrame(
+    frame: SeesawFrame,
+    snapshot: WarriorSnapshotState,
+    status: ArchiveTeamWarriorItem["status"],
+  ) {
+    const message = itemStatusMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    this.updateItemStatus(snapshot.items, message.data.item_id, status);
+  }
+
+  private applyBandwidthFrame(frame: SeesawFrame, snapshot: WarriorSnapshotState) {
+    const message = bandwidthMessageSchema.safeParse(frame.message);
+    if (!message.success) return;
+
+    snapshot.bandwidth = message.data;
+  }
+
+  private createStatusFromSnapshot(snapshot: WarriorSnapshotState): ArchiveTeamWarriorStatus {
+    const itemList = Array.from(snapshot.items.values());
 
     return {
-      status,
-      runnerStatus,
-      project,
-      selectedProject,
-      broadcastMessage,
-      bandwidth,
+      status: snapshot.status,
+      runnerStatus: snapshot.runnerStatus,
+      project: snapshot.project,
+      selectedProject: snapshot.selectedProject,
+      broadcastMessage: snapshot.broadcastMessage,
+      bandwidth: snapshot.bandwidth,
       items: itemList,
       counts: {
         running: itemList.filter((item) => item.status === "running").length,
@@ -258,13 +271,24 @@ export class ArchiveTeamWarriorIntegration extends Integration {
     if (raw === "o" || raw === "h" || raw.length === 0) return [];
     if (!raw.startsWith("a")) return [];
 
-    const payload = z.array(z.string()).safeParse(JSON.parse(raw.slice(1)));
+    const rawPayload = this.parseJsonSafely(raw.slice(1));
+    const payload = z.array(z.string()).safeParse(rawPayload);
     if (!payload.success) return [];
 
     return payload.data.flatMap((frame) => {
-      const result = seesawFrameSchema.safeParse(JSON.parse(frame));
+      const rawFrame = this.parseJsonSafely(frame);
+      const result = seesawFrameSchema.safeParse(rawFrame);
+
       return result.success ? [result.data] : [];
     });
+  }
+
+  private parseJsonSafely(value: string) {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      return null;
+    }
   }
 
   private createSockJsWebSocketUrl(baseUrl: string) {
@@ -348,13 +372,13 @@ export class ArchiveTeamWarriorIntegration extends Integration {
 
   private updateItemStatus(
     items: Map<string, ArchiveTeamWarriorItem>,
-    id: string,
+    itemId: string,
     status: ArchiveTeamWarriorItem["status"],
   ) {
-    const item = items.get(id);
+    const item = items.get(itemId);
     if (!item) return;
 
-    items.set(id, {
+    items.set(itemId, {
       ...item,
       status,
     });

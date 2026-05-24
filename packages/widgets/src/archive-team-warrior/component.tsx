@@ -3,6 +3,7 @@
 import { Avatar, Badge, Card, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { humanFileSize } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../definition";
@@ -46,21 +47,18 @@ const ArchiveTeamWarriorWidgetContent = ({
   const projectName = status.project?.title ?? status.selectedProject ?? "No project selected";
 
   return (
-    <Stack p="sm" gap="sm">
-      <Group justify="space-between" align="start" wrap="nowrap">
-        <Group gap="sm" wrap="nowrap">
+    <Stack p="xs" gap="xs" h="100%">
+      <Group justify="space-between" align="center" wrap="nowrap">
+        <Group gap="xs" wrap="nowrap" miw={0}>
           <Avatar size="sm" radius="md" src={getIconUrl("archiveTeamWarrior")} />
-          <Stack gap={0}>
-            <Text fw={700} lineClamp={1}>
-              ArchiveTeam Warrior
-            </Text>
-            <Text size="xs" c="dimmed" lineClamp={1}>
-              {projectName}
-            </Text>
-          </Stack>
+          <Text size="sm" c="dimmed" lineClamp={1}>
+            {projectName}
+          </Text>
         </Group>
 
-        <Badge color={status.status === "Running" ? "green" : "gray"}>{status.status}</Badge>
+        <Badge size="sm" color={status.status === "Running" ? "green" : "gray"}>
+          {status.status}
+        </Badge>
       </Group>
 
       {options.showBroadcastMessage && status.broadcastMessage && (
@@ -71,7 +69,7 @@ const ArchiveTeamWarriorWidgetContent = ({
         </Card>
       )}
 
-      <SimpleGrid cols={4}>
+      <SimpleGrid cols={2} spacing="xs">
         <Metric label="Running" value={status.counts.running} />
         <Metric label="Done" value={status.counts.completed} />
         <Metric label="Failed" value={status.counts.failed} />
@@ -79,38 +77,24 @@ const ArchiveTeamWarriorWidgetContent = ({
       </SimpleGrid>
 
       {status.bandwidth && (
-        <Group grow>
-          <Metric label="Download" value={formatBytesPerSecond(status.bandwidth.receiving)} />
-          <Metric label="Upload" value={formatBytesPerSecond(status.bandwidth.sending)} />
-        </Group>
-      )}
-
-      {status.runnerStatus && (
-        <Text size="xs" c="dimmed">
-          Runner: {status.runnerStatus}
-        </Text>
+        <SimpleGrid cols={2} spacing="xs">
+          <Metric label="Download" value={formatBandwidth(status.bandwidth.receiving)} />
+          <Metric label="Upload" value={formatBandwidth(status.bandwidth.sending)} />
+        </SimpleGrid>
       )}
     </Stack>
   );
 };
 
 const Metric = ({ label, value }: { label: string; value: number | string }) => (
-  <Stack gap={0}>
-    <Text size="lg" fw={700}>
+  <Stack gap={0} miw={0}>
+    <Text size="md" fw={700} lineClamp={1}>
       {value}
     </Text>
-    <Text size="xs" c="dimmed">
+    <Text size="xs" c="dimmed" lineClamp={1}>
       {label}
     </Text>
   </Stack>
 );
 
-const formatBytesPerSecond = (value?: number) => {
-  if (!value) return "0 KB/s";
-
-  if (value >= 1024 * 1024) {
-    return `${(value / 1024 / 1024).toFixed(1)} MB/s`;
-  }
-
-  return `${Math.round(value / 1024)} KB/s`;
-};
+const formatBandwidth = (value?: number) => humanFileSize(Math.round(value ?? 0), "/s");
