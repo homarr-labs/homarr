@@ -159,7 +159,7 @@
         "label": "Abrir resultados da busca em uma nova guia"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Ativar bangs do DuckDuckGo"
       }
     },
     "error": {
@@ -252,10 +252,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Bangs do DuckDuckGo alternados com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível alternar os bangs do DuckDuckGo"
           }
         }
       },
@@ -1093,7 +1093,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Automático",
         "light": "Claro",
         "dark": "Escuro"
       }
@@ -2111,101 +2111,101 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analytics",
+      "description": "Exibir estatísticas de visitantes da sua instância do Umami",
+      "visitors": "visitantes",
+      "active": "ativos",
+      "pageviews": "visualizações de página",
+      "visits": "visitas",
+      "bounceRate": "rejeição",
+      "avgDuration": "média",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "site",
+          "description": "Selecione um site monitorado pela sua instância do Umami",
+          "placeholder": "Selecionar um site",
+          "loading": "Carregando sites...",
+          "noWebsites": "Nenhum site encontrado",
+          "configureIntegrationFirst": "Conecte uma integração do Umami primeiro"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Período de tempo",
+          "description": "O período de tempo para exibir os dados de visitantes",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Hoje",
+            "24h": "Últimas 24 horas",
+            "7d": "Últimos 7 dias",
+            "30d": "Últimos 30 dias",
+            "month": "Este mês",
+            "lastMonth": "Mês passado"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Evento",
+          "description": "Exibir total de ocorrências de um evento específico",
+          "placeholder": "Selecionar um evento",
+          "loading": "Carregando eventos...",
+          "noEvents": "Nenhum evento encontrado",
+          "none": "Nenhum evento",
+          "configureWebsiteFirst": "Selecione um site primeiro para carregar os eventos"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Tipo de gráfico",
+          "description": "Estilo de exibição do gráfico",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Gráfico de barras",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Estilo do gráfico",
+          "description": "Como exibir a série de eventos no gráfico",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Lado a lado",
+            "overlay": "Sobreposição (subconjunto)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Visualização",
+          "description": "O que exibir no corpo do widget",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Gráfico",
+            "events": "Gráfico de eventos",
+            "topPages": "Principais páginas",
+            "topReferrers": "Principais referenciadores"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Eventos",
+          "description": "Selecione um ou mais eventos para o gráfico",
+          "placeholder": "Selecionar eventos...",
+          "loading": "Carregando eventos...",
+          "noEvents": "Nenhum evento encontrado",
+          "configureWebsiteFirst": "Selecione um site primeiro para carregar os eventos"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Itens para exibir",
+          "description": "Número de itens principais para exibir (máx 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "Eventos",
+        "label": "Eventos"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direto"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direto"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Selecionar eventos para o gráfico"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Nenhuma integração Umami configurada",
+        "noWebsite": "Nenhum site configurado",
+        "noData": "Nenhum dado disponível",
+        "internalServerError": "Falha ao buscar dados do Umami"
       }
     },
     "common": {
@@ -3680,7 +3680,7 @@
             "defaultColorScheme": {
               "label": "Esquema de cores padrão",
               "options": {
-                "auto": "",
+                "auto": "Automático",
                 "light": "Claro",
                 "dark": "Escuro"
               }
@@ -3783,7 +3783,7 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
-              "label": ""
+              "label": "Visitantes Ativos do Umami"
             }
           },
           "interval": {
@@ -3972,7 +3972,7 @@
         "label": "Portas"
       },
       "host": {
-        "label": ""
+        "label": "Host"
       }
     },
     "action": {
@@ -4499,7 +4499,7 @@
             "title": "Comandos globais",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Alternar modo de aparência",
                 "light": "Alternar para o modo claro",
                 "dark": "Alternar para o modo escuro"
               },
@@ -4551,13 +4551,13 @@
         "group": {
           "searchEngine": {
             "title": "Mecanismos de busca",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Dica: Você também pode usar qualquer bang do DuckDuckGo aqui, ex: !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Pesquisar \"{query}\" com {label}",
+              "pressEnterToOpen": "Pressione Enter para abrir",
+              "engineSelected": "{label} selecionado (!{bang})",
+              "typeQueryToContinue": "Digite sua pesquisa para continuar",
+              "emptyBangHint": "Digite um bang, ex: !yt, e pressione Espaço para selecionar"
             },
             "children": {
               "action": {
