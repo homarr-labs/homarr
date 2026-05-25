@@ -1,0 +1,67 @@
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 2-3,9,12,15-19,30,32-53,69
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-104
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 16,27
+e2e/shared/assertions/onboarding-assertions.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 60
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 15,41,75,117-120,140-141
+packages/ui/src/theme.ts
+  ai_agent 102-109
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-129
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-26
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 114
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-84
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-134
+packages/definitions/src/widget-integration-map.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-100
+e2e/onboarding.spec.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 34,107
+packages/api/src/router/onboard/onboard-router.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-2,5-28,31-33,36-96,123-273
+packages/db/migrations/seed.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-2,7-9,13,17,29,34,36-37,52-54,226-283,325-328,334-452
+packages/definitions/src/index.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 15
+packages/translation/src/lang/en-gb.json
+  s_aac9680e6041a8::t_e9fa80b07e6138 93-106
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 47-53,64-72,74,77,79,85,91-93,98,103-105,113-145,154,161-162,166,198,202,208,211-224
+e2e/shared/actions/onboarding-actions.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 54-58
+packages/definitions/src/onboarding.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 1
+packages/api/src/router/onboard/onboard-queries.ts
+  s_aac9680e6041a8::t_e9fa80b07e6138 79-81
+packages/translation/src/lang/en.json
+  s_aac9680e6041a8::t_e9fa80b07e6138 93-106,753-783,1116
+packages/modals-collection/src/apps/app-select-modal.tsx
+  ai_agent 2-4,8-12,20,23-33,44,48-55,61-79,111,142,154
+apps/nextjs/src/app/[locale]/init/_steps/finish/init-finish.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 3,20-22
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  s_aac9680e6041a8::t_e9fa80b07e6138 1-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "b76811a4c977457be22e8959637854cac8d661f2",
+  "prompts": {},
+  "sessions": {
+    "s_aac9680e6041a8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "92249a51-c3ca-438b-a38e-6a39dfcc9bcd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
