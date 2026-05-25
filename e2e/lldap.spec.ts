@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { GenericContainer } from "testcontainers";
 import { describe, expect, test } from "vitest";
 

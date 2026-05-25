@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { describe, test } from "vitest";
 
 import { OnboardingActions } from "./shared/actions/onboarding-actions";

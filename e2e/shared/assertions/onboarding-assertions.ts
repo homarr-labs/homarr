@@ -1,5 +1,5 @@
+import type { Page } from "@playwright/test";
 import { eq } from "drizzle-orm";
-import type { Page } from "playwright";
 import { expect } from "vitest";
 
 import * as sqliteSchema from "../../../packages/db/schema/sqlite";
