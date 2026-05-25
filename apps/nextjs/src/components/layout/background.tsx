@@ -4,10 +4,7 @@ import type { AppShellProps } from "@mantine/core";
 import { useOptionalBoard } from "@homarr/boards/context";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
-const isVideo = (url: string) =>
-  supportedVideoFormats.some((format) =>
-    url.toLowerCase().endsWith(`.${format}`),
-  );
+const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLowerCase().endsWith(`.${format}`));
 
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   const board = useOptionalBoard();
