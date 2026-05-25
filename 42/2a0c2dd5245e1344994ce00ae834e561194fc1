@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  s_812f0bd91cbce5::t_939855d35a2463 1-321
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  s_812f0bd91cbce5::t_939855d35a2463 14,61,72-83,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "422a0c2dd5245e1344994ce00ae834e561194fc1",
+  "prompts": {},
+  "sessions": {
+    "s_812f0bd91cbce5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a178a5f8ffetT6wwTqIOEiYJ7",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
