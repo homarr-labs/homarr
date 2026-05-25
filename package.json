@@ -22,7 +22,6 @@
     "lint": "turbo lint --continue",
     "lint:fix": "turbo lint --continue -- --fix",
     "lint:ws": "pnpm dlx sherif@latest",
-    "package:new": "turbo gen init",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
