@@ -1,0 +1,109 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  ai_agent 5-6,57-61,179-183,191-215
+apps/nextjs/src/components/layout/header/tour-target.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-11
+apps/nextjs/src/components/layout/navigation.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 30,41,45,47-48,54,69
+packages/api/src/router/user.ts
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 281-282,309-310,612-644
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-53
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 201
+packages/db/migrations/mysql/meta/_journal.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 277-283
+packages/db/migrations/mysql/meta/0039_snapshot.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2120
+packages/db/migrations/sqlite/meta/_journal.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 263-269
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 87
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 229
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 14,24-28,32,38,72-81
+packages/db/schema/sqlite.ts
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 65-66
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-197
+apps/nextjs/package.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 21
+packages/form/src/index.ts
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1,36
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-108
+packages/forms-collection/src/new-app/_form.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 117
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  ai_agent 45
+apps/nextjs/src/components/board/sections/category-section.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 59
+packages/widgets/src/media-requests/stats/component.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 109
+apps/nextjs/src/components/layout/navigation-link.tsx
+  ai_agent 5,13-17,20-21,32,38,45,51
+packages/db/migrations/sqlite/0037_add_user_onboarding_tour_status.sql
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 86
+packages/db/schema/postgresql.ts
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 82-83
+packages/db/migrations/postgresql/meta/0005_snapshot.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2016
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  ai_agent 15-16
+packages/db/migrations/mysql/0039_add_user_onboarding_tour_status.sql
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2
+pnpm-workspace.yaml
+  ai_agent 17
+packages/ui/src/styles.css
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 4
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 27
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-220
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 39,49,55,65,72,82,89,95,164,203-205,212-215
+apps/nextjs/src/components/layout/header.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 9,29-31,35-37
+packages/widgets/package.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 52
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 5,53,73
+packages/db/migrations/sqlite/meta/0037_snapshot.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2035
+packages/db/migrations/postgresql/0005_add_user_onboarding_tour_status.sql
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-2
+packages/translation/src/lang/en.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 3495-3512,4967-5031
+packages/db/schema/mysql.ts
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 83-84
+packages/widgets/src/firewall/component.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 156,167
+apps/nextjs/src/components/onboarding/tour-step-content.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 1-39
+packages/db/migrations/postgresql/meta/_journal.json
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 39-45
+pnpm-lock.yaml
+  ai_agent 42-44,652-654,2394-2396,3312-3320,10413-10419
+packages/widgets/src/downloads/component.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 808
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_aac9680e6041a8::t_7f4d549dbbeb5c 4,146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "5f35a959ddde7064e94cc5910883fd00c2ac47f5",
+  "prompts": {},
+  "sessions": {
+    "s_aac9680e6041a8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "92249a51-c3ca-438b-a38e-6a39dfcc9bcd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
