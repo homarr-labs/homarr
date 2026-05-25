@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  s_aac9680e6041a8::t_ebe50829f82c50 14,61,72-83,85
+pnpm-lock.yaml
+  ai_agent 4823-4829,4858-4863,4877-4882,9448-9452,12017-12024,12062-12065,16945-16947
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  s_aac9680e6041a8::t_ebe50829f82c50 1-321
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "44c7572eb6a8548a08fcd551fb80f336d047247e",
+  "prompts": {},
+  "sessions": {
+    "s_aac9680e6041a8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "92249a51-c3ca-438b-a38e-6a39dfcc9bcd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
