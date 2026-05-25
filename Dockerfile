@@ -15,6 +15,8 @@ RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
+ARG CI='true'
+ARG DISABLE_REDIS_LOGS='true'
 
 RUN corepack enable pnpm && pnpm build
 
