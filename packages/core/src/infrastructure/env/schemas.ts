@@ -12,26 +12,25 @@ export const createBooleanSchema = (defaultValue: boolean) =>
     })
     .default(defaultValue);
 
-export const createDurationSchema = (defaultValue: `${number}${"s" | "m" | "h" | "d"}`) => {
-  const defaultMultipliers = {
-    s: 1,
-    m: 60,
-    h: 60 * 60,
-    d: 60 * 60 * 24,
-  } as const;
-
-  return z
+export const createDurationSchema = (defaultValue: `${number}${"s" | "m" | "h" | "d"}`) =>
+  z
     .string()
     .regex(/^\d+[smhd]?$/)
     .default(defaultValue)
     .transform((duration) => {
-      const unit = duration.at(-1) as keyof typeof defaultMultipliers | undefined;
-      const multiplier = unit ? defaultMultipliers[unit] : undefined;
-
-      if (multiplier) {
-        return Number(duration.slice(0, -1)) * multiplier;
+      const lastChar = duration[duration.length - 1] as "s" | "m" | "h" | "d";
+      if (!isNaN(Number(lastChar))) {
+        return Number(defaultValue);
       }
 
-      return Number(duration);
+      const multipliers = {
+        s: 1,
+        m: 60,
+        h: 60 * 60,
+        d: 60 * 60 * 24,
+      };
+      const numberDuration = Number(duration.slice(0, -1));
+      const multiplier = multipliers[lastChar];
+
+      return numberDuration * multiplier;
     });
-};

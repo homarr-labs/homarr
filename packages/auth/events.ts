@@ -99,7 +99,7 @@ const addUserToEveryoneGroupIfNotMemberAsync = async (db: Database, userId: stri
     },
   });
 
-  if (dbEveryoneGroup?.id && dbEveryoneGroup.members.length === 0) {
+  if (dbEveryoneGroup?.members.length === 0) {
     await db.insert(groupMembers).values({
       userId,
       groupId: dbEveryoneGroup.id,
