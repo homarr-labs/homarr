@@ -1,0 +1,142 @@
+apps/web/components/features/collection/CollectionDetail.tsx
+  s_5af6053cbf3544::t_4a5a53444842ea 111
+apps/web/components/features/cloud/CloudDriveBrowser.tsx
+  s_5af6053cbf3544::t_ab53e68a4ea3b1 143
+apps/web/components/features/result/biometric/BiometricTooltip.tsx
+  s_5af6053cbf3544::t_510c332fab4470 156
+apps/web/components/features/result/RecommendationsPanel.tsx
+  s_5af6053cbf3544::t_428b1480d4ec6b 45
+apps/web/components/features/comparaison/ComparePicker.tsx
+  ai_agent 74
+apps/web/components/features/pilote/ingestion/SocialAccountConnectModal.tsx
+  s_5af6053cbf3544::t_1055773491816c 193
+  s_5af6053cbf3544::t_1babaf15e095a6 436,440,445
+apps/web/components/features/protocols/danone/report-helpers.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 236-238,241,356,507-512,603,701
+apps/web/components/features/pilote/PiloteResumeOuverture.tsx
+  s_5af6053cbf3544::t_a6be5159cfa11d 298
+apps/web/components/features/protocols/shared/tabs/CommercialSummaryTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 100,273,281,319,338
+apps/web/components/features/result/TimelinePanel.tsx
+  s_5af6053cbf3544::t_df6a6f51932226 51
+apps/web/components/features/accueil/ActionCards.tsx
+  s_5af6053cbf3544::t_30c78a04a87e9c 33-34
+  s_5af6053cbf3544::t_43ef06259a376d 25-26
+apps/web/components/features/result/biometric/TrustSealBadge.tsx
+  ai_agent 69
+apps/web/components/features/connections/ConnectionsSummaryCard.tsx
+  s_5af6053cbf3544::t_866ac165c65380 64
+  ai_agent 35
+apps/web/components/features/accueil/RecentAnalyses.tsx
+  s_5af6053cbf3544::t_aaed7c4c40c5e6 94-95
+  s_5af6053cbf3544::t_ad7e203c28c8c1 186
+  s_5af6053cbf3544::t_c09a06db11c137 298
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 532
+apps/web/components/features/analyse/SmartDropZone.tsx
+  ai_agent 13-14,16-17,19,21-24,36-39,204-208
+  s_5af6053cbf3544::t_b9d7a0da0a9fe2 150
+apps/web/components/features/pilote/EvolutionPage.tsx
+  s_5af6053cbf3544::t_daa410b2220129 53
+apps/web/components/features/result/BrandContextDebugPanel.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 90,320,419
+apps/web/components/features/result/biometric/BiometricSignalsPanel.tsx
+  s_5af6053cbf3544::t_6db82843e32b25 63
+  s_5af6053cbf3544::t_667718087a7ae9 81
+apps/web/components/features/protocols/shared/tabs/ParticipantTimelineTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 252,256,285,567
+apps/web/components/features/protocols/shared/tabs/ClusterCompositionTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 302,414,419-420,424
+apps/web/components/features/protocols/shared/tabs/ClusterScatterExplorerTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 231,320,365-367,393,396,399-400,406-407,493
+apps/web/components/features/protocols/danone/csv-export.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 374,509
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_5af6053cbf3544::t_e43bb31f86585f 267
+apps/web/components/features/pilote/AlternativesEntry.tsx
+  s_5af6053cbf3544::t_d3ca30b8f631b0 119
+apps/web/components/features/pilote/ingestion/DropZoneInput.tsx
+  s_5af6053cbf3544::t_96a99fe6d64c56 90
+apps/web/components/features/pilote/SocialRecentContent.tsx
+  s_5af6053cbf3544::t_4c0b2798cfa7de 248
+apps/web/components/features/protocols/shared/tabs/YogurtDiffClusterTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 145-146
+apps/web/components/features/protocols/bel/InsightMethodDebugPanel.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 381
+apps/web/app/rapports/page.tsx
+  s_5af6053cbf3544::t_4a22808e2086d2 148
+apps/web/components/features/protocols/danone/diff-utils.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 208,253,276
+apps/web/components/features/protocols/danone/InsightMethodDebugPanel.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 420
+apps/web/components/features/result/seven-dimensions/video/SevenDimensionsStackedTimeline.tsx
+  s_5af6053cbf3544::t_513b1215c22c65 43
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 630,842,845,902,909
+apps/web/components/features/result/social/formatters.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 19,31
+apps/web/components/features/result/SyntheseSection.tsx
+  s_5af6053cbf3544::t_577cee07be2560 89
+  s_5af6053cbf3544::t_cb37c66a1f9107 154
+  s_5af6053cbf3544::t_5279a3499d49c2 178
+  s_5af6053cbf3544::t_0ef3153857c82e 162
+  s_5af6053cbf3544::t_db7c67eec038e6 255
+  s_5af6053cbf3544::t_304ef721b1f62b 267
+  s_5af6053cbf3544::t_13ac6552c4377b 268
+  s_5af6053cbf3544::t_00c453beffccdb 346
+  s_5af6053cbf3544::t_e0e752dcdfb75b 286
+apps/web/components/layout/HeaderBar.tsx
+  s_5af6053cbf3544::t_c1dd5d9d194e9c 117
+apps/web/components/features/protocols/bel/tabs/BelInlineTabs.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 448,453,458,566,623,713,715
+apps/web/components/features/protocols/shared/tabs/CommercialDrilldownTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 364
+apps/web/components/features/protocols/shared/tabs/ProductEngineComparisonTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 168
+apps/web/components/features/pilote/SocialAccountsConnectCard.tsx
+  s_5af6053cbf3544::t_c9b21b295868fb 149
+apps/web/components/features/result/TrustSealBanner.tsx
+  s_5af6053cbf3544::t_f4d6b854f0b301 29,34,41,45,48,54,60,68,72,78
+  ai_agent 42,71
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_5af6053cbf3544::t_09614ad3397274 132
+apps/web/app/compte/page-client.tsx
+  s_5af6053cbf3544::t_ee6520d4213402 235
+apps/web/app/(auth)/login/page.tsx
+  s_5af6053cbf3544::t_26ba17e95722d8 93,95-96
+apps/web/components/features/protocols/bel/shared.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 115,308,314
+apps/web/components/features/protocols/danone/shared.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 118
+apps/web/components/features/pilote/LinkedSourcesModule.tsx
+  s_5af6053cbf3544::t_86c52f0f50126a 149
+apps/web/components/features/protocols/shared/tabs/SegmentPatternTab.tsx
+  s_5af6053cbf3544::t_1babaf15e095a6 51,56
+apps/web/components/features/protocols/bel/tabs/bel-diff-utils.ts
+  s_5af6053cbf3544::t_1babaf15e095a6 98-99,103,148,170
+apps/web/components/features/connections/ConnectionStatusBadge.tsx
+  s_5af6053cbf3544::t_3674e9b35b5447 15,18
+apps/web/components/features/result/BiometricReadingsPanel.tsx
+  ai_agent 272
+  s_5af6053cbf3544::t_27b163255216f5 260
+apps/web/components/features/connections/__tests__/ConnectionStatusBadge.test.ts
+  s_5af6053cbf3544::t_8b6e4689fc6ad5 9,12
+  s_5af6053cbf3544::t_48c83b5d471e8b 47-48
+  s_5af6053cbf3544::t_66b8f1b0bc6e4f 35-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "4a5f2407c774cc34aca6afe8e4dc95e5c4484ae5",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
