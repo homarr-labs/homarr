@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_a468d31d0a2f8f::t_4aebf6cf8d2fd7 118
+packages/auth/events.ts
+  s_a468d31d0a2f8f::t_0befde4586e1a8 102
+packages/core/src/infrastructure/env/schemas.ts
+  s_a468d31d0a2f8f::t_0befde4586e1a8 15-16,21-23,26-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "0df64f05e54b8950592d995b5915de9859fe1b8e",
+  "prompts": {},
+  "sessions": {
+    "s_a468d31d0a2f8f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a18bad93ffeGDDR1HHePALy3j",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
