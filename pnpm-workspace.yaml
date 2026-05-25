@@ -42,28 +42,28 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
-  "@tanstack/react-query": ^5.100.10
-  "@tanstack/react-query-devtools": ^5.100.10
-  "@tanstack/react-query-next-experimental": ^5.100.10
-  "@testcontainers/mysql": ^11.14.0
-  "@testcontainers/postgresql": ^11.14.0
-  "@testcontainers/redis": ^11.14.0
-  "@tiptap/extension-color": 3.23.4
-  "@tiptap/extension-highlight": 3.23.4
-  "@tiptap/extension-image": 3.23.4
-  "@tiptap/extension-link": ^3.23.4
-  "@tiptap/extension-placeholder": ^3.23.4
-  "@tiptap/extension-table": 3.23.4
-  "@tiptap/extension-table-cell": 3.23.4
-  "@tiptap/extension-table-header": 3.23.4
-  "@tiptap/extension-table-row": 3.23.4
-  "@tiptap/extension-task-item": 3.23.4
-  "@tiptap/extension-task-list": 3.23.4
-  "@tiptap/extension-text-align": 3.23.4
-  "@tiptap/extension-text-style": 3.23.4
-  "@tiptap/extension-underline": 3.23.4
-  "@tiptap/react": ^3.23.4
-  "@tiptap/starter-kit": ^3.23.4
+  "@tanstack/react-query": ^5.100.11
+  "@tanstack/react-query-devtools": ^5.100.11
+  "@tanstack/react-query-next-experimental": ^5.100.11
+  "@testcontainers/mysql": ^12.0.0
+  "@testcontainers/postgresql": ^12.0.0
+  "@testcontainers/redis": ^12.0.0
+  "@tiptap/extension-color": 3.23.5
+  "@tiptap/extension-highlight": 3.23.5
+  "@tiptap/extension-image": 3.23.5
+  "@tiptap/extension-link": ^3.23.5
+  "@tiptap/extension-placeholder": ^3.23.5
+  "@tiptap/extension-table": 3.23.5
+  "@tiptap/extension-table-cell": 3.23.5
+  "@tiptap/extension-table-header": 3.23.5
+  "@tiptap/extension-table-row": 3.23.5
+  "@tiptap/extension-task-item": 3.23.5
+  "@tiptap/extension-task-list": 3.23.5
+  "@tiptap/extension-text-align": 3.23.5
+  "@tiptap/extension-text-style": 3.23.5
+  "@tiptap/extension-underline": 3.23.5
+  "@tiptap/react": ^3.23.5
+  "@tiptap/starter-kit": ^3.23.5
   "@trpc/client": ^11.17.0
   "@trpc/next": ^11.17.0
   "@trpc/react-query": ^11.17.0
@@ -82,7 +82,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.14
+  "@types/react": 19.2.15
   "@types/react-dom": 19.2.3
   "@types/swagger-ui-react": ^5.18.0
   "@types/video.js": ^7.3.58
@@ -90,8 +90,8 @@ catalog:
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
   "@vitejs/plugin-react": ^5.2.0
-  "@vitest/coverage-v8": ^4.1.6
-  "@vitest/ui": ^4.1.6
+  "@vitest/coverage-v8": ^4.1.7
+  "@vitest/ui": ^4.1.7
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
@@ -124,11 +124,11 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.10.1
-  isomorphic-dompurify: ^3.13.0
+  isomorphic-dompurify: ^3.14.0
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
-  ldapts: 8.1.7
+  ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   mantine-form-zod-resolver: ^1.3.0
   mantine-react-table: 2.0.0-beta.9
@@ -141,7 +141,7 @@ catalog:
   octokit: ^5.0.5
   oxfmt: ^0.49.0
   oxlint: ^1.64.0
-  pg: ^8.20.0
+  pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
@@ -154,11 +154,11 @@ catalog:
   recharts: ^3.8.1
   sass: ^1.99.0
   semantic-release: ^25.0.3
-  semver-parser: ^4.1.8
+  semver-parser: ^4.2.0
   superjson: 2.2.6
   svgson: ^5.3.1
   swagger-ui-react: ^5.32.6
-  testcontainers: ^11.14.0
+  testcontainers: ^12.0.0
   timezones-ical-library: ^2.2.0
   trpc-to-openapi: ^3.2.0
   tsdav: ^2.2.2
@@ -169,7 +169,7 @@ catalog:
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.6
+  vitest: ^4.1.7
   winston: 3.19.0
   ws: ^8.20.1
   xml2js: ^0.6.2
