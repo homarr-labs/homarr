@@ -1,0 +1,61 @@
+e2e/shared/assertions/onboarding-assertions.ts
+  s_812f0bd91cbce5::t_8e27e741961888 60
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 2-3,9,12,15-19,30,32-53,69
+packages/definitions/src/index.ts
+  s_812f0bd91cbce5::t_8e27e741961888 15
+packages/api/src/router/onboard/onboard-router.ts
+  s_812f0bd91cbce5::t_8e27e741961888 1-2,5-28,31-33,36-96,123-273
+packages/definitions/src/onboarding.ts
+  s_812f0bd91cbce5::t_8e27e741961888 1
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 1-104
+packages/definitions/src/widget-integration-map.ts
+  s_812f0bd91cbce5::t_8e27e741961888 1-100
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 114
+e2e/onboarding.spec.ts
+  s_812f0bd91cbce5::t_8e27e741961888 34,107
+apps/nextjs/src/app/[locale]/init/_steps/finish/init-finish.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 3,20-22
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 16,27
+packages/api/src/router/onboard/onboard-queries.ts
+  s_812f0bd91cbce5::t_8e27e741961888 79-81
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 1-56
+packages/translation/src/lang/en-gb.json
+  s_812f0bd91cbce5::t_8e27e741961888 93-106
+e2e/shared/actions/onboarding-actions.ts
+  s_812f0bd91cbce5::t_8e27e741961888 54-58
+packages/translation/src/lang/en.json
+  s_812f0bd91cbce5::t_8e27e741961888 93-106,753-783,1116
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 1-26
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 1-129
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 1-134
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 47-53,64-72,74,77,79,85,91-93,98,103-105,113-145,154,161-162,166,198,202,208,211-224
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_812f0bd91cbce5::t_8e27e741961888 1-84
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_812f0bd91cbce5::t_8e27e741961888 15,41,75,117-120,140-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "ab42bcd7488a494ae658b0e1ca9c6e93bdf910f2",
+  "prompts": {},
+  "sessions": {
+    "s_812f0bd91cbce5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a178a5f8ffetT6wwTqIOEiYJ7",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
