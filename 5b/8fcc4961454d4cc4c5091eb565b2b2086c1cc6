@@ -1,0 +1,124 @@
+apps/web/components/features/result/insight-engine/ui-bits.tsx
+  s_5af6053cbf3544::t_51b724203d2129 15
+  ai_agent 105
+apps/web/components/features/result/biometric/BiometricSegmentSimulator.tsx
+  ai_agent 216,231
+apps/web/components/features/analyse/HeaderAnalyseSearch.tsx
+  ai_agent 1-88
+apps/web/components/features/result/seven-dimensions/video/PrimacyRecencyBrandBar.tsx
+  s_5af6053cbf3544::t_2e47266b94af64 70
+  ai_agent 35
+apps/web/components/features/result/HeroBlock.tsx
+  ai_agent 170
+apps/web/components/features/comparaison/ComparePicker.tsx
+  ai_agent 74
+apps/web/components/features/result/InsightEngineDetailPanel.tsx
+  s_5af6053cbf3544::t_26b794ac4484f2 107
+apps/web/components/features/result/seven-dimensions/image/DifferenciationNiveauxTable.tsx
+  ai_agent 98
+  s_5af6053cbf3544::t_8167b39d41801b 77
+apps/web/components/features/result/seven-dimensions/image/ClarteDetruitConstruitTable.tsx
+  ai_agent 25-26,32
+apps/web/components/features/result/seven-dimensions/ImageSevenDimensionsView.tsx
+  s_5af6053cbf3544::t_a47a900f757b9a 211
+apps/web/components/features/result/seven-dimensions/RadarSevenAxes.tsx
+  s_5af6053cbf3544::t_68d7cc39e4f147 205-206
+  s_5af6053cbf3544::t_ec87eb99d30988 163
+apps/web/components/features/result/seven-dimensions/image/ConfortPositionnementTable.tsx
+  s_5af6053cbf3544::t_9499248c3470da 73
+  s_5af6053cbf3544::t_a1d31063e11eae 72
+  s_5af6053cbf3544::t_7e24de28f36209 125
+apps/web/components/features/cloud/CloudImportShortcut.tsx
+  s_6b51a0038b32cf::t_1fa8e4b54dc990 282,288-292,298-314
+  s_6b51a0038b32cf::t_03cc87d27bbd67 151-161
+  ai_agent 295-297,316
+  s_6b51a0038b32cf::t_b1727b2d8500b4 37
+  s_6b51a0038b32cf::t_cf80633ef43bfd 54,62
+  s_6b51a0038b32cf::t_f05f9372eaa4e5 2,6-7,18,27
+  s_6b51a0038b32cf::t_b411e69a7f50c2 225-235
+  s_6b51a0038b32cf::t_ed7d4ccda37b4e 46
+apps/web/components/features/result/seven-dimensions/FormatThresholdBanner.tsx
+  s_5af6053cbf3544::t_26f9f65f2dd5ad 40
+apps/web/components/features/result/seven-dimensions/image/ConfortSeuilSidebarCard.tsx
+  s_5af6053cbf3544::t_2c999d598c62a1 42
+  ai_agent 32
+apps/web/components/features/analyse/AnalyseFilePickers.tsx
+  ai_agent 1-115
+apps/web/components/features/result/insight-engine/BestEngineMatrix.tsx
+  ai_agent 272,394
+  s_5af6053cbf3544::t_747adb91a83f68 279
+apps/web/components/features/result/insight-engine/constants.ts
+  s_5af6053cbf3544::t_fd78d2eef35e78 216-217
+apps/web/lib/hooks/useChartTokens.ts
+  s_5af6053cbf3544::t_fdc6b215575884 42-43
+  s_5af6053cbf3544::t_c65d491090fc8d 59
+  s_5af6053cbf3544::t_cd9b3f6124ad94 73
+apps/web/components/features/result/seven-dimensions/video/MomentsClesMarkers.tsx
+  s_5af6053cbf3544::t_2296cf41fd89f9 60
+apps/web/components/features/result/seven-dimensions/DimensionCard.tsx
+  ai_agent 152,192
+apps/web/components/features/result/charts/GapBarChart.tsx
+  s_5af6053cbf3544::t_8bef2de0342b0d 44
+  s_5af6053cbf3544::t_f020fa6bed43d5 50
+  s_5af6053cbf3544::t_c40ff17f36481d 49
+  s_5af6053cbf3544::t_37ccbed7c64fc1 43
+apps/web/components/features/result/seven-dimensions/HabsInsightsScoringGuide.tsx
+  s_5af6053cbf3544::t_5360abb294bcf9 42-44
+  s_5af6053cbf3544::t_e2eb8fc9107c34 47-49
+apps/web/components/features/result/seven-dimensions/video/DimensionTimelineChart.tsx
+  s_5af6053cbf3544::t_a4d7dbee9d2689 63-64
+apps/web/components/features/result/SyntheseSection.tsx
+  ai_agent 374
+apps/web/components/features/result/seven-dimensions/video/SegmentDropAlert.tsx
+  s_5af6053cbf3544::t_b102e3d3a879ea 46
+  ai_agent 30,32-33
+  s_5af6053cbf3544::t_6d9138e319f976 48
+apps/web/components/features/result/seven-dimensions/image/ClarteAmbiguiteChip.tsx
+  ai_agent 28
+apps/web/components/features/result/social/YouTubeBlocks.tsx
+  ai_agent 213
+apps/web/components/features/accueil/RecentAnalyses.tsx
+  s_5af6053cbf3544::t_284ff57513b689 96
+apps/web/components/features/result/charts/ClarteCharts.tsx
+  s_5af6053cbf3544::t_d9ef712e5a7310 27
+apps/web/components/features/result/seven-dimensions/GrilleBar.tsx
+  s_5af6053cbf3544::t_9f2f5956482057 31
+  s_5af6053cbf3544::t_5e760369278ad7 32
+apps/web/components/features/result/heatmap/DiagnosticStrip.tsx
+  ai_agent 39,42
+apps/web/components/features/result/charts/ConfortCharts.tsx
+  s_5af6053cbf3544::t_9e5525a670f9ba 27
+  s_5af6053cbf3544::t_7fa734e4484012 224
+  s_5af6053cbf3544::t_aed578c265f4d9 270
+apps/web/components/features/result/seven-dimensions/image/ClarteDiagnosticQuestions.tsx
+  s_5af6053cbf3544::t_9719b43b7d3023 32-33
+  s_5af6053cbf3544::t_50a3a6f0872c8b 37-38
+apps/web/components/features/result/social/TwitterBlocks.tsx
+  ai_agent 263
+apps/web/components/features/result/seven-dimensions/image/AttentionComposantesBlock.tsx
+  s_5af6053cbf3544::t_dcbd31c743bbf6 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "5b8fcc4961454d4cc4c5091eb565b2b2086c1cc6",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6b51a0038b32cf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2100b362-7d19-403d-8763-82b636952974",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
