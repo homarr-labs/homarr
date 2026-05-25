@@ -21,6 +21,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -36,7 +37,6 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
-import { invalidateBoardCacheAsync } from "../_invalidate-board-cache";
 
 export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
@@ -153,7 +153,7 @@ const EditModeMenu = () => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
-      void invalidateBoardCacheAsync(board.name);
+      void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },
     onError() {
