@@ -1,0 +1,148 @@
+apps/web/lib/hooks/useAnalyseIngestion.ts
+  s_3f7abfee110f3a::t_b8496fe58fe423 52
+  s_3f7abfee110f3a::t_7a96179c713081 91
+  s_3f7abfee110f3a::t_520c2f68a16be6 124
+apps/api/app/compute/tokens.py
+  s_3f7abfee110f3a::t_36602e68fadcda 1-6,9-10,41-59
+apps/api/app/compute/narrative.py
+  s_3f7abfee110f3a::t_36602e68fadcda 1,3-9,13-90,108-122,126-144,146-154,157-160,162,166-188,192,195,197,200,202,206-230,241-242,251,261-262
+apps/web/app/home-client.tsx
+  s_3f7abfee110f3a::t_81c5840d56e899 40-41
+  s_3f7abfee110f3a::t_9a9a2ce344cc56 1-6,15
+apps/web/components/features/pilote/PiloteResumeOuverture.tsx
+  s_328312367dfd4e::t_75ea56a075fe21 25
+  s_328312367dfd4e::t_c8fe307b76c548 7
+  s_328312367dfd4e::t_8fbb2b2c2588ed 249-250
+apps/api/app/llm/analysis_lang.py
+  s_ca1c9b9ed48724::t_59aa3657c23e81 1-18
+apps/web/app/analyse/page.tsx
+  s_5195f04c373700::t_7e0a618272be25 1-8,10,13-15,23,25-32,36-38,40
+apps/web/components/features/analyse/funnel/AnalyseKindIngestion.tsx
+  ai_agent 24-29
+  s_3f7abfee110f3a::t_3765b8e632a944 1-23,30-49
+apps/web/lib/queries/analyses.ts
+  s_3f7abfee110f3a::t_8dd271d57bbb85 94
+apps/api/app/api/analyses.py
+  s_3f7abfee110f3a::t_a83fe7a20380ea 175-176
+  s_3f7abfee110f3a::t_7a141678bcd26e 208
+apps/web/lib/social/__tests__/content-evolution.test.ts
+  s_328312367dfd4e::t_08b77659e9ded2 1-19,27-94,98-218
+  ai_agent 20-26,95-97
+apps/api/app/compute/brand_context.py
+  s_3f7abfee110f3a::t_36602e68fadcda 52-57,99-101,271,294,296-297,329
+apps/web/components/features/evolution/ContentEvolutionPanel.tsx
+  ai_agent 59,66
+  s_328312367dfd4e::t_76c45f3a63aad1 1-58,60-65,67-111
+apps/api/app/compute/llm_narrative.py
+  s_3f7abfee110f3a::t_36602e68fadcda 23-24,30,121,137-138,141
+apps/web/lib/routes.ts
+  ai_agent 34-35
+  s_5195f04c373700::t_b5e80b7025926a 28-29,33
+apps/web/lib/habs/narrative.ts
+  ai_agent 237-248,355-366
+  s_3f7abfee110f3a::t_36602e68fadcda 2,9-11,17-18,33-135,150-231,234-236,249-328,330-332,338-354,367-374,380,384-386,388,432-447,451,462,469,481-495,499,510,514-518,522-526
+apps/web/lib/jobs/analyse.ts
+  s_3f7abfee110f3a::t_0b19a55cc9d55c 179
+  ai_agent 77-87,231-238,240-247,336-343,345-352,476-483,485-492,580-587,589-596
+  s_3f7abfee110f3a::t_36602e68fadcda 57,60-74,88-104,110,112,121-125,130-131,144,153-154,210,216,221,230,239,307,313,326,335,344,438,444,466,475,484,537,543,570,579,588,653,685,687
+  s_ca1c9b9ed48724::t_e1c1adc0311aca 105
+apps/api/app/schemas/analyses.py
+  s_3f7abfee110f3a::t_09ee0f25d4715d 37
+apps/api/app/tasks/analyse_task.py
+  s_3f7abfee110f3a::t_f4d25564b1dffe 227
+  s_3f7abfee110f3a::t_05234573ee57aa 270
+  s_3f7abfee110f3a::t_63f526f07e2674 76
+apps/web/lib/i18n/dictionary/home.ts
+  ai_agent 77-80,86-87,157-160,166-167
+  s_3f7abfee110f3a::t_acd1ebc7dda136 74-76,81-85
+  s_3f7abfee110f3a::t_b85c9d37c51208 154-156,161-165
+apps/web/app/api/analyse/route.ts
+  s_3f7abfee110f3a::t_36602e68fadcda 23,34,227,239
+  ai_agent 226
+apps/api/app/compute/attention_decomposition.py
+  s_3f7abfee110f3a::t_36602e68fadcda 73-74,86,118,326,362-363,367
+apps/api/app/tasks/pipeline.py
+  s_ca1c9b9ed48724::t_3caf0f2613a35b 70
+  s_3f7abfee110f3a::t_36602e68fadcda 14-15,60-69,71-73,310,334,338,385,394,413-416,436,733,735,755,761,787
+  s_3f7abfee110f3a::t_218b77ac554b24 316
+  s_3f7abfee110f3a::t_73e82bc3e84143 331
+  s_3f7abfee110f3a::t_9a808de23600ad 344
+  s_3f7abfee110f3a::t_30d4642c88ffe6 359
+  s_3f7abfee110f3a::t_039caf4eb00deb 290
+apps/web/lib/i18n/dictionary/analyse.ts
+  s_5195f04c373700::t_0663b97ca696e5 101-114,116-119
+  ai_agent 115,224
+  s_5195f04c373700::t_cc1fc7d8d7f0ef 210-223,225-228
+apps/web/components/features/evolution/ContentEvolutionChart.tsx
+  s_328312367dfd4e::t_bf999b13d7730a 71
+  s_328312367dfd4e::t_2a782583766649 72-74
+  s_328312367dfd4e::t_c198f654f4cd38 1-70,75-129
+apps/web/components/features/analyse/funnel/AnalyseKindPicker.tsx
+  ai_agent 11-15
+  s_3f7abfee110f3a::t_9a646a59fdfd4f 1,3-4,6-8,16-19,22-28,30-31,33-35,56-57,62-63,73-74,84-88
+  s_5195f04c373700::t_b5fa28972b0cb3 2,5,9-10,20-21,29,32,36-55,58-61,64-72,75-83
+apps/web/app/api/ai/qa/stream/route.ts
+  s_ca1c9b9ed48724::t_bbe59910d26018 2,10,21-22
+  s_3f7abfee110f3a::t_7d28f5e2490de9 169
+  s_ca1c9b9ed48724::t_5aa158630f3465 29-52
+  s_ca1c9b9ed48724::t_d2e84120c84708 170-174,176,183
+apps/api/app/compute/narrative_overlay.py
+  s_3f7abfee110f3a::t_36602e68fadcda 44-45,71,811,837-838,841
+apps/web/lib/social/content-evolution.ts
+  s_328312367dfd4e::t_45a059599508b9 1-100,102-203
+  s_3f7abfee110f3a::t_0e1ffe423bd488 101
+apps/web/app/api/ai/qa/route.ts
+  s_3f7abfee110f3a::t_07580d3360c292 327
+  s_ca1c9b9ed48724::t_134d8b1b95bea6 33-56
+  s_ca1c9b9ed48724::t_82ab7a11a18309 329-330,332-333,339
+  s_ca1c9b9ed48724::t_89b526f898fc73 1-6,17-18
+apps/web/lib/analyse/analyse-kind-config.ts
+  s_5195f04c373700::t_62c0f668133877 1-118
+apps/web/lib/services/analyses.ts
+  s_3f7abfee110f3a::t_6dcef36adf5549 491
+  s_3f7abfee110f3a::t_20c71a28e361e4 513
+apps/api/app/llm/analysis_prompts.py
+  s_ca1c9b9ed48724::t_c9230607010ee9 1-232
+apps/web/app/analyse/new/[kind]/page.tsx
+  s_5195f04c373700::t_91ab948d6cf824 1-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "9b608b2d8f35109924b8b60a8418b00225e8042d",
+  "prompts": {},
+  "sessions": {
+    "s_328312367dfd4e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0b8e3476-7bdb-4832-8b2b-08d995d371c2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_3f7abfee110f3a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "691b8e91-12d7-4ad5-a75d-6f389a6bd753",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5195f04c373700": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "72426dd2-74ed-418d-9f74-2c96b0cb11aa",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca1c9b9ed48724": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb8c5a7-f420-4532-a0b5-0876ce937fa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
