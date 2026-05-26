@@ -1,0 +1,606 @@
+apps/web/components/features/pilote/PiloteHero.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 101
+apps/web/components/features/result/TrustSealBanner.tsx
+  s_5af6053cbf3544::t_210a5d14d0fe7f 48
+apps/web/components/features/compte/LanguageSwitcher.tsx
+  ai_agent 26
+apps/web/components/features/pilote/BrandRepresentationPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 41,92,118
+  s_5af6053cbf3544::t_e8dbc9f7449e90 91
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 228,232
+apps/ml-worker/habs_worker/features/faces.py
+  ai_agent 1-124
+apps/web/components/report/sections/SessionBreakdown.tsx
+  ai_agent 47,54,57,60
+apps/web/app/rapports/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 25
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 112
+apps/ml-worker/habs_worker/security.py
+  ai_agent 1-91
+apps/web/lib/video/stats.ts
+  s_bd0d2ef3ba0760::t_456cb99ad4f9ce 2,4-5,7,9-22,24-33,35,39-45
+  s_bd0d2ef3ba0760::t_ccd976a65e9b96 36-38
+apps/web/components/features/accueil/RecentAnalyses.tsx
+  s_5af6053cbf3544::t_fa9afc6a9636a1 11
+  s_5af6053cbf3544::t_f4d5112165eb71 6
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 201
+apps/web/app/compte/page.tsx
+  s_5af6053cbf3544::t_73862f3f8d2a73 15,19
+apps/ml-worker/tests/test_ytdlp_youtube_integration.py
+  s_baa8fcdd5c9472::t_e8441e0638d6ed 1-10,12-41
+  s_baa8fcdd5c9472::t_2db94bb6308946 11
+apps/web/app/pilote/[id]/layout.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 31
+apps/web/components/features/result/social/YouTubeBlocks.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 45,150
+apps/web/components/features/comparaison/CrossInspirations.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 68
+  s_5af6053cbf3544::t_81e6252ac34258 62
+apps/web/components/features/protocols/shared/tabs/ParticipantTimelineTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 302,402,464,540,548,574,582,634
+apps/web/app/api/ai/qa/route.ts
+  s_5af6053cbf3544::t_82c06b1217a2ec 26
+apps/web/components/features/result/NeuroMiniStory.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 93
+apps/web/components/report/sections/SegmentPages.tsx
+  ai_agent 124,138,141,144,152-153
+apps/web/components/features/cloud/CloudImportShortcut.tsx
+  s_6b51a0038b32cf::t_3fc41648d98975 157-171,173
+  s_6b51a0038b32cf::t_a7087a7b40047c 62
+apps/web/lib/ai/provider.ts
+  s_5af6053cbf3544::t_7d605bd4c8135b 62
+apps/web/components/features/protocols/shared/tabs/ClusterCompositionTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 115,196,382,393,447
+apps/web/.gitignore
+  ai_agent 51,57-60
+apps/web/components/report/sections/Phase2Plan.tsx
+  ai_agent 39
+apps/web/app/rapports/bel/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 40
+apps/web/components/features/result/video/VideoStatsBar.tsx
+  s_bd0d2ef3ba0760::t_1e96aad5e2a516 1-6,9,11-13,15-75
+apps/ml-worker/habs_worker/features/url_ingest.py
+  s_ed84423845b887::t_3f9c190737175a 748-750
+  s_ed84423845b887::t_9b9557bf40ebef 532
+  s_baa8fcdd5c9472::t_c13aef76d85a80 352
+  s_ed84423845b887::t_1b7119b782f136 533-542
+  s_ed84423845b887::t_a3778ce1ef3e41 600-601
+  s_baa8fcdd5c9472::t_8b60252c8fe057 34
+  s_ed84423845b887::t_a48fc5a7a09a6e 769
+  s_baa8fcdd5c9472::t_7e4045cd74f612 568,782
+  s_ed84423845b887::t_1b9656a61edc4a 777-779
+  s_ed84423845b887::t_7a13b514035088 7-16
+  s_ed84423845b887::t_1a5a38b9d37313 807-811
+  s_ed84423845b887::t_8b3a4e962edddf 818-831
+apps/web/lib/tokens.ts
+  s_5af6053cbf3544::t_ee0253e68f745a 149
+  s_5af6053cbf3544::t_021a5340879863 247
+  s_5af6053cbf3544::t_705e428f1ab4cc 67
+  s_5af6053cbf3544::t_a6e0a7a513be17 262
+  s_5af6053cbf3544::t_fb00c0e87c2acf 113
+apps/web/components/features/result/EffortImpactMatrix.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 224
+apps/web/components/primitives/GlassCard.tsx
+  s_5af6053cbf3544::t_d8822ed68e0c24 10
+  s_5af6053cbf3544::t_14fcebdeb3348a 24,34
+apps/web/app/(auth)/login/page.tsx
+  s_5af6053cbf3544::t_76905ec84fb5de 58
+apps/web/lib/services/analyses.ts
+  s_bd0d2ef3ba0760::t_ebfb362a8fbf2c 323-328,343
+apps/web/components/features/result/SegmentationFilterCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 89
+apps/web/components/report/sections/ScoringMethodNote.tsx
+  ai_agent 44,47
+apps/ml-worker/habs_worker/features/vad_online_client.py
+  ai_agent 1-530
+apps/ml-worker/habs_worker/features/image_pipeline.py
+  s_baa8fcdd5c9472::t_8567bf2e7f1ff7 9
+  s_baa8fcdd5c9472::t_e9dc874a925a24 106-137
+  s_baa8fcdd5c9472::t_7c375ee5c94670 185-186
+  s_baa8fcdd5c9472::t_c1703f4247dcd5 204-206
+  s_baa8fcdd5c9472::t_b8634d2e38701c 62-65
+  s_baa8fcdd5c9472::t_ef3c0e37862e63 178
+  s_baa8fcdd5c9472::t_ba623339140d69 160
+  s_baa8fcdd5c9472::t_7a20c56924cd7b 61,66-71
+  s_baa8fcdd5c9472::t_1cbec6f1dc1d41 169
+apps/web/components/features/pilote/EvolutionPage.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 82
+  s_5af6053cbf3544::t_81e6252ac34258 132
+apps/web/lib/api-client.ts
+  s_1898cbe4caec7a::t_73fc914cc32cdc 198-202
+  s_1898cbe4caec7a::t_3257deb03e9d98 8-9
+apps/web/components/features/result/DemographicsPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 20
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 34
+apps/azure/go.sh
+  ai_agent 1-115
+apps/ml-worker/habs_worker/features/grounding.py
+  ai_agent 1-162
+apps/web/components/features/protocols/shared/ProtocolTabNav.tsx
+  ai_agent 22
+apps/ml-worker/tests/test_ytdlp_youtube.py
+  s_baa8fcdd5c9472::t_d3f922066a3fe2 1,21-25,28-31,34,36-38
+  s_baa8fcdd5c9472::t_7e92205465cee3 2-20,26,32-33,35
+  s_baa8fcdd5c9472::t_6ebba79cde367e 27
+apps/ml-worker/habs_worker/features/social_api.py
+  ai_agent 1-899
+apps/web/components/features/result/WorksFails.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 18,35
+apps/web/app/loading.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 6
+apps/web/components/report/sections/Recommendations.tsx
+  s_5af6053cbf3544::t_deed4b8cc9a920 48-50,54,58
+apps/web/components/features/protocols/shared/ProtocolKpiCard.tsx
+  s_5af6053cbf3544::t_25a6888610a585 25
+apps/azure/deploy_web.sh
+  ai_agent 1-46
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 104
+  s_5af6053cbf3544::t_81e6252ac34258 113,142
+apps/ml-worker/.gitignore
+  ai_agent 1-7
+apps/web/components/features/result/biometric/TrustSealBadge.tsx
+  ai_agent 77
+apps/ml-worker/habs_worker/schema.py
+  s_bd0d2ef3ba0760::t_90ea6e06ac5c48 426-445
+apps/web/app/api/pilote/[id]/social-account/[analysisId]/route.ts
+  s_5af6053cbf3544::t_d197ee7356183b 22
+apps/api/tests/ml_client/test_sse_parse.py
+  s_baa8fcdd5c9472::t_0ca7f786983260 1-32
+apps/web/components/features/protocols/shared/tabs/YogurtComparisonTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 25
+apps/ml-worker/habs_worker/cpu.py
+  s_baa8fcdd5c9472::t_187fab1d419392 1-12
+apps/web/lib/i18n/report-dictionary.ts
+  s_5af6053cbf3544::t_52a5de8cdb0f0e 93,299,478,510,535,543-546,791,795,798,884,891,903,999,1039,1203,1216,1377,1405,1430,1438-1441,1682,1686,1689,1775,1782,1794
+apps/web/lib/habs/brain-panel.ts
+  s_5af6053cbf3544::t_03c876157f2bbc 62
+apps/web/components/features/result/video/VideoPlayerProvider.tsx
+  s_bd0d2ef3ba0760::t_b90bbaa5be634b 2-6,9-17,19-29,32,34-57,60-72,74-75,78-81
+apps/web/components/features/analyse/SmartDropZone.tsx
+  s_5af6053cbf3544::t_e9f994d3923810 37
+  s_5af6053cbf3544::t_10bdfc199858c9 5
+  s_5af6053cbf3544::t_1e3a67a3db408c 9
+apps/web/app/pilote/[id]/take/[takeId]/page.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 48
+  s_5af6053cbf3544::t_53a7704692a8bf 39
+apps/ml-worker/habs_worker/routers/url.py
+  ai_agent 1-44
+apps/web/components/features/result/biometric/BiometricSegmentSimulator.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 235
+  s_5af6053cbf3544::t_81e6252ac34258 143
+apps/web/components/report/sections/Cover.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 88
+apps/api/package.json
+  ai_agent 8
+apps/web/app/pilote/[id]/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 28
+apps/web/app/pilote/[id]/representation/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 17
+apps/web/app/pilote/new/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 70
+apps/web/lib/ai/mocks/MockAIProvider.ts
+  s_5af6053cbf3544::t_3016eb0bfa5a87 228
+  s_5af6053cbf3544::t_db2ef05ead3986 223
+apps/web/components/features/compte/ReportDebugCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 55
+  s_5af6053cbf3544::t_042c7c89e4b2b9 7,9,12-17,21-44,48,74,100,121
+apps/web/components/features/result/seven-dimensions/video/VideoSevenDimensionsView.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 48
+apps/web/components/features/pilote/SourcesPage.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 145
+  s_5af6053cbf3544::t_e8dbc9f7449e90 143
+apps/ml-worker/README.md
+  s_baa8fcdd5c9472::t_1081efa5e4e84e 93-95,97-106
+  s_baa8fcdd5c9472::t_7f0fe81276209a 119
+  s_baa8fcdd5c9472::t_5fcc23226df248 84-92,96,107-108
+  s_baa8fcdd5c9472::t_940eaa2f74bc96 118
+apps/ml-worker/habs_worker/routers/analyse_url.py
+  s_baa8fcdd5c9472::t_d6184265ea7e78 198
+  s_baa8fcdd5c9472::t_b726dd28fd6285 211-215
+  s_baa8fcdd5c9472::t_cf21851b06ce31 24
+apps/web/app/pilote/[id]/decisions/[decisionId]/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 46
+apps/ml-worker/habs_worker/routers/video.py
+  s_baa8fcdd5c9472::t_9f410c58c4ebfc 6
+  s_baa8fcdd5c9472::t_a454ff070dc927 23
+.env
+  ai_agent 32,65
+apps/web/components/report/sections/KeyDeepDive.tsx
+  s_5af6053cbf3544::t_cfb5da2a8c824e 122
+apps/web/components/features/result/TimelinePanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 39
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 95
+apps/azure/README.md
+  ai_agent 1-107
+apps/web/components/features/result/biometric/BiometricSignalsPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 61
+apps/ml-worker/habs_worker/features/image_vad_client.py
+  ai_agent 1-516
+apps/web/components/features/pilote/DecisionsList.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 42
+apps/web/lib/types.ts
+  s_bd0d2ef3ba0760::t_6e5102b101c7e7 284-285
+  s_bd0d2ef3ba0760::t_fc83de67d88b53 1037-1042
+apps/web/components/report/sections/InsightDetailPages.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 63,70,77
+apps/web/components/features/compte/AdminLlmPickerCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 92
+apps/ml-worker/habs_worker/features/detect.py
+  ai_agent 1-237
+apps/ml-worker/habs_worker/features/saliency.py
+  ai_agent 1-237
+apps/ml-worker/habs_worker/features/ocr.py
+  ai_agent 1-132
+apps/api/app/ml_client/worker_client.py
+  s_baa8fcdd5c9472::t_593509bd5eed55 18
+  s_baa8fcdd5c9472::t_ab1d6aad723df3 50
+apps/web/components/features/result/seven-dimensions/image/ConfortPositionnementTable.tsx
+  s_5af6053cbf3544::t_50bc84ca3d4b35 188
+apps/ml-worker/habs_worker/routers/pdf.py
+  ai_agent 1-23
+apps/web/components/features/protocols/shared/tabs/SegmentPatternTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 108,129,157
+apps/web/components/features/compte/GazeEnsemblePipelineCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 59
+apps/web/components/report/sections/DanoneKeyTakeaways.tsx
+  ai_agent 38,40-41
+apps/web/components/report/sections/LimitationsSection.tsx
+  ai_agent 32
+apps/web/components/report/sections/TemporalInsightEvolution.tsx
+  ai_agent 257
+scripts/hold-dev.mjs
+  ai_agent 1,3,5-6,9-10,12-16
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 540,580,624,765
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 364,397,424,440,469
+apps/web/app/compte/page-client.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 221,239,269
+  s_5af6053cbf3544::t_53a7704692a8bf 159
+  s_5af6053cbf3544::t_81e6252ac34258 218,238,265,298,304,320,349,413,427,510
+apps/ml-worker/habs_worker/features/scanpath.py
+  ai_agent 1-245
+apps/ml-worker/habs_worker/main.py
+  ai_agent 1-152
+apps/web/components/report/sections/SegmentsOverview.tsx
+  ai_agent 53,60,67,76,83,90
+apps/web/components/features/protocols/shared/tabs/InsightsByClusterTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 315,371,435,485,534,545,638
+apps/api/app/ml_client/sse_parse.py
+  s_baa8fcdd5c9472::t_907e5e76d0c6a5 1-94
+apps/web/app/api/cloud/[provider]/disconnect/route.ts
+  s_5af6053cbf3544::t_78fd5373238156 14
+apps/web/components/report/parts/ScoreChip.tsx
+  s_5af6053cbf3544::t_78b8d3ea712666 19,22
+apps/web/app/rapports/bel_demo/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 42
+apps/web/components/features/protocols/bel/InsightMethodDebugPanel.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 199,238
+  s_5af6053cbf3544::t_15b1ba0e6cbf77 375
+apps/web/lib/services/home.ts
+  s_5af6053cbf3544::t_c800e19a110c85 10
+apps/web/components/report/sections/HabsValueSection.tsx
+  ai_agent 41
+apps/web/components/report/ReportNavigation.tsx
+  ai_agent 30,36
+apps/web/components/report/sections/StudyPlan.tsx
+  ai_agent 49,91
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 218
+apps/web/components/features/pilote/LinkedSourcesModule.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 187,218
+apps/web/components/features/result/BiometricReadingsPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 245
+apps/web/app/comparaison/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 12
+apps/web/components/features/pilote/PiloteBrandIdentity.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 130,141,188,202,226,246
+apps/web/components/features/protocols/bel/tabs/BelInlineTabs.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 745
+  s_5af6053cbf3544::t_c11edd157f9ca0 310
+  s_5af6053cbf3544::t_81e6252ac34258 125,151,171,210,218,280,332,377,414,423,489,529,615,686
+apps/web/components/features/result/MomentsPanel.tsx
+  s_bd0d2ef3ba0760::t_bf1e4906608eac 1-6,12,16-21
+  s_5af6053cbf3544::t_81e6252ac34258 42
+  s_bd0d2ef3ba0760::t_c1bcd9e799a202 39,47,67-70
+apps/web/app/pilote/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 17
+apps/web/components/features/connections/ConnectionsSummaryCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 25
+apps/web/components/features/protocols/danone/report-helpers.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 117,191
+apps/web/components/features/comparaison/CompareView.tsx
+  s_5af6053cbf3544::t_7b66213ff2630a 36
+  s_5af6053cbf3544::t_81e6252ac34258 56,139,158
+  s_5af6053cbf3544::t_f5dd51b3f25a17 5
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 125,265
+apps/web/components/features/result/QAPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 74
+apps/ml-worker/habs_worker/features/ytdlp_youtube.py
+  s_baa8fcdd5c9472::t_b9715c8ed476ac 48-49,53-54
+  s_baa8fcdd5c9472::t_f52cf75008a29b 1-4,10-11,14,50,57,59,61-62,65-66,71-73,75-101,117-118,122,124-127,129-133
+  s_baa8fcdd5c9472::t_380a5ee3db6add 74
+  s_baa8fcdd5c9472::t_dc23e1d1cc74d8 5-9,12-13,15-47,55-56,58,60,63-64,67-70,102-116,119-121,123,128,134-139
+  s_baa8fcdd5c9472::t_4ee76e45c0858d 51-52
+apps/web/components/report/sections/SessionAggregateDetail.tsx
+  s_5af6053cbf3544::t_e4ff7d7183e772 63-68
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 72
+apps/ml-worker/habs_worker/settings.py
+  s_ed84423845b887::t_74cc22506c2711 9-27
+apps/web/components/features/pilote/SourceDetailView.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 350,366
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 469
+  s_5af6053cbf3544::t_e8dbc9f7449e90 233
+apps/web/components/features/protocols/shared/tabs/ProductEngineComparisonTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 217,260
+  s_5af6053cbf3544::t_1eae268689d4d2 177
+apps/web/lib/jobs/analyse.ts
+  s_bd0d2ef3ba0760::t_1fa7ed0af1740e 312-327
+  s_bd0d2ef3ba0760::t_9e973d18aceeac 351
+  s_bd0d2ef3ba0760::t_f153118872ee24 48-49
+apps/web/components/features/protocols/shared/tabs/CommercialSummaryTab.tsx
+  s_5af6053cbf3544::t_1b90f3fe043289 249
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 244,362
+  s_5af6053cbf3544::t_81e6252ac34258 308
+apps/web/app/analyse/[id]/page.tsx
+  s_5af6053cbf3544::t_14010424856729 35
+  s_5af6053cbf3544::t_9a0c37c0146586 5
+  s_5af6053cbf3544::t_c728141a5002ea 49
+  s_bd0d2ef3ba0760::t_950ad013ddadd1 78-79,89
+  s_bd0d2ef3ba0760::t_f3b5ce9f27079d 190,194-196
+  s_5af6053cbf3544::t_04ac7686b8347f 93
+  s_bd0d2ef3ba0760::t_ff58d1dd218de7 31
+  s_bd0d2ef3ba0760::t_55efacc2677561 94-96
+  s_bd0d2ef3ba0760::t_806cf3adff1c6c 32
+apps/ml-worker/habs_worker/routers/audio.py
+  ai_agent 1,3-4,6-9,12,15-17,19-21,23
+scripts/dev-service.mjs
+  ai_agent 1-10,12-14,16-29,31-42,45-46,48-52,54-63,65-69,72-88,91-103,106-129,131-132
+apps/web/components/features/protocols/danone/InsightMethodDebugPanel.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 228,266
+apps/web/app/pilote/[id]/representants/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 24
+  s_5af6053cbf3544::t_81e6252ac34258 25
+apps/web/components/features/result/SimulationPanel.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 25
+  s_5af6053cbf3544::t_81e6252ac34258 13
+apps/web/components/features/accueil/PiloteCard.tsx
+  s_5af6053cbf3544::t_d9ab73102e13ce 96
+apps/ml-worker/habs_worker/__init__.py
+  ai_agent 1-3
+apps/web/components/features/pilote/BestCandidatePodium.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 59
+  s_5af6053cbf3544::t_81e6252ac34258 60
+.cursor/skills/habs-local-dev/SKILL.md
+  ai_agent 23,36,71-72,74-75
+apps/web/components/features/protocols/shared/tabs/ProductClusterComparisonTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 202
+apps/ml-worker/habs_worker/routers/image.py
+  ai_agent 1-28
+apps/web/components/features/protocols/shared/tabs/YogurtDiffClusterTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 56,83,118,191,273
+apps/web/app/analyse/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 16
+apps/ml-worker/habs_worker/features/models.py
+  ai_agent 1-62
+apps/web/components/primitives/ProgressRing.tsx
+  ai_agent 65
+apps/web/components/layout/nav-items.ts
+  s_5af6053cbf3544::t_d6dc8283f89c87 51
+apps/web/components/features/result/RecommendationsPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 16
+apps/web/components/report/sections/InsightTable.tsx
+  ai_agent 70,72,76,78
+apps/web/components/features/result/video/VideoHighlightsStrip.tsx
+  s_bd0d2ef3ba0760::t_1b63d9ea00531f 2-6,9,11-13,15-27,29-33,35-74
+apps/web/app/page.tsx
+  s_5af6053cbf3544::t_eb389f35b24698 5,17,21
+apps/web/components/features/pilote/AlternativesEntry.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 79
+  s_5af6053cbf3544::t_81e6252ac34258 110
+apps/ml-worker/habs_worker/features/video_pipeline.py
+  s_baa8fcdd5c9472::t_93dcedb3acded3 465-468
+  s_bd0d2ef3ba0760::t_c97980f6652666 541-546
+  s_bd0d2ef3ba0760::t_cf85b14b3a80b8 564
+  s_bd0d2ef3ba0760::t_ab3a32d2003089 34
+  s_baa8fcdd5c9472::t_c3838857f12d12 447-454
+  s_baa8fcdd5c9472::t_119146647de7cb 49
+  s_bd0d2ef3ba0760::t_2023ccb701d889 369-442
+apps/web/components/report/sections/PairwiseVA.tsx
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 49-50,55
+apps/web/components/features/protocols/shared/tabs/ProductDeltaTab.tsx
+  s_5af6053cbf3544::t_1eae268689d4d2 301
+  s_5af6053cbf3544::t_81e6252ac34258 244,272
+apps/ml-worker/package.json
+  s_baa8fcdd5c9472::t_745d1cbdaa9518 8-9
+  s_baa8fcdd5c9472::t_0c4cb1e3b2cdc9 10
+apps/web/components/features/protocols/shared/tabs/DiffClusterLabTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 156,229,298,443,460,530
+apps/web/components/features/result/insight-engine/BestEngineMatrix.tsx
+  ai_agent 301
+apps/web/components/report/sections/MethodologySchematic.tsx
+  ai_agent 34-35,39
+apps/web/components/report/sections/ScientificProofLayer.tsx
+  ai_agent 32,35
+apps/web/components/features/result/social/TwitterBlocks.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 41
+apps/web/components/features/result/social/InstagramBlocks.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 43,113
+apps/web/lib/i18n/dictionary/result-4.ts
+  s_bd0d2ef3ba0760::t_27917f93622ffb 58-71
+  s_bd0d2ef3ba0760::t_ec1ad3b3c03cdb 26-39
+apps/web/lib/i18n/dictionary/common.ts
+  s_5af6053cbf3544::t_3aa78ae0754396 14
+  s_5af6053cbf3544::t_91d767c6569e1c 334
+apps/azure/monitor.sh
+  ai_agent 1-29
+apps/ml-worker/pyproject.toml
+  s_baa8fcdd5c9472::t_3533f60a9cc081 26-32
+apps/web/lib/worker/client.ts
+  s_baa8fcdd5c9472::t_afa70a3f35a9e2 84-87
+apps/ml-worker/habs_worker/features/color.py
+  ai_agent 1-54
+apps/ml-worker/habs_worker/features/youtube_api.py
+  ai_agent 1-471
+apps/web/components/features/pilote/SocialSynthesisCard.tsx
+  ai_agent 99
+apps/web/components/features/result/EyeTrackingPanel.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 147
+apps/ml-worker/habs_worker/features/pdf_pipeline.py
+  ai_agent 1-87
+apps/web/components/features/result/gaze/ZPatternExplainer.tsx
+  ai_agent 127
+apps/web/app/rapports/danone/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 39
+apps/ml-worker/habs_worker/features/audio_pipeline.py
+  ai_agent 1-135
+apps/ml-worker/habs_worker/sse.py
+  ai_agent 1-96
+apps/web/components/report/ReportActions.tsx
+  ai_agent 182,187,206,213
+apps/web/components/report/sections/ExecutiveSummary.tsx
+  ai_agent 44,46,49,52
+apps/web/components/features/result/social/TikTokBlocks.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 41,87
+apps/web/app/api/pilote/[id]/route.ts
+  s_5af6053cbf3544::t_899e3ab7355fcc 77
+apps/azure/provision.sh
+  ai_agent 1-198
+apps/web/components/features/pilote/SocialAccountsConnectCard.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 93
+apps/web/components/features/result/seven-dimensions/ImageSevenDimensionsView.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 80
+apps/web/app/globals.css
+  s_5af6053cbf3544::t_b1043bdc0f6166 345-378
+apps/web/components/features/protocols/shared/tabs/ClusterScatterExplorerTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 122
+apps/web/app/comparaison/[id]/page.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 35,54
+apps/ml-worker/habs_worker/features/caption.py
+  ai_agent 1-16
+apps/ml-worker/habs_worker/features/clip_probe.py
+  ai_agent 1-205
+apps/ml-worker/habs_worker/features/image_gaze_va_client.py
+  ai_agent 1-826
+apps/web/lib/services/detection.ts
+  s_5af6053cbf3544::t_f1b1a8067ee5f0 1-6,11-27,31-32,35
+apps/azure/deploy.sh
+  ai_agent 1-193
+apps/web/components/features/pilote/PiloteQA.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 62,84
+.gitignore
+  ai_agent 25-47
+apps/web/components/report/parts/SectionShell.tsx
+  ai_agent 53
+apps/web/components/features/result/seven-dimensions/video/SegmentDropAlert.tsx
+  s_bd0d2ef3ba0760::t_bc2df59e21b6ac 28
+  s_bd0d2ef3ba0760::t_d8b714e2c47b02 5,13
+  s_bd0d2ef3ba0760::t_b2660db96571d0 45-47,49
+apps/ml-worker/habs_worker/features/text_estimate.py
+  ai_agent 1-48
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_5af6053cbf3544::t_5fb96e1bbaddd4 184
+  s_5af6053cbf3544::t_2c97d4f16c6266 117-130
+  s_5af6053cbf3544::t_392e2fd2a2a6ea 492,533,574
+  s_5af6053cbf3544::t_81e6252ac34258 811
+  s_5af6053cbf3544::t_92570c1ca535ed 199
+apps/web/lib/i18n/dictionary/pilote-3.ts
+  s_5af6053cbf3544::t_4f508386ccd413 301
+  s_5af6053cbf3544::t_73bb77df49ac37 313
+  s_5af6053cbf3544::t_f1e1ff73608339 91
+  s_5af6053cbf3544::t_8bb39617298b33 103
+apps/web/components/features/result/InsightsTabs.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 27
+apps/web/components/features/result/SyntheseSection.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 58
+apps/web/components/features/result/HeroBlock.tsx
+  s_5af6053cbf3544::t_7bc6a73db6bf67 2,5,12,21
+  s_bd0d2ef3ba0760::t_959fb9a08a4ecc 131-157,159-160
+  s_5af6053cbf3544::t_0ac271d888e5d9 95
+  s_bd0d2ef3ba0760::t_a2863a0ee0d520 46-94,99
+  s_bd0d2ef3ba0760::t_c0f81c7d5f7f29 19-20
+apps/web/components/features/accueil/SelectionActionBar.tsx
+  s_5af6053cbf3544::t_67b10ff9386c75 2
+  s_5af6053cbf3544::t_314024508165b5 10
+apps/web/components/features/result/video/VideoAnalysisPlayer.tsx
+  s_bd0d2ef3ba0760::t_81dfb3e6bc9f98 2-3,5-6,10-13,15-16,20,23,25,27-39,42-44,46,48-51,55,57-60,62-65,67-70,72-75,77-78,81-105,108-117,119-155,159-160,165-169,172-175,179-196,198-203
+apps/web/components/features/result/SectionTitle.tsx
+  ai_agent 10
+apps/web/components/primitives/ScoreTile.tsx
+  ai_agent 52
+apps/web/components/features/pilote/BestCombinationCard.tsx
+  s_5af6053cbf3544::t_e8dbc9f7449e90 43
+  s_5af6053cbf3544::t_81e6252ac34258 44
+apps/web/app/pilote/[id]/sources/loading.tsx
+  s_5af6053cbf3544::t_53a7704692a8bf 6
+apps/web/app/home-client.tsx
+  s_5af6053cbf3544::t_e611e847d044b2 9,24
+apps/web/components/features/protocols/shared/tabs/CommercialDrilldownTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 149,258,268,306
+apps/web/components/features/pilote/SelfPresentationRecorder.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 265
+apps/web/components/primitives/KpiTile.tsx
+  ai_agent 39
+apps/web/components/report/sections/MethodologyVA.tsx
+  ai_agent 38,46,55
+apps/web/components/report/sections/RadarCharts.tsx
+  ai_agent 160
+apps/web/components/features/protocols/shared/tabs/CustomClusterBuilderTab.tsx
+  s_5af6053cbf3544::t_81e6252ac34258 322,409,433,466,510
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "9b6b194b76b67f43501f28360e230cf05bb5f4ff",
+  "prompts": {},
+  "sessions": {
+    "s_1898cbe4caec7a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c9caffa6-9c30-448f-9fd3-ddf62630a5b7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6b51a0038b32cf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2100b362-7d19-403d-8763-82b636952974",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_baa8fcdd5c9472": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3ae24ced-54b1-4aa4-86ad-70826743bf03",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_bd0d2ef3ba0760": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8c013609-fd55-4659-a223-adaf6bf23899",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ed84423845b887": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4e10b099-4ef9-485c-9398-b4030ad183b8",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
