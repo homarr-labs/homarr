@@ -12,8 +12,7 @@ export const buildIntegrationUrl = (
   mode: UrlTemplateMode,
   dockerPort?: number,
 ): string => {
-  let host = baseHost.trim();
-  while (host.endsWith("/")) host = host.slice(0, -1);
+  const host = baseHost.trim().replace(/\/+$/, "");
   if (!host) return "";
 
   const slug = getSlugForKind(kind);

@@ -3,8 +3,6 @@ import { createTheme } from "@mantine/core";
 import { primaryColor } from "./theme/colors/primary";
 import { secondaryColor } from "./theme/colors/secondary";
 
-const XXL_MODAL_SIZE = "75rem";
-
 export const theme = createTheme({
   colors: {
     primaryColor,
@@ -15,7 +13,7 @@ export const theme = createTheme({
     Modal: {
       vars: (_theme: unknown, props: { size?: string }) => {
         if (props.size === "xxl") {
-          return { root: { "--modal-size": XXL_MODAL_SIZE } };
+          return { root: { "--modal-size": "75rem" } };
         }
         return { root: {} };
       },
