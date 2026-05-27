@@ -31,6 +31,5 @@ scopeRangeRegex: "(?:const|let|var)\\s+t\\s*=\\s*(?:await\\s+)?(?:getScopedI18n|
 # refactorTemplates:
 #  - i18n.get("$1")
 
-
 # If set to true, only enables this custom framework (will disable all built-in frameworks)
 monopoly: true
