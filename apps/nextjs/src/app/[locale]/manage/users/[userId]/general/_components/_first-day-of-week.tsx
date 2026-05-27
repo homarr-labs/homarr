@@ -62,7 +62,7 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Radio.Group {...inputProps} value={value} onChange={(value) => onChange(parseInt(value))}>
+        <Radio.Group {...inputProps} value={value} onChange={(nextValue: string) => onChange(parseInt(nextValue, 10))}>
           <Group mt="xs">
             <Radio value="1" label={weekDays[1]} />
             <Radio value="6" label={weekDays[6]} />
