@@ -24,8 +24,6 @@ describe("getIntegrationApiKeyUrl", () => {
   });
 
   it("strips trailing slash from base URL", () => {
-    expect(getIntegrationApiKeyUrl("http://sonarr.local/", "sonarr")).toBe(
-      "http://sonarr.local/settings/general",
-    );
+    expect(getIntegrationApiKeyUrl("http://sonarr.local/", "sonarr")).toBe("http://sonarr.local/settings/general");
   });
 });

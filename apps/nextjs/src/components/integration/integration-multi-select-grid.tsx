@@ -34,18 +34,21 @@ export const IntegrationMultiSelectGrid = ({
 
   const toggleKind = useCallback(
     (kind: IntegrationKind) => {
-      const next = new Set(selectedKinds);
-      if (next.has(kind)) {
-        next.delete(kind);
+      const current = new Set(selectedKindsArray);
+      if (current.has(kind)) {
+        current.delete(kind);
       } else {
-        next.add(kind);
+        current.add(kind);
       }
-      onSelectionChange(Array.from(next));
+      onSelectionChange(Array.from(current));
     },
-    [selectedKinds, onSelectionChange],
+    [selectedKindsArray, onSelectionChange],
   );
 
-  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration, onboarding }), [enableMockIntegration, onboarding]);
+  const integrations = useMemo(
+    () => buildSortedIntegrations({ enableMockIntegration, onboarding }),
+    [enableMockIntegration, onboarding],
+  );
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (

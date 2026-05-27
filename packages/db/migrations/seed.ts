@@ -1,25 +1,19 @@
-import superjson from "superjson";
-
 import { createId, objectKeys } from "@homarr/common";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
   defaultBookmarkApps,
-  defaultWidgetConfigs,
-  emptySuperJSON,
   everyoneGroup,
   getIntegrationDefaultUrl,
   getIntegrationName,
-  getWidgetKindsForIntegration,
   integrationDefs,
   integrationKinds,
 } from "@homarr/definitions";
-import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
 import { eq } from "..";
-import { getMaxGroupPositionAsync } from "../queries";
+import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
@@ -31,9 +25,7 @@ import {
   groupMembers,
   groupPermissions,
   groups,
-  integrationItems,
   integrations,
-  itemLayouts,
   items,
   layouts,
   onboarding,
@@ -265,7 +257,7 @@ const seedDefaultBoardAsync = async (db: Database) => {
   await db.insert(layouts).values({
     id: createId(),
     name: "Base",
-    columnCount: 10,
+    columnCount: 12,
     breakpoint: 0,
     boardId,
   });
@@ -351,103 +343,12 @@ const seedBoardWidgetsAsync = async (db: Database) => {
   const allIntegrations = await db.query.integrations.findMany();
   const allApps = await db.query.apps.findMany();
 
-  const ctx = {
-    xOffset: 0,
-    yOffset: 0,
-    rowMaxHeight: 0,
-    columnCount: layout.columnCount,
-  };
+  const count = await placeAllWidgetsAsync(
+    db,
+    { boardId: board.id, sectionId: section.id, layoutId: layout.id, columnCount: layout.columnCount },
+    allIntegrations,
+    allApps,
+  );
 
-  const placedWidgets = new Set<WidgetKind>();
-  const widgetConfigMap = new Map(defaultWidgetConfigs.map((cfg) => [cfg.kind, cfg]));
-
-  const placeWidgetAsync = async (
-    kind: WidgetKind,
-    linkedIntegrationIds: string[],
-    options?: string,
-    size?: { width: number; height: number },
-  ) => {
-    const width = size?.width ?? 2;
-    const height = size?.height ?? 2;
-
-    if (ctx.xOffset + width > ctx.columnCount) {
-      ctx.xOffset = 0;
-      ctx.yOffset += ctx.rowMaxHeight;
-      ctx.rowMaxHeight = 0;
-    }
-
-    const itemId = createId();
-    await db.insert(items).values({
-      id: itemId,
-      boardId: board.id,
-      kind,
-      options: options ?? emptySuperJSON,
-      advancedOptions: emptySuperJSON,
-    });
-
-    await db.insert(itemLayouts).values({
-      itemId,
-      sectionId: section.id,
-      layoutId: layout.id,
-      xOffset: ctx.xOffset,
-      yOffset: ctx.yOffset,
-      width,
-      height,
-    });
-
-    for (const integrationId of linkedIntegrationIds) {
-      await db.insert(integrationItems).values({ itemId, integrationId });
-    }
-
-    ctx.rowMaxHeight = Math.max(ctx.rowMaxHeight, height);
-    ctx.xOffset += width;
-  };
-
-  for (const integration of allIntegrations) {
-    for (const widgetKind of getWidgetKindsForIntegration(integration.kind)) {
-      if (placedWidgets.has(widgetKind)) continue;
-      const config = widgetConfigMap.get(widgetKind);
-      if (config?.skip) continue;
-      placedWidgets.add(widgetKind);
-
-      const matchingIds = allIntegrations
-        .filter((row) => getWidgetKindsForIntegration(row.kind).includes(widgetKind))
-        .map((row) => row.id);
-
-      const options = config?.options ? superjson.stringify(config.options) : undefined;
-      await placeWidgetAsync(
-        widgetKind,
-        matchingIds,
-        options,
-        config && { width: config.width, height: config.height },
-      );
-    }
-  }
-
-  for (const app of allApps) {
-    await placeWidgetAsync("app", [], superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true }), {
-      width: 1,
-      height: 1,
-    });
-  }
-
-  const bookmarkAppNames = new Set(defaultBookmarkApps.map((bookmark) => bookmark.name));
-  const bookmarkAppIds = allApps.filter((app) => bookmarkAppNames.has(app.name)).map((app) => app.id);
-
-  for (const config of defaultWidgetConfigs) {
-    if (config.skip || placedWidgets.has(config.kind)) continue;
-    placedWidgets.add(config.kind);
-
-    let options = config.options ? { ...config.options } : undefined;
-    if (config.kind === "bookmarks" && bookmarkAppIds.length > 0) {
-      options = { ...options, items: bookmarkAppIds };
-    }
-
-    await placeWidgetAsync(config.kind, [], options ? superjson.stringify(options) : undefined, {
-      width: config.width,
-      height: config.height,
-    });
-  }
-
-  console.log(`Placed ${placedWidgets.size + allApps.length} widgets on board`);
+  console.log(`Placed ${count} widgets on board`);
 };

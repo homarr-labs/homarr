@@ -3,8 +3,7 @@ import { objectKeys } from "@homarr/common";
 import { integrationDefs } from "./integration";
 import type { IntegrationKind } from "./integration";
 
-export const extractContainerImageName = (image: string): string =>
-  image.split("/").at(-1)?.split(":").at(0) ?? "";
+export const extractContainerImageName = (image: string): string => image.split("/").at(-1)?.split(":").at(0) ?? "";
 
 const extractIconSlug = (iconUrl: string): string => {
   const filename = iconUrl.split("/").pop() ?? "";

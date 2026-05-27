@@ -14,7 +14,7 @@ import {
   ThemeIcon,
   UnstyledButton,
 } from "@mantine/core";
-import { IconChevronDown, IconBrandDocker } from "@tabler/icons-react";
+import { IconBrandDocker, IconChevronDown } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
@@ -128,21 +128,17 @@ export const DockerDiscoveryIndicator = ({
                 onChange={() => onToggleAllApps(!appsEnabled)}
                 styles={{ label: { fontSize: "var(--mantine-font-size-xs)" } }}
               />
-              {appsEnabled && apps.map((app) => (
-                <Group key={app.containerId} gap="xs" wrap="nowrap" py={2}>
-                  <Avatar
-                    size="xs"
-                    radius="sm"
-                    src={app.iconUrl}
-                    styles={{ image: { objectFit: "contain" } }}
-                  >
-                    {app.containerName.at(0)?.toUpperCase()}
-                  </Avatar>
-                  <Text size="xs" c="dimmed" lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
-                    {app.containerName}
-                  </Text>
-                </Group>
-              ))}
+              {appsEnabled &&
+                apps.map((app) => (
+                  <Group key={app.containerId} gap="xs" wrap="nowrap" py={2}>
+                    <Avatar size="xs" radius="sm" src={app.iconUrl} styles={{ image: { objectFit: "contain" } }}>
+                      {app.containerName.at(0)?.toUpperCase()}
+                    </Avatar>
+                    <Text size="xs" c="dimmed" lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
+                      {app.containerName}
+                    </Text>
+                  </Group>
+                ))}
             </>
           )}
         </Stack>

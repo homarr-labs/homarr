@@ -21,15 +21,14 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconArrowRight, IconSettings } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, UrlTemplateMode } from "@homarr/definitions";
 import { buildIntegrationUrl, getIntegrationName } from "@homarr/definitions";
-import type { UrlTemplateMode } from "@homarr/definitions";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import { IntegrationMultiSelectGrid } from "~/components/integration/integration-multi-select-grid";
-
 import { DockerDiscoveryIndicator } from "./docker-discovery-panel";
 
 type Phase = "select" | "configure" | "done";
@@ -69,7 +68,7 @@ export const InitIntegrations = () => {
 
   const dockerApplied = useRef(false);
   useEffect(() => {
-    if (!dockerData || dockerData.status !== "success" || dockerApplied.current) return;
+    if (dockerData?.status !== "success" || dockerApplied.current) return;
     dockerApplied.current = true;
 
     const newDrafts = new Map(drafts);
@@ -132,6 +131,10 @@ export const InitIntegrations = () => {
       await setupIntegrations();
       router.refresh();
     } catch {
+      showErrorNotification({
+        title: t("configure.error.title"),
+        message: t("configure.error.message"),
+      });
       setPhase("select");
     }
   };
@@ -192,7 +195,9 @@ export const InitIntegrations = () => {
         />
 
         <Stack gap="xs">
-          <Text size="sm" fw={500}>{t("urlTemplate.label")}</Text>
+          <Text size="sm" fw={500}>
+            {t("urlTemplate.label")}
+          </Text>
           <Group gap="sm" grow>
             <TextInput
               placeholder={t("urlTemplate.placeholder")}
@@ -216,7 +221,11 @@ export const InitIntegrations = () => {
           </Text>
         </Stack>
 
-        <IntegrationMultiSelectGrid selectedKinds={selectedKinds} onSelectionChange={handleSelectionChange} onboarding />
+        <IntegrationMultiSelectGrid
+          selectedKinds={selectedKinds}
+          onSelectionChange={handleSelectionChange}
+          onboarding
+        />
 
         <Group justify="space-between">
           <Button variant="subtle" onClick={() => void finishSetupAsync()}>
@@ -280,11 +289,7 @@ const ConfigurePhase = ({
             <Text fw={500}>{getIntegrationName(currentKind)}</Text>
           </Group>
           <Tooltip label={t("configure.helpers.tooltip")}>
-            <ActionIcon
-              variant={helpersOpen ? "light" : "subtle"}
-              color="gray"
-              onClick={toggleHelpers}
-            >
+            <ActionIcon variant={helpersOpen ? "light" : "subtle"} color="gray" onClick={toggleHelpers}>
               <IconSettings size={18} stroke={1.5} />
             </ActionIcon>
           </Tooltip>
@@ -298,7 +303,11 @@ const ConfigurePhase = ({
         </Stack>
 
         <Collapse in={helpersOpen}>
-          <Stack gap="xs" p="xs" style={{ background: "var(--mantine-color-default-hover)", borderRadius: "var(--mantine-radius-sm)" }}>
+          <Stack
+            gap="xs"
+            p="xs"
+            style={{ background: "var(--mantine-color-default-hover)", borderRadius: "var(--mantine-radius-sm)" }}
+          >
             <Text size="xs" c="dimmed">
               {t("configure.helpers.description")}
             </Text>
@@ -322,7 +331,9 @@ const ConfigurePhase = ({
             </Group>
             {baseHost && (
               <Text size="xs" c="dimmed">
-                {t("urlTemplate.preview", { example: buildIntegrationUrl(currentKind, baseHost, urlMode, draft?.dockerPort ?? undefined) })}
+                {t("urlTemplate.preview", {
+                  example: buildIntegrationUrl(currentKind, baseHost, urlMode, draft?.dockerPort ?? undefined),
+                })}
               </Text>
             )}
           </Stack>

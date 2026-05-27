@@ -63,17 +63,6 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-const onboardingFormSchema = z
-  .object({
-    name: z.string().nonempty().max(127),
-    url: z.string().nonempty(),
-    secrets: z.array(z.object({ kind: z.string(), value: z.string() })),
-    attemptSearchEngineCreation: z.boolean(),
-    hasApp: z.boolean(),
-    appHref: appHrefSchema,
-    appId: z.string().nullable(),
-  });
-
 export const NewIntegrationForm = ({
   kind,
   initialUrl,
@@ -93,7 +82,7 @@ export const NewIntegrationForm = ({
   if (hasUrlSecret) {
     url = "http://localhost";
   }
-  const form = useZodForm(isOnboarding ? onboardingFormSchema : formSchema, {
+  const form = useZodForm(formSchema, {
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,

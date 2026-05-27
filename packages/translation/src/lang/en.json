@@ -102,6 +102,10 @@
           "progress": "{current} of {total}",
           "skip": "Skip this integration",
           "finishing": "Setting up your dashboard...",
+          "error": {
+            "title": "Setup failed",
+            "message": "Something went wrong while setting up your dashboard. Please try again."
+          },
           "helpers": {
             "tooltip": "URL helpers",
             "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."

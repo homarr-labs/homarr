@@ -68,7 +68,9 @@ export interface IntegrationGridItem {
   widgets: WidgetKind[];
 }
 
-export const buildSortedIntegrations = (options: { enableMockIntegration?: boolean; onboarding?: boolean } = {}): IntegrationGridItem[] =>
+export const buildSortedIntegrations = (
+  options: { enableMockIntegration?: boolean; onboarding?: boolean } = {},
+): IntegrationGridItem[] =>
   integrationKinds
     .filter((kind) => {
       if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;

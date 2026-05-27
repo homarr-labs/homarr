@@ -1,11 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import superjson from "superjson";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
-import type { Database } from "@homarr/db";
 import { eq, like, or } from "@homarr/db";
+import { placeAllWidgetsAsync } from "@homarr/db/queries";
 import {
   apps,
   groups,
@@ -18,19 +17,15 @@ import {
   onboarding,
 } from "@homarr/db/schema";
 import {
-  defaultBookmarkApps,
-  defaultWidgetConfigs,
-  emptySuperJSON,
   everyoneGroup,
   extractContainerImageName,
   getIconUrl,
-  getWidgetKindsForIntegration,
   integrationKinds,
   integrationSecretKinds,
   matchIntegrationKindFromContainer,
   onboardingSteps,
 } from "@homarr/definitions";
-import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
 import { createTRPCRouter, onboardingProcedure, publicProcedure } from "../../trpc";
@@ -55,67 +50,6 @@ const buildSuggestedUrl = (ports: PortInfo[] | undefined, host: string): Suggest
     return { url: `http://${ip}:${port.PublicPort}`, publishedPort: port.PublicPort };
   }
   return { url: "", publishedPort: null };
-};
-
-const widgetConfigMap = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
-
-const getWidgetConfig = (kind: WidgetKind) => widgetConfigMap.get(kind);
-
-interface PlaceWidgetContext {
-  db: Database;
-  boardId: string;
-  sectionId: string;
-  layoutId: string;
-  columnCount: number;
-  xOffset: number;
-  yOffset: number;
-  rowMaxHeight: number;
-}
-
-const placeWidgetAsync = async (
-  ctx: PlaceWidgetContext,
-  kind: WidgetKind,
-  linkedIntegrationIds: string[],
-  options?: string,
-  size?: { width: number; height: number },
-) => {
-  const itemWidth = size?.width ?? 2;
-  const itemHeight = size?.height ?? 2;
-
-  if (ctx.xOffset + itemWidth > ctx.columnCount) {
-    ctx.xOffset = 0;
-    ctx.yOffset += ctx.rowMaxHeight;
-    ctx.rowMaxHeight = 0;
-  }
-
-  const itemId = createId();
-  await ctx.db.insert(items).values({
-    id: itemId,
-    boardId: ctx.boardId,
-    kind,
-    options: options ?? emptySuperJSON,
-    advancedOptions: emptySuperJSON,
-  });
-
-  await ctx.db.insert(itemLayouts).values({
-    itemId,
-    sectionId: ctx.sectionId,
-    layoutId: ctx.layoutId,
-    xOffset: ctx.xOffset,
-    yOffset: ctx.yOffset,
-    width: itemWidth,
-    height: itemHeight,
-  });
-
-  for (const integrationId of linkedIntegrationIds) {
-    await ctx.db.insert(integrationItems).values({
-      itemId,
-      integrationId,
-    });
-  }
-
-  ctx.rowMaxHeight = Math.max(ctx.rowMaxHeight, itemHeight);
-  ctx.xOffset += itemWidth;
 };
 
 export const onboardRouter = createTRPCRouter({
@@ -211,7 +145,14 @@ export const onboardRouter = createTRPCRouter({
     }),
   discoverDockerServices: onboardingProcedure.requiresStep("integrations").query(async ({ ctx }) => {
     const emptyResult = {
-      integrations: [] as { containerId: string; containerName: string; kind: IntegrationKind; suggestedUrl: string; publishedPort: number | null; iconUrl: string | null }[],
+      integrations: [] as {
+        containerId: string;
+        containerName: string;
+        kind: IntegrationKind;
+        suggestedUrl: string;
+        publishedPort: number | null;
+        iconUrl: string | null;
+      }[],
       apps: [] as { containerId: string; containerName: string; suggestedUrl: string; iconUrl: string | null }[],
     };
 
@@ -227,9 +168,7 @@ export const onboardRouter = createTRPCRouter({
       const results = await Promise.allSettled(
         dockerInstances.map(async ({ instance, host }) => {
           const containerList = await instance.listContainers({ all: true });
-          return containerList
-            .filter((c) => !(dockerLabels.hide in c.Labels))
-            .map((c) => ({ ...c, host }));
+          return containerList.filter((c) => !(dockerLabels.hide in c.Labels)).map((c) => ({ ...c, host }));
         }),
       );
 
@@ -240,9 +179,7 @@ export const onboardRouter = createTRPCRouter({
       }
 
       const likeQueries = containers.map((c) => like(icons.name, `%${extractContainerImageName(c.Image)}%`));
-      const dbIcons = likeQueries.length > 0
-        ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) })
-        : [];
+      const dbIcons = likeQueries.length > 0 ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) }) : [];
 
       const seenKinds = new Set<IntegrationKind>();
       const discoveredIntegrations = emptyResult.integrations;
@@ -346,68 +283,12 @@ export const onboardRouter = createTRPCRouter({
         await db.delete(items).where(eq(items.boardId, board.id));
       }
 
-      const widgetCtx: PlaceWidgetContext = {
+      await placeAllWidgetsAsync(
         db,
-        boardId: board.id,
-        sectionId: section.id,
-        layoutId: layout.id,
-        columnCount: layout.columnCount,
-        xOffset: 0,
-        yOffset: 0,
-        rowMaxHeight: 0,
-      };
-
-      const placedWidgets = new Set<WidgetKind>();
-
-      for (const integration of allIntegrations) {
-        for (const widgetKind of getWidgetKindsForIntegration(integration.kind)) {
-          if (placedWidgets.has(widgetKind)) continue;
-          const config = getWidgetConfig(widgetKind);
-          if (config?.skip) continue;
-          placedWidgets.add(widgetKind);
-
-          const matchingIds = allIntegrations
-            .filter((row) => getWidgetKindsForIntegration(row.kind).includes(widgetKind))
-            .map((row) => row.id);
-
-          const options = config?.options ? superjson.stringify(config.options) : undefined;
-          await placeWidgetAsync(
-            widgetCtx,
-            widgetKind,
-            matchingIds,
-            options,
-            config && {
-              width: config.width,
-              height: config.height,
-            },
-          );
-        }
-      }
-
-      for (const app of allApps) {
-        const appOptions = superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true });
-        await placeWidgetAsync(widgetCtx, "app", [], appOptions, { width: 1, height: 1 });
-      }
-
-      const bookmarkAppNames = new Set(defaultBookmarkApps.map((bookmark) => bookmark.name));
-      const bookmarkAppIds = allApps.filter((app) => bookmarkAppNames.has(app.name)).map((app) => app.id);
-
-      for (const config of defaultWidgetConfigs) {
-        if (config.skip) continue;
-        if (placedWidgets.has(config.kind)) continue;
-        placedWidgets.add(config.kind);
-
-        let options = config.options ? { ...config.options } : undefined;
-
-        if (config.kind === "bookmarks" && bookmarkAppIds.length > 0) {
-          options = { ...options, items: bookmarkAppIds };
-        }
-
-        await placeWidgetAsync(widgetCtx, config.kind, [], options ? superjson.stringify(options) : undefined, {
-          width: config.width,
-          height: config.height,
-        });
-      }
+        { boardId: board.id, sectionId: section.id, layoutId: layout.id, columnCount: layout.columnCount },
+        allIntegrations,
+        allApps,
+      );
     }
 
     await nextOnboardingStepAsync(db, undefined);

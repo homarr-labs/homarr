@@ -4,8 +4,7 @@ import { getIntegrationDefaultPort } from "./integration";
 
 export type UrlTemplateMode = "hostPort" | "subdomain";
 
-const getSlugForKind = (kind: IntegrationKind): string =>
-  integrationIconSlugs[kind] ?? kind.toLowerCase();
+const getSlugForKind = (kind: IntegrationKind): string => integrationIconSlugs[kind];
 
 export const buildIntegrationUrl = (
   kind: IntegrationKind,
