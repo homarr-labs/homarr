@@ -139,7 +139,7 @@ catalog:
   next-intl: 4.12.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  oxfmt: ^0.49.0
+  oxfmt: ^0.51.0
   oxlint: ^1.66.0
   pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
