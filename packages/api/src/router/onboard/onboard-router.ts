@@ -158,7 +158,6 @@ export const onboardRouter = createTRPCRouter({
 
     try {
       const { DockerSingleton, dockerLabels } = await import("@homarr/docker");
-      const { bestMatch } = await import("@homarr/common");
 
       const dockerInstances = DockerSingleton.getInstances();
       if (dockerInstances.length === 0) {
@@ -167,7 +166,7 @@ export const onboardRouter = createTRPCRouter({
 
       const results = await Promise.allSettled(
         dockerInstances.map(async ({ instance, host }) => {
-          const containerList = await instance.listContainers({ all: true });
+          const containerList = await instance.listContainers({ all: false });
           return containerList.filter((c) => !(dockerLabels.hide in c.Labels)).map((c) => ({ ...c, host }));
         }),
       );
@@ -188,11 +187,19 @@ export const onboardRouter = createTRPCRouter({
       const cdnIconUrl = (slug: string) =>
         `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
 
+      const strictIconMatch = (imageName: string) => {
+        const normalized = imageName.toLowerCase().trim();
+        if (normalized.length < 3) return null;
+        const exact = dbIcons.find((icon) => icon.name.toLowerCase() === normalized);
+        if (exact) return exact.url;
+        return dbIcons.find((icon) => icon.name.toLowerCase().startsWith(normalized))?.url ?? null;
+      };
+
       for (const container of containers) {
         const imageName = extractContainerImageName(container.Image);
         const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
-        const iconUrl =
-          bestMatch(imageName, dbIcons, (icon) => icon.name)?.url ?? cdnIconUrl(imageName.toLowerCase());
+        const dbIcon = strictIconMatch(imageName);
+        const iconUrl = dbIcon ?? cdnIconUrl(imageName.toLowerCase());
 
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
 
@@ -208,7 +215,7 @@ export const onboardRouter = createTRPCRouter({
             publishedPort,
             iconUrl,
           });
-        } else if (!kind) {
+        } else if (!kind && dbIcon) {
           discoveredApps.push({
             containerId: container.Id,
             containerName,
