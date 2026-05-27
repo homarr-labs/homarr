@@ -42,14 +42,14 @@ jobs:
       - name: Get changed files
         id: changed
         run: |
-          FILES=$(git diff --name-only --diff-filter=ACMR origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | tr '\n' ' ')
-          echo "files=$FILES" >> $GITHUB_OUTPUT
+          git diff --name-only --diff-filter=ACMR origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
+          echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
 
       - name: Auto-fix lint + format
-        if: steps.changed.outputs.files != ''
+        if: steps.changed.outputs.count != '0'
         run: |
-          pnpm exec oxlint --fix ${{ steps.changed.outputs.files }} || true
-          pnpm exec oxfmt --write ${{ steps.changed.outputs.files }}
+          xargs -r -a /tmp/changed-files pnpm exec oxlint --fix || true
+          xargs -r -a /tmp/changed-files pnpm exec oxfmt --write
 
       - name: Commit fixes
         uses: stefanzweifel/git-auto-commit-action@v5
