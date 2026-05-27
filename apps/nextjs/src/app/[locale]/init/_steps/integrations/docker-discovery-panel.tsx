@@ -7,6 +7,7 @@ import {
   Card,
   Collapse,
   Group,
+  Loader,
   Paper,
   ScrollArea,
   SimpleGrid,
@@ -43,6 +44,7 @@ interface DockerDiscoveryIndicatorProps {
   apps: DiscoveredApp[];
   selectedAppIds: Set<string>;
   onToggleApp: (containerId: string) => void;
+  isLoading: boolean;
 }
 
 const APP_CARD_HEIGHT = 80;
@@ -52,6 +54,7 @@ export const DockerDiscoveryIndicator = ({
   apps,
   selectedAppIds,
   onToggleApp,
+  isLoading,
 }: DockerDiscoveryIndicatorProps) => {
   const hasApps = apps.length > 0;
   const [expanded, setExpanded] = useState(false);
@@ -67,9 +70,38 @@ export const DockerDiscoveryIndicator = ({
   const t = useScopedI18n("init.step.integrations.docker");
   const totalCount = integrations.length + apps.length;
 
-  if (totalCount === 0) return null;
+  if (!isLoading && totalCount === 0) return null;
 
   const selectedAppCount = apps.filter((app) => selectedAppIds.has(app.containerId)).length;
+
+  if (isLoading) {
+    return (
+      <Paper
+        withBorder
+        p="sm"
+        radius="md"
+        style={{
+          borderColor: "var(--mantine-color-blue-4)",
+          background: "var(--mantine-color-blue-light)",
+        }}
+      >
+        <Group gap="sm" wrap="nowrap">
+          <ThemeIcon variant="light" color="blue" size="lg" radius="md">
+            <IconBrandDocker size={20} />
+          </ThemeIcon>
+          <Stack gap={0} style={{ flex: 1 }}>
+            <Text size="sm" fw={600}>
+              {t("scanning")}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {t("scanningDescription")}
+            </Text>
+          </Stack>
+          <Loader size="sm" color="blue" type="dots" />
+        </Group>
+      </Paper>
+    );
+  }
 
   return (
     <Paper

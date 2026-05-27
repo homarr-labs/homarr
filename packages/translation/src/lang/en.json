@@ -125,7 +125,9 @@
           "detected": "Docker detected {count} services",
           "detectedBreakdown": "{integrations} integrations · {apps} apps",
           "appBadge": "App",
-          "appSectionLabel": "Apps to add to dashboard ({count} selected)"
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
         }
       },
       "finish": {

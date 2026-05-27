@@ -56,10 +56,13 @@ export const InitIntegrations = () => {
   const { mutateAsync: setupIntegrations } = clientApi.onboard.setupIntegrations.useMutation();
   const { mutateAsync: createApps } = clientApi.onboard.createAppsFromDiscovery.useMutation();
 
-  const { data: dockerData } = clientApi.onboard.discoverDockerServices.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: dockerData, isPending: isDockerLoading } = clientApi.onboard.discoverDockerServices.useQuery(
+    undefined,
+    {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const dockerIntegrations = dockerData?.status === "success" ? dockerData.integrations : [];
   const dockerApps = dockerData?.status === "success" ? dockerData.apps : [];
@@ -206,6 +209,7 @@ export const InitIntegrations = () => {
           apps={dockerApps}
           selectedAppIds={selectedAppIds}
           onToggleApp={handleToggleApp}
+          isLoading={isDockerLoading}
         />
 
         <Stack gap="xs">
@@ -249,6 +253,7 @@ export const InitIntegrations = () => {
             onClick={handleContinueToConfig}
             disabled={selectedKinds.length === 0 || undefined}
             rightSection={<IconArrowRight size={16} stroke={1.5} />}
+            suppressHydrationWarning
           >
             {t("action.continue")} {selectedKinds.length > 0 && `(${selectedKinds.length})`}
           </Button>
