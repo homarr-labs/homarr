@@ -4,12 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts",
-    "./prefetch": "./src/prefetch.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
@@ -17,13 +11,18 @@
       ]
     }
   },
+  "exports": {
+    ".": "./index.ts",
+    "./errors": "./src/errors/component.tsx",
+    "./modals": "./src/modals/index.ts",
+    "./prefetch": "./src/prefetch.ts"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt --check .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
@@ -82,11 +81,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "catalog:",
-    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }
