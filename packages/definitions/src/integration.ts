@@ -474,7 +474,8 @@ export const getIntegrationDefaultPort = (kind: IntegrationKind): number | undef
 export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: IntegrationKind): string | null => {
   const definition = integrationDefs[kind];
   if (!("apiKeySettingsPath" in definition)) return null;
-  const base = integrationUrl.replace(/\/+$/, "");
+  let base = integrationUrl;
+  while (base.endsWith("/")) base = base.slice(0, -1);
   if (!base) return null;
   return `${base}${definition.apiKeySettingsPath}`;
 };
