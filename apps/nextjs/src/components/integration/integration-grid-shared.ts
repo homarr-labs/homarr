@@ -74,6 +74,7 @@ export const buildSortedIntegrations = (
   integrationKinds
     .filter((kind) => {
       if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
+      if (options.onboarding && widgetsByIntegration[kind].length === 0) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;
     })

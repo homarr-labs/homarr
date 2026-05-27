@@ -4,17 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Badge,
-  Checkbox,
+  Card,
   Collapse,
-  Divider,
   Group,
   Paper,
+  ScrollArea,
+  SimpleGrid,
   Stack,
   Text,
   ThemeIcon,
   UnstyledButton,
 } from "@mantine/core";
-import { IconBrandDocker, IconChevronDown } from "@tabler/icons-react";
+import { IconBrandDocker, IconCheck, IconChevronDown } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
@@ -40,30 +41,35 @@ export interface DiscoveredApp {
 interface DockerDiscoveryIndicatorProps {
   integrations: DiscoveredIntegration[];
   apps: DiscoveredApp[];
-  appsEnabled: boolean;
-  onToggleAllApps: (checked: boolean) => void;
+  selectedAppIds: Set<string>;
+  onToggleApp: (containerId: string) => void;
 }
+
+const APP_CARD_HEIGHT = 80;
 
 export const DockerDiscoveryIndicator = ({
   integrations,
   apps,
-  appsEnabled,
-  onToggleAllApps,
+  selectedAppIds,
+  onToggleApp,
 }: DockerDiscoveryIndicatorProps) => {
   const hasApps = apps.length > 0;
   const [expanded, setExpanded] = useState(false);
 
   const expandedOnce = useRef(false);
   useEffect(() => {
-    if (hasApps && !expandedOnce.current) {
+    if ((hasApps || integrations.length > 0) && !expandedOnce.current) {
       expandedOnce.current = true;
       setExpanded(true);
     }
-  }, [hasApps]);
+  }, [hasApps, integrations.length]);
+
   const t = useScopedI18n("init.step.integrations.docker");
   const totalCount = integrations.length + apps.length;
 
   if (totalCount === 0) return null;
+
+  const selectedAppCount = apps.filter((app) => selectedAppIds.has(app.containerId)).length;
 
   return (
     <Paper
@@ -75,7 +81,7 @@ export const DockerDiscoveryIndicator = ({
         background: "var(--mantine-color-blue-light)",
       }}
     >
-      <UnstyledButton onClick={() => setExpanded((v) => !v)} w="100%">
+      <UnstyledButton onClick={() => setExpanded((prev) => !prev)} w="100%">
         <Group justify="space-between" wrap="nowrap">
           <Group gap="sm" wrap="nowrap">
             <ThemeIcon variant="light" color="blue" size="lg" radius="md">
@@ -105,41 +111,63 @@ export const DockerDiscoveryIndicator = ({
       </UnstyledButton>
 
       <Collapse in={expanded}>
-        <Stack gap={4} mt="sm">
-          {integrations.map((integration) => (
-            <Group key={integration.containerId} gap="xs" wrap="nowrap" py={2}>
-              <IntegrationAvatar kind={integration.kind} size="xs" />
-              <Text size="xs" fw={500} lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
-                {integration.containerName}
-              </Text>
-              <Badge size="xs" variant="light" color="blue">
-                {getIntegrationName(integration.kind)}
-              </Badge>
-            </Group>
-          ))}
+        <Stack gap="xs" mt="sm">
+          {integrations.length > 0 && (
+            <Stack gap={4}>
+              {integrations.map((integration) => (
+                <Group key={integration.containerId} gap="xs" wrap="nowrap" py={2}>
+                  <IntegrationAvatar kind={integration.kind} size="xs" />
+                  <Text size="xs" fw={500} lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
+                    {integration.containerName}
+                  </Text>
+                  <Badge size="xs" variant="light" color="blue">
+                    {getIntegrationName(integration.kind)}
+                  </Badge>
+                </Group>
+              ))}
+            </Stack>
+          )}
 
           {hasApps && (
-            <>
-              {integrations.length > 0 && <Divider my={4} />}
-              <Checkbox
-                size="xs"
-                label={t("appSectionLabel", { count: String(apps.length) })}
-                checked={appsEnabled}
-                onChange={() => onToggleAllApps(!appsEnabled)}
-                styles={{ label: { fontSize: "var(--mantine-font-size-xs)" } }}
-              />
-              {appsEnabled &&
-                apps.map((app) => (
-                  <Group key={app.containerId} gap="xs" wrap="nowrap" py={2}>
-                    <Avatar size="xs" radius="sm" src={app.iconUrl} styles={{ image: { objectFit: "contain" } }}>
-                      {app.containerName.at(0)?.toUpperCase()}
-                    </Avatar>
-                    <Text size="xs" c="dimmed" lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
-                      {app.containerName}
-                    </Text>
-                  </Group>
-                ))}
-            </>
+            <Stack gap="xs">
+              <Text size="xs" fw={500}>
+                {t("appSectionLabel", { count: String(selectedAppCount) })}
+              </Text>
+              <ScrollArea.Autosize mah="30vh">
+                <SimpleGrid cols={{ base: 3, xs: 4, sm: 5 }} spacing="xs">
+                  {apps.map((app) => {
+                    const isSelected = selectedAppIds.has(app.containerId);
+                    return (
+                      <Card
+                        key={app.containerId}
+                        h={APP_CARD_HEIGHT}
+                        p="xs"
+                        withBorder
+                        style={{
+                          cursor: "pointer",
+                          borderColor: isSelected ? "var(--mantine-color-blue-6)" : undefined,
+                          borderWidth: isSelected ? 2 : undefined,
+                          opacity: isSelected ? 1 : 0.6,
+                        }}
+                        onClick={() => onToggleApp(app.containerId)}
+                      >
+                        <Stack justify="space-between" h="100%" gap={4} align="center">
+                          <Group justify="space-between" w="100%" wrap="nowrap">
+                            <Text size="xs" fw={500} lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
+                              {app.containerName}
+                            </Text>
+                            {isSelected && <IconCheck size={14} color="var(--mantine-color-blue-6)" />}
+                          </Group>
+                          <Avatar size="sm" radius="sm" src={app.iconUrl} styles={{ image: { objectFit: "contain" } }}>
+                            {app.containerName.at(0)?.toUpperCase()}
+                          </Avatar>
+                        </Stack>
+                      </Card>
+                    );
+                  })}
+                </SimpleGrid>
+              </ScrollArea.Autosize>
+            </Stack>
           )}
         </Stack>
       </Collapse>

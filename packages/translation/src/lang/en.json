@@ -125,7 +125,7 @@
           "detected": "Docker detected {count} services",
           "detectedBreakdown": "{integrations} integrations · {apps} apps",
           "appBadge": "App",
-          "appSectionLabel": "Also add {count} apps to dashboard"
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)"
         }
       },
       "finish": {

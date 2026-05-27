@@ -64,7 +64,7 @@ export const InitIntegrations = () => {
   const dockerIntegrations = dockerData?.status === "success" ? dockerData.integrations : [];
   const dockerApps = dockerData?.status === "success" ? dockerData.apps : [];
 
-  const [addDockerApps, setAddDockerApps] = useState(true);
+  const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
 
   const dockerApplied = useRef(false);
   useEffect(() => {
@@ -89,10 +89,23 @@ export const InitIntegrations = () => {
 
     setDrafts(newDrafts);
     setSelectedKinds(Array.from(newKinds));
+    setSelectedAppIds(new Set(dockerData.apps.map((app) => app.containerId)));
   }, [dockerData]);
 
   const handleSelectionChange = useCallback((kinds: IntegrationKind[]) => {
     setSelectedKinds(kinds);
+  }, []);
+
+  const handleToggleApp = useCallback((containerId: string) => {
+    setSelectedAppIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(containerId)) {
+        next.delete(containerId);
+      } else {
+        next.add(containerId);
+      }
+      return next;
+    });
   }, []);
 
   const handleContinueToConfig = () => {
@@ -119,9 +132,10 @@ export const InitIntegrations = () => {
   const finishSetupAsync = async () => {
     setPhase("done");
     try {
-      if (addDockerApps && dockerApps.length > 0) {
+      const appsToCreate = dockerApps.filter((app) => selectedAppIds.has(app.containerId));
+      if (appsToCreate.length > 0) {
         await createApps(
-          dockerApps.map((app) => ({
+          appsToCreate.map((app) => ({
             name: app.containerName,
             href: app.suggestedUrl || null,
             iconUrl: app.iconUrl,
@@ -190,8 +204,8 @@ export const InitIntegrations = () => {
         <DockerDiscoveryIndicator
           integrations={dockerIntegrations}
           apps={dockerApps}
-          appsEnabled={addDockerApps}
-          onToggleAllApps={setAddDockerApps}
+          selectedAppIds={selectedAppIds}
+          onToggleApp={handleToggleApp}
         />
 
         <Stack gap="xs">
