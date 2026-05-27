@@ -4,6 +4,13 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
   "exports": {
     ".": "./index.ts",
     "./client": "./src/client/index.ts",
@@ -12,20 +19,12 @@
     "./request": "./src/request.ts",
     "./dayjs": "./src/dayjs.ts"
   },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
-  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt --check .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
@@ -38,10 +37,7 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }
