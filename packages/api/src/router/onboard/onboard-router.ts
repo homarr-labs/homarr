@@ -204,7 +204,7 @@ export const onboardRouter = createTRPCRouter({
             publishedPort,
             iconUrl,
           });
-        } else if (!kind && iconUrl) {
+        } else if (!kind) {
           discoveredApps.push({
             containerId: container.Id,
             containerName,
