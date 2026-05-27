@@ -29,7 +29,10 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
 import { createTRPCRouter, onboardingProcedure, publicProcedure } from "../../trpc";
-import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
+import {
+  MissingSecretError,
+  testConnectionAsync,
+} from "../integration/integration-test-connection";
 import { mapTestConnectionError } from "../integration/map-test-connection-error";
 import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard-queries";
 
@@ -143,93 +146,119 @@ export const onboardRouter = createTRPCRouter({
         );
       }
     }),
-  discoverDockerServices: onboardingProcedure.requiresStep("integrations").query(async ({ ctx }) => {
-    const emptyResult = {
-      integrations: [] as {
-        containerId: string;
-        containerName: string;
-        kind: IntegrationKind;
-        suggestedUrl: string;
-        publishedPort: number | null;
-        iconUrl: string | null;
-      }[],
-      apps: [] as { containerId: string; containerName: string; suggestedUrl: string; iconUrl: string | null }[],
-    };
-
-    try {
-      const { DockerSingleton, dockerLabels } = await import("@homarr/docker");
-
-      const dockerInstances = DockerSingleton.getInstances();
-      if (dockerInstances.length === 0) {
-        return { status: "empty" as const, ...emptyResult };
-      }
-
-      const results = await Promise.allSettled(
-        dockerInstances.map(async ({ instance, host }) => {
-          const containerList = await instance.listContainers({ all: false });
-          return containerList.filter((c) => !(dockerLabels.hide in c.Labels)).map((c) => ({ ...c, host }));
-        }),
-      );
-
-      const containers = results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
-
-      if (containers.length === 0) {
-        return { status: "empty" as const, ...emptyResult };
-      }
-
-      const likeQueries = containers.map((c) => like(icons.name, `%${extractContainerImageName(c.Image)}%`));
-      const dbIcons = likeQueries.length > 0 ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) }) : [];
-
-      const seenKinds = new Set<IntegrationKind>();
-      const discoveredIntegrations = emptyResult.integrations;
-      const discoveredApps = emptyResult.apps;
-
-      const cdnIconUrl = (slug: string) =>
-        `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
-
-      const strictIconMatch = (imageName: string) => {
-        const normalized = imageName.toLowerCase().trim();
-        if (normalized.length < 3) return null;
-        const exact = dbIcons.find((icon) => icon.name.toLowerCase() === normalized);
-        if (exact) return exact.url;
-        return dbIcons.find((icon) => icon.name.toLowerCase().startsWith(normalized))?.url ?? null;
+  discoverDockerServices: onboardingProcedure
+    .requiresStep("integrations")
+    .query(async ({ ctx }) => {
+      const emptyResult = {
+        integrations: [] as {
+          containerId: string;
+          containerName: string;
+          kind: IntegrationKind;
+          suggestedUrl: string;
+          publishedPort: number | null;
+          iconUrl: string | null;
+        }[],
+        apps: [] as {
+          containerId: string;
+          containerName: string;
+          suggestedUrl: string;
+          iconUrl: string | null;
+        }[],
       };
 
-      for (const container of containers) {
-        const imageName = extractContainerImageName(container.Image);
-        const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
-        const dbIcon = strictIconMatch(imageName);
-        const iconUrl = dbIcon ?? cdnIconUrl(imageName.toLowerCase());
+      try {
+        const { DockerSingleton, dockerLabels } = await import("@homarr/docker");
 
-        const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
-
-        const kind = matchIntegrationKindFromContainer({ image: container.Image, name: containerName });
-
-        if (kind && !seenKinds.has(kind)) {
-          seenKinds.add(kind);
-          discoveredIntegrations.push({
-            containerId: container.Id,
-            containerName,
-            kind,
-            suggestedUrl,
-            publishedPort,
-            iconUrl,
-          });
-        } else if (!kind && dbIcon) {
-          discoveredApps.push({
-            containerId: container.Id,
-            containerName,
-            suggestedUrl,
-            iconUrl,
-          });
+        const dockerInstances = DockerSingleton.getInstances();
+        if (dockerInstances.length === 0) {
+          return { status: "empty" as const, ...emptyResult };
         }
-      }
 
-      return { status: "success" as const, integrations: discoveredIntegrations, apps: discoveredApps };
-    } catch {
-      return { status: "unavailable" as const, ...emptyResult };
-    }
-  }),
+        const results = await Promise.allSettled(
+          dockerInstances.map(async ({ instance, host }) => {
+            const containerList = await instance.listContainers({ all: false });
+            return containerList
+              .filter((c) => !(dockerLabels.hide in c.Labels))
+              .map((c) => ({ ...c, host }));
+          }),
+        );
+
+        const containers = results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
+
+        if (containers.length === 0) {
+          return { status: "empty" as const, ...emptyResult };
+        }
+
+        const likeQueries = containers.map((c) =>
+          like(icons.name, `%${extractContainerImageName(c.Image)}%`),
+        );
+        const dbIcons =
+          likeQueries.length > 0
+            ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) })
+            : [];
+
+        const seenKinds = new Set<IntegrationKind>();
+        const discoveredIntegrations = emptyResult.integrations;
+        const discoveredApps = emptyResult.apps;
+
+        const cdnIconUrl = (slug: string) =>
+          `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
+
+        const strictIconMatch = (imageName: string) => {
+          const normalized = imageName.toLowerCase().trim();
+          if (normalized.length < 3) return null;
+          const exact = dbIcons.find((icon) => icon.name.toLowerCase() === normalized);
+          if (exact) return exact.url;
+          return (
+            dbIcons.find((icon) => icon.name.toLowerCase().startsWith(normalized))?.url ?? null
+          );
+        };
+
+        for (const container of containers) {
+          const imageName = extractContainerImageName(container.Image);
+          const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
+          const dbIcon = strictIconMatch(imageName);
+          const iconUrl = dbIcon ?? cdnIconUrl(imageName.toLowerCase());
+
+          const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(
+            container.Ports,
+            container.host,
+          );
+
+          const kind = matchIntegrationKindFromContainer({
+            image: container.Image,
+            name: containerName,
+          });
+
+          if (kind && !seenKinds.has(kind)) {
+            seenKinds.add(kind);
+            discoveredIntegrations.push({
+              containerId: container.Id,
+              containerName,
+              kind,
+              suggestedUrl,
+              publishedPort,
+              iconUrl,
+            });
+          } else if (!kind && dbIcon) {
+            discoveredApps.push({
+              containerId: container.Id,
+              containerName,
+              suggestedUrl,
+              iconUrl,
+            });
+          }
+        }
+
+        return {
+          status: "success" as const,
+          integrations: discoveredIntegrations,
+          apps: discoveredApps,
+        };
+      } catch {
+        return { status: "unavailable" as const, ...emptyResult };
+      }
+    }),
   createAppsFromDiscovery: onboardingProcedure
     .requiresStep("integrations")
     .input(
@@ -243,7 +272,8 @@ export const onboardRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if (input.length === 0) return;
-      const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
+      const defaultIcon =
+        "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
       await ctx.db.insert(apps).values(
         input.map((app) => ({
           id: createId(),
@@ -276,7 +306,10 @@ export const onboardRouter = createTRPCRouter({
       where: eq(groups.name, everyoneGroup),
     });
     if (everyoneGroupRow && !everyoneGroupRow.homeBoardId) {
-      await db.update(groups).set({ homeBoardId: board.id }).where(eq(groups.id, everyoneGroupRow.id));
+      await db
+        .update(groups)
+        .set({ homeBoardId: board.id })
+        .where(eq(groups.id, everyoneGroupRow.id));
     }
 
     const section = board.sections.find((boardSection) => boardSection.kind === "empty");
@@ -296,7 +329,12 @@ export const onboardRouter = createTRPCRouter({
 
       await placeAllWidgetsAsync(
         db,
-        { boardId: board.id, sectionId: section.id, layoutId: layout.id, columnCount: layout.columnCount },
+        {
+          boardId: board.id,
+          sectionId: section.id,
+          layoutId: layout.id,
+          columnCount: layout.columnCount,
+        },
         allIntegrations,
         allApps,
       );
