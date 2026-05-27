@@ -52,7 +52,7 @@ jobs:
           pnpm exec oxfmt --write ${{ steps.changed.outputs.files }}
 
       - name: Commit fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "style: auto-fix lint and format"
 
