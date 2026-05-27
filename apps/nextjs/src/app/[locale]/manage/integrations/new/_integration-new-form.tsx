@@ -3,6 +3,7 @@
 import { startTransition, useState } from "react";
 import {
   Alert,
+  Anchor,
   Button,
   Checkbox,
   Collapse,
@@ -15,7 +16,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconCheck, IconExternalLink, IconInfoCircle, IconKey } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -26,6 +27,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
   getIconUrl,
+  getIntegrationApiKeyUrl,
   getIntegrationDefaultUrl,
   getIntegrationName,
   integrationDefs,
@@ -61,6 +63,17 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
+const onboardingFormSchema = z
+  .object({
+    name: z.string().nonempty().max(127),
+    url: z.string().nonempty(),
+    secrets: z.array(z.object({ kind: z.string(), value: z.string() })),
+    attemptSearchEngineCreation: z.boolean(),
+    hasApp: z.boolean(),
+    appHref: appHrefSchema,
+    appId: z.string().nullable(),
+  });
+
 export const NewIntegrationForm = ({
   kind,
   initialUrl,
@@ -80,7 +93,7 @@ export const NewIntegrationForm = ({
   if (hasUrlSecret) {
     url = "http://localhost";
   }
-  const form = useZodForm(formSchema, {
+  const form = useZodForm(isOnboarding ? onboardingFormSchema : formSchema, {
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,
@@ -190,6 +203,7 @@ export const NewIntegrationForm = ({
                 <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
               </Alert>
             )}
+            <ApiKeySettingsLink kind={kind} url={form.values.url} />
           </Stack>
         </Fieldset>
 
@@ -289,6 +303,40 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
         </Fieldset>
       </Collapse>
     </>
+  );
+};
+
+const normalizeUrl = (raw: string): string | null => {
+  try {
+    return new URL(raw).href;
+  } catch {
+    // Bare IP / hostname — prepend http:// and retry
+  }
+  try {
+    return new URL(`http://${raw}`).href;
+  } catch {
+    return null;
+  }
+};
+
+const ApiKeySettingsLink = ({ kind, url }: { kind: IntegrationKind; url: string }) => {
+  const t = useI18n();
+  const apiKeyUrl = getIntegrationApiKeyUrl(url, kind);
+  if (!apiKeyUrl) return null;
+
+  const resolved = normalizeUrl(url);
+  if (!resolved) return null;
+
+  const fullApiKeyUrl = getIntegrationApiKeyUrl(resolved, kind);
+
+  return (
+    <Anchor href={fullApiKeyUrl ?? apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
+      <Group gap={4}>
+        <IconKey size={14} stroke={1.5} />
+        <Text size="sm">{t("integration.field.apiKeySettings.label")}</Text>
+        <IconExternalLink size={14} stroke={1.5} />
+      </Group>
+    </Anchor>
   );
 };
 

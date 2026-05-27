@@ -1,6 +1,12 @@
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { featuredIntegrations, getIntegrationName, integrationDefs, integrationKinds } from "@homarr/definitions";
+import {
+  featuredIntegrations,
+  getIntegrationName,
+  hiddenFromOnboarding,
+  integrationDefs,
+  integrationKinds,
+} from "@homarr/definitions";
 import { widgetImports } from "@homarr/widgets";
 
 export const CARD_HEIGHT = 180;
@@ -62,9 +68,13 @@ export interface IntegrationGridItem {
   widgets: WidgetKind[];
 }
 
-export const buildSortedIntegrations = (enableMockIntegration: boolean): IntegrationGridItem[] =>
+export const buildSortedIntegrations = (options: { enableMockIntegration?: boolean; onboarding?: boolean } = {}): IntegrationGridItem[] =>
   integrationKinds
-    .filter((kind) => enableMockIntegration || kind !== "mock")
+    .filter((kind) => {
+      if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
+      if (!options.enableMockIntegration && kind === "mock") return false;
+      return true;
+    })
     .map((kind) => ({
       kind,
       name: getIntegrationName(kind),

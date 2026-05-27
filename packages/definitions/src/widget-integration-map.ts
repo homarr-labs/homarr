@@ -76,6 +76,19 @@ export const featuredIntegrations: readonly IntegrationKind[] = [
   "jellyfin",
 ];
 
+export const hiddenFromOnboarding = new Set<IntegrationKind>([
+  "searchCh",
+  "github",
+  "dockerHub",
+  "gitlab",
+  "npm",
+  "codeberg",
+  "linuxServerIO",
+  "gitHubContainerRegistry",
+  "quay",
+  "mock",
+]);
+
 export const defaultBookmarkApps = [
   {
     name: "Homarr Docs",

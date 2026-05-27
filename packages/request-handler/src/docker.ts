@@ -7,6 +7,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
@@ -23,7 +24,7 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(20, "seconds"),
 });
 
-const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);
 
 async function getContainersWithStatsAsync() {
   const dockerInstances = DockerSingleton.getInstances();

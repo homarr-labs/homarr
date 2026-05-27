@@ -101,7 +101,27 @@
         "configure": {
           "progress": "{current} of {total}",
           "skip": "Skip this integration",
-          "finishing": "Setting up your dashboard..."
+          "finishing": "Setting up your dashboard...",
+          "helpers": {
+            "tooltip": "URL helpers",
+            "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "preview": "e.g. {example}",
+          "mode": {
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "appBadge": "App",
+          "appSectionLabel": "Also add {count} apps to dashboard"
         }
       },
       "finish": {
@@ -744,6 +764,9 @@
       },
       "appHref": {
         "placeholder": "Custom application URL"
+      },
+      "apiKeySettings": {
+        "label": "Get API key"
       }
     },
     "action": {

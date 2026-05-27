@@ -24,7 +24,7 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
   const [search, setSearch] = useState("");
   const t = useI18n();
 
-  const integrations = useMemo(() => buildSortedIntegrations(enableMockIntegration), [enableMockIntegration]);
+  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration }), [enableMockIntegration]);
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (

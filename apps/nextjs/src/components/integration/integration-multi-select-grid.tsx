@@ -16,18 +16,20 @@ import {
 } from "./integration-grid-shared";
 
 interface IntegrationMultiSelectGridProps {
+  selectedKinds: IntegrationKind[];
   onSelectionChange: (kinds: IntegrationKind[]) => void;
-  initialSelection?: IntegrationKind[];
   enableMockIntegration?: boolean;
+  onboarding?: boolean;
 }
 
 export const IntegrationMultiSelectGrid = ({
+  selectedKinds: selectedKindsArray,
   onSelectionChange,
-  initialSelection = [],
   enableMockIntegration = false,
+  onboarding = false,
 }: IntegrationMultiSelectGridProps) => {
   const [search, setSearch] = useState("");
-  const [selectedKinds, setSelectedKinds] = useState<Set<IntegrationKind>>(() => new Set(initialSelection));
+  const selectedKinds = useMemo(() => new Set(selectedKindsArray), [selectedKindsArray]);
   const t = useI18n();
 
   const toggleKind = useCallback(
@@ -38,13 +40,12 @@ export const IntegrationMultiSelectGrid = ({
       } else {
         next.add(kind);
       }
-      setSelectedKinds(next);
       onSelectionChange(Array.from(next));
     },
     [selectedKinds, onSelectionChange],
   );
 
-  const integrations = useMemo(() => buildSortedIntegrations(enableMockIntegration), [enableMockIntegration]);
+  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration, onboarding }), [enableMockIntegration, onboarding]);
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
