@@ -185,10 +185,14 @@ export const onboardRouter = createTRPCRouter({
       const discoveredIntegrations = emptyResult.integrations;
       const discoveredApps = emptyResult.apps;
 
+      const cdnIconUrl = (slug: string) =>
+        `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
+
       for (const container of containers) {
         const imageName = extractContainerImageName(container.Image);
         const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
-        const iconUrl = bestMatch(imageName, dbIcons, (icon) => icon.name)?.url ?? null;
+        const iconUrl =
+          bestMatch(imageName, dbIcons, (icon) => icon.name)?.url ?? cdnIconUrl(imageName.toLowerCase());
 
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
 
