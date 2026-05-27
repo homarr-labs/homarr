@@ -1,6 +1,6 @@
-import type { RefObject } from "react";
+import type { Ref, RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
-import { useElementSize } from "@mantine/hooks";
+import { useElementSize, useMergedRef } from "@mantine/hooks";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
@@ -13,7 +13,7 @@ import { useSectionActions } from "../section-actions";
 import { initializeGridstack } from "./init-gridstack";
 
 export interface UseGridstackRefs {
-  wrapper: RefObject<HTMLDivElement | null>;
+  wrapper: Ref<HTMLDivElement | null>;
   items: RefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
   gridstack: RefObject<GridStack | null>;
 }
@@ -59,8 +59,9 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
   const { moveAndResizeInnerSection, moveInnerSectionToSection } = useSectionActions();
 
-  // define reference for wrapper - is used to calculate the width of the wrapper
-  const { ref: wrapperRef, width, height } = useElementSize<HTMLDivElement>();
+  const wrapperElementRef = useRef<HTMLDivElement | null>(null);
+  const { ref: measureWrapperRef, width, height } = useElementSize<HTMLDivElement>();
+  const wrapperRef = useMergedRef(measureWrapperRef, wrapperElementRef);
   // references to the diffrent items contained in the gridstack
   const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement | null>>>({});
   // reference of the gridstack object for modifications after initialization
@@ -193,7 +194,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       itemIds,
       refs: {
         items: itemRefs,
-        wrapper: wrapperRef,
+        wrapper: wrapperElementRef,
         gridstack: gridRef,
       },
       sectionColumnCount: columnCount,
@@ -276,7 +277,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   useCssVariableConfiguration({
     columnCount,
     gridRef,
-    wrapperRef,
+    wrapperRef: wrapperElementRef,
     width,
     height,
     isDynamic: section.kind === "dynamic",
@@ -293,7 +294,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
 interface UseCssVariableConfiguration {
   gridRef: UseGridstackRefs["gridstack"];
-  wrapperRef: UseGridstackRefs["wrapper"];
+  wrapperRef: RefObject<HTMLDivElement | null>;
   width: number;
   height: number;
   columnCount: number;

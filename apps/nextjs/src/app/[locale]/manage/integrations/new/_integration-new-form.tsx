@@ -255,7 +255,7 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
         description={t("integration.field.createApp.description")}
       />
 
-      <Collapse in={form.values.hasApp}>
+      <Collapse expanded={form.values.hasApp}>
         <Fieldset legend={t("integration.field.app.sectionTitle")}>
           <Stack gap="sm">
             {canCreateApps && (

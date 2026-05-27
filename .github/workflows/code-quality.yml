@@ -24,6 +24,38 @@ env:
   TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
+  lint-format-autofix:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Get changed files
+        id: changed
+        run: |
+          git diff --name-only --diff-filter=ACMR origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
+          echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
+
+      - name: Auto-fix lint + format
+        if: steps.changed.outputs.count != '0'
+        run: |
+          xargs -r -a /tmp/changed-files pnpm exec oxlint --fix || true
+          xargs -r -a /tmp/changed-files pnpm exec oxfmt --write
+
+      - name: Commit fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-fix lint and format"
+
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -54,7 +86,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Format
-        run: pnpm turbo format --affected --continue -- --cache --cache-location node_modules/.cache/.prettiercache
+        run: pnpm turbo format --affected --continue
 
   typecheck:
     runs-on: ubuntu-latest

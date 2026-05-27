@@ -41,13 +41,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
-      const session = await auth();
-      const integrations = await getIntegrationsWithPermissionsAsync(session);
-
-      const board = await getInitialBoard(await params);
+      const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      // Prefetch item data
+      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
         if (existing) {
@@ -58,17 +56,20 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         return acc;
       }, new Map<WidgetKind, Item[]>());
 
-      for (const [kind, items] of itemsMap) {
-        await prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-          logger.error(
-            new ErrorWithMetadata(
-              "Failed to prefetch widget",
-              { widgetKind: kind, itemCount: items.length },
-              { cause: error },
-            ),
-          );
-        });
-      }
+      const [integrations] = await Promise.all([
+        getIntegrationsWithPermissionsAsync(session),
+        ...Array.from(itemsMap).map(([kind, items]) =>
+          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
+            logger.error(
+              new ErrorWithMetadata(
+                "Failed to prefetch widget",
+                { widgetKind: kind, itemCount: items.length },
+                { cause: error },
+              ),
+            );
+          }),
+        ),
+      ]);
 
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
