@@ -12,16 +12,7 @@ export const CommonNavLink = (props: ClientNavigationLink) =>
 const NavLinkHref = (props: NavigationLinkHref) => {
   const pathname = usePathname();
   return props.external ? (
-    <NavLink
-      component="a"
-      label={props.label}
-      leftSection={props.icon}
-      href={props.href}
-      style={{
-        borderRadius: 5,
-      }}
-      target="_blank"
-    />
+    <NavLink component="a" label={props.label} leftSection={props.icon} href={props.href} target="_blank" />
   ) : (
     <NavLink
       component={Link}
@@ -29,9 +20,6 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       leftSection={props.icon}
       href={props.href}
       active={pathname === props.href}
-      style={{
-        borderRadius: 5,
-      }}
     />
   );
 };
@@ -40,14 +28,7 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   const pathname = usePathname();
   const isActive = props.items.some((item) => item.href === pathname);
   return (
-    <NavLink
-      style={{
-        borderRadius: 5,
-      }}
-      label={props.label}
-      leftSection={props.icon}
-      defaultOpened={isActive}
-    >
+    <NavLink label={props.label} leftSection={props.icon} defaultOpened={isActive}>
       {props.items.map((item) => (
         <NavLinkHref key={item.label} {...item} />
       ))}
