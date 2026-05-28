@@ -70,16 +70,14 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card radius="lg" withBorder>
+    <Card>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
             <Tooltip label={t(`visibility.${visibility}`)}>
               <VisibilityIcon size={20} stroke={1.5} />
             </Tooltip>
-            <Text fw="bolder" tt="uppercase">
-              {board.name}
-            </Text>
+            <Text fw={700}>{board.name}</Text>
           </Group>
 
           <Group>
@@ -127,6 +125,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
                   style={{ borderTop: "none", borderBottom: "none", borderRight: "none", borderRadius: 0 }}
                   variant="default"
                   size="lg"
+                  aria-label={t("action.settings.label")}
                 >
                   <IconDotsVertical size={16} stroke={1.5} />
                 </ActionIcon>

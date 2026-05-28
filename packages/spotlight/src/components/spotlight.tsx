@@ -110,6 +110,7 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
                 inputRef.current?.focus();
               }}
               variant="subtle"
+              aria-label={t("common.action.close")}
             >
               <IconX stroke={1.5} />
             </ActionIcon>

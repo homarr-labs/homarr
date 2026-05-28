@@ -29,20 +29,20 @@ export default async function ManagementPage() {
       <Space h="md" />
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
         {statistics.map((statistic) => (
-          <Card component={Link} href={statistic.path} key={statistic.path} radius="lg">
+          <Card component={Link} href={statistic.path} key={statistic.path}>
             <Group justify="space-between" wrap="nowrap">
               <Group wrap="nowrap">
-                <Text size="2.4rem" fw="bolder">
+                <Text size="xl" fw={700}>
                   {statistic.count}
                 </Text>
                 <Stack gap={0}>
-                  <Text c="red" size="xs">
+                  <Text c="dimmed" size="xs">
                     {t(`statisticLabel.${statistic.subtitleKey}`)}
                   </Text>
-                  <Text fw="bold">{t(`statistic.${statistic.titleKey}`)}</Text>
+                  <Text fw={600}>{t(`statistic.${statistic.titleKey}`)}</Text>
                 </Stack>
               </Group>
-              <IconArrowRight />
+              <IconArrowRight size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
             </Group>
           </Card>
         ))}

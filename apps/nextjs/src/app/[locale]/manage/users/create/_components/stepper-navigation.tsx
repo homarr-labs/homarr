@@ -25,7 +25,7 @@ export const StepperNavigationComponent = ({
 }: StepperNavigationComponentProps) => {
   const t = useI18n();
   return (
-    <Card shadow="md" withBorder>
+    <Card>
       {!isComplete ? (
         <Group justify="space-between" wrap="nowrap">
           <Button

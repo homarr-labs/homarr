@@ -74,7 +74,7 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
   const session = await auth();
 
   return (
-    <Card withBorder>
+    <Card>
       <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap" style={{ flex: 1 }}>
           <Avatar
