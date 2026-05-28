@@ -257,7 +257,7 @@ const seedDefaultBoardAsync = async (db: Database) => {
   await db.insert(layouts).values({
     id: createId(),
     name: "Base",
-    columnCount: 12,
+    columnCount: 10,
     breakpoint: 0,
     boardId,
   });
