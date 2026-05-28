@@ -51,12 +51,11 @@ export default function MediaTranscodingWidget({
   });
 
   const [view, setView] = useState<View>(options.defaultView);
+  const t = useI18n("widget.mediaTranscoding");
 
   if (!transcodingData) return null;
 
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
-
-  const t = useI18n("widget.mediaTranscoding");
   const isTiny = width < 256;
 
   return (

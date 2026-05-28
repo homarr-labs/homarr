@@ -206,7 +206,8 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const utils = clientApi.useUtils();
   const { data } = clientApi.docker.getContainers.useQuery();
   const containers = data?.containers ?? [];
-  const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
+  const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
+  const relativeTime = useTimeAgo(timestamp);
 
   clientApi.docker.subscribeContainers.useSubscription(undefined, {
     onData(data) {

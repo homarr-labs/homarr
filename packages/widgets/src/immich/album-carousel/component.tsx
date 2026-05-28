@@ -17,14 +17,17 @@ export default function ImmichAlbumCarouselWidget({
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
+  const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      albumId: options.albumId ?? "",
+    },
+    { enabled: Boolean(options.albumId) },
+  );
+
   if (!options.albumId) {
     return <NoAlbumSelected />;
   }
-
-  const { data: album } = clientApi.widget.immich.getAlbum.useQuery({
-    integrationId: integrationIds[0] ?? "",
-    albumId: options.albumId,
-  });
 
   if (!album) return null;
 

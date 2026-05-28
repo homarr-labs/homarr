@@ -39,11 +39,6 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const scheme = useMantineColorScheme();
   const t = useI18n();
 
-  const lastItem = data.at(-1);
-
-  if (!lastItem) return null;
-  const { fileSystem, smart } = lastItem.healthInfo;
-
   clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(queryInput, {
     onData(data) {
       utils.widget.healthMonitoring.getSystemHealthStatus.setData(queryInput, (oldData) =>
@@ -51,6 +46,11 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
       );
     },
   });
+
+  const lastItem = data.at(-1);
+
+  if (!lastItem) return null;
+  const { fileSystem, smart } = lastItem.healthInfo;
 
   if (fileSystem.length === 0) {
     throw new NoIntegrationDataError();

@@ -94,7 +94,10 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     ),
   );
 
-  const results = queryResults.map((q) => q.data).filter(Boolean);
+  const results = useMemo(
+    () => queryResults.map((q) => q.data).filter((d): d is NonNullable<typeof d> => d != null),
+    [queryResults],
+  );
 
   const repositories = useMemo(() => {
     const formattedResults = options.repositories
