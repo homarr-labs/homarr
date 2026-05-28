@@ -9,6 +9,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
+import { onboardingContentWidth, onboardingMaxWidth } from "./_constants";
 import { BackToStart } from "./_steps/back";
 import { InitFinish } from "./_steps/finish/init-finish";
 import { InitGroup } from "./_steps/group/init-group";
@@ -37,7 +38,7 @@ export default async function InitPage() {
   return (
     <Box mih="100dvh">
       <Center>
-        <Stack align="center" mt="xl">
+        <Stack align="center" mt="xl" w={onboardingContentWidth} maw={onboardingMaxWidth}>
           <HomarrLogoWithTitle size="lg" />
           <Stack gap={6} align="center">
             <Title order={3} fw={400} ta="center">

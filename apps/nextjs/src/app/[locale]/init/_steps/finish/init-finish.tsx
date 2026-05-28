@@ -1,5 +1,5 @@
 import type { MantineColor } from "@mantine/core";
-import { Button, Card, Stack, Text } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { IconBook2, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
 
 import { isProviderEnabled } from "@homarr/auth/server";
@@ -9,11 +9,13 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { InitStepCard } from "../../_components/init-step-card";
+
 export const InitFinish = async () => {
   const tFinish = await getScopedI18n("init.step.finish");
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <InitStepCard>
       <Stack>
         <Text>{tFinish("description")}</Text>
 
@@ -37,7 +39,7 @@ export const InitFinish = async () => {
           {tFinish("action.docs")}
         </ExternalLinkButton>
       </Stack>
-    </Card>
+    </InitStepCard>
   );
 };
 
