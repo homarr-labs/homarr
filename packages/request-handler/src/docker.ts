@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type { ContainerInfo, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
+import { bestMatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
@@ -82,12 +83,7 @@ async function getContainersWithStatsAsync() {
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
-      iconUrl:
-        dbIcons.find((icon) => {
-          const extractedImage = extractImage(container);
-          if (!extractedImage) return false;
-          return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-        })?.url ?? null,
+      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
       cpuUsage,
       memoryUsage,
       image: container.Image,

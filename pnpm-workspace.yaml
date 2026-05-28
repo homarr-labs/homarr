@@ -13,30 +13,28 @@ catalog:
   "@dnd-kit/sortable": ^10.0.0
   "@dnd-kit/utilities": ^3.2.2
   "@drizzle-team/brocli": ^0.12.0
-  '@eslint/js': 10.0.1
   "@extractus/feed-extractor": 7.2.1
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
   "@homarr/node-unifi": ^2.6.0
-  "@ianvs/prettier-plugin-sort-imports": ^4.7.1
   "@immich/sdk": ^2.7.5
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
-  "@mantine/charts": ^8.3.18
-  "@mantine/colors-generator": ^8.3.18
-  "@mantine/core": ^8.3.18
-  "@mantine/dates": ^8.3.18
-  "@mantine/dropzone": ^8.3.18
-  "@mantine/form": ^8.3.18
-  "@mantine/hooks": ^8.3.18
-  "@mantine/modals": ^8.3.18
-  "@mantine/notifications": ^8.3.18
-  "@mantine/spotlight": ^8.3.18
-  "@mantine/tiptap": ^8.3.18
-  "@million/lint": 1.0.14
+  "@mantine/charts": ^9.2.1
+  "@mantine/colors-generator": ^9.2.1
+  "@mantine/core": ^9.2.1
+  "@mantine/dates": ^9.2.1
+  "@mantine/dropzone": ^9.2.1
+  "@mantine/form": ^9.2.1
+  "@mantine/hooks": ^9.2.1
+  "@mantine/modals": ^9.2.1
+  "@mantine/notifications": ^9.2.1
+  "@mantine/spotlight": ^9.2.1
+  "@mantine/tiptap": ^9.2.1
   "@next/eslint-plugin-next": 16.2.6
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
+  "@playwright/test": ^1.60.0
   "@semantic-release/changelog": ^6.0.3
   "@semantic-release/commit-analyzer": ^13.0.1
   "@semantic-release/git": ^10.0.1
@@ -45,34 +43,34 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
-  "@tanstack/react-query": ^5.100.10
-  "@tanstack/react-query-devtools": ^5.100.10
-  "@tanstack/react-query-next-experimental": ^5.100.10
-  "@testcontainers/mysql": ^11.14.0
-  "@testcontainers/postgresql": ^11.14.0
-  "@testcontainers/redis": ^11.14.0
-  "@tiptap/extension-color": 3.23.2
-  "@tiptap/extension-highlight": 3.23.2
-  "@tiptap/extension-image": 3.23.2
-  "@tiptap/extension-link": ^3.23.2
-  "@tiptap/extension-placeholder": ^3.23.2
-  "@tiptap/extension-table": 3.23.2
-  "@tiptap/extension-table-cell": 3.23.2
-  "@tiptap/extension-table-header": 3.23.2
-  "@tiptap/extension-table-row": 3.23.2
-  "@tiptap/extension-task-item": 3.23.2
-  "@tiptap/extension-task-list": 3.23.2
-  "@tiptap/extension-text-align": 3.23.2
-  "@tiptap/extension-text-style": 3.23.2
-  "@tiptap/extension-underline": 3.23.2
-  "@tiptap/react": ^3.23.2
-  "@tiptap/starter-kit": ^3.23.2
+  "@tanstack/react-query": ^5.100.13
+  "@tanstack/react-query-devtools": ^5.100.13
+  "@tanstack/react-query-next-experimental": ^5.100.13
+  "@testcontainers/mysql": ^12.0.0
+  "@testcontainers/postgresql": ^12.0.0
+  "@testcontainers/redis": ^12.0.0
+  "@tiptap/extension-color": 3.23.6
+  "@tiptap/extension-highlight": 3.23.6
+  "@tiptap/extension-image": 3.23.6
+  "@tiptap/extension-link": ^3.23.6
+  "@tiptap/extension-placeholder": ^3.23.6
+  "@tiptap/extension-table": 3.23.6
+  "@tiptap/extension-table-cell": 3.23.6
+  "@tiptap/extension-table-header": 3.23.6
+  "@tiptap/extension-table-row": 3.23.6
+  "@tiptap/extension-task-item": 3.23.6
+  "@tiptap/extension-task-list": 3.23.6
+  "@tiptap/extension-text-align": 3.23.6
+  "@tiptap/extension-text-style": 3.23.6
+  "@tiptap/extension-underline": 3.23.6
+  "@tiptap/react": ^3.23.6
+  "@tiptap/starter-kit": ^3.23.6
   "@trpc/client": ^11.17.0
   "@trpc/next": ^11.17.0
   "@trpc/react-query": ^11.17.0
   "@trpc/server": ^11.17.0
   "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.12
+  "@turbo/gen": ^2.9.14
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -85,7 +83,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.14
+  "@types/react": 19.2.15
   "@types/react-dom": 19.2.3
   "@types/swagger-ui-react": ^5.18.0
   "@types/video.js": ^7.3.58
@@ -93,15 +91,15 @@ catalog:
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
   "@vitejs/plugin-react": ^5.2.0
-  "@vitest/coverage-v8": ^4.1.6
-  "@vitest/ui": ^4.1.6
+  "@vitest/coverage-v8": ^4.1.7
+  "@vitest/ui": ^4.1.7
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.17
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
-  better-sqlite3: ^12.9.0
+  better-sqlite3: ^12.10.0
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   concurrently: ^9.2.1
@@ -121,38 +119,30 @@ catalog:
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
-  eslint: ^10.3.0
-  eslint-config-prettier: ^10.1.8
-  eslint-config-turbo: ^2.9.12
-  eslint-plugin-import: ^2.32.0
-  eslint-plugin-jsx-a11y: ^6.10.2
-  eslint-plugin-react: ^7.37.5
-  eslint-plugin-react-hooks: ^6.1.1
   fast-xml-parser: ^5.8.0
   fastify: ^5.8.5
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.10.1
-  isomorphic-dompurify: ^3.12.0
+  isomorphic-dompurify: ^3.14.0
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
-  ldapts: 8.1.7
+  ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
-  mantine-form-zod-resolver: ^1.3.0
   mantine-react-table: 2.0.0-beta.9
   maria2: ^0.4.1
   mysql2: 3.22.3
   next: 16.2.6
   next-auth: 5.0.0-beta.31
-  next-intl: 4.11.2
+  next-intl: 4.12.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  pg: ^8.20.0
+  oxfmt: ^0.51.0
+  oxlint: ^1.66.0
+  pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
-  prettier: ^3.8.3
-  prettier-plugin-packagejson: ^3.0.2
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
   react: 19.2.6
@@ -162,27 +152,26 @@ catalog:
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
   recharts: ^3.8.1
-  sass: ^1.99.0
+  sass: ^1.100.0
   semantic-release: ^25.0.3
-  semver-parser: ^4.1.8
+  semver-parser: ^4.2.0
   superjson: 2.2.6
   svgson: ^5.3.1
   swagger-ui-react: ^5.32.6
-  testcontainers: ^11.14.0
+  testcontainers: ^12.0.0
   timezones-ical-library: ^2.2.0
   trpc-to-openapi: ^3.2.0
-  tsdav: ^2.2.1
+  tsdav: ^2.2.2
   tsx: 4.20.4
-  turbo: ^2.9.12
+  turbo: ^2.9.14
   typescript: ^5.9.3
-  typescript-eslint: ^8.58.2
   undici: 7.24.6
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.6
+  vitest: ^4.1.7
   winston: 3.19.0
-  ws: ^8.20.1
+  ws: ^8.21.0
   xml2js: ^0.6.2
   yaml: 2.9.0
   zod: ^4.4.3
@@ -193,3 +182,5 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  # Renovate security update: turbo@2.9.14
+  - turbo@2.9.14

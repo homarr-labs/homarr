@@ -1,3 +1,9 @@
+## [1.61.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1) (2026-05-18)
+
+### Bug Fixes
+
+* **downloads-widget:** increase name column default width ratio ([e9142c0](https://github.com/homarr-labs/homarr/commit/e9142c0dbcaca6cd9215b5292a2d139d96919b51))
+
 ## [1.61.1-beta.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1-beta.1) (2026-05-08)
 
 ### Performance Improvements

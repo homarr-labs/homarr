@@ -1,13 +1,6 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "eslint.experimental.useFlatConfig": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
-  "prettier.configPath": "./tooling/prettier/index.mjs",
   "cSpell.words": [
     "ajnart",
     "cqmin",
@@ -34,11 +27,7 @@
   ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.displayLanguage": "en",
-  "i18n-ally.enabledFrameworks": [
-    "custom"
-  ],
-  "i18n-ally.localesPaths": [
-    "packages/translation/src/lang",
-  ],
-  "i18n-ally.keystyle": "nested",
+  "i18n-ally.enabledFrameworks": ["custom"],
+  "i18n-ally.localesPaths": ["packages/translation/src/lang"],
+  "i18n-ally.keystyle": "nested"
 }

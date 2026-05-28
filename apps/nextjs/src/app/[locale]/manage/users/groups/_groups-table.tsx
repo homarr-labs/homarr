@@ -259,7 +259,7 @@ const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) =>
     <div style={{ position: "sticky", bottom: 20 }}>
       <Transition transition="slide-up" mounted={visible}>
         {(transitionStyles) => (
-          <Card style={transitionStyles} withBorder>
+          <Card style={transitionStyles}>
             <Group justify="space-between">
               <Text fw={500}>{t("common.unsavedChanges")}</Text>
               <Group>

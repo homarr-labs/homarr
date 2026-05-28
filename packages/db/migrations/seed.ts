@@ -1,6 +1,7 @@
 import { createId, objectKeys } from "@homarr/common";
 import {
   createDocumentationLink,
+  credentialsAdminGroup,
   everyoneGroup,
   getIntegrationDefaultUrl,
   getIntegrationName,
@@ -11,12 +12,24 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database } from "..";
 import { eq } from "..";
+import { getMaxGroupPositionAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "../queries/server-setting";
-import { groups, integrations, onboarding, searchEngines } from "../schema";
+import {
+  boards,
+  groupMembers,
+  groupPermissions,
+  groups,
+  integrations,
+  layouts,
+  onboarding,
+  searchEngines,
+  sections,
+  users,
+} from "../schema";
 import type { Integration } from "../schema";
 
 export const seedDataAsync = async (db: Database) => {
@@ -25,6 +38,10 @@ export const seedDataAsync = async (db: Database) => {
   await seedServerSettingsAsync(db);
   await seedDefaultSearchEnginesAsync(db);
   await seedDefaultIntegrationsAsync(db);
+
+  if (process.env.DEMO_MODE === "true") {
+    await seedDemoUserAsync(db);
+  }
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -190,4 +207,73 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
   }
 
   console.log(`Created ${createdCount} default integrations through seeding process`);
+};
+
+const seedDemoUserAsync = async (db: Database) => {
+  const existingUser = await db.query.users.findFirst({
+    where: eq(users.name, "demo"),
+  });
+
+  if (existingUser) {
+    console.log("Skipping seeding of demo user as it already exists");
+    return;
+  }
+
+  const userId = createId();
+
+  await db.insert(users).values({
+    id: userId,
+    name: "demo",
+    email: "demo@example.com",
+    password: "$2b$10$c5AaQb0oj32/bui5Z55PyOb7pY.iEkXYqgdD8MjS9LjSjLMeOkZu2",
+  });
+
+  const maxPosition = await getMaxGroupPositionAsync(db);
+  const groupId = createId();
+  await db.insert(groups).values({
+    id: groupId,
+    name: credentialsAdminGroup,
+    ownerId: userId,
+    position: maxPosition + 1,
+  });
+  await db.insert(groupPermissions).values({
+    groupId,
+    permission: "admin",
+  });
+  await db.insert(groupMembers).values({
+    groupId,
+    userId,
+  });
+
+  await db.update(onboarding).set({
+    step: "finish",
+    previousStep: "settings",
+  });
+
+  const boardId = createId();
+  await db.insert(boards).values({
+    id: boardId,
+    name: "default",
+    isPublic: false,
+    creatorId: userId,
+  });
+  await db.insert(sections).values({
+    id: createId(),
+    kind: "empty",
+    xOffset: 0,
+    yOffset: 0,
+    boardId,
+  });
+  await db.insert(layouts).values({
+    id: createId(),
+    name: "Base",
+    columnCount: 12,
+    breakpoint: 0,
+    boardId,
+  });
+  await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, userId));
+
+  console.log(
+    "Your instance has enabled demo mode. Homarr therefore created example data for your demo. You can disable demo mode anytime by setting the env 'DEMO_MODE' to 'false' or unset it.",
+  );
 };
