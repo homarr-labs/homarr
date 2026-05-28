@@ -40,7 +40,9 @@ export const env = createEnv({
           AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),
           AUTH_OIDC_FORCE_USERINFO: createBooleanSchema(false),
           AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING: createBooleanSchema(false),
-          AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD: z.enum(["client_secret_basic", "client_secret_post", "none"]).default("client_secret_basic"),
+          AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD: z
+            .enum(["client_secret_basic", "client_secret_post", "none"])
+            .default("client_secret_basic"),
         }
       : {}),
     ...(authProviders.includes("ldap")
