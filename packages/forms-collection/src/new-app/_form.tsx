@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEventHandler } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef } from "react";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
@@ -17,6 +17,11 @@ import { findBestIconMatch } from "./icon-matcher";
 
 type FormType = z.infer<typeof appManageSchema>;
 
+export interface AppFormHandle {
+  submit: () => void;
+  isDirty: () => boolean;
+}
+
 interface AppFormProps {
   showBackToOverview: boolean;
   buttonLabels: {
@@ -26,6 +31,8 @@ interface AppFormProps {
   initialValues?: FormType;
   handleSubmit: (values: FormType, redirect: boolean, afterSuccess?: () => void) => void;
   isPending: boolean;
+  hideButtons?: boolean;
+  formRef?: React.Ref<AppFormHandle>;
 }
 
 export const AppForm = ({
@@ -34,6 +41,8 @@ export const AppForm = ({
   handleSubmit: originalHandleSubmit,
   initialValues,
   isPending,
+  hideButtons,
+  formRef,
 }: AppFormProps) => {
   const t = useI18n();
 
@@ -61,6 +70,15 @@ export const AppForm = ({
       : undefined;
     originalHandleSubmit(values, redirect, afterSuccess);
   };
+
+  useImperativeHandle(
+    formRef,
+    () => ({
+      submit: () => form.onSubmit(handleSubmit)(),
+      isDirty: () => form.isDirty(),
+    }),
+    [form, handleSubmit],
+  );
 
   const [opened, { open, close }] = useDisclosure((initialValues?.pingUrl?.length ?? 0) > 0);
 
@@ -92,32 +110,32 @@ export const AppForm = ({
     }
   }, [debouncedName, iconsData]);
 
-  return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
-        <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
-        <IconPicker {...form.getInputProps("iconUrl")} />
-        <Textarea
-          {...form.getInputProps("description")}
-          label={t("app.field.description.label")}
-          autosize
-          minRows={2}
-          resize="vertical"
-        />
-        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
+  const formFields = (
+    <Stack>
+      <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
+      <IconPicker {...form.getInputProps("iconUrl")} />
+      <Textarea
+        {...form.getInputProps("description")}
+        label={t("app.field.description.label")}
+        autosize
+        minRows={2}
+        resize="vertical"
+      />
+      <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
-        <Checkbox
-          checked={opened}
-          onChange={handleClickDifferentUrlPing}
-          label={t("app.field.useDifferentUrlForPing.checkbox.label")}
-          description={t("app.field.useDifferentUrlForPing.checkbox.description")}
-          mt="md"
-        />
+      <Checkbox
+        checked={opened}
+        onChange={handleClickDifferentUrlPing}
+        label={t("app.field.useDifferentUrlForPing.checkbox.label")}
+        description={t("app.field.useDifferentUrlForPing.checkbox.description")}
+        mt="md"
+      />
 
-        <Collapse expanded={opened}>
-          <TextInput {...form.getInputProps("pingUrl")} />
-        </Collapse>
+      <Collapse expanded={opened}>
+        <TextInput {...form.getInputProps("pingUrl")} />
+      </Collapse>
 
+      {!hideButtons && (
         <Group justify="end">
           {showBackToOverview && (
             <Button variant="default" component={Link} href="/manage/apps">
@@ -139,7 +157,17 @@ export const AppForm = ({
             {buttonLabels.submit}
           </Button>
         </Group>
-      </Stack>
+      )}
+    </Stack>
+  );
+
+  if (hideButtons) {
+    return formFields;
+  }
+
+  return (
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      {formFields}
     </form>
   );
 };
