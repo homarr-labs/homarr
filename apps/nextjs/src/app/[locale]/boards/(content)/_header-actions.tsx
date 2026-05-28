@@ -37,6 +37,7 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
+import { QueryRefreshIndicator } from "~/components/layout/header/query-refresh-indicator";
 
 export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
@@ -44,13 +45,19 @@ export const BoardContentHeaderActions = () => {
   const { hasChangeAccess } = useBoardPermissions(board);
 
   if (!hasChangeAccess) {
-    return <SelectBoardsMenu />;
+    return (
+      <>
+        <QueryRefreshIndicator />
+        <SelectBoardsMenu />
+      </>
+    );
   }
 
   return (
     <>
       {isEditMode && <AddMenu />}
 
+      <QueryRefreshIndicator />
       <EditModeMenu />
 
       <HeaderButton href={`/boards/${board.name}/settings`}>
