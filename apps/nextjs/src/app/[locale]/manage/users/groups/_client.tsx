@@ -19,7 +19,7 @@ interface GroupsListProps {
 export const GroupsList = ({ groups }: GroupsListProps) => {
   const [search, setSearch] = useState("");
   const initialGroupIds = useMemo(
-    () => groups.sort((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
+    () => groups.toSorted((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
     [groups],
   );
   const filteredGroups = useMemo(

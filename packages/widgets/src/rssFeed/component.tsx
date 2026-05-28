@@ -26,7 +26,7 @@ const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]
         return oldData
           ?.filter((entry) => entry.feedUrl !== updatedData.url)
           .concat(updatedData.entries)
-          .sort((entryA, entryB) => {
+          .toSorted((entryA, entryB) => {
             return entryA.published && entryB.published
               ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
               : 0;
