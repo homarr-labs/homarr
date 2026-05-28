@@ -36,6 +36,7 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
+import { ManageNavigationFooter } from "~/components/manage/manage-navigation-footer";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const t = await getScopedI18n("management.navbar");
@@ -194,7 +195,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   return (
     <ClientShell hasNavigation>
       <MainHeader></MainHeader>
-      <MainNavigation links={navigationLinks}></MainNavigation>
+      <MainNavigation links={navigationLinks} footerSection={<ManageNavigationFooter />}></MainNavigation>
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );

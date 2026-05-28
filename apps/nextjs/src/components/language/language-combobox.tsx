@@ -16,9 +16,17 @@ interface LanguageComboboxProps {
   onChange: (value: SupportedLanguage) => void;
   isPending?: boolean;
   width?: string;
+  showTranslatedName?: boolean;
 }
 
-export const LanguageCombobox = ({ label, value, onChange, isPending, width }: LanguageComboboxProps) => {
+export const LanguageCombobox = ({
+  label,
+  value,
+  onChange,
+  isPending,
+  width,
+  showTranslatedName,
+}: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -53,7 +61,7 @@ export const LanguageCombobox = ({ label, value, onChange, isPending, width }: L
           variant="filled"
           w={width}
         >
-          <OptionItem currentLocale={value} localeKey={value} />
+          <OptionItem currentLocale={value} localeKey={value} showTranslatedName={showTranslatedName} />
         </InputBase>
       </Combobox.Target>
       <Combobox.Dropdown>
@@ -75,10 +83,12 @@ const OptionItem = ({
   currentLocale,
   localeKey,
   showCheck,
+  showTranslatedName = true,
 }: {
   currentLocale: SupportedLanguage;
   localeKey: SupportedLanguage;
   showCheck?: boolean;
+  showTranslatedName?: boolean;
 }) => {
   return (
     <Group wrap="nowrap" justify="space-between">
@@ -86,9 +96,11 @@ const OptionItem = ({
         <LanguageIcon icon={localeConfigurations[localeKey].icon} />
         <Group wrap="nowrap" gap="xs">
           <Text>{localeConfigurations[localeKey].name}</Text>
-          <Text size="xs" c="dimmed" inherit>
-            ({localeConfigurations[localeKey].translatedName})
-          </Text>
+          {showTranslatedName && (
+            <Text size="xs" c="dimmed" inherit>
+              ({localeConfigurations[localeKey].translatedName})
+            </Text>
+          )}
         </Group>
       </Group>
       {showCheck && localeKey === currentLocale && <IconCheck color="currentColor" size={16} />}
