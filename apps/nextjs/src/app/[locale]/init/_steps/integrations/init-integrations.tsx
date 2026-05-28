@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ActionIcon,
+  Alert,
   Button,
-  Card,
   Center,
   Collapse,
   Group,
@@ -18,7 +18,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowRight, IconSettings } from "@tabler/icons-react";
+import { IconArrowRight, IconInfoCircle, IconSettings } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind, UrlTemplateMode } from "@homarr/definitions";
@@ -29,6 +29,7 @@ import { IntegrationAvatar } from "@homarr/ui";
 
 import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import { IntegrationMultiSelectGrid } from "~/components/integration/integration-multi-select-grid";
+import { InitStepCard } from "../../_components/init-step-card";
 import { DockerDiscoveryIndicator } from "./docker-discovery-panel";
 
 type Phase = "select" | "configure" | "done";
@@ -40,8 +41,6 @@ interface IntegrationDraft {
   dockerPort?: number | null;
   source: "manual" | "docker";
 }
-
-const CARD_WIDTH = 64 * 16;
 
 export const InitIntegrations = () => {
   const [phase, setPhase] = useState<Phase>("select");
@@ -171,14 +170,14 @@ export const InitIntegrations = () => {
 
   if (phase === "done") {
     return (
-      <Card w={CARD_WIDTH} maw="90vw" withBorder>
+      <InitStepCard>
         <Center py="xl">
           <Stack align="center" gap="md">
             <Loader size="lg" />
             <Text>{t("configure.finishing")}</Text>
           </Stack>
         </Center>
-      </Card>
+      </InitStepCard>
     );
   }
 
@@ -200,7 +199,7 @@ export const InitIntegrations = () => {
   }
 
   return (
-    <Card w={CARD_WIDTH} maw="90vw" withBorder>
+    <InitStepCard>
       <Stack>
         <Text>{t("description")}</Text>
 
@@ -212,32 +211,32 @@ export const InitIntegrations = () => {
           isLoading={isDockerLoading}
         />
 
-        <Stack gap="xs">
-          <Text size="sm" fw={500}>
-            {t("urlTemplate.label")}
-          </Text>
-          <Group gap="sm" grow>
-            <TextInput
-              placeholder={t("urlTemplate.placeholder")}
-              value={baseHost}
-              onChange={(e) => setBaseHost(e.currentTarget.value)}
-            />
-            <SegmentedControl
-              value={urlMode}
-              onChange={(value) => setUrlMode(value as UrlTemplateMode)}
-              data={[
-                { label: t("urlTemplate.mode.subdomain"), value: "subdomain" },
-                { label: t("urlTemplate.mode.hostPort"), value: "hostPort" },
-              ]}
-              style={{ flex: "0 0 auto" }}
-            />
-          </Group>
-          <Text size="xs" c="dimmed">
-            {baseHost
-              ? t("urlTemplate.preview", { example: buildIntegrationUrl("sonarr", baseHost, urlMode) })
-              : t("urlTemplate.hint")}
-          </Text>
-        </Stack>
+        <Alert variant="light" color="blue" icon={<IconInfoCircle />} title={t("urlTemplate.label")}>
+          <Stack gap="xs">
+            <Text size="sm">{t("urlTemplate.hint")}</Text>
+            <Group gap="sm" grow>
+              <TextInput
+                placeholder={t("urlTemplate.placeholder")}
+                value={baseHost}
+                onChange={(e) => setBaseHost(e.currentTarget.value)}
+              />
+              <SegmentedControl
+                value={urlMode}
+                onChange={(value) => setUrlMode(value as UrlTemplateMode)}
+                data={[
+                  { label: t("urlTemplate.mode.subdomain"), value: "subdomain" },
+                  { label: t("urlTemplate.mode.hostPort"), value: "hostPort" },
+                ]}
+                style={{ flex: "0 0 auto" }}
+              />
+            </Group>
+            {baseHost && (
+              <Text size="xs" c="dimmed">
+                {t("urlTemplate.preview", { example: buildIntegrationUrl("sonarr", baseHost, urlMode) })}
+              </Text>
+            )}
+          </Stack>
+        </Alert>
 
         <IntegrationMultiSelectGrid
           selectedKinds={selectedKinds}
@@ -259,7 +258,7 @@ export const InitIntegrations = () => {
           </Button>
         </Group>
       </Stack>
-    </Card>
+    </InitStepCard>
   );
 };
 
@@ -300,7 +299,7 @@ const ConfigurePhase = ({
     : draft?.initialUrl;
 
   return (
-    <Card w={CARD_WIDTH} maw="90vw" withBorder>
+    <InitStepCard>
       <Stack>
         <Group justify="space-between" align="center">
           <Group gap="xs">
@@ -321,7 +320,7 @@ const ConfigurePhase = ({
           </Text>
         </Stack>
 
-        <Collapse in={helpersOpen}>
+        <Collapse expanded={helpersOpen}>
           <Stack
             gap="xs"
             p="xs"
@@ -369,6 +368,6 @@ const ConfigurePhase = ({
           isOnboarding
         />
       </Stack>
-    </Card>
+    </InitStepCard>
   );
 };

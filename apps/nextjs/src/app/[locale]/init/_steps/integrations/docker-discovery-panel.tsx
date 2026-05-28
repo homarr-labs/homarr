@@ -142,7 +142,7 @@ export const DockerDiscoveryIndicator = ({
         </Group>
       </UnstyledButton>
 
-      <Collapse in={expanded}>
+      <Collapse expanded={expanded}>
         <Stack gap="xs" mt="sm">
           {integrations.length > 0 && (
             <Stack gap={4}>

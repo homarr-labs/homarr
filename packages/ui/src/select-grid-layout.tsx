@@ -13,6 +13,7 @@ interface SelectGridLayoutProps {
   onSearchChange: (value: string) => void;
   placeholder: string;
   onSearchKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  disableScroll?: boolean;
   children: ReactNode;
 }
 
@@ -21,22 +22,27 @@ export const SelectGridLayout = ({
   onSearchChange,
   placeholder,
   onSearchKeyDown,
+  disableScroll = false,
   children,
-}: SelectGridLayoutProps) => (
-  <Stack>
-    <Input
-      value={search}
-      onChange={(event) => onSearchChange(event.currentTarget.value)}
-      leftSection={<IconSearch />}
-      placeholder={placeholder}
-      data-autofocus
-      onKeyDown={onSearchKeyDown}
-    />
+}: SelectGridLayoutProps) => {
+  const grid = (
+    <SimpleGrid cols={selectGridCols} spacing="sm">
+      {children}
+    </SimpleGrid>
+  );
 
-    <ScrollArea.Autosize mah={selectGridScrollMaxHeight}>
-      <SimpleGrid cols={selectGridCols} spacing="sm">
-        {children}
-      </SimpleGrid>
-    </ScrollArea.Autosize>
-  </Stack>
-);
+  return (
+    <Stack>
+      <Input
+        value={search}
+        onChange={(event) => onSearchChange(event.currentTarget.value)}
+        leftSection={<IconSearch />}
+        placeholder={placeholder}
+        data-autofocus
+        onKeyDown={onSearchKeyDown}
+      />
+
+      {disableScroll ? grid : <ScrollArea.Autosize mah={selectGridScrollMaxHeight}>{grid}</ScrollArea.Autosize>}
+    </Stack>
+  );
+};

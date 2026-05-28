@@ -51,6 +51,7 @@ export const IntegrationMultiSelectGrid = ({
       search={search}
       onSearchChange={setSearch}
       placeholder={`${t("integration.page.list.search")}...`}
+      disableScroll={onboarding}
     >
       {filtered.map((integration) => {
         const isSelected = selectedKinds.has(integration.kind);
