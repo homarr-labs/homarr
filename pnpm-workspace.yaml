@@ -20,17 +20,17 @@ catalog:
   "@immich/sdk": ^2.7.5
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
-  "@mantine/charts": ^9.2.0
-  "@mantine/colors-generator": ^9.2.0
-  "@mantine/core": ^9.2.0
-  "@mantine/dates": ^9.2.0
-  "@mantine/dropzone": ^9.2.0
-  "@mantine/form": ^9.2.0
-  "@mantine/hooks": ^9.2.0
-  "@mantine/modals": ^9.2.0
-  "@mantine/notifications": ^9.2.0
-  "@mantine/spotlight": ^9.2.0
-  "@mantine/tiptap": ^9.2.0
+  "@mantine/charts": ^9.2.1
+  "@mantine/colors-generator": ^9.2.1
+  "@mantine/core": ^9.2.1
+  "@mantine/dates": ^9.2.1
+  "@mantine/dropzone": ^9.2.1
+  "@mantine/form": ^9.2.1
+  "@mantine/hooks": ^9.2.1
+  "@mantine/modals": ^9.2.1
+  "@mantine/notifications": ^9.2.1
+  "@mantine/spotlight": ^9.2.1
+  "@mantine/tiptap": ^9.2.1
   "@next/eslint-plugin-next": 16.2.6
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
