@@ -22,7 +22,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const [app] = clientApi.app.byId.useSuspenseQuery(
+  const { data: app } = clientApi.app.byId.useQuery(
     {
       id: options.appId,
     },
@@ -34,8 +34,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
     },
   );
   useRegisterSpotlightContextResults(
-    `app-${app.id}`,
-    app.href
+    `app-${app?.id ?? options.appId}`,
+    app?.href
       ? [
           {
             id: app.id,
@@ -44,7 +44,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
             interaction() {
               return {
                 type: "link",
-                // We checked above that app.href is defined
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 href: app.href!,
                 newTab: options.openInNewTab,
@@ -55,6 +54,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
       : [],
     [app, options.openInNewTab],
   );
+
+  if (!app) return null;
 
   const isTiny = height < 100 || width < 100;
   const isColumnLayout = options.layout.startsWith("column");

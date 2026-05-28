@@ -20,7 +20,7 @@ import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
-  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery(
     {
       integrationIds,
     },

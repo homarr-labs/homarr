@@ -28,7 +28,7 @@ export function UmamiEventsContent({
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const [series] = clientApi.widget.umami.getMultiEventTimeSeries.useSuspenseQuery({
+  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery({
     integrationId: integrationIds[0] ?? "",
     websiteId,
     timeFrame,

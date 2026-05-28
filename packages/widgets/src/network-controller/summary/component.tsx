@@ -20,7 +20,7 @@ dayjs.extend(duration);
 export default function NetworkControllerSummaryWidget({
   integrationIds,
 }: WidgetComponentProps<"networkControllerSummary">) {
-  const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
+  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery(
     {
       integrationIds,
     },

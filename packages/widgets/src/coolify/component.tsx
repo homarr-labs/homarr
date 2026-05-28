@@ -31,7 +31,7 @@ interface CoolifyContentProps {
 }
 
 function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
-  const [instancesData] = clientApi.widget.coolify.getInstancesInfo.useSuspenseQuery({ integrationIds });
+  const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
 
   const utils = clientApi.useUtils();
   clientApi.widget.coolify.subscribeInstancesInfo.useSubscription(

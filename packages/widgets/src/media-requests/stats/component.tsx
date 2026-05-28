@@ -32,7 +32,7 @@ export default function MediaServerWidget({
   width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
+  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery(
     {
       integrationIds,
     },
@@ -45,6 +45,7 @@ export default function MediaServerWidget({
 
   const board = useRequiredBoard();
 
+  if (!requestStats) return null;
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
   const data = [

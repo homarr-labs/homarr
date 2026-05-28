@@ -81,7 +81,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     );
   }, [groupedRepositories]);
 
-  const [results] = clientApi.useSuspenseQueries((t) =>
+  const queryResults = clientApi.useQueries((t) =>
     batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
         integrationId,
@@ -93,6 +93,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       }),
     ),
   );
+
+  const results = queryResults.map((q) => q.data).filter(Boolean);
 
   const repositories = useMemo(() => {
     const formattedResults = options.repositories

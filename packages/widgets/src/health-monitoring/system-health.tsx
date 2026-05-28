@@ -51,7 +51,7 @@ export const SystemHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring">) => {
   const t = useI18n();
-  const [healthData] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery(
+  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
     {
       integrationIds,
     },

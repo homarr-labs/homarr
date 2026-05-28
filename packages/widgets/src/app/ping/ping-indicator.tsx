@@ -11,7 +11,7 @@ interface PingIndicatorProps {
 }
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
-  const [ping] = clientApi.widget.app.ping.useSuspenseQuery(
+  const { data: ping } = clientApi.widget.app.ping.useQuery(
     {
       id: appId,
     },
@@ -21,7 +21,7 @@ export const PingIndicator = ({ appId }: PingIndicatorProps) => {
     },
   );
 
-  const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"]>(ping);
+  const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"] | undefined>(ping);
 
   clientApi.widget.app.updatedPing.useSubscription(
     { id: appId },
@@ -32,16 +32,19 @@ export const PingIndicator = ({ appId }: PingIndicatorProps) => {
     },
   );
 
-  const isError = "error" in pingResult || pingResult.statusCode >= 500;
+  const current = pingResult ?? ping;
+  if (!current) return null;
+
+  const isError = "error" in current || current.statusCode >= 500;
 
   return (
     <PingDot
       icon={isError ? IconX : IconCheck}
       color={isError ? "red" : "green"}
       tooltip={
-        "statusCode" in pingResult
-          ? `${pingResult.statusCode} - ${pingResult.durationMs.toFixed(0)}ms`
-          : pingResult.error
+        "statusCode" in current
+          ? `${current.statusCode} - ${current.durationMs.toFixed(0)}ms`
+          : current.error
       }
     />
   );

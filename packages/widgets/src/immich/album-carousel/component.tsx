@@ -21,10 +21,12 @@ export default function ImmichAlbumCarouselWidget({
     return <NoAlbumSelected />;
   }
 
-  const [album] = clientApi.widget.immich.getAlbum.useSuspenseQuery({
+  const { data: album } = clientApi.widget.immich.getAlbum.useQuery({
     integrationId: integrationIds[0] ?? "",
     albumId: options.albumId,
   });
+
+  if (!album) return null;
 
   if (album.assets.length === 0) {
     return <NoPhotosInAlbum />;

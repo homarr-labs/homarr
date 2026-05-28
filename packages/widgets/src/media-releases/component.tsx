@@ -18,7 +18,7 @@ import { OverflowBadge } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaReleasesWidget({ options, integrationIds }: WidgetComponentProps<"mediaReleases">) {
-  const [releases] = clientApi.widget.mediaRelease.getMediaReleases.useSuspenseQuery({
+  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
     integrationIds,
   });
 

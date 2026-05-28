@@ -18,7 +18,7 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
     latitude: options.location.latitude,
     longitude: options.location.longitude,
   };
-  const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(input, {
+  const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -28,6 +28,8 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
   clientApi.widget.weather.subscribeAtLocation.useSubscription(input, {
     onData: (data) => utils.widget.weather.atLocation.setData(input, data),
   });
+
+  if (!weather) return null;
 
   return (
     <Stack

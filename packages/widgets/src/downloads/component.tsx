@@ -87,7 +87,7 @@ export default function DownloadClientsWidget({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
+  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
     {
       integrationIds,
       limitPerIntegration: options.limitPerIntegration,

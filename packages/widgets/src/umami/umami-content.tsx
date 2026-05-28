@@ -40,7 +40,7 @@ export function UmamiContent({
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const [results] = clientApi.widget.umami.getVisitorStats.useSuspenseQuery({
+  const { data: results = [] } = clientApi.widget.umami.getVisitorStats.useQuery({
     integrationIds,
     websiteId,
     timeFrame,
@@ -48,7 +48,7 @@ export function UmamiContent({
   });
 
   const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
-  const [activeVisitors] = clientApi.widget.umami.getActiveVisitors.useSuspenseQuery(activeVisitorsInput);
+  const { data: activeVisitors = 0 } = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput);
   const utils = clientApi.useUtils();
   clientApi.widget.umami.subscribeActiveVisitors.useSubscription(activeVisitorsInput, {
     onData(count) {

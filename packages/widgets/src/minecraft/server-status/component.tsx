@@ -10,7 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MinecraftServerStatusWidget({ options }: WidgetComponentProps<"minecraftServerStatus">) {
-  const [{ data }] = clientApi.widget.minecraft.getServerStatus.useSuspenseQuery(options);
+  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const utils = clientApi.useUtils();
   clientApi.widget.minecraft.subscribeServerStatus.useSubscription(options, {
     onData(data) {
@@ -21,6 +21,9 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
     },
   });
   const tStatus = useScopedI18n("widget.minecraftServerStatus.status");
+
+  if (!result) return null;
+  const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
 

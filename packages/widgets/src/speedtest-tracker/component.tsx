@@ -19,7 +19,7 @@ export default function SpeedtestTrackerWidget({
   isEditMode,
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
-  const [dashboardData] = clientApi.widget.speedtestTracker.getDashboard.useSuspenseQuery({ integrationIds });
+  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
 
   const utils = clientApi.useUtils();
   clientApi.widget.speedtestTracker.subscribeToDashboard.useSubscription(

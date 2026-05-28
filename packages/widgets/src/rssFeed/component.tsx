@@ -12,7 +12,7 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const [feedEntries] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(input, {
+  const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

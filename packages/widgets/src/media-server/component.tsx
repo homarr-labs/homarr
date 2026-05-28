@@ -23,7 +23,7 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
+  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
     {
       integrationIds,
       showOnlyPlaying: options.showOnlyPlaying,

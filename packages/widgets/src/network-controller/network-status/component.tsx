@@ -21,7 +21,7 @@ export default function NetworkControllerNetworkStatusWidget({
   options,
   integrationIds,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
+  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery(
     {
       integrationIds,
     },

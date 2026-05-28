@@ -32,7 +32,7 @@ const getDisplayText = (item: { used: string; available: string; percentage: num
 
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery(queryInput);
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
   const utils = clientApi.useUtils();
 
   const board = useRequiredBoard();

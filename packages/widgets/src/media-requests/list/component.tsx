@@ -19,7 +19,7 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
+  const { data: mediaRequests = [] } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },

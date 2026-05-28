@@ -34,7 +34,7 @@ export const ClusterHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
-  const [healthData] = clientApi.widget.healthMonitoring.getClusterHealthStatus.useSuspenseQuery(
+  const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery(
     {
       integrationId,
     },
@@ -55,6 +55,8 @@ export const ClusterHealthMonitoring = ({
       },
     },
   );
+
+  if (!healthData) return null;
 
   const activeNodes = healthData.nodes.reduce(running, 0);
   const activeVMs = healthData.vms.reduce(running, 0);

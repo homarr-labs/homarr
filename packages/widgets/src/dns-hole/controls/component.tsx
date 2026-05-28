@@ -51,7 +51,7 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery(
     {
       integrationIds,
     },

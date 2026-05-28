@@ -26,7 +26,7 @@ interface TimetableWidgetInnerProps {
 }
 
 const TimetableWidgetInner = ({ station, integrationId }: TimetableWidgetInnerProps) => {
-  const [timetable] = clientApi.widget.timetable.getTimetable.useSuspenseQuery({
+  const { data: timetable } = clientApi.widget.timetable.getTimetable.useQuery({
     integrationId,
     stationId: station.value,
     limit: 10,
@@ -36,7 +36,7 @@ const TimetableWidgetInner = ({ station, integrationId }: TimetableWidgetInnerPr
   return (
     <Stack w="100%" gap="xs" p="sm">
       <Text fw="bold">{t("title", { station: station.label })}</Text>
-      {timetable.entries.map((entry) => (
+      {(timetable?.entries ?? []).map((entry) => (
         <Group key={`${entry.timestamp.toISOString()}-${entry.location}`} justify="space-between" w="100%">
           <Group gap="sm">
             {entry.line && (
