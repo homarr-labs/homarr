@@ -1,0 +1,34 @@
+.oxlintrc.json
+  s_b76ab56b2a7361::t_b470035824d610 1-2,4-7,12-16,29-30,32-34,36-37
+  s_b76ab56b2a7361::t_211f1d8fbbbb73 3,35
+  s_b76ab56b2a7361::t_bff46ca9630a6a 8-11
+  s_b76ab56b2a7361::t_8c579cbcae2504 17-22
+  s_b76ab56b2a7361::t_f2770a0c50f65e 23
+  s_b76ab56b2a7361::t_135dfa37e5a085 24-26
+  s_58c3289739dea6::t_b14e9ae170647d 27-28
+  s_58c3289739dea6::t_dc6609a8c50b87 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "eb3ec7bf45daa189be08f73641cf42e7c7d4755c",
+  "prompts": {},
+  "sessions": {
+    "s_58c3289739dea6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1c33c814bffeMn7JGv3RDL6KCM",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b76ab56b2a7361": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05d8b873-8c52-4964-9e34-0bb4380b4e9f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

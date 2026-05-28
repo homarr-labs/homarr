@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/boards/(content)/[name]/(board)/_definition.tsx
+  s_70e268487112ca::t_56b349b2b08912 1-2,7-8,10
+apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts
+  s_70e268487112ca::t_07e14c00367719 1-2,7-8,10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "eae51a844709a5d945f9ad42f41d51dc3c0438cc",
+  "prompts": {},
+  "sessions": {
+    "s_70e268487112ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "19d4ce07-a424-49dc-914b-c648208ee784",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

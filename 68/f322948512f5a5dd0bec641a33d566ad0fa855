@@ -1,0 +1,33 @@
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  c590cf67f6e61487 447-451,461-462,471
+packages/db/migrations/mysql/meta/0038_snapshot.json
+  c590cf67f6e61487 4-1979
+packages/db/migrations/mysql/meta/_journal.json
+  c590cf67f6e61487 270-276
+packages/db/migrations/postgresql/meta/0004_snapshot.json
+  c590cf67f6e61487 2-1879
+packages/db/migrations/postgresql/meta/_journal.json
+  c590cf67f6e61487 32-38
+packages/translation/src/lang/en.json
+  c590cf67f6e61487 4446-4452
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "68f322948512f5a5dd0bec641a33d566ad0fa855",
+  "prompts": {
+    "c590cf67f6e61487": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "623495d3-5de0-4513-9098-9a48bf86dd06",
+        "model": "composer-2"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 50,
+      "total_deletions": 11,
+      "accepted_lines": 50,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -1,0 +1,41 @@
+packages/docker/src/shared.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 14-33
+packages/request-handler/src/docker-log-decode.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 1-89
+packages/request-handler/src/docker.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 1,3,14,30-107
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.tsx
+  s_812f0bd91cbce5::t_b6f832056a930d 1-79
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 16-23,76-77
+packages/request-handler/src/docker-log-decode.spec.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 1-53
+packages/translation/src/lang/en.json
+  s_812f0bd91cbce5::t_b6f832056a930d 3990-3995
+packages/widgets/src/docker/component.tsx
+  s_812f0bd91cbce5::t_b6f832056a930d 14
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.module.css
+  s_812f0bd91cbce5::t_b6f832056a930d 1-3
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/client.tsx
+  s_812f0bd91cbce5::t_b6f832056a930d 1-10
+packages/api/src/router/docker/docker-router.ts
+  s_812f0bd91cbce5::t_b6f832056a930d 7-11,111-187
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/page.tsx
+  s_812f0bd91cbce5::t_b6f832056a930d 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "d7f9d81e8b669f4a41992a1772275f3ea2da52fa",
+  "prompts": {},
+  "sessions": {
+    "s_812f0bd91cbce5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a178a5f8ffetT6wwTqIOEiYJ7",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

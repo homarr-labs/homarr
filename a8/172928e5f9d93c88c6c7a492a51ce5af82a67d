@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  ebfcd15b75261a62 4,55
+packages/widgets/src/prefetch.ts
+  ebfcd15b75261a62 4,18-36,42-232
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  ebfcd15b75261a62 1,24,38-39,43,50,63-75,80,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "a8172928e5f9d93c88c6c7a492a51ce5af82a67d",
+  "prompts": {
+    "ebfcd15b75261a62": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b521ec5c-7458-4402-bb2b-08c73a844306",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 239,
+      "total_deletions": 42,
+      "accepted_lines": 234,
+      "overriden_lines": 0
+    }
+  }
+}

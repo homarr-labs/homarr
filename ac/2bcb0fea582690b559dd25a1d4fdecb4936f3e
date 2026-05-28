@@ -1,0 +1,117 @@
+packages/form/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+packages/image-proxy/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/notifications/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+packages/translation/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-13
+packages/widgets/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-18
+packages/common/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-19
+packages/settings/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+.vscode/launch.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 18,26,34,66,74
+packages/auth/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-8
+static-data/contributors.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-122
+packages/integrations/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-18
+packages/old-schema/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/cron-job-status/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+packages/ping/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+static-data/translators.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-958
+package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 66
+packages/modals-collection/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+turbo/generators/templates/package.json.hbs
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-4
+packages/definitions/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/cron-jobs-core/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-17
+packages/analytics/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+turbo/generators/templates/tsconfig.json.hbs
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-2
+tooling/typescript/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 4
+.vscode/settings.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 30-32
+packages/redis/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/request-handler/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+.deepsource.toml
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 6-8,11
+packages/old-import/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-19
+packages/cron-jobs/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+packages/spotlight/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+static-data/opencollective-contributors.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-212
+packages/core/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-13
+packages/forms-collection/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/api/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-8
+scripts/update-integration-list.mts
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 1-2,4,9,12-13,20,25,35,40,47,56,67,70
+.vscode/i18n-ally-custom-framework.yml
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 35
+development/development.docker-compose.yml
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 54
+packages/ui/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-18
+packages/modals/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/db/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-8
+packages/validation/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+CHANGELOG.md
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 5-6
+apps/tasks/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-8
+deployments/prebuilt-debian/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 11
+packages/cli/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/icons/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-16
+packages/boards/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-17
+apps/websocket/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 7-8
+packages/server-settings/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-15
+packages/docker/package.json
+  s_c176b06e8c451e::t_05ae5fdc1a6ba9 14-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "ac2bcb0fea582690b559dd25a1d4fdecb4936f3e",
+  "prompts": {},
+  "sessions": {
+    "s_c176b06e8c451e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8d6e43a7-56f3-4f3d-961e-0d3189cc2903",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

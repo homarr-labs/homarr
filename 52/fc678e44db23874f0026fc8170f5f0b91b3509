@@ -1,0 +1,26 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.spec.ts
+  s_ded556cdcb2646::t_e51146f8ac1524 139,144,146,149
+  s_ded556cdcb2646::t_c6667745c4b539 89-94
+  s_ded556cdcb2646::t_d911bf3a365d77 159
+  s_ded556cdcb2646::t_e7c3add3827278 1-2,5,9,13-14,16,19-88,95-138,140-143,145,147-148,150-158,160-192,194-204,206-224,226-237,239-254,256-264,266-272
+  s_ded556cdcb2646::t_f65d12039f8c9f 10-12
+  s_ded556cdcb2646::t_b124674b1d484b 3-4,6-8
+  s_ded556cdcb2646::t_ab88b8f6338e18 15,17-18
+  s_ded556cdcb2646::t_bb9a8e0a31f139 193,205,225,238,255,265
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "52fc678e44db23874f0026fc8170f5f0b91b3509",
+  "prompts": {},
+  "sessions": {
+    "s_ded556cdcb2646": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8145cbe7-4038-4db5-9fc2-a459115c8fed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

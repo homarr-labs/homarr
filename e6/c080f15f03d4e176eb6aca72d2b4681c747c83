@@ -1,0 +1,31 @@
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_a3055e40d16f76::t_3c5bbc4623f2eb 31
+  s_a3055e40d16f76::t_070ee19ba67ae3 46,50
+  s_a3055e40d16f76::t_a60aa3046e175b 48-49,57
+  s_a3055e40d16f76::t_d95821645ed989 32
+  s_a3055e40d16f76::t_dcbaaef00fe2d7 15-22
+  s_a3055e40d16f76::t_d67a0718031606 43-45,47,58
+apps/nextjs/src/app/[locale]/manage/boards/_components/create-board-button.tsx
+  s_a3055e40d16f76::t_53065ab39a505a 3,10-11,18-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "e6c080f15f03d4e176eb6aca72d2b4681c747c83",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_a3055e40d16f76": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "62ac77f0-9510-4c61-82de-45df0f952cdc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

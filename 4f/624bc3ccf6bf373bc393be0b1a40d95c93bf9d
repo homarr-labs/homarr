@@ -1,0 +1,29 @@
+CHANGELOG.md
+  ai_agent 1-6,11-12
+packages/api/package.json
+  s_4245d9aacb0f23::t_7b7d12fca82dac 7-8
+static-data/contributors.json
+  ai_agent 1
+static-data/translators.json
+  ai_agent 1
+.oxfmtrc.json
+  s_4245d9aacb0f23::t_d5a3a0651503d0 6
+static-data/opencollective-contributors.json
+  ai_agent 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "4f624bc3ccf6bf373bc393be0b1a40d95c93bf9d",
+  "prompts": {},
+  "sessions": {
+    "s_4245d9aacb0f23": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "55cb9c91-53f6-4a31-852c-bec15e4d556d",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+packages/ui/src/theme.ts
+  s_a2dfecb58231be::t_f4ad4ea1080b18 1,13-14,20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6461d84ec8ee3a751e105bf097fa9caf0d4877e9",
+  "prompts": {},
+  "sessions": {
+    "s_a2dfecb58231be": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f4c6d2f-efab-46a4-9597-2b42074b48c7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

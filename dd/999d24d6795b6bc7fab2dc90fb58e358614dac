@@ -1,0 +1,35 @@
+apps/tasks/src/main.ts
+  s_5868729544b04b::t_915e9b670d8ea5 5-6,10-28,30
+packages/redis/src/lib/connection.ts
+  s_5868729544b04b::t_522db12bb6a93e 3
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_5868729544b04b::t_0861004fba5d2f 4,22-25
+packages/redis/src/lib/channel.ts
+  s_5868729544b04b::t_85af688e6bd193 110,118,124,144,160,166,191,198,241-242,245,254,258,264,275,279,290,294,298,301-302,309,313,315,328,343,346,349,422
+  s_5868729544b04b::t_04de72b3acb921 57-58
+  s_5868729544b04b::t_020697c076f074 34,46,48,51
+  s_5868729544b04b::t_b763488ebc4601 87
+  s_5868729544b04b::t_faddf9804ea049 94
+  s_5868729544b04b::t_94bee8a366592e 240,289,342
+  s_5868729544b04b::t_0d428dabd4b69f 358-359
+  s_5868729544b04b::t_46b31e301001f5 73
+  s_5868729544b04b::t_ba403d72335bad 4,13-17
+  s_5868729544b04b::t_8cffa349dc6989 81
+  s_5868729544b04b::t_868a3678f96a33 371,375
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "dd999d24d6795b6bc7fab2dc90fb58e358614dac",
+  "prompts": {},
+  "sessions": {
+    "s_5868729544b04b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7bbd4daf-51bb-48c6-b3a3-5940fbcff8d1",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  4ce654cf70f9902c 60-61
+e2e/shared/actions/onboarding-actions.ts
+  4ce654cf70f9902c 54-58
+e2e/shared/assertions/onboarding-assertions.ts
+  4ce654cf70f9902c 60
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  4ce654cf70f9902c 19-20
+e2e/onboarding.spec.ts
+  4ce654cf70f9902c 34,76
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  4ce654cf70f9902c 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e0c2978f523c67eba5a98f9ba9f245e36fb49268",
+  "prompts": {
+    "4ce654cf70f9902c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7cdaa66a-445e-4f22-9e7a-578bc0f0c13b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 6,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_32d929d7363456": {
+      "author": "Thomas Camlong"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.spec.ts
+  s_ded556cdcb2646::t_f65d12039f8c9f 5-7
+  s_ded556cdcb2646::t_e7c3add3827278 1-4,8-280
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "a28a774608929a282528ad60f6fc9d3fc93a19f6",
+  "prompts": {},
+  "sessions": {
+    "s_ded556cdcb2646": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8145cbe7-4038-4db5-9fc2-a459115c8fed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

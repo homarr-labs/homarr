@@ -1,0 +1,29 @@
+packages/widgets/src/rssFeed/prefetch.ts
+  s_70e268487112ca::t_1af1f317e256c1 2-7,9-14,17-21
+  s_70e268487112ca::t_77945110dca7a0 8,22
+  s_70e268487112ca::t_f17421a7e46783 1,15-16
+packages/widgets/src/weather/prefetch.ts
+  s_70e268487112ca::t_319518f8ad3212 1,21-22
+  s_70e268487112ca::t_50787d52c2fb5d 8,29
+  s_70e268487112ca::t_e5f84d0769fb32 15-16
+  s_70e268487112ca::t_6b06e90326ff2a 2-7,9-14,17-20,23-28
+packages/widgets/src/prefetch.ts
+  s_70e268487112ca::t_c047850bc0b8f4 14-15
+  s_70e268487112ca::t_5c1d729d73919f 24-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "108b48825079934196ed17fe99e6c8976bdf2094",
+  "prompts": {},
+  "sessions": {
+    "s_70e268487112ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "19d4ce07-a424-49dc-914b-c648208ee784",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

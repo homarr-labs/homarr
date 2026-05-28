@@ -1,0 +1,19 @@
+packages/translation/src/lang/en.json
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 752-782
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "9c0e73922d3c1a72bd76a96b5319573cdbd3a5a1",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

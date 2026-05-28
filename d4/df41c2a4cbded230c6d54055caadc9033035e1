@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  s_a3055e40d16f76::t_4374be5864a982 3-4,36-41,47,51
+apps/nextjs/src/app/[locale]/manage/users/groups/page.tsx
+  s_a3055e40d16f76::t_d01a58ca9d66a8 28
+  s_a3055e40d16f76::t_b0fd90c3c16d1b 2,11-12,52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "d4df41c2a4cbded230c6d54055caadc9033035e1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_a3055e40d16f76": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "62ac77f0-9510-4c61-82de-45df0f952cdc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

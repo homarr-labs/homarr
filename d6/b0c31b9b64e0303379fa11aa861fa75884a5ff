@@ -1,0 +1,36 @@
+packages/db/schema/postgresql.ts
+  ai_agent 23,28,35-39
+packages/db/schema/mysql.ts
+  ai_agent 24,29,36-40
+packages/validation/src/user.ts
+  ai_agent 3
+packages/definitions/src/index.ts
+  s_d845807fb8b082::t_f2abe3de786554 17
+packages/definitions/src/ui-types.ts
+  s_d845807fb8b082::t_a0c739f3383e38 1-2
+packages/db/schema/sqlite.ts
+  ai_agent 12,17,24-28
+packages/db/package.json
+  s_d845807fb8b082::t_d1a30d7735aae9 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "d6b0c31b9b64e0303379fa11aa861fa75884a5ff",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

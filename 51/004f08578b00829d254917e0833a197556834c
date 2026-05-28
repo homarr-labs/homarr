@@ -1,0 +1,13 @@
+packages/definitions/src/integration.ts
+  ai_agent 477
+packages/definitions/src/integration-url-template.ts
+  ai_agent 15
+packages/ui/src/theme.ts
+  ai_agent 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "51004f08578b00829d254917e0833a197556834c",
+  "prompts": {}
+}

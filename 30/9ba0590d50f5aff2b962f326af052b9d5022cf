@@ -1,0 +1,128 @@
+packages/definitions/src/docker-integration-match.ts
+  s_a2dfecb58231be::t_c8aa3d38b8e4a1 63-76,85,88
+  s_a2dfecb58231be::t_dd192a712b97f8 1-62,77-84,86-87,89-91
+packages/api/src/router/onboard/onboard-router.ts
+  s_a2dfecb58231be::t_2bb13cba515859 41-45,52-54,56,58-59
+  s_a2dfecb58231be::t_fd49d24b8791d6 214
+  s_a2dfecb58231be::t_7079594a0a7ea1 183-193,199,212-213,215-222,227-238,240-255,257-266,268-280,283-290,293-307
+  s_a2dfecb58231be::t_1f106c530b7b94 8,10,12,25-26,30,33
+  s_a2dfecb58231be::t_2087b10026b2ee 46-51,55,57
+  s_a2dfecb58231be::t_eb226846b143aa 223-226,239,281-282
+  s_a2dfecb58231be::t_60f8b0868b0c95 256,267
+  s_a2dfecb58231be::t_30e140b304b5bb 291-292
+  s_a2dfecb58231be::t_ccde25e1401e81 338-348
+  s_a2dfecb58231be::t_3b837c4f1bbcc7 152
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_a2dfecb58231be::t_bdc79e32405380 66-76
+  s_a2dfecb58231be::t_0b333f36aecfaf 96
+  s_a2dfecb58231be::t_32c2692d12ceaf 206
+  s_a2dfecb58231be::t_09b00a89c99258 30
+  s_a2dfecb58231be::t_efc13f3c57f9c6 19
+  s_a2dfecb58231be::t_0bdf9bbd187de9 322-326,329,331-332,334-342
+  s_a2dfecb58231be::t_2ba18373ee2ef8 309-321,327-328,330,333
+  s_a2dfecb58231be::t_5fd4949dda98f8 6
+packages/request-handler/src/docker.ts
+  s_a2dfecb58231be::t_6a7deaa8362cee 10,27
+packages/definitions/src/test/docker-integration-match.spec.ts
+  s_a2dfecb58231be::t_46ae3f7e506252 1-91,119
+  s_a2dfecb58231be::t_05a1f41d24b5a1 92-118
+packages/definitions/src/test/integration-url-template.spec.ts
+  s_a2dfecb58231be::t_7ab14448a4f65a 3-4,35-38
+  s_a2dfecb58231be::t_3d0e166a15e7d2 1-2,5-34,39-40
+packages/definitions/src/integration.ts
+  s_a2dfecb58231be::t_7f99f6ac123a85 347
+  s_a2dfecb58231be::t_2d67a97157ec95 31
+  s_a2dfecb58231be::t_0ce9eb7c9e4c6e 145
+  s_a2dfecb58231be::t_39490432c81ca3 179
+  s_a2dfecb58231be::t_925d66da7fdbfd 42,51,59,67,75,83,91,99,108,117,126,135,144,153,161,169,178,187,196,204,212,220
+  s_a2dfecb58231be::t_83668e21be324a 100,109,118,127,136
+  s_a2dfecb58231be::t_ff646f385fe0dd 30,32
+  s_a2dfecb58231be::t_8e869e761ae7f1 235,243,251,259,267,275
+  s_a2dfecb58231be::t_827004b6d0a139 188
+  s_a2dfecb58231be::t_93c7279606a846 474-481
+  s_a2dfecb58231be::t_b3d696effb3700 402,410,418,427
+  s_a2dfecb58231be::t_2c14d44f7ceec2 170
+  s_a2dfecb58231be::t_80d34c91c02ace 362,370,378,387
+  s_a2dfecb58231be::t_2d802d25443964 43
+  s_a2dfecb58231be::t_6af57f08bb1cf8 469-473
+packages/translation/src/lang/en.json
+  s_a2dfecb58231be::t_8b8b072ec82ecf 767-769
+  s_a2dfecb58231be::t_a2182740ce0a33 121-122
+  s_a2dfecb58231be::t_a35bd083efcc2f 124
+  s_a2dfecb58231be::t_0f61f37636c5b1 123
+  s_a2dfecb58231be::t_b55101ed1b0d36 109-120
+  s_a2dfecb58231be::t_f8030368a5fa49 104-108
+packages/definitions/src/integration-url-template.ts
+  s_a2dfecb58231be::t_f4e878341dac54 2-3,24
+  s_a2dfecb58231be::t_1667f79322fad2 1,4-23,25-30
+apps/nextjs/src/app/[locale]/init/_steps/integrations/docker-discovery-panel.tsx
+  s_a2dfecb58231be::t_a0b5952ad69cf7 3
+  s_a2dfecb58231be::t_ec645982ab4595 29
+  s_a2dfecb58231be::t_90188eaa84de1c 1-2,4-6,10,12-13,16,18-19,21-28,30-39,45-46,63,65,67-68,104,151-152
+  s_a2dfecb58231be::t_f777ce4e591639 43,50
+  s_a2dfecb58231be::t_2d7baabdfd6974 127-128
+  s_a2dfecb58231be::t_b3e95c4afaa442 124-126,129-130,132-144
+  s_a2dfecb58231be::t_66d020cf31b3b2 91
+  s_a2dfecb58231be::t_f454a76b56de42 9,44,51,53,88-90,92-93,120-123,145-146
+  s_a2dfecb58231be::t_5650491d6b1ba4 131
+  s_a2dfecb58231be::t_2d98de39e9a9f4 7,47-49,52,147
+  s_a2dfecb58231be::t_52e07a90808461 8,11,14-15,20,40-42,64,66,69-81,83-87,94-103,105-119,148-150
+  s_a2dfecb58231be::t_a98038c5879d08 54-62
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_a2dfecb58231be::t_a458e8273943ff 48
+  s_a2dfecb58231be::t_c01721fb71f922 22,29
+  s_a2dfecb58231be::t_3ef80c8754f570 19,26,32
+packages/definitions/src/widget-integration-map.ts
+  s_a2dfecb58231be::t_91bb3b57c6e83d 79-91
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_a2dfecb58231be::t_34133b6927f2b1 27
+packages/definitions/src/test/api-key-url.spec.ts
+  s_a2dfecb58231be::t_43aa937d714dcc 1-31
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_a2dfecb58231be::t_333f65d713a14d 71,73-77
+  s_a2dfecb58231be::t_5280da6acf8b68 3-9
+packages/definitions/src/index.ts
+  s_a2dfecb58231be::t_cee53d1d31d878 18-19
+packages/translation/src/lang/en-gb.json
+  s_a2dfecb58231be::t_7d2312b5eb9e5a 123
+  s_a2dfecb58231be::t_892a76bf9b5543 104-108
+  s_a2dfecb58231be::t_da8e6da581f9f9 121-122
+  s_a2dfecb58231be::t_2e586745fb4f4e 124
+  s_a2dfecb58231be::t_9e4ec6f6c55aa9 109-120
+  s_a2dfecb58231be::t_cd51501eacb312 767-769
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_a2dfecb58231be::t_92281e58bc3a9e 219
+  s_a2dfecb58231be::t_faac68e0a70044 84
+  s_a2dfecb58231be::t_ae4765d878f149 167-178
+  s_a2dfecb58231be::t_de917956d360ff 69
+  s_a2dfecb58231be::t_38df6037faa880 130
+  s_a2dfecb58231be::t_88779e7b44222b 237-344
+  s_a2dfecb58231be::t_ef29b1bae489a6 68
+  s_a2dfecb58231be::t_51b60abddbd5ce 123-129,131
+  s_a2dfecb58231be::t_6c96e800fa1bb0 102-103,107,109,111-112
+  s_a2dfecb58231be::t_4617b5eb848a43 5,7-9,11-17,19,25-26,34,37-40,42-44,49,52-53,58-59,61-63,74,100-101,104-105,110,113-115,194-217
+  s_a2dfecb58231be::t_a354aae97e3457 65-67
+  s_a2dfecb58231be::t_d4b66e007f8acd 106,108
+  s_a2dfecb58231be::t_894cca48443883 6,10,18,20-21
+  s_a2dfecb58231be::t_7c77a8048fd7a3 41
+  s_a2dfecb58231be::t_81ae400107adcf 190-191
+  s_a2dfecb58231be::t_fcb3ece855661b 227
+  s_a2dfecb58231be::t_297daa916c6ac2 187-189,192
+  s_a2dfecb58231be::t_5f551445b1662d 3,33,60,70-73,75-83,85-93,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "309ba0590d50f5aff2b962f326af052b9d5022cf",
+  "prompts": {},
+  "sessions": {
+    "s_a2dfecb58231be": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f4c6d2f-efab-46a4-9597-2b42074b48c7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

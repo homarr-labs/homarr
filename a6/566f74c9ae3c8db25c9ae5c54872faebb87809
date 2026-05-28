@@ -1,0 +1,53 @@
+packages/definitions/src/test/api-key-url.spec.ts
+  s_a2dfecb58231be::t_87eb9f096a18b7 27
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_a2dfecb58231be::t_87eb9f096a18b7 71-73
+packages/definitions/src/docker-integration-match.ts
+  s_a2dfecb58231be::t_87eb9f096a18b7 6
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_a2dfecb58231be::t_87eb9f096a18b7 48-51
+  s_a2dfecb58231be::t_34e5f2048fc4d1 37-39,41,43,45
+packages/translation/src/lang/en.json
+  s_a2dfecb58231be::t_ff54be1de8d24f 105-108
+packages/db/migrations/seed.ts
+  s_a2dfecb58231be::t_0eccc43342619d 16
+  s_a2dfecb58231be::t_bd3f7ddc925fc5 260
+  s_a2dfecb58231be::t_758f72f1914589 346-351,353
+apps/nextjs/src/app/[locale]/init/_steps/integrations/docker-discovery-panel.tsx
+  s_a2dfecb58231be::t_87eb9f096a18b7 17,131-141
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_a2dfecb58231be::t_e56ba113c4fcd2 26
+  s_a2dfecb58231be::t_dc56044d482df4 134-137
+  s_a2dfecb58231be::t_87eb9f096a18b7 24,198-200,224-228,292,306-310,334-336
+  s_a2dfecb58231be::t_4a23f34bf8fa15 71
+packages/api/src/router/onboard/onboard-router.ts
+  s_a2dfecb58231be::t_87eb9f096a18b7 148-155,171,182
+  s_a2dfecb58231be::t_3d446dd013d6b6 286,288-291
+  s_a2dfecb58231be::t_2bfc31cfe7b81e 7,28
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_a2dfecb58231be::t_a8e4c7cf258e10 85
+packages/definitions/src/integration.ts
+  s_a2dfecb58231be::t_62506fc8013586 476
+packages/db/queries/widget-placement.ts
+  s_a2dfecb58231be::t_7bb011b03b5afe 1-148
+packages/definitions/src/integration-url-template.ts
+  s_a2dfecb58231be::t_2228df014655d0 7
+packages/db/queries/index.ts
+  s_a2dfecb58231be::t_0c6f843b773b93 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a6566f74c9ae3c8db25c9ae5c54872faebb87809",
+  "prompts": {},
+  "sessions": {
+    "s_a2dfecb58231be": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f4c6d2f-efab-46a4-9597-2b42074b48c7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

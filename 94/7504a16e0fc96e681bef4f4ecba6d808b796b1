@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/init/_steps/finish/init-finish.tsx
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 20-21
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_0d1d16cf775ae9::t_a79b50e48a7f6f 3-6,10,12,24,37,39-40,45,57-66,70-72,77-86,93,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "947504a16e0fc96e681bef4f4ecba6d808b796b1",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

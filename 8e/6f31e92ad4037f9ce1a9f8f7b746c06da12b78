@@ -1,0 +1,14 @@
+packages/ui/src/styles.css
+  h_d6e478ca18e517 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "8e6f31e92ad4037f9ce1a9f8f7b746c06da12b78",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
