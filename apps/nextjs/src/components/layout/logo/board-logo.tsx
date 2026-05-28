@@ -1,7 +1,10 @@
 "use client";
 
+import { Group } from "@mantine/core";
+
 import { useRequiredBoard } from "@homarr/boards/context";
 
+import { QueryRefreshIndicator } from "../header/query-refresh-indicator";
 import { homarrLogoPath, homarrPageTitle } from "./homarr-logo";
 import type { LogoWithTitleProps } from "./logo";
 import { Logo, LogoWithTitle } from "./logo";
@@ -33,11 +36,14 @@ export const BoardLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTi
   const board = useRequiredBoard();
   const imageOptions = useImageOptions();
   return (
-    <LogoWithTitle
-      size={size}
-      hideTitleOnMobile={hideTitleOnMobile}
-      title={board.pageTitle ?? homarrPageTitle}
-      image={imageOptions}
-    />
+    <Group gap="xs" wrap="nowrap" align="center">
+      <LogoWithTitle
+        size={size}
+        hideTitleOnMobile={hideTitleOnMobile}
+        title={board.pageTitle ?? homarrPageTitle}
+        image={imageOptions}
+      />
+      <QueryRefreshIndicator />
+    </Group>
   );
 };
