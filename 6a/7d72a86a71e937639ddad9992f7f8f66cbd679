@@ -1,0 +1,91 @@
+docs/product-tour/scripts/shared/capture.mjs
+  s_f7e50673f58a9e::t_a98396084298b0 1-144
+docs/product-tour/build.mjs
+  s_f7e50673f58a9e::t_a34c4c50db4ce7 1-205
+docs/product-tour/manifest/pilote.json
+  s_f7e50673f58a9e::t_d0b0d64f6b58e2 1-10,14-21,25-32,36-42,47-54,58-64,69-75,80-87,91-98,102-109,113-116
+  s_f7e50673f58a9e::t_5f6dc889422634 11-13,22-24,33-35,43-46,55-57,65-68,76-79,88-90,99-101,110-112
+docs/product-tour/scripts/capture-pilote.mjs
+  s_f7e50673f58a9e::t_22fb669793a0f5 10
+  s_f7e50673f58a9e::t_ff486c63136134 1-9,11-165
+docs/product-tour/fixtures.example.json
+  s_f7e50673f58a9e::t_4f2f3da0fdbcf5 1-8
+docs/product-tour/templates/presentation.html
+  s_f7e50673f58a9e::t_b6b62e409db50b 1-383,410,418,461-462,492,499,502,508,522,529-530,533-536
+  s_f7e50673f58a9e::t_cbe9acaa992987 384-409,411-417,419-460,463-491,493-498,500-501,503-507,509-521,523-528,531-532
+docs/product-tour/scripts/shared/types.mjs
+  s_f7e50673f58a9e::t_7266623d8b2c6a 1-26
+docs/product-tour/README.md
+  s_f7e50673f58a9e::t_66985687f44309 9,11,14-26,28-30,33,35,37-59,65-67,71-99,101,103-105
+  s_f7e50673f58a9e::t_d6837419cf0eaf 1-8,10,12-13,27,31-32,34,36,60-64,68-70,100,102
+docs/product-tour/scripts/shared/fixtures.mjs
+  s_f7e50673f58a9e::t_c80ef6432a3c22 108
+  s_f7e50673f58a9e::t_e1baef27f068b7 1-107,109-123
+docs/product-tour/manifest/auth-account.json
+  s_f7e50673f58a9e::t_278de824fb1d53 1-10,15-22,27-34,39-46,51-54
+  s_f7e50673f58a9e::t_b8fe0c2950b9bf 11-14,23-26,35-38,47-50
+docs/product-tour/scripts/capture-auth-account.mjs
+  s_b4894965ce6c94::t_93639962d66929 10
+docs/product-tour/manifest/rapports.json
+  s_f7e50673f58a9e::t_451d91df2d02f0 11-13,22-25,34-37,46-49,58-61,70-73
+  s_f7e50673f58a9e::t_a4cab55d399f81 1-10,14-21,26-33,38-45,50-57,62-69,74-77
+docs/product-tour/manifest/analyse.json
+  s_f7e50673f58a9e::t_ca54a2c8ba05d1 11-14,23-26,35-38,47-51,60-65,74-79,88-92,101-106
+  s_b4894965ce6c94::t_cc2afbf6ede084 1-10,15-22,27-34,39-46,52-59,66-73,80-87,93-100,107-110
+docs/product-tour/index.html
+  s_f7e50673f58a9e::t_dbce5375e026db 1-358,360-369,371-373,756-765,792,800,843-844,874,881,884,890,904,911-912,915-918
+  s_f7e50673f58a9e::t_ae632719600688 382,394,406,418,430,442,454,466,478,490,502,514,526,538,550,562,574,584,586,598,608,610,620,622,634,646,658,670,678,682,694,706,718,730,742,754
+  s_f7e50673f58a9e::t_974160a57c4f2c 359,370,374-381,383-393,395-405,407-417,419-429,431-441,443-453,455-465,467-477,479-489,491-501,503-513,515-525,527-537,539-549,551-561,563-573,575-583,585,587-597,599-607,609,611-619,621,623-633,635-645,647-657,659-669,671-677,679-681,683-693,695-705,707-717,719-729,731-741,743-753,755
+  s_f7e50673f58a9e::t_06e563165bb7ba 766-791,793-799,801-842,845-873,875-880,882-883,885-889,891-903,905-910,913-914
+docs/product-tour/scripts/shared/auth.mjs
+  s_f7e50673f58a9e::t_ce14c57e1b39e9 20-42
+  s_f7e50673f58a9e::t_75b560ccd927a6 1-19,43
+docs/product-tour/scripts/capture-comparaison.mjs
+  s_f7e50673f58a9e::t_df38dd7c35be2c 1-9,11-81
+  s_f7e50673f58a9e::t_87b7ea2e41a920 10
+docs/product-tour/manifest.schema.json
+  s_f7e50673f58a9e::t_e6d7cf1352de55 1-56
+docs/product-tour/scripts/capture-home-nav.mjs
+  s_f7e50673f58a9e::t_2217f1c0c4335d 10
+  s_f7e50673f58a9e::t_a9eeb1963636a2 1-9,11-69
+docs/product-tour/.gitignore
+  s_f7e50673f58a9e::t_1a1b23c9240413 1-3
+docs/product-tour/manifest/comparaison.json
+  s_f7e50673f58a9e::t_dd2a10ef55f379 11-14,19,23-26
+  s_f7e50673f58a9e::t_278de824fb1d53 1-10,15-18,20-22,27-30
+docs/product-tour/scripts/capture-analyse.mjs
+  s_f7e50673f58a9e::t_8e09bb3ea376b2 1-9,11-191
+  s_f7e50673f58a9e::t_ff9c469cd4f51b 10
+docs/product-tour/scripts/shared/browser.mjs
+  s_f7e50673f58a9e::t_1b7e1f503ab318 1-18
+docs/product-tour/scripts/capture-rapports.mjs
+  s_f7e50673f58a9e::t_10766f2fbfc3dc 1-9,11-128
+  s_f7e50673f58a9e::t_9943f38f6a151e 10
+docs/product-tour/manifest/home-nav.json
+  s_f7e50673f58a9e::t_278de824fb1d53 1-10,15-22,28-31
+  s_f7e50673f58a9e::t_b8fe0c2950b9bf 11-14,23-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6a7d72a86a71e937639ddad9992f7f8f66cbd679",
+  "prompts": {},
+  "sessions": {
+    "s_b4894965ce6c94": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c2f2e2f3-c017-40c0-8fa3-68c736fb1b39",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f7e50673f58a9e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04b7ba50-9df2-4b37-9572-ad7bb78b79ce",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
