@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { Group, TextInput } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -33,29 +33,20 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
 
   return (
     <>
-      <Group justify="space-between">
-        <TextInput
-          leftSection={<IconSearch size={20} stroke={1.5} />}
-          value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
-          placeholder={`${t("group.search")}...`}
-          style={{ flex: 1 }}
-        />
-        <AddGroup />
-      </Group>
-
+      <TextInput
+        leftSection={<IconSearch size={20} stroke={1.5} />}
+        value={search}
+        onChange={(event) => setSearch(event.currentTarget.value)}
+        placeholder={`${t("group.search")}...`}
+      />
       <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
     </>
   );
 };
 
-const AddGroup = () => {
+export const AddGroupButton = () => {
   const t = useI18n();
   const { openModal } = useModalAction(AddGroupModal);
 
-  const handleAddGroup = useCallback(() => {
-    openModal();
-  }, [openModal]);
-
-  return <MobileAffixButton onClick={handleAddGroup}>{t("group.action.create.label")}</MobileAffixButton>;
+  return <MobileAffixButton onClick={() => openModal()}>{t("group.action.create.label")}</MobileAffixButton>;
 };

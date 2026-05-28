@@ -216,7 +216,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
   const tCertificateField = useScopedI18n("certificate.field");
 
   return (
-    <Card withBorder>
+    <Card>
       <Text fw={500}>{tDetails("title")}</Text>
       <Group justify="space-between">
         <Text size="sm" c="dimmed">

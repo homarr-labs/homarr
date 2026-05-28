@@ -12,7 +12,7 @@ interface UserAvatarGroupProps {
 
 export const UserAvatarGroup = ({ size, limit, users }: UserAvatarGroupProps) => {
   return (
-    <TooltipGroup openDelay={300} closeDelay={300}>
+    <TooltipGroup closeDelay={300}>
       <AvatarGroup>
         {users.slice(0, limit).map((user) => (
           <Tooltip key={user.name} label={user.name} withArrow>
