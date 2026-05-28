@@ -106,7 +106,7 @@ export default function MediaServerWidget({
         <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
           {t("titles.stats.main")}
         </Text>
-        <Grid className="mediaRequests-stats-stats-grid" gutter={4} w="100%">
+        <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
           {data.map((stat) => (
             <Grid.Col
               className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}

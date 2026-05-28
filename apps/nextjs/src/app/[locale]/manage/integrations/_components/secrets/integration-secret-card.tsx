@@ -84,7 +84,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
             </Button>
           </Group>
         </Group>
-        <Collapse in={editMode}>{children}</Collapse>
+        <Collapse expanded={editMode}>{children}</Collapse>
       </Stack>
     </Card>
   );

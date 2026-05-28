@@ -65,8 +65,8 @@ const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   id: 1,
   index: 1,
   integration: 1,
-  name: 8,
-  progress: 4,
+  name: 16,
+  progress: 6,
   ratio: 2,
   received: 3,
   sent: 3,
@@ -805,7 +805,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             <Chip.Group
               multiple
               value={filters.statuses}
-              onChange={(statuses) => setFilters({ ...filters, statuses: statuses as typeof filters.statuses })}
+              onChange={(statuses) => setFilters({ ...filters, statuses: statuses })}
             >
               {availableStatuses.map((status) => (
                 <Chip key={status} value={status}>

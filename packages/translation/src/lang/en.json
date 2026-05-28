@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Open media"
       }
+    },
+    "noResults": {
+      "title": "No media uploaded"
     }
   },
   "common": {
@@ -3454,6 +3457,9 @@
         "visibility": {
           "public": "This board is public",
           "private": "This board is private"
+        },
+        "noResults": {
+          "title": "No boards yet"
         },
         "modal": {
           "createBoard": {

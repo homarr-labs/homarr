@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import type { Page } from "playwright";
+import type { Page } from "@playwright/test";
 
 import * as sqliteSchema from "../../../packages/db/schema/sqlite";
 import type { SqliteDatabase } from "../e2e-db";

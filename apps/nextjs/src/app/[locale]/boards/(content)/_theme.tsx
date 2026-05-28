@@ -24,6 +24,7 @@ export const BoardMantineProvider = ({
     },
     primaryColor: "primaryColor",
     autoContrast: true,
+    defaultRadius: "sm",
     fontSizes: {
       "2xl": rem(24),
       "3xl": rem(28),
