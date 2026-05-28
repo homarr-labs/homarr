@@ -38,7 +38,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
   }
 
   return (
-    <Card w={64 * 12 + 8} maw="90vw">
+    <Card w={64 * 12 + 8} maw="90vw" withBorder={false}>
       <Stack gap="sm">
         <Stack gap={0}>
           <Group justify="space-between" align="center">
@@ -57,7 +57,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
 
         <Stack gap="sm">
           {[...selections.entries()].map(([name, selected]) => (
-            <Card key={name} withBorder>
+            <Card key={name}>
               <Checkbox
                 checked={selected}
                 onChange={registerToggle(name)}

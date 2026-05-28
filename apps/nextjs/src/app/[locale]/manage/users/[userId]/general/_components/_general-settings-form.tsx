@@ -198,6 +198,10 @@ export const UserGeneralSettingsForm = ({
     form.resetDirty();
   };
 
+  const firstDayOfWeekInputProps = form.getInputProps("firstDayOfWeek");
+  const firstDayOfWeekOnChange = firstDayOfWeekInputProps.onChange as (value: number) => void;
+  const firstDayOfWeekValue = (firstDayOfWeekInputProps.value as number).toString();
+
   return (
     <form onSubmit={form.onSubmit(handleSubmitAsync)}>
       <Stack gap="lg">
@@ -281,10 +285,14 @@ export const UserGeneralSettingsForm = ({
               <Divider />
               {showLanguageSelector && <CurrentLanguageCombobox />}
               <Title order={4}>{tGeneral("item.firstDayOfWeek")}</Title>
-              <Radio.Group {...form.getInputProps("firstDayOfWeek")}>
+              <Radio.Group
+                {...firstDayOfWeekInputProps}
+                value={firstDayOfWeekValue}
+                onChange={(nextValue: string) => firstDayOfWeekOnChange(parseInt(nextValue, 10))}
+              >
                 <Group mt="xs" wrap="wrap">
                   {FIRST_DAY_OPTIONS.map(({ value: dayValue, labelKey }) => (
-                    <Radio key={dayValue} value={dayValue} label={weekDays[labelKey]} />
+                    <Radio key={dayValue} value={dayValue.toString()} label={weekDays[labelKey]} />
                   ))}
                 </Group>
               </Radio.Group>

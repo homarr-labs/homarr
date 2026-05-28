@@ -2,13 +2,14 @@
 
 import type { PropsWithChildren } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { createTheme, DirectionProvider, MantineProvider } from "@mantine/core";
+import { DirectionProvider, MantineProvider } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
+import { theme } from "@homarr/ui";
 
 export const CustomMantineProvider = ({
   children,
@@ -23,6 +24,7 @@ export const CustomMantineProvider = ({
         theme={createTheme({
           primaryColor: "red",
           autoContrast: true,
+          defaultRadius: "sm",
         })}
       >
         {children}

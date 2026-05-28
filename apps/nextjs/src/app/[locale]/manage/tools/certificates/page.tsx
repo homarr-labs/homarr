@@ -79,7 +79,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
           {x509Certificates.map((cert) => (
-            <Card key={cert.fileName} withBorder>
+            <Card key={cert.fileName}>
               <Group wrap="nowrap">
                 {cert.isError ? (
                   <IconAlertTriangle
