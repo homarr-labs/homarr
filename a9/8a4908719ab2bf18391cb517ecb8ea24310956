@@ -1,0 +1,19 @@
+packages/widgets/src/calendar/component.tsx
+  s_8f234bf38d1be1::t_60e78578b92aa4 64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a98a4908719ab2bf18391cb517ecb8ea24310956",
+  "prompts": {},
+  "sessions": {
+    "s_8f234bf38d1be1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26c18160-55ae-46d7-a2c7-e491e223bf11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
