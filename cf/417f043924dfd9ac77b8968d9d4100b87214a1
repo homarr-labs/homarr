@@ -1,0 +1,62 @@
+apps/web/app/analyse/page.tsx
+  s_882373fed589ec::t_e04ef9affa3497 26-28,30,33
+  s_882373fed589ec::t_8613d47ac205c2 18
+apps/web/lib/services/pilotes/internal.ts
+  s_882373fed589ec::t_7ce9c12388a41c 255
+apps/web/app/api/pilote/[id]/route.ts
+  s_882373fed589ec::t_01845fa3a0de28 66
+  s_882373fed589ec::t_06ad356019984f 48,91
+  s_882373fed589ec::t_aeee1ef71da20c 104,124-129
+apps/web/lib/services/pilotes/types.ts
+  s_882373fed589ec::t_030982c6820bd9 25
+  s_882373fed589ec::t_893e6276fd80ab 83
+apps/web/lib/services/analyses.ts
+  s_7d777d3954db6e::t_15af0c595732fd 338-339,342,350
+  s_7d777d3954db6e::t_1344b612aebb30 411
+  s_7d777d3954db6e::t_965482a77edd8a 19
+  s_7d777d3954db6e::t_69460432c8d938 20
+apps/web/app/analyse/new/[kind]/page.tsx
+  s_882373fed589ec::t_62fa70741e9966 22
+  s_882373fed589ec::t_c12803510c22bf 4
+  s_882373fed589ec::t_24d7874c631338 46
+apps/web/app/analyse/[id]/page.tsx
+  s_882373fed589ec::t_1689365dbed744 93-94
+  s_7d777d3954db6e::t_1855ea834f5424 74-75
+  s_7d777d3954db6e::t_ad37fa783788c7 107
+  s_7d777d3954db6e::t_2ab0af40bca731 123
+  s_7d777d3954db6e::t_34e0e873df086d 72-73
+  s_7d777d3954db6e::t_17e9dc604cd453 41
+  s_882373fed589ec::t_145ebd0214ed57 15
+apps/web/app/api/pilote/[id]/social-account/route.ts
+  s_882373fed589ec::t_a911025d0c8552 31
+apps/web/lib/types.ts
+  s_882373fed589ec::t_f2f39b3a3dfc02 1325-1326
+apps/web/app/api/pilote/[id]/social-account/[analysisId]/route.ts
+  s_882373fed589ec::t_f3e72beee02a46 53
+apps/web/app/api/pilote/[id]/refresh/route.ts
+  s_882373fed589ec::t_df549f8e144c1d 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cf417f043924dfd9ac77b8968d9d4100b87214a1",
+  "prompts": {},
+  "sessions": {
+    "s_7d777d3954db6e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "102cc0cb-f472-47bf-ad48-d0d9cbecbaf9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
