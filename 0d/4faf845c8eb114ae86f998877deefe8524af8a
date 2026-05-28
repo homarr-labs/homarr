@@ -1,0 +1,86 @@
+apps/api/app/integrations/composio/cloud_download.py
+  s_12a1a17dcc424e::t_99f09207404601 65-69
+  s_12a1a17dcc424e::t_f4fe6eff43eae0 1-51,57-64,70-79,86-193
+  s_12a1a17dcc424e::t_356938011bc228 52-56
+  s_12a1a17dcc424e::t_78ab5c4d62c851 80-85
+apps/web/lib/habs/platform-sync-capabilities.ts
+  s_882373fed589ec::t_bef79a7c669903 18-21
+  s_882373fed589ec::t_4c4f5544a1e7d8 119-131,134-142,144
+  s_882373fed589ec::t_bb5f4759e4bcab 116,133,145
+apps/api/app/api/connections.py
+  s_882373fed589ec::t_4d02a587d3a3ad 11
+  s_882373fed589ec::t_bb434973c60860 82
+apps/api/app/api/social_sync.py
+  s_882373fed589ec::t_7e90a0fc96f0f7 344
+  s_882373fed589ec::t_91f4e0398121d1 4
+  s_882373fed589ec::t_aa40fb97c020b8 309-311,319-323,340-341,349-351,359,374,383-392
+apps/api/app/tasks/pilote_social_sync.py
+  s_882373fed589ec::t_2f166edccf1f19 106
+  s_882373fed589ec::t_6e75776c70d059 95-98,102-103,111-113,136,145-154
+  s_882373fed589ec::t_89ba7764ea051a 3-6,9
+apps/api/app/integrations/composio/social_media_download.py
+  s_882373fed589ec::t_b6f940464c5994 55,57
+  s_882373fed589ec::t_813a8dac4c2077 1-3,8-31,34-54,56,58-63,65-74,76-78,82,108-121,123-134,136-155
+  s_882373fed589ec::t_5b8ac75cd142c6 64
+  s_882373fed589ec::t_19ab35360e28ff 79-81,83-107
+  s_882373fed589ec::t_c78cadedb1e965 32-33
+  s_882373fed589ec::t_4a9310b8717fdf 75
+  s_882373fed589ec::t_adb90f30689109 4-5
+  s_882373fed589ec::t_b57596d70733e8 122
+  s_882373fed589ec::t_08488ead44170c 135
+apps/api/app/integrations/composio/normalizers/instagram.py
+  s_882373fed589ec::t_83c1606442ea4c 49-50,53-55
+  s_882373fed589ec::t_a2f40bb8a50626 47-48,51-52,56,66
+  s_882373fed589ec::t_0b8d7f617d0c85 26-34
+  s_882373fed589ec::t_f70e4d58152e01 3-6
+apps/api/tests/integrations/composio/test_social_media_download.py
+  s_882373fed589ec::t_235a639a9e6a0d 1-67
+apps/api/app/integrations/composio/sync.py
+  s_882373fed589ec::t_6245fcad7056d7 131-135,143-147,182,186
+  s_882373fed589ec::t_36fddbb90bd1a8 136-142,148-150,153,155-169,172,175,178-181,183-185,187-189
+  s_882373fed589ec::t_8ac8ff5cc4170f 151,154
+  s_882373fed589ec::t_1d4c1087b4aa61 170-171,173-174,176-177
+  s_882373fed589ec::t_6b9d1d90fc058e 3-5
+  s_882373fed589ec::t_f6dc1a96f1d21e 152
+  s_882373fed589ec::t_f0476871f6c441 264-266
+apps/api/app/integrations/composio/capabilities.py
+  s_882373fed589ec::t_43650754f8fb41 76
+  s_882373fed589ec::t_510d97bc563cb3 77-84
+  s_882373fed589ec::t_ccdc619f2f10ca 22-25
+apps/api/app/integrations/composio/actions.py
+  s_882373fed589ec::t_e823582c4da469 71-75
+  s_882373fed589ec::t_bf598211b68e43 10-12,14
+  s_882373fed589ec::t_fdd5ac5f5c3f05 13
+  s_882373fed589ec::t_fb0b59abc489b9 76-79
+  s_882373fed589ec::t_35ac043cd10278 3
+apps/web/lib/habs/__tests__/platform-sync-parity.test.ts
+  s_882373fed589ec::t_ec7f8bfd034764 52-55
+  s_882373fed589ec::t_29faa4e0708cfb 57
+  s_882373fed589ec::t_748d49ca108ae5 44
+apps/api/tests/integrations/composio/test_cloud_download.py
+  s_12a1a17dcc424e::t_72fe7ab0e41073 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0d4faf845c8eb114ae86f998877deefe8524af8a",
+  "prompts": {},
+  "sessions": {
+    "s_12a1a17dcc424e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7e2a9e33-cc34-438a-b654-9f878c2f0230",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
