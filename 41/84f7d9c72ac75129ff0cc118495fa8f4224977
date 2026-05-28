@@ -1,0 +1,25 @@
+apps/ml-worker/.dockerignore
+  s_730d97a4a9a8f0::t_587b00b78625ab 1-10
+.env.docker
+  s_730d97a4a9a8f0::t_0af012c12d3ec8 1-91
+apps/ml-worker/Dockerfile
+  s_730d97a4a9a8f0::t_73827def3fb772 1-32
+apps/api/Dockerfile
+  s_730d97a4a9a8f0::t_bb1dd6d12fda51 39-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4184f7d9c72ac75129ff0cc118495fa8f4224977",
+  "prompts": {},
+  "sessions": {
+    "s_730d97a4a9a8f0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c65de88a-1089-4bf0-af95-00a174c5742e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
