@@ -58,37 +58,37 @@ catalogs:
       specifier: ^1.4.0
       version: 1.4.0
     '@mantine/charts':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/colors-generator':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/core':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/dates':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/dropzone':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/form':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/hooks':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/modals':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/notifications':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/spotlight':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@mantine/tiptap':
-      specifier: ^9.2.0
+      specifier: ^9.2.1
       version: 9.2.1
     '@octokit/auth-app':
       specifier: ^8.2.0
@@ -3287,9 +3287,6 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
-
-  '@floating-ui/utils@0.2.10':
-    resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
@@ -10459,7 +10456,7 @@ snapshots:
 
   '@floating-ui/core@1.7.3':
     dependencies:
-      '@floating-ui/utils': 0.2.10
+      '@floating-ui/utils': 0.2.11
     optional: true
 
   '@floating-ui/core@1.7.5':
@@ -10469,7 +10466,7 @@ snapshots:
   '@floating-ui/dom@1.7.4':
     dependencies:
       '@floating-ui/core': 1.7.3
-      '@floating-ui/utils': 0.2.10
+      '@floating-ui/utils': 0.2.11
     optional: true
 
   '@floating-ui/dom@1.7.6':
@@ -10490,9 +10487,6 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       tabbable: 6.2.0
-
-  '@floating-ui/utils@0.2.10':
-    optional: true
 
   '@floating-ui/utils@0.2.11': {}
 
