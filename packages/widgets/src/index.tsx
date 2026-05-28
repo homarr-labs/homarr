@@ -19,6 +19,7 @@ import * as dnsHoleSummary from "./dns-hole/summary";
 import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
 import * as firewall from "./firewall";
+import * as gluetun from "./gluetun";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import * as immichAlbumCarousel from "./immich/album-carousel";
@@ -93,6 +94,7 @@ export const widgetImports = {
   tracearr,
   speedtestTracker,
   umami,
+  gluetun,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

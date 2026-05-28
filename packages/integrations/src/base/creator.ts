@@ -18,6 +18,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
 import { ImmichIntegration } from "../immich/immich-integration";
@@ -123,6 +124,7 @@ export const integrationCreators = {
   immich: ImmichIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
   umami: UmamiIntegration,
+  gluetun: GluetunIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

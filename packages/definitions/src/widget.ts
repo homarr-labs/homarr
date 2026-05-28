@@ -38,5 +38,6 @@ export const widgetKinds = [
   "tracearr",
   "speedtestTracker",
   "umami",
+  "gluetun",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
