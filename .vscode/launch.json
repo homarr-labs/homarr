@@ -15,9 +15,7 @@
       "request": "launch",
       "command": "pnpm docker:dev",
       "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "lint fix",
@@ -25,9 +23,7 @@
       "request": "launch",
       "command": "pnpm lint:fix",
       "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "format fix",
@@ -35,9 +31,7 @@
       "request": "launch",
       "command": "pnpm format:fix",
       "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "db push",
@@ -69,9 +63,7 @@
       "request": "launch",
       "command": "pnpm test",
       "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "test ui",
@@ -79,9 +71,7 @@
       "request": "launch",
       "command": "pnpm test:ui",
       "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

@@ -44,6 +44,7 @@ export const BoardBackgroundVideo = () => {
       muted
       loop
       playsInline
+      aria-hidden="true"
       style={{
         position: "fixed",
         width: "100vw",
