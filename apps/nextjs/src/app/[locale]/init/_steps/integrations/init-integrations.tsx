@@ -22,7 +22,7 @@ import { IconArrowRight, IconInfoCircle, IconSettings } from "@tabler/icons-reac
 
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind, UrlTemplateMode } from "@homarr/definitions";
-import { buildIntegrationUrl, getIntegrationName } from "@homarr/definitions";
+import { buildAppUrl, buildIntegrationUrl, getIntegrationName } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
@@ -137,11 +137,16 @@ export const InitIntegrations = () => {
       const appsToCreate = dockerApps.filter((app) => selectedAppIds.has(app.containerId));
       if (appsToCreate.length > 0) {
         await createApps(
-          appsToCreate.map((app) => ({
-            name: app.containerName,
-            href: app.suggestedUrl || null,
-            iconUrl: app.iconUrl,
-          })),
+          appsToCreate.map((app) => {
+            const href = baseHost
+              ? buildAppUrl(app.containerName, baseHost, urlMode, app.publishedPort ?? undefined)
+              : app.suggestedUrl;
+            return {
+              name: app.containerName,
+              href: href || null,
+              iconUrl: app.iconUrl,
+            };
+          }),
         );
       }
       await setupIntegrations();

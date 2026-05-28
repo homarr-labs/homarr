@@ -36,6 +36,7 @@ export interface DiscoveredApp {
   containerId: string;
   containerName: string;
   suggestedUrl: string;
+  publishedPort: number | null;
   iconUrl: string | null;
 }
 

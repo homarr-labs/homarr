@@ -157,6 +157,7 @@ export const onboardRouter = createTRPCRouter({
         containerId: string;
         containerName: string;
         suggestedUrl: string;
+        publishedPort: number | null;
         iconUrl: string | null;
       }[],
     };
@@ -228,6 +229,7 @@ export const onboardRouter = createTRPCRouter({
             containerId: container.Id,
             containerName,
             suggestedUrl,
+            publishedPort,
             iconUrl,
           });
         }
