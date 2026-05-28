@@ -1,0 +1,34 @@
+apps/ml-worker/habs_worker/routers/analyse_url.py
+  s_12a1a17dcc424e::t_856c37f8679e6e 122-124
+  s_12a1a17dcc424e::t_8f70bc8881936c 155
+apps/ml-worker/habs_worker/features/url_ingest.py
+  s_12a1a17dcc424e::t_1042cefed48396 288-293,295
+  s_882373fed589ec::t_a91f72dc9a7b56 833-844
+  s_12a1a17dcc424e::t_94ca063bca5529 263-267,272,275-279
+  s_882373fed589ec::t_9dbf06c517776b 7-9,11,13-15,19-21
+  s_882373fed589ec::t_9420a1402bf27d 205-208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "48b10107450e239bfbd5bc6003ebc889d53b872d",
+  "prompts": {},
+  "sessions": {
+    "s_12a1a17dcc424e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7e2a9e33-cc34-438a-b654-9f878c2f0230",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
