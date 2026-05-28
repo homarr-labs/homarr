@@ -5,7 +5,7 @@ packages/api/src/router/onboard/onboard-router.ts
 ---
 {
   "schema_version": "authorship/3.0.0",
-  "git_ai_version": "1.3.4",
+  "git_ai_version": "1.5.2",
   "base_commit_sha": "62d571621f0d5a23c8cd39811fa70dd4a2857ecf",
   "prompts": {
     "4ce654cf70f9902c": {
@@ -15,7 +15,6 @@ packages/api/src/router/onboard/onboard-router.ts
         "model": "claude-sonnet-4-6"
       },
       "human_author": "Thomas Camlong",
-      "messages": [],
       "total_additions": 2,
       "total_deletions": 6,
       "accepted_lines": 8,
