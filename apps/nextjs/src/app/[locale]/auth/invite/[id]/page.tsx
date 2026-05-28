@@ -59,7 +59,7 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
             {t("subtitle")}
           </Text>
         </Stack>
-        <Card withBorder w={64 * 6} maw="90vw">
+        <Card w={64 * 6} maw="90vw">
           <RegistrationForm invite={invite} />
         </Card>
         <Text size="xs" c="gray.5" ta="center">

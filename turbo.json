@@ -22,13 +22,11 @@
     },
     "format": {
       "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["node_modules/.cache/.prettiercache"],
       "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": ["^topo"],
-      "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["node_modules/.cache/.eslintcache"]
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "typecheck": {
       "dependsOn": ["^topo"],

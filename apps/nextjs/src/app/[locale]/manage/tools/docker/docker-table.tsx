@@ -202,7 +202,7 @@ const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => 
       <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
-      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light" radius="md">
+      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light">
         {t("addToHomarr.label")}
       </Button>
     </Group>
@@ -253,7 +253,6 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
       onClick={handleClickAsync}
       loading={isPending}
       variant="light"
-      radius="md"
     >
       {t(`${props.action}.label`)}
     </Button>

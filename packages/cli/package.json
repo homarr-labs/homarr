@@ -4,9 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
@@ -14,16 +11,18 @@
       ]
     }
   },
+  "exports": {
+    ".": "./index.ts"
+  },
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt --check .",
+    "lint": "oxlint",
     "run": "pnpm with-env node cli.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e .env --"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@drizzle-team/brocli": "catalog:",
     "@homarr/auth": "workspace:^0.1.0",
@@ -33,11 +32,8 @@
     "dotenv": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "esbuild": "catalog:",
-    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }

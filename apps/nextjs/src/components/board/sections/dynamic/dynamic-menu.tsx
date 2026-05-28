@@ -43,9 +43,17 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
   };
 
   return (
-    <Menu withinPortal withArrow position="right-start" arrowPosition="center">
+    <Menu withinPortal position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon variant="default" radius={"xl"} pos="absolute" top={4} right={4} style={{ zIndex: 10 }}>
+        <ActionIcon
+          variant="default"
+          radius={"xl"}
+          pos="absolute"
+          top={4}
+          right={4}
+          style={{ zIndex: 10 }}
+          aria-label={tItem("menu.label.settings")}
+        >
           <IconDotsVertical size={"1rem"} />
         </ActionIcon>
       </Menu.Target>
