@@ -9,8 +9,6 @@ import {
 } from "@homarr/definitions";
 import { widgetImports } from "@homarr/widgets";
 
-export const CARD_HEIGHT = 180;
-
 const buildWidgetsByIntegration = () => {
   const map = Object.fromEntries(integrationKinds.map((kind) => [kind, [] as WidgetKind[]])) as Record<
     IntegrationKind,

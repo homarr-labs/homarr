@@ -116,7 +116,7 @@ const AddMenu = () => {
   }, [openIntegrationSelectModal]);
 
   return (
-    <Menu position="bottom-end" withArrow>
+    <Menu position="bottom-end">
       <Menu.Target>
         <HeaderButton w="auto" px={4}>
           <Group gap={4} wrap="nowrap">
@@ -194,7 +194,7 @@ const SelectBoardsMenu = () => {
   const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
 
   return (
-    <Menu position="bottom-end" withArrow>
+    <Menu position="bottom-end">
       <Menu.Target>
         <HeaderButton w="auto" px={4}>
           <IconReplace stroke={1.5} />

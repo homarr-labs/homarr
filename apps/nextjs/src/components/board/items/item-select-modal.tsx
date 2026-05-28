@@ -1,15 +1,14 @@
 import { useMemo, useState } from "react";
-import { Avatar, Button, Card, Center, Grid, Group, Input, Stack, Text, Tooltip } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { Avatar, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
+import { SelectGridLayout, selectGridCardHeight, type TablerIcon } from "@homarr/ui";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
@@ -86,32 +85,31 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   };
 
   return (
-    <Stack miw="min(1400px, 90vw)">
-      <Input
-        value={search}
-        onChange={(event) => setSearch(event.currentTarget.value)}
-        leftSection={<IconSearch />}
-        placeholder={`${t("item.create.search")}...`}
-        data-autofocus
-        onKeyDown={(event) => {
-          // Add item if there is only one item in the list and user presses Enter
-          if (event.key === "Enter" && filteredItems.length === 1) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            handleAdd(filteredItems[0]!.kind);
-          }
-        }}
-      />
+    <SelectGridLayout
+      search={search}
+      onSearchChange={setSearch}
+      placeholder={`${t("item.create.search")}...`}
+      onSearchKeyDown={(event) => {
+        if (event.key === "Enter" && filteredItems.length === 1) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          handleAdd(filteredItems[0]!.kind);
+        }
+      }}
+    >
+      {filteredItems.map((item) => (
+        <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
+      ))}
 
-      <Grid gutter="md" style={{ minHeight: 300 }}>
-        {filteredItems.map((item) => (
-          <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
-        ))}
-      </Grid>
-    </Stack>
+      {filteredItems.length === 0 && (
+        <Center p="xl">
+          <Text c="dimmed">{t("common.noResults")}</Text>
+        </Center>
+      )}
+    </SelectGridLayout>
   );
 }).withOptions({
   defaultTitle: (t) => t("item.create.title"),
-  size: "xxl",
+  size: modalSizeSelect,
 });
 
 const WidgetItem = ({
@@ -130,27 +128,25 @@ const WidgetItem = ({
   const t = useI18n();
 
   return (
-    <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
-      <Card h="100%">
-        <Stack justify="space-between" h="100%">
-          <Stack gap="xs">
-            <Center>
-              <item.icon />
-            </Center>
-            <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-              {item.name}
-            </Text>
-            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-              {item.description}
-            </Text>
-          </Stack>
-          <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
-          <Button onClick={onSelect} variant="light" size="xs" radius="md" fullWidth>
-            {t(`item.create.addToBoard`)}
-          </Button>
+    <Card h={selectGridCardHeight} withBorder>
+      <Stack justify="space-between" h="100%" gap="xs">
+        <Stack gap="xs">
+          <Center>
+            <item.icon />
+          </Center>
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+            {item.name}
+          </Text>
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
+            {item.description}
+          </Text>
         </Stack>
-      </Card>
-    </Grid.Col>
+        <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
+        <Button onClick={onSelect} variant="light" size="xs" fullWidth>
+          {t(`item.create.addToBoard`)}
+        </Button>
+      </Stack>
+    </Card>
   );
 };
 
@@ -164,13 +160,12 @@ const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps)
     return null;
   }
 
-  // When there are 8 or more integrations, we show 6 and a "+X" avatar. Otherwise, we show all integrations.
   const countToShow = integrations.length >= 8 ? 6 : 7;
   const moreCount = integrations.length - countToShow;
 
   return (
     <Center mt={mt}>
-      <Tooltip.Group openDelay={300} closeDelay={100}>
+      <Tooltip.Group closeDelay={100}>
         <Group gap={2}>
           {integrations.slice(0, countToShow).map((integration) => (
             <Tooltip key={integration} label={getIntegrationName(integration)} withArrow>

@@ -91,7 +91,7 @@ function StatisticItem(props: StatisticItemProps) {
   const board = useRequiredBoard();
   return (
     <Tooltip label={props.label}>
-      <Card p={0} withBorder radius={board.itemRadius} miw={48} flex={1}>
+      <Card p={0} radius={board.itemRadius} miw={48} flex={1}>
         <Group justify="center" align="center" gap="xs" w="100%" wrap="nowrap">
           <props.icon size={16} style={{ minWidth: 16 }} />
           <Text size="md">{props.value}</Text>

@@ -6,7 +6,7 @@ import { IconArrowLeft } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
-import { createModal } from "@homarr/modals";
+import { createModal, modalSizeSelect } from "@homarr/modals";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
@@ -52,5 +52,5 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   return <IntegrationSelectGrid onSelect={handleSelect} enableMockIntegration={innerProps.enableMockIntegration} />;
 }).withOptions({
   defaultTitle: (t) => t("integration.action.create"),
-  size: "xxl",
+  size: modalSizeSelect,
 });
