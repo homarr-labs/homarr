@@ -1,0 +1,118 @@
+apps/web/lib/i18n/dictionary/pilote-1.ts
+  s_882373fed589ec::t_8bed3a701d74a9 65,76,99,117,129,138,155,174
+  s_882373fed589ec::t_5182a0265dd966 312,325
+  s_882373fed589ec::t_33d1fcb51a65c9 98,113
+  s_882373fed589ec::t_5f4bf24012b5e9 280,291,313,328,339,347,363,380
+apps/web/lib/i18n/dictionary/social.ts
+  s_882373fed589ec::t_9b8dafd385e668 138
+  s_882373fed589ec::t_904d7304dd08fa 42
+apps/web/lib/i18n/dictionary/pilote-3.ts
+  s_882373fed589ec::t_f2d0e84bd9b9e3 134
+  s_882373fed589ec::t_22148d3b2041a1 286-290
+  s_882373fed589ec::t_dbb402551b1889 99
+  s_882373fed589ec::t_f8fb45e457df24 312
+  s_882373fed589ec::t_6d05b0ceffc890 314
+  s_882373fed589ec::t_23cd54e9b04c52 357
+  s_882373fed589ec::t_dd27bb414c2813 333
+  s_882373fed589ec::t_a8dc4a93a19e9a 102
+  s_882373fed589ec::t_4c9746f64d8db8 321,323
+  s_882373fed589ec::t_43a4a477e09968 317
+  s_882373fed589ec::t_1e03ce1c54dc0b 349
+  s_882373fed589ec::t_52b70812f03e66 97
+  s_882373fed589ec::t_6dfc7737980338 71-75
+  s_882373fed589ec::t_9e6cb6c94ef26c 106,108
+  s_882373fed589ec::t_0eca842665f71f 118
+  s_882373fed589ec::t_c02f59ad9606ee 142
+  s_882373fed589ec::t_11e131936c6e53 309
+  s_882373fed589ec::t_54b1b453f4ebaa 94
+apps/web/lib/i18n/dictionary/pilote-0.ts
+  s_882373fed589ec::t_a03c21e44f7249 178
+  s_882373fed589ec::t_4b0451dd8413e3 352
+  s_882373fed589ec::t_0f3b6b817cfd56 176
+  s_882373fed589ec::t_b1b7b72c80fd5f 350
+apps/web/lib/i18n/dictionary/connections.ts
+  s_882373fed589ec::t_ea5c0e1af2b561 56
+  s_882373fed589ec::t_3ea25a7322baba 29
+apps/web/lib/i18n/dictionary/compte.ts
+  s_882373fed589ec::t_706e01f850ab40 158
+  s_882373fed589ec::t_c340b8193f00c5 40
+  s_882373fed589ec::t_689c323782370a 133
+  s_882373fed589ec::t_300e4ccf1c5d23 15
+apps/web/lib/i18n/dictionary/pilote-2.ts
+  s_882373fed589ec::t_c28977f0e0d5e6 20
+  s_882373fed589ec::t_a4e86087e1a7b0 45
+  s_882373fed589ec::t_235f551887710c 145
+  s_882373fed589ec::t_b0dd49215503b6 334
+  s_882373fed589ec::t_095db7b76cbeea 233
+  s_882373fed589ec::t_4bebb42809f939 234
+  s_882373fed589ec::t_7a980024b8ff3a 341
+  s_882373fed589ec::t_93a69e9a6ac43a 209
+  s_882373fed589ec::t_e82a26c07773d4 211
+  s_882373fed589ec::t_3a025541e15de0 231
+  s_882373fed589ec::t_2a95e5c37ace39 44
+  s_882373fed589ec::t_fbc8a6754386fb 150
+  s_882373fed589ec::t_db3055d155fe3d 339
+  s_882373fed589ec::t_5051b9f2679427 152
+  s_882373fed589ec::t_074bf0ddf75a91 22
+  s_882373fed589ec::t_a6ea830e611450 42
+apps/web/lib/i18n/dictionary/result-0.ts
+  s_882373fed589ec::t_e69d6aeba87098 190-197
+  s_882373fed589ec::t_bae79357890f32 379-380,382-386
+apps/web/lib/i18n/dictionary/cloud.ts
+  s_882373fed589ec::t_4569e06ba6c44b 106
+  s_882373fed589ec::t_d70a0502e013e6 14
+  s_882373fed589ec::t_1d6b4c40a26299 16
+  s_882373fed589ec::t_96cb4664269f6a 108
+  s_882373fed589ec::t_f1b14756c38e95 28
+  s_882373fed589ec::t_35b0f5349c5197 120
+apps/web/lib/i18n/dictionary/analyse.ts
+  s_882373fed589ec::t_c3dce4a6c46196 100-102
+  s_882373fed589ec::t_3f72201b89dde8 214-223
+  s_882373fed589ec::t_aecf138aaa07dd 99
+  s_882373fed589ec::t_769d01362a994e 224
+  s_882373fed589ec::t_22283ead03ee6a 88-98
+  s_882373fed589ec::t_dad4a35293ccb3 225-227
+apps/web/lib/i18n/dictionary/home.ts
+  s_882373fed589ec::t_b59e8244388a18 67-68
+  s_882373fed589ec::t_58edce143b5839 114
+  s_882373fed589ec::t_30e867b2675f58 152
+  s_882373fed589ec::t_7a83158537364c 147-148
+  s_882373fed589ec::t_1eb7a45874fd5f 34
+  s_882373fed589ec::t_3324c8c04b9c4e 72
+apps/web/lib/i18n/dictionary/pilote-4.ts
+  s_882373fed589ec::t_6ddb211cac7fc8 35
+  s_882373fed589ec::t_df4f1e4fe5b688 65
+apps/web/lib/i18n/dictionary/common.ts
+  s_882373fed589ec::t_16b5b4111faa93 379-380
+  s_882373fed589ec::t_a86d6dc62d7a22 184
+  s_882373fed589ec::t_b91aef25a22161 614
+  s_882373fed589ec::t_eea9fe51227b14 376
+  s_882373fed589ec::t_d2d2e2fadd07ff 403
+  s_882373fed589ec::t_4ce1a27e18fed0 499
+  s_882373fed589ec::t_9a89c38aaa7875 310-311
+  s_882373fed589ec::t_76cd2234af94a1 300
+  s_882373fed589ec::t_7e9ea06060f738 60-61
+  s_882373fed589ec::t_0dcf578cd3f26a 86
+  s_882373fed589ec::t_7bfb3cf57ab9b8 466-470
+  s_882373fed589ec::t_a86d7fcd016646 504
+  s_882373fed589ec::t_a4e7d93f8ae1c5 57
+  s_882373fed589ec::t_a3b8e22ea01b6f 623-624
+  s_882373fed589ec::t_251cde86b2c208 150-151,153-154
+  s_882373fed589ec::t_39058d8ff7b3dd 189
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3f11d25365f41f46b4224c822277b1cd39387f8a",
+  "prompts": {},
+  "sessions": {
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
