@@ -165,9 +165,5 @@ export const AppForm = ({
     return formFields;
   }
 
-  return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      {formFields}
-    </form>
-  );
+  return <form onSubmit={form.onSubmit(handleSubmit)}>{formFields}</form>;
 };
