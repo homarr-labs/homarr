@@ -73,6 +73,7 @@ export const integrationDefs = {
     category: ["downloadClient", "torrent"],
     documentationUrl: createDocumentationLink("/docs/integrations/q-bittorent"),
     defaultPort: 8080,
+    apiKeySettingsPath: "/#/settings/webui",
   },
   aria2: {
     name: "Aria2",
