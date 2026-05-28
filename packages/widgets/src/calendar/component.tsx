@@ -152,7 +152,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           .filter(
             (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
           )
-          .sort((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
+          .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
         return (
           <CalendarDay
