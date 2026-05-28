@@ -28,7 +28,7 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
-    <Stack>
+    <Stack miw="min(1400px, 90vw)">
       <Input
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
