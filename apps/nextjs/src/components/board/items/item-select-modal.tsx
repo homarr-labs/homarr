@@ -102,7 +102,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         }}
       />
 
-      <Grid>
+      <Grid gutter="md" style={{ minHeight: 300 }}>
         {filteredItems.map((item) => (
           <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
         ))}
