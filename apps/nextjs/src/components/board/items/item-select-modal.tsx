@@ -8,7 +8,8 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { SelectGridLayout, selectGridCardHeight, type TablerIcon } from "@homarr/ui";
+import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 

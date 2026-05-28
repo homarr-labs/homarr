@@ -33,13 +33,7 @@ const ActionButtons = ({
   );
 };
 
-export const ModalFormFooter = ({
-  onCancel,
-  submitLabel,
-  cancelLabel,
-  loading,
-  leftSection,
-}: ModalFormFooterProps) => {
+export const ModalFormFooter = ({ onCancel, submitLabel, cancelLabel, loading, leftSection }: ModalFormFooterProps) => {
   const actionButtons = (
     <ActionButtons onCancel={onCancel} submitLabel={submitLabel} cancelLabel={cancelLabel} loading={loading} />
   );
