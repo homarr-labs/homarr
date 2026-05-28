@@ -16,7 +16,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
   const board = useRequiredBoard();
   const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
     select(data) {
-      return data.sort((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+      return data.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
     },
   });
 

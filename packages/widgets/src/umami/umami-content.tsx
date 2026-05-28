@@ -57,7 +57,7 @@ export function UmamiContent({
   });
 
   const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].sort() },
+    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
     { enabled: viewMode === "events" && eventNames.length > 0 },
   );
 

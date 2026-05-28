@@ -43,7 +43,7 @@ export default function MediaServerWidget({
           const newData = filteredData.concat(
             data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
           );
-          return newData.sort((dataA, dataB) => {
+          return newData.toSorted((dataA, dataB) => {
             if (dataA.status === dataB.status) {
               return dataB.createdAt.getTime() - dataA.createdAt.getTime();
             }

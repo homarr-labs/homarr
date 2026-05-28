@@ -169,9 +169,7 @@ export const QueryRefreshIndicator = () => {
 };
 
 const QueryMenuItem = ({ row }: { row: QueryStatusRow }) => {
-  const rowColor = statusColorMap[
-    row.fetchStatus === "fetching" ? "fetching" : `idle_${row.status}`
-  ] ?? "gray";
+  const rowColor = statusColorMap[row.fetchStatus === "fetching" ? "fetching" : `idle_${row.status}`] ?? "gray";
 
   const updatedLabel = row.dataUpdatedAt > 0 ? dayjs(row.dataUpdatedAt).fromNow() : "never";
 

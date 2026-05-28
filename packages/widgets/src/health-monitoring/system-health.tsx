@@ -332,5 +332,5 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
         overallStatus: smartDisk?.overallStatus ?? "",
       };
     })
-    .sort((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
+    .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
 };

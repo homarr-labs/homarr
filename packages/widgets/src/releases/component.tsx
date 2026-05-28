@@ -126,7 +126,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         (repository) =>
           "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
-      .sort((repoA, repoB) => {
+      .toSorted((repoA, repoB) => {
         if ("error" in repoA) return -1;
         if ("error" in repoB) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;

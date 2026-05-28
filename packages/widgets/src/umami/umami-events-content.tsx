@@ -32,7 +32,7 @@ export function UmamiEventsContent({
     integrationId: integrationIds[0] ?? "",
     websiteId,
     timeFrame,
-    eventNames: [...eventNames].sort(),
+    eventNames: [...eventNames].toSorted(),
   });
 
   if (eventNames.length === 0) {
@@ -48,7 +48,7 @@ export function UmamiEventsContent({
   // Collect all unique timestamps across all series
   const allTimestamps = Array.from(
     new Set(series.flatMap(({ dataPoints }) => dataPoints.map(({ x: xPoint }) => xPoint))),
-  ).sort();
+  ).toSorted();
 
   // Build per-event lookup by timestamp string
   const byEvent = new Map(
