@@ -19,7 +19,7 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const { data: mediaRequests = [] } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+  const { data: mediaRequests = [], isFetched } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },
@@ -58,6 +58,7 @@ export default function MediaServerWidget({
     },
   );
 
+  if (!isFetched) return null;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (
