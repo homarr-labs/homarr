@@ -39,7 +39,7 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
       </TableThead>
       <TableTbody>
         {data
-          .sort((itemA, itemB) => {
+          .toSorted((itemA, itemB) => {
             const nodeResult = itemA.node.localeCompare(itemB.node);
             if (nodeResult !== 0) return nodeResult;
             return itemA.name.localeCompare(itemB.name);
