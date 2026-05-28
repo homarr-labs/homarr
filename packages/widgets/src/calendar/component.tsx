@@ -63,7 +63,16 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
-  return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} isLoading={isLoading} />;
+  return (
+    <CalendarBase
+      isEditMode={isEditMode}
+      events={events}
+      month={month}
+      setMonth={setMonth}
+      options={options}
+      isLoading={isLoading}
+    />
+  );
 };
 
 interface CalendarBaseProps {
@@ -89,9 +98,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options, isLoading 
 
   return (
     <Box pos="relative" w="100%" h="100%">
-      {isLoading && (
-        <Loader size={16} pos="absolute" top={8} right={8} style={{ zIndex: 1 }} />
-      )}
+      {isLoading && <Loader size={16} pos="absolute" top={8} right={8} style={{ zIndex: 1 }} />}
       <Calendar
         defaultDate={new Date()}
         onPreviousMonth={(month) => setMonth(new Date(month))}
@@ -108,71 +115,71 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options, isLoading 
         h="100%"
         ref={ref}
         styles={{
-        calendarHeaderControl: {
-          pointerEvents: isEditMode ? "none" : undefined,
-          borderRadius: "md",
-          height: isSmall ? "1.5rem" : undefined,
-          width: isSmall ? "1.5rem" : undefined,
-        },
-        calendarHeaderLevel: {
-          pointerEvents: "none",
-          fontSize: isSmall ? "0.75rem" : undefined,
-          height: "100%",
-        },
-        levelsGroup: {
-          height: "100%",
-          padding: "md",
-        },
-        calendarHeader: {
-          maxWidth: "unset",
-          marginBottom: 0,
-        },
-        monthCell: {
-          textAlign: "center",
-          position: "relative",
-        },
-        day: {
-          borderRadius: actualItemRadius,
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-        },
-        month: {
-          height: "100%",
-        },
-        weekday: {
-          padding: 0,
-        },
-        weekdaysRow: {
-          height: 22,
-        },
-      }}
-      renderDay={(tileDate) => {
-        const eventsForDate = normalizedEvents
-          .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
-          .filter(
-            (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
-          )
-          .sort((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
+          calendarHeaderControl: {
+            pointerEvents: isEditMode ? "none" : undefined,
+            borderRadius: "md",
+            height: isSmall ? "1.5rem" : undefined,
+            width: isSmall ? "1.5rem" : undefined,
+          },
+          calendarHeaderLevel: {
+            pointerEvents: "none",
+            fontSize: isSmall ? "0.75rem" : undefined,
+            height: "100%",
+          },
+          levelsGroup: {
+            height: "100%",
+            padding: "md",
+          },
+          calendarHeader: {
+            maxWidth: "unset",
+            marginBottom: 0,
+          },
+          monthCell: {
+            textAlign: "center",
+            position: "relative",
+          },
+          day: {
+            borderRadius: actualItemRadius,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          },
+          month: {
+            height: "100%",
+          },
+          weekday: {
+            padding: 0,
+          },
+          weekdaysRow: {
+            height: 22,
+          },
+        }}
+        renderDay={(tileDate) => {
+          const eventsForDate = normalizedEvents
+            .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
+            .filter(
+              (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
+            )
+            .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
-        return (
-          <CalendarDay
-            // new Date() does not work here, because for timezones like UTC-7 it will
-            // show one day earlier (probably due to the time being set to 00:00)
-            // see https://github.com/homarr-labs/homarr/pull/3120
-            date={dayjs(tileDate).toDate()}
-            events={eventsForDate}
-            disabled={isEditMode || eventsForDate.length === 0}
-            rootWidth={width}
-            rootHeight={height}
-          />
-        );
-      }}
-    />
+          return (
+            <CalendarDay
+              // new Date() does not work here, because for timezones like UTC-7 it will
+              // show one day earlier (probably due to the time being set to 00:00)
+              // see https://github.com/homarr-labs/homarr/pull/3120
+              date={dayjs(tileDate).toDate()}
+              events={eventsForDate}
+              disabled={isEditMode || eventsForDate.length === 0}
+              rootWidth={width}
+              rootHeight={height}
+            />
+          );
+        }}
+      />
     </Box>
   );
 };
