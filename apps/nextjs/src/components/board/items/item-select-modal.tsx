@@ -86,7 +86,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   };
 
   return (
-    <Stack>
+    <Stack miw="min(1400px, 90vw)">
       <Input
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
