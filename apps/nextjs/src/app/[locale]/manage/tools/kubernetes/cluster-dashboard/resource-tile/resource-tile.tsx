@@ -17,7 +17,12 @@ interface ResourceTileProps {
 export function ResourceTile(props: ResourceTileProps) {
   const t = useI18n();
   return (
-    <Card component={Link} href={`/manage/tools/kubernetes/${props.label}`} className={classes.cardContainer}>
+    <Card
+      withBorder
+      component={Link}
+      href={`/manage/tools/kubernetes/${props.label}`}
+      className={classes.cardContainer}
+    >
       <Group justify="space-between" wrap="nowrap">
         <Image src={`/images/kubernetes/${props.label}.svg`} alt={props.label} width={64} height={64} />
         <Group gap="xs">

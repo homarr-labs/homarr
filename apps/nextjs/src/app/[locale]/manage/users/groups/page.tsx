@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Card, Group, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Card, Group, Stack, Text, ThemeIcon, Title, UnstyledButton } from "@mantine/core";
 import { IconChevronRight, IconUsersGroup } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
@@ -8,8 +8,9 @@ import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { AddGroupButton, GroupsList } from "./_client";
+import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { GroupsList } from "./_client";
 import classes from "./groups.module.css";
 
 export default async function GroupsListPage() {
@@ -25,8 +26,11 @@ export default async function GroupsListPage() {
   const groupsWithoutEveryone = groups.filter((group) => group.name !== everyoneGroup);
 
   return (
-    <ManagePageLayout title={t("group.title")} primaryAction={<AddGroupButton />} floatingPrimaryAction>
+    <ManageContainer size="xl">
+      <DynamicBreadcrumb />
       <Stack>
+        <Title>{t("group.title")}</Title>
+
         {dbEveryoneGroup && (
           <UnstyledButton component={Link} href={`/manage/users/groups/${dbEveryoneGroup.id}`}>
             <Card className={classes.everyoneGroup}>
@@ -49,6 +53,6 @@ export default async function GroupsListPage() {
 
         <GroupsList groups={groupsWithoutEveryone} />
       </Stack>
-    </ManagePageLayout>
+    </ManageContainer>
   );
 }

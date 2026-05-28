@@ -33,7 +33,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
   const KindIcon = integrationSecretIcons[secret.kind];
 
   return (
-    <Card>
+    <Card withBorder>
       <Stack>
         <Group justify="space-between">
           <Group>
@@ -58,12 +58,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
               </Tooltip>
             )}
             {isPublic ? (
-              <ActionIcon
-                color="gray"
-                variant="subtle"
-                onClick={togglePublicSecretDisplay}
-                aria-label={t(publicSecretDisplayOpened ? "common.action.hide" : "common.action.show")}
-              >
+              <ActionIcon color="gray" variant="subtle" onClick={togglePublicSecretDisplay}>
                 <DisplayIcon size={16} stroke={1.5} />
               </ActionIcon>
             ) : null}

@@ -7,7 +7,9 @@ export default async function NotFound() {
   return (
     <Center h="100%">
       <Stack align="center">
-        <Title order={1}>{t("title")}</Title>
+        <Title order={1} tt="uppercase">
+          {t("title")}
+        </Title>
         <Text>{t("text")}</Text>
       </Stack>
     </Center>

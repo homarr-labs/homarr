@@ -14,13 +14,13 @@ interface NoResultsProps {
 
 export const NoResults = ({ icon: Icon, title, action }: NoResultsProps) => {
   return (
-    <Card bg="transparent" withBorder={false}>
+    <Card withBorder bg="transparent">
       <Stack align="center" gap="sm">
         <Icon size="2rem" />
         <Text fw={500} size="lg">
           {title}
         </Text>
-        {action && !action.hidden && <Anchor href={action.href}>{action.label}</Anchor>}
+        {!action?.hidden && <Anchor href={action?.href}>{action?.label}</Anchor>}
       </Stack>
     </Card>
   );

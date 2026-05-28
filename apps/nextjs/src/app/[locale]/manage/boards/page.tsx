@@ -9,17 +9,12 @@ import {
   Group,
   Menu,
   MenuTarget,
+  Stack,
   Text,
+  Title,
   Tooltip,
 } from "@mantine/core";
-import {
-  IconDeviceMobile,
-  IconDotsVertical,
-  IconHomeFilled,
-  IconLayoutDashboard,
-  IconLock,
-  IconWorld,
-} from "@tabler/icons-react";
+import { IconDeviceMobile, IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -28,8 +23,8 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -40,22 +35,23 @@ export default async function ManageBoardsPage() {
   const canCreateBoards = session?.user.permissions.includes("board-create");
 
   return (
-    <ManagePageLayout
-      title={t("title")}
-      primaryAction={canCreateBoards ? <CreateBoardButton /> : undefined}
-      floatingPrimaryAction={canCreateBoards}
-    >
-      {boards.length === 0 && <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} />}
-      {boards.length > 0 && (
-        <Grid>
+    <ManageContainer>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Group justify="space-between">
+          <Title mb="md">{t("title")}</Title>
+          {canCreateBoards && <CreateBoardButton />}
+        </Group>
+
+        <Grid mb={{ base: "xl", md: 0 }}>
           {boards.map((board) => (
             <GridCol span={{ base: 12, md: 6 }} key={board.id}>
               <BoardCard board={board} />
             </GridCol>
           ))}
         </Grid>
-      )}
-    </ManagePageLayout>
+      </Stack>
+    </ManageContainer>
   );
 }
 
@@ -70,14 +66,16 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card>
+    <Card radius="lg" withBorder>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
             <Tooltip label={t(`visibility.${visibility}`)}>
               <VisibilityIcon size={20} stroke={1.5} />
             </Tooltip>
-            <Text fw={700}>{board.name}</Text>
+            <Text fw="bolder" tt="uppercase">
+              {board.name}
+            </Text>
           </Group>
 
           <Group>
@@ -125,7 +123,6 @@ const BoardCard = async ({ board }: BoardCardProps) => {
                   style={{ borderTop: "none", borderBottom: "none", borderRight: "none", borderRadius: 0 }}
                   variant="default"
                   size="lg"
-                  aria-label={t("action.settings.label")}
                 >
                   <IconDotsVertical size={16} stroke={1.5} />
                 </ActionIcon>

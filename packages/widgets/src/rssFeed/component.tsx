@@ -57,6 +57,7 @@ export default function RssFeed({ options, width }: WidgetComponentProps<"rssFee
         {feedEntries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
+            withBorder
             component={"a"}
             href={feedEntry.link}
             radius={board.itemRadius}

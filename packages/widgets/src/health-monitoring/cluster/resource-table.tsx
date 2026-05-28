@@ -1,4 +1,4 @@
-import { Group, Indicator, Popover, Table, TableTbody, TableTh, TableThead, TableTr, Text } from "@mantine/core";
+import { Group, Indicator, Popover, Table, TableTbody, TableThead, TableTr, Text } from "@mantine/core";
 
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
@@ -17,23 +17,23 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
     <Table highlightOnHover>
       <TableThead>
         <TableTr fz={isTiny ? "8px" : "xs"}>
-          <TableTh ta="start" p={0}>
+          <Table.Th ta="start" p={0}>
             {t("widget.healthMonitoring.cluster.table.header.name")}
-          </TableTh>
+          </Table.Th>
           {type !== "storage" ? (
-            <TableTh ta="start" p={0}>
+            <Table.Th ta="start" p={0}>
               {t("widget.healthMonitoring.cluster.table.header.cpu")}
-            </TableTh>
+            </Table.Th>
           ) : null}
           {type !== "storage" ? (
-            <TableTh ta="start" p={0}>
+            <Table.Th ta="start" p={0}>
               {t("widget.healthMonitoring.cluster.table.header.memory")}
-            </TableTh>
+            </Table.Th>
           ) : null}
           {type === "storage" ? (
-            <TableTh ta="start" p={0}>
+            <Table.Th ta="start" p={0}>
               {t("widget.healthMonitoring.cluster.table.header.node")}
-            </TableTh>
+            </Table.Th>
           ) : null}
         </TableTr>
       </TableThead>

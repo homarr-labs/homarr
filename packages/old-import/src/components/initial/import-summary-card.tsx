@@ -13,7 +13,7 @@ interface ImportSummaryCardProps {
 export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCardProps) => {
   const tSummary = useScopedI18n("init.step.import.summary");
   return (
-    <Card w={64 * 12 + 8} maw="90vw" withBorder={false}>
+    <Card w={64 * 12 + 8} maw="90vw">
       <Stack gap="sm">
         <Stack gap={0}>
           <Text fw={500}>{tSummary("title")}</Text>
@@ -24,7 +24,7 @@ export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCa
 
         <Stack gap="xs">
           {objectEntries(counts).map(([key, count]) => (
-            <Card key={key} p="sm">
+            <Card key={key} withBorder p="sm">
               <Group justify="space-between" align="center">
                 <Text fw={500} size="sm">
                   {tSummary(`entities.${key}`)}

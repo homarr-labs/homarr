@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Button, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -10,7 +10,8 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
@@ -64,6 +65,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
     enableFullScreenToggle: false,
     layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
+    renderTopToolbarCustomActions: RenderTopToolbarCustomActions,
     state: {
       isLoading,
     },
@@ -72,7 +74,22 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
     },
   });
 
-  return <MantineReactTable table={table} />;
+  return (
+    <>
+      <Title mb="md">{t("title")}</Title>
+      <MantineReactTable table={table} />
+    </>
+  );
+};
+
+const RenderTopToolbarCustomActions = () => {
+  const t = useScopedI18n("management.page.user.invite");
+  const { openModal } = useModalAction(InviteCreateModal);
+  const handleNewInvite = useCallback(() => {
+    openModal();
+  }, [openModal]);
+
+  return <Button onClick={handleNewInvite}>{t("action.new.title")}</Button>;
 };
 
 const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAll"][number]> }) => {

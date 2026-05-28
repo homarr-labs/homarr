@@ -50,7 +50,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
   ).length;
 
   return (
-    <Card p={0} radius="sm">
+    <Card p={0} radius="sm" withBorder>
       <Group
         p="xs"
         justify="space-between"

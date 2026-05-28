@@ -41,8 +41,8 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
     <>
       <Title order={2}>{t("title")}</Title>
 
-      <Card pos="relative">
-        <LoadingOverlay visible={isPending} />
+      <Card pos="relative" withBorder>
+        <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
           <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
         </Stack>

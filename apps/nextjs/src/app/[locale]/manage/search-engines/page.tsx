@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -10,8 +10,9 @@ import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { SearchEngineDeleteButton } from "./_search-engine-delete-button";
 
@@ -37,31 +38,34 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
 
   const tEngine = await getScopedI18n("search.engine");
 
-  const canCreate = session.user.permissions.includes("search-engine-create");
-
   return (
-    <ManagePageLayout
-      title={tEngine("page.list.title")}
-      primaryAction={
-        canCreate ? (
-          <MobileAffixButton component={Link} href="/manage/search-engines/new">
-            {tEngine("page.create.title")}
-          </MobileAffixButton>
-        ) : undefined
-      }
-      toolbar={<SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} flexExpand />}
-      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
-      floatingPrimaryAction={canCreate}
-    >
-      {searchEngines.length === 0 && <SearchEngineNoResults />}
-      {searchEngines.length > 0 && (
-        <Stack gap="sm">
-          {searchEngines.map((searchEngine) => (
-            <SearchEngineCard key={searchEngine.id} searchEngine={searchEngine} />
-          ))}
-        </Stack>
-      )}
-    </ManagePageLayout>
+    <ManageContainer>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Title>{tEngine("page.list.title")}</Title>
+        <Group justify="space-between" align="center">
+          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} flexExpand />
+          {session.user.permissions.includes("search-engine-create") && (
+            <MobileAffixButton component={Link} href="/manage/search-engines/new">
+              {tEngine("page.create.title")}
+            </MobileAffixButton>
+          )}
+        </Group>
+        {searchEngines.length === 0 && <SearchEngineNoResults />}
+        {searchEngines.length > 0 && (
+          <Stack gap="sm">
+            {searchEngines.map((searchEngine) => (
+              <SearchEngineCard key={searchEngine.id} searchEngine={searchEngine} />
+            ))}
+          </Stack>
+        )}
+
+        {/* Added margin to not hide pagination behind affix-button */}
+        <Group justify="end" mb={48}>
+          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
+        </Group>
+      </Stack>
+    </ManageContainer>
   );
 }
 
@@ -74,7 +78,7 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
   const session = await auth();
 
   return (
-    <Card>
+    <Card withBorder>
       <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap" style={{ flex: 1 }}>
           <Avatar

@@ -1054,9 +1054,6 @@
       "open": {
         "label": "Open media"
       }
-    },
-    "noResults": {
-      "title": "No media uploaded"
     }
   },
   "common": {
@@ -1087,9 +1084,7 @@
       "checkoutDocs": "Check out the documentation",
       "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
-      "loading": "Loading",
-      "show": "Show",
-      "hide": "Hide"
+      "loading": "Loading"
     },
     "here": "here",
     "iconPicker": {
@@ -1254,8 +1249,7 @@
       "menu": {
         "label": {
           "create": "New category",
-          "changePosition": "Change position",
-          "settings": "Settings"
+          "changePosition": "Change position"
         }
       },
       "openAllInNewTabs": {
@@ -3457,9 +3451,6 @@
         "visibility": {
           "public": "This board is public",
           "private": "This board is private"
-        },
-        "noResults": {
-          "title": "No boards yet"
         },
         "modal": {
           "createBoard": {

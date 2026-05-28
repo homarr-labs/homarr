@@ -27,11 +27,7 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
           <IconHeartbeat size={16} />
         </Indicator>
       </HoverCard.Target>
-      <HoverCard.Dropdown
-        style={{
-          backgroundColor: "light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-8))",
-        }}
-      >
+      <HoverCard.Dropdown bg={colorScheme === "light" ? "gray.2" : "dark.8"}>
         <Stack gap="sm" align="center">
           <Group gap="xs">
             <IconHeartbeat size={18} />

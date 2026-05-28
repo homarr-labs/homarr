@@ -39,7 +39,7 @@ export const NetworkTrafficChart = ({
         content: ({ payload }) => {
           const value = payload[0] ? Number(payload[0].value) : 0;
           return (
-            <Paper px={3} py={2} shadow="md">
+            <Paper px={3} py={2} withBorder shadow="md" radius="md">
               <Text c="dimmed" size="xs">
                 {humanFileSize(Math.round(value))}/s
               </Text>

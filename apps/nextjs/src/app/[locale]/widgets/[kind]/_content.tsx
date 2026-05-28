@@ -99,7 +99,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
 
   return (
     <>
-      <Card w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
+      <Card withBorder w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
         <QueryErrorResetBoundary>
           {({ reset }) => (
             <ErrorBoundary
@@ -123,35 +123,17 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
         </QueryErrorResetBoundary>
       </Card>
       <Affix bottom={12} right={72}>
-        <ActionIcon
-          size={48}
-          variant="default"
-          radius="xl"
-          onClick={handleOpenEditWidgetModal}
-          aria-label={t("common.action.edit")}
-        >
+        <ActionIcon size={48} variant="default" radius="xl" onClick={handleOpenEditWidgetModal}>
           <IconPencil size={24} />
         </ActionIcon>
       </Affix>
       <Affix bottom={12} right={72 + 60}>
-        <ActionIcon
-          size={48}
-          variant="default"
-          radius="xl"
-          onClick={toggleEditMode}
-          aria-label={editMode ? t("widgetPreview.toggle.disabled") : t("widgetPreview.toggle.enabled")}
-        >
+        <ActionIcon size={48} variant="default" radius="xl" onClick={toggleEditMode}>
           {editMode ? <IconToggleLeft size={24} /> : <IconToggleRight size={24} />}
         </ActionIcon>
       </Affix>
       <Affix bottom={12} right={72 + 120}>
-        <ActionIcon
-          size={48}
-          variant="default"
-          radius="xl"
-          onClick={openDimensionsModal}
-          aria-label={t("widgetPreview.dimensions.title")}
-        >
+        <ActionIcon size={48} variant="default" radius="xl" onClick={openDimensionsModal}>
           <IconDimensions size={24} />
         </ActionIcon>
       </Affix>

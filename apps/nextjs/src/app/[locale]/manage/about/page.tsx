@@ -90,7 +90,9 @@ export default async function AboutPage() {
         <Group py="lg">
           <Image src={homarrLogoPath} width={100} height={100} alt="" />
           <Stack gap={0}>
-            <Title order={1}>Homarr</Title>
+            <Title order={1} tt="uppercase">
+              Homarr
+            </Title>
             <Title order={2}>{t("version", { version })}</Title>
           </Stack>
         </Group>
@@ -193,9 +195,9 @@ export default async function AboutPage() {
                     href={`https://www.npmjs.com/package/${name}`}
                     target="_blank"
                   >
-                    <Card radius="md" p="xs" className={classes.dependencyCard}>
+                    <Card withBorder radius="md" p="xs" className={classes.dependencyCard}>
                       <Group gap="sm" wrap="nowrap">
-                        <ThemeIcon variant="light" size="lg">
+                        <ThemeIcon variant="light" size="lg" radius="md">
                           <IconPackage size="1.5rem" stroke={1.5} />
                         </ThemeIcon>
 

@@ -23,6 +23,7 @@ export function HeaderCard(props: HeaderCardProps) {
       <Flex align="center" justify={isRTL ? "space-between" : "flex-start"} gap="md" direction={"row"}>
         <ThemeIcon
           size="xl"
+          radius="md"
           variant="gradient"
           gradient={{
             deg: 0,

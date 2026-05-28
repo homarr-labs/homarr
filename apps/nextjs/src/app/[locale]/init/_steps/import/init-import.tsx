@@ -20,7 +20,7 @@ export const InitImport = () => {
 
   if (!file) {
     return (
-      <Card w={64 * 12 + 8} maw="90vw">
+      <Card w={64 * 12 + 8} maw="90vw" withBorder>
         <ImportDropZone
           loading={isPending}
           updateFile={(file) => {

@@ -28,6 +28,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
         className={combineClasses(classes.itemCard, section.options.customCssClasses.join(" "))}
         w="100%"
         h="100%"
+        withBorder
         styles={{
           root: {
             overflow: "visible",

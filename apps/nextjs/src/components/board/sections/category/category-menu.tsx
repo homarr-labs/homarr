@@ -30,9 +30,9 @@ export const CategoryMenu = ({ category }: Props) => {
   const t = useScopedI18n("section.category");
 
   return (
-    <Menu>
+    <Menu withArrow>
       <Menu.Target>
-        <ActionIcon mr="sm" variant="transparent" aria-label={t("menu.label.settings")}>
+        <ActionIcon mr="sm" variant="transparent">
           <IconDotsVertical size={20} />
         </ActionIcon>
       </Menu.Target>

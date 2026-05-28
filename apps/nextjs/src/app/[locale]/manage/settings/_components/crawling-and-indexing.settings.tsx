@@ -41,11 +41,11 @@ export const CrawlingAndIndexingSettings = ({ initialData }: CrawlingAndIndexing
     <>
       <Title order={2}>{t("title")}</Title>
 
-      <Card pos="relative">
+      <Card pos="relative" withBorder>
         <Text c={"dimmed"} mb={"lg"}>
           {t("warning")}
         </Text>
-        <LoadingOverlay visible={isPending} />
+        <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
           <SwitchSetting form={form} formKey="noIndex" title={t("noIndex.title")} text={t("noIndex.text")} />
           <SwitchSetting form={form} formKey="noFollow" title={t("noFollow.title")} text={t("noFollow.text")} />

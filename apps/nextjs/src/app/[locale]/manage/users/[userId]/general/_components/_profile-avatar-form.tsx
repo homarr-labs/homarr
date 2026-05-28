@@ -95,7 +95,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
 
   return (
     <Box pos="relative">
-      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start">
+      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow>
         <Menu.Target>
           <UnstyledButton onClick={toggle}>
             <UserAvatar user={user} size={200} />

@@ -67,7 +67,7 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
       <Stack w={"100%"} gap="sm">
         {sortedNotifications.length > 0 ? (
           sortedNotifications.map((notification) => (
-            <Card key={notification.id} radius={board.itemRadius} w="100%" p="sm">
+            <Card key={notification.id} withBorder radius={board.itemRadius} w="100%" p="sm">
               <Flex gap="sm" direction="column" w="100%">
                 {notification.title && (
                   <Text fz="sm" lh="sm" lineClamp={2}>

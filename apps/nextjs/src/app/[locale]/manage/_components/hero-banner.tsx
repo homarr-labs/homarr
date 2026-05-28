@@ -45,6 +45,7 @@ export const HeroBanner = async () => {
                     <Image
                       key={`grid-column-${columnIndex}-scroll-1-${index}`}
                       src={icon}
+                      radius="md"
                       fit={"contain"}
                       w={50}
                       h={50}
@@ -56,6 +57,7 @@ export const HeroBanner = async () => {
                     <Image
                       key={`grid-column-${columnIndex}-scroll-2-${index}`}
                       src={icon}
+                      radius="md"
                       fit={"contain"}
                       w={50}
                       h={50}

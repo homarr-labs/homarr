@@ -149,7 +149,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           color={!generalForm.isValid() ? "red" : undefined}
         >
           <form>
-            <Card p="xl">
+            <Card p="xl" shadow="md" withBorder>
               <Stack gap="md">
                 <TextInput
                   label={tUserField("username.label")}
@@ -165,7 +165,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         </Stepper.Step>
         <Stepper.Step label={t("step.security.label")} allowStepSelect={false} allowStepClick={false}>
           <form>
-            <Card p="xl">
+            <Card p="xl" shadow="md" withBorder>
               <Stack gap="md">
                 <CustomPasswordInput
                   withPasswordRequirements
@@ -185,7 +185,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           </form>
         </Stepper.Step>
         <Stepper.Step label={t("step.groups.label")} allowStepSelect={false} allowStepClick={false}>
-          <Card p="xl">
+          <Card p="xl" shadow="md" withBorder>
             <GroupsForm
               initialGroups={initialGroups}
               addGroup={(groupId) =>
@@ -198,20 +198,20 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           </Card>
         </Stepper.Step>
         <Stepper.Step label={t("step.review.label")} allowStepSelect={false} allowStepClick={false}>
-          <Card p="xl">
+          <Card p="xl" shadow="md" withBorder>
             <Stack maw={300} align="center" mx="auto">
               <UserAvatar
                 size="xl"
                 user={{ name: generalForm.values.username, email: generalForm.values.email ?? null, image: null }}
               />
-              <Text fw={700} size="xl">
+              <Text tt="uppercase" fw="bolder" size="xl">
                 {generalForm.values.username}
               </Text>
             </Stack>
           </Card>
         </Stepper.Step>
         <Stepper.Completed>
-          <Card p="xl">
+          <Card p="xl" shadow="md" withBorder>
             <Stack align="center" maw={300} mx="auto">
               <IconUserCheck size="3rem" />
               <Title order={2}>{t("step.completed.title")}</Title>

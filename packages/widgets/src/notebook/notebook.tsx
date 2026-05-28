@@ -421,6 +421,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
             color={primaryColor}
             variant="light"
             size={30}
+            radius={"md"}
             onClick={handleEditToggle}
           >
             {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
@@ -437,6 +438,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
               color={primaryColor}
               variant="light"
               size={30}
+              radius={"md"}
               onClick={handleEditCancel}
             >
               <IconX {...iconProps} />

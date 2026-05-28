@@ -52,7 +52,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
 
   return (
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
-    <Menu width={300} withinPortal keepMounted>
+    <Menu width={300} withArrow withinPortal keepMounted>
       <Menu.Dropdown>
         <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>

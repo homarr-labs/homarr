@@ -83,10 +83,15 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
   return (
     <Stack>
-      <LoadingOverlay visible={isPending} />
+      <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
       {data && (
         <Group wrap="nowrap" align="start">
-          <Image src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.posterPath}`} alt="poster" w={100} />
+          <Image
+            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.posterPath}`}
+            alt="poster"
+            w={100}
+            radius="md"
+          />
           <Text c="dimmed" style={{ flex: "1" }}>
             {data.overview}
           </Text>

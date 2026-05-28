@@ -15,7 +15,7 @@ export const InitFinish = async () => {
   const tFinish = await getScopedI18n("init.step.finish");
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <Card w={64 * 6} maw="90vw" withBorder>
       <Stack>
         <Text>{tFinish("description")}</Text>
 

@@ -1,8 +1,10 @@
 .releasesRepository {
+  border-left: 2px solid transparent;
+
   &:has(.releasesRepositoryHeader:hover),
   &:has(.releasesRepositoryHeader.active),
   &:has(.releasesRepositoryDetails:hover) {
-    background-color: var(--mantine-color-secondaryColor-light);
+    border-left-color: var(--mantine-color-secondaryColor-text);
   }
 }
 

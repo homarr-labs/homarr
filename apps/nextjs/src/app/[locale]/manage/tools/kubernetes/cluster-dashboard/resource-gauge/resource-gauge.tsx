@@ -8,8 +8,6 @@ import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 import { ResourceIcon } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-icon";
 import classes from "./resource-gauge.module.css";
 
-const KUBERNETES_BRAND_COLOR = "#326ce5";
-
 interface KubernetesResourceGaugeProps {
   kubernetesCapacity: KubernetesCapacity;
 }
@@ -20,8 +18,8 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
   const isRTL = Boolean(isLocaleRTL(currentLocale));
 
   return (
-    <Paper className={classes.paper} mt={20}>
-      <ThemeIcon className={classes.icon} size={60} radius={60} bg={KUBERNETES_BRAND_COLOR}>
+    <Paper radius="md" withBorder className={classes.paper} mt={20}>
+      <ThemeIcon className={classes.icon} size={60} radius={60} bg={"#326ce5"}>
         <ResourceIcon type={props.kubernetesCapacity.type} />
       </ThemeIcon>
 

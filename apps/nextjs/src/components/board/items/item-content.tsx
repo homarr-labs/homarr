@@ -42,6 +42,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           item.advancedOptions.customCssClasses.join(" "),
         )}
         radius={board.itemRadius}
+        withBorder
         styles={{
           root: {
             "--opacity": board.opacity / 100,

@@ -19,7 +19,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
       ) : (
         <Stack gap="xs">
           {violations.map((violation) => (
-            <Paper key={violation.id} p="xs" radius="lg">
+            <Paper key={violation.id} p="xs" radius="lg" withBorder>
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle
