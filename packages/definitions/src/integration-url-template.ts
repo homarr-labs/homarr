@@ -18,7 +18,7 @@ export const buildIntegrationUrl = (
   const slug = getSlugForKind(kind);
 
   const modeBuilders: Record<UrlTemplateMode, () => string> = {
-    subdomain: () => `http://${slug}.${host}`,
+    subdomain: () => `https://${slug}.${host}`,
     hostPort: () => {
       const port = dockerPort ?? getIntegrationDefaultPort(kind);
       return port ? `http://${host}:${port}` : `http://${host}`;

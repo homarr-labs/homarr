@@ -5,7 +5,7 @@ import { buildIntegrationUrl } from "../integration-url-template";
 
 describe("buildIntegrationUrl", () => {
   it("builds subdomain URL", () => {
-    expect(buildIntegrationUrl("sonarr", "homelab.local", "subdomain")).toBe("http://sonarr.homelab.local");
+    expect(buildIntegrationUrl("sonarr", "homelab.local", "subdomain")).toBe("https://sonarr.homelab.local");
   });
 
   it("builds hostPort URL with default port", () => {
@@ -21,7 +21,7 @@ describe("buildIntegrationUrl", () => {
   });
 
   it("strips trailing slashes from host", () => {
-    expect(buildIntegrationUrl("sonarr", "homelab.local/", "subdomain")).toBe("http://sonarr.homelab.local");
+    expect(buildIntegrationUrl("sonarr", "homelab.local/", "subdomain")).toBe("https://sonarr.homelab.local");
   });
 
   it("returns empty string for empty host", () => {
@@ -29,7 +29,7 @@ describe("buildIntegrationUrl", () => {
   });
 
   it("uses pi-hole slug for subdomain mode", () => {
-    expect(buildIntegrationUrl("piHole", "example.com", "subdomain")).toBe("http://pi-hole.example.com");
+    expect(buildIntegrationUrl("piHole", "example.com", "subdomain")).toBe("https://pi-hole.example.com");
   });
 
   it("reads default ports from integration definitions", () => {
