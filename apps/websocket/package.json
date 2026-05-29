@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
