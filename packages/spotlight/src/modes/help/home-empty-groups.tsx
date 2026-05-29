@@ -20,11 +20,11 @@ import { appIntegrationBoardMode } from "../app-integration-board";
 import { commandMode } from "../command";
 import { externalMode } from "../external";
 import { pageMode } from "../page";
+import { preferencesGroup } from "../preferences/groups";
 import { userGroupMode } from "../user-group";
 
-// We need type to allow it as generic type for Record<string, unknown>
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type QuickLinkOption = {
+  key: string;
   icon: TablerIcon;
   name: string;
   path: string;
@@ -41,19 +41,13 @@ export const useHomeEmptyGroups = () => {
 
   return [
     createGroup({
-      keyPath: "path",
+      keyPath: "key",
       title: () => "Quick links",
       options: (() => {
         const quickLinks: QuickLinkOption[] = [];
-        if (session?.user) {
-          quickLinks.push({
-            icon: IconSettings,
-            path: `/manage/users/${session.user.id}/general`,
-            name: tPages("preferences.label"),
-          });
-        }
 
         quickLinks.push({
+          key: "manageBoards",
           icon: IconLayoutDashboard,
           path: "/manage/boards",
           name: tPages("manageBoard.label"),
@@ -61,6 +55,7 @@ export const useHomeEmptyGroups = () => {
 
         if (session?.user.permissions.includes("admin")) {
           quickLinks.push({
+            key: "manageSettings",
             icon: IconSettings,
             path: "/manage/settings",
             name: tPages("manageSettings.label"),
@@ -69,6 +64,7 @@ export const useHomeEmptyGroups = () => {
 
         if (session) {
           quickLinks.push({
+            key: "manageSearchEngines",
             icon: IconSearch,
             path: "/manage/search-engines",
             name: tPages("manageSearchEngine.label"),
@@ -138,3 +134,5 @@ export const useHomeEmptyGroups = () => {
     }),
   ] as const;
 };
+
+export const useHomeEmptyGroupsWithPreferences = () => [preferencesGroup, ...useHomeEmptyGroups()];
