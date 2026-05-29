@@ -75,9 +75,7 @@ export class OverseerrIntegration
     });
     const data = await mediaInformationSchema.parseAsync(await response.json());
     const requestedSeasons = [
-      ...new Set(
-        data.mediaInfo?.requests?.flatMap((req) => req.seasons.map((s) => s.seasonNumber)) ?? [],
-      ),
+      ...new Set(data.mediaInfo?.requests?.flatMap((req) => req.seasons.map((s) => s.seasonNumber)) ?? []),
     ];
     const { mediaInfo: _strip, ...rest } = data;
     return { ...rest, requestedSeasons };
@@ -351,13 +349,21 @@ interface MovieInformation {
   releaseDate: string;
 }
 
-const mediaInfoRequestsSchema = z.object({
-  requests: z.array(z.object({
-    seasons: z.array(z.object({
-      seasonNumber: z.number(),
-    })),
-  })).optional(),
-}).optional();
+const mediaInfoRequestsSchema = z
+  .object({
+    requests: z
+      .array(
+        z.object({
+          seasons: z.array(
+            z.object({
+              seasonNumber: z.number(),
+            }),
+          ),
+        }),
+      )
+      .optional(),
+  })
+  .optional();
 
 const mediaInformationSchema = z.union([
   z.object({
@@ -383,9 +389,11 @@ const mediaInformationSchema = z.union([
   }),
 ]);
 
-const searchMediaInfoSchema = z.object({
-  status: z.number(),
-}).optional();
+const searchMediaInfoSchema = z
+  .object({
+    status: z.number(),
+  })
+  .optional();
 
 const searchSchema = z.object({
   results: z

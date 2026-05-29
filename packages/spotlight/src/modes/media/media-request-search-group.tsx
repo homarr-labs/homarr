@@ -72,7 +72,11 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
         <Stack gap={2} style={{ flex: 1 }}>
           <Group gap="xs" wrap="nowrap">
             <Text>{result.name}</Text>
-            {badgeLabel && <Badge size="xs" color={badgeColor} variant="light">{badgeLabel}</Badge>}
+            {badgeLabel && (
+              <Badge size="xs" color={badgeColor} variant="light">
+                {badgeLabel}
+              </Badge>
+            )}
           </Group>
           <Text c="dimmed" size="sm" lineClamp={2}>
             {result.text ?? getIntegrationName(result.integration.kind)}
