@@ -125,6 +125,49 @@ export const createGetSetChannel = <TData>(name: string) => {
   };
 };
 
+interface QueryCacheChannelOptions {
+  userId: string;
+  boardId: string;
+  key: string;
+  ttlMs: number;
+  maxValueBytes: number;
+}
+
+const queryCacheHashKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
+
+export const createQueryCacheChannel = ({ userId, boardId, key, ttlMs, maxValueBytes }: QueryCacheChannelOptions) => {
+  const hkey = queryCacheHashKey(userId, boardId);
+
+  return {
+    name: `${hkey}:${key}`,
+    getAsync: async () => {
+      return await getSetClient.hget(hkey, key);
+    },
+    setAsync: async (value: string) => {
+      if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
+        logger.warn("Query cache value exceeded maximum size", {
+          channel: hkey,
+          valueBytes: Buffer.byteLength(value, "utf8"),
+          maxValueBytes,
+        });
+        return false;
+      }
+
+      await getSetClient.hset(hkey, key, value);
+      await getSetClient.pexpire(hkey, ttlMs);
+      return true;
+    },
+    removeAsync: async () => {
+      await getSetClient.hdel(hkey, key);
+    },
+  };
+};
+
+export const getAllQueryCacheAsync = async (userId: string, boardId: string): Promise<Record<string, string>> => {
+  const hkey = queryCacheHashKey(userId, boardId);
+  return await getSetClient.hgetall(hkey);
+};
+
 /**
  * Creates a new cache channel.
  * @param name name of the channel
