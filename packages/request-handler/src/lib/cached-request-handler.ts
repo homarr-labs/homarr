@@ -40,10 +40,16 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
               };
             } catch (error) {
               if (options.fallbackToStaleOnError && channelData) {
-                logger.warn(new ErrorWithMetadata("Cached request handler using stale cache after fetch failure", {
-                  channel: channel.name,
-                  queryKey: options.queryKey,
-                }, { cause: error }));
+                logger.warn(
+                  new ErrorWithMetadata(
+                    "Cached request handler using stale cache after fetch failure",
+                    {
+                      channel: channel.name,
+                      queryKey: options.queryKey,
+                    },
+                    { cause: error },
+                  ),
+                );
                 return channelData;
               }
 
