@@ -74,6 +74,8 @@ export const buildUrl = (baseUrl: URL, path: Path, queryParams?: QueryParams) =>
   const url = new URL(`${baseUrl.origin}${removeTrailingSlash(baseUrl.pathname)}${path}`);
 
   baseUrl.searchParams.forEach((value, key) => {
+    // base url query params should not override path query params
+    if (url.searchParams.has(key)) return;
     url.searchParams.set(key, value);
   });
 
