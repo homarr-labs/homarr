@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { Button, Group, Stack, Tabs } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { z } from "zod/v4";
