@@ -21,7 +21,7 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
