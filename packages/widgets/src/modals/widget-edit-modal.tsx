@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Button, Group, Stack, Tabs } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { z } from "zod/v4";
@@ -45,6 +45,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   z.config({
     customError: zodErrorMap(t),
@@ -86,14 +87,28 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const appId = innerProps.appId;
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
 
-  const handleSubmit = form.onSubmit((values) => {
-    innerProps.onSuccessfulEdit({
-      ...values,
-      advancedOptions,
-    });
-    appEditRef.current?.submitIfDirty();
-    actions.closeModal();
+  const handleSubmit = form.onSubmit(async (values) => {
+    setIsSubmitting(true);
+    try {
+      const appSaved = showAppTab ? await (appEditRef.current?.submitIfDirty() ?? true) : true;
+
+      if (!appSaved) {
+        return;
+      }
+
+      innerProps.onSuccessfulEdit({
+        ...values,
+        advancedOptions,
+      });
+      actions.closeModal();
+    } finally {
+      setIsSubmitting(false);
+    }
   });
+
+  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    handleSubmit(event);
+  };
 
   const widgetFormContent = (
     <Stack>
@@ -108,9 +123,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         const Input = getInputForType(value.type);
 
         if (
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           !Input ||
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           value.shouldHide?.(
             form.values.options as never,
             innerProps.integrationData
@@ -154,7 +167,9 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
               {t("common.action.cancel")}
             </Button>
-            <Button type="submit">{t("common.action.saveChanges")}</Button>
+            <Button type="submit" loading={isSubmitting}>
+              {t("common.action.saveChanges")}
+            </Button>
           </Group>
         )}
       </Group>
@@ -162,7 +177,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   );
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onFormSubmit}>
       <FormProvider form={form}>
         {showAppTab ? (
           <Stack>
@@ -182,7 +197,9 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
                 {t("common.action.cancel")}
               </Button>
-              <Button type="submit">{t("common.action.saveChanges")}</Button>
+              <Button type="submit" loading={isSubmitting}>
+                {t("common.action.saveChanges")}
+              </Button>
             </Group>
           </Stack>
         ) : (

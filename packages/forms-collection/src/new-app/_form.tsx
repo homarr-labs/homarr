@@ -18,7 +18,7 @@ import { findBestIconMatch } from "./icon-matcher";
 type FormType = z.infer<typeof appManageSchema>;
 
 export interface AppFormHandle {
-  submit: () => void;
+  submit: () => Promise<boolean>;
   isDirty: () => boolean;
 }
 
@@ -29,7 +29,7 @@ interface AppFormProps {
     submitAndCreateAnother?: string;
   };
   initialValues?: FormType;
-  handleSubmit: (values: FormType, redirect: boolean, afterSuccess?: () => void) => void;
+  handleSubmit: (values: FormType, redirect: boolean, afterSuccess?: () => void) => void | Promise<void>;
   isPending: boolean;
   hideButtons?: boolean;
   formRef?: React.Ref<AppFormHandle>;
@@ -74,7 +74,20 @@ export const AppForm = ({
   useImperativeHandle(
     formRef,
     () => ({
-      submit: () => form.onSubmit(handleSubmit)(),
+      submit: () =>
+        new Promise<boolean>((resolve) => {
+          form.onSubmit(
+            async (values) => {
+              try {
+                await Promise.resolve(handleSubmit(values));
+                resolve(true);
+              } catch {
+                resolve(false);
+              }
+            },
+            () => resolve(false),
+          )();
+        }),
       isDirty: () => form.isDirty(),
     }),
     [form, handleSubmit],

@@ -1,7 +1,7 @@
 "use client";
 
 import { useImperativeHandle, useRef } from "react";
-import { Alert, Center, Loader, Stack } from "@mantine/core";
+import { Alert, Button, Center, Loader, Stack, Text } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -11,7 +11,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 export interface EmbeddedAppEditFormHandle {
-  submitIfDirty: () => void;
+  submitIfDirty: () => Promise<boolean>;
 }
 
 interface EmbeddedAppEditFormProps {
@@ -22,9 +22,9 @@ interface EmbeddedAppEditFormProps {
 export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormProps) => {
   const t = useI18n();
   const appFormRef = useRef<AppFormHandle>(null);
-  const { data: app, isPending: isLoadingApp } = clientApi.app.byId.useQuery({ id: appId });
+  const { data: app, isPending: isLoadingApp, isError, refetch } = clientApi.app.byId.useQuery({ id: appId });
 
-  const { mutate, isPending: isMutating } = clientApi.app.update.useMutation({
+  const { mutateAsync, isPending: isMutating } = clientApi.app.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
         title: t("app.page.edit.notification.success.title"),
@@ -42,20 +42,33 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
   useImperativeHandle(
     handleRef,
     () => ({
-      submitIfDirty: () => {
-        if (appFormRef.current?.isDirty()) {
-          appFormRef.current.submit();
+      submitIfDirty: async () => {
+        if (!appFormRef.current?.isDirty()) {
+          return true;
         }
+
+        return appFormRef.current.submit();
       },
     }),
     [],
   );
 
-  if (isLoadingApp || !app) {
+  if (isLoadingApp) {
     return (
       <Center py="xl">
         <Loader />
       </Center>
+    );
+  }
+
+  if (isError || !app) {
+    return (
+      <Stack align="center" gap="md" py="xl">
+        <Text c="dimmed">{t("app.action.select.notFound")}</Text>
+        <Button variant="light" onClick={() => void refetch()}>
+          {t("common.action.tryAgain")}
+        </Button>
+      </Stack>
     );
   }
 
@@ -70,8 +83,8 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
         showBackToOverview={false}
         buttonLabels={{ submit: "" }}
         initialValues={app}
-        handleSubmit={(values) => {
-          mutate({ id: appId, ...values });
+        handleSubmit={async (values) => {
+          await mutateAsync({ id: appId, ...values });
         }}
         isPending={isMutating}
       />
