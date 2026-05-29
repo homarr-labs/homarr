@@ -96,7 +96,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
 
   return (
     <Box pos="relative" display="flex" style={{ justifyContent: isMobile ? "center" : undefined }}>
-      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow>
+      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow withinPortal>
         <Menu.Target>
           <UnstyledButton onClick={toggle}>
             <UserAvatar user={user} size={isMobile ? 120 : 200} />

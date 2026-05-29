@@ -242,6 +242,7 @@ export const UserGeneralSettingsForm = ({
                 clearable
                 boards={boardsData}
                 w="100%"
+                withinPortal
                 {...form.getInputProps("homeBoardId")}
               />
               <BoardSelect
@@ -249,6 +250,7 @@ export const UserGeneralSettingsForm = ({
                 clearable
                 boards={boardsData}
                 w="100%"
+                withinPortal
                 {...form.getInputProps("mobileHomeBoardId")}
               />
             </Stack>
@@ -264,6 +266,7 @@ export const UserGeneralSettingsForm = ({
                 label={t("user.field.defaultSearchEngine.label")}
                 w="100%"
                 data={searchEnginesData}
+                comboboxProps={{ withinPortal: true }}
                 {...form.getInputProps("defaultSearchEngineId")}
               />
               <Switch
@@ -283,7 +286,7 @@ export const UserGeneralSettingsForm = ({
                 <Title order={3}>{tGeneral("item.language")}</Title>
               </Stack>
               <Divider />
-              {showLanguageSelector && <CurrentLanguageCombobox />}
+              {showLanguageSelector && <CurrentLanguageCombobox withinPortal />}
               <Title order={4}>{tGeneral("item.firstDayOfWeek")}</Title>
               <Radio.Group
                 {...firstDayOfWeekInputProps}
