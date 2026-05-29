@@ -1,14 +1,14 @@
 export const userPreferenceDefinitions = [
-  { key: "colorScheme", kind: "select", guest: true },
-  { key: "locale", kind: "select", guest: true },
-  { key: "defaultSearchEngineId", kind: "searchEngine", guest: false },
-  { key: "openSearchInNewTab", kind: "boolean", guest: false },
-  { key: "ddgBangs", kind: "boolean", guest: false },
-  { key: "firstDayOfWeek", kind: "select", guest: false },
-  { key: "homeBoardId", kind: "board", guest: false },
-  { key: "mobileHomeBoardId", kind: "board", guest: false },
-  { key: "pingIconsEnabled", kind: "boolean", guest: false },
-  { key: "fullPreferencesPage", kind: "link", guest: false },
+  { key: "colorScheme", kind: "select", guest: true, aliases: ["theme", "dark", "light", "auto"] },
+  { key: "locale", kind: "select", guest: true, aliases: ["language", "translation"] },
+  { key: "defaultSearchEngineId", kind: "searchEngine", guest: false, aliases: ["search", "search engine"] },
+  { key: "openSearchInNewTab", kind: "boolean", guest: false, aliases: ["search", "new tab", "external"] },
+  { key: "ddgBangs", kind: "boolean", guest: false, aliases: ["duckduckgo", "bangs", "search"] },
+  { key: "firstDayOfWeek", kind: "select", guest: false, aliases: ["calendar", "week", "weekday"] },
+  { key: "homeBoardId", kind: "board", guest: false, aliases: ["home", "board", "dashboard"] },
+  { key: "mobileHomeBoardId", kind: "board", guest: false, aliases: ["mobile", "home", "board", "dashboard"] },
+  { key: "pingIconsEnabled", kind: "boolean", guest: false, aliases: ["ping", "icon", "status"] },
+  { key: "fullPreferencesPage", kind: "link", guest: false, aliases: ["settings", "manage", "profile"] },
 ] as const;
 
 export type UserPreferenceDefinition = (typeof userPreferenceDefinitions)[number];

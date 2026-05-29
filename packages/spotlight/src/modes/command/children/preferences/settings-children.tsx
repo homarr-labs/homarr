@@ -16,7 +16,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { createChildrenOptions } from "../../../../lib/children";
 import type { ChildrenAction } from "../../../../lib/children";
 import { interaction } from "../../../../lib/interaction";
-import { useUserPreference } from "../../../../preferences/use-user-preference";
+import { useUserPreferences } from "../../../../preferences/use-user-preference";
 import { preferenceChildrenOptionsByKey, preferenceIcons, visiblePreferenceDefinitions } from "./registry";
 
 dayjs.extend(localeData);
@@ -25,7 +25,17 @@ type SettingsAction = ChildrenAction<Record<string, unknown>>;
 
 const weekDays = dayjs.weekdays(false);
 
-const BooleanRow = ({ label, Icon, checked, isPending }: { label: string; Icon: TablerIcon; checked: boolean; isPending: boolean }) => (
+const BooleanRow = ({
+  label,
+  Icon,
+  checked,
+  isPending,
+}: {
+  label: string;
+  Icon: TablerIcon;
+  checked: boolean;
+  isPending: boolean;
+}) => (
   <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
     <Group wrap="nowrap" gap="sm">
       <Icon stroke={1.5} size={20} />
@@ -41,7 +51,9 @@ const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIco
       <Icon stroke={1.5} size={20} />
       <Text>{label}</Text>
     </Group>
-    <Text size="sm" c="dimmed">{valueLabel}</Text>
+    <Text size="sm" c="dimmed">
+      {valueLabel}
+    </Text>
   </Group>
 );
 
@@ -58,24 +70,28 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
   const normalizedQuery = query.trim().toLowerCase();
+  const preferences = useUserPreferences();
 
-  const colorScheme = useUserPreference("colorScheme");
-  const locale = useUserPreference("locale");
-  const defaultSearchEngineId = useUserPreference("defaultSearchEngineId");
-  const openSearchInNewTab = useUserPreference("openSearchInNewTab");
-  const ddgBangs = useUserPreference("ddgBangs");
-  const firstDayOfWeek = useUserPreference("firstDayOfWeek");
-  const homeBoardId = useUserPreference("homeBoardId");
-  const mobileHomeBoardId = useUserPreference("mobileHomeBoardId");
-  const pingIconsEnabled = useUserPreference("pingIconsEnabled");
+  const colorScheme = preferences.getPreference("colorScheme");
+  const locale = preferences.getPreference("locale");
+  const defaultSearchEngineId = preferences.getPreference("defaultSearchEngineId");
+  const openSearchInNewTab = preferences.getPreference("openSearchInNewTab");
+  const ddgBangs = preferences.getPreference("ddgBangs");
+  const firstDayOfWeek = preferences.getPreference("firstDayOfWeek");
+  const homeBoardId = preferences.getPreference("homeBoardId");
+  const mobileHomeBoardId = preferences.getPreference("mobileHomeBoardId");
+  const pingIconsEnabled = preferences.getPreference("pingIconsEnabled");
 
-  const boardsQuery = clientApi.board.getAllBoards.useQuery();
-  const searchEnginesQuery = clientApi.searchEngine.getSelectable.useQuery();
+  const boardsQuery = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isAuthenticated });
+  const searchEnginesQuery = clientApi.searchEngine.getSelectable.useQuery(undefined, { enabled: isAuthenticated });
 
   const boards = boardsQuery.data ?? [];
   const engines = searchEnginesQuery.data ?? [];
 
-  const prefState: Record<Exclude<UserPreferenceKey, "fullPreferencesPage">, { value: unknown; setValue: (v: never) => void; isPending: boolean }> = {
+  const prefState: Record<
+    Exclude<UserPreferenceKey, "fullPreferencesPage">,
+    { value: unknown; setValue: (v: never) => void; isPending: boolean }
+  > = {
     colorScheme,
     locale,
     defaultSearchEngineId,
@@ -90,7 +106,8 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
   const valueLabels: Record<Exclude<UserPreferenceKey, "fullPreferencesPage">, string> = {
     colorScheme: tColorScheme(colorScheme.value as ColorScheme),
     locale: localeConfigurations[locale.value as keyof typeof localeConfigurations]?.name ?? String(locale.value),
-    defaultSearchEngineId: engines.find((e) => e.value === defaultSearchEngineId.value)?.label ?? t("searchEngine.none"),
+    defaultSearchEngineId:
+      engines.find((e) => e.value === defaultSearchEngineId.value)?.label ?? t("searchEngine.none"),
     openSearchInNewTab: "",
     ddgBangs: "",
     firstDayOfWeek: weekDays[firstDayOfWeek.value as DayOfWeek] ?? String(firstDayOfWeek.value),
@@ -105,37 +122,46 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
     const label = t(`${definition.key}.label` as never);
     const Icon = preferenceIcons[definition.key];
 
-    if (!label.toLowerCase().includes(normalizedQuery)) return [];
+    const matchesSearch = [label, ...definition.aliases].some((value) => value.toLowerCase().includes(normalizedQuery));
+    if (!matchesSearch) return [];
 
     if (definition.kind === "boolean") {
       const state = prefState[definition.key as keyof typeof prefState];
       const checked = state.value as boolean;
-      return [{
-        key: definition.key,
-        Component: () => <BooleanRow label={label} Icon={Icon} checked={checked} isPending={state.isPending} />,
-        useInteraction: interaction.javaScript(() => ({
-          onSelect: () => state.setValue(!checked as never),
-          closeSpotlightOnTrigger: false,
-        })),
-      }];
+      return [
+        {
+          key: definition.key,
+          Component: () => <BooleanRow label={label} Icon={Icon} checked={checked} isPending={state.isPending} />,
+          useInteraction: interaction.javaScript(() => ({
+            onSelect: state.isPending ? () => undefined : () => state.setValue(!checked as never),
+            closeSpotlightOnTrigger: false,
+          })),
+        },
+      ];
     }
 
     if (definition.kind === "link") {
-      return [{
-        key: definition.key,
-        Component: () => <LinkRow label={label} Icon={Icon} />,
-        useInteraction: interaction.link(() => ({
-          href: `/manage/users/${session?.user.id ?? ""}/general`,
-        })),
-      }];
+      return [
+        {
+          key: definition.key,
+          Component: () => <LinkRow label={label} Icon={Icon} />,
+          useInteraction: interaction.link(() => ({
+            href: `/manage/users/${session?.user.id ?? ""}/general`,
+          })),
+        },
+      ];
     }
 
     const childrenKey = definition.key as keyof typeof preferenceChildrenOptionsByKey;
-    return [{
-      key: definition.key,
-      Component: () => <SelectRow label={label} Icon={Icon} valueLabel={valueLabels[definition.key as keyof typeof valueLabels]} />,
-      useInteraction: interaction.children(preferenceChildrenOptionsByKey[childrenKey]),
-    }];
+    return [
+      {
+        key: definition.key,
+        Component: () => (
+          <SelectRow label={label} Icon={Icon} valueLabel={valueLabels[definition.key as keyof typeof valueLabels]} />
+        ),
+        useInteraction: interaction.children(preferenceChildrenOptionsByKey[childrenKey]),
+      },
+    ];
   });
 };
 
@@ -146,9 +172,10 @@ export const settingsChildrenOptions = createChildrenOptions<Record<string, unkn
     return (
       <Stack mx="md" my="sm" gap="xs">
         <Text>{t("title")}</Text>
-        <Text size="xs" c="dimmed">{t("children.detail.backHint")}</Text>
+        <Text size="xs" c="dimmed">
+          {t("children.detail.backHint")}
+        </Text>
       </Stack>
     );
   },
 });
-

@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
-import { IconSearch, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch, IconX } from "@tabler/icons-react";
 
 import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
@@ -58,11 +58,14 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
     setChildrenStack([]);
   }, []);
 
-  const pushChildrenOptions = useCallback((options: ChildrenOptions) => {
-    setChildrenStack((currentStack) => [...currentStack, options]);
-    setQuery("");
-    setTimeout(() => selectAction(0, spotlightStore));
-  }, [setQuery]);
+  const pushChildrenOptions = useCallback(
+    (options: ChildrenOptions) => {
+      setChildrenStack((currentStack) => [...currentStack, options]);
+      setQuery("");
+      setTimeout(() => selectAction(0, spotlightStore));
+    },
+    [setQuery],
+  );
 
   const popChildrenOptions = useCallback(() => {
     setChildrenStack((currentStack) => currentStack.slice(0, -1));
@@ -117,6 +120,11 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
         rightSection={
           mode === defaultMode && childrenStack.length === 0 ? null : (
             <ActionIcon
+              title={
+                childrenStack.length > 0
+                  ? t("search.mode.command.group.preferences.children.detail.backAction")
+                  : t("common.action.close")
+              }
               onClick={() => {
                 if (childrenStack.length > 0) {
                   popChildrenOptions();
@@ -129,9 +137,13 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
                 inputRef.current?.focus();
               }}
               variant="subtle"
-              aria-label={t("common.action.close")}
+              aria-label={
+                childrenStack.length > 0
+                  ? t("search.mode.command.group.preferences.children.detail.backAction")
+                  : t("common.action.close")
+              }
             >
-              <IconX stroke={1.5} />
+              {childrenStack.length > 0 ? <IconArrowLeft stroke={1.5} /> : <IconX stroke={1.5} />}
             </ActionIcon>
           )
         }

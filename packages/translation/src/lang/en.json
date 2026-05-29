@@ -4553,7 +4553,13 @@
             "children": {
               "detail": {
                 "title": "Select a preference to change",
-                "backHint": "Press Backspace to go back"
+                "backHint": "Press Backspace or use the back button to go back",
+                "backAction": "Go back"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "Unable to update preference"
               }
             },
             "option": {

@@ -19,7 +19,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
           configuration.name.toLowerCase().includes(normalizedQuery) ||
           configuration.translatedName.toLowerCase().includes(normalizedQuery),
       )
-      .sort(
+      .toSorted(
         (languageA, languageB) =>
           Math.min(
             languageA.configuration.name.toLowerCase().indexOf(normalizedQuery),

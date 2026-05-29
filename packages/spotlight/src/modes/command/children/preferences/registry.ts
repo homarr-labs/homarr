@@ -15,14 +15,20 @@ import { userPreferenceDefinitions } from "@homarr/settings";
 import type { UserPreferenceKey } from "@homarr/settings";
 import type { TablerIcon } from "@homarr/ui";
 
-import { createChildrenOptions } from "../../../../lib/children";
+import type { createChildrenOptions } from "../../../../lib/children";
 import { languageChildrenOptions } from "../language";
 import { createBoardChildrenOptions } from "./board";
 import { colorSchemeChildrenOptions } from "./color-scheme";
 import { firstDayOfWeekChildrenOptions } from "./first-day-of-week";
 import { searchEngineChildrenOptions } from "./search-engine";
 
-type ChildrenPreferenceKey = "colorScheme" | "locale" | "defaultSearchEngineId" | "firstDayOfWeek" | "homeBoardId" | "mobileHomeBoardId";
+type ChildrenPreferenceKey =
+  | "colorScheme"
+  | "locale"
+  | "defaultSearchEngineId"
+  | "firstDayOfWeek"
+  | "homeBoardId"
+  | "mobileHomeBoardId";
 
 type PreferenceChildrenOptionsFactory = ReturnType<typeof createChildrenOptions<Record<string, unknown>>>;
 

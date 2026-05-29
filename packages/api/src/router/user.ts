@@ -542,7 +542,7 @@ export const userRouter = createTRPCRouter({
         .set({
           pingIconsEnabled: input.pingIconsEnabled,
         })
-        .where(eq(users.id, ctx.session.user.id));
+        .where(eq(users.id, input.id));
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
@@ -603,7 +603,7 @@ export const userRouter = createTRPCRouter({
         .set({
           firstDayOfWeek: input.firstDayOfWeek,
         })
-        .where(eq(users.id, ctx.session.user.id));
+        .where(eq(users.id, input.id));
     }),
 });
 
