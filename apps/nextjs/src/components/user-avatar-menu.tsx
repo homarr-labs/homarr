@@ -45,7 +45,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
           window.location.assign(logoutUrl);
           return;
         }
-        router.refresh();
+        router.push("/auth/login");
       },
     });
   }, [logoutUrl, openModal, router]);
