@@ -1,0 +1,27 @@
+packages/ui/src/components/password-input/password-input.tsx
+  s_c4de2d062f6f0d::t_2fca5d12a87a3f 23,26,31
+packages/translation/src/lang/en.json
+  s_c4de2d062f6f0d::t_69cfb6bbb57118 136,138-141
+packages/ui/src/components/password-input/password-requirements-popover.tsx
+  s_c4de2d062f6f0d::t_f2e176b72e96e2 49
+packages/validation/src/user.ts
+  s_c4de2d062f6f0d::t_4f073f87f76460 22
+packages/ui/src/components/password-input/password-requirement.tsx
+  s_c4de2d062f6f0d::t_47fe93d9f56264 4-8,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f1ed293b792fc9e9ce3eb57c2f4b48968245c1a7",
+  "prompts": {},
+  "sessions": {
+    "s_c4de2d062f6f0d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d3d10fca-9e1a-43f4-afb7-d9473c8419da",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
