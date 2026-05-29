@@ -83,7 +83,8 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
-  const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(innerProps.appId);
+  const appId = innerProps.appId;
+  const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
 
   const handleSubmit = form.onSubmit((values) => {
     innerProps.onSuccessfulEdit({
@@ -174,7 +175,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
                 {widgetFormContent}
               </Tabs.Panel>
               <Tabs.Panel value="app" pt="md">
-                <EmbeddedAppEditForm appId={innerProps.appId!} handleRef={appEditRef} />
+                {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
               </Tabs.Panel>
             </Tabs>
             <Group justify="end">
