@@ -20,7 +20,7 @@
     "build:postgresql": "esbuild migrations/postgresql/migrate.ts --bundle --platform=node --outfile=migrations/postgresql/migrate.cjs",
     "build:sqlite": "esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "lint": "oxlint",
     "migration:custom": "pnpm with-env tsx ./migrations/custom/run-custom.ts",
     "migration:mysql:drop": "pnpm with-env drizzle-kit drop --config ./configs/mysql.config.ts",
