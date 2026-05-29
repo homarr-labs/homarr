@@ -1,0 +1,30 @@
+packages/request-handler/src/test/update-checker.spec.ts
+  s_ad6f3518790c14::t_d93813cc61808f 114-131
+packages/cron-jobs/src/jobs/update-checker.ts
+  s_ad6f3518790c14::t_d93813cc61808f 1,6,10
+packages/request-handler/src/update-checker.ts
+  s_ad6f3518790c14::t_d93813cc61808f 18-19,62,105
+packages/request-handler/src/lib/cached-request-handler.ts
+  s_ad6f3518790c14::t_d93813cc61808f 18,30-31,33-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "28dd9dc8921cdc6c218e9078cc8705b4de5ea70b",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_ad6f3518790c14": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "243ac177-eae8-4929-b574-49eb4cf5136b",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
