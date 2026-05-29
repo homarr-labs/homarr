@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 
-import { Path, QueryParams } from "@homarr/common";
+import type { Path, QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createDb } from "@homarr/db/test";
 

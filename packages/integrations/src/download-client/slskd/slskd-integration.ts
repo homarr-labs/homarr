@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import type { RequestInit } from "undici";
 
-import { Path } from "@homarr/common";
+import type { Path } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";

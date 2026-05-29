@@ -3,7 +3,8 @@ import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
 
-import { buildUrl, isPath, Path, QueryParams } from "@homarr/common";
+import type { Path, QueryParams } from "@homarr/common";
+import { buildUrl, isPath } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 

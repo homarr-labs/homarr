@@ -1,6 +1,6 @@
 import type { fetch as undiciFetch } from "undici";
 
-import { Path, QueryParams } from "@homarr/common";
+import type { Path, QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";

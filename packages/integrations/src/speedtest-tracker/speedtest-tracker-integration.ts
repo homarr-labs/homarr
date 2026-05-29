@@ -1,4 +1,4 @@
-import { QueryParams } from "@homarr/common";
+import type { QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 

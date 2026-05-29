@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { Path } from "@homarr/common";
+import type { Path } from "@homarr/common";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
