@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { getActiveQueryCacheBoardId, setActiveQueryCacheBoardId } from "@homarr/api/query-cache";
 
 import { updateBoardName } from "./updater";
 
@@ -28,6 +29,8 @@ export const BoardProvider = ({
     },
   );
 
+  setActiveQueryCacheBoardId(data.id);
+
   // Update the board name so it can be used within updateBoard method
   updateBoardName(initialBoard.name);
 
@@ -41,6 +44,16 @@ export const BoardProvider = ({
       void utils.board.getBoardByName.invalidate({ name: initialBoard.name });
     };
   }, [pathname, utils, initialBoard.name]);
+
+  useEffect(() => {
+    setActiveQueryCacheBoardId(data.id);
+
+    return () => {
+      if (getActiveQueryCacheBoardId() === data.id) {
+        setActiveQueryCacheBoardId(null);
+      }
+    };
+  }, [data.id]);
 
   return (
     <BoardContext.Provider
