@@ -1,4 +1,4 @@
-import { objectKeys } from "@homarr/common";
+import { objectKeys, removeTrailingSlash } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
@@ -475,7 +475,7 @@ export const getIntegrationDefaultPort = (kind: IntegrationKind): number | undef
 export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: IntegrationKind): string | null => {
   const definition = integrationDefs[kind];
   if (!("apiKeySettingsPath" in definition)) return null;
-  const base = integrationUrl.replace(/\/+$/, "");
+  const base = removeTrailingSlash(integrationUrl);
   if (!base) return null;
   return `${base}${definition.apiKeySettingsPath}`;
 };

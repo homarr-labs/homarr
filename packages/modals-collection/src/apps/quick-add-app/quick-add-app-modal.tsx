@@ -3,7 +3,7 @@ import type { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { AppForm } from "@homarr/forms-collection";
-import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
+import { createModal, modalSizeForm } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";

@@ -22,6 +22,7 @@ describe("buildIntegrationUrl", () => {
 
   it("strips trailing slashes from host", () => {
     expect(buildIntegrationUrl("sonarr", "homelab.local/", "subdomain")).toBe("https://sonarr.homelab.local");
+    expect(buildIntegrationUrl("sonarr", "homelab.local///", "subdomain")).toBe("https://sonarr.homelab.local");
   });
 
   it("returns empty string for empty host", () => {

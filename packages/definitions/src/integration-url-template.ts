@@ -1,3 +1,5 @@
+import { removeTrailingSlash } from "@homarr/common";
+
 import { integrationIconSlugs } from "./docker-integration-match";
 import type { IntegrationKind } from "./integration";
 import { getIntegrationDefaultPort } from "./integration";
@@ -20,7 +22,7 @@ export const buildIntegrationUrl = (
   mode: UrlTemplateMode,
   dockerPort?: number,
 ): string => {
-  const host = baseHost.trim().replace(/\/+$/, "");
+  const host = removeTrailingSlash(baseHost.trim());
   if (!host) return "";
   const port = dockerPort ?? getIntegrationDefaultPort(kind);
   return buildUrl(getSlugForKind(kind), host, mode, port ?? undefined);
@@ -32,7 +34,7 @@ export const buildAppUrl = (
   mode: UrlTemplateMode,
   dockerPort?: number,
 ): string => {
-  const host = baseHost.trim().replace(/\/+$/, "");
+  const host = removeTrailingSlash(baseHost.trim());
   if (!host) return "";
   const slug = containerName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
   return buildUrl(slug, host, mode, dockerPort);
