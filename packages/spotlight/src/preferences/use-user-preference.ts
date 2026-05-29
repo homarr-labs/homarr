@@ -10,75 +10,58 @@ import { useSession } from "@homarr/auth/client";
 import type { ColorScheme } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
+import {
+  userPreferenceDefinitions,
+  userPreferenceDefinitionByKey,
+} from "@homarr/settings";
 import type { UserPreferenceKey } from "@homarr/settings";
 import { useSettings } from "@homarr/settings";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
 
-const optimisticPreferenceKeys = new Set<UserPreferenceKey>([
-  "defaultSearchEngineId",
-  "openSearchInNewTab",
-  "ddgBangs",
-  "firstDayOfWeek",
-  "homeBoardId",
-  "mobileHomeBoardId",
-  "pingIconsEnabled",
-]);
+// --- Optimistic store (module-level, shared across all hook instances) ---
 
-const optimisticPreferencesRef: { current: Partial<Record<UserPreferenceKey, unknown>> } = { current: {} };
-let optimisticPreferencesVersion = 0;
-const optimisticPreferenceListeners = new Set<() => void>();
+const optimisticRef: { current: Partial<Record<UserPreferenceKey, unknown>> } = { current: {} };
+let optimisticVersion = 0;
+const optimisticListeners = new Set<() => void>();
 
-const searchPreferenceKeys = ["defaultSearchEngineId", "openSearchInNewTab", "ddgBangs"] as const;
-const homeBoardPreferenceKeys = ["homeBoardId", "mobileHomeBoardId"] as const;
-
-const notifyOptimisticPreferenceListeners = () => {
-  optimisticPreferencesVersion += 1;
-  optimisticPreferenceListeners.forEach((listener) => listener());
+const notifyListeners = () => {
+  optimisticVersion += 1;
+  optimisticListeners.forEach((fn) => fn());
 };
 
-const subscribeToOptimisticPreferenceChanges = (listener: () => void) => {
-  optimisticPreferenceListeners.add(listener);
-  return () => optimisticPreferenceListeners.delete(listener);
+const subscribeOptimistic = (listener: () => void) => {
+  optimisticListeners.add(listener);
+  return () => optimisticListeners.delete(listener);
 };
 
-const setOptimisticPreference = (preferenceKey: UserPreferenceKey, value: unknown) => {
-  optimisticPreferencesRef.current[preferenceKey] = value;
-  notifyOptimisticPreferenceListeners();
+const setOptimistic = (key: UserPreferenceKey, value: unknown) => {
+  optimisticRef.current[key] = value;
+  notifyListeners();
 };
 
-const clearOptimisticPreferences = (keys: readonly UserPreferenceKey[]) => {
+const clearOptimistic = (keys: readonly UserPreferenceKey[]) => {
   let changed = false;
-  keys.forEach((preferenceKey) => {
-    changed ||= preferenceKey in optimisticPreferencesRef.current;
-    delete optimisticPreferencesRef.current[preferenceKey];
-  });
-  if (!changed) return;
-
-  notifyOptimisticPreferenceListeners();
-};
-
-const getEffectivePreferenceValue = (preferenceKey: UserPreferenceKey, settings: SettingsContextProps): unknown => {
-  const optimisticValue = optimisticPreferencesRef.current[preferenceKey];
-  if (optimisticValue !== undefined) {
-    return optimisticValue;
+  for (const key of keys) {
+    changed ||= key in optimisticRef.current;
+    delete optimisticRef.current[key];
   }
-
-  const settingsValues: Partial<Record<UserPreferenceKey, unknown>> = {
-    defaultSearchEngineId: settings.defaultSearchEngineId,
-    openSearchInNewTab: settings.openSearchInNewTab,
-    ddgBangs: settings.ddgBangs,
-    firstDayOfWeek: settings.firstDayOfWeek,
-    homeBoardId: settings.homeBoardId,
-    mobileHomeBoardId: settings.mobileHomeBoardId,
-    pingIconsEnabled: settings.pingIconsEnabled,
-  };
-
-  return settingsValues[preferenceKey];
+  if (changed) notifyListeners();
 };
 
-const refreshAfterMutation = (router: ReturnType<typeof useRouter>) => {
-  router.refresh();
+const CLIENT_ONLY_GROUPS = new Set(["colorScheme", "locale"]);
+
+const isDbBacked = (key: UserPreferenceKey) => {
+  const group = userPreferenceDefinitionByKey[key].mutationGroup;
+  return group !== null && !CLIENT_ONLY_GROUPS.has(group);
 };
+
+const getGroupKeys = (key: UserPreferenceKey): UserPreferenceKey[] => {
+  const group = userPreferenceDefinitionByKey[key].mutationGroup;
+  if (!group) return [key];
+  return userPreferenceDefinitions.filter((d) => d.mutationGroup === group).map((d) => d.key);
+};
+
+// --- Hook ---
 
 export const useUserPreferences = () => {
   const router = useRouter();
@@ -91,242 +74,114 @@ export const useUserPreferences = () => {
   const currentLocale = useCurrentLocale();
   const { changeLocale } = useChangeLocale();
   const t = useI18n();
-  const pendingGroupsRef = useRef({
-    search: false,
-    homeBoards: false,
-    firstDayOfWeek: false,
-    pingIcons: false,
-  });
+  const userId = session?.user.id;
+  const pendingRef = useRef<Record<string, boolean>>({});
 
-  useSyncExternalStore(
-    subscribeToOptimisticPreferenceChanges,
-    () => optimisticPreferencesVersion,
-    () => optimisticPreferencesVersion,
-  );
+  useSyncExternalStore(subscribeOptimistic, () => optimisticVersion, () => optimisticVersion);
 
-  const showPreferenceErrorNotification = () => {
-    showErrorNotification({
-      message: t("search.mode.command.group.preferences.notification.error.message"),
-    });
+  const refresh = () => router.refresh();
+
+  const searchMutation = clientApi.user.changeSearchPreferences.useMutation({ onSuccess: refresh });
+  const homeBoardsMutation = clientApi.user.changeHomeBoards.useMutation({ onSuccess: refresh });
+  const firstDayMutation = clientApi.user.changeFirstDayOfWeek.useMutation({ onSuccess: refresh });
+  const pingMutation = clientApi.user.changePingIconsEnabled.useMutation({ onSuccess: refresh });
+
+  const getEffective = (key: UserPreferenceKey): unknown =>
+    key in optimisticRef.current
+      ? optimisticRef.current[key]
+      : settingsRef.current[key as keyof SettingsContextProps];
+
+  const pick = (field: UserPreferenceKey, changedKey: UserPreferenceKey, value: unknown) =>
+    field === changedKey ? value : getEffective(field);
+
+  const groupDispatchers: Record<string, (key: UserPreferenceKey, value: unknown) => Promise<unknown>> = {
+    searchPreferences: (key, value) =>
+      searchMutation.mutateAsync({
+        userId: userId!,
+        defaultSearchEngineId: pick("defaultSearchEngineId", key, value) as string | null,
+        openInNewTab: pick("openSearchInNewTab", key, value) as boolean,
+        ddgBangsEnabled: pick("ddgBangs", key, value) as boolean,
+      }),
+    homeBoards: (key, value) =>
+      homeBoardsMutation.mutateAsync({
+        userId: userId!,
+        homeBoardId: pick("homeBoardId", key, value) as string | null,
+        mobileHomeBoardId: pick("mobileHomeBoardId", key, value) as string | null,
+      }),
+    firstDayOfWeek: (_key, value) =>
+      firstDayMutation.mutateAsync({ id: userId!, firstDayOfWeek: value as DayOfWeek }),
+    pingIconsEnabled: (_key, value) =>
+      pingMutation.mutateAsync({ id: userId!, pingIconsEnabled: value as boolean }),
   };
 
-  const { mutateAsync: mutateSearchPreferencesAsync, isPending: isSearchPreferencesPending } =
-    clientApi.user.changeSearchPreferences.useMutation({
-      onSuccess: () => refreshAfterMutation(router),
-    });
+  const groupPending: Record<string, boolean> = {
+    searchPreferences: searchMutation.isPending,
+    homeBoards: homeBoardsMutation.isPending,
+    firstDayOfWeek: firstDayMutation.isPending,
+    pingIconsEnabled: pingMutation.isPending,
+  };
 
-  const { mutateAsync: mutateHomeBoardsAsync, isPending: isHomeBoardsPending } =
-    clientApi.user.changeHomeBoards.useMutation({
-      onSuccess: () => refreshAfterMutation(router),
-    });
-
-  const { mutateAsync: mutateFirstDayOfWeekAsync, isPending: isFirstDayOfWeekPending } =
-    clientApi.user.changeFirstDayOfWeek.useMutation({
-      onSuccess: () => refreshAfterMutation(router),
-    });
-
-  const { mutateAsync: mutatePingIconsEnabledAsync, isPending: isPingIconsPending } =
-    clientApi.user.changePingIconsEnabled.useMutation({
-      onSuccess: () => refreshAfterMutation(router),
-    });
-
-  const userId = session?.user.id;
-
-  const persistedValues = useMemo<Record<UserPreferenceKey, unknown>>(
-    () => ({
+  const persistedValues = useMemo<Record<UserPreferenceKey, unknown>>(() => {
+    const values: Record<string, unknown> = {
       colorScheme: colorScheme as ColorScheme,
       locale: currentLocale,
-      defaultSearchEngineId: settings.defaultSearchEngineId,
-      openSearchInNewTab: settings.openSearchInNewTab,
-      ddgBangs: settings.ddgBangs,
-      firstDayOfWeek: settings.firstDayOfWeek,
-      homeBoardId: settings.homeBoardId,
-      mobileHomeBoardId: settings.mobileHomeBoardId,
-      pingIconsEnabled: settings.pingIconsEnabled,
       fullPreferencesPage: userId ? `/manage/users/${userId}/general` : null,
-    }),
-    [
-      colorScheme,
-      currentLocale,
-      settings.defaultSearchEngineId,
-      settings.openSearchInNewTab,
-      settings.ddgBangs,
-      settings.firstDayOfWeek,
-      settings.homeBoardId,
-      settings.mobileHomeBoardId,
-      settings.pingIconsEnabled,
-      userId,
-    ],
-  );
-
-  const getValue = (preferenceKey: UserPreferenceKey) =>
-    preferenceKey in optimisticPreferencesRef.current
-      ? optimisticPreferencesRef.current[preferenceKey]
-      : persistedValues[preferenceKey];
+    };
+    for (const def of userPreferenceDefinitions) {
+      if (def.key in values) continue;
+      values[def.key] = settings[def.key as keyof SettingsContextProps];
+    }
+    return values as Record<UserPreferenceKey, unknown>;
+  }, [colorScheme, currentLocale, userId, settings]);
 
   useEffect(() => {
-    clearOptimisticPreferences(
-      Object.entries(persistedValues)
-        .filter(
-          ([preferenceKey, value]) => optimisticPreferencesRef.current[preferenceKey as UserPreferenceKey] === value,
-        )
-        .map(([preferenceKey]) => preferenceKey as UserPreferenceKey),
-    );
+    const matchedKeys = Object.entries(persistedValues)
+      .filter(([key, value]) => optimisticRef.current[key as UserPreferenceKey] === value)
+      .map(([key]) => key as UserPreferenceKey);
+    clearOptimistic(matchedKeys);
   }, [persistedValues]);
 
-  const setPersistedValueAsync = async (key: UserPreferenceKey, value: never) => {
-    const currentSettings = settingsRef.current;
+  const getValue = (key: UserPreferenceKey) =>
+    key in optimisticRef.current ? optimisticRef.current[key] : persistedValues[key];
 
-    const setters: Record<UserPreferenceKey, (nextValue: never) => Promise<void> | void> = {
-      colorScheme: (nextValue) => setColorScheme(nextValue as ColorScheme),
-      locale: (nextValue) => changeLocale(nextValue as typeof currentLocale),
-      defaultSearchEngineId: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.search) return;
-        pendingGroupsRef.current.search = true;
-        try {
-          await mutateSearchPreferencesAsync({
-            userId,
-            defaultSearchEngineId: nextValue as string | null,
-            openInNewTab: getEffectivePreferenceValue("openSearchInNewTab", currentSettings) as boolean,
-            ddgBangsEnabled: getEffectivePreferenceValue("ddgBangs", currentSettings) as boolean,
-          });
-        } finally {
-          pendingGroupsRef.current.search = false;
-        }
-      },
-      openSearchInNewTab: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.search) return;
-        pendingGroupsRef.current.search = true;
-        try {
-          await mutateSearchPreferencesAsync({
-            userId,
-            defaultSearchEngineId: getEffectivePreferenceValue("defaultSearchEngineId", currentSettings) as
-              | string
-              | null,
-            openInNewTab: nextValue as boolean,
-            ddgBangsEnabled: getEffectivePreferenceValue("ddgBangs", currentSettings) as boolean,
-          });
-        } finally {
-          pendingGroupsRef.current.search = false;
-        }
-      },
-      ddgBangs: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.search) return;
-        pendingGroupsRef.current.search = true;
-        try {
-          await mutateSearchPreferencesAsync({
-            userId,
-            defaultSearchEngineId: getEffectivePreferenceValue("defaultSearchEngineId", currentSettings) as
-              | string
-              | null,
-            openInNewTab: getEffectivePreferenceValue("openSearchInNewTab", currentSettings) as boolean,
-            ddgBangsEnabled: nextValue as boolean,
-          });
-        } finally {
-          pendingGroupsRef.current.search = false;
-        }
-      },
-      firstDayOfWeek: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.firstDayOfWeek) return;
-        pendingGroupsRef.current.firstDayOfWeek = true;
-        try {
-          await mutateFirstDayOfWeekAsync({ id: userId, firstDayOfWeek: nextValue as DayOfWeek });
-        } finally {
-          pendingGroupsRef.current.firstDayOfWeek = false;
-        }
-      },
-      homeBoardId: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.homeBoards) return;
-        pendingGroupsRef.current.homeBoards = true;
-        try {
-          await mutateHomeBoardsAsync({
-            userId,
-            homeBoardId: nextValue as string | null,
-            mobileHomeBoardId: getEffectivePreferenceValue("mobileHomeBoardId", currentSettings) as string | null,
-          });
-        } finally {
-          pendingGroupsRef.current.homeBoards = false;
-        }
-      },
-      mobileHomeBoardId: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.homeBoards) return;
-        pendingGroupsRef.current.homeBoards = true;
-        try {
-          await mutateHomeBoardsAsync({
-            userId,
-            homeBoardId: getEffectivePreferenceValue("homeBoardId", currentSettings) as string | null,
-            mobileHomeBoardId: nextValue as string | null,
-          });
-        } finally {
-          pendingGroupsRef.current.homeBoards = false;
-        }
-      },
-      pingIconsEnabled: async (nextValue) => {
-        if (!userId) return;
-        if (pendingGroupsRef.current.pingIcons) return;
-        pendingGroupsRef.current.pingIcons = true;
-        try {
-          await mutatePingIconsEnabledAsync({ id: userId, pingIconsEnabled: nextValue as boolean });
-        } finally {
-          pendingGroupsRef.current.pingIcons = false;
-        }
-      },
-      fullPreferencesPage: () => undefined,
-    };
-
-    await setters[key](value);
+  const isPreferencePending = (key: UserPreferenceKey): boolean => {
+    const group = userPreferenceDefinitionByKey[key].mutationGroup;
+    if (!group || CLIENT_ONLY_GROUPS.has(group)) return false;
+    return (groupPending[group] ?? false) || (pendingRef.current[group] ?? false);
   };
 
-  const isPreferencePending = (key: UserPreferenceKey) => {
-    if (searchPreferenceKeys.includes(key as never))
-      return isSearchPreferencesPending || pendingGroupsRef.current.search;
-    if (homeBoardPreferenceKeys.includes(key as never))
-      return isHomeBoardsPending || pendingGroupsRef.current.homeBoards;
-    if (key === "firstDayOfWeek") return isFirstDayOfWeekPending || pendingGroupsRef.current.firstDayOfWeek;
-    if (key === "pingIconsEnabled") return isPingIconsPending || pendingGroupsRef.current.pingIcons;
-
-    return false;
+  const clientSetters: Partial<Record<UserPreferenceKey, (value: unknown) => void>> = {
+    colorScheme: (value) => setColorScheme(value as ColorScheme),
+    locale: (value) => changeLocale(value as typeof currentLocale),
+    fullPreferencesPage: () => undefined,
   };
 
-  const setValueAsync = async (key: UserPreferenceKey, value: never) => {
-    if (optimisticPreferenceKeys.has(key) && !userId) return;
+  const setValueAsync = async (key: UserPreferenceKey, value: unknown) => {
+    if (isDbBacked(key) && !userId) return;
     if (isPreferencePending(key)) return;
 
-    if (optimisticPreferenceKeys.has(key)) {
-      setOptimisticPreference(key, value);
+    const clientSetter = clientSetters[key];
+    if (clientSetter) {
+      clientSetter(value);
+      return;
     }
 
+    setOptimistic(key, value);
+    const group = userPreferenceDefinitionByKey[key].mutationGroup!;
+    const dispatcher = groupDispatchers[group];
+    if (!dispatcher) return;
+
+    pendingRef.current[group] = true;
     try {
-      await setPersistedValueAsync(key, value);
+      await dispatcher(key, value);
     } catch {
-      if (searchPreferenceKeys.includes(key as never)) {
-        clearOptimisticPreferences(searchPreferenceKeys);
-      } else if (homeBoardPreferenceKeys.includes(key as never)) {
-        clearOptimisticPreferences(homeBoardPreferenceKeys);
-      } else {
-        clearOptimisticPreferences([key]);
-      }
-      showPreferenceErrorNotification();
+      clearOptimistic(getGroupKeys(key));
+      showErrorNotification({
+        message: t("search.mode.command.group.preferences.notification.error.message"),
+      });
+    } finally {
+      pendingRef.current[group] = false;
     }
-  };
-
-  const pendingStates: Record<UserPreferenceKey, boolean> = {
-    colorScheme: false,
-    locale: false,
-    defaultSearchEngineId: isPreferencePending("defaultSearchEngineId"),
-    openSearchInNewTab: isPreferencePending("openSearchInNewTab"),
-    ddgBangs: isPreferencePending("ddgBangs"),
-    firstDayOfWeek: isPreferencePending("firstDayOfWeek"),
-    homeBoardId: isPreferencePending("homeBoardId"),
-    mobileHomeBoardId: isPreferencePending("mobileHomeBoardId"),
-    pingIconsEnabled: isPreferencePending("pingIconsEnabled"),
-    fullPreferencesPage: false,
   };
 
   return {
@@ -334,14 +189,10 @@ export const useUserPreferences = () => {
       return {
         value: getValue(preferenceKey),
         setValue: (value: never) => setValueAsync(preferenceKey, value),
-        isPending: pendingStates[preferenceKey],
+        isPending: isPreferencePending(preferenceKey),
       };
     },
   };
 };
 
-export const useUserPreference = (key: UserPreferenceKey) => {
-  const preferences = useUserPreferences();
-
-  return preferences.getPreference(key);
-};
+export const useUserPreference = (key: UserPreferenceKey) => useUserPreferences().getPreference(key);
