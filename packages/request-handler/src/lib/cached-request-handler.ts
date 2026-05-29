@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
 
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 
@@ -42,7 +43,7 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
                 logger.warn(new ErrorWithMetadata("Cached request handler using stale cache after fetch failure", {
                   channel: channel.name,
                   queryKey: options.queryKey,
-                }, { cause: error });
+                }, { cause: error }));
                 return channelData;
               }
 
