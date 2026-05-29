@@ -40,7 +40,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     showUnmonitored: options.showUnmonitored,
   };
   const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
-    refetchOnMount: false,
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,

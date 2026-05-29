@@ -28,7 +28,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
       id: options.appId,
     },
     {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

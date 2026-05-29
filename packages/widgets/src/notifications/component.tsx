@@ -18,7 +18,7 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

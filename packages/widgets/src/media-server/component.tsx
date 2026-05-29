@@ -29,7 +29,7 @@ export default function MediaServerWidget({
       showOnlyPlaying: options.showOnlyPlaying,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },

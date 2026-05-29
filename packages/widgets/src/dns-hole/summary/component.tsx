@@ -25,7 +25,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

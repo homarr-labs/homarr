@@ -38,7 +38,7 @@ export default function MediaServerWidget({
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },

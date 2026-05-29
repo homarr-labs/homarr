@@ -13,7 +13,7 @@ import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input, {
-    refetchOnMount: false,
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,

@@ -23,7 +23,7 @@ export default function ImmichAlbumCarouselWidget({
       integrationId: integrationIds[0] ?? "",
       albumId: options.albumId ?? "",
     },
-    { enabled: Boolean(options.albumId) },
+    { enabled: Boolean(options.albumId), staleTime: 15 * 60 * 1000 },
   );
 
   if (!options.albumId) {

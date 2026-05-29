@@ -151,7 +151,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
       noteId,
     },
     {
-      refetchOnMount: false,
+      staleTime: 15 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

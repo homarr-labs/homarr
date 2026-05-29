@@ -26,11 +26,16 @@ interface TimetableWidgetInnerProps {
 }
 
 const TimetableWidgetInner = ({ station, integrationId }: TimetableWidgetInnerProps) => {
-  const { data: timetable } = clientApi.widget.timetable.getTimetable.useQuery({
-    integrationId,
-    stationId: station.value,
-    limit: 10,
-  });
+  const { data: timetable } = clientApi.widget.timetable.getTimetable.useQuery(
+    {
+      integrationId,
+      stationId: station.value,
+      limit: 10,
+    },
+    {
+      staleTime: 60 * 1000,
+    },
+  );
   const t = useScopedI18n("widget.timetable");
 
   return (

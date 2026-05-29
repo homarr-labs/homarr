@@ -21,7 +21,7 @@ export default function IndexerManagerWidget({
   const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery(
     { integrationIds },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

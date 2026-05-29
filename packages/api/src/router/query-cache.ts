@@ -4,7 +4,7 @@ import { eq } from "@homarr/db";
 import { boards } from "@homarr/db/schema";
 import { createQueryCacheChannel } from "@homarr/redis";
 
-import { queryCacheMaxAgeMs, queryCacheMaxValueBytes } from "../query-cache";
+import { queryCacheMaxValueBytes, queryCacheRetentionMs } from "../query-cache";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
@@ -22,7 +22,7 @@ const createChannel = (input: z.infer<typeof queryCacheKeyInput>, userId: string
     userId,
     boardId: input.boardId,
     key: input.key,
-    ttlMs: queryCacheMaxAgeMs,
+    ttlMs: queryCacheRetentionMs,
     maxValueBytes: queryCacheMaxValueBytes,
   });
 

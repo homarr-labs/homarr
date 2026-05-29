@@ -39,7 +39,7 @@ export default function MediaTranscodingWidget({
     page: queuePage,
   };
   const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input, {
-    refetchOnMount: false,
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

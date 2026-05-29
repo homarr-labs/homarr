@@ -189,7 +189,7 @@ export const useUpdatingCpuStatus = (integrationIds: string[]) => {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -230,7 +230,7 @@ export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 15 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -271,7 +271,7 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -311,7 +311,7 @@ export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 30 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
