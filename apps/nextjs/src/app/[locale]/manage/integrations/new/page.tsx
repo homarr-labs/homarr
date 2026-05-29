@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation";
-import { Button, Center, Container, Group, Stack, Text, Title } from "@mantine/core";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { Container, Group, Stack, Title } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { auth } from "@homarr/auth/next";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { IntegrationAvatar, Link } from "@homarr/ui";
+import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { env } from "~/env";
 import { IntegrationNewFormWrapper } from "./_integration-new-form-wrapper";
+import { IntegrationNewSelectGrid } from "./_integration-new-select-grid";
 
 interface NewIntegrationPageProps {
   searchParams: Promise<{
@@ -34,20 +35,10 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
       <>
         <DynamicBreadcrumb />
         <Container>
-          <Center py="xl">
-            <Stack align="center" gap="md">
-              <Title order={3}>{t("action.create")}</Title>
-              <Text c="dimmed">{t("page.list.search")}</Text>
-              <Button
-                variant="default"
-                component={Link}
-                href="/manage/integrations"
-                leftSection={<IconArrowLeft size={16} />}
-              >
-                {t("page.list.title")}
-              </Button>
-            </Stack>
-          </Center>
+          <Stack>
+            <Title>{t("action.create")}</Title>
+            <IntegrationNewSelectGrid enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
+          </Stack>
         </Container>
       </>
     );
