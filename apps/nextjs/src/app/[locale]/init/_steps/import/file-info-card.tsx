@@ -13,7 +13,7 @@ interface FileInfoCardProps {
 export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
   const tFileInfo = useScopedI18n("init.step.import.fileInfo");
   return (
-    <Card w={64 * 12 + 8} maw="90vw">
+    <Card w={64 * 12 + 8} maw="90vw" withBorder={false}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <Group>
           <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>

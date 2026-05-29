@@ -17,12 +17,11 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
-    "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
-    "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
-    "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
-    "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
+    "format": "turbo format --continue -- --check",
+    "format:fix": "turbo format --continue",
+    "lint": "turbo lint --continue",
+    "lint:fix": "turbo lint --continue -- --fix",
     "lint:ws": "pnpm dlx sherif@latest",
-    "package:new": "turbo gen init",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
@@ -33,9 +32,7 @@
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
   },
-  "prettier": "@homarr/prettier-config",
   "devDependencies": {
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/commit-analyzer": "catalog:",
@@ -52,7 +49,8 @@
     "cross-env": "catalog:",
     "jsdom": "catalog:",
     "json5": "catalog:",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
     "semantic-release": "catalog:",
     "testcontainers": "catalog:",
     "turbo": "catalog:",
@@ -60,11 +58,11 @@
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.33.4",
   "engines": {
-    "node": ">=24.15.0",
+    "node": ">=24.16.0",
     "pnpm": ">=10.33.4"
   },
+  "packageManager": "pnpm@10.33.4",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@tree-sitter-grammars/tree-sitter-yaml",
@@ -85,7 +83,7 @@
       "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.6",
       "esbuild@<=0.24.2": ">=0.28.0",
       "form-data@>=4.0.0 <4.0.4": ">=4.0.5",
-      "hono@<4.6.5": ">=4.12.19",
+      "hono@<4.6.5": ">=4.12.22",
       "linkifyjs@<4.3.2": ">=4.3.3",
       "nanoid@>=4.0.0 <5.0.9": ">=5.1.11",
       "prismjs@<1.30.0": ">=1.30.0",
@@ -96,7 +94,7 @@
       "tar-fs@>=3.0.0 <3.0.9": ">=3.1.2",
       "tar-fs@>=2.0.0 <2.1.3": ">=3.1.2",
       "tmp@<=0.2.3": ">=0.2.5",
-      "vite@>=5.0.0 <=5.4.18": ">=8.0.13"
+      "vite@>=5.0.0 <=5.4.18": ">=8.0.14"
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch",

@@ -17,6 +17,8 @@ import { WorkersPanel } from "./panels/workers.panel";
 
 type View = (typeof views)[number];
 
+const viewBySegmentValue = Object.fromEntries(views.map((view) => [view, view])) as Record<string, View>;
+
 const viewIcons = {
   workers: IconCpu2,
   queue: IconClipboardList,
@@ -83,7 +85,12 @@ export default function MediaTranscodingWidget({
             };
           })}
           value={view}
-          onChange={(value) => setView(value as View)}
+          onChange={(value) => {
+            const nextView = viewBySegmentValue[value];
+            if (nextView) {
+              setView(nextView);
+            }
+          }}
           size="xs"
         />
 

@@ -15,7 +15,7 @@ export const DangerZoneRoot = async ({ children }: DangerZoneRootProps) => {
       <Title c="red.8" order={2}>
         {t("common.dangerZone")}
       </Title>
-      <Card withBorder style={{ borderColor: "var(--mantine-color-red-8)", borderWidth: 3 }}>
+      <Card style={{ borderColor: "var(--mantine-color-red-8)", borderWidth: 3 }}>
         <Stack gap="sm">
           {Array.isArray(children)
             ? children.map((child, index) => (

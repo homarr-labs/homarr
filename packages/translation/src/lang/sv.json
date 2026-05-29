@@ -1054,6 +1054,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Försök igen",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Ändra position"
+          "changePosition": "Ändra position",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Den här tavlan är offentlig",
           "private": "Den här tavlan är privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

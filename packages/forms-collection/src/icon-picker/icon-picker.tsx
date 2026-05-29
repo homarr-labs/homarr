@@ -108,10 +108,9 @@ export const IconPicker = ({
                 cursor: "pointer",
               }}
               className={classes.iconCard}
-              withBorder
             >
               <Box w={25} h={25}>
-                <Image src={item.url} w={25} h={25} radius="md" />
+                <Image src={item.url} w={25} h={25} />
               </Box>
             </Card>
           </Indicator>

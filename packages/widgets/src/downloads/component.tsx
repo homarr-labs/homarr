@@ -805,7 +805,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             <Chip.Group
               multiple
               value={filters.statuses}
-              onChange={(statuses) => setFilters({ ...filters, statuses: statuses as typeof filters.statuses })}
+              onChange={(statuses) => setFilters({ ...filters, statuses: statuses })}
             >
               {availableStatuses.map((status) => (
                 <Chip key={status} value={status}>
@@ -864,7 +864,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             <Stack key={client.integration.id} gap="10px">
               <Divider />
               <Group wrap="nowrap" w="100%">
-                <Paper withBorder radius={999}>
+                <Paper radius={999}>
                   <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between" wrap="nowrap">
                     <Avatar radius={0} src={getIconUrl(client.integration.kind)} />
                     {client.status ? (
