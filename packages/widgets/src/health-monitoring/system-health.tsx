@@ -37,6 +37,7 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetEmptyState } from "../common/empty-state";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
@@ -85,6 +86,8 @@ export const SystemHealthMonitoring = ({
   );
 
   const isTiny = width < 256;
+
+  if (healthData.length === 0) return <WidgetEmptyState />;
 
   return (
     <Stack h="100%" gap="sm" className="health-monitoring">

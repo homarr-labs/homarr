@@ -7,6 +7,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { humanFileSize } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
@@ -49,7 +50,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
 
   const lastItem = data.at(-1);
 
-  if (!lastItem) return null;
+  if (!lastItem) return <WidgetEmptyState />;
   const { fileSystem, smart } = lastItem.healthInfo;
 
   if (fileSystem.length === 0) {

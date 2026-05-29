@@ -8,6 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
 
@@ -20,7 +21,7 @@ export default function ImmichServerStatsWidget({
     integrationId: integrationIds[0] ?? "",
   });
 
-  if (!stats) return null;
+  if (!stats) return <WidgetEmptyState />;
 
   return (
     <Stack gap="md" h="100%" p="md">

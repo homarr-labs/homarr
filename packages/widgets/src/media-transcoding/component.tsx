@@ -9,6 +9,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
@@ -53,7 +54,7 @@ export default function MediaTranscodingWidget({
   const [view, setView] = useState<View>(options.defaultView);
   const t = useI18n("widget.mediaTranscoding");
 
-  if (!transcodingData) return null;
+  if (!transcodingData) return <WidgetEmptyState />;
 
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
   const isTiny = width < 256;

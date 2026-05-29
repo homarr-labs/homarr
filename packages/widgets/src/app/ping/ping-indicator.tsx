@@ -1,6 +1,7 @@
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconMinus, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { PingDot } from "./ping-dot";
 
@@ -9,6 +10,7 @@ interface PingIndicatorProps {
 }
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
+  const t = useI18n();
   const { data: pingResult } = clientApi.widget.app.ping.useQuery(
     { id: appId },
     { refetchOnMount: false, refetchOnWindowFocus: false },
@@ -24,7 +26,7 @@ export const PingIndicator = ({ appId }: PingIndicatorProps) => {
     },
   );
 
-  if (!pingResult) return null;
+  if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />;
 
   const isError = "error" in pingResult || pingResult.statusCode >= 500;
 

@@ -5,6 +5,7 @@ import { clientApi } from "@homarr/api/client";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
 import { ResourceAccordionItem } from "./resource-accordion-item";
@@ -56,7 +57,7 @@ export const ClusterHealthMonitoring = ({
     },
   );
 
-  if (!healthData) return null;
+  if (!healthData) return <WidgetEmptyState />;
 
   const activeNodes = healthData.nodes.reduce(running, 0);
   const activeVMs = healthData.vms.reduce(running, 0);

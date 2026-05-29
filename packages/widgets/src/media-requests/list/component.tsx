@@ -10,6 +10,7 @@ import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 
@@ -19,7 +20,7 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const { data: mediaRequests = [], isFetched } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },
@@ -58,7 +59,7 @@ export default function MediaServerWidget({
     },
   );
 
-  if (!isFetched) return null;
+  if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (

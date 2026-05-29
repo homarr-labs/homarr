@@ -14,6 +14,7 @@ import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 
 import "react-quill-new/dist/quill.snow.css";
@@ -264,7 +265,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     );
   }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, t, updateNoteAsync]);
 
-  if (!note) return null;
+  if (!note) return <WidgetEmptyState />;
 
   return (
     <Stack h="100%" gap="xs" p="sm">

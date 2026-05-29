@@ -8,6 +8,7 @@ import type { SpeedtestTrackerDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetEmptyState } from "../common/empty-state";
 import { AveragesSection } from "./averages";
 import { mergeStats } from "./helpers";
 import { LatestResultSection } from "./latest-result";
@@ -86,6 +87,7 @@ export default function SpeedtestTrackerWidget({
           {t("noSectionsEnabled")}
         </Text>
       )}
+      {!noSectionsEnabled && !hasStatSection && !hasChart && <WidgetEmptyState />}
     </Stack>
   );
 }

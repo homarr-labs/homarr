@@ -10,6 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { metricToImperial } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
@@ -29,7 +30,7 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
     onData: (data) => utils.widget.weather.atLocation.setData(input, data),
   });
 
-  if (!weather) return null;
+  if (!weather) return <WidgetEmptyState />;
 
   return (
     <Stack

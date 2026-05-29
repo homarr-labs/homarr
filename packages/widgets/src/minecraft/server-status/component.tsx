@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MinecraftServerStatusWidget({ options }: WidgetComponentProps<"minecraftServerStatus">) {
@@ -22,7 +23,7 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
   });
   const tStatus = useScopedI18n("widget.minecraftServerStatus.status");
 
-  if (!result) return null;
+  if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;

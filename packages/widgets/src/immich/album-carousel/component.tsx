@@ -8,6 +8,7 @@ import { IconAlertCircle, IconCalendar } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
 
@@ -29,7 +30,7 @@ export default function ImmichAlbumCarouselWidget({
     return <NoAlbumSelected />;
   }
 
-  if (!album) return null;
+  if (!album) return <WidgetEmptyState />;
 
   if (album.assets.length === 0) {
     return <NoPhotosInAlbum />;
