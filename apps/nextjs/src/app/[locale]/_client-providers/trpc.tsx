@@ -22,6 +22,8 @@ import { clientApi } from "@homarr/api/client";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 
+import { createWidgetQueryPersister } from "./query-cache-persister";
+
 const getWebSocketProtocol = () => {
   // window is not defined on server side
   if (typeof window === "undefined") {
@@ -49,11 +51,13 @@ const wsClient = createWSClient({
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {
+  const [queryPersister] = useState(() => createWidgetQueryPersister());
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
+            persister: queryPersister.persisterFn,
             staleTime: 5 * 1000,
           },
         },

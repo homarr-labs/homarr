@@ -56,6 +56,7 @@
     "@mantine/modals": "catalog:",
     "@mantine/tiptap": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "@tanstack/query-persist-client-core": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
     "@tanstack/react-query-next-experimental": "catalog:",
