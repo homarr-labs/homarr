@@ -7,13 +7,12 @@
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt .",
+    "lint": "oxlint",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/modifiers": "catalog:",
@@ -92,8 +91,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/chroma-js": "catalog:",
     "@types/node": "catalog:",
@@ -102,9 +99,7 @@
     "@types/react-dom": "catalog:",
     "@types/swagger-ui-react": "catalog:",
     "concurrently": "catalog:",
-    "eslint": "catalog:",
     "node-loader": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

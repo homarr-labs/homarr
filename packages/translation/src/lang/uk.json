@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Відкрити медіа"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Переглянути документацію",
       "checkLogs": "Щоб дізнатися більше, перевірте логи",
       "tryAgain": "Повторіть спробу",
-      "loading": "Завантаження"
+      "loading": "Завантаження",
+      "show": "",
+      "hide": ""
     },
     "here": "тут",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Нова категорія",
-          "changePosition": "Змінити положення"
+          "changePosition": "Змінити положення",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Ця дошка є публічною",
           "private": "Ця дошка є приватною"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

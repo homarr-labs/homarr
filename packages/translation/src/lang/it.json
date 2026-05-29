@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Apri media"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Consulta la documentazione",
       "checkLogs": "Controlla i log per maggiori dettagli",
       "tryAgain": "Riprova",
-      "loading": "Caricamento"
+      "loading": "Caricamento",
+      "show": "",
+      "hide": ""
     },
     "here": "qui",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nuova categoria",
-          "changePosition": "Cambia posizione"
+          "changePosition": "Cambia posizione",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Questa board è pubblica",
           "private": "Questa board è privata"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

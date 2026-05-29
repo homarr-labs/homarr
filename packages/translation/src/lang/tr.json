@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Medyayı aç"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Dökümanlara göz at",
       "checkLogs": "Daha fazla ayrıntı için günlükleri kontrol edin",
       "tryAgain": "Tekrar Deneyin",
-      "loading": "Yükleniyor"
+      "loading": "Yükleniyor",
+      "show": "",
+      "hide": ""
     },
     "here": "buraya",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Yeni Kategori",
-          "changePosition": "Pozisyonu değiştir"
+          "changePosition": "Pozisyonu değiştir",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Bu panel herkese açıktır",
           "private": "Bu panel özeldir"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

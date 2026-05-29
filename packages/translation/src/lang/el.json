@@ -1054,6 +1054,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Προσπαθήστε ξανά",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Αλλαγή θέσης"
+          "changePosition": "Αλλαγή θέσης",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

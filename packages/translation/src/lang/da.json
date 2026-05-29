@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Åben medie"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Tjek dokumentationen",
       "checkLogs": "Tjek logs for flere detaljer",
       "tryAgain": "Prøv igen",
-      "loading": "Indlæser"
+      "loading": "Indlæser",
+      "show": "",
+      "hide": ""
     },
     "here": "her",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Ny kategori",
-          "changePosition": "Ændre placering"
+          "changePosition": "Ændre placering",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Denne tavle er offentlig",
           "private": "Denne tavle er privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

@@ -153,7 +153,7 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
                           style={{ justifyContent: "flex-start" }}
                         >
                           <IconArrowBarUp size={isTiny ? "8" : "12"} color="lightgreen" />
-                          <Text size={isTiny ? "8px" : "xs"} color="lightgreen" style={{ textAlign: "left" }}>
+                          <Text size={isTiny ? "8px" : "xs"} c="lightgreen" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(transmit, 2)}
                           </Text>
                         </Flex>
@@ -164,7 +164,7 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
                           style={{ justifyContent: "flex-start" }}
                         >
                           <IconArrowBarDown size={isTiny ? "8" : "12"} color="yellow" />
-                          <Text size={isTiny ? "8px" : "xs"} color="yellow" style={{ textAlign: "left" }}>
+                          <Text size={isTiny ? "8px" : "xs"} c="yellow" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(receive, 2)}
                           </Text>
                         </Flex>

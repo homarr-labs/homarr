@@ -1054,6 +1054,9 @@
       "open": {
         "label": "打开媒体"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "查阅文档",
       "checkLogs": "检查日志获取更多详情",
       "tryAgain": "重试",
-      "loading": "正在加载"
+      "loading": "正在加载",
+      "show": "",
+      "hide": ""
     },
     "here": "这里",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "新建分类",
-          "changePosition": "换位"
+          "changePosition": "换位",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "此面板是公开的",
           "private": "此面板是私有的"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
