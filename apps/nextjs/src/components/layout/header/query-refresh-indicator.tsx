@@ -1,65 +1,92 @@
 "use client";
 
 import { forwardRef, useEffect, useState } from "react";
-import { Box, Indicator, Menu, ScrollArea, Text, UnstyledButton } from "@mantine/core";
+import { Avatar, Box, Group, Indicator, Menu, ScrollArea, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
+import type { IntegrationKind } from "@homarr/definitions";
+import { getIconUrl } from "@homarr/definitions";
+
+interface IntegrationInfo {
+  id: string;
+  kind: IntegrationKind;
+  name: string;
+}
 
 interface QueryStatusRow {
   id: string;
-  section: string;
   procedure: string;
+  integrationIcons: { kind: IntegrationKind; name: string }[];
   status: "pending" | "error" | "success";
   fetchStatus: "fetching" | "paused" | "idle";
   dataUpdatedAt: number;
-  isStale: boolean;
 }
 
-const trackedQueryPrefixes = new Set(["widget", "integration"]);
+const hiddenProcedures = new Set(["widget.app.ping"]);
 
-const isTrackedQuery = (queryKey: readonly unknown[]): boolean => {
+const isTrackedWidgetQuery = (queryKey: readonly unknown[]): boolean => {
   const first = queryKey[0];
-  return Array.isArray(first) && first.length >= 1 && trackedQueryPrefixes.has(first[0] as string);
-};
+  if (!Array.isArray(first) || first.length < 2 || first[0] !== "widget") return false;
 
-const sectionLabels: Record<string, string> = {
-  widget: "Widgets",
-  integration: "Integrations",
+  const path = first.join(".");
+  return !hiddenProcedures.has(path);
 };
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const parseQueryKey = (queryKey: readonly unknown[]): { section: string; procedure: string } => {
-  const first = queryKey[0];
-  if (!Array.isArray(first)) return { section: "Other", procedure: String(first) };
+const parseWidgetQueryKey = (queryKey: readonly unknown[]): { procedure: string; integrationIds: string[] } => {
+  const first = queryKey[0] as string[];
+  const procedure = first.slice(1).map(capitalize).join(" — ");
 
-  const parts = first.filter((s): s is string => typeof s === "string");
-  const sectionKey = parts[0] ?? "other";
-  const section = sectionLabels[sectionKey] ?? capitalize(sectionKey);
+  const second = queryKey[1] as { input?: Record<string, unknown> } | undefined;
+  const integrationIds = Array.isArray(second?.input?.integrationIds)
+    ? (second.input.integrationIds as string[])
+    : [];
 
-  const remaining = parts.slice(1);
-  const procedure = remaining.length > 0 ? remaining.map(capitalize).join(" — ") : sectionKey;
-
-  return { section, procedure };
+  return { procedure, integrationIds };
 };
 
-const statusColorMap: Record<string, string> = {
+const statusColors: Record<string, string> = {
   fetching: "orange",
-  idle_success: "green",
-  idle_error: "red",
-  idle_pending: "gray",
+  success: "green",
+  error: "red",
+  pending: "gray",
+};
+
+const resolveRowColor = (fetchStatus: string, status: string) => {
+  if (fetchStatus === "fetching") return statusColors.fetching!;
+  return statusColors[status] ?? "gray";
+};
+
+const resolveDotColor = (fetchingCount: number, errorCount: number) => {
+  if (fetchingCount > 0) return statusColors.fetching!;
+  if (errorCount > 0) return statusColors.error!;
+  return statusColors.success!;
 };
 
 interface CacheSnapshot {
   rows: QueryStatusRow[];
-  widgetFetchingCount: number;
+  fetchingCount: number;
   errorCount: number;
-  staleCount: number;
 }
 
-const emptyCacheSnapshot: CacheSnapshot = { rows: [], widgetFetchingCount: 0, errorCount: 0, staleCount: 0 };
+const emptyCacheSnapshot: CacheSnapshot = { rows: [], fetchingCount: 0, errorCount: 0 };
+
+function resolveIntegrationMap(queryClient: ReturnType<typeof useQueryClient>): Map<string, IntegrationInfo> {
+  const cache = queryClient.getQueryCache();
+  const integrationQuery = cache.find({ queryKey: [["integration", "all"]] });
+
+  const map = new Map<string, IntegrationInfo>();
+  const data = integrationQuery?.state.data as IntegrationInfo[] | undefined;
+  if (!data) return map;
+
+  for (const integration of data) {
+    map.set(integration.id, integration);
+  }
+  return map;
+}
 
 function useQueryCacheStatus() {
   const queryClient = useQueryClient();
@@ -68,29 +95,32 @@ function useQueryCacheStatus() {
   useEffect(() => {
     const update = () => {
       const cache = queryClient.getQueryCache();
-      const queries = cache.findAll({ type: "active" }).filter((q) => isTrackedQuery(q.queryKey));
+      const queries = cache.findAll({ type: "active" }).filter((q) => isTrackedWidgetQuery(q.queryKey));
+      const integrationMap = resolveIntegrationMap(queryClient);
 
       let fetching = 0;
       let errors = 0;
-      let stale = 0;
       const nextRows: QueryStatusRow[] = queries.map((q) => {
         if (q.state.fetchStatus === "fetching") fetching++;
         if (q.state.status === "error") errors++;
-        const isQueryStale = q.isStale();
-        if (isQueryStale) stale++;
-        const { section, procedure } = parseQueryKey(q.queryKey);
+        const { procedure, integrationIds } = parseWidgetQueryKey(q.queryKey);
+
+        const integrationIcons = integrationIds
+          .map((id) => integrationMap.get(id))
+          .filter((info): info is IntegrationInfo => info !== undefined)
+          .map(({ kind, name }) => ({ kind, name }));
+
         return {
           id: q.queryHash,
-          section,
           procedure,
+          integrationIcons,
           status: q.state.status,
           fetchStatus: q.state.fetchStatus,
           dataUpdatedAt: q.state.dataUpdatedAt,
-          isStale: isQueryStale,
         };
       });
 
-      setSnapshot({ rows: nextRows, widgetFetchingCount: fetching, errorCount: errors, staleCount: stale });
+      setSnapshot({ rows: nextRows, fetchingCount: fetching, errorCount: errors });
     };
 
     update();
@@ -113,19 +143,6 @@ function useQueryCacheStatus() {
   return { ...snapshot, totalCount: snapshot.rows.length };
 }
 
-function groupBySection(rows: QueryStatusRow[]): Map<string, QueryStatusRow[]> {
-  const groups = new Map<string, QueryStatusRow[]>();
-  for (const row of rows) {
-    const existing = groups.get(row.section);
-    if (existing) {
-      existing.push(row);
-    } else {
-      groups.set(row.section, [row]);
-    }
-  }
-  return groups;
-}
-
 const StatusDot = forwardRef<HTMLButtonElement, { color: string; processing: boolean }>(
   ({ color, processing, ...others }, ref) => (
     <UnstyledButton ref={ref} {...others} style={{ lineHeight: 0 }}>
@@ -138,29 +155,22 @@ const StatusDot = forwardRef<HTMLButtonElement, { color: string; processing: boo
 
 export const QueryRefreshIndicator = () => {
   const [isEditMode] = useEditMode();
-  const { rows, widgetFetchingCount, errorCount, totalCount } = useQueryCacheStatus();
+  const { rows, fetchingCount, errorCount, totalCount } = useQueryCacheStatus();
 
   if (isEditMode || totalCount === 0) return null;
 
-  const isFetching = widgetFetchingCount > 0;
-  const color = isFetching ? "orange" : errorCount > 0 ? "red" : "green";
-  const grouped = groupBySection(rows);
+  const isFetching = fetchingCount > 0;
+  const dotColor = resolveDotColor(fetchingCount, errorCount);
 
   return (
-    <Menu width={320} position="bottom-start" shadow="md" withArrow>
+    <Menu width={340} position="bottom-start" shadow="md" withArrow>
       <Menu.Target>
-        <StatusDot color={color} processing={isFetching} />
+        <StatusDot color={dotColor} processing={isFetching} />
       </Menu.Target>
       <Menu.Dropdown>
         <ScrollArea.Autosize mah={360}>
-          {Array.from(grouped).map(([section, sectionRows], i) => (
-            <div key={section}>
-              {i > 0 && <Menu.Divider />}
-              <Menu.Label>{section}</Menu.Label>
-              {sectionRows.map((row) => (
-                <QueryMenuItem key={row.id} row={row} />
-              ))}
-            </div>
+          {rows.map((row) => (
+            <QueryMenuItem key={row.id} row={row} />
           ))}
         </ScrollArea.Autosize>
       </Menu.Dropdown>
@@ -168,22 +178,29 @@ export const QueryRefreshIndicator = () => {
   );
 };
 
-const QueryMenuItem = ({ row }: { row: QueryStatusRow }) => {
-  const rowColor = statusColorMap[row.fetchStatus === "fetching" ? "fetching" : `idle_${row.status}`] ?? "gray";
+const SmallDot = ({ color }: { color: string }) => (
+  <Box
+    w={8}
+    h={8}
+    miw={8}
+    style={{ borderRadius: "50%", flexShrink: 0, backgroundColor: `var(--mantine-color-${color}-6)` }}
+  />
+);
 
-  const updatedLabel = row.dataUpdatedAt > 0 ? dayjs(row.dataUpdatedAt).fromNow() : "never";
+const QueryMenuItem = ({ row }: { row: QueryStatusRow }) => {
+  const rowColor = resolveRowColor(row.fetchStatus, row.status);
+  const updatedLabel = row.dataUpdatedAt > 0 ? dayjs(row.dataUpdatedAt).fromNow() : "—";
 
   return (
     <Menu.Item
       leftSection={
-        <Box
-          w={8}
-          h={8}
-          style={{ borderRadius: "50%", flexShrink: 0, backgroundColor: `var(--mantine-color-${rowColor}-6)` }}
-        />
+        <Group gap={6} wrap="nowrap">
+          <SmallDot color={rowColor} />
+          {row.integrationIcons.length > 0 && <IntegrationAvatars icons={row.integrationIcons} />}
+        </Group>
       }
       rightSection={
-        <Text size="xs" c="dimmed">
+        <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
           {updatedLabel}
         </Text>
       }
@@ -195,3 +212,13 @@ const QueryMenuItem = ({ row }: { row: QueryStatusRow }) => {
     </Menu.Item>
   );
 };
+
+const IntegrationAvatars = ({ icons }: { icons: QueryStatusRow["integrationIcons"] }) => (
+  <Group gap={2} wrap="nowrap">
+    {icons.slice(0, 3).map((icon, index) => (
+      <Tooltip key={`${icon.kind}-${index}`} label={icon.name} withArrow>
+        <Avatar size={18} radius={0} src={getIconUrl(icon.kind)} />
+      </Tooltip>
+    ))}
+  </Group>
+);
