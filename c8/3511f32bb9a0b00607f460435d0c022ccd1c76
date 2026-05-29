@@ -1,0 +1,19 @@
+packages/request-handler/src/lib/cached-request-handler.ts
+  s_a019a237dce20d::t_4e02d229fe7481 41,47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c83511f32bb9a0b00607f460435d0c022ccd1c76",
+  "prompts": {},
+  "sessions": {
+    "s_a019a237dce20d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8e46edbd-a326-47d1-a663-f596f9023903",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
