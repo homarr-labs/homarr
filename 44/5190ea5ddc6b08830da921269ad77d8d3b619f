@@ -1,0 +1,20 @@
+packages/request-handler/src/lib/cached-request-handler.ts
+  s_e1eb5af7b80dd7::t_dc811dfd16c682 4
+  s_e1eb5af7b80dd7::t_9dd4b84ee95852 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "445190ea5ddc6b08830da921269ad77d8d3b619f",
+  "prompts": {},
+  "sessions": {
+    "s_e1eb5af7b80dd7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_18ae427f0ffeFPZjkGDrlACYMv",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
