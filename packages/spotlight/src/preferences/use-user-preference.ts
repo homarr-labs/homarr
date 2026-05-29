@@ -10,10 +10,7 @@ import { useSession } from "@homarr/auth/client";
 import type { ColorScheme } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
-import {
-  userPreferenceDefinitions,
-  userPreferenceDefinitionByKey,
-} from "@homarr/settings";
+import { userPreferenceDefinitions, userPreferenceDefinitionByKey } from "@homarr/settings";
 import type { UserPreferenceKey } from "@homarr/settings";
 import { useSettings } from "@homarr/settings";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
@@ -77,7 +74,11 @@ export const useUserPreferences = () => {
   const userId = session?.user.id;
   const pendingRef = useRef<Record<string, boolean>>({});
 
-  useSyncExternalStore(subscribeOptimistic, () => optimisticVersion, () => optimisticVersion);
+  useSyncExternalStore(
+    subscribeOptimistic,
+    () => optimisticVersion,
+    () => optimisticVersion,
+  );
 
   const refresh = () => router.refresh();
 
@@ -87,9 +88,7 @@ export const useUserPreferences = () => {
   const pingMutation = clientApi.user.changePingIconsEnabled.useMutation({ onSuccess: refresh });
 
   const getEffective = (key: UserPreferenceKey): unknown =>
-    key in optimisticRef.current
-      ? optimisticRef.current[key]
-      : settingsRef.current[key as keyof SettingsContextProps];
+    key in optimisticRef.current ? optimisticRef.current[key] : settingsRef.current[key as keyof SettingsContextProps];
 
   const pick = (field: UserPreferenceKey, changedKey: UserPreferenceKey, value: unknown) =>
     field === changedKey ? value : getEffective(field);
@@ -108,10 +107,8 @@ export const useUserPreferences = () => {
         homeBoardId: pick("homeBoardId", key, value) as string | null,
         mobileHomeBoardId: pick("mobileHomeBoardId", key, value) as string | null,
       }),
-    firstDayOfWeek: (_key, value) =>
-      firstDayMutation.mutateAsync({ id: userId!, firstDayOfWeek: value as DayOfWeek }),
-    pingIconsEnabled: (_key, value) =>
-      pingMutation.mutateAsync({ id: userId!, pingIconsEnabled: value as boolean }),
+    firstDayOfWeek: (_key, value) => firstDayMutation.mutateAsync({ id: userId!, firstDayOfWeek: value as DayOfWeek }),
+    pingIconsEnabled: (_key, value) => pingMutation.mutateAsync({ id: userId!, pingIconsEnabled: value as boolean }),
   };
 
   const groupPending: Record<string, boolean> = {

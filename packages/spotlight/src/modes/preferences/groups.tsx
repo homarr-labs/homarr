@@ -10,9 +10,7 @@ import { createGroup } from "../../lib/group";
 import { preferenceChildrenOptionsByKey, preferenceIcons } from "../../preferences/preference-registry";
 import { settingsChildrenOptions } from "../command/children/preferences/settings-children";
 
-type PreferencesGroupOption =
-  | { key: "settings"; preferenceKey: null }
-  | { key: string; preferenceKey: string };
+type PreferencesGroupOption = { key: "settings"; preferenceKey: null } | { key: string; preferenceKey: string };
 
 const settingsOption: PreferencesGroupOption = { key: "settings", preferenceKey: null };
 

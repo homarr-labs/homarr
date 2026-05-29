@@ -26,7 +26,17 @@ type SettingsAction = ChildrenAction<Record<string, unknown>>;
 
 const weekDays = dayjs.weekdays(false);
 
-const BooleanRow = ({ label, Icon, checked, isPending }: { label: string; Icon: TablerIcon; checked: boolean; isPending: boolean }) => (
+const BooleanRow = ({
+  label,
+  Icon,
+  checked,
+  isPending,
+}: {
+  label: string;
+  Icon: TablerIcon;
+  checked: boolean;
+  isPending: boolean;
+}) => (
   <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
     <Group wrap="nowrap" gap="sm">
       <Icon stroke={1.5} size={20} />
@@ -42,7 +52,9 @@ const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIco
       <Icon stroke={1.5} size={20} />
       <Text>{label}</Text>
     </Group>
-    <Text size="sm" c="dimmed">{valueLabel}</Text>
+    <Text size="sm" c="dimmed">
+      {valueLabel}
+    </Text>
   </Group>
 );
 
@@ -73,12 +85,15 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
       return localeConfigurations[val as keyof typeof localeConfigurations]?.name ?? String(val);
     },
     defaultSearchEngineId: () =>
-      searchEnginesQuery.data?.find((e) => e.value === preferences.getPreference("defaultSearchEngineId").value)?.label ?? t("searchEngine.none" as never),
+      searchEnginesQuery.data?.find((e) => e.value === preferences.getPreference("defaultSearchEngineId").value)
+        ?.label ?? t("searchEngine.none" as never),
     firstDayOfWeek: () => weekDays[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
     homeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("homeBoardId").value)?.name ?? t("board.none" as never),
+      boardsQuery.data?.find((b) => b.id === preferences.getPreference("homeBoardId").value)?.name ??
+      t("board.none" as never),
     mobileHomeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("mobileHomeBoardId").value)?.name ?? t("board.none" as never),
+      boardsQuery.data?.find((b) => b.id === preferences.getPreference("mobileHomeBoardId").value)?.name ??
+      t("board.none" as never),
   };
 
   return visiblePreferenceDefinitions(isAuthenticated)
@@ -93,7 +108,9 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
         const pref = preferences.getPreference(definition.key);
         return {
           key: definition.key,
-          Component: () => <BooleanRow label={label} Icon={Icon} checked={pref.value as boolean} isPending={pref.isPending} />,
+          Component: () => (
+            <BooleanRow label={label} Icon={Icon} checked={pref.value as boolean} isPending={pref.isPending} />
+          ),
           useInteraction: interaction.javaScript(() => ({
             onSelect: pref.isPending ? () => undefined : () => pref.setValue(!(pref.value as boolean) as never),
             closeSpotlightOnTrigger: false,
@@ -114,7 +131,9 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
         if (!children) return null;
         return {
           key: definition.key,
-          Component: () => <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.() ?? ""} />,
+          Component: () => (
+            <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.() ?? ""} />
+          ),
           useInteraction: interaction.children(children),
         };
       }
@@ -131,7 +150,9 @@ export const settingsChildrenOptions = createChildrenOptions<Record<string, unkn
     return (
       <Stack mx="md" my="sm" gap="xs">
         <Text>{t("title")}</Text>
-        <Text size="xs" c="dimmed">{t("children.detail.backHint")}</Text>
+        <Text size="xs" c="dimmed">
+          {t("children.detail.backHint")}
+        </Text>
       </Stack>
     );
   },
