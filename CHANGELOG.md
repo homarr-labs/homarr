@@ -1,3 +1,24 @@
+## [1.63.0](https://github.com/homarr-labs/homarr/compare/v1.62.0...v1.63.0) (2026-05-29)
+
+### Features
+
+* **auth:** support custom token endpoint auth methods ([#5806](https://github.com/homarr-labs/homarr/issues/5806)) ([be61602](https://github.com/homarr-labs/homarr/commit/be61602576a8bec4bb7e4928d36e0854e926264d))
+* auto-open widget settings on add with all integrations pre-selected ([#5767](https://github.com/homarr-labs/homarr/issues/5767)) ([f10bb3a](https://github.com/homarr-labs/homarr/commit/f10bb3ae23fefc9779332733706aa567cc40ba48))
+* **board:** persist category collapse state in localStorage for guests ([#5714](https://github.com/homarr-labs/homarr/issues/5714)) ([66212b4](https://github.com/homarr-labs/homarr/commit/66212b4e475738e61d2ea78f3a7e72d7a610bf12)), closes [#3355](https://github.com/homarr-labs/homarr/issues/3355)
+* **manage:** unified management page layout ([#5758](https://github.com/homarr-labs/homarr/issues/5758)) ([c252b4f](https://github.com/homarr-labs/homarr/commit/c252b4f9accc4523f222354c73f687714640701f))
+* **users:** rework general settings ([#4915](https://github.com/homarr-labs/homarr/issues/4915)) ([2991777](https://github.com/homarr-labs/homarr/commit/2991777b0a0ae72522d0769a86a91250d618dbe6))
+
+### Bug Fixes
+
+* matine ui fixes for concistency ([#5733](https://github.com/homarr-labs/homarr/issues/5733)) ([4454e3f](https://github.com/homarr-labs/homarr/commit/4454e3fb7afa624ee2f1eaec015f2725e664ac46))
+* parse Speedtest Tracker created_at as local time ([#5751](https://github.com/homarr-labs/homarr/issues/5751)) ([b19549b](https://github.com/homarr-labs/homarr/commit/b19549b601636bcbc2fadaa270a77a9fdb48b77a))
+* prevent GitHub releases check from blocking app on API failure ([#5807](https://github.com/homarr-labs/homarr/issues/5807)) ([6cc2ac5](https://github.com/homarr-labs/homarr/commit/6cc2ac56a920563c47aaaab1b33b19a9b6d5ecee))
+* **ui:** use imported theme instead of undefined createTheme ([4a67bf0](https://github.com/homarr-labs/homarr/commit/4a67bf0ef30ff8d10b06d2d3719ccab792395669))
+
+### Performance Improvements
+
+* **boards:** parallelize board page data fetching ([#5736](https://github.com/homarr-labs/homarr/issues/5736)) ([8f03a38](https://github.com/homarr-labs/homarr/commit/8f03a38de5b9b385da7ffcc9a963be00710acb5e))
+
 ## [1.62.0](https://github.com/homarr-labs/homarr/compare/v1.61.1...v1.62.0) (2026-05-22)
 
 ### Features
