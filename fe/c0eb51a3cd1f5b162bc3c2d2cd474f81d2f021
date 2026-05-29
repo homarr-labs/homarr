@@ -1,0 +1,25 @@
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_2c1afb218aa9c8::t_3185aa64ed4f1d 178
+  s_2c1afb218aa9c8::t_cfc31c07591f79 86-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fec0eb51a3cd1f5b162bc3c2d2cd474f81d2f021",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_2c1afb218aa9c8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1a22c81c-03d2-4ae7-b9f2-f9f2118ecfb3",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
