@@ -1,4 +1,4 @@
-import { Group, Image, Stack, Text } from "@mantine/core";
+import { Badge, Group, Image, Stack, Text } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconMovie, IconSearch } from "@tabler/icons-react";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -7,11 +7,21 @@ import { useAtomValue } from "jotai";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { getIntegrationName } from "@homarr/definitions";
+import type { MediaAvailability } from "@homarr/integrations/types";
+import { mediaAvailabilityConfiguration } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../../lib/group";
 import { mediaRequestSearchScopeAtom } from "../../spotlight-store";
 import { useMediaRequestSearchInteraction } from "../external/search-engines-search-group";
+
+const availabilityLabels: Partial<Record<MediaAvailability, string>> = {
+  available: "Available",
+  partiallyAvailable: "Partial",
+  processing: "Processing",
+  requested: "Requested",
+  pending: "Requested",
+};
 
 type MediaRequestSearchResult = RouterOutputs["integration"]["searchMediaRequests"][number];
 
@@ -47,6 +57,11 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
     }
 
     const { result } = option;
+    const badgeLabel = result.availability ? availabilityLabels[result.availability as MediaAvailability] : undefined;
+    const badgeColor = result.availability
+      ? mediaAvailabilityConfiguration[result.availability as MediaAvailability]?.color
+      : undefined;
+
     return (
       <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
         {result.image ? (
@@ -54,8 +69,11 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
         ) : (
           <IconSearch stroke={1.5} size={35} />
         )}
-        <Stack gap={2}>
-          <Text>{result.name}</Text>
+        <Stack gap={2} style={{ flex: 1 }}>
+          <Group gap="xs" wrap="nowrap">
+            <Text>{result.name}</Text>
+            {badgeLabel && <Badge size="xs" color={badgeColor} variant="light">{badgeLabel}</Badge>}
+          </Group>
           <Text c="dimmed" size="sm" lineClamp={2}>
             {result.text ?? getIntegrationName(result.integration.kind)}
           </Text>
