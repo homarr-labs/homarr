@@ -148,7 +148,8 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     );
   };
 
-  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
+  const integrationCategories = integrationDefs[searchParams.kind].category.flat();
+  const supportsSearchEngine = integrationCategories.includes("search") && !integrationCategories.includes("mediaSearch");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
