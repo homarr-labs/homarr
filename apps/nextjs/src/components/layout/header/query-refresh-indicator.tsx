@@ -41,9 +41,7 @@ const parseWidgetQueryKey = (queryKey: readonly unknown[]): { procedure: string;
   const procedure = first.slice(1).map(capitalize).join(" — ");
 
   const second = queryKey[1] as { input?: Record<string, unknown> } | undefined;
-  const integrationIds = Array.isArray(second?.input?.integrationIds)
-    ? (second.input.integrationIds as string[])
-    : [];
+  const integrationIds = Array.isArray(second?.input?.integrationIds) ? (second.input.integrationIds as string[]) : [];
 
   return { procedure, integrationIds };
 };
