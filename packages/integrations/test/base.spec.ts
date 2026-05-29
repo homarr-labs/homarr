@@ -69,7 +69,7 @@ describe("Base integration", () => {
         url: new URL("https://example.com"),
       });
       const result = integration.buildExternalUrl("/items/42", { q: "search" });
-      expect(result).toBe("https://example.com/items/42?q=search");
+      expect(result.toString()).toBe("https://example.com/items/42?q=search");
     });
   });
 });
