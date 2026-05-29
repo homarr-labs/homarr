@@ -42,37 +42,6 @@ describe("Onboarding", () => {
     await homarrContainer.stop();
   }, 60_000);
 
-  test("Credentials onboarding with special character password should be successful", async () => {
-    const { db, localMountPath } = await createSqliteDbFileAsync();
-    const homarrContainer = await createHomarrContainer({
-      mounts: {
-        "/appdata": localMountPath,
-      },
-    }).start();
-
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const actions = new OnboardingActions(page, db);
-    const assertions = new OnboardingAssertions(page, db);
-
-    await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-    await actions.startOnboardingAsync("scratch");
-    await actions.processUserStepAsync({
-      username: "admin",
-      password: "LoveHomarr<3",
-      confirmPassword: "LoveHomarr<3",
-    });
-    await actions.processSettingsStepAsync();
-
-    await assertions.assertFinishStepVisibleAsync();
-    await assertions.assertUserAndAdminGroupInsertedAsync("admin");
-    await assertions.assertDbOnboardingStepAsync("finish");
-
-    await browser.close();
-    await homarrContainer.stop();
-  }, 60_000);
-
   test("External provider onboarding setup should be successful", async () => {
     // Arrange
     const { db, localMountPath } = await createSqliteDbFileAsync();

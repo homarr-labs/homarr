@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Mật khẩu",
-        "requirement": {
+        "suggestion": {
           "length": "Bao gồm ít nhất 8 kí tự",
           "lowercase": "Bao gồm chữ thường",
           "uppercase": "Bao gồm chữ in hoa",

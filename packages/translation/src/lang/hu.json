@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Jelszó",
-        "requirement": {
+        "suggestion": {
           "length": "Tartalmazzon legalább 8 karaktert",
           "lowercase": "Tartalmazzon kisbetűt",
           "uppercase": "Tartalmazzon nagybetűt",

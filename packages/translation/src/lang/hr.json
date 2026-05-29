@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Lozinka",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "Uključuje mala slova",
           "uppercase": "Uključuje veliko slovo",

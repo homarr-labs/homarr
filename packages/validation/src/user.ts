@@ -19,7 +19,7 @@ export const passwordRequirements = [
   { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{}]/), value: "special" },
 ] satisfies {
   check: (value: string) => boolean;
-  value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
+  value: keyof TranslationObject["user"]["field"]["password"]["suggestion"];
 }[];
 
 export const userPasswordSchema = z.string().min(8).max(255);

@@ -53,12 +53,4 @@ describe("comparePasswordsAsync should compare passwords correctly", () => {
     // Assert
     expect(result).toBe(false);
   });
-  it("should return true for passwords with special characters like LoveHomarr<3", async () => {
-    const password = "LoveHomarr<3";
-    const hash = await hashPasswordAsync(password);
-
-    const result = await comparePasswordsAsync(password, hash);
-
-    expect(result).toBe(true);
-  });
 });

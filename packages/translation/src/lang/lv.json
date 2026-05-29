@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Parole",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "Ietver mazo burtu",
           "uppercase": "Ietver lielo burtu",

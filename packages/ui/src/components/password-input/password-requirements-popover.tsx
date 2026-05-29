@@ -46,7 +46,7 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
 };
 
 const useRequirements = () => {
-  const t = useScopedI18n("user.field.password.requirement");
+  const t = useScopedI18n("user.field.password.suggestion");
 
   return passwordRequirements.map(({ check, value }) => ({ check, label: t(value) }));
 };

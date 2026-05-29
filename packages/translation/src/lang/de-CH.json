@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Passwort",
-        "requirement": {
+        "suggestion": {
           "length": "Enthält mindestens 8 Zeichen",
           "lowercase": "Enthält Kleinbuchstaben",
           "uppercase": "Enthält Großbuchstaben",

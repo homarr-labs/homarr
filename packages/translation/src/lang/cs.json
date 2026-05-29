@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Heslo",
-        "requirement": {
+        "suggestion": {
           "length": "Obsahuje alespoň 8 znaků",
           "lowercase": "Obsahuje malé písmeno",
           "uppercase": "Obsahuje velké písmeno",

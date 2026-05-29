@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Adgangskode",
-        "requirement": {
+        "suggestion": {
           "length": "Inkluderer mindst 8 tegn",
           "lowercase": "Inkluderer små bogstaver",
           "uppercase": "Inkluderer store bogstaver",

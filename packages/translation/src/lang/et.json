@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "",
           "uppercase": "",

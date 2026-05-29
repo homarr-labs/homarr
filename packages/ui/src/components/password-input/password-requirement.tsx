@@ -1,18 +1,14 @@
 import { rem, Text } from "@mantine/core";
 import { IconCheck, IconPoint } from "@tabler/icons-react";
 
-const requirementDisplay = {
-  met: { color: "teal", Icon: IconCheck },
-  unmet: { color: "dimmed", Icon: IconPoint },
-} as const;
-
-const displayKey = {
-  true: "met",
-  false: "unmet",
-} as const;
+const getRequirementDisplay = (meets: boolean) =>
+  ({
+    true: { color: "teal", Icon: IconCheck },
+    false: { color: "dimmed", Icon: IconPoint },
+  })[String(meets) as "true" | "false"];
 
 export function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
-  const display = requirementDisplay[displayKey[String(meets) as "true" | "false"]];
+  const display = getRequirementDisplay(meets);
   const Icon = display.Icon;
 
   return (

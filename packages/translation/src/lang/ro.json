@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Parola",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "Să includă litere mici",
           "uppercase": "Să includă litere mari",
