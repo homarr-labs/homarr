@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./query-cache": "./src/query-cache.ts",
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
