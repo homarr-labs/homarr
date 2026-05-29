@@ -38,24 +38,13 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
                 timestamp: new Date(),
               };
             } catch (error) {
-              const staleFallbackHandlers: Record<string, () => { data: TData; timestamp: Date } | null | undefined> = {
-                enabled: () => channelData,
-                disabled: () => null,
-              };
-              const staleFallbackKeyMap: Record<string, string> = {
-                true: "enabled",
-                false: "disabled",
-              };
-              const staleFallbackKey = staleFallbackKeyMap[String(Boolean(options.fallbackToStaleOnError))];
-              const staleData = staleFallbackHandlers[staleFallbackKey]();
-
-              if (staleData) {
+              if (options.fallbackToStaleOnError && channelData) {
                 logger.warn("Cached request handler using stale cache after fetch failure", {
                   channel: channel.name,
                   queryKey: options.queryKey,
                   cause: error instanceof Error ? error.message : String(error),
                 });
-                return staleData;
+                return channelData;
               }
 
               throw error;
