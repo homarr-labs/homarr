@@ -101,7 +101,7 @@ export const SaveAffix = ({ groupId }: SaveAffixProps) => {
     <div style={{ position: "sticky", bottom: 20 }}>
       <Transition transition="slide-up" mounted={form.isDirty()}>
         {(transitionStyles) => (
-          <Card style={transitionStyles} withBorder>
+          <Card style={transitionStyles}>
             <Group justify="space-between">
               <Text fw={500}>{tForm("unsavedChanges")}</Text>
               <Group>

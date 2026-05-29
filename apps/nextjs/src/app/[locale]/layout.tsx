@@ -45,13 +45,13 @@ const fontSans = Inter({
 export const generateMetadata = async (): Promise<Metadata> => ({
   title: "Homarr",
   description:
-    "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+    "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
   openGraph: {
     title: "Homarr Dashboard",
     description:
-      "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+      "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
     url: "https://homarr.dev",
-    siteName: "Homarr Documentation",
+    siteName: "Homarr",
   },
   icons: {
     icon: "/logo/logo.png",

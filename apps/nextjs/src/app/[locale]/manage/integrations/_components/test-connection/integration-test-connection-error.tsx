@@ -18,7 +18,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
   const causeArray = useMemo(() => toCauseArray(error.cause), [error.cause]);
 
   return (
-    <Card withBorder style={{ borderColor: getMantineColor("red", 8) }}>
+    <Card style={{ borderColor: getMantineColor("red", 8) }}>
       <Stack>
         <Stack gap="sm">
           <Text size="lg" fw={500} c="red.8">

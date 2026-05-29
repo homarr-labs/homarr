@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -12,9 +12,8 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManageContainer } from "~/components/manage/manage-container";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
 
@@ -40,36 +39,35 @@ export default async function AppsPage(props: AppsPageProps) {
   const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
   const t = await getScopedI18n("app");
 
+  const canCreate = session.user.permissions.includes("app-create");
+
   return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title>{t("page.list.title")}</Title>
-        <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />
-          {session.user.permissions.includes("app-create") && (
-            <TourTarget id="manage-apps-create">
-              <MobileAffixButton component={Link} href="/manage/apps/new">
-                {t("page.create.title")}
-              </MobileAffixButton>
-            </TourTarget>
-          )}
-        </Group>
+    <ManagePageLayout
+      title={t("page.list.title")}
+      primaryAction={
+        canCreate ? (
+          <TourTarget id="manage-apps-create">
+            <MobileAffixButton component={Link} href="/manage/apps/new">
+              {t("page.create.title")}
+            </MobileAffixButton>
+          </TourTarget>
+        ) : undefined
+      }
+      toolbar={<SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />}
+      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      floatingPrimaryAction={canCreate}
+    >
+      {apps.length === 0 && <AppNoResults />}
+      {apps.length > 0 && (
         <TourTarget id="manage-apps-list">
           <Stack gap="sm">
-            {apps.length === 0 && <AppNoResults />}
             {apps.map((app) => (
               <AppCard key={app.id} app={app} />
             ))}
           </Stack>
         </TourTarget>
-
-        {/* Added margin to not hide pagination behind affix-button */}
-        <Group justify="end" mb={48}>
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        </Group>
-      </Stack>
-    </ManageContainer>
+      )}
+    </ManagePageLayout>
   );
 }
 
@@ -82,7 +80,7 @@ const AppCard = async ({ app }: AppCardProps) => {
   const session = await auth();
 
   return (
-    <Card withBorder>
+    <Card>
       <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
           <Avatar

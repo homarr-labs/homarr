@@ -12,7 +12,7 @@ interface FormType {
 interface SecretKindsSegmentedControlProps<TFormType extends FormType> {
   defaultKinds?: IntegrationSecretKind[];
   secretKinds: IntegrationSecretKind[][];
-  form: UseFormReturnType<TFormType, (values: TFormType) => TFormType>;
+  form: UseFormReturnType<TFormType, TFormType>;
 }
 
 export const SecretKindsSegmentedControl = <TFormType extends FormType>({

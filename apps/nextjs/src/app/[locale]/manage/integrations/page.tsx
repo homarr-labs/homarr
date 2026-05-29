@@ -7,9 +7,7 @@ import {
   AccordionPanel,
   ActionIcon,
   ActionIconGroup,
-  Affix,
   Anchor,
-  Box,
   Button,
   Divider,
   Group,
@@ -24,9 +22,8 @@ import {
   TableThead,
   TableTr,
   Text,
-  Title,
 } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconPencil, IconPlugX } from "@tabler/icons-react";
+import { IconChevronDown, IconPencil, IconPlugX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -38,8 +35,8 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManageContainer } from "~/components/manage/manage-container";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
 import { env } from "~/env";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
@@ -67,42 +64,27 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
   const canCreateIntegrations = session.user.permissions.includes("integration-create");
 
   return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Group justify="space-between" align="center">
-          <Title>{t("page.list.title")}</Title>
-
-          {canCreateIntegrations && (
-            <>
-              <Box>
-                <IntegrationSelectMenu>
-                  <Affix hiddenFrom="md" position={{ bottom: 20, right: 20 }}>
-                    <MenuTarget>
-                      <Button rightSection={<IconChevronUp size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                    </MenuTarget>
-                  </Affix>
-                </IntegrationSelectMenu>
-              </Box>
-
-              <TourTarget id="manage-integrations-create">
-                <Box visibleFrom="md">
-                  <IntegrationSelectMenu>
-                    <MenuTarget>
-                      <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                    </MenuTarget>
-                  </IntegrationSelectMenu>
-                </Box>
-              </TourTarget>
-            </>
-          )}
-        </Group>
-
-        <TourTarget id="manage-integrations-list">
-          <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
-        </TourTarget>
-      </Stack>
-    </ManageContainer>
+    <ManagePageLayout
+      title={t("page.list.title")}
+      primaryAction={
+        canCreateIntegrations ? (
+          <TourTarget id="manage-integrations-create">
+            <ManageMobilePrimaryAction>
+              <IntegrationSelectMenu>
+                <MenuTarget>
+                  <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                </MenuTarget>
+              </IntegrationSelectMenu>
+            </ManageMobilePrimaryAction>
+          </TourTarget>
+        ) : undefined
+      }
+      floatingPrimaryAction={canCreateIntegrations}
+    >
+      <TourTarget id="manage-integrations-list">
+        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      </TourTarget>
+    </ManagePageLayout>
   );
 }
 

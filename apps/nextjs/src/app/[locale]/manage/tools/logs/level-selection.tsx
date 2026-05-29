@@ -2,11 +2,13 @@
 
 import { Select } from "@mantine/core";
 
-import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 import { logLevelConfiguration, logLevels } from "@homarr/core/infrastructure/logs/constants";
+import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 import { useI18n } from "@homarr/translation/client";
 
 import { useLogContext } from "./log-context";
+
+const levelByValue = Object.fromEntries(logLevels.map((logLevel) => [logLevel, logLevel])) as Record<string, LogLevel>;
 
 export const LogLevelSelection = () => {
   const { level, setLevel } = useLogContext();
@@ -19,7 +21,12 @@ export const LogLevelSelection = () => {
         label: `${logLevelConfiguration[level].prefix} ${t(`log.level.option.${level}`)}`,
       }))}
       value={level}
-      onChange={(value) => setLevel(value as LogLevel)}
+      onChange={(value) => {
+        const nextLevel = value && levelByValue[value];
+        if (nextLevel) {
+          setLevel(nextLevel);
+        }
+      }}
       checkIconPosition="right"
     />
   );

@@ -1,26 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
+import { Anchor, Group, Text, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
-import { TourTarget } from "~/components/layout/header/tour-target";
-
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
-  credentialsProviderEnabled: boolean;
 }
 
-export const UserListComponent = ({ initialUserList, credentialsProviderEnabled }: UserListComponentProps) => {
-  const tUserList = useScopedI18n("management.page.user.list");
+export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
   const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
     initialData: initialUserList,
@@ -76,21 +72,5 @@ export const UserListComponent = ({ initialUserList, credentialsProviderEnabled 
     },
   });
 
-  return (
-    <>
-      <Group justify="space-between" align="center" mb="md">
-        <TourTarget id="manage-users-list">
-          <Title>{tUserList("title")}</Title>
-        </TourTarget>
-        {credentialsProviderEnabled && (
-          <TourTarget id="manage-users-create">
-            <Button component={Link} href="/manage/users/create">
-              {t("management.page.user.create.title")}
-            </Button>
-          </TourTarget>
-        )}
-      </Group>
-      <MantineReactTable table={table} />
-    </>
-  );
+  return <MantineReactTable table={table} />;
 };

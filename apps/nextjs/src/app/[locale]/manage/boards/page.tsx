@@ -9,12 +9,17 @@ import {
   Group,
   Menu,
   MenuTarget,
-  Stack,
   Text,
-  Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDeviceMobile, IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
+import {
+  IconDeviceMobile,
+  IconDotsVertical,
+  IconHomeFilled,
+  IconLayoutDashboard,
+  IconLock,
+  IconWorld,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -24,8 +29,8 @@ import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManageContainer } from "~/components/manage/manage-container";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { NoResults } from "~/components/no-results";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -36,20 +41,21 @@ export default async function ManageBoardsPage() {
   const canCreateBoards = session?.user.permissions.includes("board-create");
 
   return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Group justify="space-between">
-          <Title mb="md">{t("title")}</Title>
-          {canCreateBoards && (
-            <TourTarget id="manage-boards-create">
-              <CreateBoardButton />
-            </TourTarget>
-          )}
-        </Group>
-
+    <ManagePageLayout
+      title={t("title")}
+      primaryAction={
+        canCreateBoards ? (
+          <TourTarget id="manage-boards-create">
+            <CreateBoardButton />
+          </TourTarget>
+        ) : undefined
+      }
+      floatingPrimaryAction={canCreateBoards}
+    >
+      {boards.length === 0 && <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} />}
+      {boards.length > 0 && (
         <TourTarget id="manage-boards-list">
-          <Grid mb={{ base: "xl", md: 0 }}>
+          <Grid>
             {boards.map((board) => (
               <GridCol span={{ base: 12, md: 6 }} key={board.id}>
                 <BoardCard board={board} />
@@ -57,8 +63,8 @@ export default async function ManageBoardsPage() {
             ))}
           </Grid>
         </TourTarget>
-      </Stack>
-    </ManageContainer>
+      )}
+    </ManagePageLayout>
   );
 }
 
@@ -73,16 +79,14 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card radius="lg" withBorder>
+    <Card>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
             <Tooltip label={t(`visibility.${visibility}`)}>
               <VisibilityIcon size={20} stroke={1.5} />
             </Tooltip>
-            <Text fw="bolder" tt="uppercase">
-              {board.name}
-            </Text>
+            <Text fw={700}>{board.name}</Text>
           </Group>
 
           <Group>
@@ -130,6 +134,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
                   style={{ borderTop: "none", borderBottom: "none", borderRight: "none", borderRadius: 0 }}
                   variant="default"
                   size="lg"
+                  aria-label={t("action.settings.label")}
                 >
                   <IconDotsVertical size={16} stroke={1.5} />
                 </ActionIcon>

@@ -53,7 +53,7 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
       )}
       leftSection={CurrentIcon && <CurrentIcon size={16} stroke={1.5} />}
       renderOption={({ option, checked }) => {
-        const Icon = getIconFor(options.options, option.value);
+        const Icon = getIconFor(options.options, String(option.value));
 
         return (
           <Group flex="1" gap="xs">
