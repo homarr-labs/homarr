@@ -161,7 +161,7 @@ catalog:
   swagger-ui-react: ^5.32.6
   testcontainers: ^12.0.0
   timezones-ical-library: ^2.2.0
-  trpc-to-openapi: ^3.2.0
+  trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
   tsx: 4.20.4
   turbo: ^2.9.14

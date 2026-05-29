@@ -7,7 +7,7 @@
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "lint": "oxlint",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
