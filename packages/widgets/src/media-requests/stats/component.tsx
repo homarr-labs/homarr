@@ -120,13 +120,7 @@ export default function MediaServerWidget({
               >
                 <Tooltip label={t(`titles.stats.${stat.name}`)}>
                   <Card p={0} radius={board.itemRadius} className={classes.card}>
-                    <Group
-                      className="mediaRequests-stats-stat-stack"
-                      justify="center"
-                      align="center"
-                      gap="xs"
-                      w="100%"
-                    >
+                    <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
                       <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
                       <Text className="mediaRequests-stats-stat-value" size="md">
                         {stat.number}
@@ -142,13 +136,7 @@ export default function MediaServerWidget({
           <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
             {t("titles.users.main")} ({t("titles.users.requests")})
           </Text>
-          <Stack
-            className="mediaRequests-stats-users-wrapper"
-            flex={1}
-            w="100%"
-            gap={4}
-            style={{ overflow: "hidden" }}
-          >
+          <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
             {requestStats.users.slice(0, 10).map((user) => (
               <Card
                 component="a"
@@ -164,13 +152,7 @@ export default function MediaServerWidget({
                 p="xs"
                 radius={board.itemRadius}
               >
-                <Group
-                  className="mediaRequests-stats-users-user-group"
-                  h="100%"
-                  p={0}
-                  gap="sm"
-                  justify="space-between"
-                >
+                <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
                   <Group gap={4}>
                     <Tooltip label={user.integration.name}>
                       <Avatar
