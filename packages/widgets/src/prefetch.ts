@@ -9,6 +9,7 @@ import { createSettings } from "@homarr/settings/creator";
 import { reduceWidgetOptionsWithDefaultValues } from ".";
 import prefetchForApps from "./app/prefetch";
 import prefetchForBookmarks from "./bookmarks/prefetch";
+import prefetchForDownloads from "./downloads/prefetch";
 import type { Prefetch, WidgetOptionsRecordOf } from "./definition";
 import type { inferOptionsFromCreator } from "./options";
 
@@ -19,6 +20,7 @@ const prefetchCallbacks: Partial<{
 }> = {
   bookmarks: prefetchForBookmarks,
   app: prefetchForApps,
+  downloads: prefetchForDownloads,
 };
 
 export const prefetchForKindAsync = async <TKind extends WidgetKind>(

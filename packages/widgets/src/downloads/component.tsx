@@ -101,7 +101,6 @@ export default function DownloadClientsWidget({
   );
   const utils = clientApi.useUtils();
 
-  //Translations
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
 
