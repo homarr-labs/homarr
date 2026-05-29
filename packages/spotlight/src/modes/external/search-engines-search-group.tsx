@@ -131,7 +131,9 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
     return [
       {
         key: "request",
-        hide: (option) => option.result.inLibrary || option.integration.permissions?.hasInteractAccess === false,
+        hide: (option) =>
+          (option.result.type === "movie" && option.result.inLibrary) ||
+          option.integration.permissions?.hasInteractAccess === false,
         Component(option) {
           const t = useScopedI18n("search.mode.media");
           return (

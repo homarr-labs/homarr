@@ -4551,6 +4551,7 @@
         }
       },
       "media": {
+        "help": "Search for movies or shows to request",
         "requestMovie": "Request movie",
         "requestSeries": "Request series",
         "openIn": "Open in {kind}",
@@ -4842,7 +4843,11 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes"
+                "episodes": "Episodes",
+                "status": "Status"
+              },
+              "status": {
+                "requested": "Requested"
               }
             },
             "button": {

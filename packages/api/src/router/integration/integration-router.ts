@@ -33,6 +33,7 @@ import {
   integrationSavePermissionsSchema,
   integrationUpdateSchema,
 } from "@homarr/validation/integration";
+import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -669,6 +670,20 @@ export const integrationRouter = createTRPCRouter({
       );
 
       return results.flat();
+    }),
+  getMediaRequestOptions: protectedProcedure
+    .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr", "seerr"))
+    .input(mediaRequestOptionsSchema)
+    .query(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
+    }),
+  requestMedia: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr", "seerr"))
+    .input(mediaRequestRequestSchema)
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
     }),
 });
 
