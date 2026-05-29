@@ -90,9 +90,7 @@ export default async function AboutPage() {
         <Group py="lg">
           <Image src={homarrLogoPath} width={100} height={100} alt="" />
           <Stack gap={0}>
-            <Title order={1} tt="uppercase">
-              Homarr
-            </Title>
+            <Title order={1}>Homarr</Title>
             <Title order={2}>{t("version", { version })}</Title>
           </Stack>
         </Group>
@@ -187,7 +185,7 @@ export default async function AboutPage() {
             <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
               {Object.entries(dependencies)
                 .filter(([, value]) => !value.includes("workspace:"))
-                .toSorted(([key1], [key2]) => key1.localeCompare(key2))
+                .sort(([key1], [key2]) => key1.localeCompare(key2))
                 .map(([name, version]) => (
                   <UnstyledButton
                     key={name}
@@ -195,9 +193,9 @@ export default async function AboutPage() {
                     href={`https://www.npmjs.com/package/${name}`}
                     target="_blank"
                   >
-                    <Card withBorder radius="md" p="xs" className={classes.dependencyCard}>
+                    <Card radius="md" p="xs" className={classes.dependencyCard}>
                       <Group gap="sm" wrap="nowrap">
-                        <ThemeIcon variant="light" size="lg" radius="md">
+                        <ThemeIcon variant="light" size="lg">
                           <IconPackage size="1.5rem" stroke={1.5} />
                         </ThemeIcon>
 

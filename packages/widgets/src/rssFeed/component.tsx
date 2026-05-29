@@ -26,7 +26,7 @@ const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]
         return oldData
           ?.filter((entry) => entry.feedUrl !== updatedData.url)
           .concat(updatedData.entries)
-          .toSorted((entryA, entryB) => {
+          .sort((entryA, entryB) => {
             return entryA.published && entryB.published
               ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
               : 0;
@@ -57,7 +57,6 @@ export default function RssFeed({ options, width }: WidgetComponentProps<"rssFee
         {feedEntries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
-            withBorder
             component={"a"}
             href={feedEntry.link}
             radius={board.itemRadius}

@@ -48,7 +48,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
         } as const;
       }
     })
-    .toSorted((certA, certB) => {
+    .sort((certA, certB) => {
       if (certA.isError) return -1;
       if (certB.isError) return 1;
       return certA.x509.validToDate.getTime() - certB.x509.validToDate.getTime();
@@ -79,7 +79,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
           {x509Certificates.map((cert) => (
-            <Card key={cert.fileName} withBorder>
+            <Card key={cert.fileName}>
               <Group wrap="nowrap">
                 {cert.isError ? (
                   <IconAlertTriangle

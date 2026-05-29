@@ -43,7 +43,7 @@ export default function MediaServerWidget({
           const newData = filteredData.concat(
             data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
           );
-          return newData.toSorted((dataA, dataB) => {
+          return newData.sort((dataA, dataB) => {
             if (dataA.status === dataB.status) {
               return dataB.createdAt.getTime() - dataA.createdAt.getTime();
             }
@@ -95,7 +95,6 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
       className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
       radius={board.itemRadius}
       p="xs"
-      withBorder
     >
       <Image
         className="mediaRequests-list-item-background"
@@ -214,7 +213,6 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
           variant="light"
           color="green"
           size="xs"
-          radius="md"
           onClick={() => {
             handleDecision("approve");
           }}
@@ -228,7 +226,6 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
           variant="light"
           color="red"
           size="xs"
-          radius="md"
           onClick={() => {
             handleDecision("decline");
           }}

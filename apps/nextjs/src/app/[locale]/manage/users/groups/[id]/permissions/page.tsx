@@ -68,7 +68,6 @@ const PermissionCard = async ({ group, isDanger }: PermissionCardProps) => {
   return (
     <Card
       p="md"
-      withBorder
       style={{
         borderColor: isDanger ? "var(--mantine-color-red-8)" : undefined,
       }}

@@ -45,7 +45,7 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           : null;
 
   return (
-    <Paper p="xs" radius="lg" withBorder style={{ position: "relative", overflow: "hidden" }}>
+    <Paper p="xs" radius="lg" style={{ position: "relative", overflow: "hidden" }}>
       {stream.posterUrl && (
         <Box
           style={{
@@ -100,7 +100,7 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           </Group>
         </Group>
 
-        <Tooltip label={mediaLabel} openDelay={300}>
+        <Tooltip label={mediaLabel}>
           <Text size="xs" c="dimmed" lineClamp={1}>
             {mediaLabel}
           </Text>

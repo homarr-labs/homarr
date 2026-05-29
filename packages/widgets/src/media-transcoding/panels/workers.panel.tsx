@@ -4,8 +4,10 @@ import {
   Progress,
   ScrollArea,
   Table,
+  TableTbody,
   TableTd,
   TableTh,
+  TableThead,
   TableTr,
   Text,
   Title,
@@ -35,7 +37,7 @@ export function WorkersPanel(props: WorkersPanelProps) {
   return (
     <ScrollArea style={{ flex: "1" }}>
       <Table style={{ tableLayout: "fixed" }}>
-        <Table.Thead>
+        <TableThead>
           <TableTr>
             <TableTh ta="start" py={4}>
               <Text size="xs" fw="bold">
@@ -53,8 +55,8 @@ export function WorkersPanel(props: WorkersPanelProps) {
               </Text>
             </TableTh>
           </TableTr>
-        </Table.Thead>
-        <Table.Tbody>
+        </TableThead>
+        <TableTbody>
           {props.workers.map((worker) => {
             const fileName = worker.filePath.split("\\").pop()?.split("/").pop() ?? worker.filePath;
             return (
@@ -101,7 +103,7 @@ export function WorkersPanel(props: WorkersPanelProps) {
               </TableTr>
             );
           })}
-        </Table.Tbody>
+        </TableTbody>
       </Table>
     </ScrollArea>
   );
