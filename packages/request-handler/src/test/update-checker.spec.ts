@@ -111,6 +111,24 @@ describe("getAvailableUpdatesAsync", () => {
     // Assert
     expect(result).toEqual([]);
   });
+
+  test("should propagate GitHub API auth errors without blocking callers", async () => {
+    const currentVersion = "v1.2.3";
+    const listReleasesSpy = vi.spyOn(new Octokit().rest.repos, "listReleases");
+    listReleasesSpy.mockRejectedValue(new Error("Bad credentials"));
+
+    await expect(getAvailableUpdatesAsync(currentVersion)).rejects.toThrow("Bad credentials");
+  });
+
+  test("should propagate GitHub API quota exhausted errors without blocking callers", async () => {
+    const currentVersion = "v1.2.3";
+    const listReleasesSpy = vi.spyOn(new Octokit().rest.repos, "listReleases");
+    listReleasesSpy.mockRejectedValue(
+      new Error("Request quota exhausted for request GET /repos/{owner}/{repo}/releases"),
+    );
+
+    await expect(getAvailableUpdatesAsync(currentVersion)).rejects.toThrow("quota exhausted");
+  });
 });
 
 const fakeReleases = (...inputs: [string, boolean][]) => inputs.map(fakeRelease);
