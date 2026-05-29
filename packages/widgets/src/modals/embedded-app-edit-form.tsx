@@ -21,11 +21,13 @@ interface EmbeddedAppEditFormProps {
 
 export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormProps) => {
   const t = useI18n();
+  const utils = clientApi.useUtils();
   const appFormRef = useRef<AppFormHandle>(null);
   const { data: app, isPending: isLoadingApp, isError, refetch } = clientApi.app.byId.useQuery({ id: appId });
 
   const { mutateAsync, isPending: isMutating } = clientApi.app.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.app.invalidate();
       showSuccessNotification({
         title: t("app.page.edit.notification.success.title"),
         message: t("app.page.edit.notification.success.message"),

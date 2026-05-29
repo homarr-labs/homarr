@@ -17,6 +17,14 @@ import { findBestIconMatch } from "./icon-matcher";
 
 type FormType = z.infer<typeof appManageSchema>;
 
+const toFormValues = (values: FormType | undefined): FormType => ({
+  name: values?.name ?? "",
+  description: values?.description ?? "",
+  iconUrl: values?.iconUrl ?? "",
+  href: values?.href ?? "",
+  pingUrl: values?.pingUrl ?? "",
+});
+
 export interface AppFormHandle {
   submit: () => Promise<boolean>;
   isDirty: () => boolean;
@@ -47,14 +55,24 @@ export const AppForm = ({
   const t = useI18n();
 
   const form = useZodForm(appManageSchema, {
-    initialValues: {
-      name: initialValues?.name ?? "",
-      description: initialValues?.description ?? "",
-      iconUrl: initialValues?.iconUrl ?? "",
-      href: initialValues?.href ?? "",
-      pingUrl: initialValues?.pingUrl ?? "",
-    },
+    initialValues: toFormValues(initialValues),
   });
+
+  const initialValuesKey = [
+    initialValues?.name,
+    initialValues?.description,
+    initialValues?.iconUrl,
+    initialValues?.href,
+    initialValues?.pingUrl,
+  ].join("\0");
+
+  useEffect(() => {
+    if (!initialValues || form.isDirty()) {
+      return;
+    }
+
+    form.initialize(toFormValues(initialValues));
+  }, [initialValuesKey, form, initialValues]);
 
   // Debounce the name value with 200ms delay
   const [debouncedName] = useDebouncedValue(form.values.name, 200);
@@ -80,6 +98,7 @@ export const AppForm = ({
             async (values) => {
               try {
                 await Promise.resolve(handleSubmit(values));
+                form.initialize(values);
                 resolve(true);
               } catch {
                 resolve(false);
