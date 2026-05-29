@@ -20,7 +20,7 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
     longitude: options.location.longitude,
   };
   const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input, {
-    refetchOnMount: false,
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

@@ -18,9 +18,12 @@ import { OverflowBadge } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaReleasesWidget({ options, integrationIds }: WidgetComponentProps<"mediaReleases">) {
-  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
-    integrationIds,
-  });
+  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery(
+    {
+      integrationIds,
+    },
+    { staleTime: 5 * 60 * 1000 },
+  );
 
   return (
     <Stack p="xs" gap="sm">

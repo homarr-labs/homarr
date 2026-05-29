@@ -28,12 +28,15 @@ export function UmamiEventsContent({
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    eventNames: [...eventNames].toSorted(),
-  });
+  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      websiteId,
+      timeFrame,
+      eventNames: [...eventNames].toSorted(),
+    },
+    { staleTime: 5 * 60 * 1000 },
+  );
 
   if (eventNames.length === 0) {
     return (

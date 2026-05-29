@@ -20,7 +20,10 @@ export default function SpeedtestTrackerWidget({
   isEditMode,
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
-  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
+  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery(
+    { integrationIds },
+    { staleTime: 10 * 60 * 1000 },
+  );
 
   const utils = clientApi.useUtils();
   clientApi.widget.speedtestTracker.subscribeToDashboard.useSubscription(

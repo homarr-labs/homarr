@@ -6,7 +6,6 @@ import { fetchApi } from "@homarr/api/client";
 import {
   getActiveQueryCacheBoardId,
   isPersistableWidgetQueryKey,
-  queryCacheMaxAgeMs,
   queryCacheStoragePrefix,
 } from "@homarr/api/query-cache";
 
@@ -39,7 +38,7 @@ const queryCacheStorage = {
 export const createWidgetQueryPersister = () =>
   experimental_createQueryPersister<string>({
     storage: typeof window === "undefined" ? undefined : queryCacheStorage,
-    maxAge: queryCacheMaxAgeMs,
+    maxAge: Number.POSITIVE_INFINITY,
     prefix: queryCacheStoragePrefix,
     refetchOnRestore: true,
     serialize: (query) => stringify(query),

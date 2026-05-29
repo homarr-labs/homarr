@@ -1,11 +1,17 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { QueryClient } from "@tanstack/react-query";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { boards, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import { isPersistableWidgetQueryKey, queryCacheMaxAgeMs, queryCacheMaxValueBytes } from "@homarr/api/query-cache";
+import {
+  isPersistableWidgetQueryKey,
+  queryCacheDefaultStaleTimeMs,
+  queryCacheMaxValueBytes,
+  queryCacheRetentionMs,
+} from "@homarr/api/query-cache";
 
 import { queryCacheRouter } from "../router/query-cache";
 
@@ -141,7 +147,7 @@ describe("queryCacheRouter", () => {
       userId: "anonymous",
       boardId: "board-1",
       key: "query-key",
-      ttlMs: queryCacheMaxAgeMs,
+      ttlMs: queryCacheRetentionMs,
       maxValueBytes: queryCacheMaxValueBytes,
     });
   });
@@ -161,7 +167,7 @@ describe("queryCacheRouter", () => {
     expect(redisMock.calls.at(-1)).toMatchObject({
       userId: "user-1",
       boardId: "board-1",
-      ttlMs: queryCacheMaxAgeMs,
+      ttlMs: queryCacheRetentionMs,
       maxValueBytes: queryCacheMaxValueBytes,
     });
   });
@@ -180,8 +186,39 @@ describe("queryCacheRouter", () => {
     await caller.setItem({ boardId: "board-1", key: "query-key", value: "cached-value" });
     await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBe("cached-value");
 
-    await vi.advanceTimersByTimeAsync(queryCacheMaxAgeMs + 1);
+    await vi.advanceTimersByTimeAsync(queryCacheRetentionMs + 1);
 
     await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBeNull();
+  });
+});
+
+describe("query cache stale handling", () => {
+  test("uses TanStack Query dataUpdatedAt and staleTime to decide when cached data refetches", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-01-01T00:10:00.000Z"));
+
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: queryCacheDefaultStaleTimeMs,
+        },
+      },
+    });
+    const queryKey = [["widget", "example"], { input: { integrationIds: ["integration-1"] }, type: "query" }];
+    const queryFn = vi.fn().mockResolvedValue("fresh");
+
+    queryClient.setQueryData(queryKey, "cached", {
+      updatedAt: Date.now() - queryCacheDefaultStaleTimeMs - 1,
+    });
+
+    await expect(
+      queryClient.fetchQuery({
+        queryKey,
+        queryFn,
+      }),
+    ).resolves.toBe("fresh");
+
+    expect(queryFn).toHaveBeenCalledOnce();
   });
 });

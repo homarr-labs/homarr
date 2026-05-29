@@ -19,6 +19,7 @@ import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { queryCacheDefaultStaleTimeMs } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 
@@ -58,7 +59,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         defaultOptions: {
           queries: {
             persister: queryPersister.persisterFn,
-            staleTime: 5 * 1000,
+            staleTime: queryCacheDefaultStaleTimeMs,
           },
         },
       }),

@@ -9,7 +9,6 @@ import type { DehydratedState } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { parse } from "superjson";
 
-import { queryCacheMaxAgeMs } from "@homarr/api/query-cache";
 import { getQueryClient } from "@homarr/api/server";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
@@ -127,13 +126,11 @@ interface PersistedEntry {
 async function QueryCacheHydration({ userId, boardId }: { userId: string; boardId: string }) {
   try {
     const entries = await getAllQueryCacheAsync(userId, boardId);
-    const now = Date.now();
     const queries: DehydratedState["queries"] = [];
 
     for (const serialized of Object.values(entries)) {
       try {
         const persisted = parse<PersistedEntry>(serialized);
-        if (now - persisted.state.dataUpdatedAt > queryCacheMaxAgeMs) continue;
         if (persisted.state.status !== "success") continue;
 
         queries.push({
