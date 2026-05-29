@@ -20,6 +20,7 @@ export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem> 
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   w?: string;
+  withinPortal?: boolean;
 }
 
 type Props<TSelectItem extends BaseSelectItem> = SelectWithCustomItemsProps<TSelectItem> & {
@@ -35,6 +36,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   SelectOption,
   w,
   clearable,
+  withinPortal = false,
   ...props
 }: Props<TSelectItem>) => {
   const combobox = useCombobox({
@@ -71,7 +73,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   const _clearable = clearable && Boolean(_value);
 
   return (
-    <Combobox store={combobox} withinPortal={false} onOptionSubmit={onOptionSubmit}>
+    <Combobox store={combobox} withinPortal={withinPortal} onOptionSubmit={onOptionSubmit}>
       <Combobox.Target>
         <InputBase
           {...props}
