@@ -304,6 +304,20 @@ describe("GluetunIntegration testing endpoint", () => {
     const headers = (init?.headers ?? {}) as Record<string, string>;
     expect(headers["X-API-Key"]).toBe(TEST_API_KEY);
   });
+
+  test("passes the Basic auth header through to fetchAsync when username/password are configured", async () => {
+    const response = new Response(JSON.stringify(VPN_STATUS_PAYLOAD), { status: 200 });
+    const input = makeInput(response);
+
+    await invokeTesting(createIntegrationWithBasicAuth(), input);
+
+    const fetchAsyncMock = vi.mocked(input.fetchAsync);
+    const init = fetchAsyncMock.mock.calls[0]?.[1];
+    const headers = (init?.headers ?? {}) as Record<string, string>;
+    const expected = `Basic ${btoa(`${TEST_USERNAME}:${TEST_PASSWORD}`)}`;
+    expect(headers.Authorization).toBe(expected);
+    expect(headers["X-API-Key"]).toBeUndefined();
+  });
 });
 
 describe("gluetun schemas", () => {

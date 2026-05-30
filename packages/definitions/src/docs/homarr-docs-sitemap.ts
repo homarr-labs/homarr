@@ -200,7 +200,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/transmission"
   | "/docs/integrations/truenas"
   | "/docs/integrations/umami"
-  | "/docs/integrations/gluetun"
   | "/docs/integrations/unifi-controller"
   | "/docs/integrations/unraid"
   | "/docs/management/api"
