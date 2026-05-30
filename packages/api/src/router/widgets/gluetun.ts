@@ -35,7 +35,7 @@ export const gluetunRouter = createTRPCRouter({
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"gluetun"> }>;
-        summary: GluetunStatusInfo;
+        summary: GluetunStatusInfo | null;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {

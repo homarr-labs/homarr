@@ -2063,7 +2063,8 @@
     },
     "gluetun": {
       "name": "Gluetun",
-      "description": "Overview of your Gluetun vpn setup"
+      "description": "Overview of your Gluetun vpn setup",
+      "serviceUnavailable": "VPN unavailable"
     },
     "tracearr": {
       "name": "Tracearr",
@@ -3797,6 +3798,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
+            },
+            "gluetun": {
+              "label": "Gluetun VPN Status"
             }
           },
           "interval": {
