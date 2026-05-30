@@ -205,6 +205,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/adguard-home"),
     defaultPort: 3000,
   },
+  technitiumDns: {
+    name: "Technitium DNS",
+    secretKinds: [["apiKey"], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg",
+    category: ["dnsHole"],
+    documentationUrl: createDocumentationLink("/docs/integrations/technitium-dns"),
+  },
   homeAssistant: {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
