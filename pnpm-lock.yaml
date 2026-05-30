@@ -436,8 +436,8 @@ catalogs:
       specifier: 19.2.6
       version: 19.2.6
     react-error-boundary:
-      specifier: ^6.1.1
-      version: 6.1.1
+      specifier: ^6.1.2
+      version: 6.1.2
     react-markdown:
       specifier: ^10.1.0
       version: 10.1.0
@@ -837,7 +837,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-error-boundary:
         specifier: 'catalog:'
-        version: 6.1.1(react@19.2.6)
+        version: 6.1.2(react@19.2.6)
       react-simple-code-editor:
         specifier: 'catalog:'
         version: 0.14.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -8420,8 +8420,8 @@ packages:
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
 
-  react-error-boundary@6.1.1:
-    resolution: {integrity: sha512-BrYwPOdXi5mqkk5lw+Uvt0ThHx32rCt3BkukS4X23A2AIWDPSGX6iaWTc0y9TU/mHDA/6qOSGel+B2ERkOvD1w==}
+  react-error-boundary@6.1.2:
+    resolution: {integrity: sha512-3DpCr5HVdZ0caUjYE/kIHBEJN0mNP3ZCgf16c48uJ5TbWjorKVp+YG8W3XqlJ7vJAVNw6wNIImyPXmFydwmyng==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
@@ -15890,7 +15890,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.6
 
-  react-error-boundary@6.1.1(react@19.2.6):
+  react-error-boundary@6.1.2(react@19.2.6):
     dependencies:
       react: 19.2.6
 
