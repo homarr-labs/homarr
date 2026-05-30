@@ -383,8 +383,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["gluetun"],
-    defaultUrl: "http://localhost:8001",
-    documentationUrl: createDocumentationLink("/docs/integrations/umami"),
+    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {

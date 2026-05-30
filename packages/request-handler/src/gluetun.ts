@@ -14,6 +14,6 @@ export const gluetunVPNStatusHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getVpnDetailsAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(5, "minutes"),
   queryKey: "gluetunInfo",
 });

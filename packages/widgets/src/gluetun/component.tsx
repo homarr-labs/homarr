@@ -7,12 +7,11 @@ import { IconArrowsExchange, IconMapPin, IconShieldCheck } from "@tabler/icons-r
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { getStatusColor } from "./helpers";
+import { getStatusColor, updateVpnInfoFromSubscription } from "./helpers";
 
-type VpnInfo = RouterOutputs["widget"]["gluetun"]["getVpnInfo"][number];
+type VpnInfo = RouterOutputs["widget"]["gluetun"]["getVpnInfo"][number]["summary"];
 
 export default function GluetunWidget({ options, integrationIds }: WidgetComponentProps<"gluetun">) {
   const [integrations] = clientApi.widget.gluetun.getVpnInfo.useSuspenseQuery(
@@ -27,19 +26,33 @@ export default function GluetunWidget({ options, integrationIds }: WidgetCompone
       retry: false,
     },
   );
+  const utils = clientApi.useUtils();
 
-  if (integrations.length === 0) {
-    return <EmptyState />;
-  }
+  clientApi.widget.gluetun.subscribeVpnInfo.useSubscription(
+    {
+      integrationIds,
+    },
+    {
+      onData: (data) => {
+        utils.widget.gluetun.getVpnInfo.setData(
+          {
+            ...options,
+            integrationIds,
+          },
+          (prevData) => updateVpnInfoFromSubscription(prevData, data),
+        );
+      },
+    },
+  );
 
   if (integrations.length === 1) {
-    const [vpn] = integrations;
-
-    if (!vpn) return <EmptyState />;
+    // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const vpn = integrations[0]!;
 
     return (
       <Flex align="center" justify="center" w="100%" h="100%" px="xs" py="sm">
-        <VpnIntegrationCard vpn={vpn} />
+        <VpnIntegrationCard vpn={vpn.summary} />
       </Flex>
     );
   }
@@ -47,8 +60,8 @@ export default function GluetunWidget({ options, integrationIds }: WidgetCompone
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" offsetScrollbars>
       <Stack w="100%" gap="sm" py="xs" px="xs">
-        {integrations.map((vpn, index) => (
-          <VpnIntegrationCard key={`${vpn.publicIp}-${index}`} vpn={vpn} variant="list" />
+        {integrations.map((vpn) => (
+          <VpnIntegrationCard key={vpn.integration.id} vpn={vpn.summary} variant="list" />
         ))}
       </Stack>
     </ScrollArea>
@@ -163,15 +176,3 @@ function DnsStatusBadge({ status }: { status: string }) {
     </Badge>
   );
 }
-
-const EmptyState = () => {
-  const t = useScopedI18n("widget.gluetun");
-
-  return (
-    <Flex align="center" justify="center" w="100%" h="100%" px="xs" py="sm">
-      <Text size="sm" c="dimmed">
-        {t("noItems")}
-      </Text>
-    </Flex>
-  );
-};

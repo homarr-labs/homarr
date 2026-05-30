@@ -2063,37 +2063,7 @@
     },
     "gluetun": {
       "name": "Gluetun",
-      "description": "Overview of your Gluetun vpn setup",
-      "noItems": "No VPNs to display.",
-      "option": {
-        "showServers": {
-          "label": "Show servers"
-        },
-        "showApplications": {
-          "label": "Show applications"
-        },
-        "showServices": {
-          "label": "Show services"
-        }
-      },
-      "empty": {
-        "servers": "No servers found",
-        "applications": "No applications found",
-        "services": "No services found"
-      },
-      "footer": {
-        "updated": "Updated {when}"
-      },
-      "error": {
-        "noIntegration": "No Gluetun integration configured",
-        "internalServerError": "Failed to fetch Gluetun data"
-      },
-      "server": {
-        "buildServer": "Build"
-      },
-      "instances": {
-        "title": "Instances"
-      }
+      "description": "Overview of your Gluetun vpn setup"
     },
     "tracearr": {
       "name": "Tracearr",
