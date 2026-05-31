@@ -124,7 +124,7 @@ catalog:
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
-  ioredis: 5.10.1
+  ioredis: 5.11.0
   isomorphic-dompurify: ^3.14.0
   jotai: ^2.20.0
   jsdom: ^29.1.1
