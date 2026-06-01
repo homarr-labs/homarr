@@ -164,6 +164,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/emby"
   | "/docs/integrations/github-containerregistry"
   | "/docs/integrations/github"
+  | "/docs/integrations/gotify"
   | "/docs/integrations/gitlab"
   | "/docs/integrations/glances"
   | "/docs/integrations/home-assistant"

@@ -305,6 +305,13 @@ export const integrationDefs = {
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
   },
+  gotify: {
+    name: "Gotify",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
+    category: ["notifications"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+  },
   ical: {
     name: "iCal",
     secretKinds: [["url"]],
