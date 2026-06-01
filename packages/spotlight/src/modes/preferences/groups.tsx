@@ -65,7 +65,8 @@ export const preferencesGroup = createGroup<PreferencesGroupOption>({
   useInteraction: (option) => ({
     type: "children",
     ...(option.preferenceKey
-      ? preferenceChildrenOptionsByKey[option.preferenceKey as keyof typeof preferenceChildrenOptionsByKey]!({})
+      ? (preferenceChildrenOptionsByKey[option.preferenceKey as keyof typeof preferenceChildrenOptionsByKey]?.({}) ??
+          settingsChildrenOptions({}))
       : settingsChildrenOptions({})),
   }),
 });

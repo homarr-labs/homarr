@@ -100,22 +100,22 @@ export const useUserPreferences = () => {
   const pick = (field: UserPreferenceKey, changedKey: UserPreferenceKey, value: unknown) =>
     field === changedKey ? value : getEffective(field);
 
-  const groupDispatchers: Record<string, (key: UserPreferenceKey, value: unknown) => Promise<unknown>> = {
-    searchPreferences: (key, value) =>
+  const groupDispatchers: Record<string, (uid: string, key: UserPreferenceKey, value: unknown) => Promise<unknown>> = {
+    searchPreferences: (uid, key, value) =>
       searchMutation.mutateAsync({
-        userId: userId!,
+        userId: uid,
         defaultSearchEngineId: pick("defaultSearchEngineId", key, value) as string | null,
         openInNewTab: pick("openSearchInNewTab", key, value) as boolean,
         ddgBangsEnabled: pick("ddgBangs", key, value) as boolean,
       }),
-    homeBoards: (key, value) =>
+    homeBoards: (uid, key, value) =>
       homeBoardsMutation.mutateAsync({
-        userId: userId!,
+        userId: uid,
         homeBoardId: pick("homeBoardId", key, value) as string | null,
         mobileHomeBoardId: pick("mobileHomeBoardId", key, value) as string | null,
       }),
-    firstDayOfWeek: (_key, value) => firstDayMutation.mutateAsync({ id: userId!, firstDayOfWeek: value as DayOfWeek }),
-    pingIconsEnabled: (_key, value) => pingMutation.mutateAsync({ id: userId!, pingIconsEnabled: value as boolean }),
+    firstDayOfWeek: (uid, _key, value) => firstDayMutation.mutateAsync({ id: uid, firstDayOfWeek: value as DayOfWeek }),
+    pingIconsEnabled: (uid, _key, value) => pingMutation.mutateAsync({ id: uid, pingIconsEnabled: value as boolean }),
   };
 
   const groupPending: Record<string, boolean> = {
@@ -170,15 +170,16 @@ export const useUserPreferences = () => {
       return;
     }
 
-    const group = userPreferenceDefinitionByKey[key].mutationGroup!;
+    const group = userPreferenceDefinitionByKey[key].mutationGroup;
+    if (!group) return;
     const dispatcher = groupDispatchers[group];
-    if (!dispatcher) return;
+    if (!dispatcher || !userId) return;
 
     setOptimistic(key, value);
 
     pendingRef.current[group] = true;
     try {
-      await dispatcher(key, value);
+      await dispatcher(userId, key, value);
     } catch {
       clearOptimistic(getGroupKeys(key));
       showErrorNotification({
