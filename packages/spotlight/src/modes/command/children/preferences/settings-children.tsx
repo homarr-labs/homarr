@@ -8,7 +8,6 @@ import localeData from "dayjs/plugin/localeData";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import type { ColorScheme } from "@homarr/definitions";
-import type { UserPreferenceKey } from "@homarr/settings";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
 import { localeConfigurations } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -23,8 +22,6 @@ import { preferenceChildrenOptionsByKey, preferenceIcons } from "../../../../pre
 dayjs.extend(localeData);
 
 type SettingsAction = ChildrenAction<Record<string, unknown>>;
-
-const weekDays = dayjs.weekdays(false);
 
 const BooleanRow = ({
   label,
@@ -87,7 +84,7 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
     defaultSearchEngineId: () =>
       searchEnginesQuery.data?.find((e) => e.value === preferences.getPreference("defaultSearchEngineId").value)
         ?.label ?? t("searchEngine.none" as never),
-    firstDayOfWeek: () => weekDays[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
+    firstDayOfWeek: () => dayjs.weekdays(false)[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
     homeBoardId: () =>
       boardsQuery.data?.find((b) => b.id === preferences.getPreference("homeBoardId").value)?.name ??
       t("board.none" as never),

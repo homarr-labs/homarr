@@ -73,6 +73,13 @@ export const useUserPreferences = () => {
   const t = useI18n();
   const userId = session?.user.id;
   const pendingRef = useRef<Record<string, boolean>>({});
+  const prevUserIdRef = useRef(userId);
+
+  useEffect(() => {
+    if (prevUserIdRef.current === userId) return;
+    prevUserIdRef.current = userId;
+    clearOptimistic(userPreferenceDefinitions.map((d) => d.key));
+  }, [userId]);
 
   useSyncExternalStore(
     subscribeOptimistic,
@@ -163,10 +170,11 @@ export const useUserPreferences = () => {
       return;
     }
 
-    setOptimistic(key, value);
     const group = userPreferenceDefinitionByKey[key].mutationGroup!;
     const dispatcher = groupDispatchers[group];
     if (!dispatcher) return;
+
+    setOptimistic(key, value);
 
     pendingRef.current[group] = true;
     try {

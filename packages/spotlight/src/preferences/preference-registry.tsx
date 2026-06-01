@@ -97,7 +97,6 @@ const createAsyncSelectableChildren = <TItem,>(
     DetailComponent: () => <PreferenceDetailHeader titleKey={`${preferenceKey}.children.detail.title`} />,
   });
 
-const weekDays = dayjs.weekdays(false);
 const firstDayOfWeekOptions: DayOfWeek[] = [1, 6, 0];
 
 export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, ChildrenFactory>> = {
@@ -116,7 +115,7 @@ export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, C
   firstDayOfWeek: createStaticChildren("firstDayOfWeek", () =>
     firstDayOfWeekOptions.map((day) => ({
       key: day.toString(),
-      label: weekDays[day] ?? day.toString(),
+      label: dayjs.weekdays(false)[day] ?? day.toString(),
       value: day,
     })),
   ),
