@@ -46,9 +46,9 @@ catalog:
   "@tanstack/react-query": ^5.100.14
   "@tanstack/react-query-devtools": ^5.100.14
   "@tanstack/react-query-next-experimental": ^5.100.14
-  "@testcontainers/mysql": ^12.0.0
-  "@testcontainers/postgresql": ^12.0.0
-  "@testcontainers/redis": ^12.0.0
+  "@testcontainers/mysql": ^12.0.1
+  "@testcontainers/postgresql": ^12.0.1
+  "@testcontainers/redis": ^12.0.1
   "@tiptap/extension-color": 3.23.6
   "@tiptap/extension-highlight": 3.23.6
   "@tiptap/extension-image": 3.23.6
@@ -158,7 +158,7 @@ catalog:
   superjson: 2.2.6
   svgson: ^5.3.1
   swagger-ui-react: ^5.32.6
-  testcontainers: ^12.0.0
+  testcontainers: ^12.0.1
   timezones-ical-library: ^2.2.0
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
