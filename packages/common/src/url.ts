@@ -51,14 +51,15 @@ export const isAbsoluteUrl = (urlOrPath: string): boolean => {
 
 /**
  * Resolves the URL used for server-side operations like pinging.
- * href might be path-only (e.g. "/cockpit/") which is not resolvable server-side
+ * A non-absolute href (path-only like "/cockpit/" or schemeless like "foo/bar")
+ * is not resolvable server-side, so it returns null.
  * @param app - object containing href and pingUrl properties
  * @returns the resolved URL as a string, or null if it cannot be resolved server-side
  */
 export const resolveServerUrl = (app: { href: string | null; pingUrl: string | null }): string | null => {
   if (app.pingUrl) return app.pingUrl;
   if (!app.href) return null;
-  if (isPath(app.href)) return null;
+  if (!isAbsoluteUrl(app.href)) return null;
   return app.href;
 };
 
