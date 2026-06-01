@@ -70,7 +70,7 @@ catalog:
   "@trpc/react-query": ^11.17.0
   "@trpc/server": ^11.17.0
   "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.14
+  "@turbo/gen": ^2.9.15
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -163,7 +163,7 @@ catalog:
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
   tsx: 4.20.4
-  turbo: ^2.9.14
+  turbo: ^2.9.15
   typescript: ^5.9.3
   undici: 7.24.6
   use-deep-compare-effect: ^1.8.1
