@@ -14,7 +14,9 @@ export const mediaRequestStatsJob = createCronJob("mediaRequestStats", EVERY_MIN
   }),
 );
 
-export const mediaRequestListJob = createCronJob("mediaRequestList", EVERY_MINUTE).withCallback(
+export const mediaRequestListJob = createCronJob("mediaRequestList", EVERY_MINUTE, {
+  expectedMaximumDurationInMillis: 15_000,
+}).withCallback(
   createRequestIntegrationJobHandler(mediaRequestListRequestHandler.handler, {
     widgetKinds: ["mediaRequests-requestList"],
     getInput: {

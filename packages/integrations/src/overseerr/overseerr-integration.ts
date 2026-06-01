@@ -1,6 +1,10 @@
 import { z } from "zod/v4";
+import type { RequestInit, Response } from "undici";
+import { fetch } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { splitToChunksWithNItems } from "@homarr/common";
+import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
+import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
@@ -24,6 +28,14 @@ import {
 
 const logger = createLogger({ module: "overseerrIntegration" });
 
+const REQUEST_TIMEOUT_MS = 10_000;
+const DETAIL_FETCH_BATCH_SIZE = 5;
+
+interface OverseerrFetchClient {
+  fetchAsync: (url: URL, init?: RequestInit) => Promise<Response>;
+  fetchUncheckedAsync: (url: URL, init?: RequestInit) => Promise<Response>;
+}
+
 interface OverseerrSearchResult {
   id: number;
   name: string;
@@ -40,12 +52,43 @@ export class OverseerrIntegration
   extends Integration
   implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult>
 {
-  public async searchAsync(query: string) {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
+  private async createFetchClientAsync(): Promise<OverseerrFetchClient> {
+    const agent = await createCertificateAgentAsync(undefined);
+    const apiKey = this.getSecretValue("apiKey");
+
+    const requestAsync = async (url: URL, init?: RequestInit) => {
+      return await withTimeoutAsync(
+        (signal) =>
+          fetch(url, {
+            ...init,
+            signal,
+            dispatcher: agent,
+            headers: {
+              "X-Api-Key": apiKey,
+              ...init?.headers,
+            },
+          }),
+        REQUEST_TIMEOUT_MS,
+      );
+    };
+
+    return {
+      fetchAsync: async (url, init) => {
+        const response = await requestAsync(url, init);
+
+        if (!response.ok) {
+          throw new Error(`Overseerr request failed: ${response.status} ${response.statusText} (${url.toString()})`);
+        }
+
+        return response;
       },
-    });
+      fetchUncheckedAsync: requestAsync,
+    };
+  }
+
+  public async searchAsync(query: string) {
+    const client = await this.createFetchClientAsync();
+    const response = await client.fetchAsync(this.url("/api/v1/search", { query }));
     const schemaData = await searchSchema.parseAsync(await response.json());
 
     if (!schemaData.results) {
@@ -67,12 +110,9 @@ export class OverseerrIntegration
   }
 
   public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number) {
+    const client = await this.createFetchClientAsync();
     const url = mediaType === "tv" ? this.url(`/api/v1/tv/${id}`) : this.url(`/api/v1/movie/${id}`);
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
-    });
+    const response = await client.fetchAsync(url);
     const data = await mediaInformationSchema.parseAsync(await response.json());
     const requestedSeasons = [
       ...new Set(
@@ -90,8 +130,9 @@ export class OverseerrIntegration
    * @param seasons A list of the seasons that should be requested.
    */
   public async requestMediaAsync(mediaType: "movie" | "tv", id: number, seasons?: number[]): Promise<void> {
+    const client = await this.createFetchClientAsync();
     const url = this.url("/api/v1/request");
-    const response = await fetchWithTrustedCertificatesAsync(url, {
+    const response = await client.fetchUncheckedAsync(url, {
       method: "POST",
       body: JSON.stringify({
         mediaType,
@@ -99,7 +140,6 @@ export class OverseerrIntegration
         seasons,
       }),
       headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
         "Content-Type": "application/json",
       },
     });
@@ -125,25 +165,16 @@ export class OverseerrIntegration
   }
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
-    const pendingRequests = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/v1/request", { take: 20, filter: "pending" }),
-      {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
-      },
-    );
+    const client = await this.createFetchClientAsync();
 
-    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
-    });
+    const [pendingResponse, allResponse] = await Promise.all([
+      client.fetchAsync(this.url("/api/v1/request", { take: 20, filter: "pending" })),
+      client.fetchAsync(this.url("/api/v1/request", { take: 20 })),
+    ]);
 
-    const pendingResults = (await getRequestsSchema.parseAsync(await pendingRequests.json())).results;
-    const allResults = (await getRequestsSchema.parseAsync(await allRequests.json())).results;
+    const pendingResults = (await getRequestsSchema.parseAsync(await pendingResponse.json())).results;
+    const allResults = (await getRequestsSchema.parseAsync(await allResponse.json())).results;
 
-    //Concat the 2 lists while remove any duplicate pending from the all items list
     let requests;
 
     if (pendingResults.length > 0 && allResults.length > 0) {
@@ -152,37 +183,53 @@ export class OverseerrIntegration
       );
     } else if (pendingResults.length > 0) requests = pendingResults;
     else if (allResults.length > 0) requests = allResults;
-    else return Promise.all([]);
+    else return [];
 
-    return await Promise.all(
-      requests.map(async (request): Promise<MediaRequest> => {
-        const information = await this.getItemInformationAsync(request.media.tmdbId, request.type);
+    const uniqueKeys = [...new Set(requests.map((request) => `${request.type}:${request.media.tmdbId}`))];
+    const informationByKey = new Map<string, MediaInformation>();
 
-        // See https://github.com/seerr-team/seerr/blob/af083a3cd5c3e3d5d7917fdf4fdd67fe3f39c46b/src/components/StatusBadge/index.tsx#L40
-        const inProgress = (request.media.downloadStatus ?? []).length >= 1;
+    for (const batch of splitToChunksWithNItems(uniqueKeys, DETAIL_FETCH_BATCH_SIZE)) {
+      const batchResults = await Promise.all(
+        batch.map(async (key) => {
+          const separatorIndex = key.indexOf(":");
+          const type = key.slice(0, separatorIndex) as MediaRequest["type"];
+          const tmdbId = Number(key.slice(separatorIndex + 1));
+          const information = await this.getItemInformationAsync(client, type, tmdbId);
+          return [key, information] as const;
+        }),
+      );
 
-        return {
-          id: request.id,
-          name: information.name,
-          status: this.mapRequestStatus(request.status),
-          availability: this.mapAvailability(request.media.status, inProgress),
-          backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
-          posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
-          href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
-          type: request.type,
-          createdAt: request.createdAt,
-          airDate: new Date(information.airDate),
-          requestedBy: request.requestedBy
-            ? ({
-                ...request.requestedBy,
-                displayName: request.requestedBy.displayName,
-                link: this.externalUrl(`/users/${request.requestedBy.id}`).toString(),
-                avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
-              } satisfies Omit<RequestUser, "requestCount">)
-            : undefined,
-        };
-      }),
-    );
+      for (const [key, information] of batchResults) {
+        informationByKey.set(key, information);
+      }
+    }
+
+    return requests.map((request): MediaRequest => {
+      const information = informationByKey.get(`${request.type}:${request.media.tmdbId}`)!;
+
+      const inProgress = (request.media.downloadStatus ?? []).length >= 1;
+
+      return {
+        id: request.id,
+        name: information.name,
+        status: this.mapRequestStatus(request.status),
+        availability: this.mapAvailability(request.media.status, inProgress),
+        backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
+        posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
+        href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
+        type: request.type,
+        createdAt: request.createdAt,
+        airDate: new Date(information.airDate),
+        requestedBy: request.requestedBy
+          ? ({
+              ...request.requestedBy,
+              displayName: request.requestedBy.displayName,
+              link: this.externalUrl(`/users/${request.requestedBy.id}`).toString(),
+              avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
+            } satisfies Omit<RequestUser, "requestCount">)
+          : undefined,
+      };
+    });
   }
 
   protected mapRequestStatus(status: UpstreamMediaRequestStatus): MediaRequestStatus {
@@ -222,20 +269,14 @@ export class OverseerrIntegration
   }
 
   public async getStatsAsync(): Promise<RequestStats> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request/count"), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
-    });
+    const client = await this.createFetchClientAsync();
+    const response = await client.fetchAsync(this.url("/api/v1/request/count"));
     return await getStatsSchema.parseAsync(await response.json());
   }
 
   public async getUsersAsync(): Promise<RequestUser[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/user", { take: 10, sort: "requests" }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
-    });
+    const client = await this.createFetchClientAsync();
+    const response = await client.fetchAsync(this.url("/api/v1/user", { take: 10, sort: "requests" }));
     const users = (await getUsersSchema.parseAsync(await response.json())).results;
     return users.map((user): RequestUser => {
       return {
@@ -248,11 +289,9 @@ export class OverseerrIntegration
 
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info("Approving media request", { requestId, integration: this.integration.name });
-    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
+    const client = await this.createFetchClientAsync();
+    await client.fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
     }).then((response) => {
       if (!response.ok) {
         logger.error(
@@ -271,12 +310,9 @@ export class OverseerrIntegration
 
   public async declineRequestAsync(requestId: number): Promise<void> {
     logger.info("Declining media request", { requestId, integration: this.integration.name });
-
-    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
+    const client = await this.createFetchClientAsync();
+    await client.fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
     }).then((response) => {
       if (!response.ok) {
         logger.error(
@@ -293,30 +329,14 @@ export class OverseerrIntegration
     });
   }
 
-  private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/${type}/${id}`), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
-    });
-
-    if (type === "tv") {
-      const series = (await response.json()) as TvInformation;
-      return {
-        name: series.name,
-        backdropPath: series.backdropPath ?? series.posterPath,
-        posterPath: series.posterPath ?? series.backdropPath,
-        airDate: series.firstAirDate,
-      } satisfies MediaInformation;
-    }
-
-    const movie = (await response.json()) as MovieInformation;
-    return {
-      name: movie.title,
-      backdropPath: movie.backdropPath ?? movie.posterPath,
-      posterPath: movie.posterPath ?? movie.backdropPath,
-      airDate: movie.releaseDate,
-    } satisfies MediaInformation;
+  private async getItemInformationAsync(
+    client: OverseerrFetchClient,
+    type: MediaRequest["type"],
+    id: number,
+  ): Promise<MediaInformation> {
+    const response = await client.fetchAsync(this.url(`/api/v1/${type}/${id}`));
+    const rawData = (await response.json()) as TvInformation | MovieInformation;
+    return mediaInformationFromResponse[type](rawData as never);
   }
 
   private constructAvatarUrl(avatar: string) {
@@ -350,6 +370,21 @@ interface MovieInformation {
   posterPath?: string;
   releaseDate: string;
 }
+
+const mediaInformationFromResponse = {
+  tv: (series: TvInformation): MediaInformation => ({
+    name: series.name,
+    backdropPath: series.backdropPath ?? series.posterPath,
+    posterPath: series.posterPath ?? series.backdropPath,
+    airDate: series.firstAirDate,
+  }),
+  movie: (movie: MovieInformation): MediaInformation => ({
+    name: movie.title,
+    backdropPath: movie.backdropPath ?? movie.posterPath,
+    posterPath: movie.posterPath ?? movie.backdropPath,
+    airDate: movie.releaseDate,
+  }),
+} satisfies Record<MediaRequest["type"], (data: TvInformation | MovieInformation) => MediaInformation>;
 
 const mediaInfoRequestsSchema = z.object({
   requests: z.array(z.object({
