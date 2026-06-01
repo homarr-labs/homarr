@@ -115,9 +115,7 @@ export class OverseerrIntegration
     const response = await client.fetchAsync(url);
     const data = await mediaInformationSchema.parseAsync(await response.json());
     const requestedSeasons = [
-      ...new Set(
-        data.mediaInfo?.requests?.flatMap((req) => req.seasons.map((s) => s.seasonNumber)) ?? [],
-      ),
+      ...new Set(data.mediaInfo?.requests?.flatMap((req) => req.seasons.map((s) => s.seasonNumber)) ?? []),
     ];
     const { mediaInfo: _strip, ...rest } = data;
     return { ...rest, requestedSeasons };
@@ -290,43 +288,47 @@ export class OverseerrIntegration
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info("Approving media request", { requestId, integration: this.integration.name });
     const client = await this.createFetchClientAsync();
-    await client.fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/approve`), {
-      method: "POST",
-    }).then((response) => {
-      if (!response.ok) {
-        logger.error(
-          new ErrorWithMetadata("Failed to approve media request", {
-            requestId,
-            integration: this.integration.name,
-            reason: `${response.status} ${response.statusText}`,
-            url: response.url,
-          }),
-        );
-      }
+    await client
+      .fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/approve`), {
+        method: "POST",
+      })
+      .then((response) => {
+        if (!response.ok) {
+          logger.error(
+            new ErrorWithMetadata("Failed to approve media request", {
+              requestId,
+              integration: this.integration.name,
+              reason: `${response.status} ${response.statusText}`,
+              url: response.url,
+            }),
+          );
+        }
 
-      logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
-    });
+        logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
+      });
   }
 
   public async declineRequestAsync(requestId: number): Promise<void> {
     logger.info("Declining media request", { requestId, integration: this.integration.name });
     const client = await this.createFetchClientAsync();
-    await client.fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/decline`), {
-      method: "POST",
-    }).then((response) => {
-      if (!response.ok) {
-        logger.error(
-          new ErrorWithMetadata("Failed to decline media request", {
-            requestId,
-            integration: this.integration.name,
-            reason: `${response.status} ${response.statusText}`,
-            url: response.url,
-          }),
-        );
-      }
+    await client
+      .fetchUncheckedAsync(this.url(`/api/v1/request/${requestId}/decline`), {
+        method: "POST",
+      })
+      .then((response) => {
+        if (!response.ok) {
+          logger.error(
+            new ErrorWithMetadata("Failed to decline media request", {
+              requestId,
+              integration: this.integration.name,
+              reason: `${response.status} ${response.statusText}`,
+              url: response.url,
+            }),
+          );
+        }
 
-      logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
-    });
+        logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
+      });
   }
 
   private async getItemInformationAsync(
@@ -386,13 +388,21 @@ const mediaInformationFromResponse = {
   }),
 } satisfies Record<MediaRequest["type"], (data: TvInformation | MovieInformation) => MediaInformation>;
 
-const mediaInfoRequestsSchema = z.object({
-  requests: z.array(z.object({
-    seasons: z.array(z.object({
-      seasonNumber: z.number(),
-    })),
-  })).optional(),
-}).optional();
+const mediaInfoRequestsSchema = z
+  .object({
+    requests: z
+      .array(
+        z.object({
+          seasons: z.array(
+            z.object({
+              seasonNumber: z.number(),
+            }),
+          ),
+        }),
+      )
+      .optional(),
+  })
+  .optional();
 
 const mediaInformationSchema = z.union([
   z.object({
@@ -418,9 +428,11 @@ const mediaInformationSchema = z.union([
   }),
 ]);
 
-const searchMediaInfoSchema = z.object({
-  status: z.number(),
-}).optional();
+const searchMediaInfoSchema = z
+  .object({
+    status: z.number(),
+  })
+  .optional();
 
 const searchSchema = z.object({
   results: z

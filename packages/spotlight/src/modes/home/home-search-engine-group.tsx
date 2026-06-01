@@ -78,12 +78,8 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
 
     return {
       isLoading:
-        defaultSearchEngineQuery.isLoading ||
-        (resultQuery.isLoading && fromIntegrationEnabled) ||
-        status === "loading",
-      isError:
-        defaultSearchEngineQuery.isError ||
-        (resultQuery.isError && fromIntegrationEnabled),
+        defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
+      isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
       data: createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
     };
   },

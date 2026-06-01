@@ -82,7 +82,7 @@ export const integrationRouter = createTRPCRouter({
           },
         };
       })
-      .sort(
+      .toSorted(
         (integrationA, integrationB) =>
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
@@ -130,7 +130,7 @@ export const integrationRouter = createTRPCRouter({
           },
         };
       })
-      .sort(
+      .toSorted(
         (integrationA, integrationB) =>
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
@@ -181,7 +181,7 @@ export const integrationRouter = createTRPCRouter({
             },
           };
         })
-        .sort(
+        .toSorted(
           (integrationA, integrationB) =>
             integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
         );
@@ -484,7 +484,7 @@ export const integrationRouter = createTRPCRouter({
     });
 
     return {
-      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
         return permissionA.group.name.localeCompare(permissionB.group.name);
       }),
       users: userPermissions
@@ -492,7 +492,7 @@ export const integrationRouter = createTRPCRouter({
           user,
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
         }),
       groups: dbGroupIntegrationPermission
@@ -503,7 +503,7 @@ export const integrationRouter = createTRPCRouter({
           },
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
     };
