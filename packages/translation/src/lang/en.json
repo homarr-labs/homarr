@@ -4567,6 +4567,13 @@
               "scoped": "This widget does not have an accessible media request integration."
             }
           }
+        },
+        "availability": {
+          "available": "Available",
+          "partiallyAvailable": "Partial",
+          "processing": "Processing",
+          "requested": "Requested",
+          "pending": "Requested"
         }
       },
       "external": {

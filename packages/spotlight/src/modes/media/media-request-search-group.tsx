@@ -15,13 +15,8 @@ import { createGroup } from "../../lib/group";
 import { mediaRequestSearchScopeAtom } from "../../spotlight-store";
 import { useMediaRequestSearchInteraction } from "../external/search-engines-search-group";
 
-const availabilityLabels: Partial<Record<MediaAvailability, string>> = {
-  available: "Available",
-  partiallyAvailable: "Partial",
-  processing: "Processing",
-  requested: "Requested",
-  pending: "Requested",
-};
+const availabilityLabelKeys = ["available", "partiallyAvailable", "processing", "requested", "pending"] as const;
+type AvailabilityWithLabel = (typeof availabilityLabelKeys)[number];
 
 type MediaRequestSearchResult = RouterOutputs["integration"]["searchMediaRequests"][number];
 
@@ -42,6 +37,8 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
   keyPath: "key",
   title: (t) => t("search.mode.media.group.title"),
   Component(option) {
+    const tMedia = useScopedI18n("search.mode.media");
+
     if (option.kind !== "result") {
       return (
         <Group w="100%" wrap="nowrap" align="center" px="md" py="xs" opacity={option.kind === "disabled" ? 0.55 : 1}>
@@ -57,7 +54,12 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
     }
 
     const { result } = option;
-    const badgeLabel = result.availability ? availabilityLabels[result.availability as MediaAvailability] : undefined;
+    const hasAvailabilityLabel =
+      result.availability &&
+      (availabilityLabelKeys as readonly string[]).includes(result.availability);
+    const badgeLabel = hasAvailabilityLabel
+      ? tMedia(`availability.${result.availability as AvailabilityWithLabel}`)
+      : undefined;
     const badgeColor = result.availability
       ? mediaAvailabilityConfiguration[result.availability as MediaAvailability]?.color
       : undefined;

@@ -12,14 +12,14 @@ interface SeriesInformation {
   overview: string;
   seasons: SerieSeason[];
   posterPath: string;
-  requestedSeasons: number[];
+  requestedSeasons?: number[];
 }
 
 interface MovieInformation {
   id: number;
   overview: string;
   posterPath: string;
-  requestedSeasons: number[];
+  requestedSeasons?: number[];
 }
 
 export type MediaInformation = SeriesInformation | MovieInformation;
