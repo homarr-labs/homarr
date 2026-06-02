@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Group, Menu, ScrollArea } from "@mantine/core";
+import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
+import { Box, Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
@@ -53,9 +54,11 @@ export const BoardContentHeaderActions = () => {
 
       <EditModeMenu />
 
-      <HeaderButton href={`/boards/${board.name}/settings`}>
-        <IconSettings stroke={1.5} />
-      </HeaderButton>
+      <OnboardingTour.Target id="board-settings">
+        <HeaderButton href={`/boards/${board.name}/settings`}>
+          <IconSettings stroke={1.5} />
+        </HeaderButton>
+      </OnboardingTour.Target>
 
       <SelectBoardsMenu />
     </>
@@ -173,9 +176,11 @@ const EditModeMenu = () => {
   usePreventLeaveWithDirty(isEditMode);
 
   return (
-    <HeaderButton onClick={toggle} loading={isPending}>
-      {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
-    </HeaderButton>
+    <OnboardingTour.Target id="board-edit-mode">
+      <HeaderButton onClick={toggle} loading={isPending}>
+        {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
+      </HeaderButton>
+    </OnboardingTour.Target>
   );
 };
 
@@ -183,27 +188,31 @@ const SelectBoardsMenu = () => {
   const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
 
   return (
-    <Menu position="bottom-end">
-      <Menu.Target>
-        <HeaderButton w="auto" px={4}>
-          <IconReplace stroke={1.5} />
-        </HeaderButton>
-      </Menu.Target>
-      <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
-        <ScrollArea.Autosize mah={300}>
-          {boards.map((board) => (
-            <Menu.Item
-              key={board.id}
-              component={Link}
-              href={`/boards/${board.name}`}
-              leftSection={<IconLayoutBoard size={20} />}
-            >
-              {board.name}
-            </Menu.Item>
-          ))}
-        </ScrollArea.Autosize>
-      </Menu.Dropdown>
-    </Menu>
+    <OnboardingTour.Target id="board-switcher">
+      <Box>
+        <Menu position="bottom-end">
+          <Menu.Target>
+            <HeaderButton w="auto" px={4}>
+              <IconReplace stroke={1.5} />
+            </HeaderButton>
+          </Menu.Target>
+          <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
+            <ScrollArea.Autosize mah={300}>
+              {boards.map((board) => (
+                <Menu.Item
+                  key={board.id}
+                  component={Link}
+                  href={`/boards/${board.name}`}
+                  leftSection={<IconLayoutBoard size={20} />}
+                >
+                  {board.name}
+                </Menu.Item>
+              ))}
+            </ScrollArea.Autosize>
+          </Menu.Dropdown>
+        </Menu>
+      </Box>
+    </OnboardingTour.Target>
   );
 };
 
@@ -244,7 +253,7 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return; // Allow to reload in development
+      if (env.NODE_ENV === "development") return;
 
       event.preventDefault();
       event.returnValue = true;

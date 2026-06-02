@@ -34,6 +34,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
@@ -67,18 +68,22 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       title={t("page.list.title")}
       primaryAction={
         canCreateIntegrations ? (
-          <ManageMobilePrimaryAction>
-            <IntegrationSelectMenu>
-              <MenuTarget>
-                <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-              </MenuTarget>
-            </IntegrationSelectMenu>
-          </ManageMobilePrimaryAction>
+          <TourTarget id="manage-integrations-create">
+            <ManageMobilePrimaryAction>
+              <IntegrationSelectMenu>
+                <MenuTarget>
+                  <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                </MenuTarget>
+              </IntegrationSelectMenu>
+            </ManageMobilePrimaryAction>
+          </TourTarget>
         ) : undefined
       }
       floatingPrimaryAction={canCreateIntegrations}
     >
-      <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      <TourTarget id="manage-integrations-list">
+        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      </TourTarget>
     </ManagePageLayout>
   );
 }

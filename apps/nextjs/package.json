@@ -18,6 +18,7 @@
     "@dnd-kit/modifiers": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@dnd-kit/utilities": "catalog:",
+    "@gfazioli/mantine-onboarding-tour": "catalog:",
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
