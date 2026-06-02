@@ -1378,6 +1378,13 @@
     },
     "edit": {
       "title": "Edit item",
+      "tab": {
+        "widget": "Edit widget",
+        "app": "Edit app"
+      },
+      "app": {
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"
