@@ -370,8 +370,8 @@ catalogs:
       specifier: 5.11.0
       version: 5.11.0
     isomorphic-dompurify:
-      specifier: ^3.14.0
-      version: 3.14.0
+      specifier: ^3.15.0
+      version: 3.15.0
     jotai:
       specifier: ^2.20.0
       version: 2.20.0
@@ -813,7 +813,7 @@ importers:
         version: 13.0.6
       isomorphic-dompurify:
         specifier: 'catalog:'
-        version: 3.14.0(@noble/hashes@2.0.1)
+        version: 3.15.0(@noble/hashes@2.0.1)
       jotai:
         specifier: 'catalog:'
         version: 2.20.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.15)(react@19.2.6)
@@ -6327,6 +6327,9 @@ packages:
   dompurify@3.4.5:
     resolution: {integrity: sha512-OrwIBKsdNSVEeubdJ1HBv/wNENRM9ytAVCv7YXt//A3vPdVMNuACRqK9mXCGCBW2ln7BT/A4X0jXHo2Gu89miA==}
 
+  dompurify@3.4.7:
+    resolution: {integrity: sha512-2jBxDJY4RR06tQNy4w5FlFH7kfxsQZlufd0sbv+chfHCxeJwrFw2baUDsSwvBISD4K4RDbd0PTfy3uNXsR6siA==}
+
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
@@ -7186,8 +7189,8 @@ packages:
     resolution: {integrity: sha512-6B3tLtFqtQS4ekarvLVMZ+X+VlvQekbe4taUkf/rhVO3d/h0M2rfARm/pXLcPEsjjMsFgrFgSrhQIxcSVrBz8w==}
     engines: {node: '>=18'}
 
-  isomorphic-dompurify@3.14.0:
-    resolution: {integrity: sha512-64W8/lsfqgaDWfEkvrIVk8FdIk29Mya0Fp39excQEdlcLUPg1Cn7CtCYe6CtPbFW90JpEKTXG0QQtIUNENJ7sw==}
+  isomorphic-dompurify@3.15.0:
+    resolution: {integrity: sha512-9ZtkbQ8+SgNf6LuDAdu9bq23dVXMIGNM8ZYnyl2MufyZiSD5dqAUJcyjtYZz7B80HuPpEn/f0NCS6zKvavHtfA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
 
   isomorphic-ws@5.0.0:
@@ -13683,6 +13686,10 @@ snapshots:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
+  dompurify@3.4.7:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+
   dot-prop@5.3.0:
     dependencies:
       is-obj: 2.0.0
@@ -14532,9 +14539,9 @@ snapshots:
   isexe@3.1.5:
     optional: true
 
-  isomorphic-dompurify@3.14.0(@noble/hashes@2.0.1):
+  isomorphic-dompurify@3.15.0(@noble/hashes@2.0.1):
     dependencies:
-      dompurify: 3.4.5
+      dompurify: 3.4.7
       jsdom: 29.1.1(@noble/hashes@2.0.1)
     transitivePeerDependencies:
       - '@noble/hashes'
