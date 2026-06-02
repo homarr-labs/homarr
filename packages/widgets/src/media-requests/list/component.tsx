@@ -10,6 +10,7 @@ import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 
@@ -19,12 +20,12 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -43,7 +44,7 @@ export default function MediaServerWidget({
           const newData = filteredData.concat(
             data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
           );
-          return newData.sort((dataA, dataB) => {
+          return newData.toSorted((dataA, dataB) => {
             if (dataA.status === dataB.status) {
               return dataB.createdAt.getTime() - dataA.createdAt.getTime();
             }
@@ -58,6 +59,7 @@ export default function MediaServerWidget({
     },
   );
 
+  if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (

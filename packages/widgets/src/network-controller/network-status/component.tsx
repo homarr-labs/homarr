@@ -21,12 +21,12 @@ export default function NetworkControllerNetworkStatusWidget({
   options,
   integrationIds,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
+  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

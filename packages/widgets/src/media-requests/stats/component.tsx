@@ -19,6 +19,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import type { RequestStats } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -32,12 +33,12 @@ export default function MediaServerWidget({
   width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
+  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -45,6 +46,7 @@ export default function MediaServerWidget({
 
   const board = useRequiredBoard();
 
+  if (!requestStats) return <WidgetEmptyState />;
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
   const data = [

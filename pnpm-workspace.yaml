@@ -43,6 +43,7 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
+  "@tanstack/query-persist-client-core": ^5.100.14
   "@tanstack/react-query": ^5.100.14
   "@tanstack/react-query-devtools": ^5.100.14
   "@tanstack/react-query-next-experimental": ^5.100.14

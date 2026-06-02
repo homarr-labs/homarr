@@ -19,8 +19,11 @@ import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { queryCacheDefaultStaleTimeMs } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
+
+import { createWidgetQueryPersister } from "./query-cache-persister";
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side
@@ -49,12 +52,14 @@ const wsClient = createWSClient({
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {
+  const [queryPersister] = useState(() => createWidgetQueryPersister());
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 5 * 1000,
+            persister: queryPersister.persisterFn,
+            staleTime: queryCacheDefaultStaleTimeMs,
           },
         },
       }),
