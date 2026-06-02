@@ -1,0 +1,76 @@
+packages/integrations/src/immich/immich-integration.ts
+  s_54dee08a496bcb::t_d48746b7642b38 50-51
+  s_54dee08a496bcb::t_e87b52de24b291 1
+  s_54dee08a496bcb::t_100d3ca44f600f 117,119,121,123-127,131,138-142
+  s_54dee08a496bcb::t_d304d7391a7ace 36-49
+  s_54dee08a496bcb::t_a45c065021f022 120
+  s_54dee08a496bcb::t_07c0c5b3238a4f 133-136
+packages/translation/src/lang/en.json
+  s_54dee08a496bcb::t_aec771bb540742 2358-2371,2373
+  s_54dee08a496bcb::t_62ce9f98c6d721 2372
+packages/widgets/package.json
+  s_54dee08a496bcb::t_0545a091ed8832 72-74
+  s_54dee08a496bcb::t_b9ccd16ce84037 50
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_016bc910b0d230::t_e0ac100448578a 20,26
+packages/widgets/src/index.tsx
+  s_54dee08a496bcb::t_b06f98b46811b9 94
+  s_54dee08a496bcb::t_9c109c271fc745 25
+packages/widgets/src/immich/memories/component.tsx
+  s_54dee08a496bcb::t_3d3b6590849bb8 21-22
+  s_54dee08a496bcb::t_09f93bd6be52f8 13-14
+  s_54dee08a496bcb::t_2424da46bd6571 3,38-42,46-50
+  s_54dee08a496bcb::t_e6739c6a0e82fb 19,23,27,64
+  s_54dee08a496bcb::t_aec1204fe4672e 1-2,5-6,8-12,15-18,20,24-26,28-34,36-37,77-106
+  s_54dee08a496bcb::t_61a732b9fbd8b0 45
+  s_54dee08a496bcb::t_860dcfb8e2b8cc 4,7,51-63,65-72
+  s_54dee08a496bcb::t_6df9f56f960e10 35
+packages/widgets/src/immich/memories/index.ts
+  s_54dee08a496bcb::t_0c4beafa92d957 14
+  s_54dee08a496bcb::t_92f900aca54ed5 1,3-13,15-24
+  s_54dee08a496bcb::t_1b98e081d466ac 2
+pnpm-workspace.yaml
+  s_54dee08a496bcb::t_4badca6793976e 23
+  s_54dee08a496bcb::t_19d471495f9445 118-120
+packages/definitions/src/widget.ts
+  s_54dee08a496bcb::t_a5f1385982ba42 38
+packages/request-handler/src/immich.ts
+  s_54dee08a496bcb::t_78db6ef56dfae0 51-56,58,60-63
+packages/widgets/src/immich/album-carousel/index.ts
+  s_016bc910b0d230::t_4aa6cc2a487ae3 4-5,15-25
+packages/api/src/router/widgets/immich.ts
+  s_54dee08a496bcb::t_8c16191fc029cd 47
+  s_54dee08a496bcb::t_ba4c2a716a0c91 44-46,48
+  s_54dee08a496bcb::t_ce66ca946bd36e 7
+  s_54dee08a496bcb::t_2e23db3909dfea 43
+packages/widgets/src/immich/memories/component.module.css
+  s_54dee08a496bcb::t_ef3181a153663b 2-12,14-22,26-29,70
+  s_54dee08a496bcb::t_01fb3d8b692365 37-38,43-65
+  s_54dee08a496bcb::t_33a915fdd52b35 30
+  s_54dee08a496bcb::t_e537e7d3f99536 33-36,39-42
+  s_54dee08a496bcb::t_efcca9dd27b658 23-24,66-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fbfade4a96298d9423b2cacd0fe554407c8d3630",
+  "prompts": {},
+  "sessions": {
+    "s_016bc910b0d230": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "665cb42d-59a7-4a1a-a065-59e108bb0861",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_54dee08a496bcb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "11b4231d-16f8-4b47-bb2b-91b693566c81",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
