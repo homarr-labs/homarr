@@ -1,0 +1,137 @@
+.mise.toml
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-3
+packages/widgets/src/coolify/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 34-37
+packages/redis/src/index.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 16-17
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 26-28
+packages/widgets/src/media-server/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 26,32
+packages/widgets/src/anchor-note/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 17,148,154,163-164,168,174,176-178,182,185,188,199,206,209,216,219,266-268
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 24,29
+packages/widgets/src/media-releases/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 21-26
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 3,9,11,21,82-83,87-89,122-155
+packages/widgets/src/rssFeed/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 15-16,29
+packages/widgets/src/umami/umami-content.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 43-51,54-56,65-66
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 54,59
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 11,23-26,93
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 23,28
+packages/widgets/src/app/ping/ping-indicator.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1,4,13-16,19,24,29
+packages/widgets/src/media-requests/stats/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 22,36,41,49
+packages/widgets/src/media-requests/list/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 13,23,28,47,62
+packages/widgets/src/weather/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 13,22-23,33
+packages/api/package.json
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 12
+packages/widgets/src/notifications/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 15,21
+packages/widgets/src/firewall/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 187,192,228,233,269,274,309,314
+packages/widgets/src/prefetch.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 12,23
+packages/widgets/src/downloads/index.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 31
+packages/redis/src/lib/channel.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 128-170
+apps/nextjs/src/app/[locale]/_client-providers/query-cache-persister.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-49
+packages/widgets/src/stocks/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 10,28-33
+packages/widgets/src/app/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 6,16,26,37-38,58-59,134
+apps/nextjs/package.json
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 59
+packages/api/src/router/query-cache.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-54
+packages/widgets/src/system-resources/chart/common-chart.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 5,88-94
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 22,26-27,55,61-62
+packages/api/src/query-cache.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-34
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 11,21-28,33
+packages/widgets/src/system-disks/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 10,36-38,53-56
+packages/widgets/src/health-monitoring/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 21
+packages/api/src/test/query-cache.spec.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-224
+packages/widgets/src/calendar/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 42-43,64,155
+packages/widgets/src/umami/umami-events-content.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 31-39,54
+packages/widgets/src/common/empty-state.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-15
+packages/widgets/src/bookmarks/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 17,19
+packages/widgets/src/umami/umami-top-list.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 18-26,32-40
+pnpm-workspace.yaml
+  ai_agent 46
+packages/boards/src/context.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 9,32-33,48-57,89
+packages/widgets/src/downloads/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 90,96
+packages/widgets/src/media-transcoding/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 12,41-42,56-59
+packages/widgets/src/docker/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 207-211
+packages/widgets/src/immich/server-stats/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 11,20-27
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 8,38,43,60
+packages/api/src/root.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 27
+packages/widgets/src/downloads/prefetch.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 1-29
+packages/widgets/src/system-resources/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 21-28
+packages/widgets/src/timetable/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 29-38,44
+packages/widgets/src/tracearr/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 38-41
+packages/widgets/src/indexer-manager/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 21,24
+packages/widgets/src/minecraft/server-status/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 10,14-16,28-29
+packages/widgets/src/releases/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 84,97-101,129
+packages/api/src/shared.ts
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 3-4,63
+pnpm-lock.yaml
+  ai_agent 126-128,766-768,4894-4896,12187-12189
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 40,55,60,90-91,338
+packages/widgets/src/network-controller/summary/component.tsx
+  s_fefa5a268e61e0::t_1e0ca1c9beeb31 23,28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "82c4622b2888e0fd144b0665f50166a50deb1cf1",
+  "prompts": {},
+  "sessions": {
+    "s_fefa5a268e61e0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bc5eeae-b92b-4486-a152-4ba2a153ec50",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
