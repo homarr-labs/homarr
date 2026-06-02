@@ -6,6 +6,7 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { createMetaTitle } from "~/metadata";
@@ -38,14 +39,18 @@ export default async function UsersPage() {
       title={t("list.title")}
       primaryAction={
         credentialsProviderEnabled ? (
-          <MobileAffixButton component={Link} href="/manage/users/create">
-            {t("create.title")}
-          </MobileAffixButton>
+          <TourTarget id="manage-users-create">
+            <MobileAffixButton component={Link} href="/manage/users/create">
+              {t("create.title")}
+            </MobileAffixButton>
+          </TourTarget>
         ) : undefined
       }
       floatingPrimaryAction={credentialsProviderEnabled}
     >
-      <UserListComponent initialUserList={userList} />
+      <TourTarget id="manage-users-list">
+        <UserListComponent initialUserList={userList} />
+      </TourTarget>
     </ManagePageLayout>
   );
 }
