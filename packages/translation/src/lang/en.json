@@ -4646,6 +4646,113 @@
                 "label": "Create a new group"
               }
             }
+          },
+          "preferences": {
+            "title": "Preferences",
+            "children": {
+              "detail": {
+                "title": "Select a preference to change",
+                "backHint": "Press Backspace or use the back button to go back",
+                "backAction": "Go back"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "Unable to update preference"
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": "Open preferences"
+              },
+              "boolean": {
+                "enabled": "Enabled",
+                "disabled": "Disabled"
+              },
+              "board": {
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
+              },
+              "searchEngine": {
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
+              },
+              "colorScheme": {
+                "label": "Color scheme",
+                "children": {
+                  "detail": {
+                    "title": "Select your color scheme"
+                  }
+                }
+              },
+              "locale": {
+                "label": "Language",
+                "children": {
+                  "detail": {
+                    "title": "Select your preferred language"
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "Default search engine",
+                "children": {
+                  "detail": {
+                    "title": "Select your default search engine"
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "Open search results in new tab",
+                "children": {
+                  "detail": {
+                    "title": "Open search results in new tab"
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "Enable DuckDuckGo bangs",
+                "children": {
+                  "detail": {
+                    "title": "Enable DuckDuckGo bangs"
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "First day of the week",
+                "children": {
+                  "detail": {
+                    "title": "Select the first day of the week"
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "Home board",
+                "children": {
+                  "detail": {
+                    "title": "Select your home board"
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "Mobile home board",
+                "children": {
+                  "detail": {
+                    "title": "Select your mobile home board"
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "Use icons for pings",
+                "children": {
+                  "detail": {
+                    "title": "Use icons for pings"
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": "Open full preferences page"
+              }
+            }
           }
         }
       },
