@@ -205,7 +205,7 @@ catalogs:
       specifier: ^11.17.0
       version: 11.17.0
     '@turbo/gen':
-      specifier: ^2.9.15
+      specifier: ^2.9.16
       version: 2.9.16
     '@types/adm-zip':
       specifier: 0.5.8
@@ -484,7 +484,7 @@ catalogs:
       specifier: 4.20.4
       version: 4.20.4
     turbo:
-      specifier: ^2.9.15
+      specifier: ^2.9.16
       version: 2.9.16
     typescript:
       specifier: ^5.9.3
