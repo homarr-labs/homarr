@@ -1,0 +1,30 @@
+packages/widgets/src/bookmarks/index.tsx
+  s_bb0ff53ccc520c::t_efbf232954e8ac 27
+packages/widgets/src/bookmarks/component.tsx
+  s_bb0ff53ccc520c::t_6bbb3e52b81301 86
+  s_bb0ff53ccc520c::t_0e4641057aea51 120
+  s_bb0ff53ccc520c::t_aad4f5e1c82f31 71
+  s_bb0ff53ccc520c::t_14b135b1dc1ef1 153
+  s_bb0ff53ccc520c::t_6c4fbb5ca3f11b 97
+  s_bb0ff53ccc520c::t_6b4b2ee64047dd 164
+  s_bb0ff53ccc520c::t_7d4fe5259404da 59
+  s_bb0ff53ccc520c::t_25dd6eb1198129 185
+packages/translation/src/lang/en.json
+  s_bb0ff53ccc520c::t_0a02d386bf913b 1408-1410
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "46ccc6c245923cf9dd319d9bbb64e428af05131a",
+  "prompts": {},
+  "sessions": {
+    "s_bb0ff53ccc520c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "db018d40-feff-4d9c-8cfc-d5f1955940e9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
