@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Κωδικός",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "Περιλαμβάνει πεζό γράμμα",
           "uppercase": "Περιλαμβάνει κεφαλαίο γράμμα",

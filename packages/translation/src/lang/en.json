@@ -132,8 +132,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
