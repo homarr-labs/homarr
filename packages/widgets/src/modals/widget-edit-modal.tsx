@@ -9,7 +9,7 @@ import { z } from "zod/v4";
 import { objectEntries } from "@homarr/common";
 import { useSession } from "@homarr/auth/client";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
