@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
@@ -123,31 +123,29 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               />
             );
           })}
-          <Group justify="space-between">
-            <Button
-              variant="subtle"
-              onClick={() =>
-                openModal({
-                  advancedOptions,
-                  onSuccess(options) {
-                    setAdvancedOptions(options);
-                    innerProps.onSuccessfulEdit({
-                      ...innerProps.value,
-                      advancedOptions: options,
-                    });
-                  },
-                })
-              }
-            >
-              {t("item.edit.advancedOptions.label")}
-            </Button>
-            <Group justify="end" w={{ base: "100%", xs: "auto" }}>
-              <Button onClick={actions.closeModal} variant="subtle" color="gray">
-                {t("common.action.cancel")}
+          <ModalFormFooter
+            onCancel={actions.closeModal}
+            leftSection={
+              <Button
+                variant="subtle"
+                type="button"
+                onClick={() =>
+                  openModal({
+                    advancedOptions,
+                    onSuccess(options) {
+                      setAdvancedOptions(options);
+                      innerProps.onSuccessfulEdit({
+                        ...innerProps.value,
+                        advancedOptions: options,
+                      });
+                    },
+                  })
+                }
+              >
+                {t("item.edit.advancedOptions.label")}
               </Button>
-              <Button type="submit">{t("common.action.saveChanges")}</Button>
-            </Group>
-          </Group>
+            }
+          />
         </Stack>
       </FormProvider>
     </form>
@@ -157,5 +155,5 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: "lg",
+  size: modalSizeForm,
 });

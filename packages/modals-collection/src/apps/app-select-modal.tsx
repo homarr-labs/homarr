@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { Button, Card, Center, Stack, Text } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
 
 import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
@@ -29,96 +30,80 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   );
 
   const handleSelect = (app: RouterOutputs["app"]["selectable"][number]) => {
-    if (innerProps.onSelect) {
-      innerProps.onSelect(app);
-    }
+    innerProps.onSelect?.(app);
     actions.closeModal();
   };
 
   const handleAddNewApp = () => {
     openQuickAddAppModal({
       onClose(app) {
-        if (innerProps.onSelect) {
-          innerProps.onSelect(app);
-        }
+        innerProps.onSelect?.(app);
         actions.closeModal();
       },
     });
   };
 
   return (
-    <Stack>
-      <Input
-        value={search}
-        onChange={(event) => setSearch(event.currentTarget.value)}
-        leftSection={<IconSearch />}
-        placeholder={`${t("app.action.select.search")}...`}
-        data-autofocus
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
-            handleSelect(filteredApps[0]);
-          }
-        }}
-      />
+    <SelectGridLayout
+      search={search}
+      onSearchChange={setSearch}
+      placeholder={`${t("app.action.select.search")}...`}
+      onSearchKeyDown={(event) => {
+        if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
+          handleSelect(filteredApps[0]);
+        }
+      }}
+    >
+      {innerProps.withCreate && (
+        <Card h={selectGridCardHeight} withBorder>
+          <Stack justify="space-between" h="100%" gap="xs">
+            <Stack gap="xs">
+              <Center>
+                <IconPlus size={24} />
+              </Center>
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+                {t("app.action.create.title")}
+              </Text>
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
+                {t("app.action.create.description")}
+              </Text>
+            </Stack>
+            <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" fullWidth>
+              {t("app.action.create.action")}
+            </Button>
+          </Stack>
+        </Card>
+      )}
 
-      <Grid>
-        {innerProps.withCreate && (
-          <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
-            <Card h="100%">
-              <Stack justify="space-between" h="100%">
-                <Stack gap="xs">
-                  <Center>
-                    <IconPlus size={24} />
-                  </Center>
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-                    {t("app.action.create.title")}
-                  </Text>
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-                    {t("app.action.create.description")}
-                  </Text>
-                </Stack>
-                <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" fullWidth>
-                  {t("app.action.create.action")}
-                </Button>
-              </Stack>
-            </Card>
-          </Grid.Col>
-        )}
+      {filteredApps.map((app) => (
+        <Card key={app.id} h={selectGridCardHeight} withBorder>
+          <Stack justify="space-between" h="100%" gap="xs">
+            <Stack gap="xs">
+              <Center>
+                <img src={app.iconUrl} alt={app.name} width={24} height={24} />
+              </Center>
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+                {app.name}
+              </Text>
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
+                {app.description ?? ""}
+              </Text>
+            </Stack>
+            <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" fullWidth>
+              {t("app.action.select.action", { app: app.name })}
+            </Button>
+          </Stack>
+        </Card>
+      ))}
 
-        {filteredApps.map((app) => (
-          <Grid.Col key={app.id} span={{ xs: 12, sm: 4, md: 3 }}>
-            <Card h="100%">
-              <Stack justify="space-between" h="100%">
-                <Stack gap="xs">
-                  <Center>
-                    <img src={app.iconUrl} alt={app.name} width={24} height={24} />
-                  </Center>
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-                    {app.name}
-                  </Text>
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-                    {app.description ?? ""}
-                  </Text>
-                </Stack>
-                <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" fullWidth>
-                  {t("app.action.select.action", { app: app.name })}
-                </Button>
-              </Stack>
-            </Card>
-          </Grid.Col>
-        ))}
-
-        {filteredApps.length === 0 && !isPending && (
-          <Grid.Col span={12}>
-            <Center p="xl">
-              <Text c="dimmed">{t("app.action.select.noResults")}</Text>
-            </Center>
-          </Grid.Col>
-        )}
-      </Grid>
-    </Stack>
+      {filteredApps.length === 0 && !isPending && (
+        <Center p="xl">
+          <Text c="dimmed">{t("app.action.select.noResults")}</Text>
+        </Center>
+      )}
+    </SelectGridLayout>
   );
 }).withOptions({
   defaultTitle: (t) => t("app.action.select.title"),
-  size: "xl",
+  size: modalSizeSelect,
 });

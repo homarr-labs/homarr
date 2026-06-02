@@ -12,6 +12,7 @@ import {
   IconLayoutBoard,
   IconPencil,
   IconPencilOff,
+  IconPlug,
   IconPlus,
   IconReplace,
   IconResize,
@@ -37,6 +38,7 @@ import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
+import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 
 export const BoardContentHeaderActions = () => {
@@ -70,6 +72,7 @@ const AddMenu = () => {
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
+  const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addCategoryToEnd } = useCategoryActions();
   const { addDynamicSection } = useDynamicSectionActions();
   const { createItem } = useItemActions();
@@ -111,6 +114,10 @@ const AddMenu = () => {
     });
   }, [openAppSelectModal, createItem]);
 
+  const handleAddIntegration = useCallback(() => {
+    openIntegrationSelectModal({});
+  }, [openIntegrationSelectModal]);
+
   return (
     <Menu position="bottom-end">
       <Menu.Target>
@@ -128,6 +135,10 @@ const AddMenu = () => {
 
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectApp}>
           {t("app.action.add")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconPlug size={20} />} onClick={handleAddIntegration}>
+          {t("integration.action.create")}
         </Menu.Item>
 
         <Menu.Divider />

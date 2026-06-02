@@ -90,6 +90,46 @@
         "title": "Settings",
         "subtitle": "Configure server settings."
       },
+      "integrations": {
+        "title": "Integrations",
+        "subtitle": "Select the services you use.",
+        "description": "Choose the integrations you'd like to connect. We'll set up your dashboard with matching widgets automatically.",
+        "action": {
+          "continue": "Continue",
+          "skip": "Skip for now"
+        },
+        "configure": {
+          "progress": "{current} of {total}",
+          "skip": "Skip this integration",
+          "finishing": "Setting up your dashboard...",
+          "error": {
+            "title": "Setup failed",
+            "message": "Something went wrong while setting up your dashboard. Please try again."
+          },
+          "helpers": {
+            "tooltip": "URL helpers",
+            "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "preview": "e.g. {example}",
+          "mode": {
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "appBadge": "App",
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
+        }
+      },
       "finish": {
         "title": "Finish setup",
         "subtitle": "You are ready to go!",
@@ -731,10 +771,44 @@
       },
       "appHref": {
         "placeholder": "Custom app URL"
+      },
+      "apiKeySettings": {
+        "label": "Get API key"
       }
     },
     "action": {
       "create": "New integration"
+    },
+    "grid": {
+      "widgetCount": "{count} widgets",
+      "noWidgets": "No widgets"
+    },
+    "category": {
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Calendar",
+      "mediaSearch": "Search",
+      "mediaRelease": "Releases",
+      "mediaRequest": "Requests",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Misc",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexer",
+      "healthMonitoring": "Health",
+      "search": "Search",
+      "mediaTranscoding": "Transcoding",
+      "networkController": "Network",
+      "releasesProvider": "Releases",
+      "notifications": "Notifications",
+      "firewall": "Firewall",
+      "timetable": "Timetable",
+      "photoService": "Photos",
+      "notes": "Notes",
+      "mediaMonitoring": "Monitoring",
+      "speedtest": "Speed Test",
+      "analytics": "Analytics"
     },
     "testConnection": {
       "action": {
@@ -1068,6 +1142,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "skip": "Skip",
       "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
