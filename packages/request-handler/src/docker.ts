@@ -1,5 +1,6 @@
+import type { Readable } from "node:stream";
 import dayjs from "dayjs";
-import type { ContainerInfo, ContainerStats } from "dockerode";
+import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
 import { bestMatch } from "@homarr/common";
@@ -10,6 +11,7 @@ import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
+import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
@@ -24,6 +26,84 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
 });
 
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+
+const findContainerByIdAsync = async (id: string) => {
+  const dockerInstances = DockerSingleton.getInstances();
+  const containers = await Promise.all(
+    dockerInstances.map(async ({ instance }) => {
+      const container = instance.getContainer(id);
+
+      return await new Promise<Container | null>((resolve) => {
+        container.inspect((err, data) => {
+          if (err || !data) {
+            resolve(null);
+          } else {
+            resolve(container);
+          }
+        });
+      });
+    }),
+  );
+
+  return containers.find((container) => container) ?? null;
+};
+
+export const getContainerLogsAsync = async (id: string, tail = 200) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    return null;
+  }
+
+  const rawLogs = await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: false,
+  });
+
+  return decodeDockerLogs(rawLogs);
+};
+
+export const streamContainerLogsAsync = async (
+  id: string,
+  tail: number,
+  onData: (data: string) => void,
+  onError: (err: Error) => void,
+) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    onError(new Error("Container not found"));
+    return () => undefined;
+  }
+
+  const stream = (await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: true,
+  })) as Readable;
+
+  const MAX_MESSAGE_SIZE = 1024 * 1024;
+  const processChunk = createDockerLogStreamProcessor(onData, onError, MAX_MESSAGE_SIZE);
+
+  const handleChunk = (chunk: Buffer) => {
+    const shouldContinue = processChunk(chunk);
+    if (!shouldContinue) {
+      stream.removeListener("data", handleChunk);
+      stream.removeListener("error", onError);
+      stream.destroy();
+    }
+  };
+
+  stream.on("data", handleChunk);
+  stream.on("error", onError);
+
+  return () => {
+    stream.removeListener("data", handleChunk);
+    stream.removeListener("error", onError);
+    stream.destroy();
+  };
+};
 
 async function getContainersWithStatsAsync() {
   const dockerInstances = DockerSingleton.getInstances();
@@ -117,8 +197,6 @@ export function calculateMemoryUsage(stats: ContainerStats): number {
     return 0;
   }
 
-  // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
-  // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
   return (
     stats.memory_stats.usage -
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

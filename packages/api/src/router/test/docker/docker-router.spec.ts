@@ -13,6 +13,14 @@ import { dockerRouter } from "../../docker/docker-router";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 vi.mock("@homarr/request-handler/docker", () => ({
+  getContainerLogsAsync: async () => {
+    await Promise.resolve();
+    return "logs";
+  },
+  streamContainerLogsAsync: async () => {
+    await Promise.resolve();
+    return () => undefined;
+  },
   dockerContainersRequestHandler: {
     handler: () => ({
       getCachedOrUpdatedDataAsync: async () => {
@@ -65,6 +73,8 @@ const validInputs: {
   restartAll: { ids: ["1"] },
   removeAll: { ids: ["1"] },
   invalidate: undefined,
+  logs: { id: "1", tail: 200 },
+  subscribeLogs: { id: "1", tail: 200 },
 };
 
 describe("All procedures should only be accessible for users with admin permission", () => {

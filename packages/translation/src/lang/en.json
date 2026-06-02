@@ -3986,6 +3986,12 @@
     },
     "action": {
       "title": "Actions",
+      "logs": {
+        "label": "View logs",
+        "page": {
+          "title": "{name} logs"
+        }
+      },
       "start": {
         "label": "Start",
         "notification": {
