@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_profile-form.tsx
+  s_fefa5a268e61e0::t_b9d7ce63a2e992 1-94
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_ping-icons-enabled.tsx
+  s_fefa5a268e61e0::t_b9d7ce63a2e992 1-69
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_change-home-board.tsx
+  s_fefa5a268e61e0::t_b9d7ce63a2e992 1-85
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_first-day-of-week.tsx
+  s_fefa5a268e61e0::t_b9d7ce63a2e992 1-83
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_change-search-preferences.tsx
+  s_fefa5a268e61e0::t_b9d7ce63a2e992 1-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "acf9ca9acb6e00c1dc4e4f8cc60c2a100bca6d22",
+  "prompts": {},
+  "sessions": {
+    "s_fefa5a268e61e0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bc5eeae-b92b-4486-a152-4ba2a153ec50",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
