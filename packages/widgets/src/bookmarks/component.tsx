@@ -106,7 +106,15 @@ const FlexLayout = ({
             key={app.id}
             w="100%"
           >
-            <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={4} h="100%">
+            <Card
+              radius={board.itemRadius}
+              className={classes.card}
+              w="100%"
+              display="flex"
+              p={4}
+              h="100%"
+              withBorder={false}
+            >
               {direction === "row" ? (
                 <VerticalItem
                   app={app}
@@ -168,6 +176,7 @@ const GridLayout = ({
             h="100%"
             className={combineClasses(classes.card, classes["card-grid"])}
             radius={board.itemRadius}
+            withBorder={false}
             p="xs"
           >
             {itemDirection === "horizontal" ? (
