@@ -33,7 +33,12 @@ export const BoardMantineProvider = ({
   });
 
   return (
-    <MantineProvider defaultColorScheme={defaultColorScheme} theme={theme} colorSchemeManager={colorSchemeManager} cssVariablesResolver={v8CssVariablesResolver}>
+    <MantineProvider
+      defaultColorScheme={defaultColorScheme}
+      theme={theme}
+      colorSchemeManager={colorSchemeManager}
+      cssVariablesResolver={v8CssVariablesResolver}
+    >
       {children}
     </MantineProvider>
   );

@@ -18,7 +18,12 @@ export const CustomMantineProvider = ({
   const manager = useColorSchemeManager();
   return (
     <DirectionProvider>
-      <MantineProvider defaultColorScheme={defaultColorScheme} colorSchemeManager={manager} theme={theme} cssVariablesResolver={v8CssVariablesResolver}>
+      <MantineProvider
+        defaultColorScheme={defaultColorScheme}
+        colorSchemeManager={manager}
+        theme={theme}
+        cssVariablesResolver={v8CssVariablesResolver}
+      >
         {children}
       </MantineProvider>
     </DirectionProvider>
