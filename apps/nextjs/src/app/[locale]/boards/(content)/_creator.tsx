@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { TRPCError } from "@trpc/server";
 
@@ -34,17 +35,20 @@ interface Props<TParams extends Params> {
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
+  const getCachedBoard = cache((_paramsKey: string, params: TParams) => getInitialBoard(params));
+  const getBoardForParams = (params: TParams) => getCachedBoard(JSON.stringify(params), params);
+
   return {
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
-      getInitialBoardAsync: getInitialBoard,
+      getInitialBoardAsync: getBoardForParams,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const [board, session] = await Promise.all([getBoardForParams(resolvedParams), auth()]);
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -81,7 +85,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
-        const board = await getInitialBoard(await params);
+        const board = await getBoardForParams(await params);
         const t = await getI18n();
 
         return {
@@ -97,7 +101,6 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           },
         };
       } catch (error) {
-        // Ignore not found errors and return empty metadata
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
           return {};
         }
