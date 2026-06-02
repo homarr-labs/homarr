@@ -4551,9 +4551,23 @@
         }
       },
       "media": {
+        "help": "Search for movies or shows to request",
         "requestMovie": "",
         "requestSeries": "",
-        "openIn": ""
+        "openIn": "",
+        "group": {
+          "title": "Movies and shows"
+        },
+        "action": {
+          "search": {
+            "label": "Search for movies or shows",
+            "description": "Start typing to search your media request integrations",
+            "disabled": {
+              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "scoped": "This widget does not have an accessible media request integration."
+            }
+          }
+        }
       },
       "external": {
         "help": "",
@@ -4829,7 +4843,11 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes"
+                "episodes": "Episodes",
+                "status": "Status"
+              },
+              "status": {
+                "requested": "Requested"
               }
             },
             "button": {

@@ -44,6 +44,9 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
       setQuery(interaction.query);
       setTimeout(() => selectAction(0, spotlightStore));
     } else if (interaction.type === "mode") {
+      if (interaction.query !== undefined) {
+        setQuery(interaction.query);
+      }
       setMode(interaction.mode);
     } else if (interaction.type === "children") {
       setChildrenOptions(interaction);

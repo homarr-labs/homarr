@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -14,11 +16,9 @@ import {
   integrations,
   integrationSecrets,
   integrationUserPermissions,
-  searchEngines,
 } from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
-  getIconUrl,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
   integrationCategories,
@@ -33,6 +33,7 @@ import {
   integrationSavePermissionsSchema,
   integrationUpdateSchema,
 } from "@homarr/validation/integration";
+import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -41,6 +42,7 @@ import { MissingSecretError, testConnectionAsync } from "./integration-test-conn
 import { mapTestConnectionError } from "./map-test-connection-error";
 
 const logger = createLogger({ module: "integrationRouter" });
+const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
 
 export const integrationRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -80,7 +82,7 @@ export const integrationRouter = createTRPCRouter({
           },
         };
       })
-      .sort(
+      .toSorted(
         (integrationA, integrationB) =>
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
@@ -128,7 +130,7 @@ export const integrationRouter = createTRPCRouter({
           },
         };
       })
-      .sort(
+      .toSorted(
         (integrationA, integrationB) =>
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
@@ -179,7 +181,7 @@ export const integrationRouter = createTRPCRouter({
             },
           };
         })
-        .sort(
+        .toSorted(
           (integrationA, integrationB) =>
             integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
         );
@@ -314,20 +316,7 @@ export const integrationRouter = createTRPCRouter({
         url: input.url,
       });
 
-      if (
-        input.attemptSearchEngineCreation &&
-        integrationDefs[input.kind].category.flatMap((category) => category).includes("search")
-      ) {
-        const icon = getIconUrl(input.kind);
-        await ctx.db.insert(searchEngines).values({
-          id: createId(),
-          name: input.name,
-          integrationId,
-          type: "fromIntegration",
-          iconUrl: icon,
-          short: await getNextValidShortNameForSearchEngineAsync(ctx.db, input.name),
-        });
-      }
+      // Media request search is a first-class Spotlight action. Do not create a search engine for it.
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
@@ -495,7 +484,7 @@ export const integrationRouter = createTRPCRouter({
     });
 
     return {
-      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
         return permissionA.group.name.localeCompare(permissionB.group.name);
       }),
       users: userPermissions
@@ -503,7 +492,7 @@ export const integrationRouter = createTRPCRouter({
           user,
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
         }),
       groups: dbGroupIntegrationPermission
@@ -514,7 +503,7 @@ export const integrationRouter = createTRPCRouter({
           },
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
     };
@@ -618,7 +607,148 @@ export const integrationRouter = createTRPCRouter({
       const integrationInstance = await createIntegrationAsync(ctx.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
+  mediaRequestSearchTargets: protectedProcedure.query(async ({ ctx }) => {
+    const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(ctx);
+
+    return integrationsWithAccess.map((integration) => {
+      const permissions = constructIntegrationPermissions(integration, ctx.session);
+
+      return {
+        id: integration.id,
+        name: integration.name,
+        kind: integration.kind,
+        url: integration.url,
+        permissions: {
+          hasInteractAccess: permissions.hasInteractAccess,
+        },
+      };
+    });
+  }),
+  searchMediaRequests: protectedProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        integrationIds: z.array(z.string()).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const query = input.query.trim();
+      if (query.length === 0) return [];
+
+      const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(ctx, input.integrationIds);
+
+      const results = await Promise.all(
+        integrationsWithAccess.map(async (integration) => {
+          const integrationInstance = await createIntegrationAsync({
+            id: integration.id,
+            name: integration.name,
+            url: integration.url,
+            kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
+            externalUrl: integration.app?.href ?? null,
+            decryptedSecrets: integration.secrets.map((secret) => ({
+              ...secret,
+              value: decryptSecret(secret.value),
+            })),
+          });
+          const permissions = constructIntegrationPermissions(integration, ctx.session);
+
+          return await integrationInstance.searchAsync(encodeURI(query)).then((searchResults) =>
+            searchResults.map((result) => ({
+              ...result,
+              integration: {
+                id: integration.id,
+                name: integration.name,
+                kind: integration.kind,
+                url: integration.url,
+                permissions: {
+                  hasInteractAccess: permissions.hasInteractAccess,
+                },
+              },
+            })),
+          );
+        }),
+      );
+
+      return results.flat();
+    }),
+  getMediaRequestOptions: protectedProcedure
+    .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr", "seerr"))
+    .input(mediaRequestOptionsSchema)
+    .query(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
+    }),
+  requestMedia: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr", "seerr"))
+    .input(mediaRequestRequestSchema)
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+    }),
 });
+
+interface IntegrationRouterContext {
+  db: Database;
+  session: Parameters<typeof hasQueryAccessToIntegrationsAsync>[2];
+}
+
+const getAccessibleMediaRequestSearchIntegrationsAsync = async (
+  ctx: IntegrationRouterContext,
+  integrationIds?: string[],
+) => {
+  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+  });
+
+  const integrationsFromDb = await ctx.db.query.integrations.findMany({
+    where:
+      integrationIds && integrationIds.length > 0
+        ? and(inArray(integrations.id, integrationIds), inArray(integrations.kind, mediaRequestSearchKinds))
+        : inArray(integrations.kind, mediaRequestSearchKinds),
+    orderBy: asc(integrations.name),
+    with: {
+      app: true,
+      secrets: true,
+      items: {
+        with: {
+          item: true,
+        },
+      },
+      userPermissions: {
+        where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+      },
+      groupPermissions: {
+        where: inArray(
+          integrationGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId),
+        ),
+      },
+    },
+  });
+
+  if (integrationIds && integrationsFromDb.length !== integrationIds.length) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "One or more media request search integrations were not found",
+    });
+  }
+
+  const integrationsWithAccess = await Promise.all(
+    integrationsFromDb.map(async (integration) => ({
+      integration,
+      hasAccess: await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session),
+    })),
+  );
+
+  if (integrationIds && integrationsWithAccess.some(({ hasAccess }) => !hasAccess)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "User does not have permission to query one or more media request search integrations",
+    });
+  }
+
+  return integrationsWithAccess.filter(({ hasAccess }) => hasAccess).map(({ integration }) => integration);
+};
 
 interface UpdateSecretInput {
   integrationId: string;
@@ -639,35 +769,6 @@ interface AddSecretInput {
   value: string;
   kind: IntegrationSecretKind;
 }
-
-const getNextValidShortNameForSearchEngineAsync = async (db: Database, integrationName: string) => {
-  const searchEngines = await db.query.searchEngines.findMany({
-    columns: {
-      short: true,
-    },
-  });
-
-  const usedShortNames = searchEngines.flatMap((searchEngine) => searchEngine.short.toLowerCase());
-  const nameByIntegrationName = integrationName.slice(0, 1).toLowerCase();
-
-  if (!usedShortNames.includes(nameByIntegrationName)) {
-    return nameByIntegrationName;
-  }
-
-  // 8 is max length constraint
-  for (let i = 2; i < 9999999; i++) {
-    const generatedName = `${nameByIntegrationName}${i}`;
-    if (usedShortNames.includes(generatedName)) {
-      continue;
-    }
-
-    return generatedName;
-  }
-
-  throw new Error(
-    "Unable to automatically generate a short name. All possible variations were exhausted. Please disable the automatic creation and choose one later yourself.",
-  );
-};
 
 const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   await db.insert(integrationSecrets).values({

@@ -15,7 +15,7 @@ const searchInteractions = [
     closeSpotlightOnTrigger?: boolean;
   }>(),
   createSearchInteraction("setQuery").optionsType<{ query: string }>(),
-  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
+  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"]; query?: string }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];
