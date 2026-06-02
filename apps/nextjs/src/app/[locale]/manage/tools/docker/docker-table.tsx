@@ -143,12 +143,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
 
     initialState: { density: "xs", showGlobalFilter: true },
     renderTopToolbarCustomActions: () => (
-      <Button
-        variant="default"
-        rightSection={<IconRefresh size="1rem" />}
-        onClick={() => mutate()}
-        loading={isPending}
-      >
+      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
         {tDocker("action.refresh.label")}
       </Button>
     ),
