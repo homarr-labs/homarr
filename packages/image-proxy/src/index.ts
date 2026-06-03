@@ -9,6 +9,7 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
+const IMAGE_PROXY_ENTRY_TTL_SECONDS = 60 * 60 * 24 * 7;
 
 const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
@@ -31,12 +32,17 @@ export class ImageProxy {
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
-      logger.debug("Image already exists in the proxy", {
-        id: existingId,
-        url: this.redactUrl(url),
-        headers: this.redactHeaders(headers ?? null),
-      });
-      return this.createImageUrl(existingId);
+      const existingImageData = await createUrlByIdChannel(existingId).getAsync();
+      if (!existingImageData) {
+        await this.removeHashForImageAsync(url, headers);
+      } else {
+        logger.debug("Image already exists in the proxy", {
+          id: existingId,
+          url: this.redactUrl(url),
+          headers: this.redactHeaders(headers ?? null),
+        });
+        return this.createImageUrl(existingId);
+      }
     }
 
     const id = createId();
@@ -116,14 +122,23 @@ export class ImageProxy {
     await urlHeaderChannel.setAsync({
       url: encryptSecret(url),
       headers: encryptSecret(JSON.stringify(headers ?? null)),
+    }, {
+      ttlSeconds: IMAGE_PROXY_ENTRY_TTL_SECONDS,
     });
-    await hashChannel.setAsync(id);
+    await hashChannel.setAsync(id, { ttlSeconds: IMAGE_PROXY_ENTRY_TTL_SECONDS });
 
     logger.debug("Stored image in the proxy", {
       id,
       url: this.redactUrl(url),
       headers: this.redactHeaders(headers ?? null),
     });
+  }
+
+  private async removeHashForImageAsync(url: string, headers: Record<string, string> | undefined): Promise<void> {
+    const urlHash = this.hashSecret(url);
+    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
+
+    await createHmacChannel(`${urlHash}.${headerHash}`).removeAsync();
   }
 
   private hashSecret(value: string): string {

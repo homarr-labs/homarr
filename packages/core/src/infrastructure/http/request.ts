@@ -9,10 +9,17 @@ import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http/http-agent";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
+
+const CERTIFICATE_DISPATCHER_TTL_MS = 5 * 60 * 1000;
+let trustedCertificateDispatcher: {
+  dispatcher: UndiciHttpAgent;
+  expiresAt: number;
+} | null = null;
+let creatingTrustedCertificateDispatcherPromise: Promise<UndiciHttpAgent> | null = null;
 
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
@@ -41,6 +48,36 @@ export const createCertificateAgentAsync = async (override?: {
   });
 };
 
+const getSharedCertificateAgentAsync = async () => {
+  const now = Date.now();
+  if (trustedCertificateDispatcher && trustedCertificateDispatcher.expiresAt > now) {
+    return trustedCertificateDispatcher.dispatcher;
+  }
+  if (creatingTrustedCertificateDispatcherPromise) {
+    return await creatingTrustedCertificateDispatcherPromise;
+  }
+
+  creatingTrustedCertificateDispatcherPromise = createCertificateAgentAsync(undefined)
+    .then((dispatcher) => {
+      const previousDispatcher = trustedCertificateDispatcher?.dispatcher;
+      trustedCertificateDispatcher = {
+        dispatcher,
+        expiresAt: Date.now() + CERTIFICATE_DISPATCHER_TTL_MS,
+      };
+      if (previousDispatcher) {
+        void previousDispatcher.close().catch(() => {
+          previousDispatcher.destroy();
+        });
+      }
+      return dispatcher;
+    })
+    .finally(() => {
+      creatingTrustedCertificateDispatcherPromise = null;
+    });
+
+  return await creatingTrustedCertificateDispatcherPromise;
+};
+
 export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" | "checkServerIdentity">) => {
   return new HttpsAgent({
     ca: await getAllTrustedCertificatesAsync(),
@@ -63,7 +100,7 @@ export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
   options?: RequestInit & { timeout?: number },
 ): Promise<Response> => {
-  const agent = await createCertificateAgentAsync(undefined);
+  const agent = await getSharedCertificateAgentAsync();
   if (options?.timeout) {
     return await withTimeoutAsync(
       async (signal) =>
