@@ -27,8 +27,9 @@ export class GotifyIntegration extends Integration implements INotificationsInte
 
     if (!response.ok) throw new ResponseError(response);
 
-    const json = (await response.json()) as unknown;
-    const parsed = await gotifyMessagesResponseSchema.parseAsync(json);
+    const result = await gotifyMessagesResponseSchema.safeParseAsync(await response.json());
+    if (!result.success) throw new Error(`Failed to parse Gotify response: ${result.error.message}`);
+    const parsed = result.data;
 
     return parsed.messages.map((message): Notification => ({
       id: String(message.id),
