@@ -309,7 +309,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: cpuData.reduce((acc, item) => acc + (item > 100 ? 0 : item), 0) / cpuData.length,
-      cpuTemp: Math.max(...cpuTempData.filter((_item, i) => i > 0)),
+      cpuTemp: Math.max(...cpuTempData.filter((_item, index) => index > 0)),
       memAvailableInBytes: systemInformation.physmem,
       memUsedInBytes: memoryData[1] ?? 0, // Index 0 is UNIX timestamp, Index 1 is free space in bytes
       fileSystem: datasets.map((dataset) => ({
