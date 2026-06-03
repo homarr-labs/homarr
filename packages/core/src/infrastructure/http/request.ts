@@ -9,9 +9,9 @@ import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import { UndiciHttpAgent } from "@homarr/core/infrastructure/http/http-agent";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
+import { UndiciHttpAgent } from "./http-agent";
 import { withTimeoutAsync } from "./timeout";
 
 const CERTIFICATE_DISPATCHER_TTL_MS = 5 * 60 * 1000;
