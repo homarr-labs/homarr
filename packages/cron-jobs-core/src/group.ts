@@ -4,6 +4,7 @@ import { objectEntries, objectKeys } from "@homarr/common";
 import { db } from "@homarr/db";
 
 import type { JobCallback } from "./creator";
+import { createProcessDiagnosticsSnapshot } from "./diagnostics";
 import type { Logger } from "./logger";
 import { jobRegistry } from "./registry";
 
@@ -38,6 +39,10 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
 
     return {
       initializeAsync: async () => {
+        options.logger.logInfo("Initializing cron job group", {
+          registeredJobs: [...jobRegistry.keys()],
+          diagnostics: createProcessDiagnosticsSnapshot(),
+        });
         const configurations = await db.query.cronJobConfigurations.findMany();
         for (const job of jobRegistry.values()) {
           const configuration = configurations.find(({ name }) => name === job.name);
@@ -51,7 +56,15 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
           const scheduledTask = await job.createTaskAsync();
 
           tasks.set(job.name, scheduledTask);
+          options.logger.logDebug("Created scheduled task for cron job", {
+            name: job.name,
+            diagnostics: createProcessDiagnosticsSnapshot(),
+          });
         }
+        options.logger.logInfo("Cron job group initialized", {
+          taskCount: tasks.size,
+          diagnostics: createProcessDiagnosticsSnapshot(),
+        });
       },
       startAsync: async (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
@@ -65,6 +78,10 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
         tasks.get(name as string)?.resume();
       },
       startAllAsync: async () => {
+        options.logger.logInfo("Starting all cron jobs", {
+          taskCount: tasks.size,
+          diagnostics: createProcessDiagnosticsSnapshot(),
+        });
         for (const job of jobRegistry.values()) {
           if (!tasks.has(job.name)) {
             continue;
@@ -76,6 +93,10 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
           await job.onStartAsync();
           tasks.get(job.name)?.resume();
         }
+        options.logger.logInfo("Started all cron jobs", {
+          taskCount: tasks.size,
+          diagnostics: createProcessDiagnosticsSnapshot(),
+        });
       },
       runManuallyAsync: async (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);

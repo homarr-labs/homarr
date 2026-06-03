@@ -7,6 +7,7 @@ import { db } from "@homarr/db";
 
 import type { Logger } from "./logger";
 import type { ValidateCron } from "./validation";
+import { createProcessDiagnosticsDelta, createProcessDiagnosticsSnapshot } from "./diagnostics";
 
 export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
   beforeCallback?: (name: TAllowedNames) => MaybePromise<void>;
@@ -33,19 +34,25 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
   const expectedMaximumDurationInMillis = options.expectedMaximumDurationInMillis ?? 2500;
   return (callback: () => MaybePromise<void>) => {
     const catchingCallbackAsync = async () => {
+      const beforeExecutionSnapshot = createProcessDiagnosticsSnapshot();
       try {
         creatorOptions.logger.logDebug("The callback of cron job started", {
           name,
+          diagnostics: beforeExecutionSnapshot,
         });
         const stopwatch = new Stopwatch();
         await creatorOptions.beforeCallback?.(name);
         const beforeCallbackTook = stopwatch.getElapsedInHumanWords();
         await callback();
+        const afterExecutionSnapshot = createProcessDiagnosticsSnapshot();
         const callbackTook = stopwatch.getElapsedInHumanWords();
         creatorOptions.logger.logDebug("The callback of cron job succeeded", {
           name,
           beforeCallbackTook,
           callbackTook,
+          diagnosticsBefore: beforeExecutionSnapshot,
+          diagnosticsAfter: afterExecutionSnapshot,
+          diagnosticsDelta: createProcessDiagnosticsDelta(beforeExecutionSnapshot, afterExecutionSnapshot),
         });
 
         const durationInMillis = stopwatch.getElapsedInMilliseconds();
@@ -58,11 +65,15 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         }
         await creatorOptions.onCallbackSuccess?.(name);
       } catch (error) {
+        const failedExecutionSnapshot = createProcessDiagnosticsSnapshot();
         creatorOptions.logger.logError(
           new ErrorWithMetadata(
             "The callback of cron job failed",
             {
               name,
+              diagnosticsBefore: beforeExecutionSnapshot,
+              diagnosticsAfter: failedExecutionSnapshot,
+              diagnosticsDelta: createProcessDiagnosticsDelta(beforeExecutionSnapshot, failedExecutionSnapshot),
             },
             { cause: error },
           ),
