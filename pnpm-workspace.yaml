@@ -70,7 +70,7 @@ catalog:
   "@trpc/react-query": ^11.17.0
   "@trpc/server": ^11.17.0
   "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.15
+  "@turbo/gen": ^2.9.16
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -125,7 +125,7 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.11.0
-  isomorphic-dompurify: ^3.14.0
+  isomorphic-dompurify: ^3.15.0
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
@@ -136,7 +136,7 @@ catalog:
   mysql2: 3.22.4
   next: 16.2.6
   next-auth: 5.0.0-beta.31
-  next-intl: 4.12.0
+  next-intl: 4.13.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
   oxfmt: ^0.52.0
@@ -163,7 +163,7 @@ catalog:
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
   tsx: 4.20.4
-  turbo: ^2.9.15
+  turbo: ^2.9.16
   typescript: ^5.9.3
   undici: 7.24.6
   use-deep-compare-effect: ^1.8.1
