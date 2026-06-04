@@ -1,0 +1,100 @@
+# Homarr Docker label discovery example.
+# Prerequisites: Homarr with ENABLE_DOCKER, Docker socket mounted, and in Manage → Settings → Docker
+# set a target board name (or label services with homarr.board). Restart Homarr after upgrade so
+# migration 0037_add_docker_app_source creates the docker_app_source table.
+# Optional: attach this stack to Homarr's network so href/ping hostnames resolve inside Docker.
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: homarr-sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - sonarr-config:/config
+      - ./media:/media
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+    labels:
+      # Homarr labels (native)
+      homarr.name: "Sonarr"
+      homarr.group: "Media"
+      homarr.href: "http://sonarr:8989"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg"
+      homarr.description: "TV series management"
+      homarr.ping: "http://sonarr:8989/ping"
+      homarr.integration: "sonarr"
+      homarr.widget: "downloads"
+      # Homepage labels (fallback — used if homarr.* are absent)
+      homepage.group: "Media"
+      homepage.name: "Sonarr"
+      homepage.href: "http://sonarr:8989"
+      homepage.icon: "sonarr"
+      homepage.description: "TV series management"
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: homarr-radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - radarr-config:/config
+      - ./media:/media
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+    labels:
+      homarr.name: "Radarr"
+      homarr.group: "Media"
+      homarr.href: "http://radarr:7878"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg"
+      homarr.description: "Movie management"
+      homarr.ping: "http://radarr:7878/ping"
+      homarr.integration: "radarr"
+      homarr.widget: "downloads"
+      homepage.group: "Media"
+      homepage.name: "Radarr"
+      homepage.href: "http://radarr:7878"
+      homepage.icon: "radarr"
+      homepage.description: "Movie management"
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: homarr-qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+    volumes:
+      - qbittorrent-config:/config
+      - ./downloads:/downloads
+    ports:
+      - "8080:8080"
+      - "6881:6881"
+      - "6881:6881/udp"
+    restart: unless-stopped
+    labels:
+      homarr.name: "qBittorrent"
+      homarr.group: "Downloads"
+      homarr.href: "http://qbittorrent:8080"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg"
+      homarr.description: "Torrent client"
+      homarr.ping: "http://qbittorrent:8080"
+      homarr.integration: "qBittorrent"
+      homarr.widget: "downloads"
+      homepage.group: "Downloads"
+      homepage.name: "qBittorrent"
+      homepage.href: "http://qbittorrent:8080"
+      homepage.icon: "qbittorrent"
+      homepage.description: "Torrent client"
+
+volumes:
+  sonarr-config:
+  radarr-config:
+  qbittorrent-config:

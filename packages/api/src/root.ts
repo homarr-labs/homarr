@@ -28,6 +28,7 @@ export const appRouter = createTRPCRouter({
   certificates: lazy(() => import("./router/certificates/certificate-router").then((mod) => mod.certificateRouter)),
   bangs: lazy(() => import("./router/bangs/bangs-router").then((mod) => mod.bangsRouter)),
   info: lazy(() => import("./router/info").then((mod) => mod.infoRouter)),
+  config: lazy(() => import("./router/config").then((mod) => mod.configRouter)),
 });
 
 // export type definition of API

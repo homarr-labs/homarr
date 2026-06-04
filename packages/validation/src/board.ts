@@ -94,3 +94,12 @@ export const boardCreateSchema = z.object({
 });
 
 export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
+
+export const boardExportBundleSchema = z.object({
+  id: z.string(),
+});
+
+export const boardImportBundleSchema = z.object({
+  content: z.string().min(1),
+  name: boardNameSchema,
+});

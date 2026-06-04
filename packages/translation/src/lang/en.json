@@ -7,12 +7,20 @@
         "description": "To get started, please select how you want to set up your Homarr instance.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0"
+          "importOldmarr": "Import from Homarr before 1.0",
+          "importConfig": "Import Homarr configuration (.json)"
         }
       },
       "import": {
         "title": "Import data",
         "subtitle": "You can import data from an existing Homarr instance.",
+        "configDropzone": {
+          "title": "Drag the configuration file here or click to browse",
+          "description": "Upload a Homarr full configuration export (.json) to restore boards, apps, integrations, and settings"
+        },
+        "configImport": {
+          "action": "Confirm import and continue"
+        },
         "dropzone": {
           "title": "Drag the zip file here or click to browse",
           "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
@@ -3008,6 +3016,74 @@
           }
         }
       },
+      "export": {
+        "label": "Export board",
+        "notification": {
+          "success": {
+            "title": "Board exported",
+            "message": "The board bundle was downloaded successfully"
+          },
+          "error": {
+            "title": "Unable to export board",
+            "message": "The board could not be exported"
+          }
+        }
+      },
+      "importHomepage": {
+        "label": "Import from Homepage",
+        "notification": {
+          "success": {
+            "title": "Homepage import complete",
+            "message": "Board created from Homepage services"
+          },
+          "error": {
+            "title": "Import failed",
+            "message": "Could not import Homepage services"
+          }
+        },
+        "modal": {
+          "title": "Import Homepage services.yaml"
+        },
+        "field": {
+          "file": {
+            "label": "Select services.yaml file",
+            "invalidError": "Invalid Homepage services.yaml file"
+          },
+          "boardName": {
+            "label": "Board name"
+          },
+          "createIntegrations": {
+            "label": "Create integrations",
+            "description": "Automatically create integrations for recognized services"
+          },
+          "envVariables": {
+            "label": "Environment variables",
+            "description": "Your services.yaml contains template variables. Fill in the values they should resolve to."
+          }
+        }
+      },
+      "importBundle": {
+        "label": "Import board bundle",
+        "notification": {
+          "success": {
+            "title": "Import successful",
+            "message": "The board bundle was imported successfully"
+          },
+          "error": {
+            "title": "Import failed",
+            "message": "The board bundle could not be imported"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Select JSON bundle",
+            "invalidError": "Invalid board bundle file"
+          },
+          "name": {
+            "label": "Board name"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -3378,7 +3454,8 @@
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificates",
-            "tasks": "Tasks"
+            "tasks": "Tasks",
+            "importExport": "Import / Export"
           }
         },
         "settings": "Settings",
@@ -3445,6 +3522,9 @@
           },
           "duplicate": {
             "label": "Duplicate board"
+          },
+          "export": {
+            "label": "Export board"
           },
           "delete": {
             "label": "Delete permanently",
@@ -3601,6 +3681,99 @@
           }
         }
       },
+      "importExport": {
+        "title": "Import / Export",
+        "summary": {
+          "title": "Contents",
+          "empty": "Nothing to include",
+          "boards": "{count} boards",
+          "apps": "{count} apps",
+          "integrations": "{count} integrations",
+          "secrets": "{count} integration secrets",
+          "widgets": "{count} widgets",
+          "sections": "{count} sections",
+          "layouts": "{count} layouts",
+          "searchEngines": "{count} search engines",
+          "groups": "{count} groups",
+          "serverSettings": "{count} server settings"
+        },
+        "preview": {
+          "exportLoading": "Loading export summary…",
+          "importLoading": "Analyzing configuration file…",
+          "importIncompatible": "This file cannot be imported on this Homarr version",
+          "importMeta": "Exported {exportedAt} from Homarr {homarrVersion} (format {bundleVersion})",
+          "importWillCreate": "Will create",
+          "importWillReuse": "Will match existing",
+          "importWillSkip": "Will skip (already exists)",
+          "importWillUpdate": "Will update",
+          "reuseApps": "{count} apps",
+          "reuseIntegrations": "{count} integrations",
+          "skipBoards": "{count} boards",
+          "skipGroups": "{count} groups",
+          "skipSearchEngines": "{count} search engines",
+          "updateServerSettings": "{count} server settings",
+          "migrationNote": "Import requires this instance to have run all database migrations. Bundle format {bundleVersion} is validated against the current schema before import."
+        },
+        "export": {
+          "title": "Export Full Configuration",
+          "description": "Export all boards, apps, integrations (with encrypted secrets), server settings, search engines, and groups as a portable JSON file. The encryption key is embedded so secrets can be restored on import.",
+          "action": "Export Configuration",
+          "warning": {
+            "title": "This export contains secrets",
+            "message": "The downloaded JSON includes your full Homarr configuration. Integration credentials stay encrypted, but the file also embeds your instance encryption key so another Homarr instance can decrypt them on import.",
+            "storage": "Store the file only in a safe place. Anyone with this file can read and reuse your integration secrets.",
+            "sharing": "Do not share it in chat, email, cloud folders without encryption, or public issue trackers."
+          },
+          "notification": {
+            "success": {
+              "title": "Export successful",
+              "message": "Your configuration has been exported"
+            },
+            "error": {
+              "title": "Export failed",
+              "message": "Failed to export configuration"
+            }
+          }
+        },
+        "importConfig": {
+          "title": "Import Homarr Configuration",
+          "description": "Import a previously exported Homarr configuration file. Existing boards, apps, and integrations with the same identity will be reused. Secrets will be re-encrypted with this instance's key.",
+          "fileLabel": "Configuration file (.json)",
+          "invalidFile": "Invalid Homarr configuration file",
+          "notification": {
+            "success": {
+              "title": "Import successful",
+              "message": "Configuration has been imported"
+            },
+            "error": {
+              "title": "Import failed",
+              "message": "Failed to import configuration"
+            }
+          }
+        },
+        "importHomepage": {
+          "title": "Import Homepage services.yaml",
+          "description": "Import a Homepage dashboard services.yaml file to create a new board with apps and integrations.",
+          "fileLabel": "Homepage services.yaml file",
+          "invalidFile": "Invalid services.yaml file",
+          "boardNameLabel": "Board name",
+          "createIntegrations": "Create integrations from Homepage widgets",
+          "envVariables": {
+            "label": "Environment variables",
+            "description": "Your services.yaml contains template variables. Fill in the values they should resolve to."
+          },
+          "notification": {
+            "success": {
+              "title": "Import successful",
+              "message": "Homepage services have been imported as a new board"
+            },
+            "error": {
+              "title": "Import failed",
+              "message": "Failed to import Homepage services"
+            }
+          }
+        }
+      },
       "settings": {
         "title": "Settings",
         "notification": {
@@ -3699,6 +3872,33 @@
             "title": "Culture",
             "defaultLocale": {
               "label": "Default language"
+            }
+          },
+          "docker": {
+            "title": "Docker Discovery",
+            "targetBoardName": {
+              "label": "Default target board",
+              "description": "Board name to place discovered apps on when no board label is set"
+            },
+            "readHomepageLabels": {
+              "label": "Read Homepage labels",
+              "description": "Fall back to homepage.* Docker labels when homarr.* labels are not present"
+            },
+            "createIntegrations": {
+              "label": "Auto-create integrations",
+              "description": "Automatically create integrations when a container has homarr.integration or homepage widget labels"
+            },
+            "pruneRemoved": {
+              "label": "Remove stale apps",
+              "description": "Delete apps from boards when their source container is no longer running"
+            },
+            "defaultItemWidth": {
+              "label": "Default item width",
+              "description": "Grid column width for discovered app tiles"
+            },
+            "defaultItemHeight": {
+              "label": "Default item height",
+              "description": "Grid row height for discovered app tiles"
             }
           }
         }
@@ -3944,6 +4144,34 @@
   },
   "docker": {
     "title": "Containers",
+    "discovery": {
+      "title": "Label Discovery",
+      "sync": {
+        "label": "Sync now",
+        "notification": {
+          "success": {
+            "title": "Discovery sync complete",
+            "message": "Created {created}, updated {updated} services"
+          },
+          "error": {
+            "title": "Discovery sync failed",
+            "message": "Could not sync discovered services. Check server logs for details."
+          }
+        }
+      },
+      "preview": {
+        "label": "Scan",
+        "title": "Discovered services",
+        "idle": "Press Scan to find running containers with Homarr or Homepage labels",
+        "empty": "No containers with homarr or homepage labels were found"
+      },
+      "field": {
+        "name": "Name",
+        "group": "Group",
+        "href": "URL",
+        "host": "Host"
+      }
+    },
     "table": {
       "updated": "Updated {when}",
       "search": "Seach {count} containers",
@@ -4435,6 +4663,9 @@
           "hostnames": {
             "label": "Hostnames"
           }
+        },
+        "import-export": {
+          "label": "Import / Export"
         }
       },
       "settings": {

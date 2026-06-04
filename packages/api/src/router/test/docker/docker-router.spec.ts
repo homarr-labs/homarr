@@ -42,6 +42,20 @@ vi.mock("@homarr/docker/env", () => ({
     ENABLE_DOCKER: true,
   },
 }));
+vi.mock("@homarr/docker", async (importOriginal) => {
+  const original = await importOriginal<typeof import("@homarr/docker")>();
+  return {
+    ...original,
+    listDiscoveredContainersAsync: async () => [],
+    syncDiscoveredServicesAsync: async () => ({ created: 0, updated: 0, skipped: 0 }),
+  };
+});
+vi.mock("@homarr/db/queries", () => ({
+  getServerSettingsAsync: async () => ({
+    docker: { targetBoardName: null, readHomepageLabels: true, pruneRemoved: false },
+    board: { enableStatusByDefault: true, forceDisableStatus: false },
+  }),
+}));
 
 const createSessionWithPermissions = (...permissions: GroupPermissionKey[]) =>
   ({
@@ -65,6 +79,8 @@ const validInputs: {
   restartAll: { ids: ["1"] },
   removeAll: { ids: ["1"] },
   invalidate: undefined,
+  getDiscoveredPreview: undefined,
+  syncDiscovery: undefined,
 };
 
 describe("All procedures should only be accessible for users with admin permission", () => {

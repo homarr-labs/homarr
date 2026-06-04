@@ -49,6 +49,7 @@ export const {
   sectionLayouts,
   trustedCertificateHostnames,
   cronJobConfigurations,
+  dockerAppSources,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;

@@ -10,8 +10,16 @@ import { InitialOldmarrImport } from "@homarr/old-import/components";
 
 import { FileInfoCard } from "./file-info-card";
 import { ImportDropZone } from "./import-dropzone";
+import { InitConfigImport } from "./init-config-import";
+import { useInitImportMode } from "./use-init-import-mode";
 
 export const InitImport = () => {
+  const importMode = useInitImportMode();
+
+  if (importMode === "config") {
+    return <InitConfigImport />;
+  }
+
   const [file, setFile] = useState<FileWithPath | null>(null);
   const { isPending, mutate } = clientApi.import.analyseInitialOldmarrImport.useMutation();
   const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseInitialOldmarrImport"] | null>(

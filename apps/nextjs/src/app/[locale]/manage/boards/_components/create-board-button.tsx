@@ -10,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 
 export const CreateBoardButton = () => {
-  const t = useI18n();
+  const t = useI18n() as unknown as (key: string) => string;
   const { openModal: openAddModal } = useModalAction(AddBoardModal);
   const { openModal: openImportModal } = useModalAction(ImportBoardModal);
 

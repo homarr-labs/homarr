@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { Box } from "@mantine/core";
-import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
@@ -15,7 +14,7 @@ export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { activeLevels } = useLogContext();
 
-  const terminalRef = useRef<Terminal>(null);
+  const terminalRef = useRef<Terminal | null>(null);
   clientApi.log.subscribe.useSubscription(
     {
       levels: activeLevels,
@@ -26,7 +25,6 @@ export const TerminalComponent = () => {
         terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
       },
       onError(err) {
-        // This makes sense as logging might cause an infinite loop
         alert(err);
       },
     },
@@ -37,28 +35,30 @@ export const TerminalComponent = () => {
       return () => undefined;
     }
 
-    const canvasAddon = new CanvasAddon();
-
-    terminalRef.current = new Terminal({
+    const fitAddon = new FitAddon();
+    const terminal = new Terminal({
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
     });
-    terminalRef.current.open(ref.current);
-    terminalRef.current.loadAddon(canvasAddon);
+    terminal.open(ref.current);
+    terminal.loadAddon(fitAddon);
+    terminalRef.current = terminal;
 
-    // This is a hack to make sure the terminal is rendered before we try to fit it
-    // You can blame @Meierschlumpf for this
-    setTimeout(() => {
-      const fitAddon = new FitAddon();
-      terminalRef.current?.loadAddon(fitAddon);
-      fitAddon.fit();
-    });
+    const fitTerminal = () => fitAddon.fit();
+    const fitTimeout = setTimeout(fitTerminal);
+
+    const resizeObserver = new ResizeObserver(fitTerminal);
+    resizeObserver.observe(ref.current);
 
     return () => {
-      terminalRef.current?.dispose();
-      canvasAddon.dispose();
+      clearTimeout(fitTimeout);
+      resizeObserver.disconnect();
+      fitAddon.dispose();
+      terminal.dispose();
+      terminalRef.current = null;
     };
   }, []);
+
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
 };

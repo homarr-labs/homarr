@@ -273,9 +273,6 @@ catalogs:
     '@vitest/ui':
       specifier: ^4.1.7
       version: 4.1.7
-    '@xterm/addon-canvas':
-      specifier: ^0.7.0
-      version: 0.7.0
     '@xterm/addon-fit':
       specifier: 0.11.0
       version: 0.11.0
@@ -655,6 +652,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
+      '@homarr/board-portability':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/board-portability
       '@homarr/boards':
         specifier: workspace:^0.1.0
         version: link:../../packages/boards
@@ -781,9 +781,6 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.17.0(typescript@5.9.3)
-      '@xterm/addon-canvas':
-        specifier: 'catalog:'
-        version: 0.7.0(@xterm/xterm@6.0.0)
       '@xterm/addon-fit':
         specifier: 'catalog:'
         version: 0.11.0
@@ -1067,6 +1064,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
+      '@homarr/board-portability':
+        specifier: workspace:^0.1.0
+        version: link:../board-portability
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1226,6 +1226,43 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  packages/board-portability:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
+      superjson:
+        specifier: 'catalog:'
+        version: 2.2.6
+      yaml:
+        specifier: 'catalog:'
+        version: 2.9.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.7(@types/node@24.12.4)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))(vite@7.1.12(@types/node@24.12.4)(jiti@1.21.7)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+
   packages/boards:
     dependencies:
       '@homarr/api':
@@ -1253,6 +1290,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
+      '@homarr/board-portability':
+        specifier: workspace:^0.1.0
+        version: link:../board-portability
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1404,6 +1444,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/docker':
+        specifier: workspace:^0.1.0
+        version: link:../docker
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../icons
@@ -1570,9 +1613,18 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       dockerode:
         specifier: 'catalog:'
         version: 5.0.0
+      superjson:
+        specifier: 'catalog:'
+        version: 2.2.6
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -1583,6 +1635,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.7(@types/node@24.12.4)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))(vite@7.1.12(@types/node@24.12.4)(jiti@1.21.7)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.8))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/form:
     dependencies:
@@ -1817,6 +1872,9 @@ importers:
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../api
+      '@homarr/board-portability':
+        specifier: workspace:^0.1.0
+        version: link:../board-portability
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -5569,11 +5627,6 @@ packages:
     engines: {node: '>=10.0.0'}
     deprecated: this version has critical issues, please update to the latest version
 
-  '@xterm/addon-canvas@0.7.0':
-    resolution: {integrity: sha512-LF5LYcfvefJuJ7QotNRdRSPc9YASAVDeoT5uyXS/nZshZXjYplGXRECBGiznwvhNL2I8bq1Lf5MzRwstsYQ2Iw==}
-    peerDependencies:
-      '@xterm/xterm': ^5.0.0
-
   '@xterm/addon-fit@0.11.0':
     resolution: {integrity: sha512-jYcgT6xtVYhnhgxh3QgYDnnNMYTcf8ElbxxFzX0IZo+vabQqSPAjC3c1wJrKB5E19VwQei89QCiZZP86DCPF7g==}
 
@@ -6525,9 +6578,6 @@ packages:
   es-errors@1.3.0:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
-
-  es-module-lexer@2.0.0:
-    resolution: {integrity: sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw==}
 
   es-module-lexer@2.1.0:
     resolution: {integrity: sha512-n27zTYMjYu1aj4MjCWzSP7G9r75utsaoc8m61weK+W8JMBGGQybd43GstCXZ3WNmSFtGT9wi59qQTW6mhTR5LQ==}
@@ -12956,10 +13006,6 @@ snapshots:
 
   '@xmldom/xmldom@0.8.10': {}
 
-  '@xterm/addon-canvas@0.7.0(@xterm/xterm@6.0.0)':
-    dependencies:
-      '@xterm/xterm': 6.0.0
-
   '@xterm/addon-fit@0.11.0': {}
 
   '@xterm/xterm@6.0.0': {}
@@ -13784,8 +13830,6 @@ snapshots:
   es-define-property@1.0.1: {}
 
   es-errors@1.3.0: {}
-
-  es-module-lexer@2.0.0: {}
 
   es-module-lexer@2.1.0: {}
 
@@ -17204,7 +17248,7 @@ snapshots:
       '@vitest/snapshot': 4.1.7
       '@vitest/spy': 4.1.7
       '@vitest/utils': 4.1.7
-      es-module-lexer: 2.0.0
+      es-module-lexer: 2.1.0
       expect-type: 1.3.0
       magic-string: 0.30.21
       obug: 2.1.1

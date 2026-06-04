@@ -2,14 +2,14 @@
 
 import { useCallback } from "react";
 import { Menu } from "@mantine/core";
-import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconDeviceMobile, IconDownload, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { DuplicateBoardModal } from "@homarr/modals-collection";
+import { DuplicateBoardModal, ExportBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -28,7 +28,10 @@ interface BoardCardMenuDropdownProps {
 }
 
 export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => {
-  const t = useScopedI18n("management.page.board.action");
+  const t = useScopedI18n("management.page.board.action" as never) as unknown as (
+    key: string,
+    values?: Record<string, unknown>,
+  ) => string;
   const tCommon = useScopedI18n("common");
 
   const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
@@ -36,6 +39,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
 
   const { openConfirmModal } = useConfirmModal();
   const { openModal: openDuplicateModal } = useModalAction(DuplicateBoardModal);
+  const { openModal: openExportModal } = useModalAction(ExportBoardModal);
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -87,6 +91,15 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     });
   }, [board.id, board.name, openDuplicateModal]);
 
+  const handleExportBoard = useCallback(() => {
+    openExportModal({
+      board: {
+        id: board.id,
+        name: board.name,
+      },
+    });
+  }, [board.id, board.name, openExportModal]);
+
   return (
     <Menu.Dropdown>
       <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
@@ -94,6 +107,9 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       </Menu.Item>
       <Menu.Item onClick={handleSetMobileHomeBoard} leftSection={<IconDeviceMobile {...iconProps} />}>
         {t("setMobileHomeBoard.label")}
+      </Menu.Item>
+      <Menu.Item onClick={handleExportBoard} leftSection={<IconDownload {...iconProps} />}>
+        {t("export.label")}
       </Menu.Item>
       {session?.user.permissions.includes("board-create") && (
         <Menu.Item onClick={handleDuplicateBoard} leftSection={<IconCopy {...iconProps} />}>

@@ -1,0 +1,40 @@
+{
+  "name": "@homarr/board-portability",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./client": "./client.ts",
+    "./homepage": "./src/homepage/index.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
+    "superjson": "catalog:",
+    "yaml": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -35,6 +35,12 @@ import {
   getPermissionsWithParents,
   widgetKinds,
 } from "@homarr/definitions";
+import {
+  exportBoardBundleAsync,
+  importBoardBundleAsync,
+  importHomepageServicesAsync,
+  parseBundleJson,
+} from "@homarr/board-portability";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -43,6 +49,9 @@ import {
   boardChangeVisibilitySchema,
   boardCreateSchema,
   boardDuplicateSchema,
+  boardExportBundleSchema,
+  boardImportBundleSchema,
+  boardNameSchema,
   boardRenameSchema,
   boardSaveLayoutsSchema,
   boardSavePartialSettingsSchema,
@@ -54,6 +63,7 @@ import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
+import packageJson from "../../../../package.json";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
@@ -1326,6 +1336,113 @@ export const boardRouter = createTRPCRouter({
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
       await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+    }),
+  exportBundle: protectedProcedure.input(boardExportBundleSchema).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+
+    const result = await exportBoardBundleAsync(ctx.db, input.id, packageJson.version);
+    if (!result) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Board not found",
+      });
+    }
+
+    return {
+      filename: result.filename,
+      content: result.content,
+    };
+  }),
+  importBundle: permissionRequiredProcedure
+    .requiresPermission("board-create")
+    .input(boardImportBundleSchema)
+    .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarNameAsync(ctx.db, input.name);
+
+      const bundle = parseBundleJson(input.content);
+
+      const existingApps = await ctx.db.query.apps.findMany();
+      const existingIntegrations = await ctx.db.query.integrations.findMany();
+
+      const hasAccessForAll = ctx.session.user.permissions.includes("integration-use-all");
+      const integrationIdsWithAccess = hasAccessForAll
+        ? []
+        : await ctx.db
+            .selectDistinct({
+              id: integrationGroupPermissions.integrationId,
+            })
+            .from(integrationGroupPermissions)
+            .leftJoin(groupMembers, eq(integrationGroupPermissions.groupId, groupMembers.groupId))
+            .where(eq(groupMembers.userId, ctx.session.user.id))
+            .union(
+              ctx.db
+                .selectDistinct({ id: integrationUserPermissions.integrationId })
+                .from(integrationUserPermissions)
+                .where(eq(integrationUserPermissions.userId, ctx.session.user.id)),
+            )
+            .then((result) => result.map((row) => row.id));
+
+      const report = await importBoardBundleAsync(
+        ctx.db,
+        bundle,
+        input.name,
+        ctx.session.user.id,
+        existingApps,
+        existingIntegrations,
+        integrationIdsWithAccess,
+        hasAccessForAll,
+      );
+
+      return {
+        boardId: report.boardId,
+        created: report.created,
+        warnings: report.warnings,
+      };
+    }),
+  importHomepageServices: permissionRequiredProcedure
+    .requiresPermission("board-create")
+    .input(
+      z.object({
+        content: z.string().min(1),
+        boardName: boardNameSchema,
+        createIntegrations: z.boolean().default(true),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarNameAsync(ctx.db, input.boardName);
+
+      try {
+        const report = await importHomepageServicesAsync(
+          ctx.db,
+          input.content,
+          input.boardName,
+          ctx.session.user.id,
+          input.createIntegrations,
+        );
+
+        const user = await ctx.db.query.users.findFirst({
+          where: eq(users.id, ctx.session.user.id),
+          columns: {
+            homeBoardId: true,
+          },
+        });
+
+        if (!user?.homeBoardId) {
+          await ctx.db.update(users).set({ homeBoardId: report.boardId }).where(eq(users.id, ctx.session.user.id));
+        }
+
+        return {
+          boardId: report.boardId,
+          created: report.created,
+          warnings: report.warnings,
+          unmappedWidgetTypes: report.unmappedWidgetTypes,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error instanceof Error ? error.message : "Could not import Homepage services",
+        });
+      }
     }),
 });
 

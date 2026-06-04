@@ -36,6 +36,13 @@
       "when": 1775400000000,
       "tag": "0004_add_user_ddg_bangs",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780490693344,
+      "tag": "0005_add_docker_app_source",
+      "breakpoints": true
     }
   ]
 }

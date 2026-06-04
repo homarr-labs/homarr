@@ -487,6 +487,33 @@ export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
   isEnabled: int({ mode: "boolean" }).default(true).notNull(),
 });
 
+export const dockerAppSources = sqliteTable(
+  "docker_app_source",
+  {
+    host: text().notNull(),
+    containerId: text().notNull(),
+    externalId: text().notNull(),
+    appId: text()
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    boardId: text()
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    itemId: text().references(() => items.id, { onDelete: "set null" }),
+    integrationId: text().references(() => integrations.id, { onDelete: "set null" }),
+    updatedAt: int({ mode: "timestamp" })
+      .$onUpdateFn(() => new Date())
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.host, table.containerId],
+    }),
+    externalIdIdx: index("docker_app_source__external_id_idx").on(table.host, table.externalId),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -749,5 +776,24 @@ export const layoutRelations = relations(layouts, ({ one, many }) => ({
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const dockerAppSourceRelations = relations(dockerAppSources, ({ one }) => ({
+  app: one(apps, {
+    fields: [dockerAppSources.appId],
+    references: [apps.id],
+  }),
+  board: one(boards, {
+    fields: [dockerAppSources.boardId],
+    references: [boards.id],
+  }),
+  item: one(items, {
+    fields: [dockerAppSources.itemId],
+    references: [items.id],
+  }),
+  integration: one(integrations, {
+    fields: [dockerAppSources.integrationId],
+    references: [integrations.id],
   }),
 }));

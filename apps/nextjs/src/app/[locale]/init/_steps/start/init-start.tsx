@@ -1,5 +1,5 @@
 import { Card, Stack, Text } from "@mantine/core";
-import { IconFileImport, IconPlayerPlay } from "@tabler/icons-react";
+import { IconFileImport, IconJson, IconPlayerPlay } from "@tabler/icons-react";
 
 import { getMantineColor } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";
@@ -22,9 +22,17 @@ export const InitStart = async () => {
         </InitStartButton>
         <InitStartButton
           preferredStep="import"
+          importMode="legacy"
           icon={<IconFileImport color={getMantineColor("cyan", 6)} size={16} stroke={1.5} />}
         >
           {tStart("action.importOldmarr")}
+        </InitStartButton>
+        <InitStartButton
+          preferredStep="import"
+          importMode="config"
+          icon={<IconJson color={getMantineColor("blue", 6)} size={16} stroke={1.5} />}
+        >
+          {tStart("action.importConfig")}
         </InitStartButton>
       </Stack>
     </Card>

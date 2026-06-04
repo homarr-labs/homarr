@@ -3,7 +3,8 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
-import { DockerSingleton } from "@homarr/docker";
+import { DockerSingleton, listDiscoveredContainersAsync, syncDiscoveredServicesAsync } from "@homarr/docker";
+import { getServerSettingsAsync } from "@homarr/db/queries";
 import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 
 import { dockerMiddleware } from "../../middlewares/docker";
@@ -103,6 +104,32 @@ export const dockerRouter = createTRPCRouter({
 
       const innerHandler = dockerContainersRequestHandler.handler({});
       await innerHandler.invalidateAsync();
+    }),
+  getDiscoveredPreview: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .query(async ({ ctx }) => {
+      const serverSettings = await getServerSettingsAsync(ctx.db);
+      return await listDiscoveredContainersAsync({
+        readHomepageLabels: serverSettings.docker.readHomepageLabels,
+      });
+    }),
+  syncDiscovery: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .mutation(async ({ ctx }) => {
+      const serverSettings = await getServerSettingsAsync(ctx.db);
+      const discovered = await listDiscoveredContainersAsync({
+        readHomepageLabels: serverSettings.docker.readHomepageLabels,
+      });
+
+      return await syncDiscoveredServicesAsync(discovered, {
+        targetBoardName: serverSettings.docker.targetBoardName,
+        enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+        forceDisableStatus: serverSettings.board.forceDisableStatus,
+        defaultItemWidth: serverSettings.docker.defaultItemWidth,
+        defaultItemHeight: serverSettings.docker.defaultItemHeight,
+      });
     }),
 });
 

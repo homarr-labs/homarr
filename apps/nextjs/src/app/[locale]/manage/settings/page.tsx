@@ -5,12 +5,15 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { env } from "@homarr/docker/env";
+
 import { CrawlingAndIndexingSettings } from "~/app/[locale]/manage/settings/_components/crawling-and-indexing.settings";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AnalyticsSettings } from "./_components/analytics.settings";
 import { AppearanceSettingsForm } from "./_components/appearance-settings-form";
 import { BoardSettingsForm } from "./_components/board-settings-form";
 import { CultureSettingsForm } from "./_components/culture-settings-form";
+import { DockerSettingsForm } from "./_components/docker-settings-form";
 import { SearchSettingsForm } from "./_components/search-settings-form";
 import { UserSettingsForm } from "./_components/user-settings-form";
 
@@ -59,6 +62,12 @@ export default async function SettingsPage() {
           <Title order={2}>{tSettings("section.culture.title")}</Title>
           <CultureSettingsForm defaultValues={serverSettings.culture} />
         </Stack>
+        {env.ENABLE_DOCKER && (
+          <Stack>
+            <Title order={2}>{(tSettings as unknown as (key: string) => string)("section.docker.title")}</Title>
+            <DockerSettingsForm defaultValues={serverSettings.docker} />
+          </Stack>
+        )}
       </Stack>
     </>
   );
