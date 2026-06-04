@@ -132,8 +132,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "Open media"
       }
+    },
+    "noResults": {
+      "title": "No media uploaded"
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "Check out the documentation",
       "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
-      "loading": "Loading"
+      "loading": "Loading",
+      "show": "Show",
+      "hide": "Hide"
     },
     "here": "here",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "New category",
-          "changePosition": "Change position"
+          "changePosition": "Change position",
+          "settings": "Settings"
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "This board is public",
           "private": "This board is private"
+        },
+        "noResults": {
+          "title": "No boards yet"
         },
         "modal": {
           "createBoard": {

@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "",
           "uppercase": "",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": ""
+          "changePosition": "",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

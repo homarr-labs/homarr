@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "crwdns26:0crwdne26:0",
-        "requirement": {
+        "suggestion": {
           "length": "crwdns28:0crwdne28:0",
           "lowercase": "crwdns30:0crwdne30:0",
           "uppercase": "crwdns32:0crwdne32:0",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "crwdns2680:0crwdne2680:0"
       }
+    },
+    "noResults": {
+      "title": "crwdns4251:0crwdne4251:0"
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "crwdns546:0crwdne546:0",
       "checkLogs": "crwdns2260:0crwdne2260:0",
       "tryAgain": "crwdns548:0crwdne548:0",
-      "loading": "crwdns550:0crwdne550:0"
+      "loading": "crwdns550:0crwdne550:0",
+      "show": "crwdns4255:0crwdne4255:0",
+      "hide": "crwdns4257:0crwdne4257:0"
     },
     "here": "crwdns552:0crwdne552:0",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "crwdns686:0crwdne686:0",
-          "changePosition": "crwdns688:0crwdne688:0"
+          "changePosition": "crwdns688:0crwdne688:0",
+          "settings": "crwdns4259:0crwdne4259:0"
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "crwdns1656:0crwdne1656:0",
           "private": "crwdns1658:0crwdne1658:0"
+        },
+        "noResults": {
+          "title": "crwdns4253:0crwdne4253:0"
         },
         "modal": {
           "createBoard": {

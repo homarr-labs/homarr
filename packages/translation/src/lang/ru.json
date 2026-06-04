@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Пароль",
-        "requirement": {
+        "suggestion": {
           "length": "Содержит не менее 8 символов",
           "lowercase": "Содержит строчную букву",
           "uppercase": "Содержит заглавную букву",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Открыть медиа"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Посмотреть документацию",
       "checkLogs": "Проверить логи для подробностей",
       "tryAgain": "Попробовать снова",
-      "loading": "Загрузка"
+      "loading": "Загрузка",
+      "show": "",
+      "hide": ""
     },
     "here": "здесь",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Новая категория",
-          "changePosition": "Изменить позицию"
+          "changePosition": "Изменить позицию",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Эта панель публичная",
           "private": "Эта панель приватная"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

@@ -194,8 +194,6 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
 
   return (
     <Card
-      withBorder
-      shadow="xs"
       padding="sm"
       radius="md"
       style={

@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Mot de passe",
-        "requirement": {
+        "suggestion": {
           "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
           "uppercase": "Inclut une lettre majuscule",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Ouvrir le média"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Voir la documentation",
       "checkLogs": "Vérifiez les logs pour plus de détails",
       "tryAgain": "Réessayer",
-      "loading": "Chargement"
+      "loading": "Chargement",
+      "show": "",
+      "hide": ""
     },
     "here": "ici",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nouvelle catégorie",
-          "changePosition": "Modifier la position"
+          "changePosition": "Modifier la position",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Ce tableau est public",
           "private": "Ce tableau est privé"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
