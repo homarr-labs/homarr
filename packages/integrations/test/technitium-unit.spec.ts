@@ -8,7 +8,9 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import type { IntegrationInput } from "../src/base/integration";
 import { IntegrationError } from "../src/base/errors/integration-error";
 import type { SessionStore } from "../src/base/session-store";
-import { apiPaths, TechnitiumDnsIntegration, type TechnitiumVersion } from "../src/technitium/technitium-integration";
+import { TechnitiumDnsIntegration } from "../src/technitium/technitium-integration";
+import { apiPaths } from "../src/technitium/technitium-types";
+import type { TechnitiumVersion } from "../src/technitium/technitium-types";
 
 // ─── module mocks ────────────────────────────────────────────────────────────
 
@@ -290,7 +292,7 @@ describe("enableAsync", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15").enableAsync();
 
-    const url = String(mockFetch.mock.calls[0]![0]);
+    const url = String(mockFetch.mock.calls[0]?.[0]);
     expect(url).toContain(apiPaths.settingsSet);
     expect(url).toContain("enableBlocking=true");
   });
@@ -334,7 +336,7 @@ describe("disableAsync", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15").disableAsync(0);
 
-    const url = String(mockFetch.mock.calls[0]![0]);
+    const url = String(mockFetch.mock.calls[0]?.[0]);
     expect(url).toContain(apiPaths.settingsSet);
     expect(url).toContain("enableBlocking=false");
     expect(url).not.toContain("temporaryDisable");
@@ -345,7 +347,7 @@ describe("disableAsync", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15").disableAsync(120);
 
-    const url = String(mockFetch.mock.calls[0]![0]);
+    const url = String(mockFetch.mock.calls[0]?.[0]);
     expect(url).toContain(apiPaths.temporaryDisable);
     expect(url).not.toContain("enableBlocking");
   });
@@ -362,7 +364,7 @@ describe("disableAsync", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15").disableAsync(durationSec);
 
-    expect(String(mockFetch.mock.calls[0]![0])).toContain(`minutes=${expectedMin}`);
+    expect(String(mockFetch.mock.calls[0]?.[0])).toContain(`minutes=${expectedMin}`);
   });
 });
 
@@ -506,7 +508,7 @@ describe("request format per version", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "credentials" }), "v15").getSummaryAsync();
 
-    expect(mockFetch.mock.calls[0]![0].toString()).toContain(apiPaths.login);
+    expect(mockFetch.mock.calls[0]?.[0].toString()).toContain(apiPaths.login);
   });
 
   test("fallback login uses /api/login when primary path returns 404", async () => {
@@ -520,7 +522,7 @@ describe("request format per version", () => {
     await new TechnitiumDnsIntegration(makeInput({ kind: "credentials" }), "v15").getSummaryAsync();
 
     // Call 0 is the primary probe (404), call 1 is the fallback /api/login
-    expect(mockFetch.mock.calls[1]![0].toString()).toContain("/api/login");
+    expect(mockFetch.mock.calls[1]?.[0].toString()).toContain("/api/login");
   });
 
   test("all versions use /api/settings/get", async () => {
@@ -653,7 +655,7 @@ describe("login URL format", () => {
     const input = makeInput({ kind: "credentials", username: "myuser", password: "mypass" });
     await new TechnitiumDnsIntegration(input, "v15").getSummaryAsync();
 
-    const loginUrl = String(mockFetch.mock.calls[0]![0]);
+    const loginUrl = String(mockFetch.mock.calls[0]?.[0]);
     expect(loginUrl).toContain("user=myuser");
     expect(loginUrl).toContain("pass=mypass");
     expect(loginUrl).toContain("includeInfo=true");
@@ -671,7 +673,7 @@ describe("login URL format", () => {
     await new TechnitiumDnsIntegration(input, "v15").getSummaryAsync();
 
     // Call 1 is the fallback login (call 0 was the primary that got 404)
-    const loginUrl = String(mockFetch.mock.calls[1]![0]);
+    const loginUrl = String(mockFetch.mock.calls[1]?.[0]);
     expect(loginUrl).toContain("/api/login");
     expect(loginUrl).toContain("user=admin");
     expect(loginUrl).toContain("pass=secret");
@@ -692,7 +694,7 @@ describe("auth mechanism per version", () => {
         sessionData = { token: "", version };
         mockFetch.mockResolvedValueOnce(makeResponse({ status: "ok" }));
         await call();
-        expect(String(mockFetch.mock.calls[0]![0])).toContain(apiPaths.settingsSet);
+        expect(String(mockFetch.mock.calls[0]?.[0])).toContain(apiPaths.settingsSet);
       }
     }
   });
@@ -702,7 +704,7 @@ describe("auth mechanism per version", () => {
 
     await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15").disableAsync();
 
-    const url = String(mockFetch.mock.calls[0]![0]);
+    const url = String(mockFetch.mock.calls[0]?.[0]);
     expect(url).toContain("enableBlocking=false");
     expect(url).not.toContain("minutes=");
   });
@@ -715,7 +717,7 @@ describe("auth mechanism per version", () => {
 
       await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), version).disableAsync(60);
 
-      expect(String(mockFetch.mock.calls[0]![0])).toContain(apiPaths.temporaryDisable);
+      expect(String(mockFetch.mock.calls[0]?.[0])).toContain(apiPaths.temporaryDisable);
     }
   });
 
@@ -730,8 +732,8 @@ describe("auth mechanism per version", () => {
 
       await new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), version).enableAsync();
 
-      const url = String(mockFetch.mock.calls[0]![0]);
-      const headers = mockFetch.mock.calls[0]![1]?.headers as Record<string, string> | undefined;
+      const url = String(mockFetch.mock.calls[0]?.[0]);
+      const headers = mockFetch.mock.calls[0]?.[1]?.headers as Record<string, string> | undefined;
       if (expectBearer) {
         expect(headers?.["Authorization"]).toContain("Bearer");
         expect(url).not.toContain("token=");
@@ -745,18 +747,19 @@ describe("auth mechanism per version", () => {
 
 // ─── testingAsync (session cleanup) ──────────────────────────────────────────
 
+// Calls the protected testingAsync directly with a custom fetchAsync.
+function callTestingAsync(
+  integration: TechnitiumDnsIntegration,
+  fetchAsync: typeof fetchWithTrustedCertificatesAsync,
+) {
+  return (
+    integration as unknown as {
+      testingAsync: (input: { fetchAsync: typeof fetchWithTrustedCertificatesAsync }) => Promise<unknown>;
+    }
+  ).testingAsync({ fetchAsync });
+}
+
 describe("testingAsync (session cleanup)", () => {
-  // Helper to call the protected testingAsync directly with a custom fetchAsync
-  function callTestingAsync(
-    integration: TechnitiumDnsIntegration,
-    fetchAsync: typeof fetchWithTrustedCertificatesAsync,
-  ) {
-    return (
-      integration as unknown as {
-        testingAsync: (input: { fetchAsync: typeof fetchWithTrustedCertificatesAsync }) => Promise<unknown>;
-      }
-    ).testingAsync({ fetchAsync });
-  }
 
   test("credentials auth calls logout endpoint after successful test", async () => {
     sessionData = null;
@@ -784,7 +787,7 @@ describe("testingAsync (session cleanup)", () => {
     const result = await callTestingAsync(integration, fetchMock);
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    const url = String(fetchMock.mock.calls[0]![0]);
+    const url = String(fetchMock.mock.calls[0]?.[0]);
     expect(url).not.toContain("/logout");
     expect(sessionData).toBeNull();
     expect(result).toMatchObject({ success: true });

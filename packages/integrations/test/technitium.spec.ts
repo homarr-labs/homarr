@@ -10,8 +10,8 @@ import type { IntegrationInput } from "../src/base/integration";
 import type { SessionStore } from "../src/base/session-store";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 import { createTechnitiumDnsIntegrationAsync } from "../src/technitium/technitium-integration-factory";
-import type { TechnitiumVersion } from "../src/technitium/technitium-integration";
 import { TechnitiumDnsIntegration } from "../src/technitium/technitium-integration";
+import type { TechnitiumVersion } from "../src/technitium/technitium-types";
 
 // ─── module mocks ────────────────────────────────────────────────────────────
 
@@ -149,7 +149,9 @@ describe.each(VERSIONS)("Technitium DNS $tag ($apiVersion)", ({ tag, apiVersion 
   let apiToken: string;
 
   beforeAll(() => {
-    ({ baseUrl, apiToken } = pool[tag]!);
+    const entry = pool[tag];
+    if (!entry) throw new Error(`Container pool entry for ${tag} was not initialized`);
+    ({ baseUrl, apiToken } = entry);
   });
 
   beforeEach(() => {
