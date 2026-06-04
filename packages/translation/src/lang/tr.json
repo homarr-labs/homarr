@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Şifre",
-        "requirement": {
+        "suggestion": {
           "length": "En az 8 karakter içermeli",
           "lowercase": "Küçük harf içermeli",
           "uppercase": "Büyük harf içermeli",

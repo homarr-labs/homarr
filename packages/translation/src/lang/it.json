@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
+        "suggestion": {
           "length": "Include almeno 8 caratteri",
           "lowercase": "Include lettera minuscola",
           "uppercase": "Include lettera maiuscola",
@@ -1056,7 +1056,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Nessun media caricato"
     }
   },
   "common": {
@@ -1088,8 +1088,8 @@
       "checkLogs": "Controlla i log per maggiori dettagli",
       "tryAgain": "Riprova",
       "loading": "Caricamento",
-      "show": "",
-      "hide": ""
+      "show": "Visualizza",
+      "hide": "Nascondi"
     },
     "here": "qui",
     "iconPicker": {
@@ -1255,7 +1255,7 @@
         "label": {
           "create": "Nuova categoria",
           "changePosition": "Cambia posizione",
-          "settings": ""
+          "settings": "Impostazioni"
         }
       },
       "openAllInNewTabs": {
@@ -3459,7 +3459,7 @@
           "private": "Questa board è privata"
         },
         "noResults": {
-          "title": ""
+          "title": "Ancora nessuna board"
         },
         "modal": {
           "createBoard": {

@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Slaptažodis",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "",
           "uppercase": "",
