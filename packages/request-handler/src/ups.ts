@@ -15,6 +15,6 @@ export const upsSummariesRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getUpsSummariesAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(1, "minute"),
   queryKey: "upsSummaries",
 });
