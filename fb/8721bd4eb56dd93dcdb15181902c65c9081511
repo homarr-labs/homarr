@@ -1,0 +1,355 @@
+packages/board-portability/src/export/export-full-config.ts
+  s_e7a9f157bc08ec::t_a475c8a50147f1 20
+  s_e7a9f157bc08ec::t_722197669b4c83 1-19,21-195,197-214
+  s_e7a9f157bc08ec::t_9d48c36e892652 196
+apps/nextjs/src/app/[locale]/init/_steps/start/next-button.tsx
+  s_e7a9f157bc08ec::t_10683e5b5cb281 10-11,15,18-23,27-31
+packages/docker/src/discovery/types.ts
+  s_e7a9f157bc08ec::t_783f414182409c 1-16
+packages/server-settings/src/index.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 8,36-42
+  s_e7a9f157bc08ec::t_a0f8544e9af52d 43
+packages/board-portability/src/import/parse-bundle.ts
+  s_e7a9f157bc08ec::t_9adfe23ef427e3 3-7
+  s_e7a9f157bc08ec::t_6116677516fa69 1-2
+packages/docker/package.json
+  s_e7a9f157bc08ec::t_f32b795b50995f 28-31,36-37
+packages/board-portability/src/homepage/index.ts
+  s_e7a9f157bc08ec::t_162f6168437926 1-5
+pnpm-lock.yaml
+  ai_agent 655-657,1067-1069,1229-1265,1293-1295,1447-1449,1616-1621,1625-1627,1638-1640,1875-1877,17251
+packages/db/migrations/postgresql/0005_add_docker_app_source.sql
+  s_e7a9f157bc08ec::t_16dc6417d188c9 1-17
+packages/db/migrations/sqlite/0037_add_docker_app_source.sql
+  s_e7a9f157bc08ec::t_c947341cf2daf2 1-17
+apps/nextjs/src/components/config-import/config-summary-list.tsx
+  s_e7a9f157bc08ec::t_80126200f60c10 1-48
+apps/nextjs/src/app/[locale]/manage/tools/import-export/docker-discovery-panel.tsx
+  s_e7a9f157bc08ec::t_ade65a414494eb 1-14,19-64,70-124
+  s_e7a9f157bc08ec::t_060ee07bbec577 65-69
+  s_e7a9f157bc08ec::t_97c3ec97dbf3b7 15-18
+packages/docker/src/discovery/__tests__/parse-container-labels.spec.ts
+  s_e7a9f157bc08ec::t_87b77f886dc70a 1-137
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 45-54,56-58,82-83
+  s_e7a9f157bc08ec::t_425e95e08dc7ca 55
+packages/db/schema/mysql.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 505-531,796-803,805-812
+  s_e7a9f157bc08ec::t_4fcccfe1b168cb 804,813-814
+apps/nextjs/src/components/config-import/config-import-preview-panel.tsx
+  s_e7a9f157bc08ec::t_aa217300009058 1-160
+packages/board-portability/src/schema.ts
+  s_e7a9f157bc08ec::t_01ca19e9362a53 108
+  s_e7a9f157bc08ec::t_48518bbfb34a91 1-107,109-118
+  s_e7a9f157bc08ec::t_5caab3188d30b0 119-174
+apps/nextjs/src/app/[locale]/manage/boards/_components/create-board-button.tsx
+  s_e7a9f157bc08ec::t_86a12113a4d979 13
+packages/board-portability/src/import/index.ts
+  s_e7a9f157bc08ec::t_deac2e0865d9ad 1-4
+packages/api/package.json
+  s_e7a9f157bc08ec::t_f32b795b50995f 25
+apps/nextjs/src/app/[locale]/manage/settings/_components/docker-settings-form.tsx
+  s_e7a9f157bc08ec::t_e5b852cca96034 1-2,4-10,14-29,35-37,52-57
+  s_e7a9f157bc08ec::t_ac02f182d7dc3a 11-13
+  s_e7a9f157bc08ec::t_27fdf1ada57289 3,30-34,38-51
+packages/db/migrations/mysql/meta/0039_snapshot.json
+  s_e7a9f157bc08ec::t_16dc6417d188c9 1-2500
+packages/db/migrations/postgresql/meta/_journal.json
+  s_e7a9f157bc08ec::t_16dc6417d188c9 39-45,48
+packages/api/src/router/config.ts
+  s_e7a9f157bc08ec::t_a3e4119a88c0e5 2-3,11-15,31-42,58-60
+  s_e7a9f157bc08ec::t_76f57c938e489a 1,5
+  s_e7a9f157bc08ec::t_c4eed3d38e0f68 43-57
+  s_e7a9f157bc08ec::t_8b36985da7b259 4,6-10,16-30
+packages/board-portability/src/export/to-json.ts
+  s_e7a9f157bc08ec::t_1618c58a8615ca 1-10
+packages/board-portability/src/import/import-full-config.ts
+  s_e7a9f157bc08ec::t_10882141ea7488 372
+  s_e7a9f157bc08ec::t_70652411a06c81 1-5,7-56,58-371,373-392
+  s_e7a9f157bc08ec::t_ccfa968526171c 57
+  s_e7a9f157bc08ec::t_42755315f4b2c3 6
+apps/nextjs/src/app/[locale]/manage/settings/page.tsx
+  s_e7a9f157bc08ec::t_f32b795b50995f 8-9,16,65-66,68-70
+  s_e7a9f157bc08ec::t_610610c4beb1c8 67
+packages/board-portability/src/export/preview-export-full-config.ts
+  s_e7a9f157bc08ec::t_6c03508a1cf471 1-42
+packages/db/migrations/sqlite/meta/0037_snapshot.json
+  s_e7a9f157bc08ec::t_c947341cf2daf2 1-2379
+examples/docker-compose.yml
+  s_e7a9f157bc08ec::t_ff67d2da03b729 1-6
+packages/api/src/router/import/import-router.ts
+  s_e7a9f157bc08ec::t_79d603cab95b7f 16
+  s_e7a9f157bc08ec::t_4e91cf2dcc072d 1,4-8
+  s_e7a9f157bc08ec::t_87467bf5fdcbb6 50-85
+packages/board-portability/src/__tests__/bundle-round-trip.spec.ts
+  s_e7a9f157bc08ec::t_167edeaff34781 125
+  s_e7a9f157bc08ec::t_1ae699d3087e1b 131-133
+  s_e7a9f157bc08ec::t_c0f0bf867b8865 1-91,93,95,97-118,120-124,126-130,134-137,141-153,156-159,163-178
+  s_e7a9f157bc08ec::t_7cf75d477026d5 160-162
+  s_e7a9f157bc08ec::t_7a5b1a65ab8543 154-155
+  s_e7a9f157bc08ec::t_c54ac4ab9cc28a 92,94,96
+  s_e7a9f157bc08ec::t_0f28e8d3af1448 138-140
+  s_e7a9f157bc08ec::t_8d4e1bc1d57787 119
+packages/db/schema/index.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 52
+packages/board-portability/src/config-bundle-compat.ts
+  s_e7a9f157bc08ec::t_36003e6c3b9873 1-99
+packages/db/schema/postgresql.ts
+  s_e7a9f157bc08ec::t_0df5dfe3ac605f 803,812-813
+  s_e7a9f157bc08ec::t_f32b795b50995f 504-530,795-802,804-811
+docs/config-portability.md
+  s_e7a9f157bc08ec::t_d98fc9831b3d7a 1-66
+packages/cli/src/index.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 3,10
+apps/nextjs/src/app/[locale]/manage/boards/_components/board-card-menu-dropdown.tsx
+  s_e7a9f157bc08ec::t_ac02f182d7dc3a 31-34
+  s_e7a9f157bc08ec::t_f32b795b50995f 5,12,42,94-102,111-112
+  s_e7a9f157bc08ec::t_c86777c46e0573 113
+apps/nextjs/package.json
+  s_e7a9f157bc08ec::t_884e0950c00430 24
+packages/board-portability/src/homepage/parse-services-yaml.ts
+  s_e7a9f157bc08ec::t_f1bc415b7d0e57 1-19,28-75,77-85,87-111
+  s_e7a9f157bc08ec::t_38a605f468f598 20-27
+  s_e7a9f157bc08ec::t_9e615a3e7f73d9 76
+apps/nextjs/src/app/[locale]/init/_steps/import/init-import.tsx
+  s_e7a9f157bc08ec::t_cc511c62a6c962 13-14,17-22
+packages/cron-jobs/package.json
+  s_e7a9f157bc08ec::t_f32b795b50995f 33
+packages/db/migrations/mysql/0039_add_docker_app_source.sql
+  s_e7a9f157bc08ec::t_16dc6417d188c9 1-17
+packages/board-portability/src/homepage/parse-services-yaml.spec.ts
+  s_e7a9f157bc08ec::t_73199021293fac 1-111
+packages/modals-collection/src/boards/import-homepage-modal.tsx
+  s_e7a9f157bc08ec::t_1a957b7da190e7 152-154
+  s_e7a9f157bc08ec::t_64b22cae3a1b10 149
+  s_e7a9f157bc08ec::t_72925dfca18518 193
+  s_e7a9f157bc08ec::t_3322025fcabd7b 22
+  s_e7a9f157bc08ec::t_31cee753d14262 69-70,72
+  s_e7a9f157bc08ec::t_f6002f889d384a 1,3-6,12-21,23-24,29-54,61-68,71,73-85,88-90,92-95,99-100,102-136,160-184,186-192,194-195
+  s_e7a9f157bc08ec::t_20f644f36a7f5f 2,7-11,25-28,55-60,86-87,91,96-98,101,137-148,150-151,155-159,185
+packages/board-portability/src/types.ts
+  s_e7a9f157bc08ec::t_0fab709276d854 1-39
+apps/nextjs/src/app/[locale]/init/_steps/back.tsx
+  s_e7a9f157bc08ec::t_3177902ee49327 9-10,16
+packages/board-portability/src/import/match-apps.ts
+  s_e7a9f157bc08ec::t_e4525b04540832 1-14
+packages/docker/src/discovery/sync-discovered-services.ts
+  s_e7a9f157bc08ec::t_167edeaff34781 132,206-211,227,349
+  s_e7a9f157bc08ec::t_bb2cce024ee2d0 142,151-152
+  s_e7a9f157bc08ec::t_7f72eda65ef7da 372
+  s_e7a9f157bc08ec::t_eed2c52d2f7273 224,231,235
+  s_e7a9f157bc08ec::t_1b71f5671d394f 427,432
+  s_e7a9f157bc08ec::t_af038f0fc4098d 34-42,44-45,47-48,54,63,68,71,76,114,128,135,156,166,169,171,182-185,214-219,222-223,239-240,252-256,258-268,272-279,281-282,284-306,308-316,318,321-346,350-371,373-381,395-397,400-401,404,421-425,428-431,433-436,442-443,446-448,450
+  s_e7a9f157bc08ec::t_da9a3d024b4899 74
+  s_e7a9f157bc08ec::t_96ec6ddfa56523 188-205,225-226,228-230,232-234,236-237,241-251
+  s_e7a9f157bc08ec::t_1b9e6d557a6bae 5
+  s_e7a9f157bc08ec::t_997f0c028f57bb 98-103
+  s_e7a9f157bc08ec::t_fdec5f23d4d8eb 398
+  s_e7a9f157bc08ec::t_a964dc4d4405fc 57-58,62
+  s_e7a9f157bc08ec::t_47b60b0745de24 136-141,143,145-150,153-154,167-168,172
+  s_e7a9f157bc08ec::t_c0985a4face63e 382-394,399,402,405-420,426,437-441,444-445
+  s_e7a9f157bc08ec::t_661f006d317c39 449
+  s_e7a9f157bc08ec::t_a52dc852d25710 7,9,19-20
+  s_e7a9f157bc08ec::t_759e310e7ade6c 1-4,6,8,10-18,21-33,43,46,49-53,55-56,59-61,64-67,69-70,72-73,75,77-97,104-113,115-127,129-131,133-134,144,155,157-165,170,173-181,186-187,212-213,220-221,238,257,269-271,280,283,307,317,319-320,347-348,403,451
+packages/api/src/root.ts
+  s_e7a9f157bc08ec::t_7d57304bb09467 31
+packages/db/migrations/sqlite/meta/_journal.json
+  s_e7a9f157bc08ec::t_c947341cf2daf2 263-269,272
+apps/nextjs/src/app/[locale]/init/_steps/import/use-init-import-mode.ts
+  s_e7a9f157bc08ec::t_a224757e6dd761 1-30
+packages/board-portability/src/export/load-board-graph.ts
+  s_e7a9f157bc08ec::t_ef77b4ef232dc0 1-35
+apps/nextjs/src/app/[locale]/init/_steps/import/config-import-dropzone.tsx
+  s_e7a9f157bc08ec::t_4ef7df97603ad2 1-5,7-50,52-68
+  s_e7a9f157bc08ec::t_3dcbdc8cff98d1 6
+  s_e7a9f157bc08ec::t_6782f8c1b4457a 51
+packages/board-portability/src/homepage/env-variables.ts
+  s_e7a9f157bc08ec::t_ef72aa497d4a55 1-15
+packages/db/migrations/postgresql/meta/0005_snapshot.json
+  s_e7a9f157bc08ec::t_16dc6417d188c9 1-2360
+packages/board-portability/src/export/index.ts
+  s_e7a9f157bc08ec::t_c70eedb96b150c 1-6,8-12,14-23
+  s_e7a9f157bc08ec::t_7d92d8411f5036 7,13
+packages/board-portability/index.ts
+  s_e7a9f157bc08ec::t_92e0e290bdbde4 14-21
+  s_e7a9f157bc08ec::t_8d24a64b44a7a5 1-5,7,10,13
+  s_e7a9f157bc08ec::t_149ef434e76ee1 8
+  s_e7a9f157bc08ec::t_6c3686fb1069ff 6,9,12
+  s_e7a9f157bc08ec::t_ee27db63d7b4d9 11
+packages/board-portability/client.ts
+  s_e7a9f157bc08ec::t_c1a71d705a391b 7,9
+  s_e7a9f157bc08ec::t_98705cdc3736c9 1-6
+  s_e7a9f157bc08ec::t_ab901c19883d9b 8
+packages/translation/src/lang/en.json
+  s_e7a9f157bc08ec::t_25584def1b7baa 3528
+  s_e7a9f157bc08ec::t_0bd668ef3900fd 4666-4668
+  s_e7a9f157bc08ec::t_edad25ee18a118 3457-3458
+  s_e7a9f157bc08ec::t_0bbdfebab6e0bd 3761-3764
+  s_e7a9f157bc08ec::t_1e90b018c8650d 4165
+  s_e7a9f157bc08ec::t_accf27772d9c3d 3684-3685,3717-3720,3727-3760,3765-3776
+  s_e7a9f157bc08ec::t_227109ed328af6 3686-3716
+  s_e7a9f157bc08ec::t_bbf496d7195dee 3721-3726
+  s_e7a9f157bc08ec::t_f32b795b50995f 3019-3057,3062-3086,3526-3527,3876-3901,4147-4164,4166-4174
+  s_e7a9f157bc08ec::t_2244774243fc06 3902
+  s_e7a9f157bc08ec::t_0b1f780077debe 3058-3061
+  s_e7a9f157bc08ec::t_e8b5d4c8372a3b 10-11,17-23
+apps/nextjs/src/app/[locale]/manage/tools/import-export/import-config-card.tsx
+  s_e7a9f157bc08ec::t_570ef47098039a 4-5,12,89-101,105
+  s_e7a9f157bc08ec::t_3aa56a7180cc5f 1-2,6-11,14,16,18-26,34-38,47,50,54-88,102-103,107-118,120-126
+  s_e7a9f157bc08ec::t_655b5658487805 3,13,15,17,27-33,39-46,48-49,51-53,104,106,119
+packages/board-portability/src/import/plan-full-config-import.ts
+  s_e7a9f157bc08ec::t_ca67184d12cfaa 171-175,177-179
+  s_e7a9f157bc08ec::t_e582287063b7dc 3-36,38-96,99-170,176,180-196
+  s_e7a9f157bc08ec::t_3f88ab46e7b18d 1-2
+  s_e7a9f157bc08ec::t_e1c2eb51ab0f55 37
+  s_e7a9f157bc08ec::t_16dc941cd3d423 97-98
+apps/nextjs/src/app/[locale]/init/_steps/import/init-config-import.tsx
+  s_e7a9f157bc08ec::t_56a6d30f66a3cc 1-98
+packages/board-portability/src/export/serialize-board.ts
+  s_e7a9f157bc08ec::t_22f97bb92d305f 47
+  s_e7a9f157bc08ec::t_273fca7f86ddaa 2
+  s_e7a9f157bc08ec::t_31eab22744d82d 132
+  s_e7a9f157bc08ec::t_167edeaff34781 149
+  s_e7a9f157bc08ec::t_e19ac225777dc4 4-8,10-29,43,58,60,62,64-65,73,75,82,84,93,102,104,108,110-115,117-131,133-148,150-161,163-168
+  s_e7a9f157bc08ec::t_36ce23060c3c91 1,3,9,30-42,44-46,48-57,59,61,63,66-72,74,76-81,83,85-92,94-101,103,105-107,109,116,162
+packages/docker/src/discovery/index.ts
+  s_e7a9f157bc08ec::t_6496d2cef8e570 1-8
+packages/api/src/router/docker/docker-router.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 6-7,108-132
+  s_e7a9f157bc08ec::t_af848ef7a2c63d 133
+packages/board-portability/src/import/insert.ts
+  s_e7a9f157bc08ec::t_be7cb5ad769cb2 6-7
+  s_e7a9f157bc08ec::t_29110e4c56fcc4 1-5,8-79
+packages/api/src/router/board.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 38-43,52-54,66,1340-1445
+  s_e7a9f157bc08ec::t_3c5bcf252b8d4c 1446
+packages/docker/src/labels.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 3-20
+packages/board-portability/package.json
+  s_e7a9f157bc08ec::t_f4eccc0a434222 1-14,18-31,33-36,39-40
+  s_e7a9f157bc08ec::t_c49b14d0ba22ec 15,17
+  s_e7a9f157bc08ec::t_e43846aefab35d 16
+  s_e7a9f157bc08ec::t_4c8227da3feaee 32,37-38
+apps/nextjs/src/app/[locale]/manage/tools/import-export/import-homepage-card.tsx
+  s_e7a9f157bc08ec::t_76775ee1a0c330 52
+  s_e7a9f157bc08ec::t_863035969820f1 152-154
+  s_e7a9f157bc08ec::t_12b2822139d478 141,144
+  s_e7a9f157bc08ec::t_1ab31ef0e49d96 1-51,53-140,142-143,145-151,155-181
+packages/db/migrations/mysql/meta/_journal.json
+  s_e7a9f157bc08ec::t_16dc6417d188c9 277-283,286
+packages/board-portability/src/import/prepare-board.ts
+  s_e7a9f157bc08ec::t_97cb76b64296c4 215
+  s_e7a9f157bc08ec::t_278368f93a6f6e 30-36
+  s_e7a9f157bc08ec::t_e07255593fdf31 3-13
+  s_e7a9f157bc08ec::t_298f21eff006d5 1-2,15-19,28-29,37-62,68-143,148-157,159-165,167-176,180-189,191-199,203-214,216-233
+  s_e7a9f157bc08ec::t_167edeaff34781 14,20
+  s_e7a9f157bc08ec::t_f4ed2473a63393 144-147
+  s_e7a9f157bc08ec::t_ab6328144c3f07 158
+  s_e7a9f157bc08ec::t_e3cb44baf27a22 177-179
+  s_e7a9f157bc08ec::t_37c096cb338f35 166
+  s_e7a9f157bc08ec::t_45966a4cce4080 63-67
+  s_e7a9f157bc08ec::t_5135fcbda68ea1 21-27
+  s_e7a9f157bc08ec::t_09f8681b4e8267 190
+  s_e7a9f157bc08ec::t_b5e3c694f7f360 200-202
+packages/docker/src/discovery/parse-container-labels.ts
+  s_e7a9f157bc08ec::t_94101a53ea7639 1-110
+packages/board-portability/tsconfig.json
+  s_e7a9f157bc08ec::t_684d8d6320f63e 1-8
+packages/validation/src/board.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 97-105
+packages/board-portability/src/homepage/import.ts
+  s_e7a9f157bc08ec::t_d928fdc8786e07 1-76
+packages/db/schema/sqlite.ts
+  s_e7a9f157bc08ec::t_542ae413f59e22 789,798-799
+  s_e7a9f157bc08ec::t_f32b795b50995f 490-516,781-788,790-797
+packages/cli/package.json
+  s_e7a9f157bc08ec::t_f32b795b50995f 29
+packages/docker/src/discovery/list-discovered-containers.ts
+  s_e7a9f157bc08ec::t_d140d75f2ef8dc 1-5,8-45
+  s_e7a9f157bc08ec::t_05e64577bc5e3a 6-7
+mise.toml
+  s_e7a9f157bc08ec::t_a00088bba4f6fc 1-2
+packages/board-portability/src/homepage/types.ts
+  s_e7a9f157bc08ec::t_8903a4e041d656 1-21
+packages/modals-collection/src/boards/export-board-modal.tsx
+  s_e7a9f157bc08ec::t_934c2df32e6de7 1-15,17-62,64
+  s_e7a9f157bc08ec::t_0f76ca2f375644 16
+  s_e7a9f157bc08ec::t_5f938150e585b8 63
+packages/board-portability/src/utils.ts
+  s_e7a9f157bc08ec::t_9c86eb2e2e069d 1-15,17-34,36-52
+  s_e7a9f157bc08ec::t_167edeaff34781 16,35
+packages/board-portability/src/homepage/prepare-homepage-import.ts
+  s_e7a9f157bc08ec::t_69e5a3cacbfd93 107
+  s_e7a9f157bc08ec::t_8b3131591ac340 168
+  s_e7a9f157bc08ec::t_155258bec891a9 153
+  s_e7a9f157bc08ec::t_beb568af817352 232
+  s_e7a9f157bc08ec::t_b74109397e3a65 250-282
+  s_e7a9f157bc08ec::t_1b17a144d85f97 287-289,291-295
+  s_e7a9f157bc08ec::t_30c8380373fc15 141
+  s_e7a9f157bc08ec::t_ef43d19656953c 120-125
+  s_e7a9f157bc08ec::t_15c81cf8f57cd8 1-94,96-106,108-119,126-140,142-152,154-163,165-167,169-202,205-210,212-231,233-240,242-247,249,283-286,290,296-299
+  s_e7a9f157bc08ec::t_e0ac53b7f22daa 164
+  s_e7a9f157bc08ec::t_2c5e70da41bb26 95
+  s_e7a9f157bc08ec::t_167edeaff34781 203-204,241,248
+  s_e7a9f157bc08ec::t_d9f327c87a0097 211
+packages/cli/src/commands/boards.ts
+  s_e7a9f157bc08ec::t_cc034997b92987 1-10
+packages/modals-collection/src/boards/import-bundle-modal.tsx
+  s_e7a9f157bc08ec::t_35e28acefd4488 1-6,8-17,19-136,138-139
+  s_e7a9f157bc08ec::t_5e255f7e6edfbe 7
+  s_e7a9f157bc08ec::t_3825031337ca62 18
+  s_e7a9f157bc08ec::t_120bdeb808fc8d 137
+apps/nextjs/src/app/[locale]/manage/tools/import-export/page.tsx
+  s_e7a9f157bc08ec::t_a99108339848ac 30
+  s_e7a9f157bc08ec::t_1be3c732fb8104 1-4,6-8,10-29,31-34
+  s_e7a9f157bc08ec::t_ceb0c2796ea467 5,9
+apps/nextjs/src/app/[locale]/manage/tools/import-export/export-config-card.tsx
+  s_e7a9f157bc08ec::t_621d80fade8fc0 11
+  s_e7a9f157bc08ec::t_8751873d98827a 123-128
+  s_e7a9f157bc08ec::t_70d85c336fe787 54,56
+  s_e7a9f157bc08ec::t_fa04fa40584448 1-2,6-10,19,21,29,31-49,57-61,135-138
+  s_e7a9f157bc08ec::t_192231098ff9d1 81-82
+  s_e7a9f157bc08ec::t_630c42f9ae71ed 4,12,20,23-26,103-118
+  s_e7a9f157bc08ec::t_c73ea4f676e72c 3,5,13-18,22,27-28,30,50-53,55,62-80,83-102,119-122,129-134
+apps/nextjs/src/app/[locale]/manage/tools/logs/terminal.tsx
+  s_e7a9f157bc08ec::t_5f5aff76ce268d 17,38-39,44-46,48-52,55-59,62
+packages/modals-collection/package.json
+  s_e7a9f157bc08ec::t_f32b795b50995f 25
+packages/docker/src/index.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 12
+packages/board-portability/src/homepage/widget-type-map.ts
+  s_e7a9f157bc08ec::t_167edeaff34781 19-28
+  s_e7a9f157bc08ec::t_7c36d7bb728ae3 1-18,29-55
+packages/board-portability/src/homepage/widget-type-map.spec.ts
+  s_e7a9f157bc08ec::t_a3f49319dd9eaf 1-40
+packages/cli/src/commands/boards-export.ts
+  s_e7a9f157bc08ec::t_9ef233066ea18d 1-40
+packages/modals-collection/src/boards/index.ts
+  s_e7a9f157bc08ec::t_f32b795b50995f 3-4,6
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_e7a9f157bc08ec::t_5b82e58ac880ba 150,152-155
+  s_e7a9f157bc08ec::t_883bf8c12e8aef 151
+  s_e7a9f157bc08ec::t_1df4f385d9a48f 13
+apps/nextjs/src/app/[locale]/init/_steps/start/init-start.tsx
+  s_e7a9f157bc08ec::t_893023f0627247 25,30-32,34-35
+  s_e7a9f157bc08ec::t_bee8cd4158ff20 2
+  s_e7a9f157bc08ec::t_6336a33b896ba5 33
+packages/cli/src/commands/boards-list.ts
+  s_e7a9f157bc08ec::t_35bcbb66a9370e 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fb8721bd4eb56dd93dcdb15181902c65c9081511",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
