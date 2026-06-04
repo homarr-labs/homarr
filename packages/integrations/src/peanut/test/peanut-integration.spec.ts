@@ -68,7 +68,7 @@ describe("PeaNutIntegration getUpsSummariesAsync", () => {
       manufacturer: "CyberPower",
       model: "CP1500EPFCLCD",
       serial: "ABC123",
-      status: "OL CHRG",
+      status: "charging",
       batteryCharge: 100,
       batteryRuntime: 3720,
       batteryVoltage: 27.3,
@@ -96,7 +96,7 @@ describe("PeaNutIntegration getUpsSummariesAsync", () => {
       name: "ups-0",
       manufacturer: null,
       model: null,
-      status: "OB DISCHRG LB",
+      status: "lowBattery",
       batteryCharge: 15,
       batteryRuntime: null,
       load: null,
@@ -116,6 +116,28 @@ describe("PeaNutIntegration getUpsSummariesAsync", () => {
     const summaries = await createIntegration().getUpsSummariesAsync();
 
     expect(summaries.map((summary) => summary.id)).toStrictEqual(["ups-a", "ups-b"]);
+  });
+
+  test("normalizes NUT status flags into a typed status", async () => {
+    mockDevicesResponse([
+      { "ups.status": "OL" },
+      { "ups.status": "OL CHRG" },
+      { "ups.status": "OB DISCHRG" },
+      { "ups.status": "OB DISCHRG LB" },
+      { "ups.status": "OL LB" },
+      { "ups.status": "" },
+    ]);
+
+    const summaries = await createIntegration().getUpsSummariesAsync();
+
+    expect(summaries.map((summary) => summary.status)).toStrictEqual([
+      "online",
+      "charging",
+      "onBattery",
+      "lowBattery",
+      "lowBattery",
+      "unknown",
+    ]);
   });
 });
 

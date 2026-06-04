@@ -6,7 +6,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IUpsSummaryIntegration } from "../interfaces/ups-summary/ups-summary-integration";
-import type { UpsSummary } from "../interfaces/ups-summary/ups-summary-types";
+import type { UpsStatus, UpsSummary } from "../interfaces/ups-summary/ups-summary-types";
 import type { PeaNutDevice } from "./peanut-types";
 import { peaNutDevicesSchema } from "./peanut-types";
 
@@ -48,7 +48,7 @@ export class PeaNutIntegration extends Integration implements IUpsSummaryIntegra
       manufacturer,
       model,
       serial: this.readString(device, "device.serial"),
-      status: this.readString(device, "ups.status") ?? "",
+      status: this.parseStatus(this.readString(device, "ups.status")),
       batteryCharge: this.readNumber(device, "battery.charge"),
       batteryRuntime: this.readNumber(device, "battery.runtime"),
       batteryVoltage: this.readNumber(device, "battery.voltage"),
@@ -58,6 +58,22 @@ export class PeaNutIntegration extends Integration implements IUpsSummaryIntegra
       power: this.readNumber(device, "ups.realpower") ?? this.readNumber(device, "ups.power"),
       temperature: this.readNumber(device, "ups.temperature"),
     };
+  }
+
+  /**
+   * Resolves the raw NUT `ups.status` flags (e.g. "OL CHRG", "OB DISCHRG LB") into a single
+   * normalized status. The flags are checked in priority order so the most critical state wins.
+   */
+  private parseStatus(rawStatus: string | null): UpsStatus {
+    const flags = (rawStatus ?? "").toUpperCase().split(/\s+/).filter(Boolean);
+
+    if (flags.includes("LB")) return "lowBattery";
+    if (flags.includes("OB")) return "onBattery";
+    if (flags.includes("OL")) {
+      return flags.includes("CHRG") ? "charging" : "online";
+    }
+
+    return "unknown";
   }
 
   private readString(device: PeaNutDevice, key: string): string | null {
