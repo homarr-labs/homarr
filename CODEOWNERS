@@ -11,3 +11,86 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 Dockerfile
 docker-compose.yml
+
+# BEGIN GENERATED widget/integration owners
+/packages/api/src/router/widgets/anchor-notes.ts /packages/integrations/src/anchor/ /packages/widgets/src/anchor-note/ @omariqbal
+/packages/api/src/router/widgets/app.ts /packages/widgets/src/app/ @manuel-rw
+/packages/api/src/router/widgets/calendar.ts /packages/widgets/src/calendar/ @manuel-rw
+/packages/api/src/router/widgets/coolify.ts /packages/integrations/src/coolify/ /packages/widgets/src/coolify/ @Rhiz3K
+/packages/api/src/router/widgets/dns-hole.ts /packages/cron-jobs/src/jobs/integrations/dns-hole.ts /packages/widgets/src/dns-hole/controls/ @manuel-rw
+/packages/api/src/router/widgets/dns-hole.ts /packages/cron-jobs/src/jobs/integrations/dns-hole.ts /packages/widgets/src/dns-hole/summary/ @manuel-rw
+/packages/api/src/router/widgets/downloads.ts /packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/widgets/src/downloads/ @manuel-rw
+/packages/api/src/router/widgets/firewall.ts /packages/cron-jobs/src/jobs/integrations/firewall.ts /packages/widgets/src/firewall/ @Oupsman
+/packages/api/src/router/widgets/health-monitoring.ts /packages/cron-jobs/src/jobs/integrations/health-monitoring.ts /packages/widgets/src/health-monitoring/ @dgshue
+/packages/api/src/router/widgets/immich.ts /packages/integrations/src/immich/ /packages/widgets/src/immich/album-carousel/ @manuel-rw
+/packages/api/src/router/widgets/immich.ts /packages/integrations/src/immich/ /packages/widgets/src/immich/server-stats/ @manuel-rw
+/packages/api/src/router/widgets/indexer-manager.ts /packages/cron-jobs/src/jobs/integrations/indexer-manager.ts /packages/widgets/src/indexer-manager/ @manuel-rw
+/packages/api/src/router/widgets/media-release.ts /packages/widgets/src/media-releases/ @manuel-rw
+/packages/api/src/router/widgets/media-requests.ts /packages/cron-jobs/src/jobs/integrations/media-requests.ts /packages/widgets/src/media-requests/list/ @manuel-rw
+/packages/api/src/router/widgets/media-requests.ts /packages/cron-jobs/src/jobs/integrations/media-requests.ts /packages/widgets/src/media-requests/stats/ @manuel-rw
+/packages/api/src/router/widgets/media-server.ts /packages/cron-jobs/src/jobs/integrations/media-server.ts /packages/widgets/src/media-server/ @manuel-rw
+/packages/api/src/router/widgets/media-transcoding.ts /packages/cron-jobs/src/jobs/integrations/media-transcoding.ts /packages/integrations/src/media-transcoding/ /packages/widgets/src/media-transcoding/ @manuel-rw
+/packages/api/src/router/widgets/minecraft.ts /packages/widgets/src/minecraft/server-status/ @manuel-rw
+/packages/api/src/router/widgets/network-controller.ts /packages/cron-jobs/src/jobs/integrations/network-controller.ts /packages/widgets/src/network-controller/network-status/ @pitschi
+/packages/api/src/router/widgets/network-controller.ts /packages/cron-jobs/src/jobs/integrations/network-controller.ts /packages/widgets/src/network-controller/summary/ @pitschi
+/packages/api/src/router/widgets/notebook.ts /packages/widgets/src/notebook/ @manuel-rw
+/packages/api/src/router/widgets/notifications.ts /packages/cron-jobs/src/jobs/integrations/notifications.ts /packages/widgets/src/notifications/ @itzTheMeow
+/packages/api/src/router/widgets/releases.ts /packages/widgets/src/releases/ @Aandree5
+/packages/api/src/router/widgets/rssFeed.ts /packages/widgets/src/rssFeed/ @manuel-rw
+/packages/api/src/router/widgets/smart-home.ts /packages/cron-jobs/src/jobs/integrations/home-assistant.ts /packages/widgets/src/smart-home/entity-state/ @manuel-rw
+/packages/api/src/router/widgets/smart-home.ts /packages/cron-jobs/src/jobs/integrations/home-assistant.ts /packages/widgets/src/smart-home/execute-automation/ @manuel-rw
+/packages/api/src/router/widgets/speedtest-tracker.ts /packages/integrations/src/speedtest-tracker/ /packages/widgets/src/speedtest-tracker/ @kylegrieder
+/packages/api/src/router/widgets/stocks.ts /packages/widgets/src/stocks/ @jackwellerreal
+/packages/api/src/router/widgets/timetable.ts /packages/cron-jobs/src/jobs/integrations/timetable.ts /packages/widgets/src/timetable/ @manuel-rw
+/packages/api/src/router/widgets/tracearr.ts /packages/cron-jobs/src/jobs/integrations/tracearr.ts /packages/integrations/src/tracearr/ /packages/widgets/src/tracearr/ @StrandedTurtle
+/packages/api/src/router/widgets/umami.ts /packages/cron-jobs/src/jobs/integrations/umami.ts /packages/integrations/src/umami/ /packages/widgets/src/umami/ @febrile42
+/packages/api/src/router/widgets/weather.ts /packages/cron-jobs/src/jobs/weather.ts /packages/widgets/src/weather/ @manuel-rw
+/packages/cron-jobs/src/jobs/docker.ts /packages/widgets/src/docker/ @ashtonbatty
+/packages/cron-jobs/src/jobs/integrations/dns-hole.ts /packages/integrations/src/pi-hole/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/aria2/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/deluge/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/nzbget/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/qbittorrent/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/sabnzbd/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/slskd/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/downloads.ts /packages/integrations/src/download-client/transmission/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/home-assistant.ts /packages/integrations/src/homeassistant/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/media-organizer.ts /packages/integrations/src/media-organizer/lidarr/ @NicolasNewman
+/packages/cron-jobs/src/jobs/integrations/media-organizer.ts /packages/integrations/src/media-organizer/radarr/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/media-organizer.ts /packages/integrations/src/media-organizer/readarr/ @manuel-rw
+/packages/cron-jobs/src/jobs/integrations/media-organizer.ts /packages/integrations/src/media-organizer/sonarr/ @manuel-rw
+/packages/integrations/src/adguard-home/ @manuel-rw
+/packages/integrations/src/codeberg/ @Aandree5
+/packages/integrations/src/dashdot/ @dgshue
+/packages/integrations/src/docker-hub/ @Aandree5
+/packages/integrations/src/emby/ @manuel-rw
+/packages/integrations/src/github-container-registry/ @manuel-rw
+/packages/integrations/src/github/ @manuel-rw
+/packages/integrations/src/gitlab/ @Aandree5
+/packages/integrations/src/glances/ @dgshue
+/packages/integrations/src/ical/ @NicolasNewman
+/packages/integrations/src/jellyfin/ @manuel-rw
+/packages/integrations/src/jellyseerr/ @manuel-rw
+/packages/integrations/src/linuxserverio/ @Aandree5
+/packages/integrations/src/nextcloud/ @manuel-rw
+/packages/integrations/src/npm/ @Aandree5
+/packages/integrations/src/ntfy/ @manuel-rw
+/packages/integrations/src/openmediavault/ @dgshue
+/packages/integrations/src/opnsense/ @manuel-rw
+/packages/integrations/src/overseerr/ @manuel-rw
+/packages/integrations/src/plex/ @manuel-rw
+/packages/integrations/src/prowlarr/ @manuel-rw
+/packages/integrations/src/proxmox/ @manuel-rw
+/packages/integrations/src/quay/ @Aandree5
+/packages/integrations/src/search-ch/ @manuel-rw
+/packages/integrations/src/seerr/ @manuel-rw
+/packages/integrations/src/truenas/ @dgshue
+/packages/integrations/src/unifi-controller/ @manuel-rw
+/packages/integrations/src/unraid/ @dgshue
+/packages/widgets/src/bookmarks/ @manuel-rw
+/packages/widgets/src/clock/ @manuel-rw
+/packages/widgets/src/iframe/ @manuel-rw
+/packages/widgets/src/system-disks/ @manuel-rw
+/packages/widgets/src/system-resources/ @kylegrieder
+/packages/widgets/src/video/ @manuel-rw
+# END GENERATED widget/integration owners

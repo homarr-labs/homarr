@@ -1,0 +1,82 @@
+name: Update CODEOWNERS
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - packages/widgets/src/**
+      - packages/integrations/src/**
+      - packages/api/src/router/widgets/**
+      - packages/cron-jobs/src/jobs/**
+      - scripts/generate-codeowners.mts
+      - scripts/codeowners-overrides.json
+    branches:
+      - dev
+
+permissions:
+  pull-requests: write
+
+jobs:
+  update-codeowners:
+    concurrency:
+      group: update-codeowners
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtain token
+        id: obtainToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
+          client-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate CODEOWNERS
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: pnpm scripts:generate-codeowners
+
+      - name: Create Pull Request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.obtainToken.outputs.token }}
+          branch: update-codeowners
+          base: dev
+          title: "chore: update widget/integration CODEOWNERS"
+          delete-branch: true
+          commit-message: "chore: update widget/integration CODEOWNERS"
+          body: |
+            This PR updates per-widget and per-integration CODEOWNERS entries from git history.
+
+            Unmapped authors can be added in `scripts/codeowners-overrides.json`.
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Enable auto-merge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --auto --squash

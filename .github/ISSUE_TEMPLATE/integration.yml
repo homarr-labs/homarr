@@ -19,7 +19,10 @@ body:
   - type: textarea
     attributes:
       label: Additional information
-      description: Add any other information related to the integration.
+      description: |
+        Add any other information related to the integration.
+
+        After your integration is merged to `dev`, a bot PR updates [CODEOWNERS](https://github.com/homarr-labs/homarr/blob/dev/CODEOWNERS) so you are requested on future PRs touching your folders. Run `pnpm scripts:generate-codeowners` locally for faster updates. Add email mappings in `scripts/codeowners-overrides.json` if the generator cannot resolve your GitHub user.
   - type: dropdown
     attributes:
       label: Public API available?
