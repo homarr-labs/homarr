@@ -37,16 +37,15 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
           withBorder
         >
           <Stack justify="space-between" h="100%" gap="xs">
-            <Text fw={500} ta="center" lh={1.2} size="sm" lineClamp={1}>
-              {integration.name}
-            </Text>
+            <Group gap="sm" wrap="nowrap" align="flex-start">
+              <IntegrationAvatar kind={integration.kind} size="sm" />
+              <Text fw={500} lh={1.2} size="sm" lineClamp={2}>
+                {integration.name}
+              </Text>
+            </Group>
 
-            <Center>
-              <IntegrationAvatar kind={integration.kind} size="lg" />
-            </Center>
-
-            <Stack gap={4} align="center">
-              <Group gap={4} justify="center" wrap="wrap">
+            <Stack gap={4} mt="auto">
+              <Group gap={4} wrap="wrap">
                 {integration.categories.slice(0, 2).map((cat) => (
                   <Badge key={cat} variant="light" size="xs">
                     {categoryTranslationKeys[cat] ? t(categoryTranslationKeys[cat] as never) : cat}
