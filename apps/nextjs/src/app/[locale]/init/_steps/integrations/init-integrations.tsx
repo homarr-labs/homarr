@@ -78,10 +78,7 @@ export const InitIntegrations = () => {
   const dockerApps = dockerData?.status === "success" ? dockerData.apps : [];
   const totalDetected = dockerIntegrations.length + dockerApps.length;
 
-  const detectedKinds = useMemo(
-    () => new Set(dockerIntegrations.map((i) => i.kind)),
-    [dockerIntegrations],
-  );
+  const detectedKinds = useMemo(() => new Set(dockerIntegrations.map((i) => i.kind)), [dockerIntegrations]);
 
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
   const [appsExpanded, setAppsExpanded] = useState(false);
