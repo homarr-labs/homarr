@@ -1,11 +1,9 @@
 "use client";
 
 import { Badge, Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type {
   Board,
@@ -17,44 +15,62 @@ import type {
 import { BoardItemContent } from "../items/item-content";
 import { CategoryMenu } from "./category/category-menu";
 import classes from "./item.module.css";
+import {
+  getEstimatedGridWidth,
+  getFallbackDimensions,
+  getFullWidthSortedSections,
+  getStaticGridElements,
+  getStaticGridLayouts,
+  getStaticGridRowCount,
+  getStaticLayoutSelectionCss,
+} from "./static-grid-layout";
+import { useCategoryCollapse } from "./use-category-collapse";
 
 interface StaticBoardGridProps {
   board: Board;
 }
 
 export const StaticBoardGrid = ({ board }: StaticBoardGridProps) => {
-  const currentLayoutId = useCurrentLayout();
-  const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
-  const columnCount = currentLayout?.columnCount ?? 12;
+  const boardId = `board-${board.id}`;
+  const layouts = getStaticGridLayouts(board.layouts);
+  const layoutSelectionCss = getStaticLayoutSelectionCss(boardId, layouts);
+  const fullWidthSortedSections = getFullWidthSortedSections(board);
 
-  const fullWidthSortedSections = board.sections
-    .filter(
-      (section): section is CategorySection | EmptySection => section.kind === "empty" || section.kind === "category",
-    )
-    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
+  if (layouts.length === 0) return null;
 
   return (
-    <Stack h="100%">
-      {fullWidthSortedSections.map((section) =>
-        section.kind === "empty" ? (
-          <StaticEmptySection
-            key={section.id}
-            section={section}
-            board={board}
-            layoutId={currentLayoutId}
-            columnCount={columnCount}
-          />
-        ) : (
-          <StaticCategorySection
-            key={section.id}
-            section={section}
-            board={board}
-            layoutId={currentLayoutId}
-            columnCount={columnCount}
-          />
-        ),
-      )}
-    </Stack>
+    <>
+      <style>{layoutSelectionCss}</style>
+      <div data-static-board={boardId}>
+        {layouts.map((layout, index) => (
+          <div key={layout.id} className="static-board-layout" data-static-layout={layout.id}>
+            <Stack h="100%">
+              {fullWidthSortedSections.map((section) =>
+                section.kind === "empty" ? (
+                  <StaticEmptySection
+                    key={section.id}
+                    section={section}
+                    board={board}
+                    layoutId={layout.id}
+                    columnCount={layout.columnCount}
+                    estimatedGridWidth={getEstimatedGridWidth(layout, layouts.at(index + 1))}
+                  />
+                ) : (
+                  <StaticCategorySection
+                    key={section.id}
+                    section={section}
+                    board={board}
+                    layoutId={layout.id}
+                    columnCount={layout.columnCount}
+                    estimatedGridWidth={getEstimatedGridWidth(layout, layouts.at(index + 1))}
+                  />
+                ),
+              )}
+            </Stack>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
@@ -63,6 +79,7 @@ interface StaticSectionGridProps {
   board: Board;
   layoutId: string;
   columnCount: number;
+  estimatedGridWidth: number;
   isDynamic?: boolean;
   fixedRowCount?: number;
 }
@@ -72,19 +89,15 @@ const StaticSectionGrid = ({
   board,
   layoutId,
   columnCount,
+  estimatedGridWidth,
   isDynamic,
   fixedRowCount,
 }: StaticSectionGridProps) => {
-  const items = getSectionItems(board, sectionId, layoutId);
-  const innerSections = getDynamicSections(board, sectionId, layoutId);
-  const allItems = [...items, ...innerSections].sort((itemA, itemB) => {
-    if (itemA.yOffset === itemB.yOffset) return itemA.xOffset - itemB.xOffset;
-    return itemA.yOffset - itemB.yOffset;
-  });
+  const allItems = getStaticGridElements(board, sectionId, layoutId);
 
   if (allItems.length === 0) return null;
 
-  const rowCount = fixedRowCount ?? Math.max(...allItems.map((item) => item.yOffset + item.height));
+  const rowCount = getStaticGridRowCount(allItems, fixedRowCount);
 
   return (
     <div className="static-grid-container" style={{ height: isDynamic ? "100%" : undefined }}>
@@ -100,7 +113,14 @@ const StaticSectionGrid = ({
         }}
       >
         {allItems.map((item) => (
-          <StaticGridItem key={item.id} item={item} board={board} layoutId={layoutId} />
+          <StaticGridItem
+            key={item.id}
+            item={item}
+            board={board}
+            layoutId={layoutId}
+            estimatedGridWidth={estimatedGridWidth}
+            columnCount={columnCount}
+          />
         ))}
       </div>
     </div>
@@ -111,40 +131,59 @@ interface StaticGridItemProps {
   item: SectionItem | DynamicSectionItem;
   board: Board;
   layoutId: string;
+  estimatedGridWidth: number;
+  columnCount: number;
 }
 
-const StaticGridItem = ({ item, board, layoutId }: StaticGridItemProps) => (
-  <div
-    style={{
-      gridColumn: `${item.xOffset + 1} / span ${item.width}`,
-      gridRow: `${item.yOffset + 1} / span ${item.height}`,
-      position: "relative",
-    }}
-  >
-    <div className="static-grid-item-content">
-      {item.type === "item" ? (
-        <BoardItemContent item={item} />
-      ) : (
-        <StaticDynamicSection section={item} board={board} layoutId={layoutId} />
-      )}
+const StaticGridItem = ({ item, board, layoutId, estimatedGridWidth, columnCount }: StaticGridItemProps) => {
+  const fallbackDimensions = getFallbackDimensions(item, estimatedGridWidth, columnCount);
+
+  return (
+    <div
+      style={{
+        gridColumn: `${item.xOffset + 1} / span ${item.width}`,
+        gridRow: `${item.yOffset + 1} / span ${item.height}`,
+        position: "relative",
+      }}
+    >
+      <div className="static-grid-item-content">
+        {item.type === "item" ? (
+          <BoardItemContent item={item} fallbackDimensions={fallbackDimensions} />
+        ) : (
+          <StaticDynamicSection
+            section={item}
+            board={board}
+            layoutId={layoutId}
+            estimatedGridWidth={fallbackDimensions.width}
+          />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface StaticEmptySectionProps {
   section: EmptySection;
   board: Board;
   layoutId: string;
   columnCount: number;
+  estimatedGridWidth: number;
 }
 
-const StaticEmptySection = ({ section, board, layoutId, columnCount }: StaticEmptySectionProps) => {
-  const items = getSectionItems(board, section.id, layoutId);
-  const innerSections = getDynamicSections(board, section.id, layoutId);
+const StaticEmptySection = ({ section, board, layoutId, columnCount, estimatedGridWidth }: StaticEmptySectionProps) => {
+  const items = getStaticGridElements(board, section.id, layoutId);
 
-  if (items.length === 0 && innerSections.length === 0) return null;
+  if (items.length === 0) return null;
 
-  return <StaticSectionGrid sectionId={section.id} board={board} layoutId={layoutId} columnCount={columnCount} />;
+  return (
+    <StaticSectionGrid
+      sectionId={section.id}
+      board={board}
+      layoutId={layoutId}
+      columnCount={columnCount}
+      estimatedGridWidth={estimatedGridWidth}
+    />
+  );
 };
 
 interface StaticCategorySectionProps {
@@ -152,29 +191,29 @@ interface StaticCategorySectionProps {
   board: Board;
   layoutId: string;
   columnCount: number;
+  estimatedGridWidth: number;
 }
 
-const StaticCategorySection = ({ section, board, layoutId, columnCount }: StaticCategorySectionProps) => {
-  const { mutate } = clientApi.section.changeCollapsed.useMutation();
+const StaticCategorySection = ({
+  section,
+  board,
+  layoutId,
+  columnCount,
+  estimatedGridWidth,
+}: StaticCategorySectionProps) => {
   const boardData = useRequiredBoard();
-  const [opened, { toggle }] = useDisclosure(section.collapsed);
-
-  const handleToggle = () => {
-    toggle();
-    mutate({ sectionId: section.id, collapsed: !opened });
-  };
+  const [opened, { toggle }] = useCategoryCollapse(section);
 
   return (
     <Card
       style={{ "--opacity": boardData.opacity / 100 }}
       radius={boardData.itemRadius}
-      withBorder
       p={0}
       className={classes.itemCard}
     >
       <Stack>
         <Group wrap="nowrap" gap="sm">
-          <UnstyledButton w="100%" p="sm" onClick={handleToggle}>
+          <UnstyledButton w="100%" p="sm" onClick={toggle}>
             <Group wrap="nowrap">
               {opened ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
               <Title order={3}>{section.name}</Title>
@@ -182,8 +221,14 @@ const StaticCategorySection = ({ section, board, layoutId, columnCount }: Static
           </UnstyledButton>
           <CategoryMenu category={section} />
         </Group>
-        <Collapse in={opened} p="sm" pt={0}>
-          <StaticSectionGrid sectionId={section.id} board={board} layoutId={layoutId} columnCount={columnCount} />
+        <Collapse expanded={opened} p="sm" pt={0}>
+          <StaticSectionGrid
+            sectionId={section.id}
+            board={board}
+            layoutId={layoutId}
+            columnCount={columnCount}
+            estimatedGridWidth={estimatedGridWidth}
+          />
         </Collapse>
       </Stack>
     </Card>
@@ -194,9 +239,10 @@ interface StaticDynamicSectionProps {
   section: DynamicSectionItem;
   board: Board;
   layoutId: string;
+  estimatedGridWidth: number;
 }
 
-const StaticDynamicSection = ({ section, board, layoutId }: StaticDynamicSectionProps) => {
+const StaticDynamicSection = ({ section, board, layoutId, estimatedGridWidth }: StaticDynamicSectionProps) => {
   const boardData = useRequiredBoard();
   const options = section.options;
 
@@ -205,7 +251,6 @@ const StaticDynamicSection = ({ section, board, layoutId }: StaticDynamicSection
       className={classes.itemCard}
       w="100%"
       h="100%"
-      withBorder
       styles={{
         root: {
           overflow: "visible",
@@ -235,30 +280,10 @@ const StaticDynamicSection = ({ section, board, layoutId }: StaticDynamicSection
         board={board}
         layoutId={layoutId}
         columnCount={section.width}
+        estimatedGridWidth={estimatedGridWidth}
         isDynamic
         fixedRowCount={section.height}
       />
     </Card>
   );
 };
-
-function getSectionItems(board: Board, sectionId: string, layoutId: string): SectionItem[] {
-  return board.items
-    .map(({ layouts, ...item }) => {
-      const layout = layouts.find((candidate) => candidate.layoutId === layoutId);
-      if (!layout) return null;
-      return { ...layout, ...item, type: "item" as const };
-    })
-    .filter((item): item is SectionItem => item !== null && item.sectionId === sectionId);
-}
-
-function getDynamicSections(board: Board, sectionId: string, layoutId: string): DynamicSectionItem[] {
-  return board.sections
-    .filter((section) => section.kind === "dynamic")
-    .map(({ layouts, ...section }) => {
-      const layout = layouts.find((candidate) => candidate.layoutId === layoutId);
-      if (!layout) return null;
-      return { ...layout, ...section, type: "section" as const };
-    })
-    .filter((entry): entry is DynamicSectionItem => entry !== null && entry.parentSectionId === sectionId);
-}

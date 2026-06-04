@@ -19,6 +19,10 @@ import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
   item: SectionItem;
+  fallbackDimensions?: {
+    width: number;
+    height: number;
+  };
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
@@ -27,16 +31,11 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
-const ASSUMED_VIEWPORT_WIDTH = 900;
-const DEFAULT_COLUMN_COUNT = 12;
-
-export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+export const BoardItemContent = ({ item, fallbackDimensions }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
-
-  const estimatedCellSize = ASSUMED_VIEWPORT_WIDTH / DEFAULT_COLUMN_COUNT;
-  const fallbackWidth = item.width * estimatedCellSize - 20;
-  const fallbackHeight = item.height * estimatedCellSize - 20;
+  const fallbackWidth = fallbackDimensions?.width ?? 0;
+  const fallbackHeight = fallbackDimensions?.height ?? 0;
 
   return (
     <>
