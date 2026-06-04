@@ -4395,7 +4395,10 @@
           "label": "Tasks"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": "Logs"
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",

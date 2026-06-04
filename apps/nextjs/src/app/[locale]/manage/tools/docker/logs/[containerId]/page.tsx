@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
-import { Box, Group, Title } from "@mantine/core";
+import { Box, Group } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -32,16 +31,14 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
     notFound();
   }
 
-  const tDocker = await getScopedI18n("docker");
-
   return (
     <>
       <Group justify="space-between" align="center" wrap="nowrap">
-        <DynamicBreadcrumb />
+        <DynamicBreadcrumb
+          dynamicMappings={new Map([[containerId, name ?? containerId]])}
+          nonInteractable={[containerId]}
+        />
       </Group>
-      <Title order={2} mb="md">
-        {tDocker("action.logs.page.title", { name: name ?? containerId })}
-      </Title>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
         <ClientSideDockerLogsTerminal containerId={containerId} />
       </Box>
