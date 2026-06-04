@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Geslo",
-        "requirement": {
+        "suggestion": {
           "length": "",
           "lowercase": "Vključuje male črke",
           "uppercase": "Vključuje velike tiskane črke",

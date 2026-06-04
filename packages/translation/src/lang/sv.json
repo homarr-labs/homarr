@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Lösenord",
-        "requirement": {
+        "suggestion": {
           "length": "Använd minst 8 tecken",
           "lowercase": "Använd liten bokstav",
           "uppercase": "Använd stor bokstav",

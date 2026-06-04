@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Wachtwoord",
-        "requirement": {
+        "suggestion": {
           "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
           "uppercase": "Inclusief hoofdletter",
