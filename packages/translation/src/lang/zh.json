@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "密碼",
-        "requirement": {
+        "suggestion": {
           "length": "至少包含 8 個字符",
           "lowercase": "包含小寫字母",
           "uppercase": "包含大寫字母",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "開啟多媒體"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "查閱說明書",
       "checkLogs": "檢查 Logs 以取得更多詳情",
       "tryAgain": "重試",
-      "loading": "正在讀取"
+      "loading": "正在讀取",
+      "show": "",
+      "hide": ""
     },
     "here": "此處",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "創建分類",
-          "changePosition": "變更位置"
+          "changePosition": "變更位置",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "此面板是公開的",
           "private": "此面板是私人的"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

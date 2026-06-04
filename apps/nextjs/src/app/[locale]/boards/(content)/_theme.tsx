@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import type { MantineColorsTuple } from "@mantine/core";
-import { colorsTuple, createTheme, darken, lighten, MantineProvider, rem } from "@mantine/core";
+import { colorsTuple, createTheme, darken, lighten, MantineProvider, rem, v8CssVariablesResolver } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { ColorScheme } from "@homarr/definitions";
@@ -24,6 +24,7 @@ export const BoardMantineProvider = ({
     },
     primaryColor: "primaryColor",
     autoContrast: true,
+    defaultRadius: "sm",
     fontSizes: {
       "2xl": rem(24),
       "3xl": rem(28),
@@ -32,7 +33,12 @@ export const BoardMantineProvider = ({
   });
 
   return (
-    <MantineProvider defaultColorScheme={defaultColorScheme} theme={theme} colorSchemeManager={colorSchemeManager}>
+    <MantineProvider
+      defaultColorScheme={defaultColorScheme}
+      theme={theme}
+      colorSchemeManager={colorSchemeManager}
+      cssVariablesResolver={v8CssVariablesResolver}
+    >
       {children}
     </MantineProvider>
   );

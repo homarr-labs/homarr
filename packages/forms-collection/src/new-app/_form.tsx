@@ -114,7 +114,7 @@ export const AppForm = ({
           mt="md"
         />
 
-        <Collapse in={opened}>
+        <Collapse expanded={opened}>
           <TextInput {...form.getInputProps("pingUrl")} />
         </Collapse>
 

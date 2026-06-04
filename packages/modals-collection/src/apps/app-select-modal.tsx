@@ -77,7 +77,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                     {t("app.action.create.description")}
                   </Text>
                 </Stack>
-                <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+                <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" fullWidth>
                   {t("app.action.create.action")}
                 </Button>
               </Stack>
@@ -100,7 +100,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                     {app.description ?? ""}
                   </Text>
                 </Stack>
-                <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+                <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" fullWidth>
                   {t("app.action.select.action", { app: app.name })}
                 </Button>
               </Stack>

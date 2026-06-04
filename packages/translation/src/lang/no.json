@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Passord",
-        "requirement": {
+        "suggestion": {
           "length": "Inkluderer minst 8 tegn",
           "lowercase": "Inkluderer liten bokstav",
           "uppercase": "Inkluderer stor bokstav",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Åpne medie"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Les dokumentasjonen",
       "checkLogs": "Sjekk loggene for mer informasjon",
       "tryAgain": "Prøv igjen",
-      "loading": "Laster"
+      "loading": "Laster",
+      "show": "",
+      "hide": ""
     },
     "here": "her",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Ny kategori",
-          "changePosition": "Endre posisjon"
+          "changePosition": "Endre posisjon",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Denne tavlen er offentlig",
           "private": "Denne tavlen er privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

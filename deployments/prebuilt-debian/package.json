@@ -2,13 +2,13 @@
   "name": "homarr-prebuilt-debian",
   "private": true,
   "dependencies": {
-    "better-sqlite3": "^12.9.0"
+    "better-sqlite3": "^12.10.0"
   },
-  "packageManager": "pnpm@10.33.4",
   "engines": {
-    "node": ">=24.15.0",
-    "pnpm": ">=10.33.4"
+    "node": ">=24.16.0",
+    "pnpm": ">=10.34.1"
   },
+  "packageManager": "pnpm@10.34.1",
   "pnpm": {
     "onlyBuiltDependencies": [
       "better-sqlite3"

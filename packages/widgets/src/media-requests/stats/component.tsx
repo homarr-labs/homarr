@@ -23,6 +23,9 @@ import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
 
+const OVERSEERR_COLOR = "#ECB000";
+const JELLYSEERR_COLOR = "#6677CC";
+
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
@@ -103,7 +106,7 @@ export default function MediaServerWidget({
         <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
           {t("titles.stats.main")}
         </Text>
-        <Grid className="mediaRequests-stats-stats-grid" gutter={4} w="100%">
+        <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
           {data.map((stat) => (
             <Grid.Col
               className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
@@ -151,7 +154,7 @@ export default function MediaServerWidget({
                       className="mediaRequests-stats-users-user-avatar"
                       size={20}
                       src={user.avatar}
-                      bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                      bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
                     />
                   </Tooltip>
                   <Text className="mediaRequests-stats-users-user-userName" size="sm">

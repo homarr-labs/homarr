@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Heslo",
-        "requirement": {
+        "suggestion": {
           "length": "Obsahuje aspoň 8 znakov",
           "lowercase": "Zahŕňa malé písmeno",
           "uppercase": "Zahŕňa veľké písmená",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Otvoriť médiá"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "Pozrite si dokumentáciu",
       "checkLogs": "Ďalšie podrobnosti nájdete v protokoloch",
       "tryAgain": "Skúste znova",
-      "loading": "Nahrávam"
+      "loading": "Nahrávam",
+      "show": "",
+      "hide": ""
     },
     "here": "tu",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nová kategória",
-          "changePosition": "Zmeniť pozíciu"
+          "changePosition": "Zmeniť pozíciu",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Táto tabuľa je verejná",
           "private": "Táto tabuľa je súkromná"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
