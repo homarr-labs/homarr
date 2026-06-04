@@ -1,23 +1,28 @@
 "use client";
 
-import { Badge, Box, Group, Progress, RingProgress, ScrollArea, Stack, Text } from "@mantine/core";
+import { Badge, Box, Card, Group, Progress, RingProgress, ScrollArea, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import type { UpsSummary } from "@homarr/integrations/types";
+import { formatDuration } from "@homarr/common";
+import type { UpsStatus, UpsSummary } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
+
+const statusColors: Record<UpsStatus, string> = {
+  online: "green",
+  charging: "blue",
+  onBattery: "yellow",
+  lowBattery: "red",
+  unknown: "gray",
+};
 
 export default function UpsWidget({ options, integrationIds, isEditMode }: WidgetComponentProps<"ups">) {
-  const t = useScopedI18n("widget.ups");
-
   if (integrationIds.length === 0) {
-    return (
-      <Stack align="center" justify="center" h="100%">
-        <Text c="dimmed">{t("error.noIntegration")}</Text>
-      </Stack>
-    );
+    throw new NoIntegrationSelectedError();
   }
 
   return <UpsContent integrationIds={integrationIds} options={options} isEditMode={isEditMode} />;
@@ -56,11 +61,7 @@ function UpsContent({ integrationIds, options, isEditMode }: UpsContentProps) {
   );
 
   if (devices.length === 0) {
-    return (
-      <Stack align="center" justify="center" h="100%">
-        <Text c="dimmed">{t("noData")}</Text>
-      </Stack>
-    );
+    throw new NoIntegrationDataError();
   }
 
   return (
@@ -81,16 +82,14 @@ interface UpsDeviceCardProps {
 }
 
 function UpsDeviceCard({ summary, options, t }: UpsDeviceCardProps) {
-  const status = getStatusDisplay(summary.status, t);
-
   return (
-    <Box p="xs" style={{ borderRadius: "var(--mantine-radius-md)", backgroundColor: "var(--mantine-color-default)" }}>
+    <Card p="xs" radius="md">
       <Group justify="space-between" wrap="nowrap" mb={4}>
         <Text fw={600} size="sm" truncate>
           {summary.name}
         </Text>
-        <Badge color={status.color} variant="light" size="sm" style={{ flexShrink: 0 }}>
-          {status.label}
+        <Badge color={statusColors[summary.status]} variant="light" size="sm" style={{ flexShrink: 0 }}>
+          {t(`status.${summary.status}`)}
         </Badge>
       </Group>
 
@@ -111,7 +110,7 @@ function UpsDeviceCard({ summary, options, t }: UpsDeviceCardProps) {
 
         <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
           {options.showBattery && summary.batteryRuntime !== null && (
-            <StatRow label={t("field.runtime")} value={formatRuntime(summary.batteryRuntime)} />
+            <StatRow label={t("field.runtime")} value={formatDuration(summary.batteryRuntime * 1000)} />
           )}
 
           {options.showLoad && summary.load !== null && (
@@ -138,7 +137,7 @@ function UpsDeviceCard({ summary, options, t }: UpsDeviceCardProps) {
           )}
         </Stack>
       </Group>
-    </Box>
+    </Card>
   );
 }
 
@@ -155,27 +154,6 @@ function StatRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function getStatusDisplay(
-  status: string,
-  t: ScopedTranslationFunction<"widget.ups">,
-): { label: string; color: string } {
-  const flags = status.toUpperCase().split(/\s+/).filter(Boolean);
-  const lowBattery = flags.includes("LB");
-
-  if (flags.includes("OB")) {
-    return lowBattery
-      ? { label: t("status.lowBattery"), color: "red" }
-      : { label: t("status.onBattery"), color: "yellow" };
-  }
-  if (flags.includes("OL")) {
-    if (lowBattery) return { label: t("status.lowBattery"), color: "red" };
-    if (flags.includes("CHRG")) return { label: t("status.charging"), color: "blue" };
-    return { label: t("status.online"), color: "green" };
-  }
-  if (status.trim().length > 0) return { label: status, color: "gray" };
-  return { label: t("status.unknown"), color: "gray" };
-}
-
 function clampPercent(value: number): number {
   return Math.min(100, Math.max(0, value));
 }
@@ -190,15 +168,4 @@ function getLoadColor(load: number): string {
   if (load > 90) return "red";
   if (load > 70) return "yellow";
   return "blue";
-}
-
-function formatRuntime(seconds: number): string {
-  if (seconds <= 0) return "0m";
-
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  if (minutes > 0) return `${minutes}m`;
-  return `${seconds}s`;
 }

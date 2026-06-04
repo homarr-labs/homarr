@@ -2088,9 +2088,7 @@
         "input": "Input",
         "output": "Output"
       },
-      "noData": "No UPS devices found",
       "error": {
-        "noIntegration": "No PeaNUT integration configured",
         "internalServerError": "Failed to fetch UPS data"
       }
     },
