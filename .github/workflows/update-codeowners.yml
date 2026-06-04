@@ -2,6 +2,16 @@ name: Update CODEOWNERS
 
 on:
   workflow_dispatch: {}
+  pull_request:
+    paths:
+      - CODEOWNERS
+      - packages/widgets/src/**
+      - packages/integrations/src/**
+      - packages/api/src/router/widgets/**
+      - packages/cron-jobs/src/jobs/**
+      - scripts/generate-codeowners.mts
+      - scripts/validate-codeowners.mts
+      - scripts/codeowners-overrides.json
   push:
     paths:
       - packages/widgets/src/**
@@ -9,20 +19,54 @@ on:
       - packages/api/src/router/widgets/**
       - packages/cron-jobs/src/jobs/**
       - scripts/generate-codeowners.mts
+      - scripts/validate-codeowners.mts
       - scripts/codeowners-overrides.json
     branches:
       - dev
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
-  update-codeowners:
+  validate:
+    name: Validate CODEOWNERS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check CODEOWNERS is up to date
+        run: pnpm exec tsx ./scripts/generate-codeowners.mts --check
+
+      - name: Validate CODEOWNERS
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm exec tsx ./scripts/validate-codeowners.mts
+
+  update:
+    name: Open CODEOWNERS update PR
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     concurrency:
       group: update-codeowners
       cancel-in-progress: false
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
       - name: Obtain token
         id: obtainToken
@@ -40,13 +84,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
-      - uses: pnpm/action-setup@v6
-
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: pnpm
+          node-version-file: .nvmrc
+
+      - uses: pnpm/action-setup@v6
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -55,6 +98,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: pnpm scripts:generate-codeowners
+
+      - name: Validate CODEOWNERS
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm exec tsx ./scripts/validate-codeowners.mts
 
       - name: Create Pull Request
         id: create-pull-request
