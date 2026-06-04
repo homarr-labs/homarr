@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Badge, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
-import { IconCheck, IconPuzzle } from "@tabler/icons-react";
+import { IconBrandDocker, IconCheck, IconPuzzle } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -15,6 +15,7 @@ interface IntegrationMultiSelectGridProps {
   onSelectionChange: (kinds: IntegrationKind[]) => void;
   enableMockIntegration?: boolean;
   onboarding?: boolean;
+  detectedKinds?: Set<IntegrationKind>;
 }
 
 export const IntegrationMultiSelectGrid = ({
@@ -22,6 +23,7 @@ export const IntegrationMultiSelectGrid = ({
   onSelectionChange,
   enableMockIntegration = false,
   onboarding = false,
+  detectedKinds,
 }: IntegrationMultiSelectGridProps) => {
   const [search, setSearch] = useState("");
   const selectedKinds = useMemo(() => new Set(selectedKindsArray), [selectedKindsArray]);
@@ -44,7 +46,15 @@ export const IntegrationMultiSelectGrid = ({
     () => buildSortedIntegrations({ enableMockIntegration, onboarding }),
     [enableMockIntegration, onboarding],
   );
-  const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
+
+  const sorted = useMemo(() => {
+    if (!detectedKinds || detectedKinds.size === 0) return integrations;
+    const detected = integrations.filter((i) => detectedKinds.has(i.kind));
+    const rest = integrations.filter((i) => !detectedKinds.has(i.kind));
+    return [...detected, ...rest];
+  }, [integrations, detectedKinds]);
+
+  const filtered = useMemo(() => filterIntegrations(sorted, search), [sorted, search]);
 
   return (
     <SelectGridLayout
@@ -52,9 +62,11 @@ export const IntegrationMultiSelectGrid = ({
       onSearchChange={setSearch}
       placeholder={`${t("integration.page.list.search")}...`}
       disableScroll={onboarding}
+      disableAutoFocus={onboarding}
     >
       {filtered.map((integration) => {
         const isSelected = selectedKinds.has(integration.kind);
+        const isDetected = detectedKinds?.has(integration.kind) ?? false;
         return (
           <Card
             key={integration.kind}
@@ -68,19 +80,21 @@ export const IntegrationMultiSelectGrid = ({
             withBorder
           >
             <Stack justify="space-between" h="100%" gap="xs">
-              <Group justify="space-between" wrap="nowrap">
-                <Text fw={500} lh={1.2} size="sm" lineClamp={1} style={{ flex: 1 }}>
+              <Group gap="sm" wrap="nowrap" align="flex-start">
+                <IntegrationAvatar kind={integration.kind} size="sm" />
+                <Text fw={500} lh={1.2} size="sm" lineClamp={2} style={{ flex: 1 }}>
                   {integration.name}
                 </Text>
-                {isSelected && <IconCheck size={18} color="var(--mantine-color-blue-6)" />}
+                {isSelected && <IconCheck size={18} color="var(--mantine-color-blue-6)" style={{ flexShrink: 0 }} />}
               </Group>
 
-              <Center>
-                <IntegrationAvatar kind={integration.kind} size="lg" />
-              </Center>
-
-              <Stack gap={4} align="center">
-                <Group gap={4} justify="center" wrap="wrap">
+              <Stack gap={4} mt="auto">
+                {isDetected && (
+                  <Badge variant="light" color="teal" size="xs" leftSection={<IconBrandDocker size={12} />}>
+                    {t("integration.grid.detected")}
+                  </Badge>
+                )}
+                <Group gap={4} wrap="wrap">
                   {integration.categories.slice(0, 2).map((cat) => (
                     <Badge key={cat} variant="light" size="xs">
                       {categoryTranslationKeys[cat] ? t(categoryTranslationKeys[cat] as never) : cat}

@@ -1,24 +1,36 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ActionIcon,
   Alert,
+  Avatar,
   Button,
+  Card,
   Center,
   Collapse,
   Group,
   Loader,
+  Paper,
   Progress,
   SegmentedControl,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
+  ThemeIcon,
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowRight, IconInfoCircle, IconSettings } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconArrowRight,
+  IconBrandDocker,
+  IconCheck,
+  IconChevronDown,
+  IconSettings,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind, UrlTemplateMode } from "@homarr/definitions";
@@ -30,7 +42,6 @@ import { IntegrationAvatar } from "@homarr/ui";
 import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import { IntegrationMultiSelectGrid } from "~/components/integration/integration-multi-select-grid";
 import { InitStepCard } from "../../_components/init-step-card";
-import { DockerDiscoveryIndicator } from "./docker-discovery-panel";
 
 type Phase = "select" | "configure" | "done";
 
@@ -65,8 +76,15 @@ export const InitIntegrations = () => {
 
   const dockerIntegrations = dockerData?.status === "success" ? dockerData.integrations : [];
   const dockerApps = dockerData?.status === "success" ? dockerData.apps : [];
+  const totalDetected = dockerIntegrations.length + dockerApps.length;
+
+  const detectedKinds = useMemo(
+    () => new Set(dockerIntegrations.map((i) => i.kind)),
+    [dockerIntegrations],
+  );
 
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
+  const [appsExpanded, setAppsExpanded] = useState(false);
 
   const dockerApplied = useRef(false);
   useEffect(() => {
@@ -92,6 +110,9 @@ export const InitIntegrations = () => {
     setDrafts(newDrafts);
     setSelectedKinds(Array.from(newKinds));
     setSelectedAppIds(new Set(dockerData.apps.map((app) => app.containerId)));
+    if (dockerData.apps.length > 0) {
+      setAppsExpanded(true);
+    }
   }, [dockerData]);
 
   const handleSelectionChange = useCallback((kinds: IntegrationKind[]) => {
@@ -203,27 +224,24 @@ export const InitIntegrations = () => {
     );
   }
 
+  const selectedAppCount = dockerApps.filter((app) => selectedAppIds.has(app.containerId)).length;
+
   return (
     <InitStepCard>
       <Stack>
         <Text>{t("description")}</Text>
 
-        <DockerDiscoveryIndicator
-          integrations={dockerIntegrations}
-          apps={dockerApps}
-          selectedAppIds={selectedAppIds}
-          onToggleApp={handleToggleApp}
-          isLoading={isDockerLoading}
-        />
-
-        <Alert variant="light" color="blue" icon={<IconInfoCircle />} title={t("urlTemplate.label")}>
+        <Alert variant="outline" color="orange" icon={<IconAlertTriangle />} title={t("urlTemplate.label")}>
           <Stack gap="xs">
-            <Text size="sm">{t("urlTemplate.hint")}</Text>
+            <Text size="sm" fw={500}>
+              {t("urlTemplate.warning")}
+            </Text>
             <Group gap="sm" grow>
               <TextInput
                 placeholder={t("urlTemplate.placeholder")}
                 value={baseHost}
                 onChange={(e) => setBaseHost(e.currentTarget.value)}
+                data-autofocus
               />
               <SegmentedControl
                 value={urlMode}
@@ -243,11 +261,101 @@ export const InitIntegrations = () => {
           </Stack>
         </Alert>
 
+        {isDockerLoading && (
+          <Paper withBorder p="sm" radius="md">
+            <Group gap="sm" wrap="nowrap">
+              <ThemeIcon variant="light" color="blue" size="lg" radius="md">
+                <IconBrandDocker size={20} />
+              </ThemeIcon>
+              <Text size="sm" fw={500}>
+                {t("docker.scanning")}
+              </Text>
+              <Loader size="sm" color="blue" type="dots" />
+            </Group>
+          </Paper>
+        )}
+
+        {!isDockerLoading && totalDetected > 0 && (
+          <Paper withBorder p="sm" radius="md" style={{ borderColor: "var(--mantine-color-teal-4)" }}>
+            <Group gap="sm" wrap="nowrap">
+              <ThemeIcon variant="light" color="teal" size="lg" radius="md">
+                <IconBrandDocker size={20} />
+              </ThemeIcon>
+              <Text size="sm">
+                {t("docker.summary", {
+                  apps: String(totalDetected),
+                  integrations: String(dockerIntegrations.length),
+                })}
+              </Text>
+            </Group>
+          </Paper>
+        )}
+
         <IntegrationMultiSelectGrid
           selectedKinds={selectedKinds}
           onSelectionChange={handleSelectionChange}
+          detectedKinds={detectedKinds}
           onboarding
         />
+
+        {dockerApps.length > 0 && (
+          <Paper withBorder p="sm" radius="md">
+            <Stack gap="xs">
+              <Group
+                justify="space-between"
+                wrap="nowrap"
+                style={{ cursor: "pointer" }}
+                onClick={() => setAppsExpanded((prev) => !prev)}
+              >
+                <Text size="sm" fw={500}>
+                  {t("docker.appSectionLabel", { count: String(selectedAppCount) })}
+                </Text>
+                <IconChevronDown
+                  size={16}
+                  color="var(--mantine-color-dimmed)"
+                  style={{
+                    transform: appsExpanded ? "rotate(180deg)" : undefined,
+                    transition: "transform 200ms ease",
+                  }}
+                />
+              </Group>
+              <Collapse expanded={appsExpanded}>
+                <SimpleGrid cols={{ base: 3, xs: 4, sm: 5 }} spacing="xs">
+                  {dockerApps.map((app) => {
+                    const isSelected = selectedAppIds.has(app.containerId);
+                    return (
+                      <Card
+                        key={app.containerId}
+                        h={80}
+                        p="xs"
+                        withBorder
+                        style={{
+                          cursor: "pointer",
+                          borderColor: isSelected ? "var(--mantine-color-blue-6)" : undefined,
+                          borderWidth: isSelected ? 2 : undefined,
+                          opacity: isSelected ? 1 : 0.6,
+                        }}
+                        onClick={() => handleToggleApp(app.containerId)}
+                      >
+                        <Stack justify="space-between" h="100%" gap={4} align="center">
+                          <Group justify="space-between" w="100%" wrap="nowrap">
+                            <Text size="xs" fw={500} lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
+                              {app.containerName}
+                            </Text>
+                            {isSelected && <IconCheck size={14} color="var(--mantine-color-blue-6)" />}
+                          </Group>
+                          <Avatar size="sm" radius="sm" src={app.iconUrl} styles={{ image: { objectFit: "contain" } }}>
+                            {app.containerName.at(0)?.toUpperCase()}
+                          </Avatar>
+                        </Stack>
+                      </Card>
+                    );
+                  })}
+                </SimpleGrid>
+              </Collapse>
+            </Stack>
+          </Paper>
+        )}
 
         <Group justify="space-between">
           <Button variant="subtle" onClick={() => void finishSetupAsync()}>

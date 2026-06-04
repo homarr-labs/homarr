@@ -115,6 +115,7 @@
           "label": "Base URL",
           "placeholder": "homelab.local or 192.168.1.1",
           "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
           "preview": "e.g. {example}",
           "mode": {
             "subdomain": "Subdomain",
@@ -124,6 +125,7 @@
         "docker": {
           "detected": "Docker detected {count} services",
           "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
           "appBadge": "App",
           "appSectionLabel": "Apps to add to dashboard ({count} selected)",
           "scanning": "Scanning Docker...",
@@ -780,7 +782,8 @@
     },
     "grid": {
       "widgetCount": "{count} widgets",
-      "noWidgets": "No widgets"
+      "noWidgets": "No widgets",
+      "detected": "Detected via Docker"
     },
     "category": {
       "dnsHole": "DNS",

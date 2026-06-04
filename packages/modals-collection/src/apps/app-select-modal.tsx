@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Card, Center, Stack, Text } from "@mantine/core";
+import { Box, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -55,44 +55,83 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
       }}
     >
       {innerProps.withCreate && (
-        <Card h={selectGridCardHeight} withBorder>
-          <Stack justify="space-between" h="100%" gap="xs">
-            <Stack gap="xs">
-              <Center>
-                <IconPlus size={24} />
-              </Center>
-              <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+        <Card
+          h={selectGridCardHeight}
+          withBorder
+          pos="relative"
+          style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+          onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+          onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+        >
+          <Stack h="100%" gap="xs">
+            <Group gap="sm" wrap="nowrap" align="flex-start">
+              <IconPlus size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
                 {t("app.action.create.title")}
               </Text>
-              <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
-                {t("app.action.create.description")}
-              </Text>
-            </Stack>
-            <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" fullWidth>
+            </Group>
+            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+              {t("app.action.create.description")}
+            </Text>
+          </Stack>
+          <Box
+            pos="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            p="xs"
+            style={{
+              opacity: "var(--_hover-opacity)",
+              transition: "opacity 150ms ease",
+              background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+            }}
+          >
+            <Button onClick={handleAddNewApp} variant="light" size="xs" fullWidth>
               {t("app.action.create.action")}
             </Button>
-          </Stack>
+          </Box>
         </Card>
       )}
 
       {filteredApps.map((app) => (
-        <Card key={app.id} h={selectGridCardHeight} withBorder>
-          <Stack justify="space-between" h="100%" gap="xs">
-            <Stack gap="xs">
-              <Center>
-                <img src={app.iconUrl} alt={app.name} width={24} height={24} />
-              </Center>
-              <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+        <Card
+          key={app.id}
+          h={selectGridCardHeight}
+          withBorder
+          pos="relative"
+          style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+          onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+          onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+        >
+          <Stack h="100%" gap="xs">
+            <Group gap="sm" wrap="nowrap" align="flex-start">
+              <img src={app.iconUrl} alt={app.name} width={22} height={22} style={{ flexShrink: 0, marginTop: 2 }} />
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
                 {app.name}
               </Text>
-              <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
+            </Group>
+            <Tooltip label={app.description} multiline w={250} disabled={!app.description}>
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
                 {app.description ?? ""}
               </Text>
-            </Stack>
-            <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" fullWidth>
+            </Tooltip>
+          </Stack>
+          <Box
+            pos="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            p="xs"
+            style={{
+              opacity: "var(--_hover-opacity)",
+              transition: "opacity 150ms ease",
+              background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+            }}
+          >
+            <Button onClick={() => handleSelect(app)} variant="light" size="xs" fullWidth>
               {t("app.action.select.action", { app: app.name })}
             </Button>
-          </Stack>
+          </Box>
         </Card>
       ))}
 

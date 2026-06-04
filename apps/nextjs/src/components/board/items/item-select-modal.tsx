@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Avatar, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Avatar, Box, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createId, objectEntries } from "@homarr/common";
@@ -129,34 +129,49 @@ const WidgetItem = ({
   const t = useI18n();
 
   return (
-    <Card h={selectGridCardHeight} withBorder>
-      <Stack justify="space-between" h="100%" gap="xs">
-        <Stack gap="xs">
-          <Center>
-            <item.icon />
-          </Center>
-          <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center" lineClamp={2}>
+    <Card
+      h={selectGridCardHeight}
+      withBorder
+      pos="relative"
+      style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+      onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+      onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+    >
+      <Stack h="100%" gap="xs">
+        <Group gap="sm" wrap="nowrap" align="flex-start">
+          <item.icon size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
             {item.name}
           </Text>
-          <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed" lineClamp={2}>
+        </Group>
+        <Tooltip label={item.description} multiline w={250} disabled={!item.description}>
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
             {item.description}
           </Text>
-        </Stack>
-        <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
+        </Tooltip>
+        <SupportedIntegrations integrations={item.supportedIntegrations} />
+      </Stack>
+      <Box
+        pos="absolute"
+        bottom={0}
+        left={0}
+        right={0}
+        p="xs"
+        style={{
+          opacity: "var(--_hover-opacity)",
+          transition: "opacity 150ms ease",
+          background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+        }}
+      >
         <Button onClick={onSelect} variant="light" size="xs" fullWidth>
           {t(`item.create.addToBoard`)}
         </Button>
-      </Stack>
+      </Box>
     </Card>
   );
 };
 
-interface SupportedIntegrationsProps {
-  integrations: IntegrationKind[];
-  mt: string;
-}
-
-const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps) => {
+const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
   if (integrations.length === 0) {
     return null;
   }
@@ -165,7 +180,7 @@ const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps)
   const moreCount = integrations.length - countToShow;
 
   return (
-    <Center mt={mt}>
+    <Group gap={2} mt="auto">
       <Tooltip.Group closeDelay={100}>
         <Group gap={2}>
           {integrations.slice(0, countToShow).map((integration) => (
@@ -191,6 +206,6 @@ const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps)
           )}
         </Group>
       </Tooltip.Group>
-    </Center>
+    </Group>
   );
 };
