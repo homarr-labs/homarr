@@ -15,8 +15,6 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     chown $PUID:$PGID ./apps/nextjs/.next
     mkdir -p ./apps/nextjs/.next/cache
     chown $PUID:$PGID ./apps/nextjs/.next/cache
-    chown $PUID:$PGID ./apps/websocket/wssServer.cjs
-    chown $PUID:$PGID ./apps/tasks/tasks.cjs
     chown $PUID:$PGID ./db/migrations/sqlite/migrate.cjs
     chown $PUID:$PGID ./db/migrations/mysql/migrate.cjs
     chown $PUID:$PGID ./build/better_sqlite3.node
