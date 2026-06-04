@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Contraseña",
-        "requirement": {
+        "suggestion": {
           "length": "Incluye al menos 8 caracteres",
           "lowercase": "Incluye al menos una letra minúscula",
           "uppercase": "Incluye al menos una letra mayúscula",

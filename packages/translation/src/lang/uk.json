@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Пароль",
-        "requirement": {
+        "suggestion": {
           "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
           "uppercase": "Включає велику літеру",

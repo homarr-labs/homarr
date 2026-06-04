@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "パスワード",
-        "requirement": {
+        "suggestion": {
           "length": "少なくとも 8 文字以上を含む",
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
