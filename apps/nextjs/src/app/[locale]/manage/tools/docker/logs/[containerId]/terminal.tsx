@@ -51,6 +51,7 @@ export const DockerLogsTerminal = ({ containerId }: DockerLogsTerminalProps) => 
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
+      fontSize: 14,
     });
     terminalRef.current.open(ref.current);
     terminalRef.current.loadAddon(canvasAddon);

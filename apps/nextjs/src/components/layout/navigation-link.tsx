@@ -26,7 +26,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       label={props.label}
       leftSection={props.icon}
       href={props.href}
-      active={pathname === props.href}
+      active={pathname === props.href || pathname.startsWith(`${props.href}/`)}
     />
   );
   return <TourTarget id={tourId}>{link}</TourTarget>;
@@ -34,7 +34,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
 
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   const pathname = usePathname();
-  const isActive = props.items.some((item) => item.href === pathname);
+  const isActive = props.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
   const nav = (
     <NavLink label={props.label} leftSection={props.icon} defaultOpened={isActive}>
       {props.items.map((item) => (
