@@ -1,0 +1,39 @@
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_5319329df19583::t_e54015b0beaa56 3,8,10,15,18,22,26-33,79-84,87,113-115,227-228,234,236-238,244,264-293,297,301-358
+apps/nextjs/src/app/[locale]/manage/tools/logs/page.tsx
+  s_5319329df19583::t_e54015b0beaa56 16,42-45
+packages/ui/src/select-grid-layout.tsx
+  s_5319329df19583::t_e54015b0beaa56 8,17,27,43
+apps/nextjs/src/app/[locale]/manage/tools/logs/log-context.tsx
+  s_5319329df19583::t_e54015b0beaa56 9-19,24-25,34,37-46
+apps/nextjs/src/app/[locale]/manage/tools/logs/font-size-slider.tsx
+  ai_agent 1-29
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_5319329df19583::t_e54015b0beaa56 2,58-69,72-89,92,97-109,112-114,117-131,134
+packages/translation/src/lang/en.json
+  s_5319329df19583::t_e54015b0beaa56 118,128,785-786
+apps/nextjs/src/app/[locale]/manage/tools/logs/terminal.tsx
+  s_5319329df19583::t_e54015b0beaa56 16,19-20,47,54,64-70
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_5319329df19583::t_e54015b0beaa56 40-48
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_5319329df19583::t_e54015b0beaa56 2,132-143,146-148,151-165,169,174,183,209
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_5319329df19583::t_e54015b0beaa56 5,18,26,49-57,65,69,83-85,88,91-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "3cb29324747a85affb144f79fb171de0546298dd",
+  "prompts": {},
+  "sessions": {
+    "s_5319329df19583": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c91d63a2-8e0b-43fe-a391-7d0a71928144",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
