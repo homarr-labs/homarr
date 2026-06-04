@@ -71,8 +71,9 @@ export const DockerLogsTerminal = ({ containerId }: DockerLogsTerminalProps) => 
     return () => {
       isTerminalReadyRef.current = false;
       pendingLogsRef.current = [];
-      terminalRef.current?.dispose();
       canvasAddon.dispose();
+      terminalRef.current?.dispose();
+      terminalRef.current = null;
     };
   }, [writeToTerminal]);
 
