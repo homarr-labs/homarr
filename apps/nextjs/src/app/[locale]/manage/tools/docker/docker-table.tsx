@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
-import { ActionIcon, Avatar, Badge, Box, Button, Group, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text } from "@mantine/core";
 import {
   IconCategoryPlus,
+  IconDots,
   IconFileText,
   IconPlayerPlay,
   IconPlayerStop,
@@ -151,7 +152,6 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
 export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const router = useRouter();
   const { data } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData: { containers, timestamp },
     refetchOnMount: false,
@@ -197,19 +197,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
 
     initialState: { density: "xs", showGlobalFilter: true, columnVisibility: { cpuUsage: false, memoryUsage: false } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => (
-      <Tooltip label={tDocker("action.logs.label")}>
-        <ActionIcon
-          variant="subtle"
-          color="blue"
-          aria-label={tDocker("action.logs.label")}
-          onClick={(event) => {
-            event.stopPropagation();
-            router.push(createContainerLogsPath(row.original));
-          }}
-        >
-          <IconFileText size="1rem" />
-        </ActionIcon>
-      </Tooltip>
+      <ContainerRowMenu container={row.original} />
     ),
     renderTopToolbarCustomActions: () => (
       <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
@@ -243,44 +231,104 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   );
 }
 
+const containerActions: { action: "start" | "stop" | "restart" | "remove"; icon: TablerIcon; color: MantineColor }[] = [
+  { action: "start", icon: IconPlayerPlay, color: "green" },
+  { action: "stop", icon: IconPlayerStop, color: "red" },
+  { action: "restart", icon: IconRotateClockwise, color: "orange" },
+  { action: "remove", icon: IconTrash, color: "red" },
+];
+
+const ContainerRowMenu = ({ container }: { container: DockerContainer }) => {
+  const t = useScopedI18n("docker.action");
+  const router = useRouter();
+  const utils = clientApi.useUtils();
+  const { openModal } = useModalAction(AddDockerAppToHomarr);
+
+  const useContainerAction = (action: "start" | "stop" | "restart" | "remove") =>
+    clientApi.docker[`${action}All`].useMutation({
+      async onSettled() {
+        await utils.docker.getContainers.invalidate();
+      },
+      onSuccess() {
+        showSuccessNotification({
+          title: t(`${action}.notification.success.title`),
+          message: t(`${action}.notification.success.message`),
+        });
+      },
+      onError() {
+        showErrorNotification({
+          title: t(`${action}.notification.error.title`),
+          message: t(`${action}.notification.error.message`),
+        });
+      },
+    });
+
+  const mutations = {
+    start: useContainerAction("start"),
+    stop: useContainerAction("stop"),
+    restart: useContainerAction("restart"),
+    remove: useContainerAction("remove"),
+  };
+
+  return (
+    <Menu withinPortal position="bottom-end" shadow="sm">
+      <Menu.Target>
+        <ActionIcon variant="subtle" color="gray" onClick={(e) => e.stopPropagation()}>
+          <IconDots size="1rem" />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item
+          leftSection={<IconFileText size="1rem" />}
+          onClick={() => router.push(createContainerLogsPath(container))}
+        >
+          {t("logs.label")}
+        </Menu.Item>
+        <Menu.Divider />
+        {containerActions.map(({ action, icon: Icon, color }) => (
+          <Menu.Item
+            key={action}
+            leftSection={<Icon size="1rem" />}
+            color={color}
+            onClick={() => mutations[action].mutate({ ids: [container.id] })}
+          >
+            {t(`${action}.label`)}
+          </Menu.Item>
+        ))}
+        <Menu.Divider />
+        <Menu.Item
+          leftSection={<IconCategoryPlus size="1rem" />}
+          color="red"
+          onClick={() => openModal({ selectedContainers: [container] })}
+        >
+          {t("addToHomarr.label")}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
+
 interface ContainerActionBarProps {
   selectedContainers: DockerContainer[];
 }
 
 const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => {
   const t = useScopedI18n("docker.action");
-  const router = useRouter();
   const { openModal } = useModalAction(AddDockerAppToHomarr);
-  const handleClick = () => {
-    openModal({
-      selectedContainers,
-    });
-  };
 
   const selectedIds = selectedContainers.map((container) => container.id);
 
-  const handleShowLogs = () => {
-    const targetContainer = selectedContainers.at(0);
-    if (!targetContainer) return;
-    router.push(createContainerLogsPath(targetContainer));
-  };
-
   return (
     <Group gap="xs">
-      <ContainerActionBarButton icon={IconPlayerPlay} color="green" action="start" selectedIds={selectedIds} />
-      <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
-      <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
-      <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
+      {containerActions.map(({ action, icon, color }) => (
+        <ContainerActionBarButton key={action} icon={icon} color={color} action={action} selectedIds={selectedIds} />
+      ))}
       <Button
-        leftSection={<IconFileText />}
-        color="blue"
-        onClick={handleShowLogs}
-        disabled={selectedContainers.length !== 1}
+        leftSection={<IconCategoryPlus />}
+        color="red"
+        onClick={() => openModal({ selectedContainers })}
         variant="light"
       >
-        {t("logs.label")}
-      </Button>
-      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light">
         {t("addToHomarr.label")}
       </Button>
     </Group>

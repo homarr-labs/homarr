@@ -57,8 +57,9 @@ export const TerminalComponent = () => {
     });
 
     return () => {
-      terminalRef.current?.dispose();
       canvasAddon.dispose();
+      terminalRef.current?.dispose();
+      terminalRef.current = null;
     };
   }, []);
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
