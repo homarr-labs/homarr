@@ -1406,6 +1406,9 @@
         "openNewTab": {
           "label": "Open in new tab"
         },
+        "withBorder": {
+          "label": "Show border"
+        },
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
