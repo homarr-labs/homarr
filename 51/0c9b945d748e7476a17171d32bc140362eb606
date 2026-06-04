@@ -1,0 +1,36 @@
+.github/workflows/update-codeowners.yml
+  s_7a866511f3ec39::t_e5b20835eb496e 91-92
+  s_7a866511f3ec39::t_686dff633817ec 5-14,22,28,32-44,48-54,56,60-66,106
+  s_7a866511f3ec39::t_ab93be29734f1f 102-105
+  s_7a866511f3ec39::t_b61463d41713cf 45,90
+  s_7a866511f3ec39::t_1383ff774c34a8 55,57-59
+  s_7a866511f3ec39::t_d7dacfd66aed71 46-47
+package.json
+  s_7a866511f3ec39::t_6952b9d91bf7ae 29
+scripts/test-codeowners-act.sh
+  s_7a866511f3ec39::t_44939074041507 1-7,13-15
+  s_7a866511f3ec39::t_98d5bc3aecf20b 8-12,16-17
+scripts/validate-codeowners.mts
+  s_7a866511f3ec39::t_38328d41bb352c 46-49
+  s_7a866511f3ec39::t_4bf9b9effea0a9 1-45,50-95,129-141,143-145
+  s_7a866511f3ec39::t_c4f8cd13765ef3 96-128,142
+.actrc
+  s_7a866511f3ec39::t_c02b4ca13ab564 2
+  s_7a866511f3ec39::t_3263e3341548a3 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "510c9b945d748e7476a17171d32bc140362eb606",
+  "prompts": {},
+  "sessions": {
+    "s_7a866511f3ec39": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4d83aff7-15f1-477f-b004-b7c9bc200683",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
