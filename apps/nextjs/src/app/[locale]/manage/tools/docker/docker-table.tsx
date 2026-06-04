@@ -196,6 +196,8 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     },
 
     initialState: { density: "xs", showGlobalFilter: true, columnVisibility: { cpuUsage: false, memoryUsage: false } },
+    mantineTableBodyCellProps: { style: { padding: "4px 8px" } },
+    mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
       <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
