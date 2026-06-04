@@ -4,20 +4,19 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./src/main.ts",
+  "types": "./src/main.ts",
   "exports": {
     ".": "./src/main.ts"
   },
-  "main": "./src/main.ts",
-  "types": "./src/main.ts",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
@@ -32,13 +31,9 @@
     "ws": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "catalog:",
     "esbuild": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

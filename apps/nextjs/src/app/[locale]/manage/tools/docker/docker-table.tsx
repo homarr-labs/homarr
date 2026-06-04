@@ -107,6 +107,23 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     refetchOnReconnect: false,
   });
   const relativeTime = useTimeAgo(data.timestamp);
+  const utils = clientApi.useUtils();
+  const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
+    async onSuccess() {
+      await utils.docker.getContainers.invalidate();
+      showSuccessNotification({
+        title: tDocker("action.refresh.notification.success.title"),
+        message: tDocker("action.refresh.notification.success.message"),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        title: tDocker("action.refresh.notification.error.title"),
+        message: tDocker("action.refresh.notification.error.message"),
+      });
+    },
+  });
+
   const table = useTranslatedMantineReactTable({
     data: data.containers,
     enableDensityToggle: false,
@@ -125,35 +142,11 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     },
 
     initialState: { density: "xs", showGlobalFilter: true },
-    renderTopToolbarCustomActions: () => {
-      const utils = clientApi.useUtils();
-      const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
-        async onSuccess() {
-          await utils.docker.getContainers.invalidate();
-          showSuccessNotification({
-            title: tDocker("action.refresh.notification.success.title"),
-            message: tDocker("action.refresh.notification.success.message"),
-          });
-        },
-        onError() {
-          showErrorNotification({
-            title: tDocker("action.refresh.notification.error.title"),
-            message: tDocker("action.refresh.notification.error.message"),
-          });
-        },
-      });
-
-      return (
-        <Button
-          variant="default"
-          rightSection={<IconRefresh size="1rem" />}
-          onClick={() => mutate()}
-          loading={isPending}
-        >
-          {tDocker("action.refresh.label")}
-        </Button>
-      );
-    },
+    renderTopToolbarCustomActions: () => (
+      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+        {tDocker("action.refresh.label")}
+      </Button>
+    ),
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
       const dockerContainers = table.getSelectedRowModel().rows.map((row) => row.original);
       return (
@@ -202,7 +195,7 @@ const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => 
       <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
-      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light" radius="md">
+      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light">
         {t("addToHomarr.label")}
       </Button>
     </Group>
@@ -253,7 +246,6 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
       onClick={handleClickAsync}
       loading={isPending}
       variant="light"
-      radius="md"
     >
       {t(`${props.action}.label`)}
     </Button>

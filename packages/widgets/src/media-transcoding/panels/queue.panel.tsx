@@ -1,4 +1,17 @@
-import { Center, Group, ScrollArea, Table, TableTd, TableTh, TableTr, Text, Title, Tooltip } from "@mantine/core";
+import {
+  Center,
+  Group,
+  ScrollArea,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
@@ -25,7 +38,7 @@ export function QueuePanel(props: QueuePanelProps) {
   return (
     <ScrollArea style={{ flex: "1" }}>
       <Table style={{ tableLayout: "fixed" }}>
-        <Table.Thead>
+        <TableThead>
           <TableTr>
             <TableTh ta="start" py={4}>
               <Text size="xs" fw="bold">
@@ -38,8 +51,8 @@ export function QueuePanel(props: QueuePanelProps) {
               </Text>
             </TableTh>
           </TableTr>
-        </Table.Thead>
-        <Table.Tbody>
+        </TableThead>
+        <TableTbody>
           {queue.array.map((item) => (
             <TableTr key={item.id}>
               <TableTd py={2}>
@@ -63,7 +76,7 @@ export function QueuePanel(props: QueuePanelProps) {
               </TableTd>
             </TableTr>
           ))}
-        </Table.Tbody>
+        </TableTbody>
       </Table>
     </ScrollArea>
   );

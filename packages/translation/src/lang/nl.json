@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Wachtwoord",
-        "requirement": {
+        "suggestion": {
           "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
           "uppercase": "Inclusief hoofdletter",
@@ -1054,6 +1054,9 @@
       "open": {
         "label": "Media openen"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1087,9 @@
       "checkoutDocs": "De documentatie bekijken",
       "checkLogs": "Controleer logs voor meer details",
       "tryAgain": "Probeer opnieuw",
-      "loading": "Laden"
+      "loading": "Laden",
+      "show": "",
+      "hide": ""
     },
     "here": "hier",
     "iconPicker": {
@@ -1249,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nieuwe categorie",
-          "changePosition": "Positie wijzigen"
+          "changePosition": "Positie wijzigen",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -3451,6 +3457,9 @@
         "visibility": {
           "public": "Dit bord is openbaar",
           "private": "Dit bord is privé"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

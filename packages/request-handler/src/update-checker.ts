@@ -15,7 +15,8 @@ const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
 export const updateCheckerRequestHandler = createCachedRequestHandler({
   queryKey: "homarr-update-checker",
-  cacheDuration: dayjs.duration(1, "hour"),
+  cacheDuration: dayjs.duration(1, "day"),
+  fallbackToStaleOnError: true,
   async requestAsync(_) {
     return {
       availableUpdates: await getAvailableUpdatesAsync(packageJson.version),
@@ -58,6 +59,7 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
     request: {
       fetch: fetchWithTrustedCertificatesAsync,
     },
+    throttle: { enabled: false },
   });
 
   const isCurrentPrerelease = isPrereleaseTag(currentVersion);
@@ -100,7 +102,7 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
   const availableUpdates = semanticReleases
     .filter((release) => isCurrentPrerelease || !release.isPrerelease)
     .filter((release) => compareSemVer(release.tagName, currentVersion) > 0)
-    .sort((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName));
+    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName));
 
   if (availableUpdates.length === 0) {
     logger.debug("No available updates found", { currentVersion });

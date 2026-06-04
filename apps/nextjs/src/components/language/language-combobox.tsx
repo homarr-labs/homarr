@@ -16,9 +16,17 @@ interface LanguageComboboxProps {
   onChange: (value: SupportedLanguage) => void;
   isPending?: boolean;
   width?: string;
+  withinPortal?: boolean;
 }
 
-export const LanguageCombobox = ({ label, value, onChange, isPending, width }: LanguageComboboxProps) => {
+export const LanguageCombobox = ({
+  label,
+  value,
+  onChange,
+  isPending,
+  width,
+  withinPortal = false,
+}: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -39,7 +47,7 @@ export const LanguageCombobox = ({ label, value, onChange, isPending, width }: L
   }, [combobox]);
 
   return (
-    <Combobox store={combobox} onOptionSubmit={handleOnOptionSubmit}>
+    <Combobox store={combobox} withinPortal={withinPortal} onOptionSubmit={handleOnOptionSubmit}>
       <Combobox.Target>
         <InputBase
           component="button"

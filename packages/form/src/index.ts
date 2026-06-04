@@ -1,5 +1,4 @@
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import type { ZodDiscriminatedUnion, ZodIntersection, ZodObject, ZodPipe } from "zod/v4";
 import { z } from "zod/v4";
 
@@ -34,6 +33,6 @@ export const useZodForm = <
     ...options,
     validateInputOnBlur: true,
     validateInputOnChange: true,
-    validate: zod4Resolver(schema),
+    validate: schemaResolver(schema, { sync: true }),
   });
 };
