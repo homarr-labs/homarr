@@ -1,0 +1,31 @@
+scripts/generate-codeowners.mts
+  s_7a866511f3ec39::t_473af8a8184458 1-309
+.github/ISSUE_TEMPLATE/widget.yml
+  s_7a866511f3ec39::t_473af8a8184458 22-25
+.github/ISSUE_TEMPLATE/integration.yml
+  s_7a866511f3ec39::t_473af8a8184458 22-25
+CODEOWNERS
+  s_7a866511f3ec39::t_473af8a8184458 14-96
+package.json
+  s_7a866511f3ec39::t_473af8a8184458 28
+.github/workflows/update-codeowners.yml
+  s_7a866511f3ec39::t_473af8a8184458 1-82
+scripts/codeowners-overrides.json
+  s_7a866511f3ec39::t_473af8a8184458 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "2405e1b93109095e989eb19dfd7f234f3451ba65",
+  "prompts": {},
+  "sessions": {
+    "s_7a866511f3ec39": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4d83aff7-15f1-477f-b004-b7c9bc200683",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
