@@ -39,6 +39,9 @@ catalogs:
     '@extractus/feed-extractor':
       specifier: 7.2.1
       version: 7.2.1
+    '@gfazioli/mantine-onboarding-tour':
+      specifier: ^4.0.1
+      version: 4.0.3
     '@gitbeaker/rest':
       specifier: ^43.8.0
       version: 43.8.0
@@ -123,6 +126,9 @@ catalogs:
     '@tabler/icons-react':
       specifier: ^3.44.0
       version: 3.44.0
+    '@tanstack/query-persist-client-core':
+      specifier: ^5.100.14
+      version: 5.100.14
     '@tanstack/react-query':
       specifier: ^5.100.14
       version: 5.100.14
@@ -646,6 +652,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: 'catalog:'
         version: 3.2.2(react@19.2.6)
+      '@gfazioli/mantine-onboarding-tour':
+        specifier: 'catalog:'
+        version: 4.0.3(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../../packages/analytics
@@ -760,6 +769,9 @@ importers:
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.6)
+      '@tanstack/query-persist-client-core':
+        specifier: 'catalog:'
+        version: 5.100.14
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.100.14(react@19.2.6)
@@ -2144,6 +2156,9 @@ importers:
       '@homarr/modals-collection':
         specifier: workspace:^0.1.0
         version: link:../modals-collection
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
       '@homarr/settings':
         specifier: workspace:^0.1.0
         version: link:../settings
@@ -3306,6 +3321,15 @@ packages:
 
   '@formatjs/intl-localematcher@0.8.1':
     resolution: {integrity: sha512-xwEuwQFdtSq1UKtQnyTZWC+eHdv7Uygoa+H2k/9uzBVQjDyp9r20LNDNKedWXll7FssT3GRHvqsdJGYSUWqYFA==}
+
+  '@gfazioli/mantine-onboarding-tour@4.0.3':
+    resolution: {integrity: sha512-krYmZoGSV9qpvtztK+QChhfwv1l6LsP/n0u+ih2/A0mV0Osn5avmlj+UBAKoIvwzA4xS50NSoPHj3B53QLzs/Q==}
+    peerDependencies:
+      '@mantine/core': '>=9.0.0'
+      '@mantine/hooks': '>=9.0.0'
+      '@tabler/icons-react': ^3.30.0
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
 
   '@gitbeaker/core@43.8.0':
     resolution: {integrity: sha512-H+LfKuf4dExBinb79c+CXViRBvTVQNf5BYLNSizm2SiqdED5JruhKX88payefleY0szp7G/mySlFSXPyGRH1dQ==}
@@ -4878,6 +4902,9 @@ packages:
 
   '@tanstack/query-devtools@5.100.14':
     resolution: {integrity: sha512-g96SmSSQecYTYcyuAMRXr895GplJv01UGt7qttQWPOUyZ5EGz5tbRc589bMc2m5BsPFD6O0PCEAHdbDYNP6UBw==}
+
+  '@tanstack/query-persist-client-core@5.100.14':
+    resolution: {integrity: sha512-mn60cqoQO/xB6aHxp/hxlSj5mcdcTO4tjj4SXSz5MKzkaMZnvcEGySz3+cGQOT8McREN56fL41L0eR//v5RwNw==}
 
   '@tanstack/react-query-devtools@5.100.14':
     resolution: {integrity: sha512-JkP5VDgKOw3t/QSA1OABRHEqx8BuNs5MfvZRooNqdvN57SzTuGq3fKR1a2IH5rqa5HDLUm+FOXUEnB9ueHiLzg==}
@@ -10517,6 +10544,14 @@ snapshots:
       '@formatjs/fast-memoize': 3.1.0
       tslib: 2.8.1
 
+  '@gfazioli/mantine-onboarding-tour@4.0.3(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+    dependencies:
+      '@mantine/core': 9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@mantine/hooks': 9.2.2(react@19.2.6)
+      '@tabler/icons-react': 3.44.0(react@19.2.6)
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+
   '@gitbeaker/core@43.8.0':
     dependencies:
       '@gitbeaker/requester-utils': 43.8.0
@@ -12163,6 +12198,10 @@ snapshots:
   '@tanstack/query-core@5.100.14': {}
 
   '@tanstack/query-devtools@5.100.14': {}
+
+  '@tanstack/query-persist-client-core@5.100.14':
+    dependencies:
+      '@tanstack/query-core': 5.100.14
 
   '@tanstack/react-query-devtools@5.100.14(@tanstack/react-query@5.100.14(react@19.2.6))(react@19.2.6)':
     dependencies:
