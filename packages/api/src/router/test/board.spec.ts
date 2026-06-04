@@ -2,8 +2,9 @@ import SuperJSON from "superjson";
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
-import { and, createId, eq, not } from "@homarr/db";
+import { and, eq, not } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -1219,11 +1220,11 @@ describe("getBoardPermissions should return board permissions", () => {
     expect(result.users).toEqual(
       expect.arrayContaining([
         {
-          user: { id: user1, name: null, image: null },
+          user: { id: user1, name: null, image: null, email: null },
           permission: "view",
         },
         {
-          user: { id: user2, name: null, image: null },
+          user: { id: user2, name: null, image: null, email: null },
           permission: "modify",
         },
       ]),

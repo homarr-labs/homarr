@@ -1,29 +1,38 @@
-import { useForm, zodResolver } from "@mantine/form";
-import { z } from "zod";
-import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod";
+import { schemaResolver, useForm } from "@mantine/form";
+import type { ZodDiscriminatedUnion, ZodIntersection, ZodObject, ZodPipe } from "zod/v4";
+import { z } from "zod/v4";
 
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
+type inferPossibleSchema<
+  TSchema extends
+    | ZodObject
+    | ZodPipe<ZodObject>
+    | ZodIntersection<ZodObject | ZodDiscriminatedUnion<ZodObject[]>, ZodObject>,
+> = z.infer<TSchema> extends Record<string, unknown> ? z.infer<TSchema> : never;
+
 export const useZodForm = <
   TSchema extends
-    | AnyZodObject
-    | ZodEffects<AnyZodObject>
-    | ZodIntersection<AnyZodObject | ZodDiscriminatedUnion<string, AnyZodObject[]>, AnyZodObject>,
+    | ZodObject
+    | ZodPipe<ZodObject>
+    | ZodIntersection<ZodObject | ZodDiscriminatedUnion<ZodObject[]>, ZodObject>,
 >(
   schema: TSchema,
   options: Omit<
-    Exclude<Parameters<typeof useForm<z.infer<TSchema>>>[0], undefined>,
+    Exclude<Parameters<typeof useForm<inferPossibleSchema<TSchema>>>[0], undefined>,
     "validate" | "validateInputOnBlur" | "validateInputOnChange"
   >,
 ) => {
   const t = useI18n();
 
-  z.setErrorMap(zodErrorMap(t));
-  return useForm<z.infer<TSchema>>({
+  z.config({
+    customError: zodErrorMap(t),
+  });
+  return useForm<inferPossibleSchema<TSchema>>({
     ...options,
     validateInputOnBlur: true,
     validateInputOnChange: true,
-    validate: zodResolver(schema),
+    validate: schemaResolver(schema, { sync: true }),
   });
 };

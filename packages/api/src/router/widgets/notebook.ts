@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { eq } from "@homarr/db";
 import { boards, items } from "@homarr/db/schema";
@@ -24,7 +24,7 @@ export const notebookRouter = createTRPCRouter({
         where: eq(items.id, input.itemId),
       });
 
-      if (!item || item.boardId !== input.boardId) {
+      if (item?.boardId !== input.boardId) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Specified item was not found",

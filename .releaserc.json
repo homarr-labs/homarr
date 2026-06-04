@@ -44,6 +44,7 @@
       {
         "successComment": false,
         "failComment": false,
+        "draftRelease": true,
         "releaseBodyTemplate": "<%= _.truncate(nextRelease.notes, { 'length': 124000, 'omission': '' }) %>"
       }
     ]

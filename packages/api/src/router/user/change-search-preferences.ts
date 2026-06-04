@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import type { Modify } from "@homarr/common/types";
@@ -15,10 +15,13 @@ export const changeSearchPreferencesInputSchema = userChangeSearchPreferencesSch
 export const changeSearchPreferencesAsync = async (
   db: Database,
   session: Session,
-  input: Modify<z.infer<typeof changeSearchPreferencesInputSchema>, { openInNewTab: boolean | undefined }>,
+  input: Modify<
+    z.infer<typeof changeSearchPreferencesInputSchema>,
+    { openInNewTab: boolean | undefined; ddgBangsEnabled: boolean | undefined }
+  >,
 ) => {
   const user = session.user;
-  // Only admins can change other users passwords
+  // Only admins can change other users search preferences
   if (!user.permissions.includes("admin") && user.id !== input.userId) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -45,6 +48,7 @@ export const changeSearchPreferencesAsync = async (
     .set({
       defaultSearchEngineId: input.defaultSearchEngineId,
       openSearchInNewTab: input.openInNewTab,
+      ddgBangs: input.ddgBangsEnabled,
     })
     .where(eq(users.id, input.userId));
 };

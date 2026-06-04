@@ -1,4 +1,6 @@
 name: "[Quality] Code Analysis"
+permissions:
+  contents: read
 
 on:
   pull_request:
@@ -9,20 +11,58 @@ on:
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
-# You can leverage Vercel Remote Caching with Turbo to speed up your builds
-# @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
 env:
   FORCE_COLOR: 3
+  SKIP_ENV_VALIDATION: true
+  TURBO_API: ${{ secrets.TURBO_API }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+  TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
+  lint-format-autofix:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Get changed files
+        id: changed
+        run: |
+          git diff --name-only --diff-filter=ACMR origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
+          echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
+
+      - name: Auto-fix lint + format
+        if: steps.changed.outputs.count != '0'
+        run: |
+          xargs -r -a /tmp/changed-files pnpm exec oxlint --fix || true
+          xargs -r -a /tmp/changed-files pnpm exec oxfmt --write
+
+      - name: Commit fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-fix lint and format"
+
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -32,34 +72,41 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws
+        run: pnpm turbo lint --affected && pnpm lint:ws
 
   format:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
       - name: Format
-        run: pnpm format
+        run: pnpm turbo format --affected --continue
 
   typecheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
       - name: Typecheck
-        run: turbo typecheck
+        run: pnpm turbo typecheck --affected
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -75,20 +122,25 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup
         uses: ./tooling/github/setup
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
       - name: Build docker image
         id: build-docker-image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           platforms: linux/amd64
           context: .
           push: false
+          load: true
           tags: homarr-e2e
           network: host
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         env:
           SKIP_ENV_VALIDATION: true
       - name: Install playwright browsers
@@ -99,12 +151,15 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Setup
         uses: ./tooling/github/setup
       - name: Copy env
         shell: bash
         run: cp .env.example .env
       - name: Build
-        run: pnpm build
+        run: pnpm turbo build --affected

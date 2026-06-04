@@ -2,7 +2,6 @@ import type { V1NodeList, VersionInfo } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
 
 import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
@@ -129,7 +128,6 @@ export const clusterRouter = createTRPCRouter({
           ],
         };
       } catch (error) {
-        logger.error("Unable to retrieve cluster", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes cluster",
@@ -165,7 +163,6 @@ export const clusterRouter = createTRPCRouter({
           { label: "volumes", count: volumes.items.length },
         ];
       } catch (error) {
-        logger.error("Unable to retrieve cluster resource counts", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes resources count",
@@ -184,12 +181,23 @@ function getProviders(versionInfo: VersionInfo, nodes: V1NodeList) {
   if (versionInfo.gitVersion.includes("aks")) providers.add("AKS");
 
   nodes.items.forEach((node) => {
-    const nodeProviderLabel =
-      node.metadata?.labels?.["node.kubernetes.io/instance-type"] ?? node.metadata?.labels?.provider ?? "";
+    const labels = node.metadata?.labels ?? {};
+    const nodeProviderLabel = labels["node.kubernetes.io/instance-type"] ?? labels.provider ?? "";
+
     if (nodeProviderLabel.includes("aws")) providers.add("EKS");
     if (nodeProviderLabel.includes("azure")) providers.add("AKS");
     if (nodeProviderLabel.includes("gce")) providers.add("GKE");
     if (nodeProviderLabel.includes("k3s")) providers.add("k3s");
+
+    const nodeInfo = node.status?.nodeInfo;
+    if (nodeInfo) {
+      const osImage = nodeInfo.osImage.toLowerCase();
+      const kernelVersion = nodeInfo.kernelVersion.toLowerCase();
+
+      if (osImage.includes("talos") || kernelVersion.includes("talos")) {
+        providers.add("Talos");
+      }
+    }
   });
 
   return Array.from(providers).join(", ");

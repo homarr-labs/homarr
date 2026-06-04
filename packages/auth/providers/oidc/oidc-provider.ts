@@ -3,7 +3,7 @@ import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
 import { customFetch } from "next-auth";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";
@@ -14,6 +14,9 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
   type: "oidc",
   clientId: env.AUTH_OIDC_CLIENT_ID,
   clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+  client: {
+    token_endpoint_auth_method: env.AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD,
+  },
   issuer: env.AUTH_OIDC_ISSUER,
   allowDangerousEmailAccountLinking: env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING,
   authorization: {
@@ -61,6 +64,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
       id: profile.sub,
       name,
       email: profile.email,
+      image: typeof profile.picture === "string" ? profile.picture : null,
       provider: "oidc",
     };
   },

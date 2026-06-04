@@ -11,8 +11,9 @@ import classes from "./component.module.css";
 
 export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
   const t = useI18n();
-  const { embedUrl, ...permissions } = options;
+  const { embedUrl, allowScrolling, ...permissions } = options;
   const allowedPermissions = getAllowedPermissions(permissions);
+  const sandboxFlags = getSandboxFlags(permissions);
 
   if (embedUrl.trim() === "") return <NoUrl />;
   if (!isSupportedProtocol(embedUrl)) {
@@ -26,7 +27,9 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
         className={classes.iframe}
         src={embedUrl}
         title="widget iframe"
-        allow={allowedPermissions.join(" ")}
+        allow={allowedPermissions}
+        scrolling={allowScrolling ? "yes" : "no"}
+        sandbox={sandboxFlags.join(" ")}
       >
         <Text>{t("widget.iframe.error.noBrowerSupport")}</Text>
       </iframe>
@@ -71,10 +74,42 @@ const UnsupportedProtocol = () => {
   );
 };
 
-const getAllowedPermissions = (permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl">) => {
-  return objectEntries(permissions)
-    .filter(([_key, value]) => value)
-    .map(([key]) => permissionMapping[key]);
+const getAllowedPermissions = (
+  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
+) => {
+  return (
+    objectEntries(permissions)
+      .filter(([_key, value]) => value)
+      // * means it applies to all origins
+      .map(([key]) => `${permissionMapping[key]} *`)
+      .join("; ")
+  );
+};
+
+const getSandboxFlags = (
+  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
+) => {
+  const baseSandbox = [
+    "allow-scripts",
+    "allow-same-origin",
+    "allow-forms",
+    "allow-popups",
+    "allow-top-navigation-by-user-activation",
+  ];
+
+  if (permissions.allowFullScreen) {
+    baseSandbox.push("allow-presentation");
+  }
+
+  if (permissions.allowPayment) {
+    baseSandbox.push("allow-popups-to-escape-sandbox");
+  }
+
+  if (permissions.allowModals) {
+    baseSandbox.push("allow-modals");
+  }
+
+  return baseSandbox;
 };
 
 const permissionMapping = {
@@ -84,6 +119,5 @@ const permissionMapping = {
   allowGeolocation: "geolocation",
   allowMicrophone: "microphone",
   allowPayment: "payment",
-  allowScrolling: "scrolling",
-  allowTransparency: "transparency",
-} satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl">, string>;
+  allowModals: "allow-modals",
+} satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">, string>;

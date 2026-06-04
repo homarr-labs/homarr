@@ -1,19 +1,18 @@
-import Link from "next/link";
+import { Fragment } from "react";
 import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
-import { ManageContainer } from "~/components/manage/manage-container";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
 
@@ -39,34 +38,31 @@ export default async function AppsPage(props: AppsPageProps) {
   const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
   const t = await getScopedI18n("app");
 
-  return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title>{t("page.list.title")}</Title>
-        <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />
-          {session.user.permissions.includes("app-create") && (
-            <MobileAffixButton component={Link} href="/manage/apps/new">
-              {t("page.create.title")}
-            </MobileAffixButton>
-          )}
-        </Group>
-        {apps.length === 0 && <AppNoResults />}
-        {apps.length > 0 && (
-          <Stack gap="sm">
-            {apps.map((app) => (
-              <AppCard key={app.id} app={app} />
-            ))}
-          </Stack>
-        )}
+  const canCreate = session.user.permissions.includes("app-create");
 
-        {/* Added margin to not hide pagination behind affix-button */}
-        <Group justify="end" mb={48}>
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        </Group>
-      </Stack>
-    </ManageContainer>
+  return (
+    <ManagePageLayout
+      title={t("page.list.title")}
+      primaryAction={
+        canCreate ? (
+          <MobileAffixButton component={Link} href="/manage/apps/new">
+            {t("page.create.title")}
+          </MobileAffixButton>
+        ) : undefined
+      }
+      toolbar={<SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />}
+      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      floatingPrimaryAction={canCreate}
+    >
+      {apps.length === 0 && <AppNoResults />}
+      {apps.length > 0 && (
+        <Stack gap="sm">
+          {apps.map((app) => (
+            <AppCard key={app.id} app={app} />
+          ))}
+        </Stack>
+      )}
+    </ManagePageLayout>
   );
 }
 
@@ -79,7 +75,7 @@ const AppCard = async ({ app }: AppCardProps) => {
   const session = await auth();
 
   return (
-    <Card withBorder>
+    <Card>
       <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
           <Avatar
@@ -98,7 +94,12 @@ const AppCard = async ({ app }: AppCardProps) => {
             </Text>
             {app.description && (
               <Text size="sm" c="gray.6" lineClamp={4}>
-                {app.description}
+                {app.description.split("\n").map((line, index) => (
+                  <Fragment key={index}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
               </Text>
             )}
             {app.href && (

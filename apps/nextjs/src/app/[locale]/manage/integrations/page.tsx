@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import type { PropsWithChildren } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   AccordionControl,
@@ -8,9 +7,7 @@ import {
   AccordionPanel,
   ActionIcon,
   ActionIconGroup,
-  Affix,
   Anchor,
-  Box,
   Button,
   Divider,
   Group,
@@ -25,9 +22,8 @@ import {
   TableThead,
   TableTr,
   Text,
-  Title,
 } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconPencil, IconPlugX } from "@tabler/icons-react";
+import { IconChevronDown, IconPencil, IconPlugX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -36,11 +32,12 @@ import { objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { CountBadge, IntegrationAvatar } from "@homarr/ui";
+import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
-import { ManageContainer } from "~/components/manage/manage-container";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
+import { env } from "~/env";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
@@ -66,38 +63,23 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
   const canCreateIntegrations = session.user.permissions.includes("integration-create");
 
   return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Group justify="space-between" align="center">
-          <Title>{t("page.list.title")}</Title>
-
-          {canCreateIntegrations && (
-            <>
-              <Box>
-                <IntegrationSelectMenu>
-                  <Affix hiddenFrom="md" position={{ bottom: 20, right: 20 }}>
-                    <MenuTarget>
-                      <Button rightSection={<IconChevronUp size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                    </MenuTarget>
-                  </Affix>
-                </IntegrationSelectMenu>
-              </Box>
-
-              <Box visibleFrom="md">
-                <IntegrationSelectMenu>
-                  <MenuTarget>
-                    <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                  </MenuTarget>
-                </IntegrationSelectMenu>
-              </Box>
-            </>
-          )}
-        </Group>
-
-        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
-      </Stack>
-    </ManageContainer>
+    <ManagePageLayout
+      title={t("page.list.title")}
+      primaryAction={
+        canCreateIntegrations ? (
+          <ManageMobilePrimaryAction>
+            <IntegrationSelectMenu>
+              <MenuTarget>
+                <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+              </MenuTarget>
+            </IntegrationSelectMenu>
+          </ManageMobilePrimaryAction>
+        ) : undefined
+      }
+      floatingPrimaryAction={canCreateIntegrations}
+    >
+      <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+    </ManagePageLayout>
   );
 }
 
@@ -114,7 +96,7 @@ const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
     >
       {children}
       <MenuDropdown>
-        <IntegrationCreateDropdownContent />
+        <IntegrationCreateDropdownContent enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
       </MenuDropdown>
     </Menu>
   );

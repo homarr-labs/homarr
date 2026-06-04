@@ -1,11 +1,12 @@
 import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
 import type { ActionIconProps } from "@mantine/core";
-import { z } from "zod";
-import type { ZodType } from "zod";
+import { z } from "zod/v4";
+import type { ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 
+import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
 
@@ -18,14 +19,19 @@ interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
 
-interface MultiSelectInput<TOptions extends SelectOption[]>
-  extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
+type AnchorNoteInput = CommonInput<string>;
+
+interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>[]
+> {
   options: TOptions;
   searchable?: boolean;
 }
 
-export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
-  extends Omit<CommonInput<TOptionValue[]>, "withDescription"> {
+export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier> extends Omit<
+  CommonInput<TOptionValue[]>,
+  "withDescription"
+> {
   AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;
@@ -37,10 +43,21 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   useData: (values: TOptionValue[]) => { data: TItem[] | undefined; isLoading: boolean; error: unknown };
 }
 
-interface SelectInput<TOptions extends readonly SelectOption[]>
-  extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
+interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>
+> {
   options: TOptions;
   searchable?: boolean;
+}
+
+interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
+  useOptions: (
+    query: string,
+    integrationIds: string[],
+  ) => {
+    isPending: boolean;
+    options: DynamicSelectOption[];
+  };
 }
 
 interface NumberInput extends CommonInput<number> {
@@ -71,11 +88,22 @@ const optionsFactory = {
     withDescription: input?.withDescription ?? false,
     validate: input?.validate,
   }),
+  anchorNote: (input?: AnchorNoteInput) => ({
+    type: "anchorNote" as const,
+    defaultValue: input?.defaultValue ?? "",
+    withDescription: input?.withDescription ?? false,
+  }),
   multiSelect: <const TOptions extends SelectOption[]>(input: MultiSelectInput<TOptions>) => ({
     type: "multiSelect" as const,
     defaultValue: input.defaultValue ?? [],
     options: input.options,
     searchable: input.searchable ?? false,
+    withDescription: input.withDescription ?? false,
+  }),
+  dynamicSelect: (input: DynamicSelectInput) => ({
+    type: "dynamicSelect" as const,
+    defaultValue: input.defaultValue ?? null,
+    useOptions: input.useOptions,
     withDescription: input.withDescription ?? false,
   }),
   select: <const TOptions extends SelectOption[]>(input: SelectInput<TOptions>) => ({
@@ -131,6 +159,21 @@ const optionsFactory = {
     type: "app" as const,
     defaultValue: "",
     withDescription: false,
+  }),
+  umamiEventName: () => ({
+    type: "umamiEventName" as const,
+    defaultValue: "",
+    withDescription: true,
+  }),
+  umamiEventNames: () => ({
+    type: "umamiEventNames" as const,
+    defaultValue: [] as string[],
+    withDescription: true,
+  }),
+  umamiWebsite: () => ({
+    type: "umamiWebsite" as const,
+    defaultValue: "",
+    withDescription: true,
   }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,

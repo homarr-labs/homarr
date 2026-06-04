@@ -1,5 +1,4 @@
 import { X509Certificate } from "node:crypto";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Button,
@@ -17,8 +16,9 @@ import {
 import { IconCertificateOff } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
-import { getTrustedCertificateHostnamesAsync } from "@homarr/certificates/server";
+import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { getI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";

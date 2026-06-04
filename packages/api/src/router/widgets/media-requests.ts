@@ -1,8 +1,9 @@
 import { observable } from "@trpc/server/observable";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
+import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
@@ -35,7 +36,10 @@ export const mediaRequestsRouter = createTRPCRouter({
             return dataB.createdAt.getTime() - dataA.createdAt.getTime();
           }
 
-          return dataA.status - dataB.status;
+          return (
+            mediaRequestStatusConfiguration[dataA.status].position -
+            mediaRequestStatusConfiguration[dataB.status].position
+          );
         });
     }),
   subscribeToLatestRequests: publicProcedure

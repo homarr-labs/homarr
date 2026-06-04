@@ -1,5 +1,5 @@
 import { IconRss } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -28,6 +28,12 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       maximumAmountPosts: factory.number({
         defaultValue: 100,
         validate: z.number().min(1).max(9999),
+      }),
+      hideDescription: factory.switch({
+        defaultValue: false,
+      }),
+      showPosterImage: factory.switch({
+        defaultValue: false,
       }),
     }));
   },

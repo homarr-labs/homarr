@@ -4,8 +4,10 @@ import { WebSocketServer } from "ws";
 import { appRouter, createTRPCContext } from "@homarr/api/websocket";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
 import { parseCookies } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
-import { logger } from "@homarr/log";
+
+const logger = createLogger({ module: "websocketMain" });
 
 const wss = new WebSocketServer({
   port: 3001,

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
@@ -138,9 +138,10 @@ const getContainerOrThrowAsync = async (id: string) => {
 interface DockerContainer {
   name: string;
   id: string;
+  host: string;
   state: ContainerState;
   image: string;
-  ports: Port[];
+  ports: Port[] | undefined;
   iconUrl: string | null;
   cpuUsage: number;
   memoryUsage: number;

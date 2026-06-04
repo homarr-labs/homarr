@@ -1,11 +1,14 @@
-import bcrypt from "bcrypt";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import type { userSignInSchema } from "@homarr/validation/user";
+
+import { comparePasswordsAsync } from "../../../security";
+
+const logger = createLogger({ module: "basicAuthorization" });
 
 export const authorizeWithBasicCredentialsAsync = async (
   db: Database,
@@ -16,19 +19,19 @@ export const authorizeWithBasicCredentialsAsync = async (
   });
 
   if (!user?.password) {
-    logger.info(`user ${credentials.name} was not found`);
+    logger.info("User not found", { userName: credentials.name });
     return null;
   }
 
-  logger.info(`user ${user.name} is trying to log in. checking password...`);
-  const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+  logger.info("User is trying to log in. Checking password...", { userName: user.name });
+  const isValidPassword = await comparePasswordsAsync(credentials.password, user.password);
 
   if (!isValidPassword) {
-    logger.warn(`password for user ${user.name} was incorrect`);
+    logger.warn("Password for user was incorrect", { userName: user.name });
     return null;
   }
 
-  logger.info(`user ${user.name} successfully authorized`);
+  logger.info("User successfully authorized", { userName: user.name });
 
   return {
     id: user.id,

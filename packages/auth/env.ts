@@ -1,8 +1,7 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
+import { createBooleanSchema, createDurationSchema, createEnv } from "@homarr/core/infrastructure/env";
 import { supportedAuthProviders } from "@homarr/definitions";
-import { createEnv } from "@homarr/env";
-import { createBooleanSchema, createDurationSchema } from "@homarr/env/schemas";
 
 const authProvidersSchema = z
   .string()
@@ -20,7 +19,7 @@ const authProvidersSchema = z
         return false;
       }),
   )
-  .default("credentials");
+  .default(["credentials"]);
 
 const authProviders = authProvidersSchema.safeParse(process.env.AUTH_PROVIDERS).data ?? [];
 
@@ -41,6 +40,9 @@ export const env = createEnv({
           AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),
           AUTH_OIDC_FORCE_USERINFO: createBooleanSchema(false),
           AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING: createBooleanSchema(false),
+          AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD: z
+            .enum(["client_secret_basic", "client_secret_post", "client_secret_jwt", "none"])
+            .default("client_secret_basic"),
         }
       : {}),
     ...(authProviders.includes("ldap")

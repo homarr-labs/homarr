@@ -1,8 +1,10 @@
 import { NextRequest } from "next/server";
 
 import { createHandlersAsync } from "@homarr/auth";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { logger } from "@homarr/log";
+
+const logger = createLogger({ module: "nextAuthRoute" });
 
 export const GET = async (req: NextRequest) => {
   const { handlers } = await createHandlersAsync(extractProvider(req), isSecureCookieEnabled(req));

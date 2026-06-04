@@ -1,39 +1,56 @@
 import dayjs from "dayjs";
 import type { ContainerInfo, ContainerStats } from "dockerode";
+import type Dockerode from "dockerode";
 
+import { bestMatch } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import type { ContainerState } from "@homarr/docker";
+import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
-import type { ContainerState } from "../../docker/src";
-import { DockerSingleton } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+
+const logger = createLogger({ module: "dockerRequestHandler" });
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "dockerContainersResult",
   widgetKind: "dockerContainers",
   async requestAsync() {
-    const containers = await getContainersWithStatsAsync();
-
-    return containers;
+    return await getContainersWithStatsAsync();
   },
   cacheDuration: dayjs.duration(20, "seconds"),
 });
 
-const dockerInstances = DockerSingleton.getInstances();
-
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
 
 async function getContainersWithStatsAsync() {
-  const containers = await Promise.all(
+  const dockerInstances = DockerSingleton.getInstances();
+  const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
-      return instanceContainers.map((container) => ({
-        ...container,
-        instance: host,
-      }));
+      return instanceContainers
+        .filter((container) => !(dockerLabels.hide in container.Labels))
+        .map((container) => ({ ...container, instance: host }));
     }),
-  ).then((res) => res.flat());
+  );
 
+  const containers = results.flatMap((result, index) => {
+    if (result.status === "fulfilled") return result.value;
+    logger.warn(
+      new ErrorWithMetadata(
+        "Failed to list containers from Docker host",
+        {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          host: dockerInstances[index]!.host,
+        },
+        { cause: result.reason },
+      ),
+    );
+
+    return [];
+  });
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
 
   const dbIcons =
@@ -47,34 +64,69 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    const stats = await instance.getContainer(container.Id).stats({ stream: false });
+    const stats = await instance
+      .getContainer(container.Id)
+      .stats({ stream: false, "one-shot": true })
+      .catch(
+        () =>
+          ({
+            cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+            memory_stats: { usage: 0 },
+          }) as ContainerStats,
+      );
+
+    const cpuUsage = calculateCpuUsage(stats);
+    const memoryUsage = calculateMemoryUsage(stats);
 
     return {
       id: container.Id,
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
+      host: container.instance,
       state: container.State as ContainerState,
-      iconUrl:
-        dbIcons.find((icon) => {
-          const extractedImage = extractImage(container);
-          if (!extractedImage) return false;
-          return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-        })?.url ?? null,
-      cpuUsage: calculateCpuUsage(stats),
-      memoryUsage: stats.memory_stats.usage,
+      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
+      cpuUsage,
+      memoryUsage,
       image: container.Image,
-      ports: container.Ports,
+      ports: container.Ports as Dockerode.Port[] | undefined,
     };
   });
 
   return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
 }
 
-function calculateCpuUsage(stats: ContainerStats): number {
-  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - stats.precpu_stats.cpu_usage.total_usage;
-  const systemDelta = stats.cpu_stats.system_cpu_usage - stats.precpu_stats.system_cpu_usage;
-  const numberOfCpus = stats.cpu_stats.online_cpus || 1;
+export function calculateCpuUsage(stats: ContainerStats): number {
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!stats.cpu_stats?.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage?.total_usage) {
+    return 0;
+  }
 
-  if (systemDelta === 0) return 0;
+  const numberOfCpus = stats.cpu_stats.online_cpus;
+  const usage = stats.cpu_stats.system_cpu_usage;
+  if (!usage || usage === 0) {
+    return 0;
+  }
 
-  return (cpuDelta / systemDelta) * numberOfCpus * 100;
+  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+}
+
+export function calculateMemoryUsage(stats: ContainerStats): number {
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!stats.memory_stats?.usage) {
+    return 0;
+  }
+
+  // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
+  // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
+  return (
+    stats.memory_stats.usage -
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (stats.memory_stats.stats?.cache ??
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      stats.memory_stats.stats?.total_inactive_file ??
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      stats.memory_stats.stats?.inactive_file ??
+      0)
+  );
 }

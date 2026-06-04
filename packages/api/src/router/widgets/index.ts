@@ -1,40 +1,34 @@
+import { lazy } from "@trpc/server";
+
 import { createTRPCRouter } from "../../trpc";
-import { appRouter } from "./app";
-import { calendarRouter } from "./calendar";
-import { dnsHoleRouter } from "./dns-hole";
-import { downloadsRouter } from "./downloads";
-import { healthMonitoringRouter } from "./health-monitoring";
-import { indexerManagerRouter } from "./indexer-manager";
-import { mediaRequestsRouter } from "./media-requests";
-import { mediaServerRouter } from "./media-server";
-import { mediaTranscodingRouter } from "./media-transcoding";
-import { minecraftRouter } from "./minecraft";
-import { networkControllerRouter } from "./network-controller";
-import { notebookRouter } from "./notebook";
-import { optionsRouter } from "./options";
-import { releasesRouter } from "./releases";
-import { rssFeedRouter } from "./rssFeed";
-import { smartHomeRouter } from "./smart-home";
-import { stockPriceRouter } from "./stocks";
-import { weatherRouter } from "./weather";
 
 export const widgetRouter = createTRPCRouter({
-  notebook: notebookRouter,
-  weather: weatherRouter,
-  app: appRouter,
-  dnsHole: dnsHoleRouter,
-  smartHome: smartHomeRouter,
-  stockPrice: stockPriceRouter,
-  mediaServer: mediaServerRouter,
-  calendar: calendarRouter,
-  downloads: downloadsRouter,
-  mediaRequests: mediaRequestsRouter,
-  rssFeed: rssFeedRouter,
-  indexerManager: indexerManagerRouter,
-  healthMonitoring: healthMonitoringRouter,
-  mediaTranscoding: mediaTranscodingRouter,
-  minecraft: minecraftRouter,
-  options: optionsRouter,
-  releases: releasesRouter,
-  networkController: networkControllerRouter,
+  anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
+  coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
+  immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
+  notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
+  weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
+  app: lazy(() => import("./app").then((mod) => mod.appRouter)),
+  dnsHole: lazy(() => import("./dns-hole").then((mod) => mod.dnsHoleRouter)),
+  smartHome: lazy(() => import("./smart-home").then((mod) => mod.smartHomeRouter)),
+  stockPrice: lazy(() => import("./stocks").then((mod) => mod.stockPriceRouter)),
+  mediaServer: lazy(() => import("./media-server").then((mod) => mod.mediaServerRouter)),
+  mediaRelease: lazy(() => import("./media-release").then((mod) => mod.mediaReleaseRouter)),
+  calendar: lazy(() => import("./calendar").then((mod) => mod.calendarRouter)),
+  downloads: lazy(() => import("./downloads").then((mod) => mod.downloadsRouter)),
+  mediaRequests: lazy(() => import("./media-requests").then((mod) => mod.mediaRequestsRouter)),
+  rssFeed: lazy(() => import("./rssFeed").then((mod) => mod.rssFeedRouter)),
+  indexerManager: lazy(() => import("./indexer-manager").then((mod) => mod.indexerManagerRouter)),
+  healthMonitoring: lazy(() => import("./health-monitoring").then((mod) => mod.healthMonitoringRouter)),
+  mediaTranscoding: lazy(() => import("./media-transcoding").then((mod) => mod.mediaTranscodingRouter)),
+  minecraft: lazy(() => import("./minecraft").then((mod) => mod.minecraftRouter)),
+  options: lazy(() => import("./options").then((mod) => mod.optionsRouter)),
+  releases: lazy(() => import("./releases").then((mod) => mod.releasesRouter)),
+  networkController: lazy(() => import("./network-controller").then((mod) => mod.networkControllerRouter)),
+  firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
+  notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
+  timetable: lazy(() => import("./timetable").then((mod) => mod.timetableRouter)),
+  tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
+  speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
+  umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
 });

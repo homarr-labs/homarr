@@ -1,10 +1,10 @@
-import type { CookieSerializeOptions } from "cookie";
-import { parse, serialize } from "cookie";
+import type { SerializeOptions } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 
 export function parseCookies(cookieString: string) {
-  return parse(cookieString);
+  return parseCookie(cookieString);
 }
 
-export function setClientCookie(name: string, value: string, options: CookieSerializeOptions = {}) {
-  document.cookie = serialize(name, value, options);
+export function setClientCookie(name: string, value: string, options: SerializeOptions = {}) {
+  document.cookie = stringifySetCookie(name, value, options);
 }

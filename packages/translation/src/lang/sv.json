@@ -82,7 +82,7 @@
         "form": {
           "name": {
             "label": "Gruppens namn",
-            "description": ""
+            "description": "Namnet måste matcha admin-grupp i extern tjänst"
           }
         }
       },
@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Lösenord",
-        "requirement": {
+        "suggestion": {
           "length": "Använd minst 8 tecken",
           "lowercase": "Använd liten bokstav",
           "uppercase": "Använd stor bokstav",
@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Visa sökresultat i ny flik"
+      },
+      "ddgBangs": {
+        "label": "Aktivera DuckDuckGo bangs"
       }
     },
     "error": {
@@ -165,7 +168,7 @@
     "action": {
       "login": {
         "label": "Logga in",
-        "labelWith": "",
+        "labelWith": "Logga in med {provider}",
         "notification": {
           "success": {
             "title": "Inloggning lyckades",
@@ -246,15 +249,25 @@
           }
         }
       },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs inställningen ändrad"
+          },
+          "error": {
+            "message": "DuckDuckGo bangs inställningen kunde inte ändras"
+          }
+        }
+      },
       "manageAvatar": {
         "changeImage": {
           "label": "Byt bild",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Bilden har ändrats"
             },
             "error": {
-              "message": ""
+              "message": "Bilden kunde inte ändras"
             },
             "toLarge": {
               "title": "Bilden är för stor",
@@ -267,10 +280,10 @@
           "confirm": "Är du säker på att du vill ta bort bilden?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Bilden har tagits bort"
             },
             "error": {
-              "message": ""
+              "message": "Kunde inte ta bort bilden"
             }
           }
         }
@@ -278,10 +291,10 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profilen har uppdaterats"
           },
           "error": {
-            "message": ""
+            "message": "Det gick inte att uppdatera profilen"
           }
         }
       },
@@ -291,11 +304,11 @@
         "confirm": "Är du säker på att du vill ta bort användaren {username} och användarens inställningar?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Välj användare",
+        "notFound": "Ingen användare hittad"
       },
       "transfer": {
-        "label": ""
+        "label": "Välj ny ägare"
       }
     }
   },
@@ -321,7 +334,7 @@
         "item": {
           "admin": {
             "label": "Administratör",
-            "description": ""
+            "description": "Medlemmar med denna behörighet har full tillgång till alla funktioner och inställningar"
           }
         }
       },
@@ -329,20 +342,20 @@
         "title": "Applikationer",
         "item": {
           "create": {
-            "label": "",
+            "label": "Skapa applikationer",
             "description": "Tillåt medlemmar att addera appar"
           },
           "use-all": {
-            "label": "",
+            "label": "Använd alla applikationer",
             "description": "Tillåt medlemmar att addera valfri applikation på sina tavlor"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla appar",
+            "description": "Tillåt att medlemmar modifierar alla appar"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till appar",
+            "description": "Tillåt att medlemmar hanterar, använder och raderar alla appar"
           }
         }
       },
@@ -350,20 +363,20 @@
         "title": "Tavlor",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Skapa tavlor",
+            "description": "Tillåt att medlemmar skapar tavlor"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Se alla tavlor",
+            "description": "Tillåt att medlemmar ser alla tavlor"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla tavlor",
+            "description": "Tillåt att medlemmar modifierar alla tavlor (Detta inkluderar inte åtkomstkontroll eller farozonen)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till tavlor",
+            "description": "Tillåt att medlemmar ser, modifierar och tar bort alla tavlor (detta inkluderar åtkomstkontroll och farozonen)"
           }
         }
       },
@@ -379,38 +392,38 @@
             "description": "Tillåter medlemmar att addera valfri integration till sina tavlor"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interagera med alla integrationer",
+            "description": "Tillåt att medlemmar interagerar med alla integrationer"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till integrationer",
+            "description": "Tillåt att medlemmar hanterar, använder och interagerar med alla integrationer"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Media",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Ladda upp media",
+            "description": "Tillåt att medlemmar laddar upp media"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Se all media",
+            "description": "Tillåt att medlemmar ser all media"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till media",
+            "description": "Tillåt att medlemmar hanterar och raderar all media"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Annat",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Se loggar",
+            "description": "Tillåt att medlemmar ser loggar"
           }
         }
       },
@@ -418,36 +431,36 @@
         "title": "Sökmotorer",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Skapa sökmotorer",
+            "description": "Tillåt medlemmar att skapa sökmotorer"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla sökmotorer",
+            "description": "Tillåt att medlemmar modifierar alla sökmotorer"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till sökmotorer",
+            "description": "Tillåt att medlemmar hanterar och raderar alla sökmotorer"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Vissa medlemmar är från externa tjänster och kan inte hantera här",
+      "external": "Alla medlemmar är från externa tjänster och kan inte hanteras här"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Denna grupp är reserverad för systemet så vissa åtgärder är begränsade. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
         "label": "Addera en grupp",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen har skapats"
           },
           "error": {
-            "message": ""
+            "message": "Gruppen kunde inte skapas"
           }
         }
       },
@@ -457,7 +470,7 @@
         "confirm": "Är du säker på att du vill överföra ägarskapet för gruppen {name} till {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Överfört grupp {group} till {user}"
           },
           "error": {
             "message": "Kunde inte överföra ägarskap"
@@ -468,7 +481,7 @@
         "label": "Lägg till en medlem"
       },
       "removeMember": {
-        "label": "",
+        "label": "Ta bort användare",
         "confirm": "Är du säker på att du vill ta bort användaren {user} från denna grupp?"
       },
       "delete": {
@@ -487,39 +500,39 @@
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Behörigheter sparade",
+            "message": "Rättigheterna sparade"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Rättigheterna ej sparade",
+            "message": "Rättigheterna har inte sparats"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen {name} har sparats"
           },
           "error": {
-            "message": ""
+            "message": "Kunde inte spara gruppen {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Välj en grupp",
+        "notFound": "Ingen grupp hittad"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Inställningarna sparades",
+              "message": "Inställningarna för tavlan har sparats"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Kunde inte spara inställningarna",
+              "message": "Kunde inte spara inställningarna för tavlan"
             }
           }
         }
@@ -527,10 +540,10 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ordning ändrad"
           },
           "error": {
-            "message": ""
+            "message": "Ordningen kunde ändras"
           }
         }
       }
@@ -546,20 +559,20 @@
       "list": {
         "title": "Applikationer",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Det finns inga appar ännu",
+          "action": "Skapa din första app"
         }
       },
       "create": {
         "title": "Addera applikation",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet lyckades",
+            "message": "Appen skapades framgångsrikt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet misslyckades",
+            "message": "Appen kunde inte skapas"
           }
         }
       },
@@ -568,11 +581,11 @@
         "notification": {
           "success": {
             "title": "Ändringarna har sparats",
-            "message": ""
+            "message": "Appen sparades"
           },
           "error": {
             "title": "Misslyckades med att spara ändringarna",
-            "message": ""
+            "message": "Appen kunde inte sparas"
           }
         }
       },
@@ -581,12 +594,12 @@
         "message": "Är du säker på att du vill ta bort applikationen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning lyckades",
+            "message": "Appen har tagits bort"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning misslyckades",
+            "message": "Kunde inte ta bort appen"
           }
         }
       }
@@ -599,21 +612,21 @@
         "label": "Beskrivning"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Använd annan URL för ping",
+          "description": "Användbart om Homarr kan komma åt appen direkt via ett internt host-namn eller nätverk för att undvika bandbreddsanvändning hos internetleverantör"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Välj app",
+        "notFound": "Ingen app hittades",
         "search": "Sök efter en applikation",
-        "noResults": "",
+        "noResults": "Inga resultat",
         "action": "Välj {app}",
         "title": "Välj en applikation att lägga till på tavlan"
       },
@@ -629,34 +642,56 @@
     "page": {
       "list": {
         "title": "Integrationer",
-        "search": "",
+        "search": "Sök integrationer",
         "noResults": {
-          "title": ""
+          "title": "Det finns inga integrationer ännu"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ny {name} integration",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet lyckades",
+            "message": "Integrationen har skapats"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet misslyckades",
+            "message": "Integrationen kunde inte skapas"
+          }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Befintlig",
+              "label": "Välj befintlig app"
+            },
+            "new": {
+              "title": "Ny",
+              "url": {
+                "label": "App URL",
+                "description": "URL:en som appen kommer att öppna när den används från tavlan"
+              }
+            }
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Redigera {name} integration",
         "notification": {
           "success": {
             "title": "Ändringarna har sparats",
-            "message": ""
+            "message": "Integrationen sparad"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunde inte tillämpa ändringar",
+            "message": "Integrationen kunde inte sparas"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Länka en app",
+            "remove": "Ta bort länk",
+            "select": "Välj en app att länka till"
           }
         }
       },
@@ -665,12 +700,12 @@
         "message": "Är du säker på att du vill ta bort integrationen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning lyckades",
+            "message": "Integrationen har tagits bort"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning misslyckades",
+            "message": "Kunde inte ta bort integrationen"
           }
         }
       }
@@ -680,41 +715,44 @@
         "label": "Namn"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Skapa sökmotor",
+        "description": "Integrationen \"{kind}\" kan inte användas med sökmotorer. Markera detta för att automatiskt konfigurera sökmotorn."
+      },
+      "app": {
+        "sectionTitle": "Länkad app"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Skapa app",
+        "description": "Skapa en app med samma namn och ikon som integrationen. Lämna fältet nedan tomt för att skapa en app med integrationens URL."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Egen app-URL"
       }
     },
     "action": {
-      "create": ""
+      "create": "Ny integration"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testa anslutningen och skapa",
+        "edit": "Testa anslutningen och skapa"
       },
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Orsak med mer detaljer"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Okänt fel",
+          "description": "Ett okänt fel inträffade, öppna orsaken nedan för att se mer detaljer"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Parsningsfel",
+          "description": "Svaret kunde inte analyseras. Verifiera att URL pekar på bas-URL för tjänsten."
         },
         "authorization": {
           "title": "",
@@ -738,7 +776,7 @@
           "description": {
             "expired": "",
             "notYetValid": "",
-            "untrusted": "",
+            "untrusted": "Certifikatet är inte betrott.",
             "hostnameMismatch": ""
           },
           "alert": {
@@ -773,7 +811,7 @@
             },
             "notification": {
               "success": {
-                "title": "",
+                "title": "Betrodda certifikat",
                 "message": ""
               },
               "error": {
@@ -789,7 +827,7 @@
             },
             "notification": {
               "success": {
-                "title": "",
+                "title": "Betrodda certifikat",
                 "message": ""
               },
               "error": {
@@ -902,7 +940,7 @@
     },
     "secrets": {
       "title": "",
-      "lastUpdated": "",
+      "lastUpdated": "Senast uppdaterad {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
@@ -934,6 +972,38 @@
           "newLabel": ""
         },
         "realm": {
+          "label": "",
+          "newLabel": ""
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
           "label": "",
           "newLabel": ""
         }
@@ -984,15 +1054,20 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
+    "success": "",
     "beta": "",
     "error": "Fel",
     "action": {
       "add": "Lägg till",
       "apply": "Använd",
       "backToOverview": "Tillbaka till översikten",
+      "change": "",
       "create": "Addera",
       "createAnother": "Addera och börja om",
       "edit": "Redigera",
@@ -1012,7 +1087,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Försök igen",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1021,6 +1098,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "",
         "dark": ""
       }
@@ -1067,7 +1145,7 @@
       "menu": {
         "switchToDarkMode": "Byt till mörkt läge",
         "switchToLightMode": "Byt till ljust läge",
-        "management": "",
+        "management": "Administration",
         "preferences": "Dina inställningar",
         "logout": "Logga ut",
         "login": "Logga in",
@@ -1079,6 +1157,9 @@
     "dangerZone": "Kritiska inställningar",
     "noResults": "Hittade inga resultat",
     "unsavedChanges": "",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "Förhandsgranska",
       "hide": "Dölj förhandsgranskning"
@@ -1112,6 +1193,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1122,6 +1209,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1164,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Ändra position"
+          "changePosition": "Ändra position",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1249,11 +1340,26 @@
         "showTitle": {
           "label": ""
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1439,6 +1545,17 @@
         "offline": ""
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Anteckningsbok",
       "description": "",
@@ -1498,7 +1615,44 @@
         "rows": "Rader",
         "width": "Bredd",
         "height": "Höjd"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
+    },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
     },
     "iframe": {
       "name": "",
@@ -1530,6 +1684,9 @@
         },
         "allowGeolocation": {
           "label": "Tillåt geografisk lokalisering"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1650,6 +1807,9 @@
     "calendar": {
       "name": "Kalender",
       "description": "",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr - händelse att visa i kalendern",
@@ -1683,6 +1843,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Plats för väder"
@@ -1756,6 +1919,9 @@
         },
         "memory": {
           "label": "Visa minnesinformation"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": ""
@@ -1841,8 +2007,210 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
+        "internalServerError": ""
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
         "internalServerError": ""
       }
     },
@@ -1920,8 +2288,72 @@
         "currentlyPlaying": "",
         "user": "",
         "name": "",
-        "id": ""
+        "id": "",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "",
@@ -2070,6 +2502,35 @@
       },
       "globalRatio": ""
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "",
       "description": "Se en lista över alla medieförfrågningar från din installation av Overseerr- eller Jellyseerr",
@@ -2087,8 +2548,11 @@
         "unknown": "Okänd",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Delmängd",
-        "available": "Tillgänglig"
+        "available": "Tillgänglig",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "",
@@ -2195,6 +2659,12 @@
         },
         "maximumAmountPosts": {
           "label": ""
+        },
+        "hideDescription": {
+          "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2217,6 +2687,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2706,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2281,7 +2756,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2291,14 +2770,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2356,6 +2841,145 @@
     "networkController": {
       "error": {
         "internalServerError": ""
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "gpu": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "gpu": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -2543,6 +3167,9 @@
       "iconColor": {
         "label": "Färg på ikoner"
       },
+      "clearColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Du kan anpassa din tavla genom att använda CSS, vilket endast rekommenderas för erfarna användare",
@@ -2574,7 +3201,7 @@
       },
       "isPublic": {
         "label": "Allmän",
-        "description": ""
+        "description": "Offentliga tavlor är tillgängliga för alla, även till de utan ett konto."
       }
     },
     "content": {
@@ -2719,12 +3346,12 @@
   "management": {
     "metaTitle": "",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "God morgon, {username}",
+      "afternoon": "God eftermiddag, {username}",
+      "evening": "God kväll, {username}"
     },
     "notFound": {
-      "title": "",
+      "title": "Hittades ej",
       "text": ""
     },
     "navbar": {
@@ -2732,9 +3359,9 @@
         "home": "Hem",
         "boards": "Tavlor",
         "apps": "Applikationer",
-        "integrations": "",
+        "integrations": "Integrationer",
         "searchEngies": "Sökmotorer",
-        "medias": "",
+        "medias": "Media",
         "users": {
           "label": "Användare",
           "items": {
@@ -2746,12 +3373,12 @@
         "tools": {
           "label": "Verktyg",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "kubernetes": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "logs": "Loggning",
+            "api": "API",
+            "certificates": "Certifikat",
+            "tasks": "Uppgifter"
           }
         },
         "settings": "Inställningar",
@@ -2759,7 +3386,7 @@
           "label": "Hjälp",
           "items": {
             "documentation": "Dokumentation",
-            "submitIssue": "",
+            "submitIssue": "Skicka in ett ärende",
             "discord": "Community Discord",
             "sourceCode": "Källkod"
           }
@@ -2773,25 +3400,31 @@
           "board": "Tavlor",
           "user": "Användare",
           "invite": "Inbjudningar",
-          "integration": "",
+          "integration": "Integrationer",
           "app": "Applikationer",
-          "group": "Grupper"
+          "group": "Grupper",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Tavlor",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Resurser",
+          "authentication": "Autentisering",
+          "authorization": "Auktorisering"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
         "title": "Dina tavlor",
         "action": {
           "new": {
-            "label": ""
+            "label": "Ny tavla"
           },
           "open": {
-            "label": ""
+            "label": "Öppna tavla"
           },
           "settings": {
             "label": "Inställningar"
@@ -2806,12 +3439,12 @@
           "setMobileHomeBoard": {
             "label": "Ange som din mobila starttavla",
             "badge": {
-              "label": "",
+              "label": "Mobil",
               "tooltip": "Den här tavlan kommer att användas som din mobila starttavla"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Duplicera tavlan"
           },
           "delete": {
             "label": "Radera permanent",
@@ -2822,8 +3455,11 @@
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Den här tavlan är offentlig",
+          "private": "Den här tavlan är privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
@@ -2836,11 +3472,11 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Inkludera media från alla användare"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Tillbaka till användare",
+        "fieldsDisabledExternalProvider": "Vissa fält är inaktiverade eftersom de hanteras av en extern autentiseringsleverantör.",
         "setting": {
           "general": {
             "title": "Allmänt",
@@ -2849,8 +3485,8 @@
               "board": {
                 "title": "Starttavla",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Generellt",
+                  "mobile": "Mobil"
                 }
               },
               "search": "Sökning",
@@ -2870,14 +3506,14 @@
           "title": "Användare"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Redigera användare {username}"
         },
         "create": {
           "metaTitle": "Addera användare",
           "title": "Addera ny användare",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Personlig information"
             },
             "security": {
               "label": "Säkerhet"
@@ -2885,13 +3521,13 @@
             "groups": {
               "label": "Grupper",
               "title": "Välj alla grupper användare skall tillhöra",
-              "description": ""
+              "description": "Gruppen {everyoneGroup} adderas till alla användare och kan inte tas bort."
             },
             "review": {
-              "label": ""
+              "label": "Granska"
             },
             "completed": {
-              "title": "Användare har adderats"
+              "title": "Användaren har adderats"
             },
             "error": {
               "title": "Misslyckades med att addera användaren"
@@ -2910,10 +3546,10 @@
               "description": "Efter giltighetsdatumet är en inbjudan inte längre giltig och mottagaren kan inte addera ett konto."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Kopiera inbjudan",
+              "description": "Din inbjudan har adderats. Efter att detta fönster stängts kommer <b>inte längre att kunna kopiera denna länk.</b> Om du inte längre vill bjuda in denna person kan du ta bort denna inbjudan när som helst.",
               "link": "Länk till inbjudan",
-              "button": ""
+              "button": "Kopiera & Stäng"
             },
             "delete": {
               "title": "Ta bort inbjudan",
@@ -2922,13 +3558,13 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Adderad av"
             },
             "expirationDate": {
-              "label": "Giltighetsdatum"
+              "label": "Giltig tom"
             },
             "token": {
               "label": ""
@@ -2937,7 +3573,7 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Tillbaka till grupper",
         "setting": {
           "general": {
             "title": "Allmänt",
@@ -2946,21 +3582,21 @@
             "ownerOfGroupDeleted": "Ägaren av denna grupp har tagits bort. Den har för närvarande ingen ägare."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Inställningar",
+            "alert": "Gruppinställningar prioriteras av ordningen på grupperna i listan. De övre inställningarna prioriteras högre än de nedre inställningarna.",
             "board": {
               "title": "Tavlor"
             }
           },
           "members": {
             "title": "Medlemmar",
-            "search": "",
-            "notFound": ""
+            "search": "Hitta en medlem",
+            "notFound": "Inga medlemmar hittades"
           },
           "permissions": {
             "title": "Behörigheter",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Du har ändringar som inte sparats!"
             }
           }
         }
@@ -2969,10 +3605,10 @@
         "title": "Inställningar",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Inställningarna har sparats"
           },
           "error": {
-            "message": ""
+            "message": "Kunde inte spara inställningarna"
           }
         },
         "section": {
@@ -3034,6 +3670,13 @@
               }
             }
           },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
+            }
+          },
           "search": {
             "title": "Sökning",
             "defaultSearchEngine": {
@@ -3046,6 +3689,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
+                "auto": "",
                 "light": "Ljus",
                 "dark": "Mörk"
               }
@@ -3065,10 +3709,14 @@
           "status": {
             "idle": "",
             "running": "Körs",
-            "error": "Fel"
+            "error": "Fel",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
+              "label": ""
+            },
+            "timetable": {
               "label": ""
             },
             "iconsUpdater": {
@@ -3110,9 +3758,6 @@
             "dnsHole": {
               "label": ""
             },
-            "sessionCleanup": {
-              "label": ""
-            },
             "updateChecker": {
               "label": ""
             },
@@ -3122,8 +3767,103 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            },
+            "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "Varje dag vid midnatt",
+            "weeklyMonday": "Varje vecka på måndag",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3165,19 +3905,38 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr är ett open source-projekt som underhålls av volontärer. Tack vare dessa människor har Homarr vuxit och utvecklats sedan 2021. Vårt team arbetar på distans från många olika länder med Homarr på sin fritid utan ersättning.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Medarbetare",
+            "subtitle": "{count} upprätthåller kod & Homarr"
           },
           "translators": {
             "title": "Översättare",
             "subtitle": "{count} bidrar med översättningar på flera olika språk"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "",
             "subtitle": ""
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3186,7 +3945,7 @@
   "docker": {
     "title": "",
     "table": {
-      "updated": "",
+      "updated": "Uppdaterad {when}",
       "search": "",
       "selected": "",
       "footer": ""
@@ -3196,7 +3955,7 @@
         "label": "Namn"
       },
       "state": {
-        "label": "Läge",
+        "label": "Status",
         "option": {
           "created": "Adderad",
           "running": "Körs",
@@ -3220,6 +3979,9 @@
       },
       "ports": {
         "label": "Portar"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -3277,7 +4039,7 @@
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Uppdatera",
         "notification": {
           "success": {
             "title": "",
@@ -3632,6 +4394,9 @@
       },
       "tools": {
         "label": "Verktyg",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },
@@ -3743,6 +4508,7 @@
             "title": "",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Byt till ljust läge",
                 "dark": "Byt till mörkt läge"
               },
@@ -3794,6 +4560,14 @@
         "group": {
           "searchEngine": {
             "title": "",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
@@ -4092,7 +4866,7 @@
     },
     "page": {
       "list": {
-        "title": "",
+        "title": "Betrodda certifikat",
         "description": "",
         "noResults": {
           "title": ""
@@ -4154,6 +4928,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

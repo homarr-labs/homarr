@@ -2,12 +2,12 @@ import type tls from "node:tls";
 import axios from "axios";
 import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
+import { getPortFromUrl } from "@homarr/common";
 import {
-  createCustomCheckServerIdentity,
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
-} from "@homarr/certificates/server";
-import { getPortFromUrl } from "@homarr/common";
+} from "@homarr/core/infrastructure/certificates";
+import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
 

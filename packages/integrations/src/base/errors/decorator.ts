@@ -1,19 +1,26 @@
 import { isFunction } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { Integration } from "../integration";
 import type { IIntegrationErrorHandler } from "./handler";
+import { integrationFetchHttpErrorHandler } from "./http";
 import { IntegrationError } from "./integration-error";
 import { IntegrationUnknownError } from "./integration-unknown-error";
+import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./parse";
 
-const localLogger = logger.child({
-  module: "HandleIntegrationErrors",
-});
+const logger = createLogger({ module: "handleIntegrationErrors" });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
 
+const defaultErrorHandlers: IIntegrationErrorHandler[] = [
+  integrationZodParseErrorHandler,
+  integrationJsonParseErrorHandler,
+  integrationFetchHttpErrorHandler,
+];
+
 export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[]) => {
+  const combinedErrorHandlers = [...defaultErrorHandlers, ...errorHandlers];
   return <T extends AbstractConstructor<Integration>>(IntegrationBaseClass: T): T => {
     abstract class ErrorHandledIntegration extends IntegrationBaseClass {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,7 +49,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                   throw error;
                 }
 
-                for (const handler of errorHandlers) {
+                for (const handler of combinedErrorHandlers) {
                   const handledError = handler.handleError(error, this.publicIntegration);
                   if (!handledError) continue;
 
@@ -50,7 +57,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                 }
 
                 // If the error was handled and should be thrown again, throw it
-                localLogger.debug("Unhandled error in integration", {
+                logger.debug("Unhandled error in integration", {
                   error: error instanceof Error ? `${error.name}: ${error.message}` : undefined,
                   integrationName: this.publicIntegration.name,
                 });

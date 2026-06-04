@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "密码",
-        "requirement": {
+        "suggestion": {
           "length": "至少包含 8 个字符",
           "lowercase": "包含小写字母",
           "uppercase": "包含大写字母",
@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "在新标签页中打开搜索结果"
+      },
+      "ddgBangs": {
+        "label": "启用 DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "无法切换 ping 图标"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs 切换成功"
+          },
+          "error": {
+            "message": "无法切换 DuckDuckGo bangs"
           }
         }
       },
@@ -645,6 +658,21 @@
             "title": "创建失败",
             "message": "无法创建组件"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "现有",
+              "label": "选择现有应用"
+            },
+            "new": {
+              "title": "新建",
+              "url": {
+                "label": "应用网址",
+                "description": "当从面板访问时应用将打开的网址"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +685,13 @@
           "error": {
             "title": "无法应用更改",
             "message": "无法保存此集成"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "链接应用",
+            "remove": "取消连接",
+            "select": "选择要链接的应用"
           }
         }
       },
@@ -685,6 +720,9 @@
       "attemptSearchEngineCreation": {
         "label": "创建搜索引擎",
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
+      },
+      "app": {
+        "sectionTitle": "关联的应用"
       },
       "createApp": {
         "label": "创建应用",
@@ -936,6 +974,38 @@
         "realm": {
           "label": "领域",
           "newLabel": "新领域"
+        },
+        "personalAccessToken": {
+          "label": "个人访问令牌",
+          "newLabel": "新建个人访问令牌"
+        },
+        "topic": {
+          "label": "主题",
+          "newLabel": "新主题"
+        },
+        "url": {
+          "label": "网址",
+          "newLabel": "新建网址"
+        },
+        "opnsenseApiKey": {
+          "label": "API 密钥 (密钥)",
+          "newLabel": "新建API密钥（密钥）"
+        },
+        "opnsenseApiSecret": {
+          "label": "API 密钥 (机密)",
+          "newLabel": "新建API密钥（机密）"
+        },
+        "githubAppId": {
+          "label": "应用 ID",
+          "newLabel": "新应用 ID"
+        },
+        "githubInstallationId": {
+          "label": "安装 Id",
+          "newLabel": "新建安装ID"
+        },
+        "privateKey": {
+          "label": "私钥",
+          "newLabel": "新建私钥"
         }
       }
     },
@@ -984,15 +1054,20 @@
       "open": {
         "label": "打开媒体"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
+    "success": "成功",
     "beta": "测试版",
     "error": "错误",
     "action": {
       "add": "添加",
       "apply": "应用",
       "backToOverview": "返回概览",
+      "change": "更改",
       "create": "创建",
       "createAnother": "创建并重新开始",
       "edit": "编辑",
@@ -1012,7 +1087,9 @@
       "checkoutDocs": "查阅文档",
       "checkLogs": "检查日志获取更多详情",
       "tryAgain": "重试",
-      "loading": "正在加载"
+      "loading": "正在加载",
+      "show": "",
+      "hide": ""
     },
     "here": "这里",
     "iconPicker": {
@@ -1021,6 +1098,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "自动",
         "light": "日间",
         "dark": "暗黑"
       }
@@ -1079,6 +1157,9 @@
     "dangerZone": "危险",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改 ！",
+    "servers": "服务",
+    "applications": "应用",
+    "services": "服务",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1112,6 +1193,12 @@
           "groupNameTaken": "用户组名称已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "千米/时",
+        "milesPerHour": "英里/时"
+      }
     }
   },
   "section": {
@@ -1123,6 +1210,9 @@
       "option": {
         "title": {
           "label": "标题"
+        },
+        "customCssClasses": {
+          "label": "自定义 CSS 类"
         },
         "borderColor": {
           "label": "边界颜色"
@@ -1164,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "新建分类",
-          "changePosition": "换位"
+          "changePosition": "换位",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1249,11 +1340,26 @@
         "showTitle": {
           "label": "显示应用名称"
         },
-        "showDescriptionTooltip": {
-          "label": "显示描述提示"
-        },
         "pingEnabled": {
           "label": "启用状态检查"
+        },
+        "layout": {
+          "label": "布局",
+          "option": {
+            "row": "水平",
+            "row-reverse": "水平(反向)",
+            "column": "垂直",
+            "column-reverse": "垂直(反向)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "描述显示模式",
+          "description": "选择应用描述的显示方式",
+          "option": {
+            "normal": "窗口组件内",
+            "tooltip": "在工具提示中显示",
+            "hidden": "隐藏"
+          }
         }
       },
       "error": {
@@ -1439,6 +1545,17 @@
         "offline": "离线"
       }
     },
+    "timetable": {
+      "name": "时刻表",
+      "description": "显示车站的出发时间",
+      "title": "出发时间 {station}",
+      "noStation": "未选择车站",
+      "option": {
+        "station": {
+          "label": "车站"
+        }
+      }
+    },
     "notebook": {
       "name": "笔记",
       "description": "支持 Markdown 的简单笔记本小部件",
@@ -1498,7 +1615,44 @@
         "rows": "行数",
         "width": "宽度",
         "height": "高度"
+      },
+      "placeholder": "开始写笔记",
+      "dismiss": {
+        "title": "放弃更改？",
+        "message": "您的笔记中有未保存的更改。确定要放弃这些更改吗？",
+        "action": {
+          "discard": "放弃修改",
+          "keepEditing": "继续编辑"
+        }
       }
+    },
+    "anchorNote": {
+      "name": "锚点笔记",
+      "description": "显示来自锚点的所选笔记",
+      "option": {
+        "noteId": {
+          "label": "笔记"
+        },
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showUpdatedAt": {
+          "label": "显示最近更新"
+        }
+      },
+      "empty": "选择要显示的笔记",
+      "emptyContent": "此笔记没有内容",
+      "notFound": "未找到笔记",
+      "noNotes": "未找到笔记",
+      "integrationRequired": "请先选择锚点集成",
+      "updatedAt": "更新时间：{date}",
+      "untitled": "未命名",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消",
+      "readOnlyViewer": "您对该笔记只有查看权限，编辑已禁用。",
+      "saveForbidden": "您没有编辑此笔记的权限。",
+      "saveFailed": "保存此笔记失败，请重试。"
     },
     "iframe": {
       "name": "iFrame",
@@ -1530,6 +1684,9 @@
         },
         "allowGeolocation": {
           "label": "允许地理位置"
+        },
+        "allowModals": {
+          "label": "允许弹窗"
         }
       },
       "error": {
@@ -1650,6 +1807,9 @@
     "calendar": {
       "name": "日历",
       "description": "在日历视图中显示某个相对时间段内的集成事件",
+      "duration": {
+        "allDay": "全天"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr 发布类型",
@@ -1684,6 +1844,9 @@
           "label": "显示当前风速",
           "description": "仅在当前天气时"
         },
+        "useImperialSpeed": {
+          "label": "风速使用英里/时"
+        },
         "location": {
           "label": "天气位置"
         },
@@ -1702,12 +1865,12 @@
           "description": "日期应该是什么样的"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日落",
-        "maxWindSpeed": "最大风速：{maxWindSpeed} km/h",
-        "maxWindGusts": "最大阵风：{maxWindGusts} km/h"
+        "maxWindSpeed": "最大风速：{maxWindSpeed} {unit}",
+        "maxWindGusts": "最大阵风：{maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "晴朗",
@@ -1756,6 +1919,9 @@
         },
         "memory": {
           "label": "显示内存信息"
+        },
+        "gpu": {
+          "label": "显示 GPU 信息"
         },
         "showUptime": {
           "label": "显示运行时间"
@@ -1841,9 +2007,211 @@
     "dockerContainers": {
       "name": "Docker 状态",
       "description": "您的容器状态 (这个小部件只能用管理员权限添加)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "启用项目排序"
+        },
+        "defaultSort": {
+          "label": "默认排序列",
+          "option": {
+            "name": "名称",
+            "state": "状态",
+            "cpuUsage": "CPU 利用率",
+            "memoryUsage": "内存占用率"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "倒序"
+        }
+      },
       "error": {
         "internalServerError": "获取容器统计信息失败"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "您的 Coolify 实例及其服务器和应用一览",
+      "option": {
+        "showServers": {
+          "label": "显示服务"
+        },
+        "showApplications": {
+          "label": "显示应用程序"
+        },
+        "showServices": {
+          "label": "显示服务"
+        }
+      },
+      "empty": {
+        "servers": "未找到服务",
+        "applications": "未找到应用程序",
+        "services": "未找到服务"
+      },
+      "footer": {
+        "updated": "已更新 {when}"
+      },
+      "error": {
+        "noIntegration": "未配置 Coolify 集成",
+        "internalServerError": "获取 Coolify 数据失败"
+      },
+      "server": {
+        "buildServer": "编译"
+      },
+      "instances": {
+        "title": "实例"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "增强型媒体服务器监控，提供详细的流与转码数据",
+      "option": {
+        "showStreams": {
+          "label": "显示活跃流"
+        },
+        "showStats": {
+          "label": "显示统计摘要"
+        },
+        "showRecentActivity": {
+          "label": "显示近期活动"
+        },
+        "showViolations": {
+          "label": "显示违规记录"
+        }
+      },
+      "stats": {
+        "activeStreams": "活跃流",
+        "totalUsers": "总用户数",
+        "transcodes": "转码数",
+        "bandwidth": "带宽"
+      },
+      "streams": {
+        "empty": "无活跃流",
+        "user": "用户",
+        "media": "媒体",
+        "state": "状态",
+        "quality": "画质",
+        "device": "设备",
+        "progress": "进度",
+        "videoDecision": {
+          "directPlay": "直接播放",
+          "transcode": "转码",
+          "directStream": "直接串流"
+        }
+      },
+      "recentActivity": {
+        "title": "近期活动",
+        "empty": "暂无近期活动",
+        "watched": "已观看",
+        "partial": "部分观看"
+      },
+      "violations": {
+        "title": "违规记录",
+        "empty": "暂无近期违规",
+        "rule": "规则",
+        "user": "用户"
+      },
+      "noSectionsEnabled": "未启用任何分区",
+      "error": {
+        "noIntegration": "未配置 Tracearr 集成",
+        "internalServerError": "获取 Tracearr 数据失败"
+      }
+    },
+    "umami": {
+      "name": "Umami 分析",
+      "description": "显示来自 Umami 分析实例的访客统计",
+      "visitors": "访客",
+      "active": "活跃",
+      "pageviews": "浏览量",
+      "visits": "访问数",
+      "bounceRate": "跳出率",
+      "avgDuration": "平均",
+      "option": {
+        "websiteId": {
+          "label": "网站",
+          "description": "选择您的 Umami 实例所追踪的网站",
+          "placeholder": "选择一个网站",
+          "loading": "正在加载网站……",
+          "noWebsites": "未找到网站",
+          "configureIntegrationFirst": "请先添加 Umami 集成"
+        },
+        "timeFrame": {
+          "label": "时间范围",
+          "description": "用于展示访客数据的时间段",
+          "option": {
+            "today": "今天",
+            "24h": "过去 24 小时",
+            "7d": "过去 7 天",
+            "30d": "过去 30 天",
+            "month": "本月",
+            "lastMonth": "上月"
+          }
+        },
+        "eventName": {
+          "label": "事件",
+          "description": "显示特定事件的总发生次数",
+          "placeholder": "选择一个事件",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "none": "无事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
+        },
+        "chartType": {
+          "label": "图表类型",
+          "description": "图表的显示样式",
+          "option": {
+            "bar": "条形图",
+            "sparkline": "迷你趋势图"
+          }
+        },
+        "chartStyle": {
+          "label": "图表样式",
+          "description": "如何在图表中显示事件序列",
+          "option": {
+            "grouped": "并排",
+            "overlay": "叠加（子集）"
+          }
+        },
+        "viewMode": {
+          "label": "视图",
+          "description": "组件主体中要显示的内容",
+          "option": {
+            "chart": "图表",
+            "events": "事件图表",
+            "topPages": "热门页面",
+            "topReferrers": "热门来源"
+          }
+        },
+        "eventNames": {
+          "label": "事件",
+          "description": "选择一个或多个要图表化的事件",
+          "placeholder": "选择事件……",
+          "loading": "正在加载事件……",
+          "noEvents": "未找到事件",
+          "configureWebsiteFirst": "请先选择网站以加载事件"
+        },
+        "topCount": {
+          "label": "显示数量",
+          "description": "要显示的热门项目数量（最大 500）"
+        }
+      },
+      "event": {
+        "occurrences": "事件",
+        "label": "事件"
+      },
+      "topPages": {
+        "direct": "直接"
+      },
+      "topReferrers": {
+        "direct": "直接"
+      },
+      "events": {
+        "selectPrompt": "选择要图表化的事件"
+      },
+      "error": {
+        "noIntegration": "未配置 Umami 集成",
+        "noWebsite": "未配置网站",
+        "noData": "无可用数据",
+        "internalServerError": "获取 Umami 数据失败"
       }
     },
     "common": {
@@ -1920,8 +2288,72 @@
         "currentlyPlaying": "正在播放",
         "user": "用户",
         "name": "名称",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "技术统计",
+          "video": {
+            "title": "视频",
+            "resolution": "分辨率"
+          },
+          "audio": {
+            "title": "音频",
+            "channelCount": "音频声道",
+            "codec": "音频编码"
+          },
+          "transcoding": {
+            "title": "转码",
+            "container": "容器",
+            "resolution": "分辨率",
+            "target": "目标编解码器"
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich 服务器统计",
+      "description": "有关您的 Immich 实例的信息",
+      "option": {
+        "showUsers": {
+          "label": "显示用户",
+          "description": "显示实例上的用户数量"
+        },
+        "showPhotos": {
+          "label": "显示图片",
+          "description": "显示实例上的照片数量"
+        },
+        "showVideos": {
+          "label": "显示视频",
+          "description": "显示实例上的视频数量"
+        },
+        "showStorage": {
+          "label": "显示存储",
+          "description": "显示已使用的总存储空间"
+        }
+      },
+      "users": "用户",
+      "photos": "照片",
+      "videos": "视频",
+      "storage": "已用存储"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich 相册",
+      "option": {
+        "albumId": {
+          "label": "相册ID",
+          "description": "这是一个唯一标识符，用于指向您的 Immich 相册。您可以通过打开相册并从 URL 中复制那段唯一字符串来找到该 ID，例如：'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "间隔（秒）",
+          "description": "每 X 秒切换一次相册中的图片。最小为 1，最大不得超过 3600。"
+        },
+        "showPhotoInfo": {
+          "label": "显示图片信息",
+          "description": "在幻灯片底部显示图片日期和当前索引"
+        }
+      },
+      "description": "Immich 相册图片幻灯片",
+      "noAlbumSelected": "未选择相册，请编辑组件并选择一个相册",
+      "noPhotos": "此相册中没有照片"
     },
     "downloads": {
       "name": "下载客户端",
@@ -2070,6 +2502,35 @@
       },
       "globalRatio": "全局比率"
     },
+    "mediaReleases": {
+      "name": "媒体发布",
+      "description": "显示来自不同集成的新添加介质或即将发布的版本",
+      "option": {
+        "layout": {
+          "label": "布局",
+          "option": {
+            "backdrop": {
+              "label": "背景"
+            },
+            "poster": {
+              "label": "海报"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "显示描述提示"
+        },
+        "showType": {
+          "label": "显示媒体类型徽章"
+        },
+        "showSource": {
+          "label": "显示来源集成"
+        }
+      },
+      "length": {
+        "duration": "{length} 分钟"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "媒体请求列表",
       "description": "查看 Overr 或 Jellyseerr 实例中的所有媒体请求列表",
@@ -2087,8 +2548,11 @@
         "unknown": "未知",
         "pending": "等待处理",
         "processing": "处理中",
+        "requested": "已请求",
         "partiallyAvailable": "部分",
-        "available": "可用"
+        "available": "可用",
+        "blacklisted": "已列入黑名单",
+        "deleted": "已删除"
       },
       "status": {
         "pending": "待处理",
@@ -2195,6 +2659,12 @@
         },
         "maximumAmountPosts": {
           "label": "帖子数量限制"
+        },
+        "hideDescription": {
+          "label": "隐藏描述"
+        },
+        "showPosterImage": {
+          "label": "显示封面图"
         }
       }
     },
@@ -2217,6 +2687,9 @@
         "showDetails": {
           "label": "展开详情"
         },
+        "showOnlyIcon": {
+          "label": "仅显示图标"
+        },
         "topReleases": {
           "label": "热门发布",
           "description": "要显示的最新版本的最大数量。零表示没有限制。"
@@ -2233,7 +2706,9 @@
             "listFoundImages": "找到的映像列表",
             "listAlreadyImportedImages": "已导入的映像列表",
             "allImagesAlreadyImported": "所有映像已导入",
-            "onlyAdminCanImport": "只有管理员才能从 docker 导入"
+            "onlyAdminCanImport": "只有管理员才能从 docker 导入",
+            "selectAll": "全选",
+            "deselectAll": "反选"
           },
           "provider": {
             "label": "提供者"
@@ -2281,7 +2756,11 @@
           "example": {
             "label": "示例"
           },
-          "invalid": "仓库定义无效，请检查值"
+          "invalid": "仓库定义无效，请检查值",
+          "noProvider": {
+            "label": "没有提供者",
+            "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
+          }
         }
       },
       "not-found": "未找到",
@@ -2291,14 +2770,20 @@
       "starsCount": "星",
       "forksCount": "复刻",
       "issuesCount": "打开问题",
+      "markViewed": "标记已读",
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
+      "projectDescription": "项目描述",
       "created": "已创建",
       "error": {
         "label": "错误",
-        "options": {
-          "noMatchingVersion": "没有找到匹配的版本"
+        "messages": {
+          "invalidIdentifier": "无效标识符",
+          "noMatchingVersion": "没有找到匹配的版本",
+          "noReleasesFound": "没有发现发布信息",
+          "noProviderSeleceted": "没有选择提供者",
+          "noProviderResponse": "提供者没有响应"
         }
       }
     },
@@ -2356,6 +2841,145 @@
     "networkController": {
       "error": {
         "internalServerError": "获取网络控制器概述失败"
+      }
+    },
+    "firewall": {
+      "name": "防火墙监测",
+      "description": "显示防火墙摘要",
+      "tab": {
+        "system": "系统",
+        "interfaces": "接口"
+      },
+      "error": {
+        "internalServerError": "无法从防火墙获取数据"
+      },
+      "option": {
+        "interfaces": "要显示的网络接口"
+      },
+      "widget": {
+        "fwname": "名称",
+        "version": "版本",
+        "versiontitle": "版本",
+        "cputitle": "CPU 利用率",
+        "memorytitle": "内存占用率",
+        "cpu": "CPU",
+        "memory": "内存",
+        "interfaces": {
+          "name": "名称",
+          "trans": "已传输",
+          "recv": "已接收",
+          "title": "网络接口"
+        }
+      }
+    },
+    "notifications": {
+      "name": "通知",
+      "description": "在集成中显示通知历史",
+      "noItems": "没有可显示的通知。",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "网速测试追踪器",
+      "description": "显示 网速测试追踪器 实例中的测速结果。",
+      "option": {
+        "showLatestResult": {
+          "label": "显示最新结果"
+        },
+        "showStats": {
+          "label": "显示平均值"
+        },
+        "showRecentResults": {
+          "label": "显示近期结果"
+        },
+        "showPingGraph": {
+          "label": "显示 Ping 图表"
+        }
+      },
+      "latestResult": "最新结果",
+      "averages": "平均值",
+      "tests": "{count}次测试",
+      "recentResults": "近期结果",
+      "recentResultsSpeed": "速度",
+      "recentResultsPing": "Ping",
+      "download": "下载",
+      "upload": "上传",
+      "ping": "Ping",
+      "status": "状态",
+      "avgDownload": "平均下载",
+      "avgUpload": "平均上传",
+      "avgPing": "平均Ping",
+      "healthy": "健康",
+      "unhealthy": "不健康",
+      "ok": "正常",
+      "fail": "失败",
+      "noSectionsEnabled": "请在组件选项中至少启用一个模块。",
+      "error": {
+        "internalServerError": "获取测速数据失败"
+      }
+    },
+    "systemResources": {
+      "name": "系统资源",
+      "description": "您系统的 CPU、内存、磁盘及其他硬件使用情况",
+      "option": {
+        "hasShadow": {
+          "label": "启用图表阴影"
+        },
+        "visibleCharts": {
+          "label": "可见图表",
+          "description": "选择您希望显示的图表。",
+          "option": {
+            "cpu": "CPU",
+            "memory": "内存",
+            "gpu": "GPU",
+            "network": "网络"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "标签显示模式",
+          "option": {
+            "textWithIcon": "显示图标和文本",
+            "text": "仅显示文本",
+            "icon": "仅显示图标",
+            "hidden": "隐藏标签"
+          }
+        }
+      },
+      "card": {
+        "cpu": "CPU",
+        "memory": "内存",
+        "gpu": "GPU",
+        "network": "网络",
+        "up": "上传",
+        "down": "下载"
+      }
+    },
+    "systemDisks": {
+      "name": "系统磁盘",
+      "description": "您系统的磁盘使用",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "如果可用则显示温度"
+        },
+        "displayMode": {
+          "label": "显示模式",
+          "option": {
+            "percentage": {
+              "label": "百分比 (例如76%)"
+            },
+            "absolute": {
+              "label": "绝对值 (例如，800GB / 1TB)"
+            },
+            "free": {
+              "label": "空闲空间百分比(例如24%空闲)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "显示背景使用栏"
+        }
+      },
+      "status": {
+        "unhealthy": "异常"
       }
     }
   },
@@ -2542,6 +3166,9 @@
       },
       "iconColor": {
         "label": "图标颜色"
+      },
+      "clearColor": {
+        "label": "清除颜色"
       },
       "customCss": {
         "label": "自定义此面板的 css",
@@ -2775,13 +3402,19 @@
           "invite": "邀请",
           "integration": "集成",
           "app": "应用",
-          "group": "群组"
+          "group": "群组",
+          "searchEngine": "搜索引擎",
+          "media": "媒体"
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "资源",
           "authentication": "认证",
           "authorization": "认证"
+        },
+        "heroBanner": {
+          "title": "欢迎回到您的",
+          "subtitle": "{app} 面板"
         }
       },
       "board": {
@@ -2824,6 +3457,9 @@
         "visibility": {
           "public": "此面板是公开的",
           "private": "此面板是私有的"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
@@ -2980,7 +3616,7 @@
             "title": "分析",
             "general": {
               "title": "发送匿名分析",
-              "text": "Homarr 将使用开源软件 Umami 发送匿名分析。它从不收集任何个人信息，因此完全符合 GDPR 和 CCPA 要求。我们鼓励您启用分析，因为它可以帮助我们的开源团队识别问题并确定待办事项的优先级。"
+              "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
             },
             "widgetData": {
               "title": "组件数据",
@@ -3034,6 +3670,13 @@
               }
             }
           },
+          "user": {
+            "title": "用户",
+            "enableGravatar": {
+              "label": "启用Gravatar",
+              "description": "未设置自定义头像时，若用户有邮箱，则自动采用其 Libravatar/Gravatar 头像"
+            }
+          },
           "search": {
             "title": "搜索",
             "defaultSearchEngine": {
@@ -3046,6 +3689,7 @@
             "defaultColorScheme": {
               "label": "默认配色方案",
               "options": {
+                "auto": "自动",
                 "light": "日间",
                 "dark": "暗黑"
               }
@@ -3065,11 +3709,15 @@
           "status": {
             "idle": "空闲",
             "running": "运行中",
-            "error": "错误"
+            "error": "错误",
+            "disabled": "禁用"
           },
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft 服务状态"
+            },
+            "timetable": {
+              "label": "时刻表"
             },
             "iconsUpdater": {
               "label": "图标更新"
@@ -3110,9 +3758,6 @@
             "dnsHole": {
               "label": "DNS Hole 数据"
             },
-            "sessionCleanup": {
-              "label": "会话清理"
-            },
             "updateChecker": {
               "label": "更新检查"
             },
@@ -3122,8 +3767,103 @@
             "networkController": {
               "label": "网络控制器"
             },
+            "refreshNotifications": {
+              "label": "更新通知"
+            },
             "dockerContainers": {
               "label": "Docker 容器"
+            },
+            "firewallCpu": {
+              "label": "防火墙 CPU"
+            },
+            "firewallMemory": {
+              "label": "防火墙内存"
+            },
+            "firewallVersion": {
+              "label": "防火墙版本"
+            },
+            "firewallInterfaces": {
+              "label": "防火墙接口"
+            },
+            "weather": {
+              "label": "天气"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami 活跃访客"
+            }
+          },
+          "interval": {
+            "seconds": "每 {interval, plural, =1 {秒} other {# 秒}}",
+            "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
+            "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
+            "midnight": "每日午夜",
+            "weeklyMonday": "每周一",
+            "update": {
+              "success": {
+                "message": "间隔已成功更新"
+              },
+              "error": {
+                "message": "更新间隔失败"
+              }
+            }
+          },
+          "settings": {
+            "title": "{jobName} 任务设置"
+          },
+          "field": {
+            "name": {
+              "label": "名称"
+            },
+            "interval": {
+              "label": "计划时间间隔"
+            },
+            "lastExecution": {
+              "label": "上次执行"
+            },
+            "actions": {
+              "label": "操作"
+            }
+          },
+          "table": {
+            "search": "在 {count} 个任务中搜索……"
+          },
+          "action": {
+            "refresh": {
+              "label": "刷新"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "任务已成功刷新"
+            },
+            "error": {
+              "message": "刷新任务失败"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "任务已成功触发"
+            },
+            "error": {
+              "message": "触发任务失败"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "任务已成功启用"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "任务已成功禁用"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "切换任务状态失败"
             }
           }
         },
@@ -3175,9 +3915,28 @@
             "title": "翻译人员",
             "subtitle": "在许多语言中，有{count}人贡献了翻译"
           },
+          "sponsors": {
+            "title": "赞助商",
+            "subtitle": "{count}人通过财务方式支持该项目"
+          },
           "libraries": {
             "title": "相关的库",
             "subtitle": "{count} 用于 Homarr 代码中"
+          },
+          "hotkeys": {
+            "title": "快捷键",
+            "subtitle": "用于增强工作流的键盘快捷键",
+            "field": {
+              "shortcut": "快捷键",
+              "action": "操作"
+            },
+            "action": {
+              "toggleBoardEdit": "切换面板编辑模式",
+              "toggleColorScheme": "切换 亮色/暗色 模式",
+              "saveNotebook": "保存笔记（仅在笔记小工具内有效）",
+              "openSpotlight": "打开搜索"
+            },
+            "note": "提示：Mod 键在 macOS 上指 Ctrl 键和 ⌘ 键"
           }
         }
       }
@@ -3220,6 +3979,9 @@
       },
       "ports": {
         "label": "端口"
+      },
+      "host": {
+        "label": "宿主机"
       }
     },
     "action": {
@@ -3632,6 +4394,9 @@
       },
       "tools": {
         "label": "工具",
+        "tasks": {
+          "label": "任务"
+        },
         "docker": {
           "label": "Docker"
         },
@@ -3743,6 +4508,7 @@
             "title": "全局命令",
             "option": {
               "colorScheme": {
+                "auto": "切换外观模式",
                 "light": "切换到日间模式",
                 "dark": "切换到暗黑模式"
               },
@@ -3794,6 +4560,14 @@
         "group": {
           "searchEngine": {
             "title": "搜索引擎",
+            "tipDdgBangs": "提示：你也可以在此使用任何 DuckDuckGo Bangs，例如 !something",
+            "bang": {
+              "searchWithQuery": "使用“‘’{query}”搜索“{label}”",
+              "pressEnterToOpen": "按 Enter 键打开",
+              "engineSelected": "已选择{label}（{bang}）",
+              "typeQueryToContinue": "输入搜索查询以继续",
+              "emptyBangHint": "输入 bang，例如 !yt，然后按空格键进行选择"
+            },
             "children": {
               "action": {
                 "search": {
@@ -4154,6 +4928,16 @@
             "message": "无法删除主机名"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "调试",
+        "info": "信息",
+        "warn": "警告",
+        "error": "错误"
       }
     }
   }

@@ -1,22 +1,19 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ActionIcon,
   Anchor,
   Group,
   Image,
-  Stack,
   Table,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Title,
   Tooltip,
 } from "@mantine/core";
-import { IconExternalLink } from "@tabler/icons-react";
-import { z } from "zod";
+import { IconExternalLink, IconPhoto } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -25,10 +22,11 @@ import { humanFileSize } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
-import { ManageContainer } from "~/components/manage/manage-container";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { NoResults } from "~/components/no-results";
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
 import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
@@ -49,7 +47,7 @@ interface MediaListPageProps {
   searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
 }
 
-export default async function GroupsListPage(props: MediaListPageProps) {
+export default async function MediaListPage(props: MediaListPageProps) {
   const session = await auth();
 
   if (!session) {
@@ -59,22 +57,31 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   const t = await getI18n();
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
+  const canUpload = session.user.permissions.includes("media-upload");
 
   return (
-    <ManageContainer>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title>{t("media.plural")}</Title>
-        <Group justify="space-between">
-          <Group>
-            <SearchInput placeholder={`${t("media.search")}...`} defaultValue={searchParams.search} />
-            {session.user.permissions.includes("media-view-all") && (
-              <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />
-            )}
-          </Group>
-
-          {session.user.permissions.includes("media-upload") && <UploadMediaButton />}
+    <ManagePageLayout
+      title={t("media.plural")}
+      primaryAction={
+        canUpload ? (
+          <ManageMobilePrimaryAction>
+            <UploadMediaButton />
+          </ManageMobilePrimaryAction>
+        ) : undefined
+      }
+      toolbar={
+        <Group>
+          <SearchInput placeholder={`${t("media.search")}...`} defaultValue={searchParams.search} />
+          {session.user.permissions.includes("media-view-all") && (
+            <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />
+          )}
         </Group>
+      }
+      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      floatingPrimaryAction={canUpload}
+    >
+      {medias.length === 0 && <NoResults icon={IconPhoto} title={t("media.noResults.title")} />}
+      {medias.length > 0 && (
         <Table striped highlightOnHover>
           <TableThead>
             <TableTr>
@@ -91,13 +98,8 @@ export default async function GroupsListPage(props: MediaListPageProps) {
             ))}
           </TableTbody>
         </Table>
-
-        {/* Added margin to not hide pagination behind affix-button */}
-        <Group justify="end" mb={48}>
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        </Group>
-      </Stack>
-    </ManageContainer>
+      )}
+    </ManagePageLayout>
   );
 }
 

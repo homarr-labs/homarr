@@ -47,3 +47,8 @@ export const humanFileSize = (size: number, concat = ""): string => {
   }
   return "∞";
 };
+
+const IMPERIAL_MULTIPLIER = 1.609344;
+
+export const metricToImperial = (metricValue: number) => metricValue / IMPERIAL_MULTIPLIER;
+export const imperialToMetric = (imperialValue: number) => imperialValue * IMPERIAL_MULTIPLIER;

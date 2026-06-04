@@ -1,32 +1,21 @@
 "use client";
 
-import { startTransition, useCallback, useMemo, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Group,
-  PasswordInput,
-  Stack,
-  Stepper,
-  Table,
-  Text,
-  TextInput,
-  Title,
-  Tooltip,
-} from "@mantine/core";
+import { startTransition, useCallback, useState } from "react";
+import { Badge, Button, Card, Group, Stack, Stepper, Table, Text, TextInput, Title, Tooltip } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { IconPlus, IconUserCheck } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
-import { everyoneGroup, groupPermissions } from "@homarr/definitions";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { everyoneGroup, groupPermissions } from "@homarr/definitions";
+import type { IsValid } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
+import { UserCreatePasswordFields } from "@homarr/forms-collection";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
+import { UserAvatar } from "@homarr/ui";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { userPasswordSchema } from "@homarr/validation/user";
 
@@ -113,11 +102,9 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
     },
   );
 
-  const allForms = useMemo(() => [generalForm, securityForm, groupsForm], [generalForm, securityForm, groupsForm]);
-
-  const activeForm = allForms[active];
-  const isCurrentFormValid = activeForm ? activeForm.isValid : () => true;
-  const canNavigateToNextStep = isCurrentFormValid();
+  const allForms = [generalForm, securityForm, groupsForm];
+  const isValidCallback: IsValid<unknown> | undefined = allForms[active]?.isValid;
+  const currentFormValid = isValidCallback?.() ?? true;
 
   const controlledGoToNextStep = useCallback(async () => {
     if (active + 1 === stepperMax) {
@@ -150,7 +137,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           color={!generalForm.isValid() ? "red" : undefined}
         >
           <form>
-            <Card p="xl" shadow="md" withBorder>
+            <Card p="xl">
               <Stack gap="md">
                 <TextInput
                   label={tUserField("username.label")}
@@ -166,27 +153,19 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         </Stepper.Step>
         <Stepper.Step label={t("step.security.label")} allowStepSelect={false} allowStepClick={false}>
           <form>
-            <Card p="xl" shadow="md" withBorder>
+            <Card p="xl">
               <Stack gap="md">
-                <CustomPasswordInput
-                  withPasswordRequirements
-                  label={tUserField("password.label")}
+                <UserCreatePasswordFields
                   variant="filled"
-                  withAsterisk
-                  {...securityForm.getInputProps("password")}
-                />
-                <PasswordInput
-                  label={tUserField("passwordConfirm.label")}
-                  variant="filled"
-                  withAsterisk
-                  {...securityForm.getInputProps("confirmPassword")}
+                  passwordInputProps={securityForm.getInputProps("password")}
+                  confirmPasswordInputProps={securityForm.getInputProps("confirmPassword")}
                 />
               </Stack>
             </Card>
           </form>
         </Stepper.Step>
         <Stepper.Step label={t("step.groups.label")} allowStepSelect={false} allowStepClick={false}>
-          <Card p="xl" shadow="md" withBorder>
+          <Card p="xl">
             <GroupsForm
               initialGroups={initialGroups}
               addGroup={(groupId) =>
@@ -199,17 +178,20 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           </Card>
         </Stepper.Step>
         <Stepper.Step label={t("step.review.label")} allowStepSelect={false} allowStepClick={false}>
-          <Card p="xl" shadow="md" withBorder>
+          <Card p="xl">
             <Stack maw={300} align="center" mx="auto">
-              <UserAvatar size="xl" user={{ name: generalForm.values.username, image: null }} />
-              <Text tt="uppercase" fw="bolder" size="xl">
+              <UserAvatar
+                size="xl"
+                user={{ name: generalForm.values.username, email: generalForm.values.email ?? null, image: null }}
+              />
+              <Text fw={700} size="xl">
                 {generalForm.values.username}
               </Text>
             </Stack>
           </Card>
         </Stepper.Step>
         <Stepper.Completed>
-          <Card p="xl" shadow="md" withBorder>
+          <Card p="xl">
             <Stack align="center" maw={300} mx="auto">
               <IconUserCheck size="3rem" />
               <Title order={2}>{t("step.completed.title")}</Title>
@@ -218,7 +200,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         </Stepper.Completed>
       </Stepper>
       <StepperNavigationComponent
-        hasNext={hasNext && canNavigateToNextStep}
+        hasNext={hasNext && currentFormValid}
         hasPrevious={hasPrevious}
         isComplete={active === stepperMax}
         isLoadingNextStep={isPending}

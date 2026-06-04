@@ -8,9 +8,11 @@ export type SettingsContextProps = Pick<
   | "homeBoardId"
   | "mobileHomeBoardId"
   | "openSearchInNewTab"
+  | "ddgBangs"
   | "pingIconsEnabled"
 > &
-  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
+  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
+  Pick<ServerSettings["user"], "enableGravatar">;
 
 export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
@@ -18,6 +20,7 @@ export interface PublicServerSettings {
     ServerSettings["board"],
     "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
   >;
+  user: Pick<ServerSettings["user"], "enableGravatar">;
 }
 
 export type UserSettings = Pick<
@@ -27,6 +30,7 @@ export type UserSettings = Pick<
   | "homeBoardId"
   | "mobileHomeBoardId"
   | "openSearchInNewTab"
+  | "ddgBangs"
   | "pingIconsEnabled"
 >;
 
@@ -39,10 +43,12 @@ export const createSettings = ({
 }) => ({
   defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
   openSearchInNewTab: user?.openSearchInNewTab ?? true,
+  ddgBangs: user?.ddgBangs ?? true,
   firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
   homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
   pingIconsEnabled: user?.pingIconsEnabled ?? false,
   enableStatusByDefault: serverSettings.board.enableStatusByDefault,
   forceDisableStatus: serverSettings.board.forceDisableStatus,
+  enableGravatar: serverSettings.user.enableGravatar,
 });

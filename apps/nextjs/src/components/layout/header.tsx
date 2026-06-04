@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
 import { Spotlight } from "@homarr/spotlight";
+import { Link } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
@@ -17,7 +17,7 @@ interface Props {
 
 export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
   return (
-    <AppShellHeader>
+    <AppShellHeader maw="100vw" style={{ overflowX: "hidden" }}>
       <Group h="100%" gap="xl" px="md" justify="apart" wrap="nowrap">
         <Group h="100%" align="center" style={{ flex: 1 }} wrap="nowrap">
           {hasNavigation && <ClientBurger />}

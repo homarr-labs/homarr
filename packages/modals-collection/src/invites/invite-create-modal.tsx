@@ -13,7 +13,7 @@ import { InviteCopyModal } from "./invite-copy-modal";
 dayjs.extend(relativeTime);
 
 interface FormType {
-  expirationDate: Date;
+  expirationDate: string;
 }
 
 export const InviteCreateModal = createModal<void>(({ actions }) => {
@@ -28,18 +28,23 @@ export const InviteCreateModal = createModal<void>(({ actions }) => {
 
   const form = useForm<FormType>({
     initialValues: {
-      expirationDate: dayjs().add(4, "hours").toDate(),
+      expirationDate: dayjs().add(4, "hours").toDate().toISOString(),
     },
   });
 
   const handleSubmit = (values: FormType) => {
-    mutate(values, {
-      onSuccess: (result) => {
-        void utils.invite.getAll.invalidate();
-        actions.closeModal();
-        openModal(result);
+    mutate(
+      {
+        expirationDate: new Date(values.expirationDate),
       },
-    });
+      {
+        onSuccess: (result) => {
+          void utils.invite.getAll.invalidate();
+          actions.closeModal();
+          openModal(result);
+        },
+      },
+    );
   };
 
   return (

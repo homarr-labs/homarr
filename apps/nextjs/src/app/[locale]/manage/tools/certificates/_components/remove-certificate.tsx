@@ -15,7 +15,11 @@ interface RemoveCertificateProps {
 
 export const RemoveCertificate = ({ fileName }: RemoveCertificateProps) => {
   const { openConfirmModal } = useConfirmModal();
-  const { mutateAsync } = clientApi.certificates.removeCertificate.useMutation();
+  const { mutateAsync } = clientApi.certificates.removeCertificate.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/tools/certificates");
+    },
+  });
   const t = useI18n();
 
   const handleClick = () => {
@@ -27,12 +31,11 @@ export const RemoveCertificate = ({ fileName }: RemoveCertificateProps) => {
         await mutateAsync(
           { fileName },
           {
-            async onSuccess() {
+            onSuccess() {
               showSuccessNotification({
                 title: t("certificate.action.remove.notification.success.title"),
                 message: t("certificate.action.remove.notification.success.message"),
               });
-              await revalidatePathActionAsync("/manage/tools/certificates");
             },
             onError() {
               showErrorNotification({

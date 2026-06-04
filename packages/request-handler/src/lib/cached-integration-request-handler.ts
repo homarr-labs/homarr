@@ -10,6 +10,7 @@ import { createCachedRequestHandler } from "./cached-request-handler";
 type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"> & {
   kind: TKind;
   decryptedSecrets: Modify<Pick<IntegrationSecret, "kind" | "value">, { value: string }>[];
+  externalUrl: string | null;
 };
 
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {

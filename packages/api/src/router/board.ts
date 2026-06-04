@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
+import { createId } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
+import { and, asc, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
@@ -154,6 +155,7 @@ export const boardRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
         userPermissions: {
@@ -440,7 +442,7 @@ export const boardRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            transaction.insert(schema.boards).values({
+            await transaction.insert(schema.boards).values({
               ...boardProps,
               id: newBoardId,
               name: input.name,
@@ -1194,6 +1196,7 @@ export const boardRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
       },
@@ -1536,6 +1539,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           id: true,
           name: true,
           image: true,
+          email: true,
         },
       },
       sections: {
@@ -1622,7 +1626,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
-    options: z.record(z.unknown()),
+    options: z.record(z.string(), z.unknown()),
   });
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);

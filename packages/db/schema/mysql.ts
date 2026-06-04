@@ -42,14 +42,15 @@ import type {
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
-    return "BLOB";
+    return "LONGBLOB"; // Has max size of 4GB
   },
 });
+
+export * from "@homarr/core/infrastructure/certificates/hostnames/db/mysql";
 
 export const apiKeys = mysqlTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
-  salt: text().notNull(),
   userId: varchar({ length: 64 })
     .notNull()
     .references((): AnyMySqlColumn => users.id, {
@@ -64,7 +65,6 @@ export const users = mysqlTable("user", {
   emailVerified: timestamp(),
   image: text(),
   password: text(),
-  salt: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
@@ -76,6 +76,7 @@ export const users = mysqlTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: boolean().default(false).notNull(),
+  ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
@@ -199,6 +200,7 @@ export const integrations = mysqlTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -208,7 +210,7 @@ export const integrations = mysqlTable(
 export const integrationSecrets = mysqlTable(
   "integrationSecret",
   {
-    kind: varchar({ length: 16 }).$type<IntegrationSecretKind>().notNull(),
+    kind: varchar({ length: 64 }).$type<IntegrationSecretKind>().notNull(),
     value: text().$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
@@ -494,19 +496,11 @@ export const onboarding = mysqlTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
-export const trustedCertificateHostnames = mysqlTable(
-  "trusted_certificate_hostname",
-  {
-    hostname: varchar({ length: 256 }).notNull(),
-    thumbprint: varchar({ length: 128 }).notNull(),
-    certificate: text().notNull(),
-  },
-  (table) => ({
-    compoundKey: primaryKey({
-      columns: [table.hostname, table.thumbprint],
-    }),
-  }),
-);
+export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
+  name: varchar({ length: 256 }).notNull().primaryKey(),
+  cronExpression: varchar({ length: 32 }).notNull(),
+  isEnabled: boolean().default(true).notNull(),
+});
 
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
@@ -522,6 +516,7 @@ export const userRelations = relations(users, ({ one, many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
   defaultSearchEngine: one(searchEngines, {
     fields: [users.defaultSearchEngineId],
     references: [searchEngines.id],
@@ -620,11 +615,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

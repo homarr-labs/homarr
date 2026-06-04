@@ -1,0 +1,34 @@
+{
+  "name": "@homarr/image-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "bcrypt": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bcrypt": "catalog:",
+    "typescript": "catalog:"
+  }
+}

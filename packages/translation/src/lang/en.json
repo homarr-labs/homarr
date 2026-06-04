@@ -132,8 +132,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
@@ -157,6 +158,9 @@
       },
       "openSearchInNewTab": {
         "label": "Open search results in new tab"
+      },
+      "ddgBangs": {
+        "label": "Enable DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +247,16 @@
           },
           "error": {
             "message": "Unable to toggle ping icons"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs toggled successfully"
+          },
+          "error": {
+            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },
@@ -645,6 +659,21 @@
             "title": "Creation failed",
             "message": "The integration could not be created"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existing",
+              "label": "Select existing app"
+            },
+            "new": {
+              "title": "New",
+              "url": {
+                "label": "App url",
+                "description": "The url the app will open when accessed from the dashboard"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +686,13 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The integration could not be saved"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Link an app",
+            "remove": "Unlink",
+            "select": "Select an app to link"
           }
         }
       },
@@ -685,6 +721,9 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "app": {
+        "sectionTitle": "Linked App"
       },
       "createApp": {
         "label": "Create app",
@@ -936,6 +975,38 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "personalAccessToken": {
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
+        },
+        "url": {
+          "label": "Url",
+          "newLabel": "New url"
+        },
+        "opnsenseApiKey": {
+          "label": "API Key (Key)",
+          "newLabel": "New API Key (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API Key (Secret)",
+          "newLabel": "New API Key (Secret)"
+        },
+        "githubAppId": {
+          "label": "App Id",
+          "newLabel": "New App Id"
+        },
+        "githubInstallationId": {
+          "label": "Installation Id",
+          "newLabel": "New Installation Id"
+        },
+        "privateKey": {
+          "label": "Private key",
+          "newLabel": "New private key"
         }
       }
     },
@@ -984,15 +1055,20 @@
       "open": {
         "label": "Open media"
       }
+    },
+    "noResults": {
+      "title": "No media uploaded"
     }
   },
   "common": {
+    "success": "Success",
     "beta": "Beta",
     "error": "Error",
     "action": {
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
       "edit": "Edit",
@@ -1012,7 +1088,9 @@
       "checkoutDocs": "Check out the documentation",
       "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
-      "loading": "Loading"
+      "loading": "Loading",
+      "show": "Show",
+      "hide": "Hide"
     },
     "here": "here",
     "iconPicker": {
@@ -1021,6 +1099,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "Auto",
         "light": "Light",
         "dark": "Dark"
       }
@@ -1079,6 +1158,9 @@
     "dangerZone": "Danger zone",
     "noResults": "No results found",
     "unsavedChanges": "You have unsaved changes!",
+    "servers": "Servers",
+    "applications": "Apps",
+    "services": "Services",
     "preview": {
       "show": "Show preview",
       "hide": "Hide preview"
@@ -1112,6 +1194,12 @@
           "groupNameTaken": "Group name already taken"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1123,6 +1211,9 @@
       "option": {
         "title": {
           "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
         },
         "borderColor": {
           "label": "Border color"
@@ -1164,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "New category",
-          "changePosition": "Change position"
+          "changePosition": "Change position",
+          "settings": "Settings"
         }
       },
       "openAllInNewTabs": {
@@ -1249,11 +1341,26 @@
         "showTitle": {
           "label": "Show app name"
         },
-        "showDescriptionTooltip": {
-          "label": "Show description tooltip"
-        },
         "pingEnabled": {
           "label": "Enable status check"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (reversed)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (reversed)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Description display mode",
+          "description": "Choose how to display the app description",
+          "option": {
+            "normal": "Within widget",
+            "tooltip": "As tooltip",
+            "hidden": "Hidden"
+          }
         }
       },
       "error": {
@@ -1298,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
@@ -1439,6 +1549,17 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timetable",
+      "description": "Displays departure times for a station",
+      "title": "Departures {station}",
+      "noStation": "No station selected",
+      "option": {
+        "station": {
+          "label": "Station"
+        }
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
@@ -1498,7 +1619,44 @@
         "rows": "Rows",
         "width": "Width",
         "height": "Height"
+      },
+      "placeholder": "Start writing your notes",
+      "dismiss": {
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
+        "action": {
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
+        }
       }
+    },
+    "anchorNote": {
+      "name": "Anchor Note",
+      "description": "Displays a selected note from Anchor",
+      "option": {
+        "noteId": {
+          "label": "Note"
+        },
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showUpdatedAt": {
+          "label": "Show last updated"
+        }
+      },
+      "empty": "Select a note to display",
+      "emptyContent": "This note has no content",
+      "notFound": "Note not found",
+      "noNotes": "No notes found",
+      "integrationRequired": "Select an Anchor integration first",
+      "updatedAt": "Updated {date}",
+      "untitled": "Untitled",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
+      "saveForbidden": "You do not have permission to edit this note.",
+      "saveFailed": "Failed to save this note. Please try again."
     },
     "iframe": {
       "name": "iFrame",
@@ -1530,6 +1688,9 @@
         },
         "allowGeolocation": {
           "label": "Allow geolocation"
+        },
+        "allowModals": {
+          "label": "Allow modals"
         }
       },
       "error": {
@@ -1650,6 +1811,9 @@
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
+      "duration": {
+        "allDay": "All day"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr release type",
@@ -1684,6 +1848,9 @@
           "label": "Show current wind speed",
           "description": "Only on current weather"
         },
+        "useImperialSpeed": {
+          "label": "Use mph for windspeed"
+        },
         "location": {
           "label": "Weather location"
         },
@@ -1702,12 +1869,12 @@
           "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",
-        "maxWindSpeed": "Max wind speed: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} km/h"
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Clear",
@@ -1756,6 +1923,9 @@
         },
         "memory": {
           "label": "Show Memory Info"
+        },
+        "gpu": {
+          "label": "Show GPU Info"
         },
         "showUptime": {
           "label": "Show Uptime"
@@ -1841,9 +2011,211 @@
     "dockerContainers": {
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "Enable items sorting"
+        },
+        "defaultSort": {
+          "label": "Column used for sorting by default",
+          "option": {
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Invert sorting"
+        }
+      },
       "error": {
         "internalServerError": "Failed to fetch containers stats"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
+      "option": {
+        "showServers": {
+          "label": "Show servers"
+        },
+        "showApplications": {
+          "label": "Show applications"
+        },
+        "showServices": {
+          "label": "Show services"
+        }
+      },
+      "empty": {
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
+      },
+      "footer": {
+        "updated": "Updated {when}"
+      },
+      "error": {
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
+      },
+      "server": {
+        "buildServer": "Build"
+      },
+      "instances": {
+        "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Enhanced media server monitoring with detailed stream and transcoding data",
+      "option": {
+        "showStreams": {
+          "label": "Show active streams"
+        },
+        "showStats": {
+          "label": "Show stats summary"
+        },
+        "showRecentActivity": {
+          "label": "Show recent activity"
+        },
+        "showViolations": {
+          "label": "Show violations"
+        }
+      },
+      "stats": {
+        "activeStreams": "Active Streams",
+        "totalUsers": "Total Users",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandwidth"
+      },
+      "streams": {
+        "empty": "No active streams",
+        "user": "User",
+        "media": "Media",
+        "state": "State",
+        "quality": "Quality",
+        "device": "Device",
+        "progress": "Progress",
+        "videoDecision": {
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
+      },
+      "noSectionsEnabled": "No sections enabled",
+      "error": {
+        "noIntegration": "No Tracearr integration configured",
+        "internalServerError": "Failed to fetch Tracearr data"
+      }
+    },
+    "umami": {
+      "name": "Umami Analytics",
+      "description": "Display visitor stats from your Umami analytics instance",
+      "visitors": "visitors",
+      "active": "active",
+      "pageviews": "pageviews",
+      "visits": "visits",
+      "bounceRate": "bounce",
+      "avgDuration": "avg",
+      "option": {
+        "websiteId": {
+          "label": "Website",
+          "description": "Select a website tracked by your Umami instance",
+          "placeholder": "Select a website",
+          "loading": "Loading websites...",
+          "noWebsites": "No websites found",
+          "configureIntegrationFirst": "Connect a Umami integration first"
+        },
+        "timeFrame": {
+          "label": "Time frame",
+          "description": "The time period to display visitor data for",
+          "option": {
+            "today": "Today",
+            "24h": "Last 24 hours",
+            "7d": "Last 7 days",
+            "30d": "Last 30 days",
+            "month": "This month",
+            "lastMonth": "Last month"
+          }
+        },
+        "eventName": {
+          "label": "Event",
+          "description": "Show total occurrences of a specific event",
+          "placeholder": "Select an event",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "none": "No event",
+          "configureWebsiteFirst": "Select a website first to load events"
+        },
+        "chartType": {
+          "label": "Chart type",
+          "description": "Display style for the chart",
+          "option": {
+            "bar": "Bar chart",
+            "sparkline": "Sparkline"
+          }
+        },
+        "chartStyle": {
+          "label": "Chart style",
+          "description": "How to display the event series in the chart",
+          "option": {
+            "grouped": "Side by side",
+            "overlay": "Overlay (subset)"
+          }
+        },
+        "viewMode": {
+          "label": "View",
+          "description": "What to display in the widget body",
+          "option": {
+            "chart": "Chart",
+            "events": "Events chart",
+            "topPages": "Top pages",
+            "topReferrers": "Top referrers"
+          }
+        },
+        "eventNames": {
+          "label": "Events",
+          "description": "Select one or more events to chart",
+          "placeholder": "Select events...",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "configureWebsiteFirst": "Select a website first to load events"
+        },
+        "topCount": {
+          "label": "Items to show",
+          "description": "Number of top items to display (max 500)"
+        }
+      },
+      "event": {
+        "occurrences": "events",
+        "label": "events"
+      },
+      "topPages": {
+        "direct": "Direct"
+      },
+      "topReferrers": {
+        "direct": "Direct"
+      },
+      "events": {
+        "selectPrompt": "Select events to chart"
+      },
+      "error": {
+        "noIntegration": "No Umami integration configured",
+        "noWebsite": "No website configured",
+        "noData": "No data available",
+        "internalServerError": "Failed to fetch Umami data"
       }
     },
     "common": {
@@ -1920,8 +2292,72 @@
         "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Stats for nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Resolution"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
+          },
+          "transcoding": {
+            "title": "Transcoding",
+            "container": "Container",
+            "resolution": "Resolution",
+            "target": "Target codec"
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "Immich Server Stats",
+      "description": "Information about your Immich instance",
+      "option": {
+        "showUsers": {
+          "label": "Show users",
+          "description": "Show count of users on your instance"
+        },
+        "showPhotos": {
+          "label": "Show photos",
+          "description": "Show count of photos on your instance"
+        },
+        "showVideos": {
+          "label": "Show videos",
+          "description": "Show count of videos on your instance"
+        },
+        "showStorage": {
+          "label": "Show storage",
+          "description": "Show the total amount of storage used"
+        }
+      },
+      "users": "Users",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Used Storage"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Interval in seconds",
+          "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Show photo info",
+          "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        }
+      },
+      "description": "Slideshow of pictures in your Immich album",
+      "noAlbumSelected": "No album selected, edit widget and choose an album",
+      "noPhotos": "No photos in this album"
     },
     "downloads": {
       "name": "Download Client",
@@ -2070,6 +2506,35 @@
       },
       "globalRatio": "Global Ratio"
     },
+    "mediaReleases": {
+      "name": "Media releases",
+      "description": "Display newly added medias or upcoming releases from different integrations",
+      "option": {
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "backdrop": {
+              "label": "Backdrop"
+            },
+            "poster": {
+              "label": "Poster"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Show description tooltip"
+        },
+        "showType": {
+          "label": "Show media type badge"
+        },
+        "showSource": {
+          "label": "Show source integration"
+        }
+      },
+      "length": {
+        "duration": "{length}min"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Media Requests List",
       "description": "See a list of all media requests from your Overseerr or Jellyseerr instance",
@@ -2087,8 +2552,11 @@
         "unknown": "Unknown",
         "pending": "Pending",
         "processing": "Processing",
+        "requested": "Requested",
         "partiallyAvailable": "Partial",
-        "available": "Available"
+        "available": "Available",
+        "blacklisted": "Blacklisted",
+        "deleted": "Deleted"
       },
       "status": {
         "pending": "Pending",
@@ -2195,6 +2663,12 @@
         },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
+        },
+        "hideDescription": {
+          "label": "Hide description"
+        },
+        "showPosterImage": {
+          "label": "Show poster image"
         }
       }
     },
@@ -2217,6 +2691,9 @@
         "showDetails": {
           "label": "Show Details"
         },
+        "showOnlyIcon": {
+          "label": "Show Only Icon"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "The max number of latest releases to show. Zero means no limit."
@@ -2233,7 +2710,9 @@
             "listFoundImages": "List of found images",
             "listAlreadyImportedImages": "List of already imported images",
             "allImagesAlreadyImported": "All images already imported",
-            "onlyAdminCanImport": "Only administrators can import from docker"
+            "onlyAdminCanImport": "Only administrators can import from docker",
+            "selectAll": "Select all",
+            "deselectAll": "Deselect all"
           },
           "provider": {
             "label": "Provider"
@@ -2281,7 +2760,11 @@
           "example": {
             "label": "Example"
           },
-          "invalid": "Invalid repository definition, please check the values"
+          "invalid": "Invalid repository definition, please check the values",
+          "noProvider": {
+            "label": "No Provider",
+            "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          }
         }
       },
       "not-found": "Not Found",
@@ -2291,14 +2774,20 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "issuesCount": "Open Issues",
+      "markViewed": "Mark as viewed",
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
+      "projectDescription": "Project Description",
       "created": "Created",
       "error": {
         "label": "Error",
-        "options": {
-          "noMatchingVersion": "No matching version found"
+        "messages": {
+          "invalidIdentifier": "Invalid identifier",
+          "noMatchingVersion": "No matching version found",
+          "noReleasesFound": "No releases found",
+          "noProviderSeleceted": "No provider selected",
+          "noProviderResponse": "No response from provider"
         }
       }
     },
@@ -2356,6 +2845,145 @@
     "networkController": {
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
+      }
+    },
+    "firewall": {
+      "name": "Firewall Monitoring",
+      "description": "Displays a summary of firewalls",
+      "tab": {
+        "system": "System",
+        "interfaces": "Interfaces"
+      },
+      "error": {
+        "internalServerError": "Unable to get data from firewall"
+      },
+      "option": {
+        "interfaces": "Network interfaces to display"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "interfaces": {
+          "name": "name",
+          "trans": "Transmited",
+          "recv": "Received",
+          "title": "Network Interfaces"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "noItems": "No notifications to display.",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Displays speed test results from your Speedtest Tracker instance.",
+      "option": {
+        "showLatestResult": {
+          "label": "Show latest result"
+        },
+        "showStats": {
+          "label": "Show averages"
+        },
+        "showRecentResults": {
+          "label": "Show recent results"
+        },
+        "showPingGraph": {
+          "label": "Show ping graph"
+        }
+      },
+      "latestResult": "Latest Result",
+      "averages": "Averages",
+      "tests": "{count} tests",
+      "recentResults": "Recent Results",
+      "recentResultsSpeed": "Speed",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Avg Download",
+      "avgUpload": "Avg Upload",
+      "avgPing": "Avg Ping",
+      "healthy": "Healthy",
+      "unhealthy": "Unhealthy",
+      "ok": "OK",
+      "fail": "Fail",
+      "noSectionsEnabled": "Enable at least one section in widget options.",
+      "error": {
+        "internalServerError": "Failed to fetch speedtest data"
+      }
+    },
+    "systemResources": {
+      "name": "System resources",
+      "description": "CPU, Memory, Disk and other hardware usage of your system",
+      "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
+        "visibleCharts": {
+          "label": "Visible charts",
+          "description": "Select the charts you want to be visible.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memory",
+            "gpu": "GPU",
+            "network": "Network"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
+          }
+        }
+      },
+      "card": {
+        "cpu": "CPU",
+        "memory": "MEM",
+        "gpu": "GPU",
+        "network": "NET",
+        "up": "UP",
+        "down": "DOWN"
+      }
+    },
+    "systemDisks": {
+      "name": "System disks",
+      "description": "Disk usage of your system",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Show temperature if available"
+        },
+        "displayMode": {
+          "label": "Display mode",
+          "option": {
+            "percentage": {
+              "label": "Percentage (e.g., 76%)"
+            },
+            "absolute": {
+              "label": "Absolute values (e.g., 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Free space percentage (e.g., 24% free)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Show background usage bar"
+        }
+      },
+      "status": {
+        "unhealthy": "Unhealthy"
       }
     }
   },
@@ -2542,6 +3170,9 @@
       },
       "iconColor": {
         "label": "Icon color"
+      },
+      "clearColor": {
+        "label": "Clear color"
       },
       "customCss": {
         "label": "Custom css for this board",
@@ -2775,13 +3406,19 @@
           "invite": "Invites",
           "integration": "Integrations",
           "app": "Apps",
-          "group": "Groups"
+          "group": "Groups",
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
           "authentication": "Authentication",
           "authorization": "Authorization"
+        },
+        "heroBanner": {
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -2824,6 +3461,9 @@
         "visibility": {
           "public": "This board is public",
           "private": "This board is private"
+        },
+        "noResults": {
+          "title": "No boards yet"
         },
         "modal": {
           "createBoard": {
@@ -2980,7 +3620,7 @@
             "title": "Analytics",
             "general": {
               "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. It never collects any personal information and is therefore fully GDPR & CCPA compliant. We encourage you to enable analytics because it helps our open source team to identify issues and prioritize our backlog."
+              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
             },
             "widgetData": {
               "title": "Widget data",
@@ -3034,6 +3674,13 @@
               }
             }
           },
+          "user": {
+            "title": "Users",
+            "enableGravatar": {
+              "label": "Enable Gravatar",
+              "description": "Falls back to user avatars from Libravatar/Gravatar when no custom avatar is set and an email is configured"
+            }
+          },
           "search": {
             "title": "Search",
             "defaultSearchEngine": {
@@ -3046,6 +3693,7 @@
             "defaultColorScheme": {
               "label": "Default color scheme",
               "options": {
+                "auto": "Auto",
                 "light": "Light",
                 "dark": "Dark"
               }
@@ -3065,11 +3713,15 @@
           "status": {
             "idle": "Idle",
             "running": "Running",
-            "error": "Error"
+            "error": "Error",
+            "disabled": "Disabled"
           },
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft server status"
+            },
+            "timetable": {
+              "label": "Timetable"
             },
             "iconsUpdater": {
               "label": "Icons Updater"
@@ -3110,9 +3762,6 @@
             "dnsHole": {
               "label": "DNS Hole Data"
             },
-            "sessionCleanup": {
-              "label": "Session Cleanup"
-            },
             "updateChecker": {
               "label": "Update checker"
             },
@@ -3122,8 +3771,103 @@
             "networkController": {
               "label": "Network Controller"
             },
+            "refreshNotifications": {
+              "label": "Notification Updater"
+            },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Memory"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umami Active Visitors"
+            }
+          },
+          "interval": {
+            "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "Every {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "Every day at midnight",
+            "weeklyMonday": "Every week on monday",
+            "update": {
+              "success": {
+                "message": "Interval updated successfully"
+              },
+              "error": {
+                "message": "Failed to update interval"
+              }
+            }
+          },
+          "settings": {
+            "title": "Task settings for {jobName}"
+          },
+          "field": {
+            "name": {
+              "label": "Name"
+            },
+            "interval": {
+              "label": "Schedule interval"
+            },
+            "lastExecution": {
+              "label": "Last Execution"
+            },
+            "actions": {
+              "label": "Actions"
+            }
+          },
+          "table": {
+            "search": "Search {count} tasks..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Refresh"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Tasks refreshed successfully"
+            },
+            "error": {
+              "message": "Failed to refresh tasks"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Task triggered successfully"
+            },
+            "error": {
+              "message": "Failed to trigger task"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Task enabled successfully"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Task disabled successfully"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Failed to toggle task status"
             }
           }
         },
@@ -3175,9 +3919,28 @@
             "title": "Translators",
             "subtitle": "{count} contributing translations in many languages"
           },
+          "sponsors": {
+            "title": "Sponsors",
+            "subtitle": "{count} supporting the project financially"
+          },
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "field": {
+              "shortcut": "Shortcut",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Toggle board edit mode",
+              "toggleColorScheme": "Toggle light/dark mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)",
+              "openSpotlight": "Open search"
+            },
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }
@@ -3220,6 +3983,9 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": "Host"
       }
     },
     "action": {
@@ -3632,6 +4398,9 @@
       },
       "tools": {
         "label": "Tools",
+        "tasks": {
+          "label": "Tasks"
+        },
         "docker": {
           "label": "Docker"
         },
@@ -3743,6 +4512,7 @@
             "title": "Global commands",
             "option": {
               "colorScheme": {
+                "auto": "Toggle appearance mode",
                 "light": "Switch to light mode",
                 "dark": "Switch to dark mode"
               },
@@ -3794,6 +4564,14 @@
         "group": {
           "searchEngine": {
             "title": "Search engines",
+            "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
+            "bang": {
+              "searchWithQuery": "Search \"{query}\" with {label}",
+              "pressEnterToOpen": "Press Enter to open",
+              "engineSelected": "{label} selected (!{bang})",
+              "typeQueryToContinue": "Type your search query to continue",
+              "emptyBangHint": "Type a bang, e.g. !yt, then press Space to select"
+            },
             "children": {
               "action": {
                 "search": {
@@ -4154,6 +4932,16 @@
             "message": "The hostname could not be removed"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
       }
     }
   }

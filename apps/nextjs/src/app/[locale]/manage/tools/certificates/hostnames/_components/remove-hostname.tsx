@@ -15,7 +15,11 @@ interface RemoveHostnameActionIconProps {
 }
 
 export const RemoveHostnameActionIcon = (input: RemoveHostnameActionIconProps) => {
-  const { mutateAsync } = clientApi.certificates.removeTrustedHostname.useMutation();
+  const { mutateAsync } = clientApi.certificates.removeTrustedHostname.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/tools/certificates/hostnames");
+    },
+  });
   const { openConfirmModal } = useConfirmModal();
   const t = useI18n();
 
@@ -26,8 +30,7 @@ export const RemoveHostnameActionIcon = (input: RemoveHostnameActionIconProps) =
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(input, {
-          async onSuccess() {
-            await revalidatePathActionAsync("/manage/tools/certificates/hostnames");
+          onSuccess() {
             showSuccessNotification({
               title: t("certificate.action.removeHostname.notification.success.title"),
               message: t("certificate.action.removeHostname.notification.success.message"),

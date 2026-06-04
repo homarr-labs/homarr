@@ -1,7 +1,9 @@
 import type { ChangeEvent, FocusEvent } from "react";
 
-export interface InputPropsFor<T, TOnChangeArg, TComponent extends HTMLElement = HTMLInputElement>
-  extends BasePropsFor<TOnChangeArg, TComponent> {
+export interface InputPropsFor<T, TOnChangeArg, TComponent extends HTMLElement = HTMLInputElement> extends BasePropsFor<
+  TOnChangeArg,
+  TComponent
+> {
   value?: T;
   defaultValue?: T;
 }

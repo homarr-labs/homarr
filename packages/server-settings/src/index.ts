@@ -5,6 +5,7 @@ export const defaultServerSettingsKeys = [
   "analytics",
   "crawlingAndIndexing",
   "board",
+  "user",
   "appearance",
   "culture",
   "search",
@@ -31,8 +32,11 @@ export const defaultServerSettings = {
     enableStatusByDefault: true,
     forceDisableStatus: false,
   },
+  user: {
+    enableGravatar: true,
+  },
   appearance: {
-    defaultColorScheme: "light" as ColorScheme,
+    defaultColorScheme: "auto" as ColorScheme,
   },
   culture: {
     defaultLocale: "en" as SupportedLanguage,

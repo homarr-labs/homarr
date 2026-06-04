@@ -3,17 +3,51 @@
   extends: ["config:recommended"],
   packageRules: [
     {
-      matchPackagePatterns: ["^@homarr/"],
+      matchPackageNames: ["^@homarr/"],
+      enabled: false,
+    },
+    // Reenable once https://github.com/privatenumber/tsx/issues/737 is fixed
+    {
+      matchPackageNames: ["tsx"],
+      enabled: false,
+    },
+    // Reenable once bug with undici v8 is fixed (https://github.com/homarr-labs/homarr/issues/5467)
+    {
+      matchPackageNames: ["undici"],
+      matchNewValue: "8.*",
       enabled: false,
     },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
+    {
+      // disallow automerge for onlyBuiltDependencies
+      matchPackageNames: [
+        "@tree-sitter-grammars/tree-sitter-yaml",
+        "bcrypt",
+        "better-sqlite3",
+        "cpu-features",
+        "esbuild",
+        "sharp",
+        "ssh2",
+        "tree-sitter",
+        "tree-sitter-json",
+      ],
+      automerge: false,
+    },
   ],
+  // Updates lockfile for prebuilt-debian after if package.json is updated, otherwise only root lockfile is updated
+  postUpgradeTasks: {
+    commands: ["cd deployments/prebuilt-debian && pnpm install --ignore-workspace --lockfile-only"],
+    fileFilters: ["deployments/prebuilt-debian/pnpm-lock.yaml"],
+    executionMode: "update",
+  },
   updateInternalDeps: true,
   rangeStrategy: "bump",
   automerge: false,
   baseBranches: ["dev"],
   dependencyDashboard: false,
+  // prevent special characters in branch names (otherwise git errors occur on windows)
+  branchNameStrict: true,
 }

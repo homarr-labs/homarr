@@ -3,7 +3,7 @@
 import { SimpleGrid, Skeleton, Stack, Title } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 

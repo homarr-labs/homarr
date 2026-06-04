@@ -12,12 +12,12 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
       allowScrolling: factory.switch({
         defaultValue: true,
       }),
-      allowTransparency: factory.switch(),
       allowPayment: factory.switch(),
       allowAutoPlay: factory.switch(),
       allowMicrophone: factory.switch(),
       allowCamera: factory.switch(),
       allowGeolocation: factory.switch(),
+      allowModals: factory.switch(),
     }));
   },
 }).withDynamicImport(() => import("./component"));

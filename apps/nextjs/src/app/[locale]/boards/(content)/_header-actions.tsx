@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
@@ -19,14 +18,17 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
+import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
@@ -42,7 +44,7 @@ export const BoardContentHeaderActions = () => {
   const { hasChangeAccess } = useBoardPermissions(board);
 
   if (!hasChangeAccess) {
-    return null; // Hide actions for user without access
+    return <SelectBoardsMenu />;
   }
 
   return (
@@ -61,6 +63,7 @@ export const BoardContentHeaderActions = () => {
 };
 
 const AddMenu = () => {
+  const { data: session } = useSession();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
@@ -95,17 +98,18 @@ const AddMenu = () => {
 
   const handleSelectApp = useCallback(() => {
     openAppSelectModal({
-      onSelect: (appId) => {
+      onSelect: (app) => {
         createItem({
           kind: "app",
-          options: { appId },
+          options: { appId: app.id },
         });
       },
+      withCreate: session?.user.permissions.includes("app-create") ?? false,
     });
   }, [openAppSelectModal, createItem]);
 
   return (
-    <Menu position="bottom-end" withArrow>
+    <Menu position="bottom-end">
       <Menu.Target>
         <HeaderButton w="auto" px={4}>
           <Group gap={4} wrap="nowrap">
@@ -165,7 +169,7 @@ const EditModeMenu = () => {
     open();
   }, [board, isEditMode, saveBoard, open]);
 
-  useHotkeys([["mod+e", toggle]]);
+  useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
@@ -179,7 +183,7 @@ const SelectBoardsMenu = () => {
   const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
 
   return (
-    <Menu position="bottom-end" withArrow>
+    <Menu position="bottom-end">
       <Menu.Target>
         <HeaderButton w="auto" px={4}>
           <IconReplace stroke={1.5} />
@@ -260,6 +264,5 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);
 };

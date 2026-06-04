@@ -4,13 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./analyse": "./src/analyse/index.ts",
-    "./components": "./src/components/index.ts",
-    "./import": "./src/import/index.ts",
-    "./shared": "./src/shared.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
@@ -18,41 +11,44 @@
       ]
     }
   },
+  "exports": {
+    ".": "./index.ts",
+    "./analyse": "./src/analyse/index.ts",
+    "./components": "./src/components/index.ts",
+    "./import": "./src/import/index.ts",
+    "./shared": "./src/shared.ts"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.1.1",
-    "@mantine/hooks": "^8.1.1",
-    "adm-zip": "0.5.16",
-    "next": "15.3.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "superjson": "2.2.2",
-    "zod": "^3.25.67",
-    "zod-form-data": "^2.0.7"
+    "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "adm-zip": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:",
+    "zod-form-data": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/adm-zip": "0.5.7",
-    "eslint": "^9.29.0",
-    "typescript": "^5.8.3"
+    "@types/adm-zip": "catalog:",
+    "typescript": "catalog:"
   }
 }

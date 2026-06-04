@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { Anchor, Center, Stack, Text } from "@mantine/core";
 import { IconCubeOff } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 export default function KubernetesErrorPage() {
   const t = useI18n();

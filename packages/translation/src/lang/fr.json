@@ -2,12 +2,12 @@
   "init": {
     "step": {
       "start": {
-        "title": "Bienvenue dans Homarr",
+        "title": "Bienvenue sur Homarr",
         "subtitle": "Commençons par configurer votre instance Homarr.",
         "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
           "scratch": "Partir de zéro",
-          "importOldmarr": "Importer à partir d'Homarr avant la 1.0"
+          "importOldmarr": "Importer depuis Homarr avant la 1.0"
         }
       },
       "import": {
@@ -113,8 +113,8 @@
         "subtitle": "Bon retour parmi nous ! Veuillez entrer vos identifiants"
       },
       "invite": {
-        "title": "Rejoindre Homarr",
-        "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
+        "title": "Rejoignez Homarr",
+        "subtitle": "Bienvenue sur Homarr ! Veuillez créer votre compte",
         "description": "Vous avez été invité par {username}"
       },
       "init": {
@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Mot de passe",
-        "requirement": {
+        "suggestion": {
           "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
           "uppercase": "Inclut une lettre majuscule",
@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Ouvrir les résultats de recherche dans un nouvel onglet"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -177,7 +180,7 @@
           }
         },
         "forgotPassword": {
-          "label": "Mot de passe oublié?",
+          "label": "Mot de passe oublié ?",
           "description": "Un administrateur peut utiliser la commande suivante pour réinitialiser votre mot de passe :"
         }
       },
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Impossible d'activer les icônes de ping"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -578,7 +591,7 @@
       },
       "delete": {
         "title": "Supprimer l'app",
-        "message": "Êtes-vous sûr de vouloir supprimer l'app {name}?",
+        "message": "Êtes-vous sûr de vouloir supprimer l'app {name} ?",
         "notification": {
           "success": {
             "title": "Suppression effectuée avec succès",
@@ -620,7 +633,7 @@
       "create": {
         "title": "Créer une nouvelle application",
         "description": "Créer une nouvelle application ",
-        "action": ""
+        "action": "Ouvrir la création de l'application"
       },
       "add": "Ajouter une application"
     }
@@ -645,6 +658,21 @@
             "title": "Échec de la création",
             "message": "L'intégration n'a pas pu être créée"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existant",
+              "label": "Sélectionner une application existante"
+            },
+            "new": {
+              "title": "Nouveau",
+              "url": {
+                "label": "Lien de l'application",
+                "description": "Lien d'ouverture de l'application depuis le tableau de bord"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -658,11 +686,18 @@
             "title": "Impossible d'appliquer les modifications",
             "message": "L'intégration n'a pas pu être enregistrée"
           }
+        },
+        "app": {
+          "action": {
+            "add": "Lier une application",
+            "remove": "Délier",
+            "select": "Sélectionnez une application à lier"
+          }
         }
       },
       "delete": {
         "title": "Supprimer l'intégration",
-        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name}?",
+        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name} ?",
         "notification": {
           "success": {
             "title": "Suppression réussie",
@@ -686,6 +721,9 @@
         "label": "Créer un moteur de recherche",
         "description": "L'intégration \"{kind}\" peut être utilisée avec les moteurs de recherche. Cochez ceci pour configurer automatiquement le moteur de recherche."
       },
+      "app": {
+        "sectionTitle": "Application liée"
+      },
       "createApp": {
         "label": "Créer une application",
         "description": "Créer une application avec le même nom et l'icône que l'intégration. Laissez le champ de saisie ci-dessous vide pour créer l'application avec l'URL d'intégration."
@@ -705,125 +743,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Cause avec plus de détails"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Erreur inconnue",
+          "description": "Une erreur inconnue s'est produite, ouvrez la cause ci-dessous pour voir plus de détails"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Erreur d'analyse",
+          "description": "La réponse n'a pas pu être analysée. Veuillez vérifier que l'URL pointe vers l'URL de base du service."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Erreur d'autorisation",
+          "description": "La requête n'a pas été autorisée. Veuillez vérifier que les informations d'identification sont correctes et que vous les avez configurées avec suffisamment d'autorisations."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Erreur de réponse",
+          "description": "Réponse {statusCode} ({reason}) inattendue de <url></url>. Veuillez vérifier que l'URL pointe vers l'URL de base de l'intégration.",
+          "otherDescription": "Réponse {statusCode} inattendue de <url></url>reçue. Veuillez vérifier que l'URL pointe vers l'URL de base de l'intégration.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Requête incorrecte",
+            "notFound": "Non trouvé",
+            "tooManyRequests": "Trop de requêtes",
+            "internalServerError": "Erreur interne du serveur",
+            "serviceUnavailable": "Service indisponible",
+            "gatewayTimeout": "Délai d'attente de la passerelle dépassé"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Erreur de certificat",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Le certificat a expiré.",
+            "notYetValid": "Le certificat n'est pas encore valide.",
+            "untrusted": "Le certificat n'est pas digne de confiance.",
+            "hostnameMismatch": "Le nom d'hôte du certificat ne correspond pas à l'URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Permissions insuffisantes",
+              "message": "Vous n'êtes pas autorisé à faire confiance ou télécharger des certificats. Veuillez contacter votre administrateur pour télécharger le certificat racine nécessaire."
             },
             "hostnameMismatch": {
               "title": "Nom d'hôte incohérent",
-              "message": ""
+              "message": "Le nom d'hôte dans le certificat ne correspond pas au nom d'hôte auquel vous vous connectez. Cela pourrait indiquer un risque de sécurité, mais vous pouvez quand même choisir de faire confiance à ce certificat."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Échec de l'extraction de l'autorité de certification",
+              "message": "Seuls les certificats auto-signés sans chaîne peuvent être récupérés automatiquement. Si vous utilisez un certificat auto-signé, assurez-vous de télécharger le certificat CA manuellement. Vous pouvez trouver des instructions sur la façon de faire ceci <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Réessayer la création"
             },
             "trust": {
-              "label": ""
+              "label": "Faire confiance au certificat"
             },
             "upload": {
-              "label": ""
+              "label": "Télécharger le certificat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Faire confiant à l'incohérence du nom d'hôte",
+              "message": "Êtes-vous sûr de vouloir faire confiance ce certificat avec un nom d'hôte incohérent ?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificat approuvé",
+                "message": "Nom d'hôte ajouté à la liste de certificats de confiance"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Impossible de faire confiance au certificat",
+                "message": "Le certificat avec un nom d'hôte incohérent n'a pas pu être approuvé"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Faire confiance au certificat auto-signé",
+              "message": "Êtes-vous sûr de vouloir faire confiance à ce certificat auto-signé ?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificat approuvé",
+                "message": "Certificat ajouté à la liste des certificats de confiance"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Impossible de faire confiance au certificat",
+                "message": "Impossible d'ajouter le certificat à la liste des certificats de confiance"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Détails",
+            "description": "Examinez les informations sur le certificat avant de décider de lui faire confiance.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Afficher le contenu",
+              "title": "Certificat PEM"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Erreur dans la requête",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Le serveur n'a pas pu être atteint. Cela signifie généralement que l'hôte est hors ligne ou injoignable depuis votre réseau.",
+              "networkUnreachable": "Le réseau est inaccessible. Veuillez vérifier votre connexion internet ou la configuration du réseau.",
+              "refused": "Le serveur a refusé la connexion. Il n'est peut-être pas en cours d'exécution ou rejette les requêtes sur le port spécifié.",
+              "reset": "La connexion a été fermée de façon inattendue par le serveur. Cela peut se produire si le serveur est instable ou redémarre."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "L'adresse du serveur est introuvable. Veuillez vérifier l'URL pour les fautes de frappe ou les noms de domaine non valides.",
+              "timeout": "La recherche DNS a expiré. Il peut s'agir d'un problème temporaire, veuillez réessayer dans quelques instants.",
+              "noAnswer": "Le serveur DNS n'a pas renvoyé de réponse valide. Le domaine peut exister mais n'a pas d'enregistrements valides."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "La requête a été annulée avant qu'elle ne puisse être terminée. Cela peut être dû à une action de l'utilisateur ou à un délai d'expiration du système.",
+              "timeout": "La requête a pris trop de temps à être terminée et a été expirée. Vérifiez votre réseau ou réessayez plus tard."
             }
           }
         }
@@ -896,7 +934,7 @@
         },
         "tooManyRequests": {
           "title": "Trop de requêtes en un temps donné",
-          "message": ""
+          "message": "Il y a eu trop de requêtes. Vous avez probablement été limité ou rejeté par le système cible"
         }
       }
     },
@@ -936,6 +974,38 @@
         "realm": {
           "label": "Domaine",
           "newLabel": "Nouveau domaine"
+        },
+        "personalAccessToken": {
+          "label": "Jeton d'accès personnel",
+          "newLabel": "Nouveau jeton d'accès personnel"
+        },
+        "topic": {
+          "label": "Sujet",
+          "newLabel": "Nouveau sujet"
+        },
+        "url": {
+          "label": "Url",
+          "newLabel": "Nouvelle url"
+        },
+        "opnsenseApiKey": {
+          "label": "Clé API (Key)",
+          "newLabel": "Nouvelle clé API (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "Clé API (secrète)",
+          "newLabel": "Nouvelle clé API (secrète)"
+        },
+        "githubAppId": {
+          "label": "Identifiant de l'application",
+          "newLabel": "Nouvel Id de l'Application"
+        },
+        "githubInstallationId": {
+          "label": "Id d'installation",
+          "newLabel": "Nouvel ID d'installation"
+        },
+        "privateKey": {
+          "label": "Clé privée",
+          "newLabel": "Nouvelle clé privée"
         }
       }
     },
@@ -984,15 +1054,20 @@
       "open": {
         "label": "Ouvrir le média"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
+    "success": "Succès",
     "beta": "Bêta",
     "error": "Erreur",
     "action": {
       "add": "Ajouter",
       "apply": "Appliquer",
       "backToOverview": "Retourner à l'aperçu",
+      "change": "Modifier",
       "create": "Créer",
       "createAnother": "Créer et recommencer",
       "edit": "Modifier",
@@ -1004,7 +1079,7 @@
       "cancel": "Annuler",
       "delete": "Supprimer",
       "discard": "Abandonner",
-      "close": "",
+      "close": "Fermer",
       "confirm": "Confirmer",
       "continue": "Continuer",
       "previous": "Précédent",
@@ -1012,7 +1087,9 @@
       "checkoutDocs": "Voir la documentation",
       "checkLogs": "Vérifiez les logs pour plus de détails",
       "tryAgain": "Réessayer",
-      "loading": "Chargement"
+      "loading": "Chargement",
+      "show": "",
+      "hide": ""
     },
     "here": "ici",
     "iconPicker": {
@@ -1021,6 +1098,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Clair",
         "dark": "Sombre"
       }
@@ -1079,6 +1157,9 @@
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
+    "servers": "Serveurs",
+    "applications": "Applications",
+    "services": "Services",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -1102,8 +1183,8 @@
           "number": "Ce champ doit être inférieur ou égal à {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
-          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises.",
+          "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+          "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises",
           "boardAlreadyExists": "Un tableau avec ce nom existe déjà",
           "invalidFileType": "Type de fichier invalide, {expected} attendu",
           "invalidFileName": "Nom de fichier invalide",
@@ -1111,6 +1192,12 @@
           "invalidConfiguration": "Configuration invalide",
           "groupNameTaken": "Nom de groupe déjà utilisé"
         }
+      }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1123,6 +1210,9 @@
       "option": {
         "title": {
           "label": "Titre"
+        },
+        "customCssClasses": {
+          "label": "Classes Css personnalisées"
         },
         "borderColor": {
           "label": "Couleur de la bordure"
@@ -1164,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nouvelle catégorie",
-          "changePosition": "Modifier la position"
+          "changePosition": "Modifier la position",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1177,7 +1268,7 @@
     "action": {
       "create": "Nouvel élément",
       "import": "Importer un élément",
-      "edit": "Editer l'élément",
+      "edit": "Éditer l'élément",
       "moveResize": "Déplacer / redimensionner l'élément",
       "duplicate": "Dupliquer l'élément",
       "remove": "Supprimer l'élément"
@@ -1210,7 +1301,7 @@
       }
     },
     "edit": {
-      "title": "Editer l'élément",
+      "title": "Éditer l'élément",
       "advancedOptions": {
         "label": "Options avancées",
         "title": "Options avancées de l'élément"
@@ -1238,7 +1329,7 @@
   "widget": {
     "app": {
       "name": "App",
-      "description": "Intégre une application dans le tableau.",
+      "description": "Intègre une application dans le tableau.",
       "option": {
         "appId": {
           "label": "Choisir une application"
@@ -1249,11 +1340,26 @@
         "showTitle": {
           "label": "Afficher le nom de l'application"
         },
-        "showDescriptionTooltip": {
-          "label": "Afficher l'info-bulle de description"
-        },
         "pingEnabled": {
           "label": "Activer la vérification du statut"
+        },
+        "layout": {
+          "label": "Mise en page",
+          "option": {
+            "row": "Horizontale",
+            "row-reverse": "Horizontal (inversé)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (inversé)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Mode d'affichage de la description",
+          "description": "Choisissez comment afficher la description de l'application",
+          "option": {
+            "normal": "Au sein du widget",
+            "tooltip": "Comme infobulle",
+            "hidden": "Masquer"
+          }
         }
       },
       "error": {
@@ -1439,6 +1545,17 @@
         "offline": "Hors ligne"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Bloc-notes",
       "description": "Un simple widget bloc-notes qui supporte le markdown",
@@ -1498,7 +1615,44 @@
         "rows": "Lignes",
         "width": "Largeur",
         "height": "Hauteur"
+      },
+      "placeholder": "Commencer à écrire vos notes",
+      "dismiss": {
+        "title": "Abandonner les modifications ?",
+        "message": "Vous avez des modifications non enregistrées dans votre bloc-notes. Êtes-vous sûr de vouloir les supprimer ?",
+        "action": {
+          "discard": "Ignorer les modifications",
+          "keepEditing": "Continuer les modifications"
+        }
       }
+    },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -1530,6 +1684,9 @@
         },
         "allowGeolocation": {
           "label": "Autoriser la géolocalisation"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1539,7 +1696,7 @@
       }
     },
     "smartHome-entityState": {
-      "name": "Etat de l'entité",
+      "name": "État de l'entité",
       "description": "Affichez l'état d'une entité et optionnellement activez la",
       "option": {
         "entityId": {
@@ -1576,10 +1733,10 @@
       "description": "Affiche le cours des actions d'une entreprise",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Symbole de l'action"
         },
         "timeRange": {
-          "label": "",
+          "label": "Intervalle de temps",
           "option": {
             "1d": {
               "label": "1 jour"
@@ -1650,6 +1807,9 @@
     "calendar": {
       "name": "Calendrier",
       "description": "Afficher les événements de vos intégrations dans une vue calendrier pendant une certaine période de temps relative",
+      "duration": {
+        "allDay": "Tous les jours"
+      },
       "option": {
         "releaseType": {
           "label": "Type de sortie Radarr",
@@ -1683,6 +1843,9 @@
         "showCurrentWindSpeed": {
           "label": "Afficher la vitesse actuelle du vent",
           "description": "Uniquement sur la météo actuelle"
+        },
+        "useImperialSpeed": {
+          "label": "Utiliser mph pour la vitesse du vent"
         },
         "location": {
           "label": "Lieu de la météo"
@@ -1757,8 +1920,11 @@
         "memory": {
           "label": "Afficher les infos de la mémoire"
         },
-        "showUptime": {
+        "gpu": {
           "label": ""
+        },
+        "showUptime": {
+          "label": "Afficher le temps de disponibilité"
         },
         "fileSystem": {
           "label": "Afficher les infos sur le système de fichiers"
@@ -1767,7 +1933,7 @@
           "label": "Onglet par défaut"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Sections visibles de cluster"
         },
         "sectionIndicatorRequirement": {
           "label": "Exigence de l'indicateur de section"
@@ -1776,16 +1942,16 @@
       "popover": {
         "information": "Information",
         "processor": "Processeur : {cpuModelName}",
-        "memory": "Mémoire: {memory}GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Mémoire : {memory}GiB",
+        "memoryAvailable": "Disponible : {memoryAvailable}GiB ({percent}%)",
         "version": "Version : {version}",
-        "uptime": "Disponibilité: {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
-        "loadAverage": "Charge moyenne:",
+        "uptime": "Disponibilité : {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
+        "loadAverage": "Charge moyenne :",
         "minute": "1 minute",
         "minutes": "{count} minutes",
         "used": "Utilisé ",
         "available": "Disponible",
-        "lastSeen": "Dernière mise à jour de statut: {lastSeen}"
+        "lastSeen": "Dernière mise à jour de statut : {lastSeen}"
       },
       "memory": {},
       "error": {
@@ -1821,7 +1987,7 @@
             "memory": "Mémoire",
             "storage": "Stockage",
             "uptime": "Disponibilité",
-            "haState": "Etat HA",
+            "haState": "État HA",
             "storageType": {
               "local": "Stockage local",
               "shared": "Stockage partagé"
@@ -1839,10 +2005,212 @@
       }
     },
     "dockerContainers": {
+      "name": "Statistiques de Docker",
+      "description": "Statistiques de vos conteneurs (Ce widget ne peut être ajouté qu'avec les privilèges d'administrateur)",
+      "option": {
+        "enableRowSorting": {
+          "label": "Activer le tri des éléments"
+        },
+        "defaultSort": {
+          "label": "Colonne de tri par défaut",
+          "option": {
+            "name": "Nom",
+            "state": "État",
+            "cpuUsage": "Utilisation du CPU",
+            "memoryUsage": "Utilisation mémoire"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Inverser le tri"
+        }
+      },
+      "error": {
+        "internalServerError": "Impossible de récupérer les statistiques des conteneurs"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Aperçu de votre instance Coolify avec les serveurs et les applications",
+      "option": {
+        "showServers": {
+          "label": "Afficher les serveurs"
+        },
+        "showApplications": {
+          "label": "Afficher les applications"
+        },
+        "showServices": {
+          "label": "Afficher les services"
+        }
+      },
+      "empty": {
+        "servers": "Aucun serveur trouvé",
+        "applications": "Aucune application trouvée",
+        "services": "Aucun service trouvé"
+      },
+      "footer": {
+        "updated": "Mis à jour {when}"
+      },
+      "error": {
+        "noIntegration": "Aucune intégration de Coolify configurée",
+        "internalServerError": "Impossible de récupérer les données de Coolify"
+      },
+      "server": {
+        "buildServer": "Version"
+      },
+      "instances": {
+        "title": "Instances"
+      }
+    },
+    "tracearr": {
+      "name": "Tracearr",
+      "description": "Surveillance avancée du serveur multimédia avec des données détaillées de flux et de transcodage",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": "Afficher le résumé des statistiques"
+        },
+        "showRecentActivity": {
+          "label": "Afficher l'activité récente"
+        },
+        "showViolations": {
+          "label": "Afficher les violations"
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "Utilisateurs totaux",
+        "transcodes": "",
+        "bandwidth": "Bande passante"
+      },
+      "streams": {
+        "empty": "",
+        "user": "Utilisateur",
+        "media": "Média",
+        "state": "",
+        "quality": "Qualité",
+        "device": "Appareil",
+        "progress": "Progression",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "Activité récente",
+        "empty": "Aucune activité récente",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "Aucune violation récente",
+        "rule": "Règle",
+        "user": "Utilisateur"
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "Aucune intégration Tracearr configurée",
+        "internalServerError": "Impossible de récupérer les données de Tracearr"
+      }
+    },
+    "umami": {
       "name": "",
       "description": "",
-      "option": {},
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
       "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
         "internalServerError": ""
       }
     },
@@ -1851,7 +2219,7 @@
         "query": "Ville / Code Postal",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "disabledTooltip": "Veuillez saisir une ville ou un code postal.",
+        "disabledTooltip": "Veuillez saisir une ville ou un code postal",
         "unknownLocation": "Lieu inconnu",
         "search": "Rechercher",
         "table": {
@@ -1870,7 +2238,7 @@
         }
       },
       "integration": {
-        "noData": "Aucune intégration trouvée.",
+        "noData": "Aucune intégration trouvée",
         "description": "Cliquez sur <here></here> pour créer une nouvelle intégration"
       },
       "app": {
@@ -1886,7 +2254,7 @@
     },
     "video": {
       "name": "Flux vidéo",
-      "description": "Intégre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
+      "description": "Intègre un flux vidéo ou une vidéo provenant d'une caméra ou d'un site web",
       "option": {
         "feedUrl": {
           "label": "URL du flux"
@@ -1899,7 +2267,7 @@
           "label": "Muet"
         },
         "hasControls": {
-          "label": "Afficher les controles"
+          "label": "Afficher les contrôles"
         }
       },
       "error": {
@@ -1920,8 +2288,72 @@
         "currentlyPlaying": "En cours de lecture",
         "user": "Utilisateur",
         "name": "Nom",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Statistiques détaillées",
+          "video": {
+            "title": "Vidéo",
+            "resolution": "Résolution"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Canaux audio",
+            "codec": "Codec audio"
+          },
+          "transcoding": {
+            "title": "Transcodage",
+            "container": "Conteneur",
+            "resolution": "Résolution",
+            "target": "Codec cible"
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "Statistiques du serveur Immich",
+      "description": "Informations sur votre instance Immich",
+      "option": {
+        "showUsers": {
+          "label": "Afficher les utilisateurs",
+          "description": "Afficher le nombre d'utilisateurs de l'instance"
+        },
+        "showPhotos": {
+          "label": "Afficher les photos",
+          "description": "Afficher le nombre de photos de l'instance"
+        },
+        "showVideos": {
+          "label": "Afficher les vidéos",
+          "description": "Afficher le nombre de vidéos de l'instance"
+        },
+        "showStorage": {
+          "label": "Affiche le stockage",
+          "description": "Afficher le stockage total utilisé"
+        }
+      },
+      "users": "Utilisateurs",
+      "photos": "Photos",
+      "videos": "Vidéos",
+      "storage": "Stockage utilisé"
+    },
+    "immich-albumCarousel": {
+      "name": "Album Immich",
+      "option": {
+        "albumId": {
+          "label": "Identifiant de l'album",
+          "description": "C'est l'identifiant unique qui correspond à l'album Immich. Vous pouvez le trouver en ouvrant un album et copiant l'identifiant unique depuis l'URL, par exemple 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervalle en secondes",
+          "description": "Rotation entre les images de l'album chaque X secondes. Doit être entre 1 et 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Afficher les informations de la photo",
+          "description": "Afficher la date et l'index de la photo en bas du diaporama"
+        }
+      },
+      "description": "Diaporama de photos dans votre album Immich",
+      "noAlbumSelected": "Aucun album sélectionné, modifier le widget et choisissez un album",
+      "noPhotos": "Aucune photo dans cet album"
     },
     "downloads": {
       "name": "Client de téléchargement",
@@ -1946,7 +2378,7 @@
           "label": "Afficher les entrées Torrent marquées comme terminées"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Afficher les entrées diverses marquées comme terminées"
         },
         "activeTorrentThreshold": {
           "label": "Masquer les Torrents terminés sous ce seuil (en kiB/s)"
@@ -1961,8 +2393,8 @@
           "label": "Utiliser le filtre pour calculer le ratio"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limiter les éléments par intégration",
+          "description": "Cela limitera le nombre d'éléments affichés par intégration, pas globalement"
         }
       },
       "errors": {
@@ -2042,10 +2474,10 @@
         "completed": "Complété",
         "failed": "Échec",
         "processing": "Traitement en cours",
-        "leeching": "",
-        "stalled": "",
+        "leeching": "En téléchargement",
+        "stalled": "Bloqué",
         "unknown": "Inconnu",
-        "seeding": ""
+        "seeding": "En partage"
       },
       "actions": {
         "clients": {
@@ -2061,7 +2493,7 @@
           "pause": "Mettre en pause l'élément",
           "resume": "Reprendre l'élément",
           "delete": {
-            "title": "Supprimer l'élement",
+            "title": "Supprimer l'élément",
             "modalTitle": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
             "entry": "Supprimer l'entrée",
             "entryAndFiles": "Supprimer l'entrée et le(s) fichier(s)"
@@ -2069,6 +2501,35 @@
         }
       },
       "globalRatio": "Ratio global"
+    },
+    "mediaReleases": {
+      "name": "Sorties récentes",
+      "description": "Afficher les médias récemment ajoutés ou les publications à venir de différentes intégrations",
+      "option": {
+        "layout": {
+          "label": "Mise en page",
+          "option": {
+            "backdrop": {
+              "label": "Arrière-plan"
+            },
+            "poster": {
+              "label": "Affiche"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Afficher l'info-bulle de description"
+        },
+        "showType": {
+          "label": "Afficher le badge du type de média"
+        },
+        "showSource": {
+          "label": "Afficher l'intégration de la source"
+        }
+      },
+      "length": {
+        "duration": "{length}min"
+      }
     },
     "mediaRequests-requestList": {
       "name": "Liste des demandes de médias",
@@ -2087,15 +2548,18 @@
         "unknown": "Inconnu",
         "pending": "En attente",
         "processing": "Traitement en cours",
+        "requested": "En attente",
         "partiallyAvailable": "Partiel",
-        "available": "Disponible"
+        "available": "Disponible",
+        "blacklisted": "Sur la liste noire",
+        "deleted": "Supprimé"
       },
       "status": {
         "pending": "En attente",
         "approved": "Approuvé",
         "declined": "Refusé",
         "failed": "Échec",
-        "completed": ""
+        "completed": "Complété"
       },
       "toBeDetermined": "À déterminer"
     },
@@ -2195,110 +2659,131 @@
         },
         "maximumAmountPosts": {
           "label": "Nombre maximum de publications"
+        },
+        "hideDescription": {
+          "label": "Masquer la description"
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Versions",
+      "description": "Affiche une liste de la version courante des référentiels donnés avec la version regex donnée.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nouvelle version dans",
+          "description": "Exemple d'utilisation : 1w (1 semaine), 10M (10 mois). Type d'unité acceptée h (heures), d (jours), w (semaines), M (mois), y (années). Laisser vide pour ne pas mettre en évidence les nouvelles versions."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Version obsolète dans",
+          "description": "Exemple d'utilisation : 1w (1 semaine), 10M (10 mois). Type d'unité acceptée h (heures), d (jours), w (semaines), M (mois), y (années). Laisser vide pour ne pas mettre en évidence les versions obsolètes."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Afficher uniquement les surbrillances",
+          "description": "Afficher uniquement les nouvelles versions ou les versions obsolètes. Comme pour les versions ci-dessus."
         },
         "showDetails": {
-          "label": ""
+          "label": "Afficher les détails"
+        },
+        "showOnlyIcon": {
+          "label": "Afficher uniquement l'icône"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Meilleures sorties",
+          "description": "Le nombre maximum de dernières versions à afficher. Zéro signifie aucune limite."
         },
         "repositories": {
-          "label": "",
+          "label": "Dépôts",
           "addRepository": {
-            "label": ""
+            "label": "Ajouter un dépôt"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Importer depuis docker",
+            "loading": "Chargement des images docker",
+            "noImagesFound": "Aucune image docker trouvée",
+            "listFoundImages": "Liste des images trouvées",
+            "listAlreadyImportedImages": "Liste des images déjà importées",
+            "allImagesAlreadyImported": "Toutes les images déjà importées",
+            "onlyAdminCanImport": "Seuls les administrateurs peuvent importer depuis docker",
+            "selectAll": "Tout sélectionner",
+            "deselectAll": "Tout désélectionner"
           },
           "provider": {
-            "label": ""
+            "label": "Fournisseur"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifiant",
+            "placeholder": "Nom ou Propriétaire / Nom"
           },
           "name": {
-            "label": ""
+            "label": "Nom"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtre de versions",
             "prefix": {
-              "label": ""
+              "label": "Préfixe"
             },
             "precision": {
-              "label": "",
+              "label": "Précision",
               "options": {
-                "none": ""
+                "none": "Aucun"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Suffixe"
             },
             "regex": {
-              "label": ""
+              "label": "Expression Régulière"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Modifier"
           },
           "editForm": {
-            "title": "",
+            "title": "Modifier le dépôt",
             "cancel": {
-              "label": ""
+              "label": "Annuler"
             },
             "confirm": {
-              "label": ""
+              "label": "Confirmer"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importer depuis Docker"
           },
           "example": {
-            "label": ""
+            "label": "Exemple"
           },
-          "invalid": ""
+          "invalid": "Définition de dépôt invalide, veuillez vérifier les valeurs",
+          "noProvider": {
+            "label": "Aucun fournisseur",
+            "tooltip": "Le fournisseur n'a pas pu être analysé, veuillez le définir manuellement après l'importation des images"
+          }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
+      "not-found": "Non trouvé",
+      "pre-release": "Pré-publication",
+      "archived": "Archivé",
       "forked": "",
-      "starsCount": "",
+      "starsCount": "Étoiles",
       "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": "",
+      "issuesCount": "Problèmes ouverts",
+      "markViewed": "Marquer comme vu(s)",
+      "openProjectPage": "Ouvrir la page du projet",
+      "openReleasePage": "Ouvrir la page de publication",
+      "releaseDescription": "Description de la publication",
+      "projectDescription": "Description du projet",
+      "created": "Créé le",
       "error": {
-        "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "label": "Erreur",
+        "messages": {
+          "invalidIdentifier": "Identifiant non valide",
+          "noMatchingVersion": "Aucune version correspondante trouvée",
+          "noReleasesFound": "Aucune publication trouvée",
+          "noProviderSeleceted": "Aucun fournisseur sélectionné",
+          "noProviderResponse": "Aucune réponse du fournisseur"
         }
       }
     },
@@ -2306,56 +2791,195 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} connecté"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Aucune donnée disponible, toutes les intégrations sont déconnectées",
+        "unknownContentOption": "Option de contenu inconnue pour le widget de résumé du contrôleur réseau : "
       },
-      "name": "",
-      "description": ""
+      "name": "Résumé du contrôleur réseau",
+      "description": "Affiche le résumé d'un contrôleur réseau (comme le contrôleur UniFi)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Filaire"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Utilisateurs"
         },
         "guests": {
-          "label": ""
+          "label": "Invités"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Filaire"
             }
           },
-          "label": ""
+          "label": "Contenu du Widget"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Aucune donnée disponible, toutes les intégrations sont déconnectées",
+        "unknownContentOption": "Option de contenu inconnue pour le widget d'état du réseau : "
       },
-      "name": "",
-      "description": ""
+      "name": "État du réseau",
+      "description": "Afficher les périphériques connectés sur un réseau"
     },
     "networkController": {
       "error": {
+        "internalServerError": "Impossible de récupérer le résumé du contrôleur réseau"
+      }
+    },
+    "firewall": {
+      "name": "Surveillance du pare-feu",
+      "description": "Affiche un résumé des pare-feu",
+      "tab": {
+        "system": "Système",
+        "interfaces": "Interfaces"
+      },
+      "error": {
+        "internalServerError": "Impossible d'obtenir les données depuis le pare-feu"
+      },
+      "option": {
+        "interfaces": "Interfaces réseau à afficher"
+      },
+      "widget": {
+        "fwname": "Nom",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "Utilisation du CPU",
+        "memorytitle": "Utilisation de la mémoire",
+        "cpu": "CPU",
+        "memory": "Mémoire",
+        "interfaces": {
+          "name": "nom",
+          "trans": "Transmis",
+          "recv": "Reçus",
+          "title": "Interfaces réseau"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Afficher l'historique des notifications à partir d'une intégration",
+      "noItems": "Aucune notification à afficher.",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
         "internalServerError": ""
+      }
+    },
+    "systemResources": {
+      "name": "Ressources du système",
+      "description": "CPU, Mémoire, Disque et autre utilisation matérielle de votre système",
+      "option": {
+        "hasShadow": {
+          "label": "Activer l'ombrage des cartes"
+        },
+        "visibleCharts": {
+          "label": "Graphiques visibles",
+          "description": "Sélectionnez les graphiques à afficher.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Mémoire",
+            "gpu": "",
+            "network": "Réseau"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Mode d'affichage de l'étiquette",
+          "option": {
+            "textWithIcon": "Afficher le texte avec l'icône",
+            "text": "Afficher uniquement le texte",
+            "icon": "Afficher uniquement l'icône",
+            "hidden": "Masquer l'étiquette"
+          }
+        }
+      },
+      "card": {
+        "cpu": "CPU",
+        "memory": "RAM",
+        "gpu": "",
+        "network": "NET",
+        "up": "UP",
+        "down": "HORS SERVICE"
+      }
+    },
+    "systemDisks": {
+      "name": "Disques système",
+      "description": "Utilisation du disque de votre système",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Afficher la température si disponible"
+        },
+        "displayMode": {
+          "label": "Mode d'affichage",
+          "option": {
+            "percentage": {
+              "label": "Pourcentage (ex : 76%)"
+            },
+            "absolute": {
+              "label": "Valeurs absolues (ex. : 800 Go / 1 To)"
+            },
+            "free": {
+              "label": "Pourcentage d'espace libre (ex. : 24 % libre)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Afficher la barre d'utilisation en arrière-plan"
+        }
+      },
+      "status": {
+        "unhealthy": "Dysfonctionnement"
       }
     }
   },
@@ -2478,10 +3102,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL de l'arrière-plan",
-        "placeholder": "",
+        "placeholder": "Commencez à taper pour rechercher des images locales",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Vos images",
+          "other": "Autres images"
         }
       },
       "backgroundImageAttachment": {
@@ -2543,9 +3167,12 @@
       "iconColor": {
         "label": "Couleur de l'icône"
       },
+      "clearColor": {
+        "label": "Enlever la couleur"
+      },
       "customCss": {
         "label": "CSS personnalisé pour ce tableau",
-        "description": "En outre, vous pouvez personnaliser votre tableau de bord à l'aide de CSS. Réservé aux utilisateurs expérimentés.",
+        "description": "De plus, personnalisez votre tableau de bord à l'aide de CSS, recommandé uniquement pour les utilisateurs expérimentés",
         "customClassesAlert": {
           "title": "Classes personnalisées",
           "description": "Vous pouvez ajouter des classes personnalisées aux éléments de votre tableau dans les options avancées de chaque élément et les utiliser dans le CSS personnalisé ci-dessus."
@@ -2775,13 +3402,19 @@
           "invite": "Invitations",
           "integration": "Intégrations",
           "app": "Applications",
-          "group": "Groupes"
+          "group": "Groupes",
+          "searchEngine": "Moteurs de recherche",
+          "media": "Médias"
         },
         "statisticLabel": {
           "boards": "Tableaux de bord",
           "resources": "Ressources",
           "authentication": "Authentification",
           "authorization": "Autorisation"
+        },
+        "heroBanner": {
+          "title": "Bienvenue sur votre",
+          "subtitle": "Tableau {app}"
         }
       },
       "board": {
@@ -2817,13 +3450,16 @@
             "label": "Supprimer définitivement",
             "confirm": {
               "title": "Supprimer le tableau de bord",
-              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name}?"
+              "description": "Êtes-vous sûr de vouloir supprimer le tableau {name} ?"
             }
           }
         },
         "visibility": {
           "public": "Ce tableau est public",
           "private": "Ce tableau est privé"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
@@ -3034,6 +3670,13 @@
               }
             }
           },
+          "user": {
+            "title": "Utilisateurs",
+            "enableGravatar": {
+              "label": "Activer Gravatar",
+              "description": "Revient aux avatars des utilisateurs de Libravatar/Gravatar quand aucun avatar personnalisé n'est défini et qu'un e-mail est configuré"
+            }
+          },
           "search": {
             "title": "Rechercher",
             "defaultSearchEngine": {
@@ -3046,6 +3689,7 @@
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut",
               "options": {
+                "auto": "",
                 "light": "Clair",
                 "dark": "Sombre"
               }
@@ -3065,11 +3709,15 @@
           "status": {
             "idle": "Inactif",
             "running": "En cours",
-            "error": "Erreur"
+            "error": "Erreur",
+            "disabled": "Désactivé"
           },
           "job": {
             "minecraftServerStatus": {
               "label": "État du serveur Minecraft"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Mise à jour des icônes"
@@ -3110,9 +3758,6 @@
             "dnsHole": {
               "label": "Données du puit DNS"
             },
-            "sessionCleanup": {
-              "label": "Nettoyage de session"
-            },
             "updateChecker": {
               "label": "Vérificateur de mise à jour"
             },
@@ -3120,10 +3765,105 @@
               "label": "Transcodage des médias"
             },
             "networkController": {
-              "label": ""
+              "label": "Contrôleur réseau"
+            },
+            "refreshNotifications": {
+              "label": "Mise à jour des notifications"
             },
             "dockerContainers": {
+              "label": "Conteneurs Docker"
+            },
+            "firewallCpu": {
+              "label": "Processeur du pare-feu"
+            },
+            "firewallMemory": {
+              "label": "Mémoire du pare-feu"
+            },
+            "firewallVersion": {
+              "label": "Version du pare-feu"
+            },
+            "firewallInterfaces": {
+              "label": "Interfaces du pare-feu"
+            },
+            "weather": {
+              "label": "Météo"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
               "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "Chaque {interval, plural, one {}=1 {seconde} other {# secondes}}",
+            "minutes": "Chaque {interval, plural, one {}=1 {minute} other {# minutes}}",
+            "hours": "Chaque {interval, plural, one {}=1 {heure} other {# heures}}",
+            "midnight": "Chaque jour à minuit",
+            "weeklyMonday": "Chaque semaine le lundi",
+            "update": {
+              "success": {
+                "message": "Intervalle mis à jour avec succès"
+              },
+              "error": {
+                "message": "L'intervalle de mise à jour a échoué"
+              }
+            }
+          },
+          "settings": {
+            "title": "Paramètres de la tâche pour {jobName}"
+          },
+          "field": {
+            "name": {
+              "label": "Nom"
+            },
+            "interval": {
+              "label": "Intervalle de planification"
+            },
+            "lastExecution": {
+              "label": "Dernière exécution"
+            },
+            "actions": {
+              "label": "Actions"
+            }
+          },
+          "table": {
+            "search": "Rechercher des tâches {count}..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Rafraîchir"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Tâches actualisées avec succès"
+            },
+            "error": {
+              "message": "Échec de l'actualisation des tâches"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Tâche déclenchée avec succès"
+            },
+            "error": {
+              "message": "Échec du déclenchement de la tâche"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Tâche activée avec succès"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Tâche désactivée avec succès"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Impossible de basculer le statut de la tâche"
             }
           }
         },
@@ -3175,9 +3915,28 @@
             "title": "Traducteurs",
             "subtitle": "{count} ont contribué à des traductions dans de nombreuses langues"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Bibliothèques",
             "subtitle": "{count} utilisés dans le Code d'Homarr"
+          },
+          "hotkeys": {
+            "title": "Raccourcis clavier",
+            "subtitle": "Raccourcis clavier pour améliorer votre flux de travail",
+            "field": {
+              "shortcut": "Raccourci",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Activer/désactiver le mode d'édition du tableau",
+              "toggleColorScheme": "Basculer en mode clair/sombre",
+              "saveNotebook": "Enregistrer le bloc-notes (uniquement à l'intérieur du widget notebook)",
+              "openSpotlight": "Ouvrir la recherche"
+            },
+            "note": "Astuce : Mod correspond à la touche Ctrl ou ⌘ sur macOS"
           }
         }
       }
@@ -3189,7 +3948,7 @@
       "updated": "Mis à jour {when}",
       "search": "Rechercher dans {count} conteneurs",
       "selected": "{selectCount} sur {totalCount} conteneurs sélectionnés",
-      "footer": ""
+      "footer": "Total des conteneurs {count}"
     },
     "field": {
       "name": {
@@ -3209,10 +3968,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "Processeur"
         },
         "memory": {
-          "label": ""
+          "label": "Mémoire"
         }
       },
       "containerImage": {
@@ -3220,10 +3979,13 @@
       },
       "ports": {
         "label": "Ports"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
-      "title": "",
+      "title": "Actions",
       "start": {
         "label": "Début",
         "notification": {
@@ -3328,7 +4090,7 @@
         "title": "Ressources",
         "nodes": "Nœuds",
         "namespaces": "Espaces de noms",
-        "ingresses": "",
+        "ingresses": "Routes",
         "services": "Services",
         "pods": "Pods",
         "configmaps": "ConfigMaps",
@@ -3397,7 +4159,7 @@
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Routes",
       "field": {
         "name": {
           "label": "Nom"
@@ -3632,6 +4394,9 @@
       },
       "tools": {
         "label": "Outils",
+        "tasks": {
+          "label": "Tâches"
+        },
         "docker": {
           "label": "Docker"
         },
@@ -3668,7 +4433,7 @@
         "certificates": {
           "label": "Certificats",
           "hostnames": {
-            "label": ""
+            "label": "Noms d'hôtes"
           }
         }
       },
@@ -3743,6 +4508,7 @@
             "title": "Commandes globales",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Activer le mode clair",
                 "dark": "Activer le mode sombre"
               },
@@ -3794,6 +4560,14 @@
         "group": {
           "searchEngine": {
             "title": "Moteurs de recherche",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
@@ -4069,25 +4843,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Nom d'Hôte"
       },
       "subject": {
-        "label": ""
+        "label": "Sujet"
       },
       "issuer": {
-        "label": ""
+        "label": "Émetteur"
       },
       "validFrom": {
-        "label": ""
+        "label": "Valable à partir du"
       },
       "validTo": {
-        "label": ""
+        "label": "Valable jusqu'au"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Numéro de série"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Empreinte"
       }
     },
     "page": {
@@ -4098,19 +4872,19 @@
           "title": "Il n'y a pas encore de certificats"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Certificat invalide",
+          "description": "Impossible d'analyser le certificat"
         },
         "expires": "Expire le {when}",
-        "toHostnames": ""
+        "toHostnames": "Noms d'hôtes de confiance"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Noms d'hôtes de certificat de confiance",
+        "description": "Certains certificats ne permettent pas au domaine spécifique que Homarr utilise pour les demander, à cause de cela, tous les noms d'hôtes de confiance avec leurs vignettes de certificat sont utilisés pour contourner ces restrictions.",
         "noResults": {
-          "title": ""
+          "title": "Il n'y a pas encore de noms d'hôtes"
         },
-        "toCertificates": ""
+        "toCertificates": "Certificats"
       }
     },
     "action": {
@@ -4142,18 +4916,28 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Supprimer le nom d'hôte de confiance",
+        "confirm": "Êtes-vous sûr de vouloir supprimer ce nom d'hôte de confiance ? Cela peut empêcher certaines intégrations de fonctionner.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Nom d'hôte supprimé",
+            "message": "Le nom d'hôte a été supprimé avec succès"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nom d'hôte non supprimé",
+            "message": "Le nom d'hôte n'a pas pu être supprimé"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Débogage",
+        "info": "Information",
+        "warn": "Avertissement",
+        "error": "Erreur"
       }
     }
   }

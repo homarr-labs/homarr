@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -18,8 +18,14 @@ interface UserProfileAvatarForm {
 }
 
 export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
-  const { mutate } = clientApi.user.setProfileImage.useMutation();
+  const { mutate } = clientApi.user.setProfileImage.useMutation({
+    async onSuccess() {
+      // Revalidate all as the avatar is used in multiple places
+      await revalidatePathActionAsync("/");
+    },
+  });
   const [opened, { toggle }] = useDisclosure(false);
+  const isMobile = useMediaQuery("(max-width: 48em)");
   const { openConfirmModal } = useConfirmModal();
   const t = useI18n();
   const tManageAvatar = useScopedI18n("user.action.manageAvatar");
@@ -38,9 +44,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           image: base64Url,
         },
         {
-          async onSuccess() {
-            // Revalidate all as the avatar is used in multiple places
-            await revalidatePathActionAsync("/");
+          onSuccess() {
             showSuccessNotification({
               message: tManageAvatar("changeImage.notification.success.message"),
             });
@@ -74,9 +78,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
             image: null,
           },
           {
-            async onSuccess() {
-              // Revalidate all as the avatar is used in multiple places
-              await revalidatePathActionAsync("/");
+            onSuccess() {
               showSuccessNotification({
                 message: tManageAvatar("removeImage.notification.success.message"),
               });
@@ -92,38 +94,24 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
     });
   }, [mutate, user.id, openConfirmModal, tManageAvatar]);
 
-  const isCredentialsUser = user.provider === "credentials";
-
   return (
-    <Box pos="relative">
-      <Menu
-        opened={opened}
-        keepMounted
-        onChange={isCredentialsUser ? toggle : undefined}
-        position="bottom-start"
-        withArrow
-      >
+    <Box pos="relative" display="flex" style={{ justifyContent: isMobile ? "center" : undefined }}>
+      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow withinPortal>
         <Menu.Target>
-          <UnstyledButton
-            component={isCredentialsUser ? undefined : "div"}
-            style={{ cursor: !isCredentialsUser ? "default" : undefined }}
-            onClick={isCredentialsUser ? toggle : undefined}
-          >
-            <UserAvatar user={user} size={200} />
-            {isCredentialsUser && (
-              <Button
-                component="div"
-                pos="absolute"
-                bottom={0}
-                left={0}
-                size="compact-md"
-                fw="normal"
-                variant="default"
-                leftSection={<IconPencil size={18} stroke={1.5} />}
-              >
-                {t("common.action.edit")}
-              </Button>
-            )}
+          <UnstyledButton onClick={toggle}>
+            <UserAvatar user={user} size={isMobile ? 120 : 200} />
+            <Button
+              component="div"
+              pos="absolute"
+              bottom={0}
+              left={0}
+              size="compact-md"
+              fw="normal"
+              variant="default"
+              leftSection={<IconPencil size={18} stroke={1.5} />}
+            >
+              {t("common.action.edit")}
+            </Button>
           </UnstyledButton>
         </Menu.Target>
         <Menu.Dropdown>

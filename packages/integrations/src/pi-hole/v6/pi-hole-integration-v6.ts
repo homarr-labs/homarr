@@ -1,9 +1,9 @@
 import type { fetch as undiciFetch, Response as UndiciResponse } from "undici";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
@@ -14,10 +14,10 @@ import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summar
 import type { DnsHoleSummary } from "../../types";
 import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } from "./pi-hole-schemas-v6";
 
-const localLogger = logger.child({ module: "PiHoleIntegrationV6" });
+const logger = createLogger({ module: "piHoleIntegration", version: "v6" });
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
-  private readonly sessionStore: SessionStore<string>;
+  private readonly sessionStore: SessionStore<{ sid: string | null }>;
 
   constructor(integration: IntegrationInput) {
     super(integration);
@@ -28,7 +28,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const response = await this.withAuthAsync(async (sessionId) => {
       return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
         headers: {
-          sid: sessionId,
+          sid: sessionId ?? undefined,
         },
       });
     });
@@ -46,7 +46,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const response = await this.withAuthAsync(async (sessionId) => {
       return fetchWithTrustedCertificatesAsync(this.url("/api/stats/summary"), {
         headers: {
-          sid: sessionId,
+          sid: sessionId ?? undefined,
         },
       });
     });
@@ -85,7 +85,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const response = await this.withAuthAsync(async (sessionId) => {
       return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
         headers: {
-          sid: sessionId,
+          sid: sessionId ?? undefined,
         },
         body: JSON.stringify({ blocking: true }),
         method: "POST",
@@ -101,7 +101,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const response = await this.withAuthAsync(async (sessionId) => {
       return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
         headers: {
-          sid: sessionId,
+          sid: sessionId ?? undefined,
         },
         body: JSON.stringify({ blocking: false, timer: duration }),
         method: "POST",
@@ -118,21 +118,25 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * @param callback
    * @returns
    */
-  private async withAuthAsync(callback: (sessionId: string) => Promise<UndiciResponse>) {
+  private async withAuthAsync(callback: (sessionId: string | null) => Promise<UndiciResponse>) {
+    if (!super.hasSecretValue("apiKey")) {
+      return await callback(null);
+    }
+
     const storedSession = await this.sessionStore.getAsync();
 
     if (storedSession) {
-      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
-      const response = await callback(storedSession);
+      logger.debug("Using stored session for request", { integrationId: this.integration.id });
+      const response = await callback(storedSession.sid);
       if (response.status !== 401) {
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const sessionId = await this.getSessionAsync();
-    await this.sessionStore.setAsync(sessionId);
+    await this.sessionStore.setAsync({ sid: sessionId });
     const response = await callback(sessionId);
     return response;
   }
@@ -141,11 +145,13 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * Get a session id from the Pi-hole server
    * @returns The session id
    */
-  private async getSessionAsync(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync): Promise<string> {
-    const apiKey = super.getSecretValue("apiKey");
+  private async getSessionAsync(
+    fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
+  ): Promise<string | null> {
+    const apiKey = super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : null;
     const response = await fetchAsync(this.url("/api/auth"), {
       method: "POST",
-      body: JSON.stringify({ password: apiKey }),
+      body: JSON.stringify({ password: apiKey ?? "" }),
       headers: {
         "User-Agent": "Homarr",
       },
@@ -156,11 +162,16 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const data = await response.json();
     const result = await sessionResponseSchema.parseAsync(data);
 
-    if (!result.session.sid) {
-      throw new ResponseError({ status: 401, url: response.url });
+    if (!result.session.valid) {
+      throw new ResponseError(
+        { status: 401, url: response.url },
+        {
+          cause: result.session.message ? new Error(result.session.message) : undefined,
+        },
+      );
     }
 
-    localLogger.info("Received session id successfully", { integrationId: this.integration.id });
+    logger.info("Received session id successfully", { integrationId: this.integration.id });
 
     return result.session.sid;
   }
@@ -170,9 +181,14 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * @param sessionId The session id to remove
    */
   private async clearSessionAsync(
-    sessionId: string,
+    sessionId: string | null,
     fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
   ) {
+    if (!sessionId) {
+      logger.debug("No session id to clear");
+      return;
+    }
+
     const response = await fetchAsync(this.url("/api/auth"), {
       method: "DELETE",
       headers: {
@@ -181,7 +197,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      localLogger.warn("Failed to clear session", { statusCode: response.status, content: await response.text() });
+      logger.warn("Failed to clear session", { statusCode: response.status, content: await response.text() });
     }
 
     logger.debug("Cleared session successfully");

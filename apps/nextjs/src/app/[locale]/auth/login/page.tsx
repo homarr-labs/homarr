@@ -4,6 +4,7 @@ import { Card, Center, Stack, Text, Title } from "@mantine/core";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
+import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
@@ -19,7 +20,7 @@ export default async function Login(props: LoginProps) {
   const session = await auth();
 
   if (session) {
-    redirect(searchParams.callbackUrl ?? "/");
+    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
   }
 
   const t = await getScopedI18n("user.page.login");
@@ -36,7 +37,7 @@ export default async function Login(props: LoginProps) {
             {t("subtitle")}
           </Text>
         </Stack>
-        <Card withBorder w={64 * 6} maw="90vw">
+        <Card w={64 * 6} maw="90vw">
           <LoginForm
             providers={env.AUTH_PROVIDERS}
             oidcClientName={env.AUTH_OIDC_CLIENT_NAME}

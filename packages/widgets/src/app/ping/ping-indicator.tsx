@@ -7,13 +7,13 @@ import { clientApi } from "@homarr/api/client";
 import { PingDot } from "./ping-dot";
 
 interface PingIndicatorProps {
-  href: string;
+  appId: string;
 }
 
-export const PingIndicator = ({ href }: PingIndicatorProps) => {
+export const PingIndicator = ({ appId }: PingIndicatorProps) => {
   const [ping] = clientApi.widget.app.ping.useSuspenseQuery(
     {
-      url: href,
+      id: appId,
     },
     {
       refetchOnMount: false,
@@ -24,7 +24,7 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
   const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"]>(ping);
 
   clientApi.widget.app.updatedPing.useSubscription(
-    { url: href },
+    { id: appId },
     {
       onData(data) {
         setPingResult(data);
@@ -38,7 +38,11 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
     <PingDot
       icon={isError ? IconX : IconCheck}
       color={isError ? "red" : "green"}
-      tooltip={"statusCode" in pingResult ? pingResult.statusCode.toString() : pingResult.error}
+      tooltip={
+        "statusCode" in pingResult
+          ? `${pingResult.statusCode} - ${pingResult.durationMs.toFixed(0)}ms`
+          : pingResult.error
+      }
     />
   );
 };

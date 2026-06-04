@@ -1,8 +1,8 @@
-import { Group, Text, useMantineColorScheme } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
+import { Group, Text, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
+  IconDeviceDesktop,
   IconFileImport,
   IconLanguage,
   IconMailForward,
@@ -17,6 +17,7 @@ import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
@@ -52,13 +53,17 @@ export const globalCommandGroup = createGroup<Command>({
   useOptions() {
     const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
     const { colorScheme } = useMantineColorScheme();
+    const computedColorScheme = useComputedColorScheme("light");
     const { data: session } = useSession();
 
     const commands: (Command & { hidden?: boolean })[] = [
       {
         commandKey: "colorScheme",
-        icon: colorScheme === "dark" ? IconSun : IconMoon,
-        name: tOption(`colorScheme.${colorScheme === "dark" ? "light" : "dark"}`),
+        icon: colorScheme === "auto" ? IconDeviceDesktop : computedColorScheme === "dark" ? IconSun : IconMoon,
+        name:
+          colorScheme === "auto"
+            ? tOption("colorScheme.auto")
+            : tOption(`colorScheme.${computedColorScheme === "dark" ? "light" : "dark"}`),
         useInteraction: () => {
           const { toggleColorScheme } = useMantineColorScheme();
 

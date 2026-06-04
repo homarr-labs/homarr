@@ -1,8 +1,9 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { createId, db, eq } from "@homarr/db";
+import { db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
@@ -13,7 +14,6 @@ export const apiKeysRouter = createTRPCRouter({
       columns: {
         id: true,
         apiKey: false,
-        salt: false,
       },
       with: {
         user: {
@@ -21,20 +21,19 @@ export const apiKeysRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
       },
     });
   }),
   create: permissionRequiredProcedure.requiresPermission("admin").mutation(async ({ ctx }) => {
-    const salt = await createSaltAsync();
     const randomToken = generateSecureRandomToken(64);
-    const hashedRandomToken = await hashPasswordAsync(randomToken, salt);
+    const hashedRandomToken = await hashPasswordAsync(randomToken);
     const id = createId();
     await db.insert(apiKeys).values({
       id,
       apiKey: hashedRandomToken,
-      salt,
       userId: ctx.session.user.id,
     });
     return {

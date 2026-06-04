@@ -1,7 +1,9 @@
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { updateCheckerRequestHandler } from "@homarr/request-handler/update-checker";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+
+const logger = createLogger({ module: "updateCheckerRouter" });
 
 export const updateCheckerRouter = createTRPCRouter({
   getAvailableUpdates: permissionRequiredProcedure.requiresPermission("admin").query(async () => {

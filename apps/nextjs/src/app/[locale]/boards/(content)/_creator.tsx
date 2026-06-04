@@ -11,8 +11,9 @@ import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
@@ -21,6 +22,8 @@ import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
+
+const logger = createLogger({ module: "createBoardContentPage" });
 
 export type Params = Record<string, unknown>;
 
@@ -38,13 +41,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
-      const session = await auth();
-      const integrations = await getIntegrationsWithPermissionsAsync(session);
-
-      const board = await getInitialBoard(await params);
+      const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      // Prefetch item data
+      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
         if (existing) {
@@ -55,11 +56,20 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         return acc;
       }, new Map<WidgetKind, Item[]>());
 
-      for (const [kind, items] of itemsMap) {
-        await prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-          logger.error(new Error("Failed to prefetch widget", { cause: error }));
-        });
-      }
+      const [integrations] = await Promise.all([
+        getIntegrationsWithPermissionsAsync(session),
+        ...Array.from(itemsMap).map(([kind, items]) =>
+          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
+            logger.error(
+              new ErrorWithMetadata(
+                "Failed to prefetch widget",
+                { widgetKind: kind, itemCount: items.length },
+                { cause: error },
+              ),
+            );
+          }),
+        ),
+      ]);
 
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>

@@ -1,13 +1,12 @@
-import Database from "better-sqlite3";
+import { createDb } from "@homarr/core/infrastructure/db";
 
-import { database } from "./driver";
+import { schema } from "./schema";
 
 export * from "drizzle-orm";
+export type { HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 
-export const db = database;
+export const db = createDb(schema);
 
 export type Database = typeof db;
-export type { HomarrDatabaseMysql } from "./driver";
 
-export { createId } from "@paralleldrive/cuid2";
 export { handleDiffrentDbDriverOperationsAsync as handleTransactionsAsync } from "./transactions";

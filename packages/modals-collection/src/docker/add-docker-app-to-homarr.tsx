@@ -1,5 +1,5 @@
 import { Avatar, Button, Group, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -21,7 +21,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
     {
       initialValues: {
         containerUrls: innerProps.selectedContainers.map((container) => {
-          if (container.ports[0]) {
+          if (Array.isArray(container.ports) && container.ports[0]) {
             return `http://${container.ports[0].IP}:${container.ports[0].PublicPort}`;
           }
 
@@ -58,7 +58,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
   };
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+      <LoadingOverlay visible={isPending} />
       <Stack>
         <List spacing={"xs"}>
           {innerProps.selectedContainers.map((container, index) => (

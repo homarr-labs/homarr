@@ -1,64 +1,119 @@
 import dayjs from "dayjs";
 import { Octokit } from "octokit";
-import { compareSemVer, isValidSemVer } from "semver-parser";
+import { compareSemVer, isValidSemVer, parseSemVer } from "semver-parser";
 
-import { fetchWithTimeout } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { env } from "@homarr/common/env";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
 import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
 
 import packageJson from "../../../package.json";
 
+const logger = createLogger({ module: "updateCheckerRequestHandler" });
+
 export const updateCheckerRequestHandler = createCachedRequestHandler({
   queryKey: "homarr-update-checker",
-  cacheDuration: dayjs.duration(1, "hour"),
+  cacheDuration: dayjs.duration(1, "day"),
+  fallbackToStaleOnError: true,
   async requestAsync(_) {
-    const octokit = new Octokit({
-      request: {
-        fetch: fetchWithTimeout,
-      },
-    });
-    const releases = await octokit.rest.repos.listReleases({
-      owner: "homarr-labs",
-      repo: "homarr",
-    });
-
-    const currentVersion = (packageJson as { version: string }).version;
-    const availableReleases = [];
-
-    for (const release of releases.data) {
-      if (!isValidSemVer(release.tag_name)) {
-        logger.warn(`Unable to parse semantic tag '${release.tag_name}'. Update check might not work.`);
-        continue;
-      }
-
-      availableReleases.push(release);
-    }
-
-    const availableNewerReleases = availableReleases
-      .filter((release) => compareSemVer(release.tag_name, currentVersion) > 0)
-      .sort((releaseA, releaseB) => compareSemVer(releaseB.tag_name, releaseA.tag_name));
-    if (availableNewerReleases.length > 0) {
-      logger.info(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        `Update checker found a new available version: ${availableReleases[0]!.tag_name}. Current version is ${currentVersion}`,
-      );
-    } else {
-      logger.debug(`Update checker did not find any available updates. Current version is ${currentVersion}`);
-    }
-
     return {
-      availableUpdates: availableNewerReleases.map((release) => ({
-        name: release.name,
-        contentHtml: release.body_html,
-        url: release.html_url,
-        tagName: release.tag_name,
-      })),
+      availableUpdates: await getAvailableUpdatesAsync(packageJson.version),
     };
   },
   createRedisChannel() {
     return createChannelWithLatestAndEvents<{
-      availableUpdates: { name: string | null; contentHtml?: string; url: string; tagName: string }[];
+      availableUpdates: Update[];
     }>("homarr:update");
   },
 });
+
+interface Update {
+  name: string | null;
+  contentHtml?: string;
+  url: string;
+  tagName: string;
+  isPrerelease: boolean;
+}
+
+const isPrereleaseTag = (tagName: string) => {
+  try {
+    const parsed = parseSemVer(tagName);
+    return Boolean(parsed.pre?.length);
+  } catch {
+    return false;
+  }
+};
+
+export const getAvailableUpdatesAsync = async (currentVersion: string) => {
+  if (env.NO_EXTERNAL_CONNECTION) return [];
+
+  if (!isValidSemVer(currentVersion)) {
+    throw new ErrorWithMetadata("Unable to check for updates due to non semantic current version", {
+      currentVersion,
+    });
+  }
+
+  const octokit = new Octokit({
+    request: {
+      fetch: fetchWithTrustedCertificatesAsync,
+    },
+    throttle: { enabled: false },
+  });
+
+  const isCurrentPrerelease = isPrereleaseTag(currentVersion);
+
+  const releases = await octokit.rest.repos.listReleases({
+    owner: "homarr-labs",
+    repo: "homarr",
+  });
+
+  const { skippedTags, semanticReleases } = releases.data
+    .map((release) => ({
+      name: release.name,
+      contentHtml: release.body_html,
+      url: release.html_url,
+      tagName: release.tag_name,
+      isPrerelease: release.prerelease,
+    }))
+    .reduce(
+      (prev, curr) => {
+        if (!isValidSemVer(curr.tagName)) {
+          prev.skippedTags.push(curr.tagName);
+          return prev;
+        }
+
+        prev.semanticReleases.push(curr);
+        return prev;
+      },
+      { semanticReleases: [] as Update[], skippedTags: [] as string[] },
+    );
+
+  if (skippedTags.length > 0) {
+    logger.warn(
+      "Some releases were skipped during the update check because their tag name is not a valid semantic version",
+      {
+        skippedTags: skippedTags.join(","),
+      },
+    );
+  }
+
+  const availableUpdates = semanticReleases
+    .filter((release) => isCurrentPrerelease || !release.isPrerelease)
+    .filter((release) => compareSemVer(release.tagName, currentVersion) > 0)
+    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName));
+
+  if (availableUpdates.length === 0) {
+    logger.debug("No available updates found", { currentVersion });
+    return [];
+  }
+
+  logger.info("Found available updates", {
+    version: availableUpdates[0]?.tagName,
+    count: availableUpdates.length,
+    currentVersion,
+  });
+
+  return availableUpdates;
+};

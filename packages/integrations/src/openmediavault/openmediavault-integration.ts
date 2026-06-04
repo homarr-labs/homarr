@@ -1,24 +1,25 @@
 import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { HealthMonitoring } from "../types";
+import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
+import type { SystemHealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
-const localLogger = logger.child({ module: "OpenMediaVaultIntegration" });
+const logger = createLogger({ module: "openMediaVaultIntegration" });
 
 type SessionStoreValue =
   | { type: "header"; sessionId: string }
   | { type: "cookie"; loginToken: string; sessionId: string };
 
-export class OpenMediaVaultIntegration extends Integration {
+export class OpenMediaVaultIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   private readonly sessionStore: SessionStore<SessionStoreValue>;
 
   constructor(integration: IntegrationInput) {
@@ -26,7 +27,7 @@ export class OpenMediaVaultIntegration extends Integration {
     this.sessionStore = createSessionStore(integration);
   }
 
-  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+  public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const systemResponses = await this.makeAuthenticatedRpcCallAsync("system", "getInformation");
     const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync(
       "filesystemmgmt",
@@ -61,6 +62,8 @@ export class OpenMediaVaultIntegration extends Integration {
     const smart = smartResult.data.response.map((smart) => ({
       deviceName: smart.devicename,
       temperature: smart.temperature,
+      // https://github.com/openmediavault/openmediavault/blob/2eb871d05cec6ff49603134d3acead561da01e4d/deb/openmediavault/usr/share/php/openmediavault/system/storage/smartinformation.inc#L592-L605
+      healthy: smart.overallstatus === "GOOD",
       overallStatus: smart.overallstatus,
     }));
 
@@ -68,9 +71,11 @@ export class OpenMediaVaultIntegration extends Integration {
       version: systemResult.data.response.version,
       cpuModelName: systemResult.data.response.cpuModelName ?? "Unknown CPU",
       cpuUtilization: systemResult.data.response.cpuUtilization,
-      memUsed: systemResult.data.response.memUsed,
-      memAvailable: systemResult.data.response.memAvailable,
+      memUsedInBytes: Number(systemResult.data.response.memUsed),
+      memAvailableInBytes: Number(systemResult.data.response.memAvailable),
       uptime: systemResult.data.response.uptime,
+      /* real-time traffic monitoring is not available over the RPC API from OMV */
+      network: null,
       loadAverage: {
         "1min": systemResult.data.response.loadAverage["1min"],
         "5min": systemResult.data.response.loadAverage["5min"],
@@ -81,6 +86,7 @@ export class OpenMediaVaultIntegration extends Integration {
       cpuTemp: cpuTempResult.success ? cpuTempResult.data.response.cputemp : undefined,
       fileSystem,
       smart,
+      gpu: [], // OpenMediaVault does not expose GPU monitoring via its RPC API.
     };
   }
 
@@ -148,13 +154,13 @@ export class OpenMediaVaultIntegration extends Integration {
     const storedSession = await this.sessionStore.getAsync();
 
     if (storedSession) {
-      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      logger.debug("Using stored session for request", { integrationId: this.integration.id });
       const response = await callback(storedSession);
       if (response.status !== 401) {
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const session = await this.getSessionAsync();

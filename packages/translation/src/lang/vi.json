@@ -2,77 +2,77 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Chào mừng đến với Homarr",
+        "subtitle": "Hãy bắt đầu cài đặt ứng dụng Homarr của bạn.",
+        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt ứng dụng Homarr của mình.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Bắt đầu từ đầu",
+          "importOldmarr": "Nhập dữ liệu từ Homarr phiên bản trước 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Nhập dữ liệu",
+        "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản Homarr có sẵn.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Kéo tệp tin zip vào đây hoặc nhấp chuột để chọn",
+          "description": "Tệp tin zip đã tải lên sẽ được xử lý và bạn sẽ có thể chọn những gì bạn muốn nhập"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Thay đổi tập tin"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Nhập cài đặt",
+          "description": "Cấu hình hành vi nhập dữ liệu"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Tìm thấy {count} bảng",
+          "description": "Chọn tất cả các bảng với kích thước bạn muốn nhập",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Chọn tất cả",
+            "unselectAll": "Bỏ chọn tất cả"
           }
         },
         "summary": {
           "title": "",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Xác nhận nhập và tiếp tục"
           },
           "entities": {
             "apps": "Ứng dụng",
             "boards": "Bảng",
-            "integrations": "",
+            "integrations": "Tích hợp",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Nhập token nhập",
           "field": {
             "token": {
               "label": "Mã thông báo",
-              "description": ""
+              "description": "Nhập token nhập được hiển thị từ phiên bản homarr trước đó của bạn"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token không hợp lệ",
+              "message": "Token bạn nhập không đúng"
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Người dùng quản trị",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã tạo người dùng",
+            "message": "Người dùng đã được tạo thành công"
           },
           "error": {
-            "title": ""
+            "title": "Tạo người dùng không thành công"
           }
         }
       },
@@ -81,70 +81,70 @@
         "subtitle": "",
         "form": {
           "name": {
-            "label": "",
+            "label": "Tên nhóm",
             "description": ""
           }
         }
       },
       "settings": {
         "title": "Cài đặt",
-        "subtitle": ""
+        "subtitle": "Cấu hình cài đặt máy chủ."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
+        "title": "Hoàn tất cài đặt",
+        "subtitle": "Bạn đã sẵn sàng để tiếp tục!",
         "description": "",
         "action": {
           "goToBoard": "",
           "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "inviteUser": "Mời người dùng khác",
+          "docs": "Đọc tài liệu hướng dẫn"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Trở lại từ đầu"
   },
   "user": {
     "title": "Người dùng",
     "name": "Người dùng",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Đăng nhập vào tài khoản của bạn",
+        "subtitle": "Chào mừng trở lại! Hãy nhập thông tin đăng nhập của bạn"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Tham gia Homarr",
+        "subtitle": "Chào mừng đến với Homarr! Hãy tạo tài khoản của bạn",
+        "description": "Bạn được mời bởi {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Cài đặt Homarr mới",
+        "subtitle": "Hãy tạo tài khoản quản trị ban đầu"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Đã xác minh"
       },
       "username": {
         "label": "Tên người dùng"
       },
       "password": {
         "label": "Mật khẩu",
-        "requirement": {
-          "length": "",
+        "suggestion": {
+          "length": "Bao gồm ít nhất 8 kí tự",
           "lowercase": "Bao gồm chữ thường",
           "uppercase": "Bao gồm chữ in hoa",
           "number": "Bao gồm số",
-          "special": ""
+          "special": "Bao gồm kí tự đặc biệt"
         }
       },
       "passwordConfirm": {
         "label": "Xác nhận mật khẩu"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Mật khẩu trước đây"
       },
       "homeBoard": {
         "label": ""
@@ -153,31 +153,34 @@
         "label": ""
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Công cụ tìm kiếm mặc định"
       },
       "openSearchInNewTab": {
+        "label": "Mở kết quả tìm kiếm trong thẻ mới"
+      },
+      "ddgBangs": {
         "label": ""
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Tên người dùng đã được sử dụng"
     },
     "action": {
       "login": {
         "label": "Đăng nhập",
-        "labelWith": "",
+        "labelWith": "Đăng nhập với {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đăng nhập thành công",
+            "message": "Bạn đã được đăng nhập"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Đăng nhập không thành công",
+            "message": "Đăng nhập thất bại"
           }
         },
         "forgotPassword": {
-          "label": "",
+          "label": "Bạn đã quên mật khẩu?",
           "description": ""
         }
       },
@@ -186,23 +189,23 @@
         "notification": {
           "success": {
             "title": "Tài khoản đã được tạo",
-            "message": ""
+            "message": "Vui lòng đăng nhập để tiếp tục"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Tạo tài khoản không thành công",
+            "message": "Không thể tạo tài khoản bạn được"
           }
         }
       },
       "create": "Tạo người dùng",
       "changePassword": {
-        "label": "",
+        "label": "Thay đổi mật khẩu",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Thay đổi mật khẩu thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi mật khẩu"
           }
         }
       },
@@ -219,20 +222,20 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Cài đặt tìm kiếm đã được thay đổi thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi cài đặt tìm kiếm"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ngày đầu tiên của tuần đã được thay đổi thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi ngày đầu tiên của tuần"
           }
         }
       },
@@ -246,36 +249,7 @@
           }
         }
       },
-      "manageAvatar": {
-        "changeImage": {
-          "label": "",
-          "notification": {
-            "success": {
-              "message": ""
-            },
-            "error": {
-              "message": ""
-            },
-            "toLarge": {
-              "title": "",
-              "message": ""
-            }
-          }
-        },
-        "removeImage": {
-          "label": "",
-          "confirm": "",
-          "notification": {
-            "success": {
-              "message": ""
-            },
-            "error": {
-              "message": ""
-            }
-          }
-        }
-      },
-      "editProfile": {
+      "changeDdgBangs": {
         "notification": {
           "success": {
             "message": ""
@@ -285,27 +259,66 @@
           }
         }
       },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "Thay đổi hình ảnh",
+          "notification": {
+            "success": {
+              "message": "Thay đổi hình ảnh thành công"
+            },
+            "error": {
+              "message": "Không thể thay đổi hình ảnh"
+            },
+            "toLarge": {
+              "title": "Hình ảnh quá lớn",
+              "message": "Kích thước tối đa của ảnh là {size}"
+            }
+          }
+        },
+        "removeImage": {
+          "label": "Xóa ảnh",
+          "confirm": "Bạn có chắc chắn muốn xoá hình ảnh này không?",
+          "notification": {
+            "success": {
+              "message": "Hình ảnh được xóa thành công"
+            },
+            "error": {
+              "message": "Không thể xóa hình ảnh"
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": "Hô sơ được cập nhật thành công"
+          },
+          "error": {
+            "message": "Không thể cập nhật hồ sơ"
+          }
+        }
+      },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Xóa người dùng vĩnh viễn",
+        "description": "Xóa người dùng này và những cài đặt cá nhân của họ. Hành động này sẽ không xóa các bảng. Người dùng bị xóa sẽ không nhận thông báo.",
+        "confirm": "Bạn có chắc chắn muốn xóa tài khoản {username} cùng với các cài đặt?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Chọn tài khoản",
+        "notFound": "Không tìm thấy tài khoản"
       },
       "transfer": {
-        "label": ""
+        "label": "Chọn chủ sở hữu mới"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Các nhóm",
+    "name": "Nhóm",
+    "search": "Tìm một nhóm",
     "field": {
       "name": "Tên",
-      "members": "",
+      "members": "Thành viên",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -320,8 +333,8 @@
         "title": "Quản trị viên",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Quản trị viên",
+            "description": "Thành viên với quyền này có toàn quyền truy cập vào các tính năng và cài đặt"
           }
         }
       },
@@ -329,11 +342,11 @@
         "title": "Ứng dụng",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tạo ứng dụng",
+            "description": "Cho phép thành viên tạo ứng dụng"
           },
           "use-all": {
-            "label": "",
+            "label": "Sử dụng tất cả các ứng dụng",
             "description": ""
           },
           "modify-all": {
@@ -342,7 +355,7 @@
           },
           "full-all": {
             "label": "",
-            "description": ""
+            "description": "Cho phép thành viên quản lý, tạo và xóa mọi ứng dụng"
           }
         }
       },
@@ -396,34 +409,34 @@
             "description": ""
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Xem tất cả media",
+            "description": "Cho phép thành viên xem tất cả media"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Toàn quyền truy cập media",
+            "description": "Cho phép thành viên quản lý và xóa mọi media"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Khác",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Xem nhật ký máy",
+            "description": "Cho phép thành viên xem nhật ký máy"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Công cụ tìm kiếm",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tạo công cụ tìm kiếm",
+            "description": "Cho phép thành viên nhóm này tạo công cụ tìm kiếm"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Sửa đổi tất cả công cụ tìm kiếm",
+            "description": "Cho phép thành viên nhóm này sửa đổi tất cả công cụ tìm kiếm"
           },
           "full-all": {
             "label": "",
@@ -441,23 +454,23 @@
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nhóm mới",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã tạo nhóm thành công"
           },
           "error": {
-            "message": ""
+            "message": "Nhóm này không thể tạo được"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Chuyển quyền sở hữu",
+        "description": "Chuyển quyền sở hữu nhóm này cho một người dùng khác",
+        "confirm": "Bạn chắc chắn muốn chuyển quyền sở hữu nhóm {name} cho {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã chuyển thành công quyền sở hữu nhóm {group} cho {username}"
           },
           "error": {
             "message": ""
@@ -465,19 +478,19 @@
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Thêm thành viên vào nhóm"
       },
       "removeMember": {
-        "label": "",
+        "label": "Xóa thành viên khỏi nhóm",
         "confirm": ""
       },
       "delete": {
-        "label": "",
+        "label": "Xóa nhóm",
         "description": "",
-        "confirm": "",
+        "confirm": "Bạn chắc chắn muốn xóa nhóm {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã xóa nhóm {name} thành công"
           },
           "error": {
             "message": ""
@@ -527,31 +540,31 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Thay đổi vị trí thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi vị trí"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Nhóm mặc định",
+      "description": "{name} - Tất cả những người dùng đã đăng nhập"
     }
   },
   "app": {
-    "search": "",
+    "search": "Tim một ứng dụng",
     "page": {
       "list": {
         "title": "Ứng dụng",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Chưa có ứng dụng nào cả",
+          "action": "Tạo ứng dụng của bạn trước"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ứng dụng mới",
         "notification": {
           "success": {
             "title": "",
@@ -596,30 +609,30 @@
         "label": "Tên"
       },
       "description": {
-        "label": ""
+        "label": "Mô tả"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "",
-          "description": ""
+          "description": "Hữu ích nếu Homarr có thể truy cập trực tiếp bằng tên máy chủ nội bộ hoặc mạng để tránh sử dụng băng thông của ISP"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
-        "search": "",
-        "noResults": "",
-        "action": "",
+        "label": "Chọn ứng dụng",
+        "notFound": "Không tìm thấy ứng dụng",
+        "search": "Tìm một ứng dụng",
+        "noResults": "Không có kết quả",
+        "action": "Chọn {app}",
         "title": ""
       },
       "create": {
-        "title": "",
-        "description": "",
+        "title": "Tạo ứng dụng mới",
+        "description": "Tạo ứng dụng mới",
         "action": ""
       },
       "add": ""
@@ -645,6 +658,21 @@
             "title": "",
             "message": ""
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +685,13 @@
           "error": {
             "title": "",
             "message": ""
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -680,14 +715,17 @@
         "label": "Tên"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
+        "label": "Tạo công cụ tìm kiếm",
         "description": ""
       },
+      "app": {
+        "sectionTitle": ""
+      },
       "createApp": {
-        "label": "",
+        "label": "Tạo ứng dụng",
         "description": ""
       },
       "appHref": {
@@ -699,8 +737,8 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Kiểm tra kết nối và tạo",
+        "edit": "Kiểm tra kết nối và lưu"
       },
       "error": {
         "common": {
@@ -709,11 +747,11 @@
           }
         },
         "unknown": {
-          "title": "",
+          "title": "Lỗi không xác định",
           "description": ""
         },
         "parse": {
-          "title": "",
+          "title": "Lỗi cú pháp",
           "description": ""
         },
         "authorization": {
@@ -887,7 +925,7 @@
           "message": ""
         },
         "invalidJson": {
-          "title": "",
+          "title": "JSON không hợp lệ",
           "message": ""
         },
         "wrongPath": {
@@ -934,6 +972,38 @@
           "newLabel": ""
         },
         "realm": {
+          "label": "",
+          "newLabel": ""
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": "Chủ đề mới"
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
           "label": "",
           "newLabel": ""
         }
@@ -984,15 +1054,20 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
+    "success": "",
     "beta": "",
     "error": "Lỗi",
     "action": {
       "add": "Thêm",
       "apply": "Áp dụng",
-      "backToOverview": "",
+      "backToOverview": "Trở về mục tổng quan",
+      "change": "",
       "create": "Tạo nên",
       "createAnother": "",
       "edit": "Sửa",
@@ -1012,7 +1087,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Thử lại",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1021,6 +1098,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "",
         "dark": ""
       }
@@ -1066,7 +1144,7 @@
     "userAvatar": {
       "menu": {
         "switchToDarkMode": "",
-        "switchToLightMode": "",
+        "switchToLightMode": "Đổi qua chế độ nền sáng",
         "management": "",
         "preferences": "Cá nhân hoá",
         "logout": "",
@@ -1079,6 +1157,9 @@
     "dangerZone": "Khu vực nguy hiểm",
     "noResults": "Không có kết quả",
     "unsavedChanges": "",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "",
       "hide": ""
@@ -1112,6 +1193,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1122,6 +1209,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1164,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Đổi vị trí"
+          "changePosition": "Đổi vị trí",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1249,11 +1340,26 @@
         "showTitle": {
           "label": ""
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1439,6 +1545,17 @@
         "offline": ""
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Ghi chú",
       "description": "",
@@ -1498,7 +1615,44 @@
         "rows": "Dòng",
         "width": "Chiều rộng",
         "height": "Chiều cao"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
+    },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
     },
     "iframe": {
       "name": "",
@@ -1530,6 +1684,9 @@
         },
         "allowGeolocation": {
           "label": "Cho phép định vị"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1650,6 +1807,9 @@
     "calendar": {
       "name": "Lịch",
       "description": "",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Loại phát hành Radarr",
@@ -1683,6 +1843,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Vị trí thời tiết"
@@ -1755,6 +1918,9 @@
           "label": ""
         },
         "memory": {
+          "label": ""
+        },
+        "gpu": {
           "label": ""
         },
         "showUptime": {
@@ -1841,8 +2007,210 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
+        "internalServerError": ""
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
         "internalServerError": ""
       }
     },
@@ -1920,8 +2288,72 @@
         "currentlyPlaying": "",
         "user": "",
         "name": "",
-        "id": ""
+        "id": "",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "",
@@ -2070,6 +2502,35 @@
       },
       "globalRatio": ""
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "",
       "description": "Xem danh sách các yêu cầu đa phương tiện từ Overseerr hoặc Jellyseerr của bạn",
@@ -2087,8 +2548,11 @@
         "unknown": "Không rõ",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Một phần",
-        "available": "Khả dụng"
+        "available": "Khả dụng",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "",
@@ -2195,6 +2659,12 @@
         },
         "maximumAmountPosts": {
           "label": ""
+        },
+        "hideDescription": {
+          "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2217,6 +2687,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2706,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2281,7 +2756,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2291,14 +2770,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2356,6 +2841,145 @@
     "networkController": {
       "error": {
         "internalServerError": ""
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "gpu": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "gpu": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -2541,6 +3165,9 @@
         "label": ""
       },
       "iconColor": {
+        "label": ""
+      },
+      "clearColor": {
         "label": ""
       },
       "customCss": {
@@ -2733,7 +3360,7 @@
         "boards": "Bảng",
         "apps": "Ứng dụng",
         "integrations": "",
-        "searchEngies": "",
+        "searchEngies": "Công cụ tìm kiếm",
         "medias": "",
         "users": {
           "label": "Người dùng",
@@ -2775,13 +3402,19 @@
           "invite": "Mời",
           "integration": "",
           "app": "Ứng dụng",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Bảng",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -2825,6 +3458,9 @@
           "public": "",
           "private": ""
         },
+        "noResults": {
+          "title": ""
+        },
         "modal": {
           "createBoard": {
             "field": {
@@ -2853,7 +3489,7 @@
                   "mobile": ""
                 }
               },
-              "search": "",
+              "search": "Tìm",
               "firstDayOfWeek": "Ngày đầu tiên trong tuần",
               "accessibility": "Trợ năng"
             }
@@ -2954,7 +3590,7 @@
           },
           "members": {
             "title": "",
-            "search": "",
+            "search": "Tìm một thành viên",
             "notFound": ""
           },
           "permissions": {
@@ -3034,10 +3670,17 @@
               }
             }
           },
-          "search": {
+          "user": {
             "title": "",
-            "defaultSearchEngine": {
+            "enableGravatar": {
               "label": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "Tìm",
+            "defaultSearchEngine": {
+              "label": "Công cụ tìm kiếm mặc định cho toàn hệ thống",
               "description": ""
             }
           },
@@ -3046,6 +3689,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
+                "auto": "",
                 "light": "",
                 "dark": ""
               }
@@ -3065,10 +3709,14 @@
           "status": {
             "idle": "",
             "running": "Đang chạy",
-            "error": "Lỗi"
+            "error": "Lỗi",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
+              "label": ""
+            },
+            "timetable": {
               "label": ""
             },
             "iconsUpdater": {
@@ -3110,9 +3758,6 @@
             "dnsHole": {
               "label": ""
             },
-            "sessionCleanup": {
-              "label": ""
-            },
             "updateChecker": {
               "label": ""
             },
@@ -3122,8 +3767,103 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            },
+            "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3175,9 +3915,28 @@
             "title": "",
             "subtitle": ""
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "",
             "subtitle": ""
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3220,6 +3979,9 @@
       },
       "ports": {
         "label": "Cổng"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -3632,6 +4394,9 @@
       },
       "tools": {
         "label": "Công cụ",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },
@@ -3682,7 +4447,7 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Không tìm được gì cả",
     "error": {
       "fetch": ""
     },
@@ -3743,6 +4508,7 @@
             "title": "",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "",
                 "dark": ""
               },
@@ -3794,6 +4560,14 @@
         "group": {
           "searchEngine": {
             "title": "",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
@@ -4154,6 +4928,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

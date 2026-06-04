@@ -17,6 +17,17 @@ vi.mock("@homarr/db", async (importActual) => {
   };
 });
 
+vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
+  return {
+    ...actual,
+    getTrustedCertificateHostnamesAsync: vi.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    }),
+  };
+});
+
 const DEFAULT_PASSWORD = "12341234";
 const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
 
@@ -207,6 +218,7 @@ const createPiHoleIntegrationV5 = (container: StartedTestContainer, apiKey: stri
     ],
     name: "Pi hole",
     url: `http://${container.getHost()}:${container.getMappedPort(80)}`,
+    externalUrl: null,
   });
 };
 
@@ -233,5 +245,6 @@ const createPiHoleIntegrationV6 = (container: StartedTestContainer, apiKey: stri
     ],
     name: "Pi hole",
     url: `http://${container.getHost()}:${container.getMappedPort(80)}`,
+    externalUrl: null,
   });
 };

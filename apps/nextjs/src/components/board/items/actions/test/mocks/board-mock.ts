@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 
 import type { Board, DynamicSection, EmptySection, Item, Section } from "~/app/[locale]/boards/_types";
 import { DynamicSectionMockBuilder } from "./dynamic-section-mock";
@@ -34,6 +34,7 @@ export class BoardMockBuilder {
         id: createId(),
         image: null,
         name: "User",
+        email: null,
       },
       groupPermissions: [],
       userPermissions: [],

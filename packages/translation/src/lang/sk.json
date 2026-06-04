@@ -132,7 +132,7 @@
       },
       "password": {
         "label": "Heslo",
-        "requirement": {
+        "suggestion": {
           "length": "Obsahuje aspoň 8 znakov",
           "lowercase": "Zahŕňa malé písmeno",
           "uppercase": "Zahŕňa veľké písmená",
@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Otvoriť výsledky vyhľadávania na novej karte"
+      },
+      "ddgBangs": {
+        "label": ""
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Nemožno prepínať ikony ping"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
           }
         }
       },
@@ -645,6 +658,21 @@
             "title": "Vytvorenie zlyhalo",
             "message": "Integráciu nebolo možné vytvoriť"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +685,13 @@
           "error": {
             "title": "Nie je možné použiť zmeny",
             "message": "Integráciu sa nepodarilo uložiť"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +720,9 @@
       "attemptSearchEngineCreation": {
         "label": "Vytvorte vyhľadávače",
         "description": "Integrácia \"{kind}\" môže byť použitá s vyhľadávačmi.  Toto začiarknite, ak chcete automaticky nakonfigurovať vyhľadávací nástroj."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "Vytvoriť aplikáciu",
@@ -936,6 +974,38 @@
         "realm": {
           "label": "Ríša",
           "newLabel": "Nová ríša"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -984,15 +1054,20 @@
       "open": {
         "label": "Otvoriť médiá"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
+    "success": "",
     "beta": "Beta",
     "error": "Chyba",
     "action": {
       "add": "Pridať",
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
+      "change": "",
       "create": "Vytvoriť",
       "createAnother": "Vytvorte a začnite odznova",
       "edit": "Upraviť",
@@ -1012,7 +1087,9 @@
       "checkoutDocs": "Pozrite si dokumentáciu",
       "checkLogs": "Ďalšie podrobnosti nájdete v protokoloch",
       "tryAgain": "Skúste znova",
-      "loading": "Nahrávam"
+      "loading": "Nahrávam",
+      "show": "",
+      "hide": ""
     },
     "here": "tu",
     "iconPicker": {
@@ -1021,6 +1098,7 @@
     },
     "colorScheme": {
       "options": {
+        "auto": "",
         "light": "Svetlý",
         "dark": "Tmavý"
       }
@@ -1079,6 +1157,9 @@
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nenašli sa žiadne výsledky",
     "unsavedChanges": "Máš neuložené zmeny!",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "Zobraziť náhľad",
       "hide": "Skryť náhľad"
@@ -1112,6 +1193,12 @@
           "groupNameTaken": "Názov skupiny je už obsadený"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1123,6 +1210,9 @@
       "option": {
         "title": {
           "label": "Názov"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Farba okraja"
@@ -1164,7 +1254,8 @@
       "menu": {
         "label": {
           "create": "Nová kategória",
-          "changePosition": "Zmeniť pozíciu"
+          "changePosition": "Zmeniť pozíciu",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1249,11 +1340,26 @@
         "showTitle": {
           "label": "Zobraziť názov aplikácie"
         },
-        "showDescriptionTooltip": {
-          "label": "Zobrazenie nápovedy k popisu"
-        },
         "pingEnabled": {
           "label": "Povoliť jednoduchý ping"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1439,6 +1545,17 @@
         "offline": "Odpojené"
       }
     },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
     "notebook": {
       "name": "Poznámkový blok",
       "description": "Jednoduchý widget poznámkového bloku, ktorý podporuje markdown",
@@ -1498,7 +1615,44 @@
         "rows": "Riadky",
         "width": "Šírka",
         "height": "Výška"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
+    },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "",
+      "saveFailed": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -1530,6 +1684,9 @@
         },
         "allowGeolocation": {
           "label": "Povolenie geografickej lokalizácie"
+        },
+        "allowModals": {
+          "label": ""
         }
       },
       "error": {
@@ -1650,6 +1807,9 @@
     "calendar": {
       "name": "Kalendár",
       "description": "Zobrazte udalosti z vašich integrácií v zobrazení kalendára za určité relatívne časové obdobie",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Typ Radarr releasu",
@@ -1683,6 +1843,9 @@
         "showCurrentWindSpeed": {
           "label": "Zobraziť aktuálnu rýchlosť vetra",
           "description": "Len za aktuálneho počasia"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Poloha počasia"
@@ -1756,6 +1919,9 @@
         },
         "memory": {
           "label": "Zobraziť informácie o pamäti"
+        },
+        "gpu": {
+          "label": ""
         },
         "showUptime": {
           "label": "Zobraziť Uptime"
@@ -1841,9 +2007,211 @@
     "dockerContainers": {
       "name": "Docker stav",
       "description": "Štatistiky vašich kontajnerov (Túto miniaplikáciu je možné pridať iba s oprávneniami správcu)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Nepodarilo sa načítať štatistiky kontajnerov"
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "",
+        "totalUsers": "",
+        "transcodes": "",
+        "bandwidth": ""
+      },
+      "streams": {
+        "empty": "",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "",
+        "empty": "",
+        "watched": "",
+        "partial": ""
+      },
+      "violations": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": ""
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1920,8 +2288,72 @@
         "currentlyPlaying": "Momentálne sa prehráva",
         "user": "Používateľ",
         "name": "Názov",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "Download klient",
@@ -2070,6 +2502,35 @@
       },
       "globalRatio": "Globálny pomer"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Zoznam mediálnych požiadaviek",
       "description": "Zobrazenie zoznamu všetkých mediálnych požiadaviek z Overseerr alebo Jellyseerr",
@@ -2087,8 +2548,11 @@
         "unknown": "Neznámy",
         "pending": "Čakajúce",
         "processing": "Spracovanie",
+        "requested": "",
         "partiallyAvailable": "Čiastočný",
-        "available": "K dispozícii"
+        "available": "K dispozícii",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "Čakajúce",
@@ -2195,6 +2659,12 @@
         },
         "maximumAmountPosts": {
           "label": "Limit počtu príspevkov"
+        },
+        "hideDescription": {
+          "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
         }
       }
     },
@@ -2217,6 +2687,9 @@
         "showDetails": {
           "label": "Zobraziť podrobnosti"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "Najlepšie vydania",
           "description": "Maximálny počet najnovších vydaní na zobrazenie. Nula znamená žiadny limit."
@@ -2233,7 +2706,9 @@
             "listFoundImages": "Zoznam nájdených obrázkov",
             "listAlreadyImportedImages": "Zoznam už importovaných obrázkov",
             "allImagesAlreadyImported": "Všetky obrázky sú už importované",
-            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia"
+            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "Poskytovateľ"
@@ -2281,7 +2756,11 @@
           "example": {
             "label": "Príklad"
           },
-          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty"
+          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nenájdené",
@@ -2291,14 +2770,20 @@
       "starsCount": "Hviezdy",
       "forksCount": "Vidlicový",
       "issuesCount": "Problémy",
+      "markViewed": "",
       "openProjectPage": "Otvorte stránku projektu",
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
+      "projectDescription": "",
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
-        "options": {
-          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2356,6 +2841,145 @@
     "networkController": {
       "error": {
         "internalServerError": "Nepodarilo sa načítať súhrn sieťového ovládača"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": ""
+        }
+      },
+      "latestResult": "",
+      "averages": "",
+      "tests": "",
+      "recentResults": "",
+      "recentResultsSpeed": "",
+      "recentResultsPing": "",
+      "download": "",
+      "upload": "",
+      "ping": "",
+      "status": "",
+      "avgDownload": "",
+      "avgUpload": "",
+      "avgPing": "",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "gpu": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "gpu": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -2542,6 +3166,9 @@
       },
       "iconColor": {
         "label": "Farba ikony"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Vlastné css pre túto nástenku",
@@ -2775,13 +3402,19 @@
           "invite": "Pozvánky",
           "integration": "Integrácie",
           "app": "Aplikácie",
-          "group": "Skupiny"
+          "group": "Skupiny",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Dosky",
           "resources": "Zdroje",
           "authentication": "Autentifikácia",
           "authorization": "Autorizácia"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -2824,6 +3457,9 @@
         "visibility": {
           "public": "Táto tabuľa je verejná",
           "private": "Táto tabuľa je súkromná"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {
@@ -3034,6 +3670,13 @@
               }
             }
           },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
+            }
+          },
           "search": {
             "title": "Hladať",
             "defaultSearchEngine": {
@@ -3046,6 +3689,7 @@
             "defaultColorScheme": {
               "label": "Predvolená farebná schéma",
               "options": {
+                "auto": "",
                 "light": "Svetlý",
                 "dark": "Tmavý"
               }
@@ -3065,11 +3709,15 @@
           "status": {
             "idle": "Nečinný",
             "running": "Spustené",
-            "error": "Chyba"
+            "error": "Chyba",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
               "label": "Minecraft Server Stav"
+            },
+            "timetable": {
+              "label": ""
             },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
@@ -3110,9 +3758,6 @@
             "dnsHole": {
               "label": "Údaje o dierach DNS"
             },
-            "sessionCleanup": {
-              "label": "Čistenie relácie"
-            },
             "updateChecker": {
               "label": "Kontrola aktualizácií"
             },
@@ -3122,8 +3767,103 @@
             "networkController": {
               "label": "Sieťový ovládač"
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": "Docker kontajnery"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            },
+            "tracearr": {
+              "label": ""
+            },
+            "umamiActiveVisitors": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3175,9 +3915,28 @@
             "title": "Prekladatelia",
             "subtitle": "{count} prispievanie prekladmi do mnohých jazykov"
           },
+          "sponsors": {
+            "title": "",
+            "subtitle": ""
+          },
           "libraries": {
             "title": "Knižnice",
             "subtitle": "{count} používané v Homarrskom kódexe"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3220,6 +3979,9 @@
       },
       "ports": {
         "label": "Porty"
+      },
+      "host": {
+        "label": ""
       }
     },
     "action": {
@@ -3632,6 +4394,9 @@
       },
       "tools": {
         "label": "Nástroje",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },
@@ -3743,6 +4508,7 @@
             "title": "Globálne príkazy",
             "option": {
               "colorScheme": {
+                "auto": "",
                 "light": "Prepnúť na svetlý motív",
                 "dark": "Prepnúť na tmavý motív"
               },
@@ -3794,6 +4560,14 @@
         "group": {
           "searchEngine": {
             "title": "Vyhľadávače",
+            "tipDdgBangs": "",
+            "bang": {
+              "searchWithQuery": "",
+              "pressEnterToOpen": "",
+              "engineSelected": "",
+              "typeQueryToContinue": "",
+              "emptyBangHint": ""
+            },
             "children": {
               "action": {
                 "search": {
@@ -4154,6 +4928,16 @@
             "message": "Názov hostiteľa sa nepodarilo odstrániť"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

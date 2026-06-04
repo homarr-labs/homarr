@@ -8,3 +8,4 @@ export type { Docker };
 export const containerStates = ["created", "running", "paused", "restarting", "exited", "removing", "dead"] as const;
 
 export type ContainerState = (typeof containerStates)[number];
+export * from "./labels";

@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { createAdapter } from "./adapter";
 import { createSessionCallback } from "./callbacks";
@@ -17,6 +17,8 @@ import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
 import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
+
+const logger = createLogger({ module: "authConfiguration" });
 
 // See why it's unknown in the [...nextauth]/route.ts file
 export const createConfiguration = (

@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { asc, createId, eq, inArray, like } from "@homarr/db";
+import type { Session } from "@homarr/auth";
+import { createId } from "@homarr/common";
+import type { Database, InferSelectModel } from "@homarr/db";
+import { asc, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
@@ -10,7 +13,7 @@ import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
-import { canUserSeeAppAsync } from "./app/app-access-control";
+import { AppAccessControl } from "./app/app-access-control";
 
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
@@ -88,19 +91,10 @@ export const appRouter = createTRPCRouter({
     .output(selectAppSchema)
     .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .query(async ({ ctx, input }) => {
-      const app = await ctx.db.query.apps.findFirst({
-        where: eq(apps.id, input.id),
-      });
+      const repository = new AppRepository(ctx.db, ctx.session?.user ?? null);
+      const app = await repository.getByIdAsync(input.id);
 
       if (!app) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "App not found",
-        });
-      }
-
-      const canUserSeeApp = await canUserSeeAppAsync(ctx.session?.user ?? null, app.id);
-      if (!canUserSeeApp) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "App not found",
@@ -110,27 +104,28 @@ export const appRouter = createTRPCRouter({
       return app;
     }),
   byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
-    return await ctx.db.query.apps.findMany({
-      where: inArray(apps.id, input),
-    });
+    const repository = new AppRepository(ctx.db, ctx.session?.user ?? null);
+    return await repository.getByIdsAsync(input);
   }),
   create: permissionRequiredProcedure
     .requiresPermission("app-create")
     .input(appManageSchema)
-    .output(z.object({ appId: z.string() }))
+    .output(z.object({ appId: z.string() }).and(selectAppSchema))
     .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
       const id = createId();
-      await ctx.db.insert(apps).values({
+      const insertValues = {
         id,
         name: input.name,
         description: input.description,
         iconUrl: input.iconUrl,
         href: input.href,
         pingUrl: input.pingUrl === "" ? null : input.pingUrl,
-      });
+      };
+      await ctx.db.insert(apps).values(insertValues);
 
-      return { appId: id };
+      // TODO: breaking change necessary for removing appId property
+      return { appId: id, ...insertValues };
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")
@@ -184,3 +179,30 @@ export const appRouter = createTRPCRouter({
       await ctx.db.delete(apps).where(eq(apps.id, input.id));
     }),
 });
+
+type App = InferSelectModel<typeof apps>;
+
+export class AppRepository {
+  private readonly accessControl: AppAccessControl;
+
+  constructor(
+    private db: Database,
+    user: Session["user"] | null,
+  ) {
+    this.accessControl = new AppAccessControl(db, user);
+  }
+
+  public async getByIdAsync(id: string): Promise<App | null> {
+    const apps = await this.getByIdsAsync([id]);
+    return apps[0] ?? null;
+  }
+
+  public async getByIdsAsync(ids: string[]): Promise<App[]> {
+    const canUserSeeApps = await this.accessControl.canUserSeeAppsAsync(ids);
+    const dbApps = await this.db.query.apps.findMany({
+      where: inArray(apps.id, ids),
+    });
+
+    return canUserSeeApps ? dbApps : [];
+  }
+}

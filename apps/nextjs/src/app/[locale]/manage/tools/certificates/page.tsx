@@ -1,15 +1,15 @@
 import { X509Certificate } from "node:crypto";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { auth } from "@homarr/auth/next";
-import { loadCustomRootCertificatesAsync } from "@homarr/certificates/server";
 import { getMantineColor } from "@homarr/common";
+import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
@@ -79,7 +79,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
           {x509Certificates.map((cert) => (
-            <Card key={cert.fileName} withBorder>
+            <Card key={cert.fileName}>
               <Group wrap="nowrap">
                 {cert.isError ? (
                   <IconAlertTriangle

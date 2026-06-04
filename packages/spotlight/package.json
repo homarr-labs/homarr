@@ -4,10 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./styles.css": "./src/styles.css"
-  },
   "typesVersions": {
     "*": {
       "*": [
@@ -15,13 +11,16 @@
       ]
     }
   },
+  "exports": {
+    ".": "./index.ts",
+    "./styles.css": "./src/styles.css"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
@@ -33,21 +32,18 @@
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^8.1.1",
-    "@mantine/hooks": "^8.1.1",
-    "@mantine/spotlight": "^8.1.1",
-    "@tabler/icons-react": "^3.34.0",
-    "jotai": "^2.12.5",
-    "next": "15.3.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "use-deep-compare-effect": "^1.8.1"
+    "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@mantine/spotlight": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "jotai": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "use-deep-compare-effect": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.29.0",
-    "typescript": "^5.8.3"
+    "typescript": "catalog:"
   }
 }

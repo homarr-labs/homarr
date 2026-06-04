@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -13,21 +14,25 @@ import { SystemHealthMonitoring } from "./system-health";
 
 dayjs.extend(duration);
 
+const isClusterIntegration = (integration: { kind: IntegrationKind }) =>
+  integration.kind === "proxmox" || integration.kind === "mock";
+
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const [integrations] = clientApi.integration.byIds.useSuspenseQuery(props.integrationIds);
   const t = useI18n();
 
-  const proxmoxIntegrationId = integrations.find((integration) => integration.kind === "proxmox")?.id;
+  const clusterIntegrationId = integrations.find(isClusterIntegration)?.id;
 
-  if (!proxmoxIntegrationId) {
+  if (!clusterIntegrationId) {
     return <SystemHealthMonitoring {...props} />;
   }
 
   const otherIntegrationIds = integrations
+    // We want to have the mock integration also in the system tab, so we use it for both
     .filter((integration) => integration.kind !== "proxmox")
     .map((integration) => integration.id);
   if (otherIntegrationIds.length === 0) {
-    return <ClusterHealthMonitoring {...props} integrationId={proxmoxIntegrationId} />;
+    return <ClusterHealthMonitoring {...props} integrationId={clusterIntegrationId} />;
   }
 
   return (
@@ -45,7 +50,7 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
           <SystemHealthMonitoring {...props} integrationIds={otherIntegrationIds} />
         </Tabs.Panel>
         <Tabs.Panel value="cluster">
-          <ClusterHealthMonitoring integrationId={proxmoxIntegrationId} {...props} />
+          <ClusterHealthMonitoring integrationId={clusterIntegrationId} {...props} />
         </Tabs.Panel>
       </Tabs>
     </ScrollArea>

@@ -25,7 +25,11 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
   const [innerOwnerId, setInnerOwnerId] = useState(group.ownerId);
   const { openModal } = useModalAction(UserSelectModal);
   const { openConfirmModal } = useConfirmModal();
-  const { mutateAsync } = clientApi.group.transferOwnership.useMutation();
+  const { mutateAsync } = clientApi.group.transferOwnership.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync(`/manage/users/groups/${group.id}`);
+    },
+  });
 
   const handleTransfer = useCallback(() => {
     openModal(
@@ -47,7 +51,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                   userId: id,
                 },
                 {
-                  async onSuccess() {
+                  onSuccess() {
                     setInnerOwnerId(id);
                     showSuccessNotification({
                       title: tRoot("common.notification.transfer.success"),
@@ -56,7 +60,6 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                         user: name,
                       }),
                     });
-                    await revalidatePathActionAsync(`/manage/users/groups/${group.id}`);
                   },
                   onError() {
                     showErrorNotification({

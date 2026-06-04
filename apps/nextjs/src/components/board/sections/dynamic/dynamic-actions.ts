@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { dynamicSectionOptionsSchema } from "@homarr/validation/shared";

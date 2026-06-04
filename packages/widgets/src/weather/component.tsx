@@ -7,23 +7,27 @@ import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { metricToImperial } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
-  const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
-    {
-      latitude: options.location.latitude,
-      longitude: options.location.longitude,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
+  const input = {
+    latitude: options.location.latitude,
+    longitude: options.location.longitude,
+  };
+  const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const utils = clientApi.useUtils();
+  clientApi.widget.weather.subscribeAtLocation.useSubscription(input, {
+    onData: (data) => utils.widget.weather.atLocation.setData(input, data),
+  });
 
   return (
     <Stack
@@ -49,6 +53,7 @@ interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> 
 
 const DailyWeather = ({ options, weather }: WeatherProps) => {
   const t = useScopedI18n("widget.weather");
+  const tCommon = useScopedI18n("common");
 
   return (
     <>
@@ -75,7 +80,17 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         {options.showCurrentWindSpeed && (
           <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="xs">
             <IconWind size={16} />
-            <Text fz={16}>{t("currentWindSpeed", { currentWindSpeed: String(weather.current.windspeed) })}</Text>
+            <Text fz={16}>
+              {t("currentWindSpeed", {
+                currentWindSpeed: (options.useImperialSpeed
+                  ? metricToImperial(weather.current.windspeed)
+                  : weather.current.windspeed
+                ).toFixed(1),
+                unit: options.useImperialSpeed
+                  ? tCommon("unit.speed.milesPerHour")
+                  : tCommon("unit.speed.kilometersPerHour"),
+              })}
+            </Text>
           </Group>
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
@@ -177,6 +192,7 @@ function Forecast({ weather, options }: WeatherProps) {
           </HoverCard.Target>
           <HoverCard.Dropdown>
             <WeatherDescription
+              useImperialSpeed={options.useImperialSpeed}
               dateFormat={dateFormat}
               time={dayWeather.time}
               weatherCode={dayWeather.weatherCode}

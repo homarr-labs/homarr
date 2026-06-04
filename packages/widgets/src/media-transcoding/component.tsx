@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Center, Divider, Group, Pagination, SegmentedControl, Stack, Text } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
 import type { WidgetComponentProps } from "../definition";
@@ -16,6 +16,8 @@ import { StatisticsPanel } from "./panels/statistics.panel";
 import { WorkersPanel } from "./panels/workers.panel";
 
 type View = (typeof views)[number];
+
+const viewBySegmentValue = Object.fromEntries(views.map((view) => [view, view])) as Record<string, View>;
 
 const viewIcons = {
   workers: IconCpu2,
@@ -30,18 +32,23 @@ export default function MediaTranscodingWidget({
 }: WidgetComponentProps<"mediaTranscoding">) {
   const [queuePage, setQueuePage] = useState(1);
   const queuePageSize = 10;
-  const [transcodingData] = clientApi.widget.mediaTranscoding.getDataAsync.useSuspenseQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-      pageSize: queuePageSize,
-      page: queuePage,
+  const input = {
+    integrationId: integrationIds[0] ?? "",
+    pageSize: queuePageSize,
+    page: queuePage,
+  };
+  const [transcodingData] = clientApi.widget.mediaTranscoding.getDataAsync.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const utils = clientApi.useUtils();
+  clientApi.widget.mediaTranscoding.subscribeData.useSubscription(input, {
+    onData(data) {
+      utils.widget.mediaTranscoding.getDataAsync.setData(input, data);
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
+  });
 
   const [view, setView] = useState<View>(options.defaultView);
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
@@ -78,7 +85,12 @@ export default function MediaTranscodingWidget({
             };
           })}
           value={view}
-          onChange={(value) => setView(value as View)}
+          onChange={(value) => {
+            const nextView = viewBySegmentValue[value];
+            if (nextView) {
+              setView(nextView);
+            }
+          }}
           size="xs"
         />
 

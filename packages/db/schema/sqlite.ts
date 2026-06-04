@@ -28,10 +28,11 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
+
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
-  salt: text().notNull(),
   userId: text()
     .notNull()
     .references((): AnySQLiteColumn => users.id, {
@@ -46,7 +47,6 @@ export const users = sqliteTable("user", {
   emailVerified: int({ mode: "timestamp_ms" }),
   image: text(),
   password: text(),
-  salt: text(),
   provider: text().$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
@@ -58,6 +58,7 @@ export const users = sqliteTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
+  ddgBangs: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
@@ -185,6 +186,7 @@ export const integrations = sqliteTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: text().$type<IntegrationKind>().notNull(),
+    appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -479,19 +481,11 @@ export const onboarding = sqliteTable("onboarding", {
   previousStep: text().$type<OnboardingStep>(),
 });
 
-export const trustedCertificateHostnames = sqliteTable(
-  "trusted_certificate_hostname",
-  {
-    hostname: text().notNull(),
-    thumbprint: text().notNull(),
-    certificate: text().notNull(),
-  },
-  (table) => ({
-    compoundKey: primaryKey({
-      columns: [table.hostname, table.thumbprint],
-    }),
-  }),
-);
+export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
+  name: text().notNull().primaryKey(),
+  cronExpression: text().notNull(),
+  isEnabled: int({ mode: "boolean" }).default(true).notNull(),
+});
 
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
@@ -606,11 +600,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

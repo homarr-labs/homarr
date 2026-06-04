@@ -21,6 +21,12 @@ interface BoardItemContentProps {
   item: SectionItem;
 }
 
+const getOverflowFromKind = (kind: SectionItem["kind"]) => {
+  if (kind === "iframe") return "hidden";
+  if (kind === "systemResources") return "visible";
+  return undefined;
+};
+
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
@@ -36,12 +42,11 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           item.advancedOptions.customCssClasses.join(" "),
         )}
         radius={board.itemRadius}
-        withBorder
         styles={{
           root: {
             "--opacity": board.opacity / 100,
             containerType: "size",
-            overflow: item.kind === "iframe" ? "hidden" : undefined,
+            overflow: getOverflowFromKind(item.kind),
             "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
           },
         }}
@@ -102,7 +107,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
-              <WidgetError kind={item.kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+              <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
         >
@@ -111,7 +116,6 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             when={
               widgetSupportsIntegrations &&
               item.integrationIds.length === 0 &&
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />

@@ -59,6 +59,18 @@ const createColumns = (
     },
   },
   {
+    accessorKey: "host",
+    header: t("docker.field.host.label"),
+    size: 140,
+    Cell({ row }) {
+      return (
+        <Text truncate="end" title={row.original.host}>
+          {row.original.host}
+        </Text>
+      );
+    },
+  },
+  {
     accessorKey: "image",
     header: t("docker.field.containerImage.label"),
     maxSize: 200,
@@ -76,6 +88,8 @@ const createColumns = (
     accessorKey: "ports",
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
+      if (!cell.row.original.ports) return null;
+      if (!cell.row.original.ports.length) return null;
       return (
         <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
       );
@@ -93,6 +107,23 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     refetchOnReconnect: false,
   });
   const relativeTime = useTimeAgo(data.timestamp);
+  const utils = clientApi.useUtils();
+  const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
+    async onSuccess() {
+      await utils.docker.getContainers.invalidate();
+      showSuccessNotification({
+        title: tDocker("action.refresh.notification.success.title"),
+        message: tDocker("action.refresh.notification.success.message"),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        title: tDocker("action.refresh.notification.error.title"),
+        message: tDocker("action.refresh.notification.error.message"),
+      });
+    },
+  });
+
   const table = useTranslatedMantineReactTable({
     data: data.containers,
     enableDensityToggle: false,
@@ -111,35 +142,11 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     },
 
     initialState: { density: "xs", showGlobalFilter: true },
-    renderTopToolbarCustomActions: () => {
-      const utils = clientApi.useUtils();
-      const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
-        async onSuccess() {
-          await utils.docker.getContainers.invalidate();
-          showSuccessNotification({
-            title: tDocker("action.refresh.notification.success.title"),
-            message: tDocker("action.refresh.notification.success.message"),
-          });
-        },
-        onError() {
-          showErrorNotification({
-            title: tDocker("action.refresh.notification.error.title"),
-            message: tDocker("action.refresh.notification.error.message"),
-          });
-        },
-      });
-
-      return (
-        <Button
-          variant="default"
-          rightSection={<IconRefresh size="1rem" />}
-          onClick={() => mutate()}
-          loading={isPending}
-        >
-          {tDocker("action.refresh.label")}
-        </Button>
-      );
-    },
+    renderTopToolbarCustomActions: () => (
+      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+        {tDocker("action.refresh.label")}
+      </Button>
+    ),
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
       const dockerContainers = table.getSelectedRowModel().rows.map((row) => row.original);
       return (
@@ -188,7 +195,7 @@ const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => 
       <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
-      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light" radius="md">
+      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light">
         {t("addToHomarr.label")}
       </Button>
     </Group>
@@ -206,15 +213,16 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   const t = useScopedI18n("docker.action");
   const utils = clientApi.useUtils();
 
-  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation();
+  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation({
+    async onSettled() {
+      await utils.docker.getContainers.invalidate();
+    },
+  });
 
   const handleClickAsync = async () => {
     await mutateAsync(
       { ids: props.selectedIds },
       {
-        async onSettled() {
-          await utils.docker.getContainers.invalidate();
-        },
         onSuccess() {
           showSuccessNotification({
             title: t(`${props.action}.notification.success.title`),
@@ -238,7 +246,6 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
       onClick={handleClickAsync}
       loading={isPending}
       variant="light"
-      radius="md"
     >
       {t(`${props.action}.label`)}
     </Button>

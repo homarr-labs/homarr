@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { fetchApi } from "@homarr/api/client";
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";

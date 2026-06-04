@@ -1,21 +1,63 @@
-import * as ical from "node-ical";
+import type { Agent } from "https";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import ICAL from "ical.js";
+import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
+import { tzlib_get_ical_block, tzlib_get_timezones } from "timezones-ical-library";
 import { DAVClient } from "tsdav";
-import type { Dispatcher, RequestInit as UndiciFetchRequestInit } from "undici";
+import { z } from "zod";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { ResponseError } from "@homarr/common/server";
+import { createHttpsAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CalendarEvent } from "../calendar-types";
+import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+
+// Register all existing timezones
+if (ICAL.TimezoneService.count === 0) {
+  const timezones = tzlib_get_timezones() as string[];
+  for (const tzid of timezones) {
+    ICAL.TimezoneService.register(
+      new ICAL.Timezone({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-non-null-assertion
+        component: new ICAL.Component(ICAL.parse((tzlib_get_ical_block(tzid) as string[])[0]!)),
+        tzid,
+      }),
+    );
+  }
+}
+
+const notificationSchema = z.object({
+  ocs: z.object({
+    data: z.array(
+      z.object({
+        notification_id: z.number(),
+        datetime: z.string(),
+        subject: z.string(),
+        message: z.string(),
+      }),
+    ),
+  }),
+});
+
+const logger = createLogger({ module: "nextcloudIntegration" });
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
-export class NextcloudIntegration extends Integration {
+export class NextcloudIntegration extends Integration implements ICalendarIntegration, INotificationsIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const client = await this.createCalendarClientAsync(input.dispatcher);
+    const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
 
     return { success: true };
@@ -39,47 +81,113 @@ export class NextcloudIntegration extends Integration {
       )
     ).flat();
 
-    return calendarEvents.map((event): CalendarEvent => {
-      // @ts-expect-error the typescript definitions for this package are wrong
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-      const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
-      const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
+    return calendarEvents
+      .map((event) => {
+        if (typeof event.data !== "string") {
+          return [];
+        }
+        const comp = ICAL.Component.fromString(event.data);
+        const veventComponent = comp.getFirstSubcomponent("vevent");
 
-      if (!veventObject) {
-        throw new Error(`Invalid event data object: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
-      }
+        if (!veventComponent) {
+          return [];
+        }
 
-      logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
+        const veventObject = new ICAL.Event(veventComponent);
 
-      const date = veventObject.start;
+        logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
 
-      const eventUrlWithoutHost = new URL(event.url).pathname;
-      const dateInMillis = veventObject.start.valueOf();
+        const eventUrlWithoutHost = new URL(event.url).pathname;
+        const eventSlug = Buffer.from(eventUrlWithoutHost).toString("base64url");
 
-      const url = this.url(
-        `/apps/calendar/timeGridWeek/now/edit/sidebar/${Buffer.from(eventUrlWithoutHost).toString("base64url")}/${dateInMillis / 1000}`,
-      );
+        const durationMs = veventObject.duration.toSeconds() * 1000;
 
-      return {
-        name: veventObject.summary,
-        date,
-        subName: "",
-        description: veventObject.description,
-        links: [
-          {
-            href: url.toString(),
-            name: "Nextcloud",
-            logo: "/images/apps/nextcloud.svg",
-            color: undefined,
-            notificationColor: "#ff8600",
-            isDark: true,
-          },
-        ],
-      };
-    });
+        // Handle recurring events
+        let startDates: Date[];
+        if (veventObject.isRecurring()) {
+          const iterator = veventObject.iterator();
+          startDates = [];
+
+          // Iterate through occurrences within the time range
+          let next: ICAL.Time | undefined;
+          // next actually returns undefined when there are no more occurrences
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          while ((next = iterator.next())) {
+            const nextStartDate = next.isDate
+              ? next.toJSDate()
+              : next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
+            if (nextStartDate > end) break;
+            const nextEndDate = new Date(nextStartDate.getTime() + durationMs);
+            if (nextEndDate < start) continue;
+
+            startDates.push(nextStartDate);
+          }
+        } else {
+          startDates = [
+            veventObject.startDate.isDate
+              ? veventObject.startDate.toJSDate()
+              : veventObject.startDate.convertToZone(ICAL.Timezone.utcTimezone).toJSDate(),
+          ];
+        }
+
+        return startDates.map((startDate) => {
+          const endDate = new Date(startDate.getTime() + durationMs);
+          const dateInMillis = startDate.valueOf();
+
+          // Get color property from the component
+          const colorProperty = veventComponent.getFirstProperty("color");
+          const color = colorProperty?.getFirstValue() as string | undefined;
+
+          return {
+            title: veventObject.summary,
+            subTitle: null,
+            description: veventObject.description || null,
+            startDate,
+            endDate,
+            image: null,
+            location: veventObject.location || null,
+            indicatorColor: color ?? "#ff8600",
+            links: [
+              {
+                href: this.externalUrl(
+                  `/apps/calendar/timeGridWeek/now/edit/sidebar/${eventSlug}/${dateInMillis / 1000}`,
+                ).toString(),
+                name: "Nextcloud",
+                logo: "/images/apps/nextcloud.svg",
+                color: undefined,
+                isDark: true,
+              },
+            ],
+          };
+        });
+      })
+      .flat();
   }
 
-  private async createCalendarClientAsync(dispatcher?: Dispatcher) {
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const url = this.url("/ocs/v2.php/apps/notifications/api/v2/notifications", { format: "json" });
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${this.getSecretValue("username")}:${this.getSecretValue("password")}`,
+        ).toString("base64")}`,
+        "OCS-APIRequest": "true",
+      },
+    });
+
+    if (!response.ok) throw new ResponseError(response);
+
+    const json = notificationSchema.parse(await response.json());
+
+    return json.ocs.data.map((notification) => ({
+      id: String(notification.notification_id),
+      time: new Date(notification.datetime),
+      title: notification.subject,
+      body: notification.message,
+    }));
+  }
+
+  private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
       serverUrl: this.integration.url,
       credentials: {
@@ -89,9 +197,10 @@ export class NextcloudIntegration extends Integration {
       authMethod: "Basic",
       defaultAccountType: "caldav",
       fetchOptions: {
-        // We can use the undici options as the global fetch is used instead of the polyfilled.
-        dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
-      } satisfies UndiciFetchRequestInit as RequestInit,
+        // tsdav is using cross-fetch which uses node-fetch for nodejs environments.
+        // There is an agent property that is the same type as the http(s) agents of nodejs
+        agent: agent ?? (await createHttpsAgentAsync()),
+      } satisfies NodeFetchRequestInit as RequestInit,
     });
   }
 }

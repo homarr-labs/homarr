@@ -1,13 +1,14 @@
 import type { Proxmox } from "proxmox-api";
 import proxmoxApi from "proxmox-api";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IClusterHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import { ProxmoxApiErrorHandler } from "./proxmox-error-handler";
 import type {
   ComputeResourceBase,
@@ -18,8 +19,10 @@ import type {
   StorageResource,
 } from "./proxmox-types";
 
+const logger = createLogger({ module: "proxmoxIntegration" });
+
 @HandleIntegrationErrors([new ProxmoxApiErrorHandler()])
-export class ProxmoxIntegration extends Integration {
+export class ProxmoxIntegration extends Integration implements IClusterHealthMonitoringIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const proxmox = this.getPromoxApi(input.fetchAsync);
     await proxmox.nodes.$get();
@@ -30,9 +33,13 @@ export class ProxmoxIntegration extends Integration {
     const proxmox = this.getPromoxApi();
     const resources = await proxmox.cluster.resources.$get();
 
-    logger.info(
-      `Found ${resources.length} resources in Proxmox cluster node=${resources.filter((resource) => resource.type === "node").length} lxc=${resources.filter((resource) => resource.type === "lxc").length} qemu=${resources.filter((resource) => resource.type === "qemu").length} storage=${resources.filter((resource) => resource.type === "storage").length}`,
-    );
+    logger.info("Found resources in Proxmox cluster", {
+      total: resources.length,
+      node: resources.filter((resource) => resource.type === "node").length,
+      lxc: resources.filter((resource) => resource.type === "lxc").length,
+      qemu: resources.filter((resource) => resource.type === "qemu").length,
+      storage: resources.filter((resource) => resource.type === "storage").length,
+    });
 
     const mappedResources = resources.map(mapResource).filter((resource) => resource !== null);
     return {

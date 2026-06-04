@@ -1,5 +1,5 @@
 import type { DayOfWeek } from "@mantine/dates";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { colorSchemes } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
@@ -16,31 +16,18 @@ export const passwordRequirements = [
   { check: regexCheck(/[a-z]/), value: "lowercase" },
   { check: regexCheck(/[A-Z]/), value: "uppercase" },
   { check: regexCheck(/\d/), value: "number" },
-  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!-]/), value: "special" },
+  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{}]/), value: "special" },
 ] satisfies {
   check: (value: string) => boolean;
-  value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
+  value: keyof TranslationObject["user"]["field"]["password"]["suggestion"];
 }[];
 
-export const userPasswordSchema = z
-  .string()
-  .min(8)
-  .max(255)
-  .refine(
-    (value) => {
-      return passwordRequirements.every((requirement) => requirement.check(value));
-    },
-    {
-      params: createCustomErrorParams({
-        key: "passwordRequirements",
-        params: {},
-      }),
-    },
-  );
+export const userPasswordSchema = z.string().min(8).max(255);
 
-const addConfirmPasswordRefinement = <TObj extends { password: string; confirmPassword: string }>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  schema: z.ZodObject<any, "strip", z.ZodTypeAny, TObj>,
+const addConfirmPasswordRefinement = <
+  TSchema extends z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
+>(
+  schema: TSchema,
 ) => {
   return schema.refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -55,16 +42,28 @@ export const userBaseCreateSchema = z.object({
   username: usernameSchema,
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  email: z.string().email().or(z.string().length(0).optional()),
-  groupIds: z.array(z.string()),
+  email: z.string().email().or(z.string().length(0)).optional(),
 });
 
-export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
+export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema).and(
+  z.object({ groupIds: z.array(z.string()) }),
+);
 
-export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema.omit({ groupIds: true }));
+export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
 
 export const userSignInSchema = z.object({
   name: z.string().min(1),
+  password: z.string().min(1),
+});
+
+export const ldapSignInSchema = z.object({
+  name: z
+    .string()
+    .min(1)
+    // Prevent special characters that could lead to LDAP injection attacks
+    .regex(/^[^\\,+<>;"=)(*|!&]+$/, {
+      message: "Invalid characters in ldap username",
+    }),
   password: z.string().min(1),
 });
 
@@ -99,12 +98,15 @@ const baseChangePasswordSchema = z.object({
   previousPassword: z.string().min(1),
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  userId: z.string(),
 });
 
-export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema.omit({ userId: true }));
+export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
-export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
+export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema).and(
+  z.object({
+    userId: z.string(),
+  }),
+);
 
 export const userChangeHomeBoardsSchema = z.object({
   homeBoardId: z.string().nullable(),
@@ -114,6 +116,7 @@ export const userChangeHomeBoardsSchema = z.object({
 export const userChangeSearchPreferencesSchema = z.object({
   defaultSearchEngineId: z.string().min(1).nullable(),
   openInNewTab: z.boolean(),
+  ddgBangsEnabled: z.boolean(),
 });
 
 export const userChangeColorSchemeSchema = z.object({
@@ -121,9 +124,17 @@ export const userChangeColorSchemeSchema = z.object({
 });
 
 export const userFirstDayOfWeekSchema = z.object({
-  firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
+  firstDayOfWeek: z
+    .number()
+    .min(0)
+    .max(6)
+    .transform((value) => value as DayOfWeek),
 });
 
 export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
+});
+
+export const userDdgBangsSchema = z.object({
+  ddgBangs: z.boolean(),
 });

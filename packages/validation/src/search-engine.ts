@@ -1,5 +1,5 @@
-import type { ZodTypeAny } from "zod";
-import { z } from "zod";
+import type { ZodTypeAny } from "zod/v4";
+import { z } from "zod/v4";
 
 import type { SearchEngineType } from "@homarr/definitions";
 

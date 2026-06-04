@@ -1,6 +1,5 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
-import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
+import { IconSearch, IconSearchOff } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +8,7 @@ import { useSession } from "@homarr/auth/client";
 import { useSettings } from "@homarr/settings";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
@@ -79,20 +79,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       isLoading:
         defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
       isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
-      data: [
-        ...createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
-        {
-          id: "other",
-          name: t("search.mode.home.group.search.option.other.label"),
-          icon: IconCaretUpDown,
-          useInteraction() {
-            return {
-              type: "mode",
-              mode: "external",
-            };
-          },
-        },
-      ],
+      data: createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
     };
   },
 });

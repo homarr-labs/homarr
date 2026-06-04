@@ -1,11 +1,14 @@
 import { decryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import { logger } from "@homarr/log";
 
-type FormIntegration = Integration & {
+const logger = createLogger({ module: "integrationTestConnection" });
+
+type FormIntegration = Omit<Integration, "appId"> & {
   secrets: {
     kind: IntegrationSecretKind;
     value: string | null;
@@ -25,16 +28,6 @@ export const testConnectionAsync = async (
     integrationUrl: integration.url,
   });
 
-  const formSecrets = integration.secrets
-    .filter((secret) => secret.value !== null)
-    .map((secret) => ({
-      ...secret,
-      // We ensured above that the value is not null
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: secret.value!,
-      source: "form" as const,
-    }));
-
   const decryptedDbSecrets = dbSecrets
     .map((secret) => {
       try {
@@ -45,8 +38,13 @@ export const testConnectionAsync = async (
         };
       } catch (error) {
         logger.warn(
-          new Error(
-            `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"`,
+          new ErrorWithMetadata(
+            "Failed to decrypt secret from database",
+            {
+              integrationName: integration.name,
+              integrationKind: integration.kind,
+              secretKind: secret.kind,
+            },
             { cause: error },
           ),
         );
@@ -54,6 +52,15 @@ export const testConnectionAsync = async (
       }
     })
     .filter((secret) => secret !== null);
+
+  const formSecrets = integration.secrets
+    .map((secret) => ({
+      ...secret,
+      // If the value is not defined in the form (because we only changed other values) we use the existing value from the db if it exists
+      value: secret.value ?? decryptedDbSecrets.find((dbSecret) => dbSecret.kind === secret.kind)?.value ?? null,
+      source: "form" as const,
+    }))
+    .filter((secret): secret is SourcedIntegrationSecret<"form"> => secret.value !== null);
 
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
@@ -76,6 +83,7 @@ export const testConnectionAsync = async (
   const integrationInstance = await createIntegrationAsync({
     ...baseIntegration,
     decryptedSecrets,
+    externalUrl: null,
   });
 
   const result = await integrationInstance.testConnectionAsync();
@@ -89,10 +97,10 @@ export const testConnectionAsync = async (
   return result;
 };
 
-interface SourcedIntegrationSecret {
+interface SourcedIntegrationSecret<TSource extends string = "db" | "form"> {
   kind: IntegrationSecretKind;
   value: string;
-  source: "db" | "form";
+  source: TSource;
 }
 
 const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret[]) => {
@@ -111,7 +119,9 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   }
 
   const onlyFormSecretsKindOptions = matchingSecretKindOptions.filter((secretKinds) =>
-    sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind)).every((secret) => secret.source === "form"),
+    secretKinds.every((secretKind) =>
+      sourcedSecrets.find((secret) => secret.kind === secretKind && secret.source === "form"),
+    ),
   );
 
   if (onlyFormSecretsKindOptions.length >= 1) {

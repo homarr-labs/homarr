@@ -1,7 +1,7 @@
-import { database } from "../driver";
+import { db } from "..";
 import { seedDataAsync } from "./seed";
 
-seedDataAsync(database)
+seedDataAsync(db)
   .then(() => {
     console.log("Seed complete");
     process.exit(0);

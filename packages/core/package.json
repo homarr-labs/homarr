@@ -1,0 +1,56 @@
+{
+  "name": "@homarr/core",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
+    "./infrastructure/env": "./src/infrastructure/env/index.ts",
+    "./infrastructure/logs": "./src/infrastructure/logs/index.ts",
+    "./infrastructure/logs/constants": "./src/infrastructure/logs/constants.ts",
+    "./infrastructure/logs/env": "./src/infrastructure/logs/env.ts",
+    "./infrastructure/logs/error": "./src/infrastructure/logs/error.ts",
+    "./infrastructure/db": "./src/infrastructure/db/index.ts",
+    "./infrastructure/db/env": "./src/infrastructure/db/env.ts",
+    "./infrastructure/db/constants": "./src/infrastructure/db/constants.ts",
+    "./infrastructure/certificates": "./src/infrastructure/certificates/index.ts",
+    "./infrastructure/certificates/hostnames/db/sqlite": "./src/infrastructure/certificates/hostnames/db/sqlite.ts",
+    "./infrastructure/certificates/hostnames/db/mysql": "./src/infrastructure/certificates/hostnames/db/mysql.ts",
+    "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts",
+    "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts",
+    "./infrastructure/http": "./src/infrastructure/http/index.ts",
+    "./infrastructure/http/timeout": "./src/infrastructure/http/timeout.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "catalog:",
+    "better-sqlite3": "catalog:",
+    "dns-caching": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ioredis": "catalog:",
+    "mysql2": "catalog:",
+    "pg": "catalog:",
+    "superjson": "catalog:",
+    "winston": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/better-sqlite3": "catalog:",
+    "@types/pg": "catalog:",
+    "typescript": "catalog:"
+  }
+}

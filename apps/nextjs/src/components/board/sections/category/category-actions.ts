@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 
 import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 import type { MoveCategoryInput } from "./actions/move-category";
@@ -58,6 +58,7 @@ export const useCategoryActions = () => {
               ...section,
               yOffset: section.yOffset + 2,
             })),
+          ...previous.sections.filter((section) => section.kind !== "category" && section.kind !== "empty"),
         ] satisfies Section[],
       }));
     },

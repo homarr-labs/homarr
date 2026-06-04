@@ -1,6 +1,6 @@
 import { getBoardLayouts } from "@homarr/boards/context";
+import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
-import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
 
 import type { Board, EmptySection, Item, ItemLayout } from "~/app/[locale]/boards/_types";
@@ -8,12 +8,14 @@ import { getFirstEmptyPosition } from "./empty-position";
 import { getSectionElements } from "./section-elements";
 
 export interface CreateItemInput {
+  id?: string;
   kind: WidgetKind;
   options?: Record<string, unknown>;
+  integrationIds?: string[];
 }
 
 export const createItemCallback =
-  ({ kind, options = {} }: CreateItemInput) =>
+  ({ id, kind, options = {}, integrationIds = [] }: CreateItemInput) =>
   (previous: Board): Board => {
     const firstSection = previous.sections
       .filter((section): section is EmptySection => section.kind === "empty")
@@ -23,11 +25,11 @@ export const createItemCallback =
     if (!firstSection) return previous;
 
     const widget = {
-      id: createId(),
+      id: id ?? createId(),
       kind,
       options,
       layouts: createItemLayouts(previous, firstSection),
-      integrationIds: [],
+      integrationIds,
       advancedOptions: {
         title: null,
         customCssClasses: [],
