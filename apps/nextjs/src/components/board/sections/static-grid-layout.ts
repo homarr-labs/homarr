@@ -8,7 +8,7 @@ const DEFAULT_SMALL_VIEWPORT_WIDTH = 360;
 const DEFAULT_LARGE_VIEWPORT_WIDTH = 1280;
 
 export const getStaticGridLayouts = (layouts: Board["layouts"]) =>
-  [...layouts].sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
+  [...layouts].toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
 
 const escapeCssString = (value: string) => value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
 
@@ -70,7 +70,7 @@ export const getStaticGridElements = (board: Board, sectionId: string, layoutId:
   return [
     ...getSectionItemsForLayout(board, sectionId, layoutId),
     ...getDynamicSectionsForLayout(board, sectionId, layoutId),
-  ].sort((itemA, itemB) => {
+  ].toSorted((itemA, itemB) => {
     if (itemA.yOffset === itemB.yOffset) return itemA.xOffset - itemB.xOffset;
     return itemA.yOffset - itemB.yOffset;
   });
