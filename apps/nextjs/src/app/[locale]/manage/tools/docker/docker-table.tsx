@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
-import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
 import {
   IconCategoryPlus,
   IconDots,
@@ -84,11 +84,11 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
     maxSize: 200,
     Cell({ renderedCellValue, cell }) {
       return (
-        <Box maw={200}>
-          <Text truncate="end" title={cell.row.original.image}>
-            {renderedCellValue}
-          </Text>
-        </Box>
+        <Tooltip label={cell.row.original.image} multiline maw={400}>
+          <Box maw={200}>
+            <Text truncate="end">{renderedCellValue}</Text>
+          </Box>
+        </Tooltip>
       );
     },
   },
@@ -196,9 +196,9 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     },
 
     initialState: { density: "xs", showGlobalFilter: true, columnVisibility: { cpuUsage: false, memoryUsage: false } },
-    renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => (
-      <ContainerRowMenu container={row.original} />
-    ),
+    mantineTableBodyCellProps: { style: { padding: "4px 8px" } },
+    mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
+    renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
       <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
         {tDocker("action.refresh.label")}
