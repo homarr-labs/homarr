@@ -1,0 +1,19 @@
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_da459b1bf3df3d::t_dd4ed70ef90f53 160,185,222,253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "4f5f3e14a129a94295d4b8ffb7d3702fdb4f6a74",
+  "prompts": {},
+  "sessions": {
+    "s_da459b1bf3df3d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c281a121-c5e5-410f-8fc0-a6decf0c906a",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
