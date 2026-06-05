@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Jelszó",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Tartalmazzon legalább 8 karaktert",
           "lowercase": "Tartalmazzon kisbetűt",
           "uppercase": "Tartalmazzon nagybetűt",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Megnyitás új lapon"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Könyjelzők",

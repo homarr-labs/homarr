@@ -19,6 +19,7 @@ import type { SearchMode } from "../../lib/mode";
 import { appIntegrationBoardMode } from "../app-integration-board";
 import { commandMode } from "../command";
 import { externalMode } from "../external";
+import { mediaMode } from "../media";
 import { pageMode } from "../page";
 import { preferencesGroup } from "../preferences/groups";
 import { userGroupMode } from "../user-group";
@@ -33,7 +34,7 @@ type QuickLinkOption = {
 export const useHomeEmptyGroups = () => {
   const { data: session } = useSession();
   const tPages = useScopedI18n("search.mode.page.group.page.option");
-  const visibleSearchModes: SearchMode[] = [appIntegrationBoardMode, externalMode, commandMode, pageMode];
+  const visibleSearchModes: SearchMode[] = [appIntegrationBoardMode, externalMode, mediaMode, commandMode, pageMode];
 
   if (session?.user.permissions.includes("admin")) {
     visibleSearchModes.unshift(userGroupMode);
@@ -83,7 +84,7 @@ export const useHomeEmptyGroups = () => {
       useInteraction: interaction.link(({ path }) => ({ href: path })),
     }),
     createGroup({
-      keyPath: "character",
+      keyPath: "modeKey",
       title: (t) => t("search.mode.help.group.mode.title"),
       options: visibleSearchModes.map(({ character, modeKey }) => ({ character, modeKey })),
       Component: ({ modeKey, character }) => {
@@ -92,7 +93,7 @@ export const useHomeEmptyGroups = () => {
         return (
           <Group px="md" py="xs" w="100%" wrap="nowrap" align="center" justify="space-between">
             <Text>{t("help")}</Text>
-            <Kbd size="sm">{character}</Kbd>
+            {character && <Kbd size="sm">{character}</Kbd>}
           </Group>
         );
       },

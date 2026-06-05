@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Şifre",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "En az 8 karakter içermeli",
           "lowercase": "Küçük harf içermeli",
           "uppercase": "Büyük harf içermeli",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Yeni sekmede aç"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Yer İmleri",

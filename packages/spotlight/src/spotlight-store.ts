@@ -3,8 +3,16 @@
 import { clamp } from "@mantine/hooks";
 import type { SpotlightStore } from "@mantine/spotlight";
 import { createSpotlight } from "@mantine/spotlight";
+import { atom } from "jotai";
 
 export const [spotlightStore, spotlightActions] = createSpotlight();
+
+export interface MediaRequestSearchScope {
+  integrationIds?: string[];
+}
+
+export const mediaRequestSearchScopeAtom = atom<MediaRequestSearchScope>({});
+export const mediaRequestSearchEvent = "homarr:spotlight:media-request-search";
 
 export const setSelectedAction = (index: number, store: SpotlightStore) => {
   store.updateState((state) => ({ ...state, selected: index }));

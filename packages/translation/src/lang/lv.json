@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Parole",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "Ietver mazo burtu",
           "uppercase": "Ietver lielo burtu",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

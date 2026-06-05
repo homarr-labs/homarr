@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "",
           "uppercase": "",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

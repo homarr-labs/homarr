@@ -1,20 +1,28 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
 import { IconArrowLeft, IconSearch, IconX } from "@tabler/icons-react";
+import { useSetAtom } from "jotai";
 
 import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
+import type { OpenMediaRequestSearchOptions } from "../index";
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { searchModes } from "../modes";
 import { useHomeEmptyGroupsWithPreferences } from "../modes/help/home-empty-groups";
-import { selectAction, spotlightStore } from "../spotlight-store";
+import {
+  mediaRequestSearchEvent,
+  mediaRequestSearchScopeAtom,
+  selectAction,
+  spotlightActions,
+  spotlightStore,
+} from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
 import { SpotlightActionGroups } from "./actions/groups/action-group";
 
@@ -50,9 +58,11 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
   const childrenOptions = childrenStack.at(-1) ?? null;
   const t = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
+  const setMediaRequestSearchScope = useSetAtom(mediaRequestSearchScopeAtom);
   const useGroups = "groups" in activeMode ? () => activeMode.groups : activeMode.useGroups;
   const groups = useGroups();
   const homeEmptyGroups = useHomeEmptyGroupsWithPreferences();
+  const hasModeCharacter = activeMode.modeKey !== defaultMode && activeMode.character !== undefined;
 
   const clearChildrenStack = useCallback(() => {
     setChildrenStack([]);
@@ -72,6 +82,29 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
     setQuery("");
     setTimeout(() => selectAction(0, spotlightStore));
   }, [setQuery]);
+
+  useEffect(() => {
+    const handleMediaRequestSearch = (event: Event) => {
+      const { integrationIds, query } = (event as CustomEvent<OpenMediaRequestSearchOptions>).detail ?? {};
+      setMediaRequestSearchScope({ integrationIds });
+      setMode("media");
+      clearChildrenStack();
+      setQuery(query ?? "");
+      spotlightActions.open();
+      setTimeout(() => selectAction(0, spotlightStore));
+    };
+
+    window.addEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
+    return () => {
+      window.removeEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
+    };
+  }, [setMediaRequestSearchScope, setMode, setQuery, clearChildrenStack]);
+
+  useEffect(() => {
+    if (mode !== "media") {
+      setMediaRequestSearchScope({});
+    }
+  }, [mode, setMediaRequestSearchScope]);
 
   return (
     <MantineSpotlight.Root
@@ -103,13 +136,13 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       <MantineSpotlight.Search
         placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
-        leftSectionWidth={activeMode.modeKey !== defaultMode ? 80 : 48}
+        leftSectionWidth={hasModeCharacter ? 80 : 48}
         leftSection={
           <Group align="center" wrap="nowrap" gap="xs" w="100%" h="100%">
             <Center w={48} h="100%">
               <IconSearch stroke={1.5} />
             </Center>
-            {activeMode.modeKey !== defaultMode ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
+            {hasModeCharacter ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
           </Group>
         }
         styles={{
