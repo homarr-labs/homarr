@@ -4123,6 +4123,12 @@
     },
     "action": {
       "title": "Actions",
+      "logs": {
+        "label": "View logs",
+        "page": {
+          "title": "{name} logs"
+        }
+      },
       "start": {
         "label": "Start",
         "notification": {
@@ -4535,7 +4541,10 @@
           "label": "Tasks"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": "Logs"
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
