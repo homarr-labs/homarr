@@ -1,0 +1,33 @@
+packages/integrations/src/mock/data/media-server.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 5-88,93
+packages/integrations/src/mock/data/network-controller-summary.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 6,12
+packages/db/migrations/seed.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 229-288,299-302,321-324,326,333-341
+packages/integrations/src/mock/data/media-releases.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 5,15-16,67-68,104-105,121-122
+packages/integrations/src/mock/data/download.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 128,135,142,145-147,149-151,153-155,157-159,161-163
+packages/integrations/src/mock/data/calendar.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 30-38,52-60,74-82,110-118,129-137,187-191,193-206,211
+packages/request-handler/src/docker.ts
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 10,19-168
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_9319e0b7f0337e::t_ec9b2ed1a05d1f 64-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "0ad7b79187913c0739e32977ec33dcab761fb8f9",
+  "prompts": {},
+  "sessions": {
+    "s_9319e0b7f0337e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d0b27f65-2db2-461a-a938-7a9239d65255",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
