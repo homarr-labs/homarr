@@ -61,7 +61,7 @@ export const BoardContentHeaderActions = () => {
             <IconSettings stroke={1.5} />
           </HeaderButton>
         </OnboardingTour.Target>
-     )}
+      )}
 
       <SelectBoardsMenu />
     </>
