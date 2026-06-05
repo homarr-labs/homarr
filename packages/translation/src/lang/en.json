@@ -2150,6 +2150,37 @@
         "title": "Instances"
       }
     },
+    "ups": {
+      "name": "UPS",
+      "description": "Monitor the status of your UPS devices through a NUT server",
+      "option": {
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showLoad": {
+          "label": "Show load"
+        },
+        "showVoltage": {
+          "label": "Show voltage"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "onBattery": "On battery",
+        "lowBattery": "Low battery",
+        "charging": "Charging",
+        "unknown": "Unknown"
+      },
+      "field": {
+        "runtime": "Runtime",
+        "load": "Load",
+        "input": "Input",
+        "output": "Output"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch UPS data"
+      }
+    },
     "tracearr": {
       "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",

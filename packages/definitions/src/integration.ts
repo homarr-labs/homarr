@@ -427,6 +427,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/umami"),
     defaultPort: 3000,
   },
+  peaNut: {
+    name: "PeaNUT",
+    secretKinds: [["username", "password"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
+    category: ["ups"],
+    documentationUrl: null,
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -445,6 +452,7 @@ export const integrationDefs = {
       "networkController",
       "notifications",
       "smartHomeServer",
+      "ups",
     ],
     documentationUrl: null,
   },
@@ -532,6 +540,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "ups",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

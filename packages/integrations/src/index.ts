@@ -34,6 +34,7 @@ export { ImmichIntegration } from "./immich/immich-integration";
 export { TracearrIntegration } from "./tracearr/tracearr-integration";
 export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
+export { PeaNutIntegration } from "./peanut/peanut-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
