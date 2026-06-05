@@ -29,6 +29,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
@@ -60,14 +61,18 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       title={t("page.list.title")}
       primaryAction={
         canCreateIntegrations ? (
-          <MobileAffixButton component={Link} href="/manage/integrations/new">
-            {t("action.create")}
-          </MobileAffixButton>
+          <TourTarget id="manage-integrations-create">
+            <MobileAffixButton component={Link} href="/manage/integrations/new">
+              {t("action.create")}
+            </MobileAffixButton>
+          </TourTarget>
         ) : undefined
       }
       floatingPrimaryAction={canCreateIntegrations}
     >
-      <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      <TourTarget id="manage-integrations-list">
+        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      </TourTarget>
     </ManagePageLayout>
   );
 }

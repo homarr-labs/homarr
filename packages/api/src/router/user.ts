@@ -278,6 +278,8 @@ export const userRouter = createTRPCRouter({
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
         ddgBangs: true,
+        completedManageTour: true,
+        completedBoardTour: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -304,6 +306,8 @@ export const userRouter = createTRPCRouter({
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
           ddgBangs: true,
+          completedManageTour: true,
+          completedBoardTour: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -605,6 +609,39 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.id));
     }),
+  completeTour: protectedProcedure
+    .input(z.object({ tour: z.enum(["manage", "board"]) }))
+    .mutation(async ({ input, ctx }) => {
+      const columnByTour = {
+        manage: { completedManageTour: true },
+        board: { completedBoardTour: true },
+      } as const;
+
+      await ctx.db.update(users).set(columnByTour[input.tour]).where(eq(users.id, ctx.session.user.id));
+    }),
+  resetTours: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db
+      .update(users)
+      .set({
+        completedManageTour: false,
+        completedBoardTour: false,
+      })
+      .where(eq(users.id, ctx.session.user.id));
+  }),
+  getTourStatus: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.query.users.findFirst({
+      columns: {
+        completedManageTour: true,
+        completedBoardTour: true,
+      },
+      where: eq(users.id, ctx.session.user.id),
+    });
+
+    return {
+      completedManageTour: user?.completedManageTour ?? false,
+      completedBoardTour: user?.completedBoardTour ?? false,
+    };
+  }),
 });
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {

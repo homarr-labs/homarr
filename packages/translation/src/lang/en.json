@@ -3611,7 +3611,24 @@
               },
               "search": "Search",
               "firstDayOfWeek": "First day of the week",
-              "accessibility": "Accessibility"
+              "accessibility": "Accessibility",
+              "onboardingTours": {
+                "title": "Onboarding Tours",
+                "description": "Reset the onboarding tours to see them again on your next visit to the management area or dashboard.",
+                "reset": "Reset onboarding tours",
+                "resetSuccess": {
+                  "title": "Tours reset",
+                  "message": "Onboarding tours will show again on your next visit"
+                },
+                "status": {
+                  "completed": "Completed",
+                  "notStarted": "Not started"
+                },
+                "name": {
+                  "management": "Management",
+                  "dashboard": "Dashboard"
+                }
+              }
             }
           },
           "security": {
@@ -5190,6 +5207,73 @@
         "info": "Info",
         "warn": "Warn",
         "error": "Error"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "Read the docs",
+    "next": "Next",
+    "prev": "Back",
+    "done": "Done",
+    "skip": "Skip tour",
+    "manage": {
+      "welcome": {
+        "title": "Welcome to Homarr!",
+        "description": "This is your control center. From here you manage boards, apps, integrations, users, and server settings. Let's take a tour of each section."
+      },
+      "boardsList": {
+        "title": "Your Boards",
+        "description": "Here are all your dashboards. Each board has its own layout, background, and access settings. You can see who created each one and whether it's public or private."
+      },
+      "boardsCreate": {
+        "title": "Create a Board",
+        "description": "Click here to create a new dashboard or import one from a previous Homarr installation. Each board gets its own URL you can share."
+      },
+      "appsList": {
+        "title": "Your Apps",
+        "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
+      },
+      "appsCreate": {
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
+      },
+      "integrationsList": {
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
+      },
+      "integrationsCreate": {
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
+      },
+      "usersList": {
+        "title": "Your Users",
+        "description": "See everyone who has access. Organize users into groups and control who can view or edit each board."
+      },
+      "usersCreate": {
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
+      },
+      "editMode": {
+        "title": "Edit Mode",
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
+      },
+      "settings": {
+        "title": "Board Settings",
+        "description": "Change this board's name, columns, background, colors, and who can access it. Each board can be public or private."
+      },
+      "switcher": {
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
+      },
+      "userMenu": {
+        "title": "Your Profile",
+        "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }
