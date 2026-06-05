@@ -72,6 +72,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
   );
 }
 
+
 interface IntegrationListProps {
   integrations: RouterOutputs["integration"]["all"];
   activeTab?: IntegrationKind;
