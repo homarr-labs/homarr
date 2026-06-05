@@ -61,7 +61,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       title={t("page.list.title")}
       primaryAction={
         canCreateIntegrations ? (
-<TourTarget id="manage-integrations-create">
+          <TourTarget id="manage-integrations-create">
             <MobileAffixButton component={Link} href="/manage/integrations/new">
               {t("action.create")}
             </MobileAffixButton>
