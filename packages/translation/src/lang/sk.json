@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Heslo",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Obsahuje aspoň 8 znakov",
           "lowercase": "Zahŕňa malé písmeno",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Otvoriť na novej karte"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Záložky",

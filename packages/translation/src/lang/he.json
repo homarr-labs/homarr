@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "סיסמה",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "כולל לפחות 8 תווים",
           "lowercase": "אפשר אותיות קטנות",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "פתיחה בכרטיסיה חדשה"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "סימניות",

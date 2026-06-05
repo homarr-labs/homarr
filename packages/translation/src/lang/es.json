@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Contraseña",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Incluye al menos 8 caracteres",
           "lowercase": "Incluye al menos una letra minúscula",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Abrir en una nueva pestaña"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Marcadores",

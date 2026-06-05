@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Mot de passe",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
@@ -1405,6 +1406,9 @@
         "openNewTab": {
           "label": "Ouvrir dans un nouvel onglet"
         },
+        "withBorder": {
+          "label": ""
+        },
         "items": {
           "label": "Signets",
           "add": "Ajouter un signet"
@@ -2088,7 +2092,7 @@
         "empty": "",
         "user": "Utilisateur",
         "media": "Média",
-        "state": "",
+        "state": "État",
         "quality": "Qualité",
         "device": "Appareil",
         "progress": "Progression",

@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Password",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Includes a minimum of 8 characters",
           "lowercase": "Includes a lower-case letter",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bookmarks",
@@ -4551,9 +4555,23 @@
         }
       },
       "media": {
+        "help": "Search for movies or shows to request",
         "requestMovie": "",
         "requestSeries": "",
-        "openIn": ""
+        "openIn": "",
+        "group": {
+          "title": "Movies and shows"
+        },
+        "action": {
+          "search": {
+            "label": "Search for movies or shows",
+            "description": "Start typing to search your media request integrations",
+            "disabled": {
+              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "scoped": "This widget does not have an accessible media request integration."
+            }
+          }
+        }
       },
       "external": {
         "help": "",
@@ -4829,7 +4847,11 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes"
+                "episodes": "Episodes",
+                "status": "Status"
+              },
+              "status": {
+                "requested": "Requested"
               }
             },
             "button": {
