@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Hasło",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Zawiera co najmniej 8 znaków",
           "lowercase": "Zawiera małą literę",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Otwórz w nowej karcie"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Zakładki",

@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Пароль",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Відкрити в новій вкладці"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Закладки",

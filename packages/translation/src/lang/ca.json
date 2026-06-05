@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Contrasenya",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Inclou com a mínim 8 caràcters",
           "lowercase": "Inclou minúscules",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

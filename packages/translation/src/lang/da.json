@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Adgangskode",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Inkluderer mindst 8 tegn",
           "lowercase": "Inkluderer små bogstaver",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Åbn i nyt faneblad"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bogmærker",
