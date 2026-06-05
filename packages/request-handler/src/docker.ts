@@ -14,10 +14,30 @@ import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-ha
 
 const logger = createLogger({ module: "dockerRequestHandler" });
 
+const isDemoMode = ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
+
+const mockContainers = [
+  { id: "a1b2c3d4e5f6", name: "sonarr", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/sonarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg", cpuUsage: 2.3, memoryUsage: 256 * 1024 * 1024, ports: [{ PrivatePort: 8989, PublicPort: 8989, Type: "tcp" }] },
+  { id: "b2c3d4e5f6a7", name: "radarr", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/radarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg", cpuUsage: 1.8, memoryUsage: 220 * 1024 * 1024, ports: [{ PrivatePort: 7878, PublicPort: 7878, Type: "tcp" }] },
+  { id: "c3d4e5f6a7b8", name: "plex", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/plex:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg", cpuUsage: 12.5, memoryUsage: 1024 * 1024 * 1024, ports: [{ PrivatePort: 32400, PublicPort: 32400, Type: "tcp" }] },
+  { id: "d4e5f6a7b8c9", name: "qbittorrent", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/qbittorrent:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg", cpuUsage: 5.1, memoryUsage: 380 * 1024 * 1024, ports: [{ PrivatePort: 8080, PublicPort: 8080, Type: "tcp" }] },
+  { id: "e5f6a7b8c9d0", name: "prowlarr", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/prowlarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg", cpuUsage: 0.8, memoryUsage: 120 * 1024 * 1024, ports: [{ PrivatePort: 9696, PublicPort: 9696, Type: "tcp" }] },
+  { id: "f6a7b8c9d0e1", name: "overseerr", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/overseerr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg", cpuUsage: 1.2, memoryUsage: 180 * 1024 * 1024, ports: [{ PrivatePort: 5055, PublicPort: 5055, Type: "tcp" }] },
+  { id: "a7b8c9d0e1f2", name: "homarr", host: "local", state: "running" as ContainerState, image: "ghcr.io/homarr-labs/homarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg", cpuUsage: 3.4, memoryUsage: 290 * 1024 * 1024, ports: [{ PrivatePort: 7575, PublicPort: 7575, Type: "tcp" }] },
+  { id: "b8c9d0e1f2a3", name: "pihole", host: "local", state: "running" as ContainerState, image: "pihole/pihole:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pi-hole.svg", cpuUsage: 0.5, memoryUsage: 95 * 1024 * 1024, ports: [{ PrivatePort: 80, PublicPort: 80, Type: "tcp" }, { PrivatePort: 53, PublicPort: 53, Type: "udp" }] },
+  { id: "c9d0e1f2a3b4", name: "nginx-proxy", host: "local", state: "running" as ContainerState, image: "jc21/nginx-proxy-manager:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nginx-proxy-manager.svg", cpuUsage: 0.3, memoryUsage: 65 * 1024 * 1024, ports: [{ PrivatePort: 443, PublicPort: 443, Type: "tcp" }, { PrivatePort: 81, PublicPort: 81, Type: "tcp" }] },
+  { id: "d0e1f2a3b4c5", name: "watchtower", host: "local", state: "running" as ContainerState, image: "containrrr/watchtower:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/watchtower.svg", cpuUsage: 0.1, memoryUsage: 30 * 1024 * 1024, ports: [] },
+  { id: "e1f2a3b4c5d6", name: "tdarr", host: "local", state: "exited" as ContainerState, image: "ghcr.io/haveagitgat/tdarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tdarr.svg", cpuUsage: 0, memoryUsage: 0, ports: [] },
+  { id: "f2a3b4c5d6e7", name: "bazarr", host: "local", state: "running" as ContainerState, image: "lscr.io/linuxserver/bazarr:latest", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg", cpuUsage: 0.6, memoryUsage: 110 * 1024 * 1024, ports: [{ PrivatePort: 6767, PublicPort: 6767, Type: "tcp" }] },
+];
+
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "dockerContainersResult",
   widgetKind: "dockerContainers",
   async requestAsync() {
+    if (isDemoMode) {
+      return mockContainers;
+    }
     return await getContainersWithStatsAsync();
   },
   cacheDuration: dayjs.duration(20, "seconds"),

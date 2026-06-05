@@ -85,7 +85,7 @@ export class MockIntegration
 
   // Health Monitoring Integrations
   getSystemInfoAsync = MockIntegration.systemMonitoring.getSystemInfoAsync.bind(MockIntegration.systemMonitoring);
-  getClusterInfoAsync = MockIntegration.clusterMonitoring.getClusterInfoAsync.bind(MockIntegration.downloadClient);
+  getClusterInfoAsync = MockIntegration.clusterMonitoring.getClusterInfoAsync.bind(MockIntegration.clusterMonitoring);
 
   // IndexerManagerIntegration
   getIndexersAsync = MockIntegration.indexerManager.getIndexersAsync.bind(MockIntegration.indexerManager);
@@ -104,7 +104,7 @@ export class MockIntegration
   declineRequestAsync = MockIntegration.mediaRequest.declineRequestAsync.bind(MockIntegration.mediaRequest);
 
   // MediaServerIntegration
-  getCurrentSessionsAsync = MockIntegration.mediaServer.getCurrentSessionsAsync.bind(MockIntegration.mediaRequest);
+  getCurrentSessionsAsync = MockIntegration.mediaServer.getCurrentSessionsAsync.bind(MockIntegration.mediaServer);
 
   // MediaTranscodingIntegration
   getStatisticsAsync = MockIntegration.mediaTranscoding.getStatisticsAsync.bind(MockIntegration.mediaTranscoding);
