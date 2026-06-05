@@ -44,6 +44,9 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
       setQuery(interaction.query);
       setTimeout(() => selectAction(0, spotlightStore));
     } else if (interaction.type === "mode") {
+      if (interaction.query !== undefined) {
+        setQuery(interaction.query);
+      }
       setMode(interaction.mode);
     } else if (interaction.type === "children") {
       setChildrenOptions(interaction);
@@ -58,7 +61,8 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
         interaction.type !== "mode" &&
         interaction.type !== "children" &&
         interaction.type !== "none" &&
-        interaction.type !== "setQuery"
+        interaction.type !== "setQuery" &&
+        (interaction.type !== "javaScript" || interaction.closeSpotlightOnTrigger !== false)
       }
       className={classes.spotlightAction}
     >
