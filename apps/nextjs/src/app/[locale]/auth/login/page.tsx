@@ -1,10 +1,13 @@
 import { redirect } from "next/navigation";
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Center, Code, Stack, Text, Title } from "@mantine/core";
+import { IconLogin } from "@tabler/icons-react";
 
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
+
+import { env as appEnv } from "~/env";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
@@ -37,6 +40,13 @@ export default async function Login(props: LoginProps) {
             {t("subtitle")}
           </Text>
         </Stack>
+        {appEnv.DEMO_MODE && (
+          <Alert icon={<IconLogin size={18} />} color="blue" variant="light" w={64 * 6} maw="90vw">
+            <Text size="sm" fw={500}>
+              Demo mode is enabled. Sign in with username <Code>demo</Code> and password <Code>demo</Code>
+            </Text>
+          </Alert>
+        )}
         <Card w={64 * 6} maw="90vw">
           <LoginForm
             providers={env.AUTH_PROVIDERS}

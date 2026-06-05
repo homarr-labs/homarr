@@ -42,8 +42,9 @@ export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
+  const { data: demoMode, isLoading } = clientApi.info.isDemoMode.useQuery();
 
-  if (!hasChangeAccess) {
+  if (!hasChangeAccess || isLoading) {
     return <SelectBoardsMenu />;
   }
 
@@ -51,11 +52,13 @@ export const BoardContentHeaderActions = () => {
     <>
       {isEditMode && <AddMenu />}
 
-      <EditModeMenu />
+      <EditModeMenu demoMode={demoMode ?? false} />
 
-      <HeaderButton href={`/boards/${board.name}/settings`}>
-        <IconSettings stroke={1.5} />
-      </HeaderButton>
+      {!demoMode && (
+        <HeaderButton href={`/boards/${board.name}/settings`}>
+          <IconSettings stroke={1.5} />
+        </HeaderButton>
+      )}
 
       <SelectBoardsMenu />
     </>
@@ -141,7 +144,7 @@ const AddMenu = () => {
   );
 };
 
-const EditModeMenu = () => {
+const EditModeMenu = ({ demoMode }: { demoMode: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
@@ -164,10 +167,18 @@ const EditModeMenu = () => {
     },
   });
 
+  const discardDemoChanges = useCallback(() => {
+    void utils.board.getBoardByName.invalidate({ name: board.name });
+    close();
+  }, [utils, board.name, close]);
+
   const toggle = useCallback(() => {
-    if (isEditMode) return saveBoard(board);
+    if (isEditMode) {
+      if (demoMode) return discardDemoChanges();
+      return saveBoard(board);
+    }
     open();
-  }, [board, isEditMode, saveBoard, open]);
+  }, [board, isEditMode, demoMode, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
