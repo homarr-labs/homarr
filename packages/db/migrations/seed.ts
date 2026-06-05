@@ -41,7 +41,16 @@ import {
 } from "../schema";
 import type { Integration } from "../schema";
 
+const isTruthyEnv = (value: string | undefined) =>
+  ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+
 export const seedDataAsync = async (db: Database) => {
+  if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
+    console.warn(
+      "UNSAFE_ENABLE_MOCK_INTEGRATION is enabled: mock integration is available in the UI. Disable by setting UNSAFE_ENABLE_MOCK_INTEGRATION=false.",
+    );
+  }
+
   await seedEveryoneGroupAsync(db);
   await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
@@ -51,7 +60,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedDefaultBoardAsync(db);
   await seedBoardWidgetsAsync(db);
 
-  if (["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase())) {
+  if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
   }
 };
