@@ -2144,6 +2144,9 @@ importers:
       '@homarr/modals-collection':
         specifier: workspace:^0.1.0
         version: link:../modals-collection
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
       '@homarr/settings':
         specifier: workspace:^0.1.0
         version: link:../settings

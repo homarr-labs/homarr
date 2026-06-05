@@ -61,7 +61,8 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
         interaction.type !== "mode" &&
         interaction.type !== "children" &&
         interaction.type !== "none" &&
-        interaction.type !== "setQuery"
+        interaction.type !== "setQuery" &&
+        (interaction.type !== "javaScript" || interaction.closeSpotlightOnTrigger !== false)
       }
       className={classes.spotlightAction}
     >
