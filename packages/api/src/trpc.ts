@@ -18,6 +18,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
+import { env } from "./env";
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 
 const logger = createLogger({ module: "trpc" });
@@ -87,6 +88,20 @@ export const createCallerFactory = t.createCallerFactory;
  */
 export const createTRPCRouter = t.router;
 
+export const isDemoMode = env.DEMO_MODE;
+
+const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
+  if (env.DEMO_MODE && type === "mutation") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Mutations are disabled in demo mode",
+    });
+  }
+  return next({ ctx });
+});
+
+const baseProcedure = env.DEMO_MODE ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
+
 /**
  * Public (unauthed) procedure
  *
@@ -94,19 +109,14 @@ export const createTRPCRouter = t.router;
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = baseProcedure;
 
-/**
- * Reusable middleware that enforces users are logged in before running the
- * procedure
- */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
-      // infers the `session` as non-nullable
       session: { ...ctx.session, user: ctx.session.user },
     },
   });
@@ -121,7 +131,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedure = baseProcedure.use(enforceUserIsAuthed);
 
 /**
  * Procedure that requires a specific permission

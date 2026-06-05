@@ -101,7 +101,7 @@ const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
     >
       {children}
       <MenuDropdown>
-        <IntegrationCreateDropdownContent enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
+        <IntegrationCreateDropdownContent enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION || env.DEMO_MODE} />
       </MenuDropdown>
     </Menu>
   );
