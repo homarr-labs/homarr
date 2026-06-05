@@ -1,3 +1,43 @@
+## [1.63.0](https://github.com/homarr-labs/homarr/compare/v1.62.0...v1.63.0) (2026-05-29)
+
+### Features
+
+* **auth:** support custom token endpoint auth methods ([#5806](https://github.com/homarr-labs/homarr/issues/5806)) ([be61602](https://github.com/homarr-labs/homarr/commit/be61602576a8bec4bb7e4928d36e0854e926264d))
+* auto-open widget settings on add with all integrations pre-selected ([#5767](https://github.com/homarr-labs/homarr/issues/5767)) ([f10bb3a](https://github.com/homarr-labs/homarr/commit/f10bb3ae23fefc9779332733706aa567cc40ba48))
+* **board:** persist category collapse state in localStorage for guests ([#5714](https://github.com/homarr-labs/homarr/issues/5714)) ([66212b4](https://github.com/homarr-labs/homarr/commit/66212b4e475738e61d2ea78f3a7e72d7a610bf12)), closes [#3355](https://github.com/homarr-labs/homarr/issues/3355)
+* **manage:** unified management page layout ([#5758](https://github.com/homarr-labs/homarr/issues/5758)) ([c252b4f](https://github.com/homarr-labs/homarr/commit/c252b4f9accc4523f222354c73f687714640701f))
+* **users:** rework general settings ([#4915](https://github.com/homarr-labs/homarr/issues/4915)) ([2991777](https://github.com/homarr-labs/homarr/commit/2991777b0a0ae72522d0769a86a91250d618dbe6))
+
+### Bug Fixes
+
+* matine ui fixes for concistency ([#5733](https://github.com/homarr-labs/homarr/issues/5733)) ([4454e3f](https://github.com/homarr-labs/homarr/commit/4454e3fb7afa624ee2f1eaec015f2725e664ac46))
+* parse Speedtest Tracker created_at as local time ([#5751](https://github.com/homarr-labs/homarr/issues/5751)) ([b19549b](https://github.com/homarr-labs/homarr/commit/b19549b601636bcbc2fadaa270a77a9fdb48b77a))
+* prevent GitHub releases check from blocking app on API failure ([#5807](https://github.com/homarr-labs/homarr/issues/5807)) ([6cc2ac5](https://github.com/homarr-labs/homarr/commit/6cc2ac56a920563c47aaaab1b33b19a9b6d5ecee))
+* **ui:** use imported theme instead of undefined createTheme ([4a67bf0](https://github.com/homarr-labs/homarr/commit/4a67bf0ef30ff8d10b06d2d3719ccab792395669))
+
+### Performance Improvements
+
+* **boards:** parallelize board page data fetching ([#5736](https://github.com/homarr-labs/homarr/issues/5736)) ([8f03a38](https://github.com/homarr-labs/homarr/commit/8f03a38de5b9b385da7ffcc9a963be00710acb5e))
+
+## [1.62.0](https://github.com/homarr-labs/homarr/compare/v1.61.1...v1.62.0) (2026-05-22)
+
+### Features
+
+* **seed:** add demo mode with pre-seeded user ([#5739](https://github.com/homarr-labs/homarr/issues/5739)) ([dade477](https://github.com/homarr-labs/homarr/commit/dade477b3226765eb614e66588ebee84c45cb688))
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.10.0 ([#5727](https://github.com/homarr-labs/homarr/issues/5727)) ([044ad9e](https://github.com/homarr-labs/homarr/commit/044ad9edf9c1dc9b50b9591dea0b5f0cce4be01a))
+* **docker:** improve icon matching ([#5693](https://github.com/homarr-labs/homarr/issues/5693)) ([7cd30b6](https://github.com/homarr-labs/homarr/commit/7cd30b640cbf47e4678abda18f83c0924f039b1b))
+* exclude .env files from Docker build context ([#5738](https://github.com/homarr-labs/homarr/issues/5738)) ([fa73763](https://github.com/homarr-labs/homarr/commit/fa737638a812372d904207fe7af5bd7c6f53d159))
+* **tracearr:** support absolute image urls ([#5654](https://github.com/homarr-labs/homarr/issues/5654)) ([7a12721](https://github.com/homarr-labs/homarr/commit/7a1272146c597c1f9df89d74b8389f70e7cdd61a))
+
+### Performance Improvements
+
+* (next branch) reduce idle memory on startup ([#5637](https://github.com/homarr-labs/homarr/issues/5637)) ([5ee84f8](https://github.com/homarr-labs/homarr/commit/5ee84f8cf464c308729281cb4db572950ba85a82))
+* **boards:** remove loading overlay and show board immediately ([#5735](https://github.com/homarr-labs/homarr/issues/5735)) ([df4b57b](https://github.com/homarr-labs/homarr/commit/df4b57bd414d4402522f9210b1470d0561c37274))
+* **memory:** combine 3 node processes into one ([#5600](https://github.com/homarr-labs/homarr/issues/5600)) ([a1aa550](https://github.com/homarr-labs/homarr/commit/a1aa5505a365688b456090a882770e561479833e))
+
 ## [1.61.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1) (2026-05-18)
 
 ### Bug Fixes
