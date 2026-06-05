@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Lösenord",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Använd minst 8 tecken",
           "lowercase": "Använd liten bokstav",
           "uppercase": "Använd stor bokstav",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Öppna i en ny flik"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bokmärken",

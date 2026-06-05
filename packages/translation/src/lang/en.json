@@ -132,8 +132,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
@@ -1302,6 +1303,13 @@
     },
     "edit": {
       "title": "Edit item",
+      "tab": {
+        "widget": "Edit widget",
+        "app": "Edit app"
+      },
+      "app": {
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"
@@ -1404,6 +1412,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
@@ -4582,9 +4593,30 @@
         }
       },
       "media": {
+        "help": "Search for movies or shows to request",
         "requestMovie": "Request movie",
         "requestSeries": "Request series",
-        "openIn": "Open in {kind}"
+        "openIn": "Open in {kind}",
+        "group": {
+          "title": "Movies and shows"
+        },
+        "action": {
+          "search": {
+            "label": "Search for movies or shows",
+            "description": "Start typing to search your media request integrations",
+            "disabled": {
+              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "scoped": "This widget does not have an accessible media request integration."
+            }
+          }
+        },
+        "availability": {
+          "available": "Available",
+          "partiallyAvailable": "Partial",
+          "processing": "Processing",
+          "requested": "Requested",
+          "pending": "Requested"
+        }
       },
       "external": {
         "help": "Use an external search engine",
@@ -4860,7 +4892,11 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes"
+                "episodes": "Episodes",
+                "status": "Status"
+              },
+              "status": {
+                "requested": "Requested"
               }
             },
             "button": {

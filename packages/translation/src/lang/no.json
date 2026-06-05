@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Passord",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Inkluderer minst 8 tegn",
           "lowercase": "Inkluderer liten bokstav",
           "uppercase": "Inkluderer stor bokstav",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Åpne i ny fane"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bokmerke",

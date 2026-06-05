@@ -81,13 +81,7 @@ describe("initUser should initialize the first user", () => {
     await expect(actAsync()).rejects.toThrow("passwordsDoNotMatch");
   });
 
-  it.each([
-    ["aB2%"], // too short
-    ["abc123DEF"], // does not contain special characters
-    ["abcDEFghi+"], // does not contain numbers
-    ["ABC123+/-"], // does not contain lowercase
-    ["abc123+/-"], // does not contain uppercase
-  ])("should throw error that password requirements do not match for '%s' as password", async (password) => {
+  it.each([["aB2%"], ["short"]])("should reject passwords shorter than 8 characters for '%s'", async (password) => {
     const db = createDb();
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
@@ -103,7 +97,55 @@ describe("initUser should initialize the first user", () => {
         confirmPassword: password,
       });
 
-    await expect(actAsync()).rejects.toThrow("passwordRequirements");
+    await expect(actAsync()).rejects.toThrow();
+  });
+
+  it("should accept passwords without complexity requirements", async () => {
+    const db = createDb();
+    await createOnboardingStepAsync(db, "user");
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: null,
+    });
+
+    await caller.initUser({
+      username: "test",
+      password: "abc123DEF",
+      confirmPassword: "abc123DEF",
+    });
+
+    const user = await db.query.users.findFirst({
+      columns: {
+        id: true,
+      },
+    });
+
+    expect(user).toBeDefined();
+  });
+
+  it("should accept passwords with special characters like LoveHomarr<3", async () => {
+    const db = createDb();
+    await createOnboardingStepAsync(db, "user");
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: null,
+    });
+
+    await caller.initUser({
+      username: "test",
+      password: "LoveHomarr<3",
+      confirmPassword: "LoveHomarr<3",
+    });
+
+    const user = await db.query.users.findFirst({
+      columns: {
+        id: true,
+      },
+    });
+
+    expect(user).toBeDefined();
   });
 });
 
