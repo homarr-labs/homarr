@@ -1,0 +1,71 @@
+packages/db/migrations/seed.ts
+  s_9319e0b7f0337e::t_9af52ff185208a 50
+  s_9319e0b7f0337e::t_71f88d9bb160a8 220-224,226-227,245-246,249,260,263-264
+  s_9319e0b7f0337e::t_5e396e6dc31d80 270,287
+  s_9319e0b7f0337e::t_65241a1b46333f 308
+  s_9319e0b7f0337e::t_4835d946a76696 24,31,33-34
+  s_9319e0b7f0337e::t_06e4d752ec92be 13
+  s_9319e0b7f0337e::t_5775be3a2fac37 290-291,333-339,361-362,364,370-371,373,379,381-382,384-386,389,391-395,397-406,413-415,419
+  s_9319e0b7f0337e::t_3e737d65b0af53 342-353,380,396
+  s_9319e0b7f0337e::t_2410f4fbef2f70 383,387-388,390,407-412
+  s_9319e0b7f0337e::t_0989538a2b6f4a 225,228-243,269,271-280
+  s_9319e0b7f0337e::t_1d02a11a86569e 244,247,255-259,265,267-268,288
+  s_9319e0b7f0337e::t_640cba3b83deef 1-2,26
+packages/api/src/middlewares/docker.ts
+  s_9319e0b7f0337e::t_194c88afdb3211 5,9
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_9319e0b7f0337e::t_e936f1b5239d66 26
+  s_9319e0b7f0337e::t_207852c40ddfa6 29
+packages/request-handler/src/docker.ts
+  s_9319e0b7f0337e::t_275b24377ce50c 17-33,38-40
+packages/integrations/src/mock/mock-integration.ts
+  s_9319e0b7f0337e::t_456120f9a7e2df 107
+  s_9319e0b7f0337e::t_dbb3591bc4b979 88
+apps/nextjs/src/env.ts
+  s_9319e0b7f0337e::t_99c3ea72087022 6
+packages/integrations/src/mock/data/network-controller-summary.ts
+  s_9319e0b7f0337e::t_18f825e7e32c03 6-12
+packages/integrations/src/mock/data/download.ts
+  s_9319e0b7f0337e::t_d8a5d55e61039a 5-125,128,130,132-133,137-142,145,147,149,151,153
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_9319e0b7f0337e::t_f2e4eced0719ab 45
+packages/integrations/src/mock/data/media-server.ts
+  s_9319e0b7f0337e::t_9643261c1a0e2a 4-5,7,9-11,13-15
+packages/api/src/trpc.ts
+  s_9319e0b7f0337e::t_0907af0cf38d9f 91-104,112,134
+  s_9319e0b7f0337e::t_1f8c438595f832 21
+packages/api/src/env.ts
+  s_9319e0b7f0337e::t_1bfe629a0f8bbe 3,8,12
+packages/integrations/src/mock/data/calendar.ts
+  s_9319e0b7f0337e::t_27c923ee288f80 4-14,17,22-23,30,36-37,44,50-51,58,64-65,78-79,86,92-93,95,97,103-104,111-122,124,127-135,137-140,143-165,169
+  s_9319e0b7f0337e::t_6c2ad9303c85aa 18-21,24-29,31-35,38-43,45-49,52-57,59-63,66-77,80-85,87-88,99-102,105-108,110,125,141,167-168,170
+packages/notifications/src/index.tsx
+  s_9319e0b7f0337e::t_c373cfdbb19399 3,18-23
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  s_9319e0b7f0337e::t_871616e2816220 99
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_9319e0b7f0337e::t_08ddd2fd052cd5 2-3,10-11,43-49
+packages/integrations/src/mock/data/media-releases.ts
+  s_9319e0b7f0337e::t_e262b5a72cdec4 5,15,18-19,25,36-37,42,52-53,58-59,63-67,69-70,72-77,81-85,87-88,90-95,99-103,105-106,108-111,115-119,121-122,124-129
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_9319e0b7f0337e::t_adaa43641389b4 20-21,26
+  s_9319e0b7f0337e::t_66ef766f05c781 62-71
+packages/api/src/router/info.ts
+  s_9319e0b7f0337e::t_794de898b42e9f 4,16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "35bc50c12a2057f0d5a4cb0ee20eba456f81c954",
+  "prompts": {},
+  "sessions": {
+    "s_9319e0b7f0337e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d0b27f65-2db2-461a-a938-7a9239d65255",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
