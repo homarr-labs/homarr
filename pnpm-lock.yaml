@@ -40,8 +40,8 @@ catalogs:
       specifier: 7.2.1
       version: 7.2.1
     '@gfazioli/mantine-onboarding-tour':
-      specifier: ^4.0.1
-      version: 4.0.2
+      specifier: ^4.0.3
+      version: 4.0.3
     '@gitbeaker/rest':
       specifier: ^43.8.0
       version: 43.8.0
@@ -651,7 +651,7 @@ importers:
         version: 3.2.2(react@19.2.6)
       '@gfazioli/mantine-onboarding-tour':
         specifier: 'catalog:'
-        version: 4.0.2(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 4.0.3(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../../packages/analytics
@@ -3316,11 +3316,11 @@ packages:
   '@formatjs/intl-localematcher@0.8.1':
     resolution: {integrity: sha512-xwEuwQFdtSq1UKtQnyTZWC+eHdv7Uygoa+H2k/9uzBVQjDyp9r20LNDNKedWXll7FssT3GRHvqsdJGYSUWqYFA==}
 
-  '@gfazioli/mantine-onboarding-tour@4.0.2':
-    resolution: {integrity: sha512-x6mcsI6qyJEXeQfmeM9yMIyWoKpLzfrhYWU04LuShNPjvrF3NprTYzmxpUsRGpdSUNVnVXwEku4ZD5u7j0tx8Q==}
+  '@gfazioli/mantine-onboarding-tour@4.0.3':
+    resolution: {integrity: sha512-krYmZoGSV9qpvtztK+QChhfwv1l6LsP/n0u+ih2/A0mV0Osn5avmlj+UBAKoIvwzA4xS50NSoPHj3B53QLzs/Q==}
     peerDependencies:
-      '@mantine/core': '>=7.0.0'
-      '@mantine/hooks': '>=7.0.0'
+      '@mantine/core': '>=9.0.0'
+      '@mantine/hooks': '>=9.0.0'
       '@tabler/icons-react': ^3.30.0
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
@@ -10535,7 +10535,7 @@ snapshots:
       '@formatjs/fast-memoize': 3.1.0
       tslib: 2.8.1
 
-  '@gfazioli/mantine-onboarding-tour@4.0.2(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@gfazioli/mantine-onboarding-tour@4.0.3(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@mantine/core': 9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mantine/hooks': 9.2.2(react@19.2.6)
