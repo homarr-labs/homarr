@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "パスワード",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "少なくとも 8 文字以上を含む",
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "新しいタブで開く"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "ブックマーク",

@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Parola",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "Să includă litere mici",
           "uppercase": "Să includă litere mari",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

@@ -10,9 +10,12 @@ const createSearchInteraction = <TType extends string>(type: TType) => ({
 // This is used to define search interactions with their options
 const searchInteractions = [
   createSearchInteraction("link").optionsType<{ href: string; newTab?: boolean }>(),
-  createSearchInteraction("javaScript").optionsType<{ onSelect: () => MaybePromise<void> }>(),
+  createSearchInteraction("javaScript").optionsType<{
+    onSelect: () => MaybePromise<void>;
+    closeSpotlightOnTrigger?: boolean;
+  }>(),
   createSearchInteraction("setQuery").optionsType<{ query: string }>(),
-  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
+  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"]; query?: string }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];
