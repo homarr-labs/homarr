@@ -23,6 +23,7 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     chown -R $PUID:$PGID /var/lib/nginx
     chown -R $PUID:$PGID /run/nginx/nginx.pid
     chown -R $PUID:$PGID /etc/nginx
+    chown $PUID:$PGID /appdata
     echo "Changing owner to $PUID:$PGID, done."
 fi
 
