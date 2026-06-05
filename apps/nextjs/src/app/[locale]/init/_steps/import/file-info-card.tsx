@@ -1,9 +1,11 @@
-import { ActionIcon, Button, Card, Group, Text } from "@mantine/core";
+import { ActionIcon, Button, Group, Text } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 import { IconPencil } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import { InitStepCard } from "../../_components/init-step-card";
 
 interface FileInfoCardProps {
   file: FileWithPath;
@@ -13,7 +15,7 @@ interface FileInfoCardProps {
 export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
   const tFileInfo = useScopedI18n("init.step.import.fileInfo");
   return (
-    <Card w={64 * 12 + 8} maw="90vw" withBorder={false}>
+    <InitStepCard withBorder={false}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <Group>
           <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>
@@ -36,6 +38,6 @@ export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
           <IconPencil size={16} stroke={1.5} />
         </ActionIcon>
       </Group>
-    </Card>
+    </InitStepCard>
   );
 };

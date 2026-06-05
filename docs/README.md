@@ -19,6 +19,9 @@
 
 <!-- Links -->
 <p align="center">
+  <a href="https://demo.homarr.dev">
+    <strong>Live Demo 🎮</strong>
+  </a> •
   <a href="https://homarr.dev/docs/category/installation-1/">
     <strong>Install 💻</strong>
   </a> •

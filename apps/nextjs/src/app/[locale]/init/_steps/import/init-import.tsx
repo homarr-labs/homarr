@@ -1,13 +1,14 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import { Card, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { InitialOldmarrImport } from "@homarr/old-import/components";
 
+import { InitStepCard } from "../../_components/init-step-card";
 import { FileInfoCard } from "./file-info-card";
 import { ImportDropZone } from "./import-dropzone";
 
@@ -20,7 +21,7 @@ export const InitImport = () => {
 
   if (!file) {
     return (
-      <Card w={64 * 12 + 8} maw="90vw">
+      <InitStepCard>
         <ImportDropZone
           loading={isPending}
           updateFile={(file) => {
@@ -40,12 +41,12 @@ export const InitImport = () => {
             });
           }}
         />
-      </Card>
+      </InitStepCard>
     );
   }
 
   return (
-    <Stack mb="sm">
+    <Stack w="100%" mb="sm">
       <FileInfoCard file={file} onRemove={() => setFile(null)} />
       {analyseResult !== null && <InitialOldmarrImport file={file} analyseResult={analyseResult} />}
     </Stack>

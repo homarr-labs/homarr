@@ -11,6 +11,7 @@ import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
@@ -45,9 +46,11 @@ export default async function AppsPage(props: AppsPageProps) {
       title={t("page.list.title")}
       primaryAction={
         canCreate ? (
-          <MobileAffixButton component={Link} href="/manage/apps/new">
-            {t("page.create.title")}
-          </MobileAffixButton>
+          <TourTarget id="manage-apps-create">
+            <MobileAffixButton component={Link} href="/manage/apps/new">
+              {t("page.create.title")}
+            </MobileAffixButton>
+          </TourTarget>
         ) : undefined
       }
       toolbar={<SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />}
@@ -56,11 +59,13 @@ export default async function AppsPage(props: AppsPageProps) {
     >
       {apps.length === 0 && <AppNoResults />}
       {apps.length > 0 && (
-        <Stack gap="sm">
-          {apps.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </Stack>
+        <TourTarget id="manage-apps-list">
+          <Stack gap="sm">
+            {apps.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </Stack>
+        </TourTarget>
       )}
     </ManagePageLayout>
   );

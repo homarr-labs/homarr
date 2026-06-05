@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Wachtwoord",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "In nieuw tabblad openen"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bladwijzers",

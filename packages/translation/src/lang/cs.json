@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Heslo",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "Obsahuje alespoň 8 znaků",
           "lowercase": "Obsahuje malé písmeno",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { Avatar, Button, Card, Center, Grid, Group, Input, Stack, Text, Tooltip } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { Avatar, Box, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
@@ -86,32 +86,31 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   };
 
   return (
-    <Stack>
-      <Input
-        value={search}
-        onChange={(event) => setSearch(event.currentTarget.value)}
-        leftSection={<IconSearch />}
-        placeholder={`${t("item.create.search")}...`}
-        data-autofocus
-        onKeyDown={(event) => {
-          // Add item if there is only one item in the list and user presses Enter
-          if (event.key === "Enter" && filteredItems.length === 1) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            handleAdd(filteredItems[0]!.kind);
-          }
-        }}
-      />
+    <SelectGridLayout
+      search={search}
+      onSearchChange={setSearch}
+      placeholder={`${t("item.create.search")}...`}
+      onSearchKeyDown={(event) => {
+        if (event.key === "Enter" && filteredItems.length === 1) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          handleAdd(filteredItems[0]!.kind);
+        }
+      }}
+    >
+      {filteredItems.map((item) => (
+        <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
+      ))}
 
-      <Grid>
-        {filteredItems.map((item) => (
-          <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
-        ))}
-      </Grid>
-    </Stack>
+      {filteredItems.length === 0 && (
+        <Center p="xl">
+          <Text c="dimmed">{t("common.noResults")}</Text>
+        </Center>
+      )}
+    </SelectGridLayout>
   );
 }).withOptions({
   defaultTitle: (t) => t("item.create.title"),
-  size: "xl",
+  size: modalSizeSelect,
 });
 
 const WidgetItem = ({
@@ -130,46 +129,58 @@ const WidgetItem = ({
   const t = useI18n();
 
   return (
-    <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
-      <Card h="100%">
-        <Stack justify="space-between" h="100%">
-          <Stack gap="xs">
-            <Center>
-              <item.icon />
-            </Center>
-            <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-              {item.name}
-            </Text>
-            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-              {item.description}
-            </Text>
-          </Stack>
-          <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
-          <Button onClick={onSelect} variant="light" size="xs" fullWidth>
-            {t(`item.create.addToBoard`)}
-          </Button>
-        </Stack>
-      </Card>
-    </Grid.Col>
+    <Card
+      h={selectGridCardHeight}
+      withBorder
+      pos="relative"
+      style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+      onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+      onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+    >
+      <Stack h="100%" gap="xs">
+        <Group gap="sm" wrap="nowrap" align="flex-start">
+          <item.icon size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
+            {item.name}
+          </Text>
+        </Group>
+        <Tooltip label={item.description} multiline w={250} disabled={!item.description}>
+          <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+            {item.description}
+          </Text>
+        </Tooltip>
+        <SupportedIntegrations integrations={item.supportedIntegrations} />
+      </Stack>
+      <Box
+        pos="absolute"
+        bottom={0}
+        left={0}
+        right={0}
+        p="xs"
+        style={{
+          opacity: "var(--_hover-opacity)",
+          transition: "opacity 150ms ease",
+          background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+        }}
+      >
+        <Button onClick={onSelect} variant="light" size="xs" fullWidth>
+          {t(`item.create.addToBoard`)}
+        </Button>
+      </Box>
+    </Card>
   );
 };
 
-interface SupportedIntegrationsProps {
-  integrations: IntegrationKind[];
-  mt: string;
-}
-
-const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps) => {
+const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
   if (integrations.length === 0) {
     return null;
   }
 
-  // When there are 8 or more integrations, we show 6 and a "+X" avatar. Otherwise, we show all integrations.
   const countToShow = integrations.length >= 8 ? 6 : 7;
   const moreCount = integrations.length - countToShow;
 
   return (
-    <Center mt={mt}>
+    <Group gap={2} mt="auto">
       <Tooltip.Group closeDelay={100}>
         <Group gap={2}>
           {integrations.slice(0, countToShow).map((integration) => (
@@ -195,6 +206,6 @@ const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps)
           )}
         </Group>
       </Tooltip.Group>
-    </Center>
+    </Group>
   );
 };

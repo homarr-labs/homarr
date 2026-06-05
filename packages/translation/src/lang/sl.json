@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "Geslo",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "",
           "lowercase": "Vključuje male črke",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

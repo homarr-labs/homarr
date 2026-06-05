@@ -38,7 +38,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
   }
 
   return (
-    <Card w={64 * 12 + 8} maw="90vw" withBorder={false}>
+    <Card w="100%" withBorder={false}>
       <Stack gap="sm">
         <Stack gap={0}>
           <Group justify="space-between" align="center">

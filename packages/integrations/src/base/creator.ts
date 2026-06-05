@@ -36,6 +36,7 @@ import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
+import { PeaNutIntegration } from "../peanut/peanut-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
@@ -123,6 +124,7 @@ export const integrationCreators = {
   immich: ImmichIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
   umami: UmamiIntegration,
+  peaNut: PeaNutIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

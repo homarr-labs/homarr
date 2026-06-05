@@ -76,6 +76,9 @@ const nextSteps: Partial<Record<OnboardingStep, Partial<Record<OnboardingStep, N
     settings: true,
   },
   settings: {
+    integrations: true,
+  },
+  integrations: {
     finish: true,
   },
 };
