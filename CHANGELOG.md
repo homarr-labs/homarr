@@ -1,3 +1,27 @@
+## [1.64.0](https://github.com/homarr-labs/homarr/compare/v1.63.0...v1.64.0) (2026-06-05)
+
+### Features
+
+* add comprehensive demo mode with mock integrations ([#5870](https://github.com/homarr-labs/homarr/issues/5870)) ([0a64679](https://github.com/homarr-labs/homarr/commit/0a6467979a5e3b3e3eae6252c31fca1d9af54dc1))
+* add PeaNUT integration and UPS monitoring widget ([#5862](https://github.com/homarr-labs/homarr/issues/5862)) ([0dc2558](https://github.com/homarr-labs/homarr/commit/0dc2558fafedcbba246c2e968d00cc541ab9f84e))
+* **docker:** add container logs modal and stats columns ([#4807](https://github.com/homarr-labs/homarr/issues/4807)) ([dbf021e](https://github.com/homarr-labs/homarr/commit/dbf021e04a785b44ad0e2ce45634de371d76de6d))
+* media request search as first-class spotlight mode ([#5823](https://github.com/homarr-labs/homarr/issues/5823)) ([3d3e305](https://github.com/homarr-labs/homarr/commit/3d3e3059a98b36b6e64e3aad90f715e334baff3e))
+* **onboarding:** enhance integration setup with Docker discovery and URL templating ([#5607](https://github.com/homarr-labs/homarr/issues/5607)) ([dd7a490](https://github.com/homarr-labs/homarr/commit/dd7a4908a36a71c1d0d1e41524eb8fd9bf53ca4d))
+* **onboarding:** guided management and board tours ([#5756](https://github.com/homarr-labs/homarr/issues/5756)) ([0b663a7](https://github.com/homarr-labs/homarr/commit/0b663a7fc6c017b9fbe78c019f06d46ee95f165f))
+* **widgets:** add in-place app editing in widget edit modal ([#5809](https://github.com/homarr-labs/homarr/issues/5809)) ([99346f2](https://github.com/homarr-labs/homarr/commit/99346f288bcfc701c41fecaab6f7bc0438d80563))
+
+### Bug Fixes
+
+* add bookmark widget option to toggle card borders ([#5854](https://github.com/homarr-labs/homarr/issues/5854)) ([41fe592](https://github.com/homarr-labs/homarr/commit/41fe5928f19207d02b04e64c2caac49d896f72ce))
+* **auth:** relax password complexity requirements to suggestions-only ([#5764](https://github.com/homarr-labs/homarr/issues/5764)) ([fd10788](https://github.com/homarr-labs/homarr/commit/fd107888385557ededcf51576c6320a1960690f2))
+* **db:** log when UNSAFE_ENABLE_MOCK_INTEGRATION is enabled during seeding ([efd37dc](https://github.com/homarr-labs/homarr/commit/efd37dca93be7f5f362331e9b5c2a95a87e24379))
+* disable onboarding tours when demo mode is enabled ([68f24e3](https://github.com/homarr-labs/homarr/commit/68f24e34d580e3a155c37ca37c3ffd61f296bd0c))
+* **docker:** restore container selection toolbar broken by Mantine v9 ([#5855](https://github.com/homarr-labs/homarr/issues/5855)) ([fe4598f](https://github.com/homarr-labs/homarr/commit/fe4598f7221a2861b8c5ae0cfd267e8c4fbf48df))
+* **immich:** respect app color scheme in server-stats widget ([#5859](https://github.com/homarr-labs/homarr/issues/5859)) ([2c6b7a8](https://github.com/homarr-labs/homarr/commit/2c6b7a818e9d32b414b024d711a3b64533e61cb9))
+* redirect to login after credentials logout instead of crashing on current page ([#5819](https://github.com/homarr-labs/homarr/issues/5819)) ([cc24f07](https://github.com/homarr-labs/homarr/commit/cc24f070db26337a4a2d87d68c7f142ed1118584))
+* sync docs sitemap and remove stale coolify ts-expect-error ([4f5f3e1](https://github.com/homarr-labs/homarr/commit/4f5f3e14a129a94295d4b8ffb7d3702fdb4f6a74))
+* **ui:** restore pre-v9 light variant colors ([#5856](https://github.com/homarr-labs/homarr/issues/5856)) ([a755692](https://github.com/homarr-labs/homarr/commit/a755692d81b80b5ff83051a3b7261c01ac10321b))
+
 ## [1.63.0](https://github.com/homarr-labs/homarr/compare/v1.62.0...v1.63.0) (2026-05-29)
 
 ### Features
