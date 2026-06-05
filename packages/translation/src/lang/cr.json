@@ -132,12 +132,13 @@
       },
       "password": {
         "label": "crwdns26:0crwdne26:0",
-        "requirement": {
-          "length": "crwdns28:0crwdne28:0",
-          "lowercase": "crwdns30:0crwdne30:0",
-          "uppercase": "crwdns32:0crwdne32:0",
-          "number": "crwdns34:0crwdne34:0",
-          "special": "crwdns36:0crwdne36:0"
+        "suggestionsTitle": "crwdns4261:0crwdne4261:0",
+        "suggestion": {
+          "length": "crwdns4263:0crwdne4263:0",
+          "lowercase": "crwdns4265:0crwdne4265:0",
+          "uppercase": "crwdns4267:0crwdne4267:0",
+          "number": "crwdns4269:0crwdne4269:0",
+          "special": "crwdns4271:0crwdne4271:0"
         }
       },
       "passwordConfirm": {
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "crwdns2686:0crwdne2686:0"
+        },
+        "withBorder": {
+          "label": "crwdns4273:0crwdne4273:0"
         },
         "items": {
           "label": "crwdns764:0crwdne764:0",

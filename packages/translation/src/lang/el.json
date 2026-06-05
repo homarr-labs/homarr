@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Κωδικός",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "Περιλαμβάνει πεζό γράμμα",
           "uppercase": "Περιλαμβάνει κεφαλαίο γράμμα",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Senha",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Inclua pelo menos 8 caracteres",
           "lowercase": "Inclui letras minúsculas",
           "uppercase": "Inclui letras maiúsculas",
@@ -1056,7 +1057,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Nenhuma mídia enviada"
     }
   },
   "common": {
@@ -1088,8 +1089,8 @@
       "checkLogs": "Verifique os logs para mais detalhes",
       "tryAgain": "Tente novamente",
       "loading": "Carregando",
-      "show": "",
-      "hide": ""
+      "show": "Mostrar",
+      "hide": "Esconder"
     },
     "here": "aqui",
     "iconPicker": {
@@ -1255,7 +1256,7 @@
         "label": {
           "create": "Nova categoria",
           "changePosition": "Mudar de posição",
-          "settings": ""
+          "settings": "Configurações"
         }
       },
       "openAllInNewTabs": {
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Abrir em nova guia"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Marcadores",
@@ -3459,7 +3463,7 @@
           "private": "Este quadro é privado"
         },
         "noResults": {
-          "title": ""
+          "title": "Nenhum painel ainda"
         },
         "modal": {
           "createBoard": {

@@ -174,8 +174,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
@@ -1380,6 +1381,13 @@
     },
     "edit": {
       "title": "Edit item",
+      "tab": {
+        "widget": "Edit widget",
+        "app": "Edit app"
+      },
+      "app": {
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"
@@ -1482,6 +1490,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
