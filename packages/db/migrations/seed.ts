@@ -226,18 +226,66 @@ interface DemoWidget {
 }
 
 const demoApps = [
-  { name: "Sonarr", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg", href: "https://sonarr.tv" },
-  { name: "Radarr", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg", href: "https://radarr.video" },
-  { name: "Plex", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg", href: "https://plex.tv" },
-  { name: "Jellyfin", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg", href: "https://jellyfin.org" },
-  { name: "Proxmox", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg", href: "https://proxmox.com" },
-  { name: "Pi-hole", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pi-hole.svg", href: "https://pi-hole.net" },
-  { name: "Grafana", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg", href: "https://grafana.com" },
-  { name: "Portainer", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/portainer.svg", href: "https://portainer.io" },
-  { name: "Home Assistant", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg", href: "https://home-assistant.io" },
-  { name: "Nextcloud", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg", href: "https://nextcloud.com" },
-  { name: "qBittorrent", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg", href: "https://qbittorrent.org" },
-  { name: "Overseerr", iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg", href: "https://overseerr.dev" },
+  {
+    name: "Sonarr",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg",
+    href: "https://sonarr.tv",
+  },
+  {
+    name: "Radarr",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg",
+    href: "https://radarr.video",
+  },
+  {
+    name: "Plex",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg",
+    href: "https://plex.tv",
+  },
+  {
+    name: "Jellyfin",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg",
+    href: "https://jellyfin.org",
+  },
+  {
+    name: "Proxmox",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg",
+    href: "https://proxmox.com",
+  },
+  {
+    name: "Pi-hole",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pi-hole.svg",
+    href: "https://pi-hole.net",
+  },
+  {
+    name: "Grafana",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg",
+    href: "https://grafana.com",
+  },
+  {
+    name: "Portainer",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/portainer.svg",
+    href: "https://portainer.io",
+  },
+  {
+    name: "Home Assistant",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg",
+    href: "https://home-assistant.io",
+  },
+  {
+    name: "Nextcloud",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg",
+    href: "https://nextcloud.com",
+  },
+  {
+    name: "qBittorrent",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg",
+    href: "https://qbittorrent.org",
+  },
+  {
+    name: "Overseerr",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg",
+    href: "https://overseerr.dev",
+  },
 ] as const;
 
 const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
@@ -248,7 +296,10 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
   // Row 2: healthMonitoring + bookmarks = 12
   { kind: "healthMonitoring", width: 6, height: 3, needsIntegration: true },
   {
-    kind: "bookmarks", width: 6, height: 3, needsIntegration: false,
+    kind: "bookmarks",
+    width: 6,
+    height: 3,
+    needsIntegration: false,
     options: { title: "Homelab", items: appIds, layout: "grid", openNewTab: true },
   },
   // Row 3: mediaServer + mediaTranscoding + dnsHoleSummary = 12
@@ -267,22 +318,27 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
   { kind: "networkControllerSummary", width: 3, height: 2, needsIntegration: true },
   { kind: "networkControllerStatus", width: 3, height: 2, needsIntegration: true },
   {
-    kind: "rssFeed", width: 6, height: 2, needsIntegration: false,
+    kind: "rssFeed",
+    width: 6,
+    height: 2,
+    needsIntegration: false,
     options: {
-      feedUrls: [
-        "https://selfh.st/rss/",
-        "https://hnrss.org/newest?q=self-hosted",
-      ],
+      feedUrls: ["https://selfh.st/rss/", "https://hnrss.org/newest?q=self-hosted"],
       maximumAmountPosts: 20,
       textLinesClamp: 2,
       hideDescription: false,
     },
   },
   // Row 7-8: app widgets (2x1 each, 6 per row = 12)
-  ...appIds.map((appId): DemoWidget => ({
-    kind: "app", width: 2, height: 1, needsIntegration: false,
-    options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
-  })),
+  ...appIds.map(
+    (appId): DemoWidget => ({
+      kind: "app",
+      width: 2,
+      height: 1,
+      needsIntegration: false,
+      options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
+    }),
+  ),
   // Row 9: notebook + dockerContainers + weather = 12
   { kind: "notebook", width: 4, height: 4, needsIntegration: false },
   { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },

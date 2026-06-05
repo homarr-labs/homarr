@@ -27,7 +27,15 @@ const eventTemplates: EventTemplate[] = [
       badge: { content: "S4/E3", color: "red" },
     },
     indicatorColor: "blue",
-    links: [{ href: "https://www.imdb.com/title/tt8111088/", name: "IMDb", color: "#f5c518", isDark: false, logo: "/images/apps/imdb.svg" }],
+    links: [
+      {
+        href: "https://www.imdb.com/title/tt8111088/",
+        name: "IMDb",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.svg",
+      },
+    ],
   },
   {
     title: "Silo",
@@ -41,7 +49,15 @@ const eventTemplates: EventTemplate[] = [
       badge: { content: "S2/E8", color: "teal" },
     },
     indicatorColor: "teal",
-    links: [{ href: "https://www.imdb.com/title/tt14688458/", name: "IMDb", color: "#f5c518", isDark: false, logo: "/images/apps/imdb.svg" }],
+    links: [
+      {
+        href: "https://www.imdb.com/title/tt14688458/",
+        name: "IMDb",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.svg",
+      },
+    ],
   },
   {
     title: "Dune: Part Two",
@@ -55,7 +71,15 @@ const eventTemplates: EventTemplate[] = [
     },
     metadata: { type: "radarr", releaseType: "digitalRelease" },
     indicatorColor: "cyan",
-    links: [{ href: "https://www.imdb.com/title/tt15239678/", name: "IMDb", color: "#f5c518", isDark: false, logo: "/images/apps/imdb.svg" }],
+    links: [
+      {
+        href: "https://www.imdb.com/title/tt15239678/",
+        name: "IMDb",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.svg",
+      },
+    ],
   },
   {
     title: "Severance",
@@ -83,7 +107,15 @@ const eventTemplates: EventTemplate[] = [
     },
     metadata: { type: "radarr", releaseType: "physicalRelease" },
     indicatorColor: "orange",
-    links: [{ href: "https://www.imdb.com/title/tt15398776/", name: "IMDb", color: "#f5c518", isDark: false, logo: "/images/apps/imdb.svg" }],
+    links: [
+      {
+        href: "https://www.imdb.com/title/tt15398776/",
+        name: "IMDb",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.svg",
+      },
+    ],
   },
   {
     title: "Homarr Meetup",
@@ -94,7 +126,15 @@ const eventTemplates: EventTemplate[] = [
     location: "Mountains",
     image: null,
     indicatorColor: "#fa5252",
-    links: [{ href: "https://homarr.dev", name: "Homarr", logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg", color: "#000000", isDark: true }],
+    links: [
+      {
+        href: "https://homarr.dev",
+        name: "Homarr",
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+        color: "#000000",
+        isDark: true,
+      },
+    ],
   },
   {
     title: "The Bear",
@@ -144,24 +184,26 @@ const buildEventsForRange = (start: Date, end: Date): CalendarEvent[] => {
   const rangeStart = new Date(start);
   rangeStart.setDate(rangeStart.getDate() - 3);
 
-  return eventTemplates.map((tpl) => {
-    const startDate = new Date(rangeStart);
-    startDate.setDate(startDate.getDate() + tpl.dayOffset);
-    startDate.setHours(tpl.hours, 0, 0, 0);
+  return eventTemplates
+    .map((tpl) => {
+      const startDate = new Date(rangeStart);
+      startDate.setDate(startDate.getDate() + tpl.dayOffset);
+      startDate.setHours(tpl.hours, 0, 0, 0);
 
-    return {
-      title: tpl.title,
-      subTitle: tpl.subTitle,
-      description: tpl.description,
-      startDate,
-      endDate: tpl.location ? new Date(startDate.getTime() + 2 * 60 * 60 * 1000) : null,
-      image: tpl.image,
-      location: tpl.location ?? null,
-      indicatorColor: tpl.indicatorColor,
-      links: tpl.links,
-      ...(tpl.metadata ? { metadata: tpl.metadata } : {}),
-    };
-  }).filter((event) => event.startDate >= start && event.startDate <= end);
+      return {
+        title: tpl.title,
+        subTitle: tpl.subTitle,
+        description: tpl.description,
+        startDate,
+        endDate: tpl.location ? new Date(startDate.getTime() + 2 * 60 * 60 * 1000) : null,
+        image: tpl.image,
+        location: tpl.location ?? null,
+        indicatorColor: tpl.indicatorColor,
+        links: tpl.links,
+        ...(tpl.metadata ? { metadata: tpl.metadata } : {}),
+      };
+    })
+    .filter((event) => event.startDate >= start && event.startDate <= end);
 };
 
 export class CalendarMockService implements ICalendarIntegration {
