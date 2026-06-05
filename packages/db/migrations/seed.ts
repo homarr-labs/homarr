@@ -4,6 +4,7 @@ import { createId, objectKeys } from "@homarr/common";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
+  defaultBookmarkApps,
   everyoneGroup,
   getIntegrationDefaultUrl,
   getIntegrationName,
@@ -15,7 +16,7 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database } from "..";
 import { eq } from "..";
-import { getMaxGroupPositionAsync } from "../queries";
+import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
@@ -46,6 +47,9 @@ export const seedDataAsync = async (db: Database) => {
   await seedServerSettingsAsync(db);
   await seedDefaultSearchEnginesAsync(db);
   await seedDefaultIntegrationsAsync(db);
+  await seedDefaultAppsAsync(db);
+  await seedDefaultBoardAsync(db);
+  await seedBoardWidgetsAsync(db);
 
   if (["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase())) {
     await seedDemoUserAsync(db);
@@ -215,6 +219,64 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
   }
 
   console.log(`Created ${createdCount} default integrations through seeding process`);
+};
+
+const seedDefaultAppsAsync = async (db: Database) => {
+  const existingApps = await db.$count(apps);
+  if (existingApps > 0) {
+    console.log("Skipping seeding of default apps as some already exist");
+    return;
+  }
+
+  for (const app of defaultBookmarkApps) {
+    await db.insert(apps).values({
+      id: createId(),
+      name: app.name,
+      iconUrl: app.iconUrl,
+      href: app.href,
+    });
+  }
+  console.log(`Created ${defaultBookmarkApps.length} default apps through seeding process`);
+};
+
+const seedDefaultBoardAsync = async (db: Database) => {
+  const existingBoard = await db.query.boards.findFirst();
+
+  if (existingBoard) {
+    console.log("Skipping seeding of default board as one already exists");
+    return;
+  }
+
+  const boardId = createId();
+  await db.insert(boards).values({
+    id: boardId,
+    name: "dashboard",
+    isPublic: false,
+  });
+  await db.insert(sections).values({
+    id: createId(),
+    kind: "empty",
+    xOffset: 0,
+    yOffset: 0,
+    boardId,
+  });
+  await db.insert(layouts).values({
+    id: createId(),
+    name: "Base",
+    columnCount: 10,
+    breakpoint: 0,
+    boardId,
+  });
+
+  const everyoneGroupRow = await db.query.groups.findFirst({
+    where: eq(groups.name, everyoneGroup),
+  });
+  if (everyoneGroupRow) {
+    await db.update(groups).set({ homeBoardId: boardId }).where(eq(groups.id, everyoneGroupRow.id));
+    console.log("Set default board as home board for everyone group");
+  }
+
+  console.log("Created default board 'dashboard' through seed");
 };
 
 interface DemoWidget {
@@ -474,4 +536,33 @@ const seedDemoUserAsync = async (db: Database) => {
   console.log(
     "Demo mode enabled: created demo user, mock integration, and sample board with widgets. Disable by setting DEMO_MODE=false.",
   );
+};
+
+const seedBoardWidgetsAsync = async (db: Database) => {
+  const existingItems = await db.$count(items);
+  if (existingItems > 0) {
+    console.log("Skipping seeding of board widgets as some already exist");
+    return;
+  }
+
+  const board = await db.query.boards.findFirst({
+    with: { sections: true, layouts: true },
+  });
+  if (!board) return;
+
+  const section = board.sections.find((sec) => sec.kind === "empty");
+  const layout = board.layouts[0];
+  if (!section || !layout) return;
+
+  const allIntegrations = await db.query.integrations.findMany();
+  const allApps = await db.query.apps.findMany();
+
+  const count = await placeAllWidgetsAsync(
+    db,
+    { boardId: board.id, sectionId: section.id, layoutId: layout.id, columnCount: layout.columnCount },
+    allIntegrations,
+    allApps,
+  );
+
+  console.log(`Placed ${count} widgets on board`);
 };

@@ -1,11 +1,11 @@
 import { useCallback, useRef } from "react";
-import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
+import { Grid, NumberInput, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import type { GridStack } from "@homarr/gridstack";
-import { createModal } from "@homarr/modals";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
 
 import type { Item, SectionItem } from "~/app/[locale]/boards/_types";
 
@@ -16,9 +16,7 @@ interface InnerProps {
 }
 
 export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const tCommon = useScopedI18n("common");
   const t = useI18n();
-  // Keep track of the maximum width based on the x offset
   const maxWidthRef = useRef(innerProps.columnCount - innerProps.item.xOffset);
   const form = useZodForm(
     z.object({
@@ -38,7 +36,6 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         height: innerProps.item.height,
       },
       onValuesChange(values, previous) {
-        // Update the maximum width when the x offset changes
         if (values.xOffset !== previous.xOffset) {
           maxWidthRef.current = innerProps.columnCount - values.xOffset;
         }
@@ -70,6 +67,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
               label={t("item.moveResize.field.xOffset.label")}
+              data-autofocus
               min={0}
               max={innerProps.columnCount - 1}
               {...form.getInputProps("xOffset")}
@@ -93,12 +91,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
             <NumberInput label={t("item.moveResize.field.height.label")} min={1} {...form.getInputProps("height")} />
           </Grid.Col>
         </Grid>
-        <Group justify="end">
-          <Button variant="subtle" onClick={actions.closeModal}>
-            {tCommon("action.cancel")}
-          </Button>
-          <Button type="submit">{tCommon("action.saveChanges")}</Button>
-        </Group>
+        <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>
     </form>
   );
@@ -106,5 +99,5 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   defaultTitle(t) {
     return t("item.moveResize.title");
   },
-  size: "lg",
+  size: modalSizeForm,
 });
