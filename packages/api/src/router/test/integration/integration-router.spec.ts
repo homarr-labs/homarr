@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
-import { apps, integrations, integrationSecrets } from "@homarr/db/schema";
+import { apps, integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
@@ -56,6 +56,127 @@ describe("all should return all integrations", () => {
     expect(result.length).toBe(2);
     expect(result[0]!.kind).toBe("plex");
     expect(result[1]!.kind).toBe("homeAssistant");
+  });
+});
+
+describe("mediaRequestSearchTargets should return accessible media search integrations", () => {
+  test("with integration use access should only return media request search integrations", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-use-all"]),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Jellyseerr",
+        kind: "jellyseerr",
+        url: "http://jellyseerr.local",
+      },
+      {
+        id: "2",
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+      },
+    ]);
+
+    const result = await caller.mediaRequestSearchTargets();
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
+    expect(result[0]!.kind).toBe("jellyseerr");
+  });
+
+  test("without access should not return media request search integrations", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values({
+      id: "1",
+      name: "Jellyseerr",
+      kind: "jellyseerr",
+      url: "http://jellyseerr.local",
+    });
+
+    const result = await caller.mediaRequestSearchTargets();
+
+    expect(result).toHaveLength(0);
+  });
+
+  test("with direct integration use access should return media request search integrations", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values({
+      id: "1",
+      name: "Jellyseerr",
+      kind: "jellyseerr",
+      url: "http://jellyseerr.local",
+    });
+    await db.insert(users).values({ id: defaultUserId });
+    await db.insert(integrationUserPermissions).values({
+      integrationId: "1",
+      userId: defaultUserId,
+      permission: "use",
+    });
+
+    const result = await caller.mediaRequestSearchTargets();
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
+  });
+});
+
+describe("searchMediaRequests should validate scoped integrations", () => {
+  test("with a non media search integration should throw not found", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-use-all"]),
+    });
+
+    await db.insert(integrations).values({
+      id: "1",
+      name: "Jellyfin",
+      kind: "jellyfin",
+      url: "http://jellyfin.local",
+    });
+
+    await expect(caller.searchMediaRequests({ query: "matrix", integrationIds: ["1"] })).rejects.toThrow(
+      "One or more media request search integrations were not found",
+    );
+  });
+
+  test("without query access to a scoped media search integration should throw forbidden", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values({
+      id: "1",
+      name: "Jellyseerr",
+      kind: "jellyseerr",
+      url: "http://jellyseerr.local",
+    });
+
+    await expect(caller.searchMediaRequests({ query: "matrix", integrationIds: ["1"] })).rejects.toThrow(
+      "User does not have permission to query one or more media request search integrations",
+    );
   });
 });
 
@@ -208,7 +329,7 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
   });
 
-  test("with create integration access should create a new integration when creating search engine", async () => {
+  test("with create integration access should not create a search engine for media request search integrations", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
@@ -243,12 +364,7 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
 
-    expect(dbSearchEngine!.integrationId).toBe(dbIntegration!.id);
-    expect(dbSearchEngine!.short).toBe("j");
-    expect(dbSearchEngine!.name).toBe(input.name);
-    expect(dbSearchEngine!.iconUrl).toBe(
-      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
-    );
+    expect(dbSearchEngine).toBeUndefined();
   });
 
   test("with create integration access should create a new integration with new linked app", async () => {

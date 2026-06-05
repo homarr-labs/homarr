@@ -13,9 +13,11 @@ import classes from "./terminal.module.css";
 
 export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { activeLevels } = useLogContext();
+  const { activeLevels, fontSize } = useLogContext();
 
   const terminalRef = useRef<Terminal>(null);
+  const fitAddonRef = useRef<FitAddon>(null);
+
   clientApi.log.subscribe.useSubscription(
     {
       levels: activeLevels,
@@ -26,7 +28,6 @@ export const TerminalComponent = () => {
         terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
       },
       onError(err) {
-        // This makes sense as logging might cause an infinite loop
         alert(err);
       },
     },
@@ -43,22 +44,30 @@ export const TerminalComponent = () => {
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
+      fontSize,
     });
     terminalRef.current.open(ref.current);
     terminalRef.current.loadAddon(canvasAddon);
 
-    // This is a hack to make sure the terminal is rendered before we try to fit it
-    // You can blame @Meierschlumpf for this
     setTimeout(() => {
       const fitAddon = new FitAddon();
+      fitAddonRef.current = fitAddon;
       terminalRef.current?.loadAddon(fitAddon);
       fitAddon.fit();
     });
 
     return () => {
-      terminalRef.current?.dispose();
       canvasAddon.dispose();
+      terminalRef.current?.dispose();
+      terminalRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!terminalRef.current) return;
+    terminalRef.current.options.fontSize = fontSize;
+    fitAddonRef.current?.fit();
+  }, [fontSize]);
+
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
 };

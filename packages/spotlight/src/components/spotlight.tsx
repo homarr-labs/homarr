@@ -1,24 +1,33 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
-import { IconSearch, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch, IconX } from "@tabler/icons-react";
+import { useSetAtom } from "jotai";
 
 import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
+import type { OpenMediaRequestSearchOptions } from "../index";
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { searchModes } from "../modes";
-import { useHomeEmptyGroups } from "../modes/help/home-empty-groups";
-import { selectAction, spotlightStore } from "../spotlight-store";
+import { useHomeEmptyGroupsWithPreferences } from "../modes/help/home-empty-groups";
+import {
+  mediaRequestSearchEvent,
+  mediaRequestSearchScopeAtom,
+  selectAction,
+  spotlightActions,
+  spotlightStore,
+} from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
 import { SpotlightActionGroups } from "./actions/groups/action-group";
 
 type SearchModeKey = keyof TranslationObject["search"]["mode"];
+type ChildrenOptions = inferSearchInteractionOptions<"children">;
 
 const defaultMode = "home";
 export const Spotlight = () => {
@@ -31,7 +40,6 @@ export const Spotlight = () => {
     return null;
   }
 
-  // We use the "key" below to prevent the 'Different amounts of hooks' error
   return (
     <SpotlightWithActiveMode key={mode} modeState={searchModeState} queryState={queryState} activeMode={activeMode} />
   );
@@ -46,13 +54,57 @@ interface SpotlightWithActiveModeProps {
 const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: SpotlightWithActiveModeProps) => {
   const [query, setQuery] = queryState;
   const [mode, setMode] = modeState;
-  const [childrenOptions, setChildrenOptions] = useState<inferSearchInteractionOptions<"children"> | null>(null);
+  const [childrenStack, setChildrenStack] = useState<ChildrenOptions[]>([]);
+  const childrenOptions = childrenStack.at(-1) ?? null;
   const t = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
-  // Works as always the same amount of hooks are executed
+  const setMediaRequestSearchScope = useSetAtom(mediaRequestSearchScopeAtom);
   const useGroups = "groups" in activeMode ? () => activeMode.groups : activeMode.useGroups;
   const groups = useGroups();
-  const homeEmptyGroups = useHomeEmptyGroups();
+  const homeEmptyGroups = useHomeEmptyGroupsWithPreferences();
+  const hasModeCharacter = activeMode.modeKey !== defaultMode && activeMode.character !== undefined;
+
+  const clearChildrenStack = useCallback(() => {
+    setChildrenStack([]);
+  }, []);
+
+  const pushChildrenOptions = useCallback(
+    (options: ChildrenOptions) => {
+      setChildrenStack((currentStack) => [...currentStack, options]);
+      setQuery("");
+      setTimeout(() => selectAction(0, spotlightStore));
+    },
+    [setQuery],
+  );
+
+  const popChildrenOptions = useCallback(() => {
+    setChildrenStack((currentStack) => currentStack.slice(0, -1));
+    setQuery("");
+    setTimeout(() => selectAction(0, spotlightStore));
+  }, [setQuery]);
+
+  useEffect(() => {
+    const handleMediaRequestSearch = (event: Event) => {
+      const { integrationIds, query } = (event as CustomEvent<OpenMediaRequestSearchOptions>).detail ?? {};
+      setMediaRequestSearchScope({ integrationIds });
+      setMode("media");
+      clearChildrenStack();
+      setQuery(query ?? "");
+      spotlightActions.open();
+      setTimeout(() => selectAction(0, spotlightStore));
+    };
+
+    window.addEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
+    return () => {
+      window.removeEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
+    };
+  }, [setMediaRequestSearchScope, setMode, setQuery, clearChildrenStack]);
+
+  useEffect(() => {
+    if (mode !== "media") {
+      setMediaRequestSearchScope({});
+    }
+  }, [mode, setMediaRequestSearchScope]);
 
   return (
     <MantineSpotlight.Root
@@ -61,7 +113,7 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       overlayProps={{ blur: 2, backgroundOpacity: 0.2 }}
       onSpotlightClose={() => {
         setMode(defaultMode);
-        setChildrenOptions(null);
+        clearChildrenStack();
         setQuery("");
       }}
       query={query}
@@ -69,17 +121,14 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
         const sanitizedQuery = mode === "external" && nextQuery.startsWith("!") ? nextQuery.slice(1) : nextQuery;
         setQuery(sanitizedQuery);
 
-        // Only switch modes when a single trigger character is typed
         if (sanitizedQuery.length !== 1) return;
 
-        const modeToActivate = searchModes.find((mode) => mode.character === sanitizedQuery);
+        const modeToActivate = searchModes.find((searchMode) => searchMode.character === sanitizedQuery);
         if (!modeToActivate) return;
 
         setMode(modeToActivate.modeKey);
-        setChildrenOptions(null);
-
+        clearChildrenStack();
         setQuery("");
-
         setTimeout(() => selectAction(0, spotlightStore));
       }}
       store={spotlightStore}
@@ -87,13 +136,13 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       <MantineSpotlight.Search
         placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
-        leftSectionWidth={activeMode.modeKey !== defaultMode ? 80 : 48}
+        leftSectionWidth={hasModeCharacter ? 80 : 48}
         leftSection={
           <Group align="center" wrap="nowrap" gap="xs" w="100%" h="100%">
             <Center w={48} h="100%">
               <IconSearch stroke={1.5} />
             </Center>
-            {activeMode.modeKey !== defaultMode ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
+            {hasModeCharacter ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
           </Group>
         }
         styles={{
@@ -102,31 +151,53 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
           },
         }}
         rightSection={
-          mode === defaultMode ? null : (
+          mode === defaultMode && childrenStack.length === 0 ? null : (
             <ActionIcon
+              title={
+                childrenStack.length > 0
+                  ? t("search.mode.command.group.preferences.children.detail.backAction")
+                  : t("common.action.close")
+              }
               onClick={() => {
+                if (childrenStack.length > 0) {
+                  popChildrenOptions();
+                  inputRef.current?.focus();
+                  return;
+                }
+
                 setMode(defaultMode);
-                setChildrenOptions(null);
+                clearChildrenStack();
                 inputRef.current?.focus();
               }}
               variant="subtle"
-              aria-label={t("common.action.close")}
+              aria-label={
+                childrenStack.length > 0
+                  ? t("search.mode.command.group.preferences.children.detail.backAction")
+                  : t("common.action.close")
+              }
             >
-              <IconX stroke={1.5} />
+              {childrenStack.length > 0 ? <IconArrowLeft stroke={1.5} /> : <IconX stroke={1.5} />}
             </ActionIcon>
           )
         }
         value={query}
         onKeyDown={(event) => {
-          if (query.length === 0 && mode !== defaultMode && event.key === "Backspace") {
+          if (query.length !== 0 || event.key !== "Backspace") return;
+
+          if (childrenStack.length > 0) {
+            popChildrenOptions();
+            return;
+          }
+
+          if (mode !== defaultMode) {
             setMode(defaultMode);
-            setChildrenOptions(null);
+            clearChildrenStack();
           }
         }}
       />
 
       {childrenOptions ? (
-        <Group>
+        <Group key={childrenStack.length}>
           <childrenOptions.DetailComponent options={childrenOptions.option as never} />
         </Group>
       ) : null}
@@ -134,25 +205,21 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       <MantineSpotlight.ActionsList>
         {childrenOptions ? (
           <SpotlightChildrenActions
+            key={childrenStack.length}
             childrenOptions={childrenOptions}
             query={query}
-            setChildrenOptions={setChildrenOptions}
+            setChildrenOptions={pushChildrenOptions}
           />
         ) : (
           <SpotlightActionGroups
             setQuery={setQuery}
-            setMode={(mode) => {
-              setMode(mode);
-              setChildrenOptions(null);
+            setMode={(nextMode) => {
+              setMode(nextMode);
+              clearChildrenStack();
               setTimeout(() => selectAction(0, spotlightStore));
             }}
             setChildrenOptions={(options) => {
-              setChildrenOptions(options);
-
-              setTimeout(() => {
-                setQuery("");
-                selectAction(0, spotlightStore);
-              });
+              pushChildrenOptions(options);
             }}
             query={query}
             groups={mode === defaultMode && query.length === 0 ? [...homeEmptyGroups] : groups}

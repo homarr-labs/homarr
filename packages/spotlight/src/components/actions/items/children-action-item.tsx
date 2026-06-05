@@ -33,7 +33,10 @@ export const ChildrenActionItem = ({ childrenOptions, action, query, setChildren
     <Spotlight.Action
       renderRoot={renderRoot}
       onClick={onClick}
-      closeSpotlightOnTrigger={interaction.type !== "children"}
+      closeSpotlightOnTrigger={
+        interaction.type !== "children" &&
+        (interaction.type !== "javaScript" || interaction.closeSpotlightOnTrigger !== false)
+      }
       className={classes.spotlightAction}
     >
       <action.Component {...childrenOptions.option} />

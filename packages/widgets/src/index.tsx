@@ -47,6 +47,7 @@ import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
+import * as ups from "./ups";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -93,6 +94,7 @@ export const widgetImports = {
   tracearr,
   speedtestTracker,
   umami,
+  ups,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

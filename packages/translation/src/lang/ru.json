@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Пароль",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Содержит не менее 8 символов",
           "lowercase": "Содержит строчную букву",
           "uppercase": "Содержит заглавную букву",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Открывать в новой вкладке"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Закладки",

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
-import type { MRT_ColumnDef } from "mantine-react-table";
+import { Badge, Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
+import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
 import { MRT_Table } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
@@ -16,13 +16,13 @@ interface RequestMediaModalProps {
 }
 
 export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions, innerProps }) => {
-  const { data, isPending: isPendingQuery } = clientApi.searchEngine.getMediaRequestOptions.useQuery({
+  const { data, isPending: isPendingQuery } = clientApi.integration.getMediaRequestOptions.useQuery({
     integrationId: innerProps.integrationId,
     mediaId: innerProps.mediaId,
     mediaType: innerProps.mediaType,
   });
 
-  const { mutate, isPending: isPendingMutation } = clientApi.searchEngine.requestMedia.useMutation({
+  const { mutate, isPending: isPendingMutation } = clientApi.integration.requestMedia.useMutation({
     onSuccess() {
       actions.closeModal();
       showSuccessNotification({
@@ -33,6 +33,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
   const isPending = isPendingQuery || isPendingMutation;
   const t = useI18n();
+  const requestedSeasons = new Set(data?.requestedSeasons ?? []);
 
   const columns = useMemo<MRT_ColumnDef<Season>[]>(
     () => [
@@ -44,8 +45,18 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
         accessorKey: "episodeCount",
         header: t("search.engine.media.request.modal.table.header.episodes"),
       },
+      {
+        id: "status",
+        header: t("search.engine.media.request.modal.table.header.status"),
+        Cell: ({ row }) =>
+          requestedSeasons.has(row.original.seasonNumber) ? (
+            <Badge size="xs" color="violet" variant="light">
+              {t("search.engine.media.request.modal.table.status.requested")}
+            </Badge>
+          ) : null,
+      },
     ],
-    [],
+    [data?.requestedSeasons],
   );
 
   const table = useTranslatedMantineReactTable({
@@ -56,7 +67,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
     enablePagination: false,
     enableSorting: false,
     enableSelectAll: true,
-    enableRowSelection: true,
+    enableRowSelection: (row: MRT_Row<Season>) => !requestedSeasons.has(row.original.seasonNumber),
     mantineTableProps: {
       highlightOnHover: false,
       striped: "odd",
