@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -123,6 +124,7 @@ export const integrationCreators = {
   immich: ImmichIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
   umami: UmamiIntegration,
+  archiveTeamWarrior: ArchiveTeamWarriorIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
