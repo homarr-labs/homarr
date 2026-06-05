@@ -55,8 +55,7 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
 
     const { result } = option;
     const hasAvailabilityLabel =
-      result.availability &&
-      (availabilityLabelKeys as readonly string[]).includes(result.availability);
+      result.availability && (availabilityLabelKeys as readonly string[]).includes(result.availability);
     const badgeLabel = hasAvailabilityLabel
       ? tMedia(`availability.${result.availability as AvailabilityWithLabel}`)
       : undefined;
