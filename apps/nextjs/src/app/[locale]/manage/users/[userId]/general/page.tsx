@@ -95,7 +95,6 @@ export default async function EditUserPage(props: Props) {
         </Stack>
       )}
 
-
       <DangerZoneRoot>
         <DangerZoneItem
           label={t("user.action.delete.label")}
