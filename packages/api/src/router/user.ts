@@ -32,6 +32,7 @@ import {
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
   createTRPCRouter,
+  isDemoMode,
   onboardingProcedure,
   permissionRequiredProcedure,
   protectedProcedure,
@@ -629,6 +630,13 @@ export const userRouter = createTRPCRouter({
       .where(eq(users.id, ctx.session.user.id));
   }),
   getTourStatus: protectedProcedure.query(async ({ ctx }) => {
+    if (isDemoMode) {
+      return {
+        completedManageTour: true,
+        completedBoardTour: true,
+      };
+    }
+
     const user = await ctx.db.query.users.findFirst({
       columns: {
         completedManageTour: true,
