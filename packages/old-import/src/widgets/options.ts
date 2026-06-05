@@ -44,6 +44,7 @@ const optionMapping: OptionMapping = {
     hideIcon: (oldOptions) => oldOptions.items.some((item) => item.hideIcon),
     hideHostname: (oldOptions) => oldOptions.items.some((item) => item.hideHostname),
     openNewTab: (oldOptions) => oldOptions.items.some((item) => item.openNewTab),
+    withBorder: () => undefined,
   },
   calendar: {
     releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
