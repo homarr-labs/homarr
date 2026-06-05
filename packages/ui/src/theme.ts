@@ -1,5 +1,7 @@
 import { createTheme, rem } from "@mantine/core";
 
+import { modalComponent } from "./theme/modal";
+
 export const theme = createTheme({
   primaryColor: "red",
   autoContrast: true,
@@ -99,5 +101,6 @@ export const theme = createTheme({
         overlayProps: { radius: "sm", blur: 2 },
       },
     },
+    Modal: modalComponent,
   },
 });

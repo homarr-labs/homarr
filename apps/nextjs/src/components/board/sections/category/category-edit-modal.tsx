@@ -1,8 +1,8 @@
-import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { Stack, TextInput } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
-import { createModal } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 interface Category {
@@ -36,13 +36,10 @@ export const CategoryEditModal = createModal<InnerProps>(({ actions, innerProps 
     >
       <Stack>
         <TextInput label={t("section.category.field.name.label")} data-autofocus {...form.getInputProps("name")} />
-        <Group justify="right">
-          <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {t("common.action.cancel")}
-          </Button>
-          <Button type="submit">{innerProps.submitLabel}</Button>
-        </Group>
+        <ModalFormFooter onCancel={actions.closeModal} submitLabel={innerProps.submitLabel} />
       </Stack>
     </form>
   );
-}).withOptions({});
+}).withOptions({
+  size: modalSizeForm,
+});

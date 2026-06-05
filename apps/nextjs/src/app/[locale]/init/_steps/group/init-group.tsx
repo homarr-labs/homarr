@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Stack, TextInput } from "@mantine/core";
+import { Button, Stack, TextInput } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
@@ -9,6 +9,8 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { groupCreateSchema } from "@homarr/validation/group";
+
+import { InitStepCard } from "../../_components/init-step-card";
 
 export const InitGroup = () => {
   const t = useI18n();
@@ -34,7 +36,7 @@ export const InitGroup = () => {
   };
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <InitStepCard>
       <form onSubmit={form.onSubmit(handleSubmitAsync)}>
         <Stack>
           <TextInput
@@ -48,6 +50,6 @@ export const InitGroup = () => {
           </Button>
         </Stack>
       </form>
-    </Card>
+    </InitStepCard>
   );
 };
