@@ -125,30 +125,40 @@ const mockItems: Omit<DownloadClientItem, "id" | "index">[] = [
 
 export class DownloadClientMockService implements IDownloadClientIntegration {
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
-    return {
+    return await Promise.resolve({
       status: {
         paused: false,
         rates: {
           down: 121_100_000,
           up: 9_340_000,
         },
-        types: ["torrent", "usenet"],
+        types: ["torrent", "usenet"] as const,
       },
       items: mockItems.slice(0, input.limit).map((item, index) => ({
         ...item,
         id: `mock-${index}`,
         index,
       })),
-    };
+    });
   }
 
-  public async pauseQueueAsync(): Promise<void> {}
+  public async pauseQueueAsync(): Promise<void> {
+    await Promise.resolve();
+  }
 
-  public async pauseItemAsync(_item: DownloadClientItem): Promise<void> {}
+  public async pauseItemAsync(_item: DownloadClientItem): Promise<void> {
+    await Promise.resolve();
+  }
 
-  public async resumeQueueAsync(): Promise<void> {}
+  public async resumeQueueAsync(): Promise<void> {
+    await Promise.resolve();
+  }
 
-  public async resumeItemAsync(_item: DownloadClientItem): Promise<void> {}
+  public async resumeItemAsync(_item: DownloadClientItem): Promise<void> {
+    await Promise.resolve();
+  }
 
-  public async deleteItemAsync(_item: DownloadClientItem, _fromDisk: boolean): Promise<void> {}
+  public async deleteItemAsync(_item: DownloadClientItem, _fromDisk: boolean): Promise<void> {
+    await Promise.resolve();
+  }
 }

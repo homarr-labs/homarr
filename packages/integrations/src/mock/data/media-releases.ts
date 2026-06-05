@@ -2,7 +2,7 @@ import type { IMediaReleasesIntegration, MediaRelease } from "../../interfaces/m
 
 export class MediaReleasesMockService implements IMediaReleasesIntegration {
   public async getMediaReleasesAsync(): Promise<MediaRelease[]> {
-    return mockMediaReleases;
+    return await Promise.resolve(mockMediaReleases);
   }
 }
 
@@ -12,7 +12,8 @@ export const mockMediaReleases: MediaRelease[] = [
     type: "movie",
     title: "Inception",
     subtitle: "A mind-bending thriller",
-    description: "A thief who steals corporate secrets through dream-sharing technology is given the task of planting an idea into the mind of a CEO.",
+    description:
+      "A thief who steals corporate secrets through dream-sharing technology is given the task of planting an idea into the mind of a CEO.",
     releaseDate: new Date("2010-07-16"),
     imageUrls: {
       poster: "https://image.tmdb.org/t/p/w300/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg",
@@ -63,7 +64,8 @@ export const mockMediaReleases: MediaRelease[] = [
     type: "movie",
     title: "The Dark Knight",
     subtitle: "Theatrical Release",
-    description: "Batman raises the stakes in his war on crime. With the help of Lt. Gordon and DA Harvey Dent, Batman sets out to dismantle organized crime.",
+    description:
+      "Batman raises the stakes in his war on crime. With the help of Lt. Gordon and DA Harvey Dent, Batman sets out to dismantle organized crime.",
     releaseDate: new Date("2008-07-18"),
     imageUrls: {
       poster: "https://image.tmdb.org/t/p/w300/qJ2tW6WMUDux911BTUgMe1nV8Is.jpg",
@@ -99,7 +101,8 @@ export const mockMediaReleases: MediaRelease[] = [
     type: "tv",
     title: "Severance",
     subtitle: "S2E1 - Premiere",
-    description: "Mark leads a team of office workers whose memories are surgically divided between work and personal lives.",
+    description:
+      "Mark leads a team of office workers whose memories are surgically divided between work and personal lives.",
     releaseDate: new Date("2025-01-17"),
     imageUrls: {
       poster: "https://image.tmdb.org/t/p/w300/pJAtR4gMFnalHCmT9cByPFgkZ6B.jpg",
@@ -115,7 +118,8 @@ export const mockMediaReleases: MediaRelease[] = [
     type: "movie",
     title: "Dune: Part Two",
     subtitle: "Theatrical Release",
-    description: "Paul Atreides unites with the Fremen to seek revenge against the conspirators who destroyed his family.",
+    description:
+      "Paul Atreides unites with the Fremen to seek revenge against the conspirators who destroyed his family.",
     releaseDate: new Date("2024-03-01"),
     imageUrls: {
       poster: "https://image.tmdb.org/t/p/w300/8b8R8l88Qje9dn9OE8PY05Nez7.jpg",

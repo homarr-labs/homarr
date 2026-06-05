@@ -61,7 +61,11 @@ export function TRPCReactProvider(props: PropsWithChildren) {
           },
           mutations: {
             onError(error) {
-              if (error instanceof TRPCClientError && error.data?.code === "FORBIDDEN" && error.message === "Mutations are disabled in demo mode") {
+              if (
+                error instanceof TRPCClientError &&
+                error.data?.code === "FORBIDDEN" &&
+                error.message === "Mutations are disabled in demo mode"
+              ) {
                 showWarningNotification({
                   title: "Demo mode",
                   message: "This action is disabled in demo mode.",
