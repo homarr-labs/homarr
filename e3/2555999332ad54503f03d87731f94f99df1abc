@@ -1,0 +1,60 @@
+.dockerignore
+  s_e7a9f157bc08ec::t_025365fd4e36ca 2,18-24
+packages/board-portability/src/__tests__/config-bundle-round-trip.spec.ts
+  s_e7a9f157bc08ec::t_bf98d477316f42 200
+  s_e7a9f157bc08ec::t_adc4e69dc089ab 89-90
+  s_e7a9f157bc08ec::t_025365fd4e36ca 82-84,88,91-105,181-199
+packages/board-portability/index.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 6
+package.json
+  s_e7a9f157bc08ec::t_025365fd4e36ca 20
+packages/board-portability/src/types.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 13,30,36
+packages/board-portability/src/schema.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 145-160,165-167,175,190,197
+apps/nextjs/src/components/config-import/config-summary-list.tsx
+  s_e7a9f157bc08ec::t_025365fd4e36ca 17
+apps/nextjs/src/app/[locale]/init/_steps/import/init-config-import.tsx
+  s_e7a9f157bc08ec::t_025365fd4e36ca 3-4,6,21-22,37-42,54,69-77,80-86,88-113
+.gitignore
+  s_e7a9f157bc08ec::t_025365fd4e36ca 75-78
+packages/board-portability/src/export/preview-export-full-config.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 13,28,41
+packages/api/src/router/user.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 55-59,83-84,86-93
+packages/board-portability/src/export/export-full-config.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 9,17,60-61,191-197,202-204,208-224,239
+apps/nextjs/src/app/[locale]/manage/settings/_components/docker-settings-form.tsx
+  s_e7a9f157bc08ec::t_025365fd4e36ca 21
+packages/board-portability/src/import/plan-full-config-import.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 4,22,62-63,86-87,98,106,111,115,176-188,209-210
+examples/docker-compose.yml
+  s_e7a9f157bc08ec::t_025365fd4e36ca 2-4,7,21-22,42-80,96-98,100-111,113-153
+packages/board-portability/src/import/import-full-config.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 12,25,38,70-71,76-77,168-211,224-230,235-237,248-261,274,277,282,288,393,396-399,404-405,407,418-436,516
+packages/docker/src/discovery/__tests__/parse-container-labels.spec.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 7-8,13-94,98-150,154-199,202-218,220-223,226-229,231-232,234-237,240-242,246-290,292-399,402-467
+  s_e7a9f157bc08ec::t_24cfea341d094a 243,291
+packages/translation/src/lang/en.json
+  s_e7a9f157bc08ec::t_025365fd4e36ca 22-23,3836,3850,3854,3898-3899
+apps/nextjs/src/components/config-import/config-import-preview-panel.tsx
+  s_e7a9f157bc08ec::t_025365fd4e36ca 81,99-103,108,131-133
+packages/api/src/router/import/import-router.ts
+  s_e7a9f157bc08ec::t_025365fd4e36ca 9,85-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "e32555999332ad54503f03d87731f94f99df1abc",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
