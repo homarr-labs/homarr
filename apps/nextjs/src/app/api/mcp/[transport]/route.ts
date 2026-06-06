@@ -17,19 +17,40 @@ import packageJson from "../../../../../../../package.json";
 
 const logger = createLogger({ module: "mcpRoute" });
 
-const authFailures = new Map<string, { count: number; resetAt: number }>();
 const AUTH_RATE_WINDOW_MS = 60_000;
 const AUTH_MAX_FAILURES = 10;
+
+interface RateLimitStore {
+  authFailures: Map<string, { count: number; resetAt: number }>;
+  cleanupTimer: ReturnType<typeof setInterval> | null;
+}
+
+const globalRateLimit = globalThis as unknown as { mcpRateLimit?: RateLimitStore };
+if (!globalRateLimit.mcpRateLimit) {
+  globalRateLimit.mcpRateLimit = {
+    authFailures: new Map(),
+    cleanupTimer: null,
+  };
+}
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const rateLimitStore = globalRateLimit.mcpRateLimit!;
+const authFailures = rateLimitStore.authFailures;
+
+if (!rateLimitStore.cleanupTimer) {
+  rateLimitStore.cleanupTimer = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of authFailures) {
+      if (entry.resetAt < now) authFailures.delete(key);
+    }
+  }, AUTH_RATE_WINDOW_MS);
+  rateLimitStore.cleanupTimer.unref();
+}
 
 function checkAuthRateLimit(ip: string | null): boolean {
   const key = ip ?? "unknown";
   const now = Date.now();
   const entry = authFailures.get(key);
-
-  if (!entry || entry.resetAt < now) {
-    return true;
-  }
-
+  if (!entry || entry.resetAt < now) return true;
   return entry.count < AUTH_MAX_FAILURES;
 }
 
@@ -37,21 +58,16 @@ function recordAuthFailure(ip: string | null) {
   const key = ip ?? "unknown";
   const now = Date.now();
   const entry = authFailures.get(key);
-
   if (!entry || entry.resetAt < now) {
     authFailures.set(key, { count: 1, resetAt: now + AUTH_RATE_WINDOW_MS });
     return;
   }
-
   entry.count++;
 }
 
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of authFailures) {
-    if (entry.resetAt < now) authFailures.delete(key);
-  }
-}, AUTH_RATE_WINDOW_MS);
+function clearAuthFailures(ip: string | null) {
+  authFailures.delete(ip ?? "unknown");
+}
 
 const callerStorage = new AsyncLocalStorage<ReturnType<typeof mcpRouter.createCaller>>();
 
@@ -79,6 +95,30 @@ function getTools() {
     logger.info(`Extracted ${toolsCache.length} MCP tools`);
   }
   return toolsCache;
+}
+
+const SAFE_ERROR_MESSAGES: Record<string, string> = {
+  UNAUTHORIZED: "You do not have permission to perform this action",
+  FORBIDDEN: "Access denied",
+  NOT_FOUND: "The requested resource was not found",
+  BAD_REQUEST: "Invalid request parameters",
+  INTERNAL_SERVER_ERROR: "An internal error occurred",
+  TIMEOUT: "The operation timed out",
+  TOO_MANY_REQUESTS: "Rate limit exceeded, try again later",
+  CONFLICT: "A conflict occurred with the current state",
+  PRECONDITION_FAILED: "A precondition for this operation was not met",
+};
+
+function sanitizeErrorMessage(error: unknown): string {
+  if (error instanceof Error && "code" in error) {
+    const trpcCode = (error as Error & { code: string }).code;
+    const safeMessage = SAFE_ERROR_MESSAGES[trpcCode];
+    if (safeMessage) return safeMessage;
+  }
+  if (error instanceof Error && error.message.length < 200 && !error.message.includes("/")) {
+    return error.message;
+  }
+  return "Tool execution failed";
 }
 
 const SERVER_INSTRUCTIONS = `You are connected to Homarr, a self-hosted homelab dashboard.
@@ -137,35 +177,35 @@ const mcpHandler = createMcpHandler(
       if (!tool) {
         return {
           content: [{ type: "text" as const, text: `Tool "${name}" not found` }],
+          isError: true,
         };
       }
 
       const caller = callerStorage.getStore();
       if (!caller) {
         return {
-          content: [
-            {
-              type: "text" as const,
-              text: "Authentication context not available",
-            },
-          ],
+          content: [{ type: "text" as const, text: "Authentication context not available" }],
+          isError: true,
         };
       }
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const procedure = tool.pathInRouter.reduce<any>((acc, part) => acc?.[part], caller);
+        if (typeof procedure !== "function") {
+          return {
+            content: [{ type: "text" as const, text: `Tool "${name}" is not callable` }],
+            isError: true,
+          };
+        }
         const input = args && Object.keys(args).length > 0 ? args : undefined;
         const result = await procedure(input);
         return {
           content: [{ type: "text" as const, text: JSON.stringify(result) }],
         };
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
-        logger.warn("MCP tool execution failed", {
-          tool: name,
-          error: message,
-        });
+        const message = sanitizeErrorMessage(error);
+        logger.warn("MCP tool execution failed", { tool: name, error: error instanceof Error ? error.message : String(error) });
         return {
           content: [{ type: "text" as const, text: JSON.stringify({ error: message }) }],
           isError: true,
@@ -197,66 +237,45 @@ function extractApiKeyValue(req: NextRequest): string | null {
   return null;
 }
 
+function jsonErrorResponse(status: number, body: Record<string, string>, extraHeaders: Record<string, string> = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...extraHeaders },
+  });
+}
+
 const handler = async (req: NextRequest) => {
   const apiKeyValue = extractApiKeyValue(req);
   const ipAddress = ipAddressFromHeaders(req.headers);
   const { ua } = userAgent(req);
 
   if (!checkAuthRateLimit(ipAddress)) {
-    return new Response(
-      JSON.stringify({
-        error: "rate_limited",
-        hint: "Too many failed authentication attempts. Try again later.",
-      }),
-      {
-        status: 429,
-        headers: { "Content-Type": "application/json", "Retry-After": "60" },
-      },
-    );
+    return jsonErrorResponse(429, { error: "rate_limited", hint: "Too many failed authentication attempts. Try again later." }, { "Retry-After": "60" });
   }
 
   if (!apiKeyValue) {
     recordAuthFailure(ipAddress);
     const baseUrl = extractBaseUrlFromHeaders(req.headers);
-    return new Response(
-      JSON.stringify({
-        error: "unauthorized",
-        hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server",
-      }),
-      {
-        status: 401,
-        headers: {
-          "Content-Type": "application/json",
-          "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"`,
-        },
-      },
+    return jsonErrorResponse(
+      401,
+      { error: "unauthorized", hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server" },
+      { "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"` },
     );
   }
 
   if (!apiKeyValue.includes(".")) {
     recordAuthFailure(ipAddress);
-    return new Response(
-      JSON.stringify({
-        error: "invalid_token",
-        hint: "The token must be in the format '<id>.<token>'.",
-      }),
-      { status: 401, headers: { "Content-Type": "application/json" } },
-    );
+    return jsonErrorResponse(401, { error: "invalid_token", hint: "The token must be in the format '<id>.<token>'." });
   }
 
   const session = await getSessionFromApiKeyAsync(db, apiKeyValue, ipAddress, ua);
 
   if (!session) {
     recordAuthFailure(ipAddress);
-    return new Response(
-      JSON.stringify({
-        error: "invalid_token",
-        hint: "The API key was not found or the token is incorrect.",
-      }),
-      { status: 401, headers: { "Content-Type": "application/json" } },
-    );
+    return jsonErrorResponse(401, { error: "invalid_token", hint: "The API key was not found or the token is incorrect." });
   }
 
+  clearAuthFailures(ipAddress);
   logger.info("MCP request authenticated", { userId: session.user.id });
 
   const ctx = createTRPCContext({ session, headers: req.headers });

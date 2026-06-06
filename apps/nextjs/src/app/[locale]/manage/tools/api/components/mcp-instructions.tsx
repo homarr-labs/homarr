@@ -51,6 +51,11 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { CopyApiKeyModal } from "./copy-api-key-modal";
 import type { McpToolGroup } from "./api-page-tabs";
 
+const toolTypeDisplay: Record<"query" | "mutation", { color: string; method: string }> = {
+  query: { color: "blue", method: "GET" },
+  mutation: { color: "orange", method: "POST" },
+};
+
 interface McpInstructionsProps {
   baseUrl: string;
   hasApiKeys: boolean;
@@ -313,8 +318,8 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                   <TableTr key={tool.name}>
                     {isDesktop && (
                       <TableTd>
-                        <Badge size="xs" radius="xs" variant="light" color={tool.type === "query" ? "blue" : "orange"}>
-                          {tool.type === "query" ? "GET" : "POST"}
+                        <Badge size="xs" radius="xs" variant="light" color={toolTypeDisplay[tool.type].color}>
+                          {toolTypeDisplay[tool.type].method}
                         </Badge>
                       </TableTd>
                     )}

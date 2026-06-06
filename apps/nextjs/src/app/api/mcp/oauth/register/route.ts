@@ -1,15 +1,30 @@
 import { registerClient } from "../_store";
 
-const registerAttempts = new Map<string, { count: number; resetAt: number }>();
+interface RateLimitStore {
+  attempts: Map<string, { count: number; resetAt: number }>;
+  timer: ReturnType<typeof setInterval> | null;
+}
+
 const REGISTER_RATE_WINDOW_MS = 60_000;
 const REGISTER_MAX_ATTEMPTS = 5;
 
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of registerAttempts) {
-    if (entry.resetAt < now) registerAttempts.delete(key);
-  }
-}, REGISTER_RATE_WINDOW_MS);
+const globalStore = globalThis as unknown as { mcpRegisterRateLimit?: RateLimitStore };
+if (!globalStore.mcpRegisterRateLimit) {
+  globalStore.mcpRegisterRateLimit = { attempts: new Map(), timer: null };
+}
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const store = globalStore.mcpRegisterRateLimit!;
+const registerAttempts = store.attempts;
+
+if (!store.timer) {
+  store.timer = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of registerAttempts) {
+      if (entry.resetAt < now) registerAttempts.delete(key);
+    }
+  }, REGISTER_RATE_WINDOW_MS);
+  store.timer.unref();
+}
 
 function getClientIp(req: Request): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -32,20 +47,14 @@ export async function POST(req: Request) {
 
   if (entry && entry.resetAt >= now && entry.count >= REGISTER_MAX_ATTEMPTS) {
     return Response.json(
-      {
-        error: "rate_limited",
-        error_description: "Too many registration attempts, try again later",
-      },
+      { error: "rate_limited", error_description: "Too many registration attempts, try again later" },
       { status: 429, headers: { "Retry-After": "60" } },
     );
   }
 
   const existing = registerAttempts.get(ip);
   if (!existing || existing.resetAt < now) {
-    registerAttempts.set(ip, {
-      count: 1,
-      resetAt: now + REGISTER_RATE_WINDOW_MS,
-    });
+    registerAttempts.set(ip, { count: 1, resetAt: now + REGISTER_RATE_WINDOW_MS });
   } else {
     existing.count++;
   }
@@ -60,10 +69,7 @@ export async function POST(req: Request) {
 
   if (!Array.isArray(redirectUris) || redirectUris.length === 0 || redirectUris.length > 10) {
     return Response.json(
-      {
-        error: "invalid_client_metadata",
-        error_description: "redirect_uris must be an array of 1-10 URIs",
-      },
+      { error: "invalid_client_metadata", error_description: "redirect_uris must be an array of 1-10 URIs" },
       { status: 400 },
     );
   }
@@ -71,10 +77,7 @@ export async function POST(req: Request) {
   const validUris = redirectUris.filter((uri): uri is string => typeof uri === "string" && isValidRedirectUri(uri));
   if (validUris.length !== redirectUris.length) {
     return Response.json(
-      {
-        error: "invalid_client_metadata",
-        error_description: "All redirect_uris must be valid http or https URLs",
-      },
+      { error: "invalid_client_metadata", error_description: "All redirect_uris must be valid http or https URLs" },
       { status: 400 },
     );
   }
@@ -82,10 +85,7 @@ export async function POST(req: Request) {
   const result = registerClient(validUris, clientName);
   if (!result) {
     return Response.json(
-      {
-        error: "server_error",
-        error_description: "Too many registered clients, please try again later",
-      },
+      { error: "server_error", error_description: "Too many registered clients, please try again later" },
       { status: 503 },
     );
   }

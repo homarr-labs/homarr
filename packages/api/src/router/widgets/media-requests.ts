@@ -141,12 +141,12 @@ export const mediaRequestsRouter = createTRPCRouter({
       const integrationInstance = await createIntegrationAsync(integration);
       const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
-      if (input.answer === "approve") {
-        await integrationInstance.approveRequestAsync(input.requestId);
-        await innerHandler.invalidateAsync();
-        return;
-      }
-      await integrationInstance.declineRequestAsync(input.requestId);
+      const answerActions = {
+        approve: (id: number) => integrationInstance.approveRequestAsync(id),
+        decline: (id: number) => integrationInstance.declineRequestAsync(id),
+      } as const;
+
+      await answerActions[input.answer](input.requestId);
       await innerHandler.invalidateAsync();
     }),
 });

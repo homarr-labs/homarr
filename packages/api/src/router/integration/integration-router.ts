@@ -367,8 +367,6 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
         url: input.url,
       });
-
-      // Media request search is a first-class Spotlight action. Do not create a search engine for it.
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");

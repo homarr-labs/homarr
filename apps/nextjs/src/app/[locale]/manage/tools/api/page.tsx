@@ -22,14 +22,7 @@ let cachedToolGroups: McpToolGroup[] | null = null;
 function getMcpToolGroups(): McpToolGroup[] {
   if (cachedToolGroups) return cachedToolGroups;
 
-  const originalError = console.error;
-  console.error = (...args: unknown[]) => {
-    if (typeof args[0] === "string" && args[0].includes("[TRPC-TO-MCP]")) return;
-    originalError(...args);
-  };
-
   const tools = extractToolsFromProcedures(mcpRouter);
-  console.error = originalError;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const procedures = (mcpRouter as any)._def.procedures as Record<string, { _def?: { type?: string } }>;
