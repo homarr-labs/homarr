@@ -384,6 +384,9 @@ catalogs:
     json5:
       specifier: ^2.2.3
       version: 2.2.3
+    jszip:
+      specifier: ^3.10.1
+      version: 3.10.1
     ldapts:
       specifier: 8.1.8
       version: 8.1.8
@@ -462,6 +465,9 @@ catalogs:
     semver-parser:
       specifier: ^4.2.0
       version: 4.2.0
+    sql.js:
+      specifier: ^1.12.0
+      version: 1.14.1
     superjson:
       specifier: 2.2.6
       version: 2.2.6
@@ -796,9 +802,15 @@ importers:
       '@xterm/xterm':
         specifier: 'catalog:'
         version: 6.0.0
+      adm-zip:
+        specifier: 'catalog:'
+        version: 0.5.17
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
+      better-sqlite3:
+        specifier: 'catalog:'
+        version: 12.10.0
       chroma-js:
         specifier: 'catalog:'
         version: 3.2.0
@@ -811,6 +823,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1)
       flag-icons:
         specifier: 'catalog:'
         version: 7.5.0
@@ -823,6 +838,9 @@ importers:
       jotai:
         specifier: 'catalog:'
         version: 2.20.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.15)(react@19.2.6)
+      jszip:
+        specifier: 'catalog:'
+        version: 3.10.1
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/dates@9.2.2(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(dayjs@1.11.21)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@mantine/hooks@9.2.2(react@19.2.6))(@tabler/icons-react@3.44.0(react@19.2.6))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -850,6 +868,9 @@ importers:
       sass:
         specifier: 'catalog:'
         version: 1.100.0
+      sql.js:
+        specifier: 'catalog:'
+        version: 1.14.1
       superjson:
         specifier: 'catalog:'
         version: 2.2.6
@@ -869,6 +890,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/adm-zip':
+        specifier: 'catalog:'
+        version: 0.5.8
+      '@types/better-sqlite3':
+        specifier: 'catalog:'
+        version: 7.6.13
       '@types/chroma-js':
         specifier: 'catalog:'
         version: 3.1.2
@@ -1338,7 +1365,7 @@ importers:
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1)
       ioredis:
         specifier: 'catalog:'
         version: 5.11.0
@@ -1510,10 +1537,10 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0))(zod@4.4.3)
+        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1))(zod@4.4.3)
       mysql2:
         specifier: 'catalog:'
         version: 3.22.4(@types/node@24.12.4)
@@ -7029,6 +7056,9 @@ packages:
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
+  immediate@3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
+
   immer@10.2.0:
     resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
 
@@ -7325,6 +7355,9 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  jszip@3.10.1:
+    resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
+
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
@@ -7347,6 +7380,9 @@ packages:
   ldapts@8.1.8:
     resolution: {integrity: sha512-Wpdvo+/0DREIynYf2he2efHtjptr5zD7dpesSkZWJqfQdMEgSTytEIsSZVuoDSiiE1+SpXf3emZ7ewxGBTo7Pw==}
     engines: {node: '>=20'}
+
+  lie@3.3.0:
+    resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
 
   light-my-request@6.6.0:
     resolution: {integrity: sha512-CHYbu8RtboSIoVsHZ6Ye4cj4Aw/yg2oAFimlF7mNvfDV192LR7nDiKtSIfCuLT7KokPSTn/9kfVLm5OGN0A28A==}
@@ -8038,6 +8074,9 @@ packages:
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
+
+  pako@1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
 
   parchment@3.0.0:
     resolution: {integrity: sha512-HUrJFQ/StvgmXRcQ1ftY6VEZUq3jA2t9ncFN4F84J/vN0/FPpQF+8FKXb3l6fLces6q0uOHj6NJn+2xvZnxO6A==}
@@ -8781,6 +8820,9 @@ packages:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
     engines: {node: '>= 0.4'}
 
+  setimmediate@1.0.5:
+    resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
+
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
 
@@ -8916,6 +8958,9 @@ packages:
   sql-escaper@1.3.3:
     resolution: {integrity: sha512-BsTCV265VpTp8tm1wyIm1xqQCS+Q9NHx2Sr+WcnUrgLrQ6yiDIvHYJV5gHxsj1lMBy2zm5twLaZao8Jd+S8JJw==}
     engines: {bun: '>=1.0.0', deno: '>=2.0.0', node: '>=12.0.0'}
+
+  sql.js@1.14.1:
+    resolution: {integrity: sha512-gcj8zBWU5cFsi9WUP+4bFNXAyF1iRpA3LLyS/DP5xlrNzGmPIizUeBggKa8DbDwdqaKwUcTEnChtd2grWo/x/A==}
 
   ssh-remote-port-forward@1.0.4:
     resolution: {integrity: sha512-x0LV1eVDwjf1gmG7TTnfqIzf+3VPRz7vrNIjX6oYLbeCrf/PeVY6hkT68Mg+q02qXxQhrLjB0jfgvhevoCRmLQ==}
@@ -13728,7 +13773,7 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0):
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
@@ -13737,10 +13782,11 @@ snapshots:
       gel: 2.0.0
       mysql2: 3.22.4(@types/node@24.12.4)
       pg: 8.21.0
+      sql.js: 1.14.1
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0))(zod@4.4.3):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1))(zod@4.4.3):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(mysql2@3.22.4(@types/node@24.12.4))(pg@8.21.0)(sql.js@1.14.1)
       zod: 4.4.3
 
   dunder-proto@1.0.1:
@@ -14414,6 +14460,8 @@ snapshots:
 
   ieee754@1.2.1: {}
 
+  immediate@3.0.6: {}
+
   immer@10.2.0: {}
 
   immer@11.1.4: {}
@@ -14679,6 +14727,13 @@ snapshots:
       '@jsep-plugin/regex': 1.0.4(jsep@1.4.0)
       jsep: 1.4.0
 
+  jszip@3.10.1:
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.8
+      setimmediate: 1.0.5
+
   keygrip@1.1.0:
     dependencies:
       tsscmp: 1.0.6
@@ -14698,6 +14753,10 @@ snapshots:
   ldapts@8.1.8:
     dependencies:
       strict-event-emitter-types: 2.0.0
+
+  lie@3.3.0:
+    dependencies:
+      immediate: 3.0.6
 
   light-my-request@6.6.0:
     dependencies:
@@ -15451,6 +15510,8 @@ snapshots:
   p-try@1.0.0: {}
 
   package-json-from-dist@1.0.1: {}
+
+  pako@1.0.11: {}
 
   parchment@3.0.0: {}
 
@@ -16324,6 +16385,8 @@ snapshots:
       gopd: 1.2.0
       has-property-descriptors: 1.0.2
 
+  setimmediate@1.0.5: {}
+
   setprototypeof@1.2.0: {}
 
   sha.js@2.4.12:
@@ -16491,6 +16554,8 @@ snapshots:
   sprintf-js@1.1.3: {}
 
   sql-escaper@1.3.3: {}
+
+  sql.js@1.14.1: {}
 
   ssh-remote-port-forward@1.0.4:
     dependencies:
