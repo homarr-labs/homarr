@@ -4036,6 +4036,95 @@
                   "actions": "Actions"
                 }
               }
+            },
+            "mcp": {
+              "label": "AI / MCP",
+              "title": "AI Integration",
+              "subtitle": "Model Context Protocol (MCP) Server",
+              "description": "Connect AI assistants to your Homarr instance and control your entire homelab through natural language. Search and request media on Overseerr, manage Docker containers, toggle Pi-hole, check server health, control Home Assistant devices, and more — all from your AI assistant.",
+              "noApiKey": "You need an API key to authenticate with the MCP server.",
+              "createApiKeyButton": "Create API Key",
+              "endpoint": {
+                "title": "MCP Endpoint"
+              },
+              "authentication": {
+                "title": "Authentication",
+                "intro": "You can authenticate with your MCP server using either an API key or OAuth. Both methods grant the same level of access.",
+                "apiKey": {
+                  "title": "API Key (manual)",
+                  "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
+                },
+                "oauth": {
+                  "title": "OAuth (browser login)",
+                  "description": "Clients that support OAuth (such as Claude Code, opencode, or Cursor) can authenticate by opening a browser window. Run the auth command in your client, log in to Homarr in the browser, and you're connected — an API key is created automatically.",
+                  "hint": "OAuth tokens appear as regular API keys in the Authentication tab. You can revoke them at any time."
+                },
+                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
+              },
+              "clientConfig": {
+                "title": "Client Configuration",
+                "streamableHttp": {
+                  "recommended": "Recommended",
+                  "title": "Streamable HTTP",
+                  "worksWith": "Works with: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Add to your MCP client configuration file:",
+                  "cursor": "{name}: {file} in your project or global settings",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} or use {command}",
+                  "vsCodeCopilot": "{name}: {file} in workspace settings",
+                  "replaceHint": "Replace the placeholder with the API key you received when creating it."
+                },
+                "stdio": {
+                  "title": "stdio (legacy clients via mcp-remote bridge)",
+                  "description": "For clients that only support stdio transport. Requires {dependency} (Node.js) installed locally:"
+                }
+              },
+              "testConnection": {
+                "title": "Test Your Connection",
+                "description": "Run this in your terminal to verify the endpoint is reachable and your API key works:",
+                "hint": "A successful response returns the MCP server capabilities. If you see an error, check the JSON response for hints."
+              },
+              "availableTools": {
+                "title": "Available Tools",
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
+                "columnType": "Type",
+                "columnName": "Tool",
+                "columnDescription": "Description"
+              },
+              "troubleshooting": {
+                "title": "Troubleshooting",
+                "missingHeader": {
+                  "title": "\"Missing ApiKey header\"",
+                  "description": "Your client is not sending the {header} header. Verify the {section} section in your MCP config is correct. Some clients require restarting after config changes."
+                },
+                "invalidFormat": {
+                  "title": "\"Invalid ApiKey format\"",
+                  "description": "Make sure you copied the full API key, not just part of it."
+                },
+                "invalidKey": {
+                  "title": "\"Invalid API key\"",
+                  "description": "The key ID was not found or the token is wrong. API keys can only be viewed once when created. If you lost it, delete the old key and create a new one."
+                },
+                "connectionRefused": {
+                  "title": "Connection refused / timeout",
+                  "description": "Make sure the URL is reachable from your AI client. If Homarr runs behind a reverse proxy or in Docker, use the external URL (not {localhost}). Verify the port is correct (default: 7575 for Docker)."
+                },
+                "toolsNotAppearing": {
+                  "title": "Tools not appearing",
+                  "description": "Some tools require specific integrations to be configured (e.g. Docker, Overseerr). The tool list depends on what's available in your Homarr instance."
+                }
+              },
+              "copy": "Copy",
+              "oneClick": {
+                "title": "Install in One Click",
+                "subtitle": "Uses OAuth — authenticate in your browser on first use",
+                "vsCode": "Install in VS Code",
+                "cursor": "Install in Cursor",
+                "copyUrl": "Copy MCP URL",
+                "copied": "Copied!",
+                "copyHint": "For ChatGPT, Claude Code, or any MCP client",
+                "manualConfig": "Manual Configuration"
+              }
             }
           }
         }

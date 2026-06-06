@@ -14,6 +14,13 @@ const createMediaServerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get currently active streams from Plex/Jellyfin/Emby media servers. REQUIRED: integrationIds (array of media server integration IDs from integration_all), showOnlyPlaying (boolean — true to filter to actively playing streams only)",
+      },
+    })
     .concat(createMediaServerIntegrationMiddleware("query"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
@@ -22,7 +29,9 @@ export const mediaServerRouter = createTRPCRouter({
           const innerHandler = mediaServerRequestHandler.handler(integration, {
             showOnlyPlaying: input.showOnlyPlaying,
           });
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
           return {
             integrationId: integration.id,
             integrationKind: integration.kind,
