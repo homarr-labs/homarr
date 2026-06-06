@@ -1,0 +1,29 @@
+apps/nextjs/package.json
+  s_84cb939c27de54::t_4696fbc477692a 59-60,82,92
+apps/nextjs/src/app/api/mcp/oauth/token/route.ts
+  s_84cb939c27de54::t_4696fbc477692a 5,11-17,21-37,61,65,74,87,100,115-139
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_84cb939c27de54::t_4696fbc477692a 54-58,321-322
+apps/nextjs/src/app/api/mcp/oauth/register/route.ts
+  s_84cb939c27de54::t_4696fbc477692a 3-7,11-27,50,57,72,80,88
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_84cb939c27de54::t_4696fbc477692a 23-48,53,68-70,100-123,180,187-188,195-200,207-208,240-246,253,259-262,268,275,278
+packages/api/src/router/widgets/media-requests.ts
+  s_84cb939c27de54::t_4696fbc477692a 144-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "311fd2356a9a6566996e116b14bd690b1043723e",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
