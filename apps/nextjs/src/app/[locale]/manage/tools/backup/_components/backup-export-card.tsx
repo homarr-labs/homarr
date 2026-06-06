@@ -20,8 +20,11 @@ export const BackupExportCard = () => {
     try {
       const response = await fetch("/api/backup/export");
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error ?? t("error"));
+        const errorMessage = await response.json().then(
+          (data) => data.error,
+          () => `Server returned ${response.status}`,
+        );
+        throw new Error(errorMessage ?? t("error"));
       }
 
       const blob = await response.blob();

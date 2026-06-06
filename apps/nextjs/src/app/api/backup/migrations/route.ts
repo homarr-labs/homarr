@@ -3,6 +3,8 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 
+import { findMigrationsFolder } from "../shared";
+
 interface JournalEntry {
   idx: number;
   version: string;
@@ -17,15 +19,6 @@ interface MigrationFile {
   sql: string;
   when: number;
 }
-
-const migrationsFolderCandidates = [
-  path.join(process.cwd(), "db/migrations/sqlite"),
-  path.join(process.cwd(), "packages/db/migrations/sqlite"),
-  path.resolve(process.cwd(), "../../db/migrations/sqlite"),
-  "/app/db/migrations/sqlite",
-];
-
-const findMigrationsFolder = () => migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));
 
 export async function GET() {
   try {

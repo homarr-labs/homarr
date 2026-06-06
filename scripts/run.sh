@@ -10,8 +10,11 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
-    # We disable redis logs during migration as the redis client is not yet started
     DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+    if [ $? -ne 0 ]; then
+        echo "ERROR: DB migrations failed, aborting startup"
+        exit 1
+    fi
 fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing

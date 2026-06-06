@@ -98,72 +98,74 @@ export const useBackupAnalysis = () => {
       const db = new SQL.Database(dbBuffer);
       dbRef.current = db;
 
-      const appliedCount = getAppliedMigrationCount(db);
-      const pendingMigrations = allMigrations.filter((m) => m.idx >= appliedCount);
+      try {
+        const appliedCount = getAppliedMigrationCount(db);
+        const pendingMigrations = allMigrations.filter((m) => m.idx >= appliedCount);
 
-      const migrations: MigrationStatus = {
-        applied: appliedCount,
-        pending: pendingMigrations,
-        total: allMigrations.length,
-      };
+        const migrations: MigrationStatus = {
+          applied: appliedCount,
+          pending: pendingMigrations,
+          total: allMigrations.length,
+        };
 
-      if (pendingMigrations.length > 0) {
-        for (let i = 0; i < pendingMigrations.length; i++) {
-          const migration = pendingMigrations[i]!;
-          setMigrationProgress({
-            current: i + 1,
-            total: pendingMigrations.length,
-            tag: migration.tag,
-            phase: "applying",
-          });
-
-          await delay(100);
-
-          try {
-            const statements = migration.sql
-              .split("--> statement-breakpoint")
-              .map((s) => s.trim())
-              .filter(Boolean);
-
-            for (const stmt of statements) {
-              db.run(stmt);
-            }
-
-            db.run(
-              `INSERT INTO "${DRIZZLE_MIGRATIONS_TABLE}" ("hash", "created_at") VALUES (?, ?)`,
-              [migration.tag, Date.now()],
-            );
-          } catch (migrationErr) {
+        if (pendingMigrations.length > 0) {
+          for (let i = 0; i < pendingMigrations.length; i++) {
+            const migration = pendingMigrations[i]!;
             setMigrationProgress({
               current: i + 1,
               total: pendingMigrations.length,
               tag: migration.tag,
-              phase: "error",
+              phase: "applying",
             });
-            throw new Error(
-              `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`,
-            );
+
+            await delay(100);
+
+            try {
+              const statements = migration.sql
+                .split("--> statement-breakpoint")
+                .map((s) => s.trim())
+                .filter(Boolean);
+
+              for (const stmt of statements) {
+                db.run(stmt);
+              }
+
+              db.run(
+                `INSERT INTO "${DRIZZLE_MIGRATIONS_TABLE}" ("hash", "created_at") VALUES (?, ?)`,
+                [migration.tag, Date.now()],
+              );
+            } catch (migrationErr) {
+              setMigrationProgress({
+                current: i + 1,
+                total: pendingMigrations.length,
+                tag: migration.tag,
+                phase: "error",
+              });
+              throw new Error(
+                `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`,
+              );
+            }
+
+            setMigrationProgress({
+              current: i + 1,
+              total: pendingMigrations.length,
+              tag: migration.tag,
+              phase: "done",
+            });
+
+            await delay(50);
           }
-
-          setMigrationProgress({
-            current: i + 1,
-            total: pendingMigrations.length,
-            tag: migration.tag,
-            phase: "done",
-          });
-
-          await delay(50);
         }
+
+        const counts = countEntities(db);
+        const boardNames = getBoardNames(db);
+
+        setMigrationProgress(null);
+        setAnalysis({ metadata, counts, boardNames, migrations });
+      } finally {
+        db.close();
+        dbRef.current = null;
       }
-
-      const counts = countEntities(db);
-      const boardNames = getBoardNames(db);
-
-      db.close();
-      dbRef.current = null;
-
-      setMigrationProgress(null);
-      setAnalysis({ metadata, counts, boardNames, migrations });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("analyzeError"));
     } finally {

@@ -14,18 +14,11 @@ import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { db } from "@homarr/db";
 
+import { findMigrationsFolder } from "../shared";
+
 const REQUIRED_ZIP_ENTRIES = ["db.sqlite", "metadata.json"] as const;
 const ALGORITHM = "aes-256-cbc";
 const HEX_KEY_REGEX = /^[0-9a-fA-F]{64}$/;
-
-const migrationsFolderCandidates = [
-  path.join(process.cwd(), "db/migrations/sqlite"),
-  path.join(process.cwd(), "packages/db/migrations/sqlite"),
-  path.resolve(process.cwd(), "../../db/migrations/sqlite"),
-  "/app/db/migrations/sqlite",
-];
-
-const findMigrationsFolder = () => migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));
 
 const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex: string) => {
   const currentKeyHex = env.SECRET_ENCRYPTION_KEY;
@@ -146,9 +139,8 @@ export async function POST(req: Request) {
     const metadataEntry = zip.getEntry("metadata.json")!;
     const metadata = JSON.parse(metadataEntry.getData().toString());
 
-    const importedKey =
-      metadata.encryptionKey ??
-      zip.getEntry("encryption-key.txt")?.getData().toString().trim();
+    const rawKey = metadata.encryptionKey ?? zip.getEntry("encryption-key.txt")?.getData().toString().trim();
+    const importedKey = typeof rawKey === "string" && rawKey.length > 0 ? rawKey : undefined;
 
     const secretCount = (
       tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number }
