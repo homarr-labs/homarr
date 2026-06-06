@@ -1,0 +1,68 @@
+apps/nextjs/src/app/.well-known/oauth-protected-resource/route.ts
+  s_84cb939c27de54::t_04e718782430b4 1-25
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  s_84cb939c27de54::t_a06f5a22c84816 48
+  s_84cb939c27de54::t_6cd3f9696c40f5 47
+apps/nextjs/src/app/api/mcp/oauth/_store.ts
+  s_84cb939c27de54::t_c333c9c0342149 28-34,37-45,47-51,61-74
+  s_84cb939c27de54::t_1b5745fba52f46 21-27,35-36,46,54
+  s_84cb939c27de54::t_a45ab827cec93c 98-104,130-134,149-152
+  s_84cb939c27de54::t_744136a7e1ed08 1,57-60,77-80,105-108,139-140,144-147
+  s_84cb939c27de54::t_87ef2bfbc4928d 2-20,52-53,55-56,75-76,81-97,109-129,135-138,141
+  s_84cb939c27de54::t_ae4f527371b2a8 142-143,148,153-162
+apps/nextjs/src/app/api/mcp/oauth/authorize/route.ts
+  s_84cb939c27de54::t_1ca72d9d4f8261 1-4,11-13,62-64,67-69,87-90,99-101,109-110,133-134,158
+  s_84cb939c27de54::t_5e28aef391a431 91-93,96-98
+  s_84cb939c27de54::t_a45ab827cec93c 5-10,19-25,30-36,39-45,47-53,65-66,70-76,80-86,94-95,102-108,112-118,120-126,135-141,143-149,153-156
+  s_84cb939c27de54::t_de651e652ea8f8 14-18,26-29,37-38,56-61,111,129-132,152,157
+  s_84cb939c27de54::t_9a8625b3ed7ba8 46,54-55,77-79,119,127-128,142,150-151
+apps/nextjs/src/app/api/mcp/oauth/token/route.ts
+  s_84cb939c27de54::t_c5798e11c584ae 3-9,36,65-72,87-90,99-101,107-108,121-122,124-140
+  s_84cb939c27de54::t_ca805e032d8844 50-56,64,80-82
+  s_84cb939c27de54::t_65df5c524b3e69 26-35
+  s_84cb939c27de54::t_a45ab827cec93c 43-46,57-63,73-79,83-86,92-98,103-106,109-115,117-120
+  s_84cb939c27de54::t_35080916964428 91,102,116
+  s_84cb939c27de54::t_cf1ccc090ffc0a 123
+  s_84cb939c27de54::t_de5d672b800851 1-2
+  s_84cb939c27de54::t_810eb888cbf2cc 10-25,37-42,47-49
+apps/nextjs/src/app/api/mcp/oauth/register/route.ts
+  s_84cb939c27de54::t_d341556f0665d1 1-2,28,64,83,95-96,108,119
+  s_84cb939c27de54::t_d04df2b8164940 29-34,39-44,49-52
+  s_84cb939c27de54::t_a45ab827cec93c 35-38,45-48,53-56,58-61,65-68,70-81,84-86,88-94,99-106,109-118
+  s_84cb939c27de54::t_db60c8f78dfc3d 19-27,57,62-63,69,82,87,97-98,107
+  s_84cb939c27de54::t_547052d5f50e72 3-18
+apps/nextjs/src/app/.well-known/oauth-authorization-server/route.ts
+  s_84cb939c27de54::t_808ad4ccef71a4 1-4,11-12,29,32
+  s_84cb939c27de54::t_dc6f4941235507 5-10,13-28,30-31
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_84cb939c27de54::t_a45ab827cec93c 14-17,63-65,67-71,140-144,149-156,161-164,167-169,171-182,217-224,257-262
+  s_84cb939c27de54::t_9a4c4c02ce539a 18,200-202,204-209,211,228,230-235,237-239,241,246,248-253,266-271
+  s_84cb939c27de54::t_727fcb52d3057d 23
+  s_84cb939c27de54::t_96a0fc17f628ae 24
+  s_84cb939c27de54::t_2806e3c1b26817 1-2,6-11,26,72-85,128-139,145-148,157-158,184-187,189-198,278,280
+  s_84cb939c27de54::t_1eacd3439a639f 86-127,188
+  s_84cb939c27de54::t_2b6d5a2e0846a5 159-160,165-166,170,183
+  s_84cb939c27de54::t_7e213bf0e22dd5 203,214,236,242-244,254-256,272,275
+  s_84cb939c27de54::t_5a4bde281a51ee 27-62
+  s_84cb939c27de54::t_3a9790ccae7695 3-4,12,19-22,25,66,210,212-213,245,263-264,273-274,276-277,281-283
+  s_84cb939c27de54::t_f797ae73145dd2 13,199
+  s_84cb939c27de54::t_3c81217656b97e 215-216,225-227,229,247,265
+  s_84cb939c27de54::t_cb1d8aecdb3748 240
+  s_84cb939c27de54::t_9de18cd092c8ce 5,279
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "901f8ab4392a24df808a7829c24b7affb67ae191",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
