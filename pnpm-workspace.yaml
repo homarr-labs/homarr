@@ -84,7 +84,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.15
+  "@types/react": 19.2.16
   "@types/react-dom": 19.2.3
   "@types/swagger-ui-react": ^5.18.0
   "@types/video.js": ^7.3.58
@@ -146,8 +146,8 @@ catalog:
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
-  react: 19.2.6
-  react-dom: 19.2.6
+  react: 19.2.7
+  react-dom: 19.2.7
   react-error-boundary: ^6.1.2
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
