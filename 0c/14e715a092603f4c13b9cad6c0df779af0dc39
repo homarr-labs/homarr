@@ -1,0 +1,135 @@
+apps/nextjs/src/app/[locale]/init/_steps/start/sqlite-restore.tsx
+  s_cac0ffa91a7ee0::t_0ea8308ee569d5 1-43
+packages/translation/src/lang/en.json
+  s_cac0ffa91a7ee0::t_0b87dfc1a1e996 10-13
+  s_cac0ffa91a7ee0::t_e72491ebf89d31 4053-4061
+  s_cac0ffa91a7ee0::t_34211d283cb204 4052,4076-4077,4095-4098
+  s_cac0ffa91a7ee0::t_6a43e2195e3e99 4099-4148,4151-4153,4155-4161
+  s_cac0ffa91a7ee0::t_c7b854e922553e 3504-3505
+  s_cac0ffa91a7ee0::t_c97c4673366689 4149-4150
+  s_cac0ffa91a7ee0::t_608c3e919154f9 4045-4051,4062-4075,4078-4094,4162
+  s_cac0ffa91a7ee0::t_ab8ce79edc3ad1 4154
+apps/nextjs/src/app/api/backup/export/route.ts
+  s_cac0ffa91a7ee0::t_99cfab1c56d99a 22-23,28,31,35,63-65,67
+  s_cac0ffa91a7ee0::t_f044669069519a 1-21,24-27,29-30,32-34,36-39,41-42,44-62,66,68-72
+  s_cac0ffa91a7ee0::t_213b8eb47d75a6 40,43
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-import-card.tsx
+  s_cac0ffa91a7ee0::t_fcf4f77535f11b 1-2,5,9-10,12-14,16-17,19-20,22,24-27
+  s_cac0ffa91a7ee0::t_de82a5aa2c5ecc 6-7,11,18,21
+  s_cac0ffa91a7ee0::t_f61cfc51a7d2d7 3-4,8,15,23
+apps/nextjs/src/app/api/backup/sql-wasm/route.ts
+  s_cac0ffa91a7ee0::t_e8c9e66742edb2 1-7,10-30
+  s_cac0ffa91a7ee0::t_9b6977765d3fff 8-9
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_cac0ffa91a7ee0::t_057c8a95d25833 13
+  s_cac0ffa91a7ee0::t_a471e007d66afc 32
+  s_cac0ffa91a7ee0::t_3d393828fc796c 159-162,164
+  s_cac0ffa91a7ee0::t_792e0c85a0307c 163
+pnpm-lock.yaml
+  ai_agent 387-389,468-470,805-807,811-813,826-828,841-843,871-873,893-898,1368,1540,1543,7059-7061,7358-7360,7384-7386,8078-8080,8823-8825,8962-8964,13776,13785,13787,13789,14463-14464,14730-14736,14757-14760,15514-15515,16388-16389,16558
+scripts/run.sh
+  s_cac0ffa91a7ee0::t_a1076725002a84 39,42,44-47,58-73
+  s_cac0ffa91a7ee0::t_ee6329450f4c8f 43,50
+apps/nextjs/src/app/[locale]/init/_steps/start/init-start.tsx
+  s_cac0ffa91a7ee0::t_7ae6eaf84f52ce 5,14,33
+  s_cac0ffa91a7ee0::t_9e4915ad716b0e 9
+apps/nextjs/src/components/backup/backup-preview-panel.tsx
+  s_cac0ffa91a7ee0::t_86dece90237adb 6-7,16,18-19,30,32,43-44,50,66,83-85,88-90,94,107
+  s_cac0ffa91a7ee0::t_3de9265f3fd0c3 1-5,8-15,17,20-29,31,33-42,45-49,51-65,67-82,86-87,91-93,95-106,108-114
+apps/nextjs/package.json
+  s_cac0ffa91a7ee0::t_8b6d69bbe8d14f 101
+  s_cac0ffa91a7ee0::t_9644f7ed175dd2 78,81
+  s_cac0ffa91a7ee0::t_1e0df18b302125 102
+  s_cac0ffa91a7ee0::t_c7da4d856e5712 92
+  s_cac0ffa91a7ee0::t_8eb6c4a77a1a62 75
+  s_cac0ffa91a7ee0::t_d45343ac541ab2 79
+apps/nextjs/src/components/backup/migration-progress-panel.tsx
+  s_cac0ffa91a7ee0::t_f8faf69678d184 6-7,15-16,25,49
+  s_cac0ffa91a7ee0::t_44d7ca62de4181 1-5,8-14,17-24,26-48,50-60
+nginx.conf
+  s_cac0ffa91a7ee0::t_d90db683619c34 26
+apps/nextjs/src/app/[locale]/manage/tools/backup/page.tsx
+  s_cac0ffa91a7ee0::t_ebce25c982e4b3 6,18-19,21,30-31,35
+  s_cac0ffa91a7ee0::t_67adbe4700348e 5,14,27
+  s_cac0ffa91a7ee0::t_4d9155711ef59d 1-4,7-13,15-17,20,22-26,28-29,32-34,36-40
+apps/nextjs/src/app/api/backup/test/backup.spec.ts
+  s_cac0ffa91a7ee0::t_51eb7051d9a8f3 58,86-88
+  s_cac0ffa91a7ee0::t_1bfcdb15f3da5b 1-57,59-71,73-78,83,85,89-117,119-120,122-126,139-142,144-308
+  s_cac0ffa91a7ee0::t_ad5a6e4f0a7637 79-82
+  s_cac0ffa91a7ee0::t_caf16f84322ddf 118,121,127-138,143
+  s_cac0ffa91a7ee0::t_a32cf084fb334c 72,84
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_cac0ffa91a7ee0::t_e6c17bc42365b7 5-6,60,89,91,165,169
+  s_cac0ffa91a7ee0::t_1d8b4e135693e9 1-4,7-59,61-73,75-78,83-88,90,92-95,97-164,166-168,170-182
+  s_cac0ffa91a7ee0::t_ebf458527110ff 74,79-82,96
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_cac0ffa91a7ee0::t_16258c36eefb35 1-2,4-10,13-25,27-29,33-50,54-56,68-71,75-82,84-85,90,97-120,122-123,125-143,145-154,156-159,161-172,174-197,199-205,207-210,212-219
+  s_cac0ffa91a7ee0::t_eed742272cea8b 64,66
+  s_cac0ffa91a7ee0::t_647123f1301666 3,30-32,51-53,57-63,65,67,72-74,83,86-89,91-96,198
+  s_cac0ffa91a7ee0::t_5d203a43cfcfc5 11-12,26,121,124,144,155,160,173,206,211
+apps/nextjs/src/components/backup/index.ts
+  s_cac0ffa91a7ee0::t_9bb6c82c4fc3bf 1,3
+  s_cac0ffa91a7ee0::t_5854a03afb7a22 2
+apps/nextjs/src/react-app-env.d.ts
+  s_cac0ffa91a7ee0::t_44a9b11c311eca 5
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_cac0ffa91a7ee0::t_383a9de3fab3c5 11
+  s_cac0ffa91a7ee0::t_93d520099076ad 15-16,18-23,25,27-31,41,53,75,87,117
+  s_cac0ffa91a7ee0::t_3e10e35f09b5ae 24,32
+  s_cac0ffa91a7ee0::t_0aaf0ce32f1f05 1-10,12-14,17,26,33-40,42-52,54-74,76-86,88-116,118-128
+apps/nextjs/src/components/backup/dangerous-action-confirmation.tsx
+  s_cac0ffa91a7ee0::t_7a142d63003f6b 1-91
+apps/nextjs/src/components/backup/types.ts
+  s_cac0ffa91a7ee0::t_7fb80981e52f92 39
+  s_cac0ffa91a7ee0::t_beff503677c679 1-4,6-27,29-30,32-38
+  s_cac0ffa91a7ee0::t_916b39882cedb5 31
+  s_cac0ffa91a7ee0::t_ca1424ffe4fcd8 5
+  s_cac0ffa91a7ee0::t_4f6bf1d50dc146 28
+apps/nextjs/src/components/backup/restore-confirmation.tsx
+  s_cac0ffa91a7ee0::t_0213e3f2f26b3b 3,7,19-30
+  s_cac0ffa91a7ee0::t_8ad194e13c0e10 5-6,16
+  s_cac0ffa91a7ee0::t_cd49bef4aa055a 1-2,4,8-15,17-18,31-32
+pnpm-workspace.yaml
+  s_cac0ffa91a7ee0::t_6f97b85488bb72 102
+  s_cac0ffa91a7ee0::t_5a94637e729c0a 101
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_cac0ffa91a7ee0::t_5f7638cb6bd422 1-14,16,18,20-23,26-33,38-40,43-46,50-51,71-75,82-83,88-92,105-112,119,121-131,133-137,139-141,152-153,155-162,167,169-171,181-182
+  s_cac0ffa91a7ee0::t_2d28a83f93f88e 17
+  s_cac0ffa91a7ee0::t_16873261e9c990 76-81,84-87
+  s_cac0ffa91a7ee0::t_2e32b23cd5d4c8 15
+  s_cac0ffa91a7ee0::t_5edffc86bf873e 42
+  s_cac0ffa91a7ee0::t_7b684f0e24e1e0 19,34-37,41,47-49,52-70,93-104,113-118,120,132,138,154,172-180
+  s_cac0ffa91a7ee0::t_273e68757cf475 24-25
+  s_cac0ffa91a7ee0::t_f02741af451282 142-151
+  s_cac0ffa91a7ee0::t_c3c0fba27108cd 163-166,168
+apps/nextjs/next.config.ts
+  s_cac0ffa91a7ee0::t_74916da757f563 32-34
+  s_cac0ffa91a7ee0::t_f4bf38cbd5aee9 45
+  s_cac0ffa91a7ee0::t_d5c356b04a8a32 8-9,13-21
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-export-card.tsx
+  s_cac0ffa91a7ee0::t_57d91708353893 24
+  s_cac0ffa91a7ee0::t_85f039f87ca825 38
+  s_cac0ffa91a7ee0::t_3c391446dd3dd0 4-5,7-8,12,14,19,37,49,52,54-58
+  s_cac0ffa91a7ee0::t_b3e9ae33163f59 9-10,15,36,59-80
+  s_cac0ffa91a7ee0::t_d8a01fc27b74d3 1-3,6,11,13,16-18,20-23,25-35,39-48,50-51,53,81-84
+apps/nextjs/src/app/api/backup/migrations/route.ts
+  s_cac0ffa91a7ee0::t_86753b62d00187 56-63
+  s_cac0ffa91a7ee0::t_00514b9151fb43 1-23,26-55,64
+  s_cac0ffa91a7ee0::t_1531f55ef26a5b 24-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "0c14e715a092603f4c13b9cad6c0df779af0dc39",
+  "prompts": {},
+  "sessions": {
+    "s_cac0ffa91a7ee0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "296e16db-2c61-4c85-b9c5-4c8468e519e2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
