@@ -1,0 +1,45 @@
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  s_84cb939c27de54::t_a9a91deacaa928 71-84,86
+  s_84cb939c27de54::t_799fdb59b39c1c 20,23
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-page-tabs.tsx
+  s_84cb939c27de54::t_1811ae68d09c29 56
+  s_84cb939c27de54::t_eb3d96bcbc22e1 24,36
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_84cb939c27de54::t_7744e35b503b75 59,62
+  s_84cb939c27de54::t_5ae67f3df57b57 122-130
+  s_84cb939c27de54::t_3423c9b63f3a1d 35
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_84cb939c27de54::t_d137e6528a7d03 15
+  s_84cb939c27de54::t_022fb73ebead21 158-164,177-180
+  s_84cb939c27de54::t_6e96de61e459e8 147-154
+  s_84cb939c27de54::t_0d9d78ed184edb 67,76-93
+packages/api/src/trpc.ts
+  s_84cb939c27de54::t_b56a81d85489da 163-176
+apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+  s_84cb939c27de54::t_8513031578f77d 6
+  s_84cb939c27de54::t_1eda2a10253e68 97
+  s_84cb939c27de54::t_fd2b14977877f0 101
+packages/translation/src/lang/en.json
+  s_84cb939c27de54::t_319857e9058dc9 4046-4049
+packages/api/src/router/apiKeys.ts
+  s_84cb939c27de54::t_2d6fd5d589a7b8 68-73
+  s_84cb939c27de54::t_7bcd1f3c4a1adf 1
+  s_84cb939c27de54::t_30db7019824633 37
+  s_84cb939c27de54::t_2cdcc33dcb5579 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "0a9038ab8b6bc4d4257d13416ba2fa0b3036b162",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
