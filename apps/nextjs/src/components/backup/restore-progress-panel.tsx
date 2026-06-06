@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Group, Loader, Paper, Stack, Text, ThemeIcon, Timeline } from "@mantine/core";
 import {
   IconCheck,
@@ -11,49 +11,87 @@ import {
   IconRefresh,
   IconTransform,
 } from "@tabler/icons-react";
+import type { Icon } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { RESTORE_PHASES } from "./types";
+import type { MigrationFile } from "./types";
 
-const PHASE_ICONS = {
+const PHASE_ICONS: Record<string, Icon> = {
   extracting: IconFileZip,
   migrating: IconDatabaseImport,
   encrypting: IconKey,
   swapping: IconTransform,
   restarting: IconRefresh,
-} as const;
+};
 
-const PHASE_DURATIONS = {
+const BASE_PHASE_DURATIONS: Record<string, number> = {
   extracting: 1200,
-  migrating: 2000,
   encrypting: 1500,
   swapping: 800,
   restarting: 10000,
-} as const;
+};
+
+const MIGRATION_STEP_DURATION = 100;
+
+interface TimelineStep {
+  key: string;
+  label: string;
+  icon: Icon;
+  duration: number;
+}
 
 interface RestoreProgressPanelProps {
   active: boolean;
+  migrations: MigrationFile[];
   onComplete?: () => void;
 }
 
-export const RestoreProgressPanel = ({ active, onComplete }: RestoreProgressPanelProps) => {
+export const RestoreProgressPanel = ({ active, migrations, onComplete }: RestoreProgressPanelProps) => {
   const t = useScopedI18n("management.page.tool.backup.restore.progress");
-  const [currentPhaseIdx, setCurrentPhaseIdx] = useState(-1);
+  const [currentStepIdx, setCurrentStepIdx] = useState(-1);
+
+  const steps = useMemo((): TimelineStep[] => {
+    const result: TimelineStep[] = [
+      { key: "extracting", label: t("extracting"), icon: IconFileZip, duration: BASE_PHASE_DURATIONS.extracting! },
+    ];
+
+    if (migrations.length > 0) {
+      for (const migration of migrations) {
+        result.push({
+          key: `migration-${migration.idx}`,
+          label: migration.tag,
+          icon: IconDatabaseImport,
+          duration: MIGRATION_STEP_DURATION,
+        });
+      }
+    } else {
+      result.push({
+        key: "migrating",
+        label: t("migrating"),
+        icon: IconDatabaseImport,
+        duration: 300,
+      });
+    }
+
+    result.push(
+      { key: "encrypting", label: t("encrypting"), icon: IconKey, duration: BASE_PHASE_DURATIONS.encrypting! },
+      { key: "swapping", label: t("swapping"), icon: IconTransform, duration: BASE_PHASE_DURATIONS.swapping! },
+      { key: "restarting", label: t("restarting"), icon: IconRefresh, duration: BASE_PHASE_DURATIONS.restarting! },
+    );
+
+    return result;
+  }, [migrations, t]);
 
   useEffect(() => {
     if (!active) return;
 
     let cancelled = false;
     const run = async () => {
-      for (let i = 0; i < RESTORE_PHASES.length; i++) {
+      for (let i = 0; i < steps.length; i++) {
         if (cancelled) return;
-        setCurrentPhaseIdx(i);
-        const phase = RESTORE_PHASES[i]!;
-        const duration = PHASE_DURATIONS[phase];
-        if (duration > 0) {
-          await new Promise((r) => setTimeout(r, duration + Math.random() * 500));
-        }
+        setCurrentStepIdx(i);
+        await new Promise((r) => setTimeout(r, steps[i]!.duration));
       }
       if (!cancelled) {
         onComplete?.();
@@ -62,9 +100,9 @@ export const RestoreProgressPanel = ({ active, onComplete }: RestoreProgressPane
 
     void run();
     return () => { cancelled = true; };
-  }, [active, onComplete]);
+  }, [active, onComplete, steps]);
 
-  if (!active && currentPhaseIdx === -1) return null;
+  if (!active && currentStepIdx === -1) return null;
 
   return (
     <Paper p="lg" radius="md" bg="var(--mantine-color-dark-7)">
@@ -78,19 +116,19 @@ export const RestoreProgressPanel = ({ active, onComplete }: RestoreProgressPane
 
         <Box pl={4}>
           <Timeline
-            active={currentPhaseIdx}
+            active={currentStepIdx}
             bulletSize={24}
             lineWidth={2}
             color="blue"
           >
-            {RESTORE_PHASES.map((phase, i) => {
-              const Icon = PHASE_ICONS[phase];
-              const isDone = i < currentPhaseIdx;
-              const isActive = i === currentPhaseIdx;
+            {steps.map((step, i) => {
+              const isDone = i < currentStepIdx;
+              const isActive = i === currentStepIdx;
+              const isMigration = step.key.startsWith("migration-");
 
               return (
                 <Timeline.Item
-                  key={phase}
+                  key={step.key}
                   bullet={
                     isDone ? (
                       <ThemeIcon size={24} radius="xl" color="green" variant="filled">
@@ -108,13 +146,14 @@ export const RestoreProgressPanel = ({ active, onComplete }: RestoreProgressPane
                   }
                 >
                   <Group gap="xs" mt={-4}>
-                    <Icon size={16} color={isDone ? "var(--mantine-color-green-6)" : isActive ? "var(--mantine-color-blue-5)" : "var(--mantine-color-dimmed)"} />
+                    <step.icon size={16} color={isDone ? "var(--mantine-color-green-6)" : isActive ? "var(--mantine-color-blue-5)" : "var(--mantine-color-dimmed)"} />
                     <Text
-                      size="sm"
+                      size={isMigration ? "xs" : "sm"}
                       fw={isActive ? 600 : 400}
+                      ff={isMigration ? "monospace" : undefined}
                       c={isDone ? "green" : isActive ? "white" : "dimmed"}
                     >
-                      {t(phase)}
+                      {step.label}
                     </Text>
                   </Group>
                 </Timeline.Item>

@@ -195,6 +195,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     return (
       <RestoreProgressPanel
         active
+        migrations={analysis?.migrations.pending ?? []}
         onComplete={handleAnimationComplete}
       />
     );

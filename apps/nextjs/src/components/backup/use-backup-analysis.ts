@@ -117,7 +117,7 @@ export const useBackupAnalysis = () => {
             phase: "applying",
           });
 
-          await delay(400 + Math.random() * 300);
+          await delay(100);
 
           try {
             const statements = migration.sql
@@ -149,7 +149,7 @@ export const useBackupAnalysis = () => {
             phase: "done",
           });
 
-          await delay(150);
+          await delay(50);
         }
       }
 

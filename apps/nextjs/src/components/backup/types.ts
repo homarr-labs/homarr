@@ -27,13 +27,4 @@ export interface BackupAnalysis {
 
 export type RestoreStep = "upload" | "preview" | "confirm" | "restoring" | "error";
 
-export interface RestoreProgress {
-  phase: "extracting" | "migrating" | "encrypting" | "swapping" | "restarting";
-  migrationIndex?: number;
-  migrationTotal?: number;
-  migrationTag?: string;
-}
-
 export const PREVIEW_TABLE_KEYS = ["board", "user", "app", "integration", "item", "media", "search_engine"] as const;
-
-export const RESTORE_PHASES = ["extracting", "migrating", "encrypting", "swapping", "restarting"] as const;
