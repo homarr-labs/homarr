@@ -1,0 +1,159 @@
+packages/api/src/router/board/grid-algorithm.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 32,47,62,72,97,143,146,162,173
+packages/api/src/router/kubernetes/router/cluster.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 4,17,40-41,45-46,51,56,65,67-68,70,90,109,144,168,185
+packages/api/src/router/test/group.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 7,41,65,87,111,124,148,162,199,207,225,239,263,281-284,286-290,292-293,295-297,302,316-319,321-323,325-333,335-346,351-354,356-368,370-375,377-379,384,406,424,449,455,477,495,533,555,573,604,625,644,683,704,722,751,761,803,824,842,875
+packages/api/src/router/app/app-access-control.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 44,48
+packages/api/src/router/kubernetes/kubernetes-client.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 2,25-26
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 7,9-12,17-25,27-31,33,38,44,127,133-141,144-147
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 7,15,157,177,262,264,266,375,559,590-592
+packages/api/src/router/test/integration/integration-test-connection.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 25,68,118,168,222,280,283
+packages/api/src/router/test/user.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 84-91,93-98,100-101,278,313,360
+packages/api/src/router/test/widgets/app.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 14,27
+packages/api/src/router/widgets/coolify.ts
+  s_84cb939c27de54::t_96753bde672e79 16,33
+packages/api/src/router/user/change-search-preferences.ts
+  s_84cb939c27de54::t_96753bde672e79 11-13
+packages/api/src/router/widgets/ups.ts
+  s_84cb939c27de54::t_96753bde672e79 12,16-17,32,34,36
+packages/api/src/router/kubernetes/resource-parser/memory-resource-parser.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 27
+apps/nextjs/src/app/[locale]/manage/tools/api/components/copy-api-key-modal.tsx
+  s_84cb939c27de54::t_c801efb993d082 7-30
+packages/api/src/router/integration/integration-access.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 7,47
+packages/api/src/router/import/import-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 3
+packages/api/src/router/test/integration/integration-access.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 13,27-51,57-82,88-113,119-144,151
+packages/api/src/router/test/app.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 19-20,24,88,129
+packages/api/src/router/home.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 34-37,39-44,47-48,55
+packages/api/src/router/kubernetes/router/ingresses.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 1,4,29,36
+packages/api/src/router/widgets/speedtest-tracker.ts
+  s_84cb939c27de54::t_96753bde672e79 15-16,40
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 20,170,173
+packages/api/src/router/widgets/notebook.ts
+  s_84cb939c27de54::t_96753bde672e79 21
+packages/api/src/router/widgets/notifications.ts
+  s_84cb939c27de54::t_96753bde672e79 15,23-24,42,47-48
+packages/api/src/router/widgets/options.ts
+  s_84cb939c27de54::t_96753bde672e79 7-8,10-14,16-18
+packages/api/src/router/widgets/rssFeed.ts
+  s_84cb939c27de54::t_96753bde672e79 43,47-61,64,68,96,103,119
+packages/api/src/router/widgets/tracearr.ts
+  s_84cb939c27de54::t_96753bde672e79 10-14,16-24,26-27,31
+packages/api/src/router/widgets/app.ts
+  s_84cb939c27de54::t_96753bde672e79 13-20,22-23,25-30,32,34-39,41,43-47,84-97
+packages/api/src/router/serverSettings.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 3,8,15-17,38
+packages/api/src/router/onboard/onboard-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 31-32,34,46,49-50,146-163,165-166,168-171,173-178,180,182-184,186-187,189-208,210-235,237-246,260,271-272,274-275,277-282,284-294,296-301,303-308,311-320,322,324-325
+packages/api/src/router/widgets/immich.ts
+  s_84cb939c27de54::t_96753bde672e79 15,18-22,32-33,37-41
+packages/api/src/router/widgets/releases.ts
+  s_84cb939c27de54::t_96753bde672e79 10,13,15,28,55
+packages/api/src/router/board/test/grid-algorithm.spec.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 14-15,17-22,24,26-27,35,37-40,50-55,66-70,72-77,321,324,343
+packages/api/src/router/kubernetes/router/kubernetes-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 8-9,13
+packages/api/src/router/onboard/onboard-queries.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 10,38,47
+packages/api/src/router/kubernetes/router/volumes.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 17,23
+packages/api/src/router/medias/media-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 8,12,18,22,25-26,78-80,101-108,110-115,117-123,125-127
+packages/api/src/router/widgets/weather.ts
+  s_84cb939c27de54::t_96753bde672e79 15-20,22-23,25-28
+packages/api/src/router/widgets/anchor-notes.ts
+  s_84cb939c27de54::t_96753bde672e79 6-7,10,21,46,58,73,79,82,92
+packages/api/src/router/widgets/minecraft.ts
+  s_84cb939c27de54::t_96753bde672e79 14-22,27-28,31-35
+packages/api/src/router/widgets/media-transcoding.ts
+  s_84cb939c27de54::t_96753bde672e79 13,20-22,24,35-44
+packages/api/src/router/kubernetes/router/services.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 24-25
+packages/api/src/router/test/board/board-access.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 13,27-50,56-79,85-108,114-137,144
+packages/api/src/router/widgets/network-controller.ts
+  s_84cb939c27de54::t_96753bde672e79 15,19-20,37,40,45-46
+packages/api/src/router/widgets/index.ts
+  s_84cb939c27de54::t_96753bde672e79 6,13-16,18-19,21-24,27,29-30,32
+packages/api/src/router/integration/map-test-connection-error.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 22,32,48,51,60,97,121
+packages/api/src/router/certificates/certificate-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 13,117,123
+packages/api/src/router/widgets/firewall.ts
+  s_84cb939c27de54::t_96753bde672e79 25,29-30,46,49,54-55,73,77-78,94,97,102-103,121,125-126,142,145,150-151,169,173-174,190,193,198-199
+packages/api/src/router/cron-jobs.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 45,59-64,66-72,74,76-82
+packages/api/src/router/widgets/stocks.ts
+  s_84cb939c27de54::t_96753bde672e79 15-22
+packages/api/src/router/location.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 31
+packages/api/src/router/board.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 8-9,57,99,101,106,117-121,123-126,128,130-139,141-143,145-158,161-188,190,193-195,197-202,205-206,211,247,276,302,340,344,352-359,361-367,369-373,375-381,383,388,398-410,413,421,425,427,434,457,461,465,473,477,502,506,518,524-525,527,529-543,545-551,553-556,558-561,563-564,586,588-590,592-595,597-599,601-603,605-614,616-620,622-628,630-631,633-643,645-654,657-658,661-662,666-681,684-700,703-718,754-775,777-796,798-823,825,827-966,971,975-976,978-981,986,997-998,1000,1002,1004-1007,1015-1019,1022,1033-1035,1037-1056,1058-1061,1066-1068,1070,1072-1081,1083-1085,1087-1091,1093,1096,1098,1100-1111,1113,1115,1117,1119-1123,1125-1127,1130,1132-1139,1141-1147,1149-1151,1153,1155-1158,1160-1161,1163-1171,1173-1185,1188-1189,1191-1199,1202-1203,1205-1211,1213-1215,1217-1237,1240-1269,1275-1310,1316-1321,1350,1379-1380,1393,1402,1426-1427,1430,1443,1467,1494,1499,1514,1530,1571,1619,1632,1652-1653,1655-1656,1658-1659
+packages/api/src/router/kubernetes/router/pods.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 35,39,51
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 81-124
+packages/api/src/router/group.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 20,25-35,40-41,43-47,53,130,137,158,253,259,266,278,346,350,352,364
+packages/api/src/router/widgets/umami.ts
+  s_84cb939c27de54::t_96753bde672e79 16,22-30,49,69-70,74,91-94,96,102,121-124,126,132,152-155,157,163,176-177,179,183,194-196
+packages/api/src/router/bangs/bangs-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 15
+packages/api/src/router/board/board-access.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 7,37,46
+packages/api/src/router/kubernetes/router/namespaces.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 3
+packages/api/src/router/kubernetes/resource-parser/cpu-resource-parser.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 16
+packages/api/src/router/test/board.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 59,132,166,231,285,301,308,337,340,351,373,379,397,400,406,409,422,448,457,478,484,487,499,517,523,539,544,556-560,562,564-565,567-573,578,582,594,637,646,651,670,702,707,709,759,764,772,829,831-836,838,840-858,860-865,867-869,871-884,888,890,943,947,955,960,968,1020,1024,1028,1073,1078,1087,1089,1137,1140,1147,1151,1168,1219,1232-1233,1243,1274,1285,1322,1343,1367,1369,1393,1398,1424,1426,1446,1451,1470,1579,1606,1654-1657,1685-1687,1761,1764,1770,1779-1780,1786-1791
+packages/api/src/router/kubernetes/router/nodes.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 27-28,30,32,37,43-44,49-50
+packages/api/src/router/test/serverSettings.spec.ts
+  s_84cb939c27de54::t_96753bde672e79 8
+packages/api/src/router/widgets/indexer-manager.ts
+  s_84cb939c27de54::t_96753bde672e79 11,14,22-23,37-44,46-54
+packages/api/src/router/integration/integration-test-connection.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 5,60,63,106-108,121-124,136
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  s_84cb939c27de54::t_c801efb993d082 25-37,54,74
+packages/api/src/router/section/section-router.ts
+  s_84cb939c27de54::t_ee4b1907e4c7e2 19,49
+packages/api/src/router/update-checker.ts
+  s_84cb939c27de54::t_96753bde672e79 9-18
+packages/api/src/router/widgets/media-release.ts
+  s_84cb939c27de54::t_96753bde672e79 15,19-20,42,45,50-51
+packages/api/src/router/widgets/timetable.ts
+  s_84cb939c27de54::t_96753bde672e79 15,18-20,23-24,28,35-36,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "d29bc769bf1d13d0671fe2a1e8f52b380275d8b4",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
