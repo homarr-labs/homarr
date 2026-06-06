@@ -1,0 +1,9 @@
+.cursor/plans/revert_demo_mcp_8d8927a6.plan.md
+  ai_agent 1-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "2e40c6e2cf0e90a0ec85a787137399891c65038f",
+  "prompts": {}
+}
