@@ -1,0 +1,26 @@
+apps/nextjs/src/components/backup/index.ts
+  s_cac0ffa91a7ee0::t_3ff12b6a8b4777 3
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_cac0ffa91a7ee0::t_bdb7c831c704a2 152
+  s_cac0ffa91a7ee0::t_d644794feeb642 120
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_cac0ffa91a7ee0::t_14f7e5b2613960 3,14,18,20,26,28,33-42,46,50,52-84,91,93-94,103,105,119,124-127,131,149,151,153,156
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_cac0ffa91a7ee0::t_74afdfbdfbd9cd 198
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "76eacf83534067c80ca8e06d96270a9adcfb8cc7",
+  "prompts": {},
+  "sessions": {
+    "s_cac0ffa91a7ee0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "296e16db-2c61-4c85-b9c5-4c8468e519e2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
