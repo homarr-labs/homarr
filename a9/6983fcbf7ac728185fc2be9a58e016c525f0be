@@ -1,0 +1,76 @@
+packages/api/src/router/widgets/dns-hole.ts
+  s_84cb939c27de54::t_8b1c2b6592bde0 98
+  s_84cb939c27de54::t_ae670f1120e57b 78
+  s_84cb939c27de54::t_e8fe1cfc3d8abf 20-21
+packages/api/src/router/icons.ts
+  s_84cb939c27de54::t_3071b049fe9ece 12-13
+packages/api/src/router/invite.ts
+  s_84cb939c27de54::t_0baf110c63d3ea 72-73
+  s_84cb939c27de54::t_8565159b3429ea 108
+packages/api/src/router/widgets/health-monitoring.ts
+  s_84cb939c27de54::t_d668230ce9d86b 72-73
+  s_84cb939c27de54::t_506ad6b420fa3d 16
+packages/api/src/router/apiKeys.ts
+  s_84cb939c27de54::t_cececf945890df 62
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_84cb939c27de54::t_90c70ffd361e3d 67-75,80
+packages/api/src/router/widgets/smart-home.ts
+  s_84cb939c27de54::t_323f9759853951 20-21
+  s_84cb939c27de54::t_5edaf02ee74369 76-77
+  s_84cb939c27de54::t_de20094fc78805 57-58
+packages/api/src/router/widgets/calendar.ts
+  s_84cb939c27de54::t_098ed6aea97878 25
+packages/api/src/router/app.ts
+  s_84cb939c27de54::t_1396f6e1f55b59 85-88
+  s_84cb939c27de54::t_cc3d68685793ab 219-223
+  s_84cb939c27de54::t_7fbb27580158d0 174-175
+  s_84cb939c27de54::t_70ff50e88fcdb5 142
+  s_84cb939c27de54::t_52c2bffbf1b028 258
+  s_84cb939c27de54::t_3224dff262888b 33-34
+packages/api/src/router/widgets/media-requests.ts
+  s_84cb939c27de54::t_4d62094df6a054 129-130
+  s_84cb939c27de54::t_a0e4f873a8f5a8 20
+  s_84cb939c27de54::t_7a090017afe52d 89-90
+packages/api/src/router/widgets/downloads.ts
+  s_84cb939c27de54::t_d5b9696ff7a6c9 25
+  s_84cb939c27de54::t_3dda40a6fb2096 84-85
+  s_84cb939c27de54::t_0afcc9a2976c99 112-113
+packages/api/src/router/user.ts
+  s_84cb939c27de54::t_5a37c9edae2a93 156-157
+  s_84cb939c27de54::t_6f1b1b3295dba9 362
+  s_84cb939c27de54::t_2d4309dab305a9 463
+.cursor/goal/scratchpad.md
+  s_84cb939c27de54::t_67790bd62078f1 1-27
+packages/api/src/router/integration/integration-router.ts
+  s_84cb939c27de54::t_fff56690517f22 476
+  s_84cb939c27de54::t_e336785fcfab01 664
+  s_84cb939c27de54::t_582ebbccddb0db 702
+  s_84cb939c27de54::t_b8c73aa8cbe43e 218
+  s_84cb939c27de54::t_57502123487bd4 248
+  s_84cb939c27de54::t_8d2fa23c536c7a 770
+  s_84cb939c27de54::t_c08dbe5456ea4e 756
+packages/api/src/router/docker/docker-router.ts
+  s_84cb939c27de54::t_2a72c89dda053b 130-131
+  s_84cb939c27de54::t_513d6d9d16f0cf 86-87
+  s_84cb939c27de54::t_f4f0d64960e181 64-65
+  s_84cb939c27de54::t_f3844925065571 108-109
+  s_84cb939c27de54::t_7d3a5bae118ba6 152-153
+packages/api/src/router/widgets/media-server.ts
+  s_84cb939c27de54::t_3a79b75f9b8a2a 20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "a96983fcbf7ac728185fc2be9a58e016c525f0be",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
