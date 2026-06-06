@@ -1,0 +1,78 @@
+apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+  s_84cb939c27de54::t_a45ab827cec93c 27-28,36-39,61-64,99
+  s_84cb939c27de54::t_cd3b3c89237899 91,103
+  s_84cb939c27de54::t_19d766995d0b46 5,11,17,32,49-53,60,66
+  s_84cb939c27de54::t_e778021bc926d2 98
+  s_84cb939c27de54::t_d1dc191548ef3d 101-102
+  s_84cb939c27de54::t_171aa93ac3e368 18,20-22,34-35,40-48,54-59
+  s_84cb939c27de54::t_f3973675c3f3f9 19,23-24,65
+  s_84cb939c27de54::t_9e615ade890828 3,15,95-97,100,104
+  s_84cb939c27de54::t_9cb8ac28cbc2c9 86-88
+  s_84cb939c27de54::t_caa124fd9fa400 16
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-page-tabs.tsx
+  s_84cb939c27de54::t_b2a105e5355c3a 5
+  s_84cb939c27de54::t_21ab071fbda4fa 12
+  s_84cb939c27de54::t_136f164ccc8dd4 57
+  s_84cb939c27de54::t_fe5d6345ae6e1b 3-4,6,15-17,19-20,24-28,30-31,35-36,38-47,49-52,60-62
+  s_84cb939c27de54::t_b9789e63dbca32 8,21-22,32-33,53-56,58-59
+  s_84cb939c27de54::t_b2e14c5e58c1a5 10-11,23,34
+  s_84cb939c27de54::t_234225015706fc 18,29,48
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  s_84cb939c27de54::t_a45ab827cec93c 25-39,56-58,78-82
+apps/nextjs/package.json
+  s_84cb939c27de54::t_9cb8ac28cbc2c9 79-81
+  s_84cb939c27de54::t_a0b52c0fa6a97f 92
+apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference.tsx
+  s_84cb939c27de54::t_2f450d1cc475c0 3,35-37,50
+  s_84cb939c27de54::t_d691cb91e2daaa 1-2,4-7,31,33-34,38-47,52-58
+  s_84cb939c27de54::t_76d2f57654f042 32
+  s_84cb939c27de54::t_ab61fe7e470ab1 48
+  s_84cb939c27de54::t_2b6d62f1f0fa92 49
+  s_84cb939c27de54::t_ea79f766a407d9 8-30,51
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_84cb939c27de54::t_c697e20a9d2953 294,296
+  s_84cb939c27de54::t_c05056c520e25f 3-8,10,12-13,15,18,26,28-29,77,125,149,154,159,164
+  s_84cb939c27de54::t_3b32de2b5d1c77 49-50,65,120,122,128,152,155,162,278,280,291,295,297,299,377,385,388-391,396,404,407,412,422,425
+  s_84cb939c27de54::t_a45ab827cec93c 60-64,68-74,97-103,255-267,311-315,318-325,328-330,352-354,357-359,415-417,436-442,448-456
+  s_84cb939c27de54::t_98aeec39cd004f 52-53,57
+  s_84cb939c27de54::t_dbb0b1e01ed7b7 179
+  s_84cb939c27de54::t_5a5fba09d4426c 399
+  s_84cb939c27de54::t_ab08e7fb59068d 17,82,84,205-222,269-277,281-285
+  s_84cb939c27de54::t_1c109fee0f65cf 42,165-166,168-178,180-203
+  s_84cb939c27de54::t_00e89999729316 11,14,30,32-36,38-39,43,54-56,58-59,114,116-117,121,130,204,224,279,300
+  s_84cb939c27de54::t_7da7c2c21afda8 317,326-327,332-336,338,351,355-356,360-366
+  s_84cb939c27de54::t_774c001ac50223 37,46-48,51,67
+  s_84cb939c27de54::t_9ee09433e8274c 41
+  s_84cb939c27de54::t_a15be6d1d26611 19-25
+  s_84cb939c27de54::t_45299972406b49 9,115,118-119,123-124,127,129,150-151,153,160-161,163
+  s_84cb939c27de54::t_c2c5f17cc09e34 31,40,112,268,287-290,292-293,298,302,369-376,378-384,386-387,392-395,397-398,400-403,405-406,408-411,413-414,418-421,423-424,426-431
+  s_84cb939c27de54::t_66b617040926a5 44
+  s_84cb939c27de54::t_d21913d1d8d096 66
+  s_84cb939c27de54::t_4db2bd4121cedf 303-310,316,367-368
+  s_84cb939c27de54::t_afc6e7bd40c7f7 27
+  s_84cb939c27de54::t_6629f204f4c2aa 83,111
+  s_84cb939c27de54::t_d8997430445a00 131-146
+  s_84cb939c27de54::t_69f76670658af5 331
+  s_84cb939c27de54::t_0a3a1da2e46bf9 337
+  s_84cb939c27de54::t_1374ed2d0ffb30 339-350
+  s_84cb939c27de54::t_9f68cfadd280f0 1-2,45,75-76,78,85-93,105-110,113,126,148,156-158,167,301,432-435,443-447,457-463
+  s_84cb939c27de54::t_f3a3b4e99ef794 79-81,94-96,104
+apps/nextjs/src/app/[locale]/manage/tools/api/components/copy-api-key-modal.tsx
+  s_84cb939c27de54::t_a45ab827cec93c 7-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "c9711a620a2fdc59365be2fd6db9d0cf607121c5",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
