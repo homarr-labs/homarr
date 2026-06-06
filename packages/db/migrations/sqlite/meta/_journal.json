@@ -264,8 +264,15 @@
     {
       "idx": 37,
       "version": "6",
+      "when": 1779199046805,
+      "tag": "0037_add_user_onboarding_tour_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "6",
       "when": 1780490686287,
-      "tag": "0037_add_docker_app_source",
+      "tag": "0038_add_docker_app_source",
       "breakpoints": true
     }
   ]

@@ -1,16 +1,17 @@
-import { Card, Stack, Text } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import { IconFileImport, IconJson, IconPlayerPlay } from "@tabler/icons-react";
 
 import { getMantineColor } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { InitStepCard } from "../../_components/init-step-card";
 import { InitStartButton } from "./next-button";
 
 export const InitStart = async () => {
   const tStart = await getScopedI18n("init.step.start");
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <InitStepCard>
       <Stack>
         <Text>{tStart("description")}</Text>
 
@@ -35,6 +36,6 @@ export const InitStart = async () => {
           {tStart("action.importConfig")}
         </InitStartButton>
       </Stack>
-    </Card>
+    </InitStepCard>
   );
 };

@@ -5,7 +5,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
+import { catchTrpcNotFound, catchTrpcUnauthorized } from "~/errors/trpc-catch-error";
 import { canAccessUserEditPage } from "../access";
 import { ChangePasswordForm } from "./_components/_change-password-form";
 
@@ -23,7 +23,8 @@ export default async function UserSecurityPage(props: Props) {
     .getById({
       userId: params.userId,
     })
-    .catch(catchTrpcNotFound);
+    .catch(catchTrpcNotFound)
+    .catch(catchTrpcUnauthorized);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();

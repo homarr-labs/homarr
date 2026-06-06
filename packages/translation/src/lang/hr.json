@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Lozinka",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "Uključuje mala slova",
           "uppercase": "Uključuje veliko slovo",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

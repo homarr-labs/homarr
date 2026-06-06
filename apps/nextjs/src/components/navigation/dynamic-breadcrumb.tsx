@@ -58,17 +58,21 @@ export const DynamicBreadcrumb = ({
         }
         const href = `/${pathnameParts.slice(0, index + 1).join("/")}`;
         const translationKey = `${pathnameParts.slice(0, index + 1).join(".")}`;
+        const mappedValue = dynamicMappings?.get(pathnamePart);
+
+        if (mappedValue) {
+          if (nonInteractable?.includes(pathnamePart)) {
+            return <Text key={href}>{mappedValue}</Text>;
+          }
+          return (
+            <Anchor key={href} href={href}>
+              {mappedValue}
+            </Anchor>
+          );
+        }
 
         if (nonInteractable?.includes(pathnamePart)) {
           return <Text key={href}>{t(`${translationKey}.label` as TranslationKeys)}</Text>;
-        }
-
-        if (dynamicMappings?.has(pathnamePart)) {
-          return (
-            <Anchor key={href} href={href}>
-              {dynamicMappings.get(pathnamePart)}
-            </Anchor>
-          );
         }
 
         return (

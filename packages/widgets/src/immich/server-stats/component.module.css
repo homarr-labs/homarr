@@ -1,20 +1,10 @@
 .statItem {
   padding: 12px;
   border-radius: var(--mantine-radius-md);
-  background-color: var(--mantine-color-gray-0);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--mantine-color-gray-1);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .statItem {
-    background-color: var(--mantine-color-dark-6);
-
-    &:hover {
-      background-color: var(--mantine-color-dark-5);
-    }
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   }
 }

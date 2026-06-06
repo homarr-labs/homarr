@@ -1,39 +1,27 @@
 import type { MantineColor } from "@mantine/core";
-import { Button, Card, Stack, Text } from "@mantine/core";
-import { IconBook2, IconCategoryPlus, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
+import { Button, Stack, Text } from "@mantine/core";
+import { IconBook2, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
 
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getMantineColor } from "@homarr/common";
-import { db } from "@homarr/db";
 import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { InitStepCard } from "../../_components/init-step-card";
+
 export const InitFinish = async () => {
-  const firstBoard = await db.query.boards.findFirst({ columns: { name: true } });
   const tFinish = await getScopedI18n("init.step.finish");
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <InitStepCard>
       <Stack>
         <Text>{tFinish("description")}</Text>
 
-        {firstBoard ? (
-          <InternalLinkButton
-            href={`/auth/login?callbackUrl=/boards/${firstBoard.name}`}
-            iconProps={{ icon: IconLayoutDashboard, color: "blue" }}
-          >
-            {tFinish("action.goToBoard", { name: firstBoard.name })}
-          </InternalLinkButton>
-        ) : (
-          <InternalLinkButton
-            href="/auth/login?callbackUrl=/manage/boards"
-            iconProps={{ icon: IconCategoryPlus, color: "blue" }}
-          >
-            {tFinish("action.createBoard")}
-          </InternalLinkButton>
-        )}
+        <InternalLinkButton href="/auth/login?callbackUrl=/" iconProps={{ icon: IconLayoutDashboard, color: "blue" }}>
+          {tFinish("action.goToBoard", { name: "dashboard" })}
+        </InternalLinkButton>
 
         {isProviderEnabled("credentials") && (
           <InternalLinkButton
@@ -51,7 +39,7 @@ export const InitFinish = async () => {
           {tFinish("action.docs")}
         </ExternalLinkButton>
       </Stack>
-    </Card>
+    </InitStepCard>
   );
 };
 

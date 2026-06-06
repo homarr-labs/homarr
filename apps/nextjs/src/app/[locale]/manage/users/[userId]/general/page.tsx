@@ -13,6 +13,7 @@ import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
+import { ResetTours } from "./_components/_reset-tours";
 
 interface Props {
   params: Promise<{
@@ -86,6 +87,13 @@ export default async function EditUserPage(props: Props) {
           <UserProfileAvatarForm user={user} />
         </Box>
       </Group>
+
+      {session?.user.id === user.id && (
+        <Stack mb="lg">
+          <Title order={2}>{tGeneral("item.onboardingTours.title")}</Title>
+          <ResetTours />
+        </Stack>
+      )}
 
       <DangerZoneRoot>
         <DangerZoneItem

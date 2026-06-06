@@ -12,9 +12,11 @@ import classes from "./terminal.module.css";
 
 export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { activeLevels } = useLogContext();
+  const { activeLevels, fontSize } = useLogContext();
 
   const terminalRef = useRef<Terminal | null>(null);
+  const fitAddonRef = useRef<FitAddon | null>(null);
+
   clientApi.log.subscribe.useSubscription(
     {
       levels: activeLevels,
@@ -40,10 +42,12 @@ export const TerminalComponent = () => {
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
+      fontSize,
     });
     terminal.open(ref.current);
     terminal.loadAddon(fitAddon);
     terminalRef.current = terminal;
+    fitAddonRef.current = fitAddon;
 
     const fitTerminal = () => fitAddon.fit();
     const fitTimeout = setTimeout(fitTerminal);
@@ -57,8 +61,15 @@ export const TerminalComponent = () => {
       fitAddon.dispose();
       terminal.dispose();
       terminalRef.current = null;
+      fitAddonRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!terminalRef.current) return;
+    terminalRef.current.options.fontSize = fontSize;
+    fitAddonRef.current?.fit();
+  }, [fontSize]);
 
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
 };
