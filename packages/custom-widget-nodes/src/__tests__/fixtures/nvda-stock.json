@@ -1,0 +1,21 @@
+{
+  "$schema": "homarr-custom-widget-v1",
+  "name": "NVDA Stock Price",
+  "description": "Displays the current Nvidia (NVDA) stock price, change, and volume via Alpha Vantage. Requires a free API key from https://www.alphavantage.co/support/#api-key",
+  "baseUrl": "https://www.alphavantage.co",
+  "authType": "apiKeyQuery",
+  "headerName": "apikey",
+  "endpoint": "/query?function=GLOBAL_QUOTE&symbol=NVDA",
+  "method": "GET",
+  "displayType": "keyValue",
+  "displayConfig": {
+    "type": "keyValue",
+    "mappings": [
+      { "label": "Symbol", "jsonPath": "$['Global Quote']['01. symbol']", "unit": "" },
+      { "label": "Price", "jsonPath": "$['Global Quote']['05. price']", "unit": "USD" },
+      { "label": "Change", "jsonPath": "$['Global Quote']['09. change']", "unit": "" },
+      { "label": "Change %", "jsonPath": "$['Global Quote']['10. change percent']", "unit": "" },
+      { "label": "Volume", "jsonPath": "$['Global Quote']['06. volume']", "unit": "" }
+    ]
+  }
+}

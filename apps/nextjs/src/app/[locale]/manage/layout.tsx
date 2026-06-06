@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
   IconAffiliateFilled,
+  IconApi,
   IconBook2,
   IconBox,
   IconBrandDiscord,
@@ -70,6 +71,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.integrations"),
       hidden: !session,
       "data-onboarding-tour-id": "manage-integrations",
+    },
+    {
+      icon: IconApi,
+      href: "/manage/custom-widgets",
+      label: t("items.customWidgets"),
+      hidden: !session,
     },
     {
       icon: IconSearch,

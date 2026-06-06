@@ -681,6 +681,175 @@
       "add": "Add an app"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "Custom Widgets",
+        "noResults": "No custom widgets yet. Create your first one!",
+        "loading": "Loading..."
+      },
+      "create": {
+        "title": "Create Custom Widget",
+        "subtitle": "Define an API endpoint, authentication, and how to display the response data."
+      },
+      "edit": {
+        "title": "Edit Custom Widget"
+      }
+    },
+    "action": {
+      "create": "Create",
+      "import": "Import",
+      "save": "Save",
+      "delete": "Delete Custom Widget",
+      "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "export": "Export",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "flowEditor": "Flow Editor",
+      "edit": "Edit",
+      "removeMapping": "Remove mapping",
+      "removeColumn": "Remove column"
+    },
+    "field": {
+      "name": "Name",
+      "description": "Description",
+      "iconUrl": "Icon URL",
+      "baseUrl": "Base URL",
+      "authType": "Auth Type",
+      "headerName": "Header/Query Parameter Name",
+      "endpoint": "Endpoint",
+      "method": "Method",
+      "requestBody": "Request Body",
+      "displayType": "Display Type",
+      "jsonPath": "JSON Path",
+      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
+      "label": "Label",
+      "unit": "Unit",
+      "mappings": "Mappings",
+      "tablePath": "Array JSON Path",
+      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
+      "columns": "Columns",
+      "header": "Header"
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperature",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "baseUrl": "https://api.example.com",
+      "endpoint": "/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name"
+    },
+    "fieldset": {
+      "general": "General",
+      "connection": "API Connection",
+      "request": "Request",
+      "display": "Display Configuration"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Show one extracted value with a label and unit",
+      "keyValue": "Show multiple labeled values side by side",
+      "table": "Show rows of data in a table format"
+    },
+    "flowEditor": {
+      "save": "Save",
+      "test": "Test",
+      "deleteNode": "Delete Node",
+      "configure": "Configure: {nodeType}",
+      "nodeLabel": "Node Label",
+      "category": {
+        "sources": "Sources",
+        "transforms": "Transforms",
+        "displays": "Displays"
+      },
+      "node": {
+        "httpRequest": "HTTP Request",
+        "jsonPath": "JSONPath Extract",
+        "merge": "Merge",
+        "template": "Template",
+        "singleValue": "Single Value",
+        "keyValue": "Key-Value",
+        "table": "Table",
+        "lineChart": "Line Chart",
+        "areaChart": "Area Chart",
+        "barChart": "Bar Chart",
+        "sparkline": "Sparkline"
+      },
+      "option": {
+        "GET": "GET",
+        "POST": "POST",
+        "array": "Array",
+        "object": "Object"
+      },
+      "configField": {
+        "url": "URL",
+        "method": "Method",
+        "requestBody": "Request Body",
+        "expression": "JSONPath Expression",
+        "mode": "Mode",
+        "templateStr": "Template",
+        "label": "Label",
+        "unit": "Unit",
+        "labels": "Labels (comma-separated)",
+        "units": "Units (comma-separated)",
+        "columnHeaders": "Column Headers (comma-separated)",
+        "columnAccessors": "Column Accessors (comma-separated)",
+        "xKey": "X Axis Key",
+        "yKeys": "Y Axis Keys (comma-separated)",
+        "height": "Height",
+        "color": "Color"
+      }
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST"
+    },
+    "authType": {
+      "none": "None",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Key (Header)",
+      "apiKeyQuery": "API Key (Query)"
+    },
+    "displayType": {
+      "singleValue": "Single Value",
+      "keyValue": "Key-Value",
+      "table": "Table"
+    },
+    "secret": {
+      "apiKey": "API Key / Token",
+      "username": "Username",
+      "password": "Password"
+    },
+    "preview": {
+      "title": "Preview",
+      "test": "Test",
+      "hint": "Click Test to preview the API response with your current configuration.",
+      "rawResponse": "Raw JSON response"
+    },
+    "notification": {
+      "created": "Widget \"{name}\" created successfully.",
+      "updated": "Widget \"{name}\" updated successfully.",
+      "deleted": "Widget \"{name}\" deleted.",
+      "imported": "Widget imported successfully.",
+      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "updateError": "Failed to update widget. Your changes were not saved.",
+      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "exportError": "Failed to export widget.",
+      "flowSaved": "Flow graph saved successfully.",
+      "flowSaveError": "Failed to save flow graph."
+    },
+    "table": {
+      "name": "Name",
+      "baseUrl": "Base URL",
+      "endpoint": "Endpoint",
+      "display": "Display"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -3101,6 +3270,18 @@
       "status": {
         "unhealthy": "Unhealthy"
       }
+    },
+    "customApi": {
+      "name": "Custom API",
+      "description": "Display data from any external API with custom configuration.",
+      "option": {
+        "definitionId": {
+          "label": "Definition ID"
+        }
+      },
+      "noDefinition": "No definition selected",
+      "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "noDisplayOutput": "No display output"
     }
   },
   "widgetPreview": {
@@ -3480,6 +3661,7 @@
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrations",
+        "customWidgets": "Custom Widgets",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -4518,6 +4700,18 @@
         },
         "edit": {
           "label": "Edit"
+        }
+      },
+      "custom-widgets": {
+        "label": "Custom widgets",
+        "new": {
+          "label": "New"
+        },
+        "edit": {
+          "label": "Edit",
+          "flow": {
+            "label": "Flow"
+          }
         }
       },
       "users": {

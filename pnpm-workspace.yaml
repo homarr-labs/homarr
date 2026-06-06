@@ -22,6 +22,8 @@ catalog:
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
   "@mantine/charts": ^9.2.2
+  "@xyflow/react": ^12.8.2
+  "mantine-contextmenu": ^7.15.1
   "@mantine/colors-generator": ^9.2.2
   "@mantine/core": ^9.2.2
   "@mantine/dates": ^9.2.2
@@ -130,6 +132,7 @@ catalog:
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
+  jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   mantine-react-table: npm:mantine-react-table-open@9.0.3

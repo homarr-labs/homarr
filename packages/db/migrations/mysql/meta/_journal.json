@@ -281,6 +281,13 @@
       "when": 1779199104477,
       "tag": "0039_add_user_onboarding_tour_status",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1780764453945,
+      "tag": "0040_wealthy_thunderbolts",
+      "breakpoints": true
     }
   ]
 }

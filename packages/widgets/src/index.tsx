@@ -50,6 +50,7 @@ import * as umami from "./umami";
 import * as ups from "./ups";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as customApi from "./custom-api";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -95,6 +96,7 @@ export const widgetImports = {
   speedtestTracker,
   umami,
   ups,
+  customApi,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

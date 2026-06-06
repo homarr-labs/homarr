@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
@@ -1604,22 +1605,24 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
         collapsed: collapseStates.at(0)?.collapsed ?? false,
       }),
     ),
-    items: items.map(({ integrations: itemIntegrations, ...item }) =>
-      parseItem({
-        ...item,
-        layouts: item.layouts.map((layout) => ({
-          xOffset: layout.xOffset,
-          yOffset: layout.yOffset,
-          width: layout.width,
-          height: layout.height,
-          layoutId: layout.layoutId,
-          sectionId: layout.sectionId,
-        })),
-        integrationIds: itemIntegrations.map((item) => item.integration.id),
-        advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
-        options: superjson.parse<Record<string, unknown>>(item.options),
-      }),
-    ),
+    items: items
+      .map(({ integrations: itemIntegrations, ...item }) =>
+        parseItem({
+          ...item,
+          layouts: item.layouts.map((layout) => ({
+            xOffset: layout.xOffset,
+            yOffset: layout.yOffset,
+            width: layout.width,
+            height: layout.height,
+            layoutId: layout.layoutId,
+            sectionId: layout.sectionId,
+          })),
+          integrationIds: itemIntegrations.map((item) => item.integration.id),
+          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+          options: superjson.parse<Record<string, unknown>>(item.options),
+        }),
+      )
+      .filter((item): item is NonNullable<typeof item> => item !== null),
   };
 };
 
@@ -1631,11 +1634,14 @@ const forKind = <T extends WidgetKind>(kind: T) =>
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
 
+const boardLogger = createLogger({ module: "board" });
+
 const parseItem = (item: unknown) => {
   const result = outputItemSchema.safeParse(item);
 
   if (!result.success) {
-    throw new Error(result.error.message);
+    boardLogger.warn("Failed to parse board item, skipping", { error: result.error.message });
+    return null;
   }
   return result.data;
 };

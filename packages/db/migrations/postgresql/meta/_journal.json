@@ -43,6 +43,13 @@
       "when": 1779199097716,
       "tag": "0005_add_user_onboarding_tour_status",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780764416094,
+      "tag": "0006_last_callisto",
+      "breakpoints": true
     }
   ]
 }
