@@ -90,8 +90,8 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
                   : t("migrationsOlderVersionPlural", { count: String(pendingCount) })}
               </Text>
             </div>
-            <Badge variant="light" color="green" ml="auto">
-              {t("upToDate")}
+            <Badge variant="light" color="orange" ml="auto">
+              {t("migrationsPending", { count: String(pendingCount) })}
             </Badge>
           </Group>
         </Paper>

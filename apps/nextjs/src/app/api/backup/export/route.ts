@@ -61,12 +61,15 @@ export async function GET() {
       },
     });
   } catch (error) {
+    console.error("[backup/export] Export failed:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Export failed: ${message}` }, { status: 500 });
   } finally {
     sourceDb?.close();
-    if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
+    try {
+      if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+    } catch (cleanupErr) {
+      console.error("[backup/export] Failed to clean up temp file:", cleanupErr);
     }
   }
 }

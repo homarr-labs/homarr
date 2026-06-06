@@ -50,7 +50,11 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
   const transaction = tempDb.transaction(() => {
     for (const row of rows) {
       const parts = row.value.split(".");
-      if (parts.length !== 2) continue;
+      if (parts.length !== 2) {
+        throw new Error(
+          `Malformed secret value for integration ${row.integration_id} (${row.kind}): expected "data.iv" format`,
+        );
+      }
       const [data, dataIv] = parts as [string, string];
 
       try {
@@ -75,7 +79,7 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
 
 const isOnboardingActiveAsync = async (): Promise<boolean> => {
   const onboardingRow = await db.query.onboarding.findFirst();
-  if (!onboardingRow) return true;
+  if (!onboardingRow) return false;
   return onboardingRow.step === "start";
 };
 
@@ -146,6 +150,17 @@ export async function POST(req: Request) {
       metadata.encryptionKey ??
       zip.getEntry("encryption-key.txt")?.getData().toString().trim();
 
+    const secretCount = (
+      tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number }
+    ).count;
+
+    if (secretCount > 0 && !importedKey) {
+      throw new Error(
+        "Backup contains integration secrets but no encryption key. " +
+        "Cannot restore without the original SECRET_ENCRYPTION_KEY.",
+      );
+    }
+
     if (importedKey) {
       reEncryptSecrets(tempDb, importedKey);
     }
@@ -155,10 +170,14 @@ export async function POST(req: Request) {
 
     fs.renameSync(tempPath, dbPath);
 
-    const walPath = `${dbPath}-wal`;
-    const shmPath = `${dbPath}-shm`;
-    if (fs.existsSync(walPath)) fs.unlinkSync(walPath);
-    if (fs.existsSync(shmPath)) fs.unlinkSync(shmPath);
+    for (const suffix of ["-wal", "-shm"] as const) {
+      try {
+        const sidecar = `${dbPath}${suffix}`;
+        if (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
+      } catch (cleanupErr) {
+        console.error(`Failed to remove ${suffix} file:`, cleanupErr);
+      }
+    }
 
     setTimeout(() => {
       console.log("Database restored, restarting server...");
@@ -167,6 +186,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, message: "Database restored. Server is restarting..." });
   } catch (error) {
+    console.error("[backup/import] Restore failed:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Restore failed: ${message}` }, { status: 500 });
   } finally {

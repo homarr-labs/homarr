@@ -17,14 +17,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { MigrationFile } from "./types";
 
-const PHASE_ICONS: Record<string, Icon> = {
-  extracting: IconFileZip,
-  migrating: IconDatabaseImport,
-  encrypting: IconKey,
-  swapping: IconTransform,
-  restarting: IconRefresh,
-};
-
 const BASE_PHASE_DURATIONS: Record<string, number> = {
   extracting: 1200,
   encrypting: 1500,

@@ -4127,7 +4127,8 @@
               "migrationsOlderVersion": "This backup was from an older Homarr version. {count} schema migration was applied to bring it up to date.",
               "migrationsOlderVersionPlural": "This backup was from an older Homarr version. {count} schema migrations were applied to bring it up to date.",
               "migrationsUpToDate": "Database schema is up to date ({count} migrations applied)",
-              "upToDate": "Up to date"
+              "upToDate": "Up to date",
+              "migrationsPending": "{count} pending"
             },
             "migration": {
               "title": "Applying migrations ({current}/{total})",

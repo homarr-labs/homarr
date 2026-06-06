@@ -22,7 +22,7 @@ const getAppliedMigrationCount = (db: any): number => {
 
 const fetchMigrations = async (): Promise<MigrationFile[]> => {
   const res = await fetch("/api/backup/migrations");
-  if (!res.ok) return [];
+  if (!res.ok) throw new Error("Failed to fetch migration files from server");
   const data = await res.json();
   return data.migrations ?? [];
 };
@@ -133,13 +133,16 @@ export const useBackupAnalysis = () => {
               `INSERT INTO "${DRIZZLE_MIGRATIONS_TABLE}" ("hash", "created_at") VALUES (?, ?)`,
               [migration.tag, Date.now()],
             );
-          } catch {
+          } catch (migrationErr) {
             setMigrationProgress({
               current: i + 1,
               total: pendingMigrations.length,
               tag: migration.tag,
               phase: "error",
             });
+            throw new Error(
+              `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`,
+            );
           }
 
           setMigrationProgress({

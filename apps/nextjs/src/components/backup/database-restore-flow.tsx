@@ -55,14 +55,17 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   }, [reset]);
 
   const tryFinalize = useCallback(() => {
-    if (!apiDoneRef.current || !animDoneRef.current) return;
+    if (!apiDoneRef.current) return;
+
     if (apiErrorRef.current) {
       setImportError(apiErrorRef.current);
       setStep("error");
-    } else {
-      onRestoreComplete?.();
-      window.location.reload();
+      return;
     }
+
+    if (!animDoneRef.current) return;
+    onRestoreComplete?.();
+    window.location.reload();
   }, [onRestoreComplete]);
 
   const handleConfirm = useCallback(async () => {
@@ -77,13 +80,17 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       const formData = new FormData();
       formData.append("file", file);
       const response = await fetch("/api/backup/import", { method: "POST", body: formData });
-      const data = await response.json();
 
       if (!response.ok) {
-        apiErrorRef.current = data.error ?? t("analyzeError");
+        try {
+          const data = await response.json();
+          apiErrorRef.current = data.error ?? t("failed.title");
+        } catch {
+          apiErrorRef.current = `Server returned ${response.status}`;
+        }
       }
-    } catch (err) {
-      apiErrorRef.current = err instanceof Error ? err.message : t("analyzeError");
+    } catch {
+      apiErrorRef.current = t("failed.title");
     } finally {
       apiDoneRef.current = true;
       tryFinalize();
