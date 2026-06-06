@@ -3,9 +3,8 @@ import SuperJSON from "superjson";
 import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import {
-  apps,
   boardGroupPermissions,
-  boards,
+  groupMembers,
   groupPermissions,
   groups,
   integrationGroupPermissions,
@@ -13,33 +12,37 @@ import {
   integrationSecrets,
   searchEngines,
   serverSettings,
+  users,
 } from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { itemAdvancedOptionsSchema } from "@homarr/validation/shared";
 
 import { CONFIG_BUNDLE_FORMAT_VERSION } from "../config-bundle-compat";
-import type { HomarrBundleApp, HomarrConfigBundle } from "../schema";
+import { USER_DIRECT_FIELDS, USER_REF_FIELDS } from "../entity-fields";
+import { groupByKey } from "../resolve-entities";
+import type { ConfigBundleUser, HomarrBundleApp, HomarrConfigBundle } from "../schema";
 import { parseStoredValue, replaceAppIdsInValue } from "../utils";
 import { loadBoardGraphAsync } from "./load-board-graph";
+import { buildBoardSettings } from "./serialize-board";
 
-const buildBoardSettings = (board: NonNullable<Awaited<ReturnType<typeof loadBoardGraphAsync>>>) => ({
-  pageTitle: board.pageTitle,
-  metaTitle: board.metaTitle,
-  logoImageUrl: board.logoImageUrl,
-  faviconImageUrl: board.faviconImageUrl,
-  backgroundImageUrl: board.backgroundImageUrl,
-  backgroundImageAttachment: board.backgroundImageAttachment,
-  backgroundImageRepeat: board.backgroundImageRepeat,
-  backgroundImageSize: board.backgroundImageSize,
-  primaryColor: board.primaryColor,
-  secondaryColor: board.secondaryColor,
-  opacity: board.opacity,
-  customCss: board.customCss,
-  iconColor: board.iconColor,
-  itemRadius: board.itemRadius,
-  disableStatus: board.disableStatus,
-  isPublic: board.isPublic,
-});
+/**
+ * Exports a user row using USER_DIRECT_FIELDS and USER_REF_FIELDS.
+ * Adding a new preference to USER_DIRECT_FIELDS automatically includes it here.
+ */
+const exportUserRow = (user: Record<string, unknown>): ConfigBundleUser => {
+  const bundle: Record<string, unknown> = { ref: user.id };
+
+  for (const field of USER_DIRECT_FIELDS) {
+    bundle[field] = user[field] ?? null;
+  }
+
+  for (const refField of Object.keys(USER_REF_FIELDS)) {
+    const dbCol = refField.replace(/Ref$/, "Id");
+    bundle[refField] = user[dbCol] ?? null;
+  }
+
+  return bundle as unknown as ConfigBundleUser;
+};
 
 export const exportFullConfigAsync = async (
   db: Database,
@@ -55,20 +58,20 @@ export const exportFullConfigAsync = async (
   const allGroupPermissions = await db.select().from(groupPermissions);
   const allBoardGroupPermissions = await db.select().from(boardGroupPermissions);
   const allIntegrationGroupPermissions = await db.select().from(integrationGroupPermissions);
+  const allUsers = await db.select().from(users);
+  const allGroupMembers = await db.select().from(groupMembers);
 
-  const secretsByIntegration = new Map<string, { kind: IntegrationSecretKind; value: string }[]>();
-  for (const secret of allSecrets) {
-    const list = secretsByIntegration.get(secret.integrationId) ?? [];
-    list.push({ kind: secret.kind, value: secret.value });
-    secretsByIntegration.set(secret.integrationId, list);
-  }
+  const secretsByIntegration = groupByKey(allSecrets, (s) => s.integrationId);
 
   const bundleIntegrations = allIntegrations.map((integration) => ({
     ref: integration.id,
     kind: integration.kind,
     name: integration.name,
     url: integration.url,
-    secrets: secretsByIntegration.get(integration.id) ?? [],
+    secrets: (secretsByIntegration.get(integration.id) ?? []).map((s) => ({
+      kind: s.kind as IntegrationSecretKind,
+      value: s.value,
+    })),
   }));
 
   const bundleApps: HomarrBundleApp[] = allApps.map((app) => ({
@@ -115,6 +118,7 @@ export const exportFullConfigAsync = async (
     });
 
     bundleBoards.push({
+      ref: boardRow.id,
       name: boardGraph.name,
       settings: buildBoardSettings(boardGraph),
       layouts: boardGraph.layouts.map((layout) => ({
@@ -162,35 +166,31 @@ export const exportFullConfigAsync = async (
     integrationRef: se.integrationId,
   }));
 
-  const permissionsByGroup = new Map<string, string[]>();
-  for (const gp of allGroupPermissions) {
-    const list = permissionsByGroup.get(gp.groupId) ?? [];
-    list.push(gp.permission);
-    permissionsByGroup.set(gp.groupId, list);
-  }
-
-  const boardPermsByGroup = new Map<string, { boardRef: string; permission: string }[]>();
-  for (const bp of allBoardGroupPermissions) {
-    const list = boardPermsByGroup.get(bp.groupId) ?? [];
-    list.push({ boardRef: bp.boardId, permission: bp.permission });
-    boardPermsByGroup.set(bp.groupId, list);
-  }
-
-  const integrationPermsByGroup = new Map<string, { integrationRef: string; permission: string }[]>();
-  for (const ip of allIntegrationGroupPermissions) {
-    const list = integrationPermsByGroup.get(ip.groupId) ?? [];
-    list.push({ integrationRef: ip.integrationId, permission: ip.permission });
-    integrationPermsByGroup.set(ip.groupId, list);
-  }
+  const permissionsByGroup = groupByKey(allGroupPermissions, (gp) => gp.groupId);
+  const boardPermsByGroup = groupByKey(allBoardGroupPermissions, (bp) => bp.groupId);
+  const integrationPermsByGroup = groupByKey(allIntegrationGroupPermissions, (ip) => ip.groupId);
+  const membersByGroup = groupByKey(allGroupMembers, (gm) => gm.groupId);
 
   const bundleGroups = allGroups.map((group) => ({
     ref: group.id,
     name: group.name,
     position: group.position,
-    permissions: permissionsByGroup.get(group.id) ?? [],
-    boardPermissions: boardPermsByGroup.get(group.id) ?? [],
-    integrationPermissions: integrationPermsByGroup.get(group.id) ?? [],
+    ownerRef: group.ownerId ?? null,
+    homeBoardRef: group.homeBoardId ?? null,
+    mobileHomeBoardRef: group.mobileHomeBoardId ?? null,
+    permissions: (permissionsByGroup.get(group.id) ?? []).map((gp) => gp.permission),
+    boardPermissions: (boardPermsByGroup.get(group.id) ?? []).map((bp) => ({
+      boardRef: bp.boardId,
+      permission: bp.permission,
+    })),
+    integrationPermissions: (integrationPermsByGroup.get(group.id) ?? []).map((ip) => ({
+      integrationRef: ip.integrationId,
+      permission: ip.permission,
+    })),
+    memberRefs: (membersByGroup.get(group.id) ?? []).map((gm) => gm.userId),
   }));
+
+  const bundleUsers = allUsers.map((user) => exportUserRow(user as unknown as Record<string, unknown>));
 
   const bundle: HomarrConfigBundle = {
     version: CONFIG_BUNDLE_FORMAT_VERSION,
@@ -204,6 +204,7 @@ export const exportFullConfigAsync = async (
     serverSettings: settingsRecord,
     searchEngines: bundleSearchEngines,
     groups: bundleGroups,
+    users: bundleUsers,
   };
 
   const now = new Date().toISOString().slice(0, 10);

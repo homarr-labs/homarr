@@ -19,7 +19,8 @@
           "description": "Upload a Homarr full configuration export (.json) to restore boards, apps, integrations, and settings"
         },
         "configImport": {
-          "action": "Confirm import and continue"
+          "action": "Confirm import and continue",
+          "selectFile": "Select configuration file"
         },
         "dropzone": {
           "title": "Drag the zip file here or click to browse",
@@ -3832,6 +3833,7 @@
           "layouts": "{count} layouts",
           "searchEngines": "{count} search engines",
           "groups": "{count} groups",
+          "users": "{count} users",
           "serverSettings": "{count} server settings"
         },
         "preview": {
@@ -3845,6 +3847,7 @@
           "importWillUpdate": "Will update",
           "reuseApps": "{count} apps",
           "reuseIntegrations": "{count} integrations",
+          "reuseUsers": "{count} users",
           "skipBoards": "{count} boards",
           "skipGroups": "{count} groups",
           "skipSearchEngines": "{count} search engines",
@@ -3886,6 +3889,13 @@
               "title": "Import failed",
               "message": "Failed to import configuration"
             }
+          },
+          "result": {
+            "boardsImported": "{count} boards imported",
+            "appsCreated": "{count} apps created",
+            "integrationsCreated": "{count} integrations created",
+            "groupsCreated": "{count} groups created",
+            "usersCreated": "{count} users created"
           }
         },
         "importHomepage": {

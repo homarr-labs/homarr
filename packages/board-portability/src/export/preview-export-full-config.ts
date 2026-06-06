@@ -1,7 +1,5 @@
 import type { Database } from "@homarr/db";
 import {
-  apps,
-  boards,
   groups,
   integrationSecrets,
   integrations,
@@ -10,6 +8,7 @@ import {
   searchEngines,
   sections,
   serverSettings,
+  users,
 } from "@homarr/db/schema";
 
 import type { ConfigExportPreview } from "../types";
@@ -24,6 +23,7 @@ export const previewExportFullConfigAsync = async (db: Database): Promise<Config
   const allLayouts = await db.select().from(layouts);
   const allSearchEngines = await db.select().from(searchEngines);
   const allGroups = await db.select().from(groups);
+  const allUsers = await db.select().from(users);
   const allServerSettings = await db.select().from(serverSettings);
 
   return {
@@ -36,7 +36,7 @@ export const previewExportFullConfigAsync = async (db: Database): Promise<Config
     layouts: allLayouts.length,
     searchEngines: allSearchEngines.length,
     groups: allGroups.length,
+    users: allUsers.length,
     serverSettings: allServerSettings.length,
-    // itemLayouts tracked implicitly via widgets; layouts count covers breakpoints
   };
 };

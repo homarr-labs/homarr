@@ -1,4 +1,6 @@
-import type { IntegrationKind, IntegrationSecretKind, WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind } from "./integration";
+import type { IntegrationSecretKind } from "./integration";
+import type { WidgetKind } from "./widget";
 
 export interface HomepageWidgetMapping {
   integrationKind: IntegrationKind;

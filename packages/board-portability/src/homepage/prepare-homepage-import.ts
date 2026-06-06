@@ -13,17 +13,15 @@ import type {
   sections,
 } from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
-import { emptySuperJSON, integrationDefs } from "@homarr/definitions";
+import { emptySuperJSON, homepageWidgetMap, integrationDefs } from "@homarr/definitions";
 
 import { stringifyForDb } from "../utils";
 import type { HomepageService, HomepageWidget } from "./types";
-import { homepageWidgetMap } from "./widget-type-map";
 
 const DASHBOARD_ICON_CDN = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg";
 const ENV_VAR_PATTERN = /^\$\{[^}]+\}$/;
 const COLUMN_COUNT = 10;
-const APP_ITEM_WIDTH = 1;
-const APP_ITEM_HEIGHT = 1;
+const WIDGET_WIDTH = 2;
 
 export type PreparedHomepageImport = {
   apps: InferInsertModel<typeof apps>[];
@@ -37,6 +35,16 @@ export type PreparedHomepageImport = {
   integrationItems: InferInsertModel<typeof integrationItems>[];
   warnings: string[];
   unmappedWidgetTypes: string[];
+};
+
+type GridPosition = { x: number; y: number };
+
+const advanceGrid = (grid: GridPosition, width: number): GridPosition => {
+  const nextX = grid.x + width;
+  if (nextX >= COLUMN_COUNT) {
+    return { x: 0, y: grid.y + 1 };
+  }
+  return { x: nextX, y: grid.y };
 };
 
 const isEnvVarReference = (value: string) => ENV_VAR_PATTERN.test(value.trim());
@@ -69,8 +77,133 @@ const resolvePingUrl = (service: HomepageService): string | null => {
 };
 
 const extractSecretValue = (widget: HomepageWidget, homepageField: string): string | undefined => {
-  const value = widget[homepageField];
+  const value = widget.fields[homepageField] ?? (homepageField === "key" ? widget.key : undefined);
   return typeof value === "string" && value.length > 0 ? value : undefined;
+};
+
+const descriptionDisplayModes: Record<string, string> = {
+  present: "tooltip",
+  absent: "hidden",
+};
+
+type WidgetProcessingContext = {
+  service: HomepageService;
+  appId: string;
+  sectionId: string;
+  boardId: string;
+  layoutId: string;
+  gridState: Map<string, GridPosition>;
+  integrationRows: InferInsertModel<typeof integrations>[];
+  integrationSecretRows: InferInsertModel<typeof integrationSecrets>[];
+  itemRows: InferInsertModel<typeof items>[];
+  itemLayoutRows: InferInsertModel<typeof itemLayouts>[];
+  integrationItemRows: InferInsertModel<typeof integrationItems>[];
+  warnings: string[];
+  unmappedWidgetTypesSet: Set<string>;
+};
+
+const processServiceWidgets = (ctx: WidgetProcessingContext) => {
+  for (const widget of ctx.service.widgets) {
+    const mapping = homepageWidgetMap[widget.type.toLowerCase()];
+    if (!mapping) {
+      ctx.unmappedWidgetTypesSet.add(widget.type);
+      continue;
+    }
+
+    const integrationId = createId();
+    const integrationUrl =
+      (typeof widget.url === "string" && widget.url.length > 0 ? widget.url : ctx.service.href) ?? "";
+
+    if (integrationUrl.length === 0) {
+      ctx.warnings.push(`Skipped integration for "${ctx.service.name}" (${widget.type}): missing URL`);
+      continue;
+    }
+
+    ctx.integrationRows.push({
+      id: integrationId,
+      kind: mapping.integrationKind,
+      name: ctx.service.name,
+      url: integrationUrl,
+      appId: ctx.appId,
+    });
+
+    processSecrets(ctx, widget, mapping, integrationId);
+    validateSecrets(ctx, mapping, integrationId);
+    placeWidgetItem(ctx, mapping.widgetKind, integrationId);
+  }
+};
+
+const processSecrets = (
+  ctx: WidgetProcessingContext,
+  widget: HomepageWidget,
+  mapping: { secretFieldMap: Record<string, IntegrationSecretKind>; integrationKind: string },
+  integrationId: string,
+) => {
+  for (const [homepageField, secretKind] of Object.entries(mapping.secretFieldMap)) {
+    const rawValue = extractSecretValue(widget, homepageField);
+    if (!rawValue) continue;
+
+    if (isEnvVarReference(rawValue)) {
+      ctx.warnings.push(
+        `Unresolved secret for "${ctx.service.name}" (${widget.type}): ${homepageField} references an environment variable`,
+      );
+      continue;
+    }
+
+    ctx.integrationSecretRows.push({
+      integrationId,
+      kind: secretKind as IntegrationSecretKind,
+      value: encryptSecret(rawValue),
+    });
+  }
+};
+
+const validateSecrets = (
+  ctx: WidgetProcessingContext,
+  mapping: { integrationKind: string },
+  integrationId: string,
+) => {
+  const requiredSecretSets = integrationDefs[mapping.integrationKind as keyof typeof integrationDefs].secretKinds;
+  const providedKinds = new Set(
+    ctx.integrationSecretRows.filter((s) => s.integrationId === integrationId).map((s) => s.kind),
+  );
+  const hasRequiredSecrets = requiredSecretSets.some(
+    (secretSet) => secretSet.length === 0 || secretSet.every((kind) => providedKinds.has(kind)),
+  );
+
+  if (!hasRequiredSecrets && requiredSecretSets.every((set) => set.length > 0)) {
+    ctx.warnings.push(`Integration "${ctx.service.name}" (${mapping.integrationKind}) may be missing required credentials`);
+  }
+};
+
+const placeWidgetItem = (ctx: WidgetProcessingContext, widgetKind: string, integrationId: string) => {
+  const widgetItemId = createId();
+  const grid = ctx.gridState.get(ctx.sectionId) ?? { x: 0, y: 0 };
+
+  ctx.itemRows.push({
+    id: widgetItemId,
+    boardId: ctx.boardId,
+    kind: widgetKind as never,
+    options: emptySuperJSON,
+    advancedOptions: emptySuperJSON,
+  });
+
+  ctx.itemLayoutRows.push({
+    itemId: widgetItemId,
+    sectionId: ctx.sectionId,
+    layoutId: ctx.layoutId,
+    width: WIDGET_WIDTH,
+    height: 1,
+    xOffset: grid.x,
+    yOffset: grid.y,
+  });
+
+  ctx.gridState.set(ctx.sectionId, advanceGrid(grid, WIDGET_WIDTH));
+
+  ctx.integrationItemRows.push({
+    itemId: widgetItemId,
+    integrationId,
+  });
 };
 
 export const prepareHomepageImport = (
@@ -93,13 +226,7 @@ export const prepareHomepageImport = (
   };
 
   const layoutRows: InferInsertModel<typeof layouts>[] = [
-    {
-      id: layoutId,
-      boardId,
-      name: "Base",
-      columnCount: COLUMN_COUNT,
-      breakpoint: 0,
-    },
+    { id: layoutId, boardId, name: "Base", columnCount: COLUMN_COUNT, breakpoint: 0 },
   ];
 
   const groupNames = [...new Set(services.map((service) => service.group || "Services"))];
@@ -111,7 +238,7 @@ export const prepareHomepageImport = (
       id: sectionId,
       boardId,
       kind: "category" as const,
-      name: groupName.length > 0 ? groupName : "Services",
+      name: groupName || "Services",
       xOffset: 0,
       yOffset: index,
     };
@@ -123,8 +250,7 @@ export const prepareHomepageImport = (
   const itemRows: InferInsertModel<typeof items>[] = [];
   const itemLayoutRows: InferInsertModel<typeof itemLayouts>[] = [];
   const integrationItemRows: InferInsertModel<typeof integrationItems>[] = [];
-
-  const gridState = new Map<string, { x: number; y: number }>();
+  const gridState = new Map<string, GridPosition>();
 
   for (const service of services) {
     const groupKey = service.group || "Services";
@@ -159,7 +285,7 @@ export const prepareHomepageImport = (
         openInNewTab: true,
         showTitle: true,
         layout: "column",
-        descriptionDisplayMode: service.description ? "tooltip" : "hidden",
+        descriptionDisplayMode: descriptionDisplayModes[service.description ? "present" : "absent"],
         pingEnabled: pingUrl !== null,
       }),
       advancedOptions: emptySuperJSON,
@@ -169,118 +295,39 @@ export const prepareHomepageImport = (
       itemId,
       sectionId,
       layoutId,
-      width: APP_ITEM_WIDTH,
-      height: APP_ITEM_HEIGHT,
+      width: 1,
+      height: 1,
       xOffset: grid.x,
       yOffset: grid.y,
     });
 
-    grid.x += APP_ITEM_WIDTH;
-    if (grid.x >= COLUMN_COUNT) {
-      grid.x = 0;
-      grid.y += APP_ITEM_HEIGHT;
-    }
-    gridState.set(sectionId, grid);
+    gridState.set(sectionId, advanceGrid(grid, 1));
 
     if (!createIntegrations) {
       for (const widget of service.widgets) {
         const mapping = homepageWidgetMap[widget.type.toLowerCase()];
-        if (mapping === undefined || mapping === null) {
+        if (!mapping) {
           unmappedWidgetTypesSet.add(widget.type);
         }
       }
       continue;
     }
 
-    for (const widget of service.widgets) {
-      const mapping = homepageWidgetMap[widget.type.toLowerCase()];
-      if (mapping === undefined || mapping === null) {
-        unmappedWidgetTypesSet.add(widget.type);
-        continue;
-      }
-
-      const integrationId = createId();
-      const integrationUrl =
-        (typeof widget.url === "string" && widget.url.length > 0 ? widget.url : service.href) ?? "";
-
-      if (integrationUrl.length === 0) {
-        warnings.push(`Skipped integration for "${service.name}" (${widget.type}): missing URL`);
-        continue;
-      }
-
-      integrationRows.push({
-        id: integrationId,
-        kind: mapping.integrationKind,
-        name: service.name,
-        url: integrationUrl,
-        appId,
-      });
-
-      for (const [homepageField, secretKind] of Object.entries(mapping.secretFieldMap)) {
-        const rawValue = extractSecretValue(widget, homepageField);
-        if (!rawValue) {
-          continue;
-        }
-
-        if (isEnvVarReference(rawValue)) {
-          warnings.push(
-            `Unresolved secret for "${service.name}" (${widget.type}): ${homepageField} references an environment variable`,
-          );
-          continue;
-        }
-
-        integrationSecretRows.push({
-          integrationId,
-          kind: secretKind as IntegrationSecretKind,
-          value: encryptSecret(rawValue),
-        });
-      }
-
-      const requiredSecretSets = integrationDefs[mapping.integrationKind].secretKinds;
-      const providedKinds = new Set(
-        integrationSecretRows.filter((secret) => secret.integrationId === integrationId).map((secret) => secret.kind),
-      );
-      const hasRequiredSecrets = requiredSecretSets.some(
-        (secretSet) => secretSet.length === 0 || secretSet.every((kind) => providedKinds.has(kind)),
-      );
-
-      if (!hasRequiredSecrets && requiredSecretSets.every((secretSet) => secretSet.length > 0)) {
-        warnings.push(`Integration "${service.name}" (${mapping.integrationKind}) may be missing required credentials`);
-      }
-
-      const widgetItemId = createId();
-      const widgetGrid = gridState.get(sectionId) ?? { x: 0, y: 0 };
-
-      itemRows.push({
-        id: widgetItemId,
-        boardId,
-        kind: mapping.widgetKind,
-        options: emptySuperJSON,
-        advancedOptions: emptySuperJSON,
-      });
-
-      itemLayoutRows.push({
-        itemId: widgetItemId,
-        sectionId,
-        layoutId,
-        width: 2,
-        height: 1,
-        xOffset: widgetGrid.x,
-        yOffset: widgetGrid.y,
-      });
-
-      widgetGrid.x += 2;
-      if (widgetGrid.x >= COLUMN_COUNT) {
-        widgetGrid.x = 0;
-        widgetGrid.y += 1;
-      }
-      gridState.set(sectionId, widgetGrid);
-
-      integrationItemRows.push({
-        itemId: widgetItemId,
-        integrationId,
-      });
-    }
+    processServiceWidgets({
+      service,
+      appId,
+      sectionId,
+      boardId,
+      layoutId,
+      gridState,
+      integrationRows,
+      integrationSecretRows,
+      itemRows,
+      itemLayoutRows,
+      integrationItemRows,
+      warnings,
+      unmappedWidgetTypesSet,
+    });
   }
 
   return {

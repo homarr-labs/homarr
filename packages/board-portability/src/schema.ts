@@ -78,6 +78,7 @@ const bundleItemSchema = z.object({
 });
 
 const bundleBoardSchema = z.object({
+  ref: z.string().optional(),
   name: z.string(),
   settings: bundleBoardSettingsSchema,
   layouts: z.array(bundleLayoutSchema),
@@ -141,10 +142,31 @@ const configBundleSearchEngineSchema = z.object({
   integrationRef: z.string().nullable().optional(),
 });
 
+const configBundleUserSchema = z
+  .object({
+    ref: z.string(),
+    name: z.string().nullable(),
+    email: z.string().nullable(),
+    password: z.string().nullable(),
+    provider: z.string(),
+    homeBoardRef: z.string().nullable(),
+    mobileHomeBoardRef: z.string().nullable(),
+    defaultSearchEngineRef: z.string().nullable(),
+    colorScheme: z.string(),
+    firstDayOfWeek: z.number(),
+    openSearchInNewTab: z.boolean(),
+    ddgBangs: z.boolean(),
+    pingIconsEnabled: z.boolean(),
+  })
+  .catchall(z.unknown());
+
 const configBundleGroupSchema = z.object({
   ref: z.string(),
   name: z.string(),
   position: z.number(),
+  ownerRef: z.string().nullable().optional(),
+  homeBoardRef: z.string().nullable().optional(),
+  mobileHomeBoardRef: z.string().nullable().optional(),
   permissions: z.array(z.string()),
   boardPermissions: z.array(
     z.object({ boardRef: z.string(), permission: z.string() }),
@@ -152,6 +174,7 @@ const configBundleGroupSchema = z.object({
   integrationPermissions: z.array(
     z.object({ integrationRef: z.string(), permission: z.string() }),
   ),
+  memberRefs: z.array(z.string()).optional(),
 });
 
 export const homarrConfigBundleSchema = z.object({
@@ -166,9 +189,11 @@ export const homarrConfigBundleSchema = z.object({
   serverSettings: z.record(z.string(), z.unknown()),
   searchEngines: z.array(configBundleSearchEngineSchema),
   groups: z.array(configBundleGroupSchema),
+  users: z.array(configBundleUserSchema).optional(),
 });
 
 export type HomarrConfigBundle = z.infer<typeof homarrConfigBundleSchema>;
 export type ConfigBundleIntegration = z.infer<typeof configBundleIntegrationSchema>;
 export type ConfigBundleGroup = z.infer<typeof configBundleGroupSchema>;
 export type ConfigBundleSearchEngine = z.infer<typeof configBundleSearchEngineSchema>;
+export type ConfigBundleUser = z.infer<typeof configBundleUserSchema>;

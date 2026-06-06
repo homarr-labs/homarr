@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import {
-  assessBundleCompatibility,
   exportFullConfigAsync,
   importFullConfigAsync,
+  parseAndValidateBundle,
   previewExportFullConfigAsync,
   previewImportFullConfigAsync,
 } from "@homarr/board-portability";
@@ -19,11 +19,7 @@ export const configRouter = createTRPCRouter({
 
   previewImport: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(
-      z.object({
-        content: z.string().min(1),
-      }),
-    )
+    .input(z.object({ content: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       return await previewImportFullConfigAsync(ctx.db, input.content, packageJson.version);
     }),
@@ -34,27 +30,13 @@ export const configRouter = createTRPCRouter({
 
   importFull: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(
-      z.object({
-        content: z.string().min(1),
-      }),
-    )
+    .input(z.object({ content: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      let parsed: unknown;
       try {
-        parsed = JSON.parse(input.content);
-      } catch {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid JSON" });
+        const bundle = parseAndValidateBundle(input.content, packageJson.version);
+        return await importFullConfigAsync(ctx.db, bundle, ctx.session.user.id);
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Invalid config" });
       }
-
-      const { bundle, compatibility } = assessBundleCompatibility(parsed, packageJson.version);
-      if (!bundle || compatibility.status !== "compatible") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: compatibility.issues.join(" "),
-        });
-      }
-
-      return await importFullConfigAsync(ctx.db, bundle, ctx.session.user.id);
     }),
 });

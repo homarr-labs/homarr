@@ -1,8 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { integrationDefs, integrationKinds } from "@homarr/definitions";
-
-import { homepageWidgetMap } from "./widget-type-map";
+import { homepageWidgetMap, integrationDefs, integrationKinds } from "@homarr/definitions";
 
 describe("homepageWidgetMap", () => {
   test("returns mapping for known homepage widget types", () => {

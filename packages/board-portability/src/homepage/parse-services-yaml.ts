@@ -33,7 +33,7 @@ const normalizeWidget = (widget: Record<string, unknown>): HomepageWidget => {
     type: String(type),
     ...(typeof url === "string" ? { url } : {}),
     ...(typeof key === "string" ? { key } : {}),
-    ...rest,
+    fields: rest,
   };
 };
 

@@ -1,50 +1,31 @@
 # Homarr Docker label discovery example.
-# Prerequisites: Homarr with ENABLE_DOCKER, Docker socket mounted, and in Manage → Settings → Docker
-# set a target board name (or label services with homarr.board). Restart Homarr after upgrade so
-# migration 0037_add_docker_app_source creates the docker_app_source table.
-# Optional: attach this stack to Homarr's network so href/ping hostnames resolve inside Docker.
+# This compose file demonstrates all supported label combinations for testing.
+# Prerequisites: Homarr with Docker socket mounted.
+# In Manage → Tools → Import/Export, use the Docker Discovery panel to scan.
 
 services:
+  # ─── Full Homarr labels (all fields) ─────────────────────────────────────────
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: homarr-sonarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - sonarr-config:/config
-      - ./media:/media
     ports:
       - "8989:8989"
     restart: unless-stopped
     labels:
-      # Homarr labels (native)
       homarr.name: "Sonarr"
       homarr.group: "Media"
       homarr.href: "http://sonarr:8989"
       homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg"
       homarr.description: "TV series management"
       homarr.ping: "http://sonarr:8989/ping"
+      homarr.id: "sonarr-main"
+      homarr.board: "homelab"
       homarr.integration: "sonarr"
       homarr.widget: "downloads"
-      # Homepage labels (fallback — used if homarr.* are absent)
-      homepage.group: "Media"
-      homepage.name: "Sonarr"
-      homepage.href: "http://sonarr:8989"
-      homepage.icon: "sonarr"
-      homepage.description: "TV series management"
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: homarr-radarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - radarr-config:/config
-      - ./media:/media
     ports:
       - "7878:7878"
     restart: unless-stopped
@@ -57,27 +38,51 @@ services:
       homarr.ping: "http://radarr:7878/ping"
       homarr.integration: "radarr"
       homarr.widget: "downloads"
-      homepage.group: "Media"
-      homepage.name: "Radarr"
-      homepage.href: "http://radarr:7878"
-      homepage.icon: "radarr"
-      homepage.description: "Movie management"
 
+  # ─── Minimal Homarr labels (required fields only) ────────────────────────────
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: homarr-portainer
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    labels:
+      homarr.name: "Portainer"
+      homarr.group: "Infrastructure"
+      homarr.href: "http://portainer:9000"
+
+  # ─── Homepage labels only (migration scenario) ───────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: homarr-grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    labels:
+      homepage.name: "Grafana"
+      homepage.group: "Monitoring"
+      homepage.href: "http://grafana:3000"
+      homepage.icon: "grafana"
+      homepage.description: "Metrics and dashboards"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: homarr-prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    labels:
+      homepage.name: "Prometheus"
+      homepage.group: "Monitoring"
+      homepage.href: "http://prometheus:9090"
+      homepage.icon: "prometheus"
+
+  # ─── Both label sets (homarr takes priority) ─────────────────────────────────
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: homarr-qbittorrent
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - WEBUI_PORT=8080
-    volumes:
-      - qbittorrent-config:/config
-      - ./downloads:/downloads
     ports:
       - "8080:8080"
-      - "6881:6881"
-      - "6881:6881/udp"
     restart: unless-stopped
     labels:
       homarr.name: "qBittorrent"
@@ -88,13 +93,61 @@ services:
       homarr.ping: "http://qbittorrent:8080"
       homarr.integration: "qBittorrent"
       homarr.widget: "downloads"
-      homepage.group: "Downloads"
-      homepage.name: "qBittorrent"
-      homepage.href: "http://qbittorrent:8080"
+      homepage.name: "qBittorrent (homepage)"
+      homepage.group: "Downloads (homepage)"
+      homepage.href: "http://qbittorrent:8080/homepage"
       homepage.icon: "qbittorrent"
-      homepage.description: "Torrent client"
+      homepage.description: "Should be ignored"
 
-volumes:
-  sonarr-config:
-  radarr-config:
-  qbittorrent-config:
+  # ─── Hidden container (excluded from discovery) ──────────────────────────────
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: homarr-watchtower
+    restart: unless-stopped
+    labels:
+      homarr.hide: "true"
+      homarr.name: "Watchtower"
+      homarr.group: "Infrastructure"
+      homarr.href: "http://watchtower:8080"
+
+  # ─── Targeting a specific board ──────────────────────────────────────────────
+  traefik:
+    image: traefik:latest
+    container_name: homarr-traefik
+    ports:
+      - "80:80"
+      - "8081:8080"
+    restart: unless-stopped
+    labels:
+      homarr.name: "Traefik"
+      homarr.group: "Networking"
+      homarr.href: "http://traefik:8080"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg"
+      homarr.board: "networking"
+      homarr.ping: "http://traefik:8080/ping"
+
+  # ─── Custom external ID ──────────────────────────────────────────────────────
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: homarr-jellyfin
+    ports:
+      - "8096:8096"
+    restart: unless-stopped
+    labels:
+      homarr.name: "Jellyfin"
+      homarr.group: "Media"
+      homarr.href: "http://jellyfin:8096"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg"
+      homarr.description: "Media streaming"
+      homarr.ping: "http://jellyfin:8096/health"
+      homarr.id: "jellyfin-production"
+      homarr.integration: "jellyfin"
+      homarr.widget: "mediaServer"
+
+  # ─── No discovery labels (should be completely ignored) ──────────────────────
+  redis:
+    image: redis:alpine
+    container_name: homarr-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

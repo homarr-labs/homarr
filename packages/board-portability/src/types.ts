@@ -1,17 +1,25 @@
 import type { BundleCompatibility } from "./config-bundle-compat";
 
-export type ConfigEntityCounts = {
-  boards: number;
-  apps: number;
-  integrations: number;
-  secrets: number;
-  widgets: number;
-  sections: number;
-  layouts: number;
-  searchEngines: number;
-  groups: number;
-  serverSettings: number;
-};
+export const CONFIG_ENTITY_KEYS = [
+  "boards",
+  "apps",
+  "integrations",
+  "secrets",
+  "widgets",
+  "sections",
+  "layouts",
+  "searchEngines",
+  "groups",
+  "users",
+  "serverSettings",
+] as const;
+
+export type ConfigEntityKey = (typeof CONFIG_ENTITY_KEYS)[number];
+
+export type ConfigEntityCounts = Record<ConfigEntityKey, number>;
+
+export const emptyCounts = (): ConfigEntityCounts =>
+  Object.fromEntries(CONFIG_ENTITY_KEYS.map((key) => [key, 0])) as ConfigEntityCounts;
 
 export type ConfigExportPreview = ConfigEntityCounts;
 
@@ -26,6 +34,7 @@ export type ConfigImportPreview = {
   toReuse: {
     apps: number;
     integrations: number;
+    users: number;
   };
   toSkip: {
     boards: number;

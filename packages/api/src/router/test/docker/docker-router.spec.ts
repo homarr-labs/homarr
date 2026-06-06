@@ -50,14 +50,13 @@ vi.mock("@homarr/docker/env", () => ({
     ENABLE_DOCKER: true,
   },
 }));
-vi.mock("@homarr/docker", async (importOriginal) => {
-  const original = await importOriginal<typeof import("@homarr/docker")>();
-  return {
-    ...original,
-    listDiscoveredContainersAsync: async () => [],
-    syncDiscoveredServicesAsync: async () => ({ created: 0, updated: 0, skipped: 0 }),
-  };
-});
+vi.mock("@homarr/docker", () => ({
+  DockerSingleton: {
+    getInstances: () => [],
+  },
+  listDiscoveredContainersAsync: async () => [],
+  syncDiscoveredServicesAsync: async () => ({ created: 0, updated: 0, skipped: 0 }),
+}));
 vi.mock("@homarr/db/queries", () => ({
   getServerSettingsAsync: async () => ({
     docker: { targetBoardName: null, readHomepageLabels: true, pruneRemoved: false },

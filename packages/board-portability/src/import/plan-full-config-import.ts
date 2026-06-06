@@ -1,26 +1,37 @@
 import SuperJSON from "superjson";
 
 import type { Database } from "@homarr/db";
-import { groups, searchEngines } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 
 import { assessBundleCompatibility } from "../config-bundle-compat";
 import type { HomarrConfigBundle } from "../schema";
 import type { ConfigEntityCounts, ConfigImportPreview } from "../types";
+import { emptyCounts } from "../types";
+import { loadExistingEntitiesAsync } from "./load-existing-entities";
 import { doAppsMatch } from "./match-apps";
 
-const emptyCounts = (): ConfigEntityCounts => ({
-  boards: 0,
-  apps: 0,
-  integrations: 0,
-  secrets: 0,
-  widgets: 0,
-  sections: 0,
-  layouts: 0,
-  searchEngines: 0,
-  groups: 0,
-  serverSettings: 0,
+const emptyPreview = (
+  compatibility: ConfigImportPreview["compatibility"],
+  meta: ConfigImportPreview["meta"],
+  warnings: string[] = [],
+): ConfigImportPreview => ({
+  compatibility,
+  meta,
+  toCreate: emptyCounts(),
+  toReuse: { apps: 0, integrations: 0, users: 0 },
+  toSkip: { boards: 0, groups: 0, searchEngines: 0 },
+  toUpdate: { serverSettings: 0 },
+  warnings,
 });
+
+const extractMetaFromUnknown = (parsed: unknown): ConfigImportPreview["meta"] => {
+  const obj = parsed as Record<string, unknown>;
+  return {
+    exportedAt: typeof obj.exportedAt === "string" ? obj.exportedAt : "",
+    homarrVersion: typeof obj.homarrVersion === "string" ? obj.homarrVersion : "",
+    bundleVersion: typeof obj.version === "string" ? obj.version : "",
+  };
+};
 
 const integrationMatches = (
   bundleIntegration: HomarrConfigBundle["integrations"][number],
@@ -30,88 +41,49 @@ const integrationMatches = (
   bundleIntegration.name === existing.name &&
   bundleIntegration.url === existing.url;
 
-const countBoardEntities = (board: HomarrConfigBundle["boards"][number]) => {
-  const widgetCount = board.items.length;
-  const sectionCount = board.sections.length;
-  const layoutCount = board.layouts.length;
-  return { widgetCount, sectionCount, layoutCount };
-};
-
 export const previewImportFullConfigAsync = async (
   db: Database,
   content: string,
   currentHomarrVersion: string,
 ): Promise<ConfigImportPreview> => {
-  const warnings: string[] = [];
   let parsed: unknown;
-
   try {
     parsed = JSON.parse(content);
   } catch {
-    return {
-      compatibility: {
-        status: "invalidStructure",
-        bundleVersion: null,
-        bundleHomarrVersion: null,
-        currentHomarrVersion,
-        issues: ["File is not valid JSON"],
-      },
-      meta: { exportedAt: "", homarrVersion: "", bundleVersion: "" },
-      toCreate: emptyCounts(),
-      toReuse: { apps: 0, integrations: 0 },
-      toSkip: { boards: 0, groups: 0, searchEngines: 0 },
-      toUpdate: { serverSettings: 0 },
-      warnings: [],
-    };
+    return emptyPreview(
+      { status: "invalidStructure", bundleVersion: null, bundleHomarrVersion: null, currentHomarrVersion, issues: ["File is not valid JSON"] },
+      { exportedAt: "", homarrVersion: "", bundleVersion: "" },
+    );
   }
 
   const { bundle, compatibility } = assessBundleCompatibility(parsed, currentHomarrVersion);
 
   if (!bundle || compatibility.status !== "compatible") {
-    return {
-      compatibility,
-      meta: {
-        exportedAt: typeof (parsed as Record<string, unknown>).exportedAt === "string" ? ((parsed as Record<string, unknown>).exportedAt as string) : "",
-        homarrVersion:
-          typeof (parsed as Record<string, unknown>).homarrVersion === "string"
-            ? ((parsed as Record<string, unknown>).homarrVersion as string)
-            : "",
-        bundleVersion:
-          typeof (parsed as Record<string, unknown>).version === "string"
-            ? ((parsed as Record<string, unknown>).version as string)
-            : "",
-      },
-      toCreate: emptyCounts(),
-      toReuse: { apps: 0, integrations: 0 },
-      toSkip: { boards: 0, groups: 0, searchEngines: 0 },
-      toUpdate: { serverSettings: 0 },
-      warnings: compatibility.issues,
-    };
+    return emptyPreview(compatibility, extractMetaFromUnknown(parsed), compatibility.issues);
   }
 
-  const existingApps = await db.query.apps.findMany();
-  const existingIntegrations = await db.query.integrations.findMany();
-  const existingBoards = await db.query.boards.findMany();
-  const existingGroups = await db.select().from(groups);
-  const existingSearchEngines = await db.select().from(searchEngines);
+  const existing = await loadExistingEntitiesAsync(db);
   const existingSettingsByKey = new Map(
-    (await db.query.serverSettings.findMany()).map((setting) => [setting.settingKey, setting.value] as const),
+    existing.serverSettings.map((setting) => [setting.settingKey, setting.value] as const),
   );
 
-  const existingBoardNames = new Set(existingBoards.map((board) => board.name));
-  const existingGroupNames = new Set(existingGroups.map((group) => group.name));
-  const existingSearchEngineShorts = new Set(existingSearchEngines.map((engine) => engine.short));
+  const existingBoardNames = new Set(existing.boards.map((b) => b.name));
+  const existingGroupNames = new Set(existing.groups.map((g) => g.name));
+  const existingSearchEngineShorts = new Set(existing.searchEngines.map((se) => se.short));
+  const existingUserEmails = new Set(existing.users.filter((u) => u.email).map((u) => u.email!));
 
   const toCreate = emptyCounts();
+  const warnings: string[] = [];
   let reuseApps = 0;
   let reuseIntegrations = 0;
+  let reuseUsers = 0;
   let skipBoards = 0;
   let skipGroups = 0;
   let skipSearchEngines = 0;
   let updateServerSettings = 0;
 
   for (const bundleApp of bundle.apps) {
-    const existing = existingApps.find((app) =>
+    const matched = existing.apps.find((app) =>
       doAppsMatch(app, {
         name: bundleApp.name,
         iconUrl: bundleApp.iconUrl,
@@ -120,7 +92,7 @@ export const previewImportFullConfigAsync = async (
         pingUrl: bundleApp.pingUrl ?? null,
       }),
     );
-    if (existing) {
+    if (matched) {
       reuseApps += 1;
       continue;
     }
@@ -128,8 +100,8 @@ export const previewImportFullConfigAsync = async (
   }
 
   for (const bundleIntegration of bundle.integrations) {
-    const existing = existingIntegrations.find((integration) => integrationMatches(bundleIntegration, integration));
-    if (existing) {
+    const matched = existing.integrations.find((i) => integrationMatches(bundleIntegration, i));
+    if (matched) {
       reuseIntegrations += 1;
       continue;
     }
@@ -144,10 +116,9 @@ export const previewImportFullConfigAsync = async (
       continue;
     }
     toCreate.boards += 1;
-    const counts = countBoardEntities(bundleBoard);
-    toCreate.widgets += counts.widgetCount;
-    toCreate.sections += counts.sectionCount;
-    toCreate.layouts += counts.layoutCount;
+    toCreate.widgets += bundleBoard.items.length;
+    toCreate.sections += bundleBoard.sections.length;
+    toCreate.layouts += bundleBoard.layouts.length;
   }
 
   for (const bundleGroup of bundle.groups) {
@@ -166,6 +137,14 @@ export const previewImportFullConfigAsync = async (
       continue;
     }
     toCreate.searchEngines += 1;
+  }
+
+  for (const bundleUser of bundle.users ?? []) {
+    if (bundleUser.email && existingUserEmails.has(bundleUser.email)) {
+      reuseUsers += 1;
+      continue;
+    }
+    toCreate.users += 1;
   }
 
   for (const [settingKey, value] of Object.entries(bundle.serverSettings)) {
@@ -188,7 +167,7 @@ export const previewImportFullConfigAsync = async (
       bundleVersion: bundle.version,
     },
     toCreate,
-    toReuse: { apps: reuseApps, integrations: reuseIntegrations },
+    toReuse: { apps: reuseApps, integrations: reuseIntegrations, users: reuseUsers },
     toSkip: { boards: skipBoards, groups: skipGroups, searchEngines: skipSearchEngines },
     toUpdate: { serverSettings: updateServerSettings },
     warnings,

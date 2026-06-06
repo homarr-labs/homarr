@@ -1,11 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import {
-  assessBundleCompatibility,
-  importFullConfigAsync,
-  previewImportFullConfigAsync,
-} from "@homarr/board-portability";
+import { importFullConfigAsync, parseAndValidateBundle, previewImportFullConfigAsync } from "@homarr/board-portability";
+import { onboarding } from "@homarr/db/schema";
 import { analyseOldmarrImportForRouterAsync, analyseOldmarrImportInputSchema } from "@homarr/old-import/analyse";
 import {
   ensureValidTokenOrThrow,
@@ -26,12 +23,7 @@ export const importRouter = createTRPCRouter({
     }),
   validateToken: onboardingProcedure
     .requiresStep("import")
-    .input(
-      z.object({
-        checksum: z.string(),
-        token: z.string(),
-      }),
-    )
+    .input(z.object({ checksum: z.string(), token: z.string() }))
     .mutation(({ input }) => {
       try {
         ensureValidTokenOrThrow(input.checksum, input.token);
@@ -49,38 +41,26 @@ export const importRouter = createTRPCRouter({
     }),
   previewInitialConfigImport: onboardingProcedure
     .requiresStep("import")
-    .input(
-      z.object({
-        content: z.string().min(1),
-      }),
-    )
+    .input(z.object({ content: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       return await previewImportFullConfigAsync(ctx.db, input.content, packageJson.version);
     }),
   importInitialConfigImport: onboardingProcedure
     .requiresStep("import")
-    .input(
-      z.object({
-        content: z.string().min(1),
-      }),
-    )
+    .input(z.object({ content: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      let parsed: unknown;
       try {
-        parsed = JSON.parse(input.content);
-      } catch {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid JSON" });
-      }
+        const bundle = parseAndValidateBundle(input.content, packageJson.version);
+        await importFullConfigAsync(ctx.db, bundle, null);
 
-      const { bundle, compatibility } = assessBundleCompatibility(parsed, packageJson.version);
-      if (!bundle || compatibility.status !== "compatible") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: compatibility.issues.join(" "),
-        });
+        const hasUsers = (bundle.users ?? []).length > 0;
+        if (hasUsers) {
+          await ctx.db.update(onboarding).set({ previousStep: "import", step: "finish" });
+        } else {
+          await nextOnboardingStepAsync(ctx.db, undefined);
+        }
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Invalid config" });
       }
-
-      await importFullConfigAsync(ctx.db, bundle, null);
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
 });

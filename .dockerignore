@@ -1,4 +1,5 @@
 Dockerfile
+Dockerfile.dev
 .dockerignore
 node_modules
 **/node_modules
@@ -14,3 +15,10 @@ apps/nextjs/.next
 .env
 .env.*
 !.env.example
+.docker-data
+.docker-cache
+coverage
+.cursor
+agent-transcripts
+**/*.spec.ts
+**/*.test.ts

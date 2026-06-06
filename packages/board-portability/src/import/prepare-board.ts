@@ -11,19 +11,10 @@ import type {
   sectionLayouts,
   sections,
 } from "@homarr/db/schema";
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
 import type { HomarrBundle, HomarrBundleBoard } from "../schema";
-import { replaceAppRefsInValue, stringifyForDb } from "../utils";
+import { buildBoardInsertRow, mustGet, replaceAppRefsInValue, stringifyForDb } from "../utils";
 import { doAppsMatch } from "./match-apps";
-
-const mustGet = <T>(map: Map<string, T>, key: string): T => {
-  const value = map.get(key);
-  if (value === undefined) {
-    throw new Error(`Missing map entry for key "${key}"`);
-  }
-  return value;
-};
 
 export type PreparedBundleImport = {
   apps: InferInsertModel<typeof apps>[];
@@ -131,28 +122,7 @@ export const prepareBoardImport = (
     integrationRefToId.set(bundleIntegration.ref, existingIntegration.id);
   }
 
-  const board: PreparedBundleImport["board"] = {
-    id: boardId,
-    name: boardName,
-    creatorId,
-    isPublic: sourceBoard.settings.isPublic ?? false,
-    pageTitle: sourceBoard.settings.pageTitle ?? null,
-    metaTitle: sourceBoard.settings.metaTitle ?? null,
-    logoImageUrl: sourceBoard.settings.logoImageUrl ?? null,
-    faviconImageUrl: sourceBoard.settings.faviconImageUrl ?? null,
-    backgroundImageUrl: sourceBoard.settings.backgroundImageUrl ?? null,
-    backgroundImageAttachment:
-      sourceBoard.settings.backgroundImageAttachment ?? backgroundImageAttachments.defaultValue,
-    backgroundImageRepeat: sourceBoard.settings.backgroundImageRepeat ?? backgroundImageRepeats.defaultValue,
-    backgroundImageSize: sourceBoard.settings.backgroundImageSize ?? backgroundImageSizes.defaultValue,
-    primaryColor: sourceBoard.settings.primaryColor,
-    secondaryColor: sourceBoard.settings.secondaryColor,
-    opacity: sourceBoard.settings.opacity,
-    customCss: sourceBoard.settings.customCss ?? null,
-    iconColor: sourceBoard.settings.iconColor ?? null,
-    itemRadius: sourceBoard.settings.itemRadius,
-    disableStatus: sourceBoard.settings.disableStatus ?? false,
-  };
+  const board: PreparedBundleImport["board"] = buildBoardInsertRow(boardId, boardName, creatorId, sourceBoard.settings);
 
   const layouts = sourceBoard.layouts.map((layout) => ({
     id: mustGet(layoutRefToId, layout.ref),

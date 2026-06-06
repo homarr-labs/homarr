@@ -18,6 +18,7 @@ export const DockerSettingsForm = ({ defaultValues }: { defaultValues: ServerSet
         <>
           <TextInput
             {...form.getInputProps("targetBoardName")}
+            value={form.getInputProps("targetBoardName").value ?? ""}
             label={tDocker("targetBoardName.label")}
             description={tDocker("targetBoardName.description")}
           />

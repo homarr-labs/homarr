@@ -13,7 +13,7 @@ export interface HomepageWidget {
   type: string;
   url?: string;
   key?: string;
-  [key: string]: unknown;
+  fields: Record<string, unknown>;
 }
 
 export type ParseServicesYamlResult =

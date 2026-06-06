@@ -107,10 +107,10 @@ export const ImportConfigCard = () => {
         {importResult && (
           <Alert color="green" icon={<IconCheck />}>
             <List size="sm">
-              <List.Item>{importResult.boards} boards imported</List.Item>
-              <List.Item>{importResult.apps} apps created</List.Item>
-              <List.Item>{importResult.integrations} integrations created</List.Item>
-              <List.Item>{importResult.groups} groups created</List.Item>
+              <List.Item>{t("management.page.importExport.importConfig.result.boardsImported", { count: importResult.boards })}</List.Item>
+              <List.Item>{t("management.page.importExport.importConfig.result.appsCreated", { count: importResult.apps })}</List.Item>
+              <List.Item>{t("management.page.importExport.importConfig.result.integrationsCreated", { count: importResult.integrations })}</List.Item>
+              <List.Item>{t("management.page.importExport.importConfig.result.groupsCreated", { count: importResult.groups })}</List.Item>
             </List>
           </Alert>
         )}

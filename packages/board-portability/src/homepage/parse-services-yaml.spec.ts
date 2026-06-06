@@ -56,7 +56,7 @@ describe("parseServicesYaml", () => {
 
     const qbit = result.services.find((service) => service.name === "qBittorrent");
     expect(qbit?.group).toBe("Downloads");
-    expect(qbit?.widgets[0]).toMatchObject({ type: "qbittorrent", username: "admin" });
+    expect(qbit?.widgets[0]).toMatchObject({ type: "qbittorrent", fields: { username: "admin" } });
   });
 
   test("flattens nested groups with separator", () => {

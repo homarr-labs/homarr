@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button, Card, Stack } from "@mantine/core";
+import { useEffect, useRef, useState } from "react";
+import { Button, Stack } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
+import { IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -11,13 +12,14 @@ import { useI18n } from "@homarr/translation/client";
 
 import { ConfigImportPreviewPanel } from "~/components/config-import/config-import-preview-panel";
 
-import { ConfigImportDropZone } from "./config-import-dropzone";
 import { FileInfoCard } from "./file-info-card";
 
 export const InitConfigImport = () => {
   const t = useI18n() as unknown as (key: string, values?: Record<string, unknown>) => string;
   const [file, setFile] = useState<FileWithPath | null>(null);
   const [fileContent, setFileContent] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const hasOpenedRef = useRef(false);
 
   const {
     mutate: runPreview,
@@ -33,6 +35,12 @@ export const InitConfigImport = () => {
   });
 
   useEffect(() => {
+    if (hasOpenedRef.current) return;
+    hasOpenedRef.current = true;
+    setTimeout(() => inputRef.current?.click(), 100);
+  }, []);
+
+  useEffect(() => {
     if (!fileContent) {
       resetPreview();
       return;
@@ -43,9 +51,7 @@ export const InitConfigImport = () => {
   const importAllowed = preview?.compatibility.status === "compatible";
 
   const handleImport = async () => {
-    if (!file || !importAllowed) {
-      return;
-    }
+    if (!file || !importAllowed) return;
 
     await mutateAsync(
       { content: fileContent },
@@ -60,39 +66,51 @@ export const InitConfigImport = () => {
     );
   };
 
-  if (!file) {
-    return (
-      <Card w={64 * 12 + 8} maw="90vw">
-        <ConfigImportDropZone
-          loading={previewLoading}
-          updateFile={(selectedFile) => {
-            void selectedFile.text().then((content) => {
-              setFileContent(content);
-              setFile(selectedFile);
-            });
-          }}
-        />
-      </Card>
-    );
-  }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    void selectedFile.text().then((content) => {
+      setFileContent(content);
+      setFile(selectedFile as FileWithPath);
+    });
+  };
 
   return (
-    <Stack mb="sm" w={64 * 12 + 8} maw="90vw">
-      <FileInfoCard
-        file={file}
-        onRemove={() => {
-          setFile(null);
-          setFileContent("");
-        }}
+    <Stack w="100%" mb="sm">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/json,.json"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
       />
-      <ConfigImportPreviewPanel preview={preview} previewLoading={previewLoading} t={t} />
-      <Button
-        loading={isPending}
-        disabled={!importAllowed || previewLoading}
-        onClick={() => void handleImport()}
-      >
-        {t("init.step.import.configImport.action")}
-      </Button>
+
+      {file && (
+        <>
+          <FileInfoCard
+            file={file}
+            onRemove={() => {
+              setFile(null);
+              setFileContent("");
+            }}
+          />
+          <ConfigImportPreviewPanel preview={preview} previewLoading={previewLoading} t={t} />
+          <Button
+            loading={isPending}
+            disabled={!importAllowed || previewLoading}
+            onClick={() => void handleImport()}
+          >
+            {t("init.step.import.configImport.action")}
+          </Button>
+        </>
+      )}
+
+      {!file && (
+        <Button variant="light" leftSection={<IconUpload size={16} />} onClick={() => inputRef.current?.click()}>
+          {t("init.step.import.configImport.selectFile")}
+        </Button>
+      )}
     </Stack>
   );
 };

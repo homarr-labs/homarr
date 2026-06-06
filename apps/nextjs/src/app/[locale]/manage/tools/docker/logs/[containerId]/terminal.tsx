@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { Box } from "@mantine/core";
-import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
@@ -45,34 +44,34 @@ export const DockerLogsTerminal = ({ containerId }: DockerLogsTerminalProps) => 
       return () => undefined;
     }
 
-    const canvasAddon = new CanvasAddon();
-
-    terminalRef.current = new Terminal({
+    const fitAddon = new FitAddon();
+    const terminal = new Terminal({
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
       fontSize: 14,
     });
-    terminalRef.current.open(ref.current);
-    terminalRef.current.loadAddon(canvasAddon);
+    terminal.open(ref.current);
+    terminal.loadAddon(fitAddon);
+    terminalRef.current = terminal;
 
     isTerminalReadyRef.current = true;
-    const terminal = terminalRef.current;
     pendingLogsRef.current.forEach((data) => terminal.write(data));
     pendingLogsRef.current = [];
     terminal.refresh(0, terminal.rows - 1);
 
-    setTimeout(() => {
-      const fitAddon = new FitAddon();
-      terminalRef.current?.loadAddon(fitAddon);
-      fitAddon.fit();
-    });
+    const fitTimeout = setTimeout(() => fitAddon.fit());
+
+    const resizeObserver = new ResizeObserver(() => fitAddon.fit());
+    resizeObserver.observe(ref.current);
 
     return () => {
+      clearTimeout(fitTimeout);
+      resizeObserver.disconnect();
       isTerminalReadyRef.current = false;
       pendingLogsRef.current = [];
-      canvasAddon.dispose();
-      terminalRef.current?.dispose();
+      fitAddon.dispose();
+      terminal.dispose();
       terminalRef.current = null;
     };
   }, [writeToTerminal]);

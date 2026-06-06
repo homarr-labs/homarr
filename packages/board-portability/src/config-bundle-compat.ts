@@ -97,3 +97,22 @@ export const assessBundleCompatibility = (
     },
   };
 };
+
+export const parseAndValidateBundle = (
+  content: string,
+  currentHomarrVersion: string,
+): HomarrConfigBundle => {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    throw new Error("Invalid JSON");
+  }
+
+  const { bundle, compatibility } = assessBundleCompatibility(parsed, currentHomarrVersion);
+  if (!bundle || compatibility.status !== "compatible") {
+    throw new Error(compatibility.issues.join(" "));
+  }
+
+  return bundle;
+};

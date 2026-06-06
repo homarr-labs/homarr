@@ -8,7 +8,7 @@ import type { HomarrBundle, HomarrBundleApp, HomarrBundleIntegration } from "../
 import { parseStoredValue, replaceAppIdsInValue } from "../utils";
 import type { LoadedBoardGraph } from "./load-board-graph";
 
-const buildBoardSettings = (board: LoadedBoardGraph) => ({
+export const buildBoardSettings = (board: LoadedBoardGraph) => ({
   pageTitle: board.pageTitle,
   metaTitle: board.metaTitle,
   logoImageUrl: board.logoImageUrl,

@@ -21,6 +21,10 @@ export const InitImport = () => {
     return <InitConfigImport />;
   }
 
+  return <LegacyInitImport />;
+};
+
+const LegacyInitImport = () => {
   const [file, setFile] = useState<FileWithPath | null>(null);
   const { isPending, mutate } = clientApi.import.analyseInitialOldmarrImport.useMutation();
   const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseInitialOldmarrImport"] | null>(

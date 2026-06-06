@@ -13,6 +13,31 @@ const compatibilityAlertColor: Record<ConfigImportPreview["compatibility"]["stat
   invalidStructure: "red",
 };
 
+type CountSection = { labelKey: string; entries: { key: string; count: number }[] };
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const buildCountSections = (preview: ConfigImportPreview): CountSection[] => [
+  {
+    labelKey: "management.page.importExport.preview.importWillReuse",
+    entries: Object.entries(preview.toReuse)
+      .filter(([, count]) => count > 0)
+      .map(([key, count]) => ({ key: `management.page.importExport.preview.reuse${capitalize(key)}`, count })),
+  },
+  {
+    labelKey: "management.page.importExport.preview.importWillSkip",
+    entries: Object.entries(preview.toSkip)
+      .filter(([, count]) => count > 0)
+      .map(([key, count]) => ({ key: `management.page.importExport.preview.skip${capitalize(key)}`, count })),
+  },
+  {
+    labelKey: "management.page.importExport.preview.importWillUpdate",
+    entries: Object.entries(preview.toUpdate)
+      .filter(([, count]) => count > 0)
+      .map(([key, count]) => ({ key: `management.page.importExport.preview.update${capitalize(key)}`, count })),
+  },
+];
+
 type ConfigImportPreviewPanelProps = {
   preview: ConfigImportPreview | undefined;
   previewLoading: boolean;
@@ -78,69 +103,22 @@ export const ConfigImportPreviewPanel = ({ preview, previewLoading, t }: ConfigI
                 <ConfigSummaryList counts={preview.toCreate} t={t} />
               </Stack>
 
-              {(preview.toReuse.apps > 0 || preview.toReuse.integrations > 0) && (
-                <Stack gap="xs">
-                  <Text size="sm" fw={500}>
-                    {t("management.page.importExport.preview.importWillReuse")}
-                  </Text>
-                  <List size="sm">
-                    {preview.toReuse.apps > 0 && (
-                      <List.Item>
-                        {t("management.page.importExport.preview.reuseApps", { count: preview.toReuse.apps })}
-                      </List.Item>
-                    )}
-                    {preview.toReuse.integrations > 0 && (
-                      <List.Item>
-                        {t("management.page.importExport.preview.reuseIntegrations", {
-                          count: preview.toReuse.integrations,
-                        })}
-                      </List.Item>
-                    )}
-                  </List>
-                </Stack>
-              )}
-
-              {(preview.toSkip.boards > 0 || preview.toSkip.groups > 0 || preview.toSkip.searchEngines > 0) && (
-                <Stack gap="xs">
-                  <Text size="sm" fw={500}>
-                    {t("management.page.importExport.preview.importWillSkip")}
-                  </Text>
-                  <List size="sm">
-                    {preview.toSkip.boards > 0 && (
-                      <List.Item>
-                        {t("management.page.importExport.preview.skipBoards", { count: preview.toSkip.boards })}
-                      </List.Item>
-                    )}
-                    {preview.toSkip.groups > 0 && (
-                      <List.Item>
-                        {t("management.page.importExport.preview.skipGroups", { count: preview.toSkip.groups })}
-                      </List.Item>
-                    )}
-                    {preview.toSkip.searchEngines > 0 && (
-                      <List.Item>
-                        {t("management.page.importExport.preview.skipSearchEngines", {
-                          count: preview.toSkip.searchEngines,
-                        })}
-                      </List.Item>
-                    )}
-                  </List>
-                </Stack>
-              )}
-
-              {preview.toUpdate.serverSettings > 0 && (
-                <Stack gap="xs">
-                  <Text size="sm" fw={500}>
-                    {t("management.page.importExport.preview.importWillUpdate")}
-                  </Text>
-                  <List size="sm">
-                    <List.Item>
-                      {t("management.page.importExport.preview.updateServerSettings", {
-                        count: preview.toUpdate.serverSettings,
-                      })}
-                    </List.Item>
-                  </List>
-                </Stack>
-              )}
+              {buildCountSections(preview)
+                .filter((section) => section.entries.length > 0)
+                .map((section) => (
+                  <Stack gap="xs" key={section.labelKey}>
+                    <Text size="sm" fw={500}>
+                      {t(section.labelKey)}
+                    </Text>
+                    <List size="sm">
+                      {section.entries.map((entry) => (
+                        <List.Item key={entry.key}>
+                          {t(entry.key, { count: entry.count })}
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Stack>
+                ))}
 
               {preview.warnings.length > 0 && (
                 <Alert color="yellow" variant="light" icon={<IconAlertTriangle size="1rem" />}>

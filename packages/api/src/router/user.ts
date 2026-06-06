@@ -52,23 +52,45 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
 
-      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
-      const userId = await createUserAsync(ctx.db, input);
-      const groupId = createId();
-      await ctx.db.insert(groups).values({
-        id: groupId,
-        name: credentialsAdminGroup,
-        ownerId: userId,
-        position: maxPosition + 1,
+      const existingUser = await ctx.db.query.users.findFirst({
+        where: eq(users.email, input.email),
       });
-      await ctx.db.insert(groupPermissions).values({
-        groupId,
-        permission: "admin",
+
+      const userId = existingUser ? existingUser.id : await createUserAsync(ctx.db, input);
+
+      const existingGroup = await ctx.db.query.groups.findFirst({
+        where: eq(groups.name, credentialsAdminGroup),
       });
-      await ctx.db.insert(groupMembers).values({
-        groupId,
-        userId,
+
+      let groupId: string;
+      if (existingGroup) {
+        groupId = existingGroup.id;
+      } else {
+        const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+        groupId = createId();
+        await ctx.db.insert(groups).values({
+          id: groupId,
+          name: credentialsAdminGroup,
+          ownerId: userId,
+          position: maxPosition + 1,
+        });
+        await ctx.db.insert(groupPermissions).values({
+          groupId,
+          permission: "admin",
+        });
+      }
+
+      const existingMembership = await ctx.db.query.groupMembers.findFirst({
+        where: and(eq(groupMembers.groupId, groupId), eq(groupMembers.userId, userId)),
       });
+
+      if (!existingMembership) {
+        await ctx.db.insert(groupMembers).values({
+          groupId,
+          userId,
+        });
+      }
+
       await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   register: publicProcedure
