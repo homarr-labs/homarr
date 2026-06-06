@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/init/_steps/import/config-import-dropzone.tsx
+  s_e7a9f157bc08ec::t_60ec35eeb1642a 18,59,62
+  s_e7a9f157bc08ec::t_fa98f79f71a337 29
+  s_e7a9f157bc08ec::t_a1c19165ea00d3 5
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_e7a9f157bc08ec::t_55a3f3245dc75b 53-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "aa26e3ac7b73d149f009ad07f55b22f443e8bd6a",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
