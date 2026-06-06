@@ -27,4 +27,4 @@ CREATE TABLE `custom_widget_secret` (
 );
 --> statement-breakpoint
 ALTER TABLE `custom_widget_definition` ADD CONSTRAINT `custom_widget_definition_creator_id_user_id_fk` FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `custom_widget_secret` ADD CONSTRAINT `custom_widget_secret_definition_id_custom_widget_definition_id_fk` FOREIGN KEY (`definition_id`) REFERENCES `custom_widget_definition`(`id`) ON DELETE cascade ON UPDATE no action;
+ALTER TABLE `custom_widget_secret` ADD CONSTRAINT `cw_secret_definition_id_cw_definition_id_fk` FOREIGN KEY (`definition_id`) REFERENCES `custom_widget_definition`(`id`) ON DELETE cascade ON UPDATE no action;

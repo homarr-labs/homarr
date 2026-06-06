@@ -768,8 +768,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "custom_widget_secret_definition_id_custom_widget_definition_id_fk": {
-          "name": "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
+        "cw_secret_definition_id_cw_definition_id_fk": {
+          "name": "cw_secret_definition_id_cw_definition_id_fk",
           "tableFrom": "custom_widget_secret",
           "tableTo": "custom_widget_definition",
           "columnsFrom": [

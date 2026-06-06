@@ -1,17 +1,24 @@
+import { redirect } from "next/navigation";
 import { Container, Stack, Text, Title } from "@mantine/core";
 
+import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CustomWidgetForm } from "../_custom-widget-form";
 
 export default async function NewCustomWidgetPage() {
+  const session = await auth();
+  if (!session || !session.user.permissions.includes("admin")) {
+    redirect("/manage/custom-widgets");
+  }
+
   const t = await getScopedI18n("customWidget");
 
   return (
     <>
       <DynamicBreadcrumb />
-      <Container>
+      <Container size="xl">
         <Stack>
           <div>
             <Title>{t("page.create.title")}</Title>

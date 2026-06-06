@@ -1,108 +1,79 @@
 "use client";
 
+import { useState } from "react";
 import type { ComponentType } from "react";
-import { Center, Group, Loader, Stack, Table, Text, Title } from "@mantine/core";
-import { AreaChart, BarChart, LineChart, Sparkline } from "@mantine/charts";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import {
+  Button,
+  Card,
+  Center,
+  Code,
+  Flex,
+  Group,
+  Loader,
+  Progress,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
+import { IconAlertTriangle, IconCheck, IconPlayerPlay } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useConfirmModal } from "@homarr/modals";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
-interface SingleValueResult {
-  type: "singleValue";
-  label: string;
-  unit: string;
-  value: unknown;
-}
+const valueSizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg", xl: "xl" };
 
-interface KeyValueResult {
-  type: "keyValue";
-  entries: Array<{ label: string; unit: string; value: unknown }>;
-}
+function SingleValueDisplay({ data }: { data: Record<string, unknown> }) {
+  const size = valueSizeMap[(data.valueSize as string) ?? "lg"] ?? "lg";
+  const labelAbove = (data.labelPosition as string) === "above";
+  const label = data.label ? <Text c="dimmed" size="sm">{String(data.label)}</Text> : null;
 
-interface TableResult {
-  type: "table";
-  columns: string[];
-  rows: unknown[][];
-}
-
-interface ChartSeries {
-  name: string;
-  color: string;
-}
-
-interface LineChartResult {
-  type: "lineChart";
-  data: Record<string, unknown>[];
-  xKey: string;
-  series: ChartSeries[];
-  height: number;
-  curveType: "linear" | "monotone" | "step";
-}
-
-interface AreaChartResult {
-  type: "areaChart";
-  data: Record<string, unknown>[];
-  xKey: string;
-  series: ChartSeries[];
-  height: number;
-  curveType: "linear" | "monotone" | "step";
-}
-
-interface BarChartResult {
-  type: "barChart";
-  data: Record<string, unknown>[];
-  xKey: string;
-  series: ChartSeries[];
-  height: number;
-  orientation: "horizontal" | "vertical";
-}
-
-interface SparklineResult {
-  type: "sparkline";
-  data: number[];
-  height: number;
-  color: string;
-}
-
-type WidgetData =
-  | SingleValueResult
-  | KeyValueResult
-  | TableResult
-  | LineChartResult
-  | AreaChartResult
-  | BarChartResult
-  | SparklineResult;
-
-function SingleValueDisplay({ data }: { data: SingleValueResult }) {
   return (
     <Stack h="100%" align="center" justify="center" gap="xs">
-      <Title order={2}>
+      {labelAbove && label}
+      <Title order={size === "xl" ? 1 : size === "lg" ? 2 : size === "md" ? 3 : 4}>
         {String(data.value ?? "—")}
         {data.unit ? ` ${data.unit}` : ""}
       </Title>
-      {data.label && (
-        <Text c="dimmed" size="sm">
-          {data.label}
-        </Text>
-      )}
+      {!labelAbove && label}
     </Stack>
   );
 }
 
-function KeyValueDisplay({ data }: { data: KeyValueResult }) {
+function KeyValueDisplay({ data }: { data: Record<string, unknown> }) {
+  const entries = (data.entries as Array<{ label: string; unit: string; value: unknown }>) ?? [];
+  const layout = (data.layout as string) ?? "list";
+  const columns = (data.columns as number) ?? 2;
+
+  if (layout === "grid") {
+    return (
+      <SimpleGrid cols={columns} spacing="xs" p="sm" h="100%">
+        {entries.map((entry, i) => (
+          <Stack key={i} align="center" gap={2}>
+            <Text size="sm" fw={600}>
+              {String(entry.value ?? "—")}{entry.unit ? ` ${entry.unit}` : ""}
+            </Text>
+            <Text size="xs" c="dimmed">{entry.label}</Text>
+          </Stack>
+        ))}
+      </SimpleGrid>
+    );
+  }
+
   return (
     <Stack h="100%" justify="center" gap="xs" p="sm">
-      {data.entries.map((entry, i) => (
+      {entries.map((entry, i) => (
         <Group key={i} justify="space-between" wrap="nowrap">
-          <Text size="sm" c="dimmed">
-            {entry.label}
-          </Text>
+          <Text size="sm" c="dimmed">{entry.label}</Text>
           <Text size="sm" fw={600}>
-            {String(entry.value ?? "—")}
-            {entry.unit ? ` ${entry.unit}` : ""}
+            {String(entry.value ?? "—")}{entry.unit ? ` ${entry.unit}` : ""}
           </Text>
         </Group>
       ))}
@@ -110,103 +81,246 @@ function KeyValueDisplay({ data }: { data: KeyValueResult }) {
   );
 }
 
-function TableDisplay({ data }: { data: TableResult }) {
+function TableDisplay({ data }: { data: Record<string, unknown> }) {
+  const columns = (data.columns as string[]) ?? [];
+  const rows = (data.rows as unknown[][]) ?? [];
+  const striped = (data.striped as boolean) ?? true;
+  const compact = (data.compact as boolean) ?? false;
+
   return (
-    <Table striped highlightOnHover withTableBorder>
-      <Table.Thead>
-        <Table.Tr>
-          {data.columns.map((col, i) => (
-            <Table.Th key={i}>{col}</Table.Th>
-          ))}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {data.rows.map((row, i) => (
-          <Table.Tr key={i}>
-            {row.map((cell, j) => (
-              <Table.Td key={j}>{String(cell ?? "—")}</Table.Td>
-            ))}
+    <ScrollArea>
+      <Table striped={striped} highlightOnHover withTableBorder>
+        <Table.Thead>
+          <Table.Tr>
+            {columns.map((col, i) => <Table.Th key={i} py={compact ? 4 : undefined}>{col}</Table.Th>)}
           </Table.Tr>
-        ))}
-      </Table.Tbody>
-    </Table>
+        </Table.Thead>
+        <Table.Tbody>
+          {rows.map((row, i) => (
+            <Table.Tr key={i}>
+              {row.map((cell, j) => <Table.Td key={j} py={compact ? 2 : undefined}>{String(cell ?? "—")}</Table.Td>)}
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
   );
 }
 
-function LineChartDisplay({ data }: { data: LineChartResult }) {
+function StatGridCard({ item, cardStyle }: { item: { label: string; unit: string; color: string; value: unknown }; cardStyle: string }) {
+  const { ref, height, width } = useElementSize();
+  const isWide = width > height + 20;
+  const hideLabel = height > 0 && height <= 38;
+
+  const bgMap: Record<string, string> = {
+    filled: `var(--mantine-color-${item.color}-light)`,
+    outline: "transparent",
+    subtle: `var(--mantine-color-${item.color}-light)`,
+  };
+
   return (
-    <LineChart
-      h={data.height}
-      data={data.data}
-      dataKey={data.xKey}
-      series={data.series}
-      curveType={data.curveType}
-      withDots={false}
-    />
+    <Card
+      ref={ref}
+      p="sm"
+      radius="md"
+      bg={bgMap[cardStyle] ?? bgMap.filled}
+      withBorder={cardStyle === "outline"}
+      h="100%"
+      style={{ flex: 1 }}
+    >
+      <Flex h="100%" w="100%" align="center" justify="center" direction={isWide ? "row" : "column"} gap={isWide ? 8 : 4}>
+        <Flex direction="column" align={isWide ? "flex-start" : "center"} gap={0}>
+          <Text size="md" fw={700} ta="center" lh={1.1}>
+            {String(item.value ?? "—")}{item.unit ? ` ${item.unit}` : ""}
+          </Text>
+          {!hideLabel && (
+            <Text size="xs" c="dimmed" ta="center" tt="uppercase" lh={1.3} style={{ letterSpacing: "0.03em" }}>
+              {item.label}
+            </Text>
+          )}
+        </Flex>
+      </Flex>
+    </Card>
   );
 }
 
-function AreaChartDisplay({ data }: { data: AreaChartResult }) {
+function StatGridDisplay({ data }: { data: Record<string, unknown> }) {
+  const items = (data.items as Array<{ label: string; unit: string; color: string; value: unknown }>) ?? [];
+  const columns = (data.columns as number) ?? 2;
+  const cardStyle = (data.cardStyle as string) ?? "filled";
+
   return (
-    <AreaChart h={data.height} data={data.data} dataKey={data.xKey} series={data.series} curveType={data.curveType} />
+    <SimpleGrid cols={columns} spacing="xs" p="xs" h="100%" style={{ gridTemplateRows: `repeat(${Math.ceil(items.length / columns)}, 1fr)` }}>
+      {items.map((item, i) => <StatGridCard key={i} item={item} cardStyle={cardStyle} />)}
+    </SimpleGrid>
   );
 }
 
-function BarChartDisplay({ data }: { data: BarChartResult }) {
-  return (
-    <BarChart
-      h={data.height}
-      data={data.data}
-      dataKey={data.xKey}
-      series={data.series}
-      orientation={data.orientation}
-    />
-  );
-}
+function ProgressBarsDisplay({ data }: { data: Record<string, unknown> }) {
+  const bars = (data.bars as Array<{ label: string; unit: string; color: string; value: number; max?: number }>) ?? [];
+  const showPercentage = (data.showPercentage as boolean) ?? true;
+  const barSize = (data.barSize as string) ?? "md";
 
-function SparklineDisplay({ data }: { data: SparklineResult }) {
-  return (
-    <Center h="100%">
-      <Sparkline h={data.height} w="80%" data={data.data} color={data.color} />
-    </Center>
-  );
-}
-
-const displayComponents: Record<string, ComponentType<{ data: WidgetData }>> = {
-  singleValue: SingleValueDisplay as ComponentType<{ data: WidgetData }>,
-  keyValue: KeyValueDisplay as ComponentType<{ data: WidgetData }>,
-  table: TableDisplay as ComponentType<{ data: WidgetData }>,
-  lineChart: LineChartDisplay as ComponentType<{ data: WidgetData }>,
-  areaChart: AreaChartDisplay as ComponentType<{ data: WidgetData }>,
-  barChart: BarChartDisplay as ComponentType<{ data: WidgetData }>,
-  sparkline: SparklineDisplay as ComponentType<{ data: WidgetData }>,
-};
-
-function FlowGraphDisplay({ data }: { data: Record<string, unknown> }) {
-  const t = useScopedI18n("widget.customApi");
-  const displayEntries = Object.entries(data);
-
-  if (displayEntries.length === 0) {
-    return (
-      <Center h="100%">
-        <Text c="dimmed" size="sm">
-          {t("noDisplayOutput")}
-        </Text>
-      </Center>
-    );
-  }
+  const sizeMap: Record<string, number> = { sm: 8, md: 14, lg: 22 };
 
   return (
-    <Stack h="100%" gap="xs">
-      {displayEntries.map(([nodeId, nodeData]) => {
-        const typed = nodeData as WidgetData;
-        const Component = displayComponents[typed.type];
-        if (!Component) return null;
-        return <Component key={nodeId} data={typed} />;
+    <Stack h="100%" justify="center" gap="sm" p="sm">
+      {bars.map((bar, i) => {
+        const max = bar.max ?? 100;
+        const pct = max > 0 ? Math.min((bar.value / max) * 100, 100) : 0;
+        return (
+          <Stack key={i} gap={4}>
+            <Group justify="space-between" wrap="nowrap">
+              <Text size="xs" fw={500}>{bar.label}</Text>
+              <Text size="xs" c="dimmed">
+                {showPercentage ? `${pct.toFixed(0)}%` : `${bar.value}${bar.unit ? ` ${bar.unit}` : ""}`}
+                {bar.max !== undefined && showPercentage ? ` (${bar.value}/${max}${bar.unit ? ` ${bar.unit}` : ""})` : ""}
+              </Text>
+            </Group>
+            <Progress value={pct} size={sizeMap[barSize] ?? 14} color={bar.color} radius="sm" />
+          </Stack>
+        );
       })}
     </Stack>
   );
 }
+
+function StatusIndicatorDisplay({ data }: { data: Record<string, unknown> }) {
+  const items = (data.items as Array<{ label: string; value: string; isGood: boolean }>) ?? [];
+  const layout = (data.layout as string) ?? "list";
+  const dotSize = (data.dotSize as string) ?? "md";
+
+  const dotSizeMap: Record<string, number> = { sm: 8, md: 10, lg: 14 };
+  const size = dotSizeMap[dotSize] ?? 10;
+
+  const renderItem = (item: { label: string; value: string; isGood: boolean }, i: number) => (
+    <Group key={i} gap="xs" wrap="nowrap">
+      <div style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        backgroundColor: item.isGood ? "var(--mantine-color-green-6)" : "var(--mantine-color-red-6)",
+        flexShrink: 0,
+      }} />
+      <Text size="sm" fw={500}>{item.label}</Text>
+      <Text size="xs" c="dimmed" ml="auto">{item.value}</Text>
+    </Group>
+  );
+
+  if (layout === "grid") {
+    return (
+      <SimpleGrid cols={2} spacing="xs" p="sm" h="100%">
+        {items.map(renderItem)}
+      </SimpleGrid>
+    );
+  }
+
+  return (
+    <Stack h="100%" justify="center" gap="xs" p="sm">
+      {items.map(renderItem)}
+    </Stack>
+  );
+}
+
+function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
+  const items = (data.items as Array<{ label: string; unit: string; value: unknown }>) ?? [];
+  const columns = (data.columns as number) ?? 2;
+  const valueSize = (data.valueSize as string) ?? "md";
+
+  const sizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg" };
+
+  return (
+    <SimpleGrid cols={columns} spacing="xs" p="sm" h="100%">
+      {items.map((item, i) => (
+        <Stack key={i} align="center" justify="center" gap={0}>
+          <Text size={sizeMap[valueSize] ?? "md"} fw={700} lh={1.2}>
+            {String(item.value ?? "—")}{item.unit ? ` ${item.unit}` : ""}
+          </Text>
+          <Text size="xs" c="dimmed" tt="uppercase" ta="center" lh={1.3} style={{ letterSpacing: "0.03em" }}>
+            {item.label}
+          </Text>
+        </Stack>
+      ))}
+    </SimpleGrid>
+  );
+}
+
+function RawDisplay({ data }: { data: Record<string, unknown> }) {
+  const maxHeight = (data.maxHeight as number) ?? 300;
+
+  return (
+    <ScrollArea h={maxHeight} p="xs">
+      <Code block style={{ fontSize: 11 }}>
+        {JSON.stringify(data.data, null, 2)}
+      </Code>
+    </ScrollArea>
+  );
+}
+
+function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
+  const t = useScopedI18n("widget.customApi");
+  const { openConfirmModal } = useConfirmModal();
+  const executeMutation = clientApi.customWidget.execute.useMutation();
+  const [lastSuccess, setLastSuccess] = useState(false);
+
+  const buttonLabel = (data.buttonLabel as string) ?? "Execute";
+  const buttonColor = (data.buttonColor as string) ?? "blue";
+  const confirmText = (data.confirmText as string) || "";
+  const successMessage = (data.successMessage as string) || t("executeSuccess");
+  const definitionId = data._definitionId as string | undefined;
+
+  const handleExecute = async () => {
+    if (!definitionId) return;
+    setLastSuccess(false);
+    const result = await executeMutation.mutateAsync({ definitionId });
+    if (result.success) {
+      setLastSuccess(true);
+      showSuccessNotification({ title: buttonLabel, message: successMessage });
+      setTimeout(() => setLastSuccess(false), 3000);
+    } else {
+      showErrorNotification({ title: buttonLabel, message: result.error ?? "Request failed" });
+    }
+  };
+
+  const handleClick = () => {
+    if (confirmText) {
+      openConfirmModal({
+        title: buttonLabel,
+        children: confirmText,
+        onConfirm: () => void handleExecute(),
+      });
+    } else {
+      void handleExecute();
+    }
+  };
+
+  return (
+    <Center h="100%">
+      <Button
+        size="lg"
+        color={buttonColor}
+        onClick={handleClick}
+        loading={executeMutation.isPending}
+        leftSection={lastSuccess ? <IconCheck size={20} /> : <IconPlayerPlay size={20} />}
+        variant={lastSuccess ? "light" : "filled"}
+      >
+        {executeMutation.isPending ? t("executing") : buttonLabel}
+      </Button>
+    </Center>
+  );
+}
+
+const displayComponents: Record<string, ComponentType<{ data: Record<string, unknown> }>> = {
+  singleValue: SingleValueDisplay,
+  keyValue: KeyValueDisplay,
+  table: TableDisplay,
+  statGrid: StatGridDisplay,
+  progressBars: ProgressBarsDisplay,
+  statusIndicator: StatusIndicatorDisplay,
+  countGrid: CountGridDisplay,
+  raw: RawDisplay,
+  actionButton: ActionButtonDisplay,
+};
 
 export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
@@ -217,9 +331,7 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
       <Center h="100%">
         <Stack align="center" gap="xs">
           <IconAlertTriangle size={32} color="var(--mantine-color-yellow-6)" />
-          <Text c="dimmed" size="sm">
-            {t("noDefinition")}
-          </Text>
+          <Text c="dimmed" size="sm">{t("noDefinition")}</Text>
         </Stack>
       </Center>
     );
@@ -233,7 +345,11 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
-      refetchInterval: 30_000,
+      refetchInterval: (query) => {
+        const result = query.state.data as Record<string, unknown> | undefined;
+        if (result?.type === "actionButton") return false;
+        return 30_000;
+      },
       retry: (failureCount, err) => {
         if (err.data?.code === "NOT_FOUND") return false;
         return failureCount < 3;
@@ -242,11 +358,7 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
   );
 
   if (isLoading) {
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+    return <Center h="100%"><Loader size="sm" /></Center>;
   }
 
   if (error) {
@@ -263,16 +375,22 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
     );
   }
 
-  if (!data) {
-    return null;
+  if (!data) return null;
+
+  const widgetData = data as Record<string, unknown>;
+  const dataType = widgetData.type as string | undefined;
+
+  if (dataType && displayComponents[dataType]) {
+    const Component = displayComponents[dataType]!;
+    const enrichedData = dataType === "actionButton" ? { ...widgetData, _definitionId: definitionId } : widgetData;
+    return <Component data={enrichedData} />;
   }
 
-  const widgetData = data as WidgetData | Record<string, unknown>;
-
-  if ("type" in widgetData && typeof widgetData.type === "string") {
-    const Component = displayComponents[widgetData.type];
-    if (Component) return <Component data={widgetData as WidgetData} />;
-  }
-
-  return <FlowGraphDisplay data={widgetData as Record<string, unknown>} />;
+  return (
+    <ScrollArea h="100%" p="xs">
+      <Code block style={{ fontSize: 11 }}>
+        {JSON.stringify(data, null, 2)}
+      </Code>
+    </ScrollArea>
+  );
 }

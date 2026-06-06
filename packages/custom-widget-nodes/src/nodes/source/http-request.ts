@@ -65,6 +65,7 @@ const definition: NodeTypeDefinition<HttpRequestData> = {
         method: data.method,
         headers,
         body: data.method !== "GET" ? data.body : undefined,
+        redirect: "error",
         signal: controller.signal,
       });
 

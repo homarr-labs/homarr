@@ -708,7 +708,12 @@
       "flowEditor": "Flow Editor",
       "edit": "Edit",
       "removeMapping": "Remove mapping",
-      "removeColumn": "Remove column"
+      "removeColumn": "Remove column",
+      "addItem": "Add Item",
+      "removeItem": "Remove item",
+      "addBar": "Add Bar",
+      "duplicate": "Duplicate",
+      "menu": "Actions"
     },
     "field": {
       "name": "Name",
@@ -729,7 +734,30 @@
       "tablePath": "Array JSON Path",
       "tablePathHint": "Path to the array in the response, e.g. $.data.items",
       "columns": "Columns",
-      "header": "Header"
+      "header": "Header",
+      "items": "Items",
+      "gridColumns": "Grid Columns",
+      "cardStyle": "Card Style",
+      "bars": "Bars",
+      "valuePath": "Value JSON Path",
+      "maxPath": "Max Value JSON Path",
+      "showPercentage": "Show Percentage",
+      "barSize": "Bar Size",
+      "goodValues": "Good Values (comma-separated)",
+      "dotSize": "Dot Size",
+      "valueSize": "Value Size",
+      "labelPosition": "Label Position",
+      "kvLayout": "Layout",
+      "striped": "Striped Rows",
+      "compact": "Compact Mode",
+      "maxHeight": "Max Height (px)",
+      "color": "Color",
+      "buttonLabel": "Button Label",
+      "buttonColor": "Button Color",
+      "confirmText": "Confirmation Text",
+      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
+      "successMessage": "Success Message",
+      "successMessageHint": "Message shown after successful execution"
     },
     "placeholder": {
       "exampleLabel": "CPU Temperature",
@@ -742,7 +770,30 @@
       "headerName": "X-API-Key",
       "jsonPath": "$.data.value",
       "tablePath": "$.data.items",
-      "columnJsonPath": "$.name"
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blue"
+    },
+    "cardStyleOption": {
+      "filled": "Filled",
+      "outline": "Outline",
+      "subtle": "Subtle"
+    },
+    "layoutOption": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "sizeOption": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large",
+      "xl": "Extra Large"
+    },
+    "labelPositionOption": {
+      "above": "Above",
+      "below": "Below"
     },
     "fieldset": {
       "general": "General",
@@ -753,7 +804,13 @@
     "displayTypeDescription": {
       "singleValue": "Show one extracted value with a label and unit",
       "keyValue": "Show multiple labeled values side by side",
-      "table": "Show rows of data in a table format"
+      "table": "Show rows of data in a table format",
+      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
+      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
+      "statusIndicator": "Colored status dots showing online/offline or health states",
+      "countGrid": "Compact number + label counters in a tight grid",
+      "raw": "Pretty-printed JSON output for debugging",
+      "actionButton": "A button that triggers a request when clicked"
     },
     "flowEditor": {
       "save": "Save",
@@ -806,7 +863,10 @@
     },
     "method": {
       "GET": "GET",
-      "POST": "POST"
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
       "none": "None",
@@ -818,7 +878,13 @@
     "displayType": {
       "singleValue": "Single Value",
       "keyValue": "Key-Value",
-      "table": "Table"
+      "table": "Table",
+      "statGrid": "Stat Grid",
+      "progressBars": "Progress Bars",
+      "statusIndicator": "Status Indicator",
+      "countGrid": "Count Grid",
+      "raw": "Raw JSON",
+      "actionButton": "Action Button"
     },
     "secret": {
       "apiKey": "API Key / Token",
@@ -841,7 +907,11 @@
       "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
       "exportError": "Failed to export widget.",
       "flowSaved": "Flow graph saved successfully.",
-      "flowSaveError": "Failed to save flow graph."
+      "flowSaveError": "Failed to save flow graph.",
+      "duplicated": "Widget \"{name}\" duplicated.",
+      "duplicateError": "Failed to duplicate widget.",
+      "executed": "Action executed successfully.",
+      "executeError": "Action failed: {error}"
     },
     "table": {
       "name": "Name",
@@ -3281,7 +3351,10 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Widget definition not found. It may have been deleted.",
-      "noDisplayOutput": "No display output"
+      "noDisplayOutput": "No display output",
+      "executeConfirm": "Are you sure you want to execute this action?",
+      "executing": "Executing...",
+      "executeSuccess": "Action executed successfully"
     }
   },
   "widgetPreview": {

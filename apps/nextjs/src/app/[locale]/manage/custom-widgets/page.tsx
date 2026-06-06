@@ -16,8 +16,8 @@ import { CustomWidgetList } from "./_custom-widget-list";
 export default async function CustomWidgetsPage() {
   const session = await auth();
 
-  if (!session) {
-    redirect("/auth/login");
+  if (!session || !session.user.permissions.includes("admin")) {
+    redirect(session ? "/" : "/auth/login");
   }
 
   const definitions = await api.customWidget.all();

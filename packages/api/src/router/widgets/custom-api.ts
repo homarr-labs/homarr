@@ -9,29 +9,14 @@ import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { executeFlowGraph } from "@homarr/custom-widget-nodes";
 import type { FlowGraph } from "@homarr/custom-widget-nodes";
-
-import type { DisplayConfig } from "@homarr/validation/custom-widget";
-
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "widget:customApi" });
 
 const FETCH_TIMEOUT_MS = 10_000;
-const ALLOWED_PROTOCOLS = /^https?:\/\//;
 
 const validateUrl = (baseUrl: string, endpoint: string): URL => {
-  if (!ALLOWED_PROTOCOLS.test(baseUrl)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Base URL must use http or https protocol" });
-  }
-
-  if (/^https?:\/\//.test(endpoint)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Endpoint must be a relative path, not an absolute URL" });
-  }
-
   const url = new URL(endpoint, baseUrl);
-  if (url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "[::1]") {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Requests to localhost are not allowed" });
-  }
 
   return url;
 };
@@ -72,32 +57,91 @@ const applyAuth = (
   }
 };
 
-const extractors: Record<string, (json: unknown, config: DisplayConfig) => unknown> = {
-  singleValue: (json, config) => ({
-    type: "singleValue" as const,
-    label: "label" in config ? (config.label ?? "") : "",
-    unit: "unit" in config ? (config.unit ?? "") : "",
-    value: JSONPath({ path: "jsonPath" in config ? config.jsonPath : "$", json: json as object, wrap: false }),
+const extractors: Record<string, (json: unknown, config: Record<string, unknown>) => unknown> = {
+  singleValue: (json, c) => ({
+    type: "singleValue",
+    label: (c.label as string) ?? "",
+    unit: (c.unit as string) ?? "",
+    value: JSONPath({ path: (c.jsonPath as string) ?? "$", json: json as object, wrap: false }),
+    valueSize: c.valueSize ?? "lg",
+    labelPosition: c.labelPosition ?? "below",
   }),
-  keyValue: (json, config) => ({
-    type: "keyValue" as const,
-    entries: ("mappings" in config ? config.mappings : []).map((m) => ({
+  keyValue: (json, c) => ({
+    type: "keyValue",
+    entries: ((c.mappings as Array<{ label: string; jsonPath: string; unit: string }>) ?? []).map((m) => ({
       label: m.label,
       unit: m.unit,
       value: JSONPath({ path: m.jsonPath, json: json as object, wrap: false }),
     })),
+    layout: c.layout ?? "list",
+    columns: c.columns ?? 2,
   }),
-  table: (json, config) => {
-    const tablePath = "tablePath" in config ? config.tablePath : "$";
-    const columns = "columns" in config ? config.columns : [];
+  table: (json, c) => {
+    const tablePath = (c.tablePath as string) ?? "$";
+    const columns = (c.columns as Array<{ header: string; jsonPath: string }>) ?? [];
     const rows = JSONPath({ path: tablePath, json: json as object, wrap: true }) as unknown[];
     const flatRows = Array.isArray(rows[0]) ? (rows[0] as unknown[]) : rows;
     return {
-      type: "table" as const,
-      columns: columns.map((c) => c.header),
-      rows: flatRows.map((row) => columns.map((c) => JSONPath({ path: c.jsonPath, json: row as object, wrap: false }))),
+      type: "table",
+      columns: columns.map((col) => col.header),
+      rows: flatRows.map((row) => columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false }))),
+      striped: c.striped ?? true,
+      compact: c.compact ?? false,
     };
   },
+  statGrid: (json, c) => ({
+    type: "statGrid",
+    items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map((item) => ({
+      label: item.label,
+      unit: item.unit,
+      color: item.color ?? "blue",
+      value: JSONPath({ path: item.jsonPath, json: json as object, wrap: false }),
+    })),
+    columns: c.columns ?? 2,
+    cardStyle: c.cardStyle ?? "filled",
+  }),
+  progressBars: (json, c) => ({
+    type: "progressBars",
+    bars: ((c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ?? []).map((bar) => {
+      const value = JSONPath({ path: bar.valuePath, json: json as object, wrap: false });
+      const max = bar.maxPath ? JSONPath({ path: bar.maxPath, json: json as object, wrap: false }) : undefined;
+      return { label: bar.label, unit: bar.unit, color: bar.color ?? "blue", value: Number(value) || 0, max: max !== undefined ? Number(max) || 100 : undefined };
+    }),
+    showPercentage: c.showPercentage ?? true,
+    barSize: c.barSize ?? "md",
+  }),
+  statusIndicator: (json, c) => ({
+    type: "statusIndicator",
+    items: ((c.items as Array<{ label: string; jsonPath: string; goodValues: string[] }>) ?? []).map((item) => {
+      const value = JSONPath({ path: item.jsonPath, json: json as object, wrap: false });
+      const isGood = item.goodValues.some((gv) => String(value).toLowerCase() === gv.toLowerCase());
+      return { label: item.label, value: String(value ?? "unknown"), isGood };
+    }),
+    layout: c.layout ?? "list",
+    dotSize: c.dotSize ?? "md",
+  }),
+  countGrid: (json, c) => ({
+    type: "countGrid",
+    items: ((c.items as Array<{ label: string; jsonPath: string; unit: string }>) ?? []).map((item) => ({
+      label: item.label,
+      unit: item.unit,
+      value: JSONPath({ path: item.jsonPath, json: json as object, wrap: false }),
+    })),
+    columns: c.columns ?? 2,
+    valueSize: c.valueSize ?? "md",
+  }),
+  raw: (json, c) => ({
+    type: "raw",
+    data: JSONPath({ path: (c.jsonPath as string) ?? "$", json: json as object, wrap: false }),
+    maxHeight: c.maxHeight ?? 300,
+  }),
+  actionButton: (_json, c) => ({
+    type: "actionButton",
+    buttonLabel: c.buttonLabel ?? "Execute",
+    buttonColor: c.buttonColor ?? "blue",
+    confirmText: c.confirmText ?? "",
+    successMessage: c.successMessage ?? "",
+  }),
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -109,6 +153,11 @@ export const customApiRouter = createTRPCRouter({
 
     if (!definition) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+    }
+
+    if (definition.displayType === "actionButton") {
+      const displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
+      return extractors.actionButton!(null, displayConfig);
     }
 
     const decryptedSecrets = definition.secrets.map((s) => ({
@@ -150,6 +199,7 @@ export const customApiRouter = createTRPCRouter({
         method: definition.method,
         headers,
         body: definition.method !== "GET" ? definition.requestBody : undefined,
+        redirect: "error",
         signal: controller.signal,
       });
 
@@ -161,8 +211,9 @@ export const customApiRouter = createTRPCRouter({
       }
 
       const json: unknown = await response.json();
-      const displayConfig = superjson.parse(definition.displayConfig) as DisplayConfig;
-      const extractor = extractors[displayConfig.type] ?? extractors.singleValue!;
+      const displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
+      const displayType = (displayConfig.type as string) ?? definition.displayType;
+      const extractor = extractors[displayType] ?? extractors.singleValue!;
 
       return extractor!(json, displayConfig);
     } catch (error) {

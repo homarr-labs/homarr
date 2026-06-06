@@ -1,11 +1,10 @@
 "use client";
 
-import { ActionIcon, Badge, Group, Stack, Table, Text } from "@mantine/core";
-import { IconApi, IconPencil } from "@tabler/icons-react";
+import { Badge, Group, Stack, Table, Text } from "@mantine/core";
+import { IconApi } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
 
 import { NoResults } from "~/components/no-results";
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
@@ -14,6 +13,12 @@ const displayTypeBadgeColors: Record<string, string> = {
   singleValue: "blue",
   keyValue: "green",
   table: "orange",
+  statGrid: "violet",
+  progressBars: "teal",
+  statusIndicator: "cyan",
+  countGrid: "indigo",
+  raw: "gray",
+  actionButton: "red",
 };
 
 interface CustomWidgetListProps {
@@ -42,7 +47,7 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
             <Table.Th>{t("table.baseUrl")}</Table.Th>
             <Table.Th>{t("table.endpoint")}</Table.Th>
             <Table.Th>{t("table.display")}</Table.Th>
-            <Table.Th />
+            <Table.Th w={50} />
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -72,18 +77,7 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
                 </Badge>
               </Table.Td>
               <Table.Td>
-                <Group justify="end" gap={4} wrap="nowrap">
-                  <ActionIcon
-                    component={Link}
-                    href={`/manage/custom-widgets/edit/${def.id}`}
-                    variant="subtle"
-                    color="gray"
-                    aria-label={t("action.edit")}
-                  >
-                    <IconPencil size={16} stroke={1.5} />
-                  </ActionIcon>
-                  <CustomWidgetRowActions widget={{ id: def.id, name: def.name }} />
-                </Group>
+                <CustomWidgetRowActions widget={{ id: def.id, name: def.name }} />
               </Table.Td>
             </Table.Tr>
           ))}
