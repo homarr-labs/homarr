@@ -423,7 +423,8 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
 function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId: string; refreshInterval: number }) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
-  const intervalMs = Math.max(1000, (refreshInterval ?? 30) * 1000);
+  const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
+  const intervalMs = Math.max(1000, safeInterval * 1000);
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
