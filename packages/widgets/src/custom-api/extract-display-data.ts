@@ -97,6 +97,11 @@ const extractors: Record<string, (json: unknown, config: Record<string, unknown>
     confirmText: c.confirmText ?? "",
     successMessage: c.successMessage ?? "",
   }),
+  customJsx: (json, config) => ({
+    type: "customJsx" as const,
+    template: config.template as string,
+    data: json,
+  }),
 };
 
 export function extractDisplayData(

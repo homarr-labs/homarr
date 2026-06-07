@@ -218,6 +218,17 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
         path: ["buttonLabel"],
       });
   },
+  customJsx: (data, ctx) => {
+    if (!data.template)
+      ctx.addIssue({
+        code: "too_small",
+        minimum: 1,
+        origin: "string",
+        inclusive: true,
+        input: data.template,
+        path: ["template"],
+      });
+  },
 };
 
 const formSchema = z
@@ -263,6 +274,7 @@ const formSchema = z
     buttonColor: z.string(),
     confirmText: z.string(),
     successMessage: z.string(),
+    template: z.string(),
     secrets: z.array(z.object({ kind: z.string(), value: z.string(), hasValue: z.boolean().optional() })),
   })
   .superRefine((data, ctx) => {
@@ -325,6 +337,7 @@ const defaultCreateValues: z.infer<typeof formSchema> = {
   buttonColor: "blue",
   confirmText: "",
   successMessage: "",
+  template: "",
   secrets: [],
 };
 
@@ -378,6 +391,7 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     confirmText: v.confirmText || undefined,
     successMessage: v.successMessage || undefined,
   }),
+  customJsx: (v) => ({ type: "customJsx", template: v.template }),
 };
 
 const serverToFormFieldMap: Record<string, Record<string, string>> = {
@@ -390,6 +404,7 @@ const serverToFormFieldMap: Record<string, Record<string, string>> = {
   singleValue: { jsonPath: "jsonPath", label: "label", unit: "unit" },
   raw: { jsonPath: "rawJsonPath" },
   actionButton: { buttonLabel: "buttonLabel" },
+  customJsx: { template: "template" },
 };
 
 function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
@@ -436,6 +451,7 @@ const ALL_DISPLAY_TYPES = [
   "countGrid",
   "raw",
   "actionButton",
+  "customJsx",
 ] as const;
 const MANTINE_COLORS = [
   "blue",
@@ -1230,6 +1246,22 @@ function DisplayTypeFields({
           {...form.getInputProps("successMessage")}
         />
       </Stack>
+    );
+  }
+
+  if (dt === "customJsx") {
+    return (
+      <Textarea
+        label={t("field.template.label")}
+        description={t("field.template.description")}
+        placeholder={'<Stack gap="sm">\n  <Title order={3}>{data.name}</Title>\n  <Text>{data.description}</Text>\n</Stack>'}
+        minRows={8}
+        maxRows={20}
+        autosize
+        maxLength={10000}
+        styles={{ input: { fontFamily: "monospace" } }}
+        {...form.getInputProps("template")}
+      />
     );
   }
 

@@ -13,6 +13,7 @@ export const customWidgetDisplayTypes = [
   "countGrid",
   "raw",
   "actionButton",
+  "customJsx",
 ] as const;
 export type CustomWidgetDisplayType = (typeof customWidgetDisplayTypes)[number];
 
@@ -256,6 +257,21 @@ const rawDisplayConfigSchema = z.object({
     .describe("Maximum height of the raw JSON display area in pixels (50–1000, default: 300)"),
 });
 
+const FORBIDDEN_TEMPLATE_PATTERN =
+  /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bfetch\b|\bXMLHttpRequest\b/;
+
+const customJsxDisplayConfigSchema = z.object({
+  type: z.literal("customJsx").describe("Display type discriminator — must be 'customJsx' when displayType is customJsx"),
+  template: z
+    .string()
+    .min(1)
+    .max(10000)
+    .refine((t) => !FORBIDDEN_TEMPLATE_PATTERN.test(t), {
+      message: "Template contains forbidden keywords (constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch)",
+    })
+    .describe("JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Forbidden keywords: constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch"),
+});
+
 const actionButtonDisplayConfigSchema = z.object({
   type: z
     .literal("actionButton")
@@ -291,6 +307,7 @@ export const displayConfigSchema = z
     countGridDisplayConfigSchema,
     rawDisplayConfigSchema,
     actionButtonDisplayConfigSchema,
+    customJsxDisplayConfigSchema,
   ])
   .describe(
     "Configuration for how API response data is displayed. The 'type' field MUST match the top-level 'displayType' field exactly. Choose the variant that matches your displayType.",
@@ -348,7 +365,7 @@ const baseDefinitionSchema = z.object({
   displayType: z
     .enum(customWidgetDisplayTypes)
     .describe(
-      "How to render the API response: 'singleValue' (one big number/text), 'keyValue' (labeled pairs), 'table' (rows/columns), 'statGrid' (colored stat cards), 'progressBars' (usage bars), 'statusIndicator' (health dots), 'countGrid' (simple counts), 'raw' (JSON debug view), 'actionButton' (clickable action)",
+      "How to render the API response: 'singleValue' (one big number/text), 'keyValue' (labeled pairs), 'table' (rows/columns), 'statGrid' (colored stat cards), 'progressBars' (usage bars), 'statusIndicator' (health dots), 'countGrid' (simple counts), 'raw' (JSON debug view), 'actionButton' (clickable action), 'customJsx' (custom JSX template with Mantine components)",
     ),
   displayConfig: displayConfigSchema,
 });
@@ -413,7 +430,7 @@ const customWidgetImportFieldsSchema = z.object({
   displayType: z
     .enum(customWidgetDisplayTypes)
     .describe(
-      "How to render the API response: 'singleValue', 'keyValue', 'table', 'statGrid', 'progressBars', 'statusIndicator', 'countGrid', 'raw', or 'actionButton'",
+      "How to render the API response: 'singleValue', 'keyValue', 'table', 'statGrid', 'progressBars', 'statusIndicator', 'countGrid', 'raw', 'actionButton', or 'customJsx'",
     ),
   displayConfig: displayConfigSchema,
 });

@@ -22,7 +22,6 @@ catalog:
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
   "@mantine/charts": ^9.2.2
-  "mantine-contextmenu": ^7.15.1
   "@mantine/colors-generator": ^9.2.2
   "@mantine/core": ^9.2.2
   "@mantine/dates": ^9.2.2
@@ -134,6 +133,7 @@ catalog:
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
+  "mantine-contextmenu": ^7.15.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   maria2: ^0.4.1
   mysql2: 3.22.4
@@ -151,6 +151,7 @@ catalog:
   react: 19.2.7
   react-dom: 19.2.7
   react-error-boundary: ^6.1.2
+  react-jsx-parser: ^2.4.1
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1

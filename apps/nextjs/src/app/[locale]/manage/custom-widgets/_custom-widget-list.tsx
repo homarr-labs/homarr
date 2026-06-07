@@ -20,6 +20,7 @@ const displayTypeBadgeColors: Record<string, string> = {
   countGrid: "indigo",
   raw: "gray",
   actionButton: "red",
+  customJsx: "pink",
 };
 
 const iconProps = { size: 16, stroke: 1.5 };

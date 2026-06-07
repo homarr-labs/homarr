@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { ComponentType } from "react";
 import {
@@ -29,6 +30,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+
+const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
 const valueSizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg", xl: "xl" };
 
@@ -394,6 +397,7 @@ export const displayComponents: Record<string, ComponentType<{ data: Record<stri
   countGrid: CountGridDisplay,
   raw: RawDisplay,
   actionButton: ActionButtonDisplay,
+  customJsx: CustomJsxDisplay,
 };
 
 export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
@@ -473,7 +477,8 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
 
   if (dataType && displayComponents[dataType]) {
     const Component = displayComponents[dataType]!;
-    const enrichedData = dataType === "actionButton" ? { ...widgetData, _definitionId: definitionId } : widgetData;
+    const needsDefinitionId = dataType === "actionButton" || dataType === "customJsx";
+    const enrichedData = needsDefinitionId ? { ...widgetData, _definitionId: definitionId } : widgetData;
     return <Component data={enrichedData} />;
   }
 

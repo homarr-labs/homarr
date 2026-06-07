@@ -1,0 +1,207 @@
+"use client";
+
+import { Children, useState, type ReactNode } from "react";
+import {
+  ActionIcon,
+  Badge,
+  Collapse,
+  Group,
+  Stack,
+  Tabs,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronUp,
+} from "@tabler/icons-react";
+
+interface PaginatedListProps {
+  children: ReactNode;
+  pageSize?: number;
+}
+
+export function PaginatedList({ children, pageSize = 6 }: PaginatedListProps) {
+  const items = Children.toArray(children);
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const [page, setPage] = useState(0);
+
+  const clampedPage = Math.min(page, totalPages - 1);
+  const start = clampedPage * pageSize;
+  const visible = items.slice(start, start + pageSize);
+
+  return (
+    <Stack gap="xs">
+      <div>{visible}</div>
+      {totalPages > 1 && (
+        <Group justify="center" gap="xs">
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            disabled={clampedPage === 0}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+          >
+            <IconChevronLeft size={14} />
+          </ActionIcon>
+          <Text size="xs" c="dimmed">
+            {clampedPage + 1} / {totalPages}
+          </Text>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            disabled={clampedPage >= totalPages - 1}
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          >
+            <IconChevronRight size={14} />
+          </ActionIcon>
+        </Group>
+      )}
+    </Stack>
+  );
+}
+
+interface TabsContainerProps {
+  children: ReactNode;
+  defaultTab?: string;
+}
+
+export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
+  const panels = Children.toArray(children).filter(
+    (child): child is React.ReactElement<TabPanelProps> =>
+      typeof child === "object" &&
+      child !== null &&
+      "props" in child &&
+      Boolean((child as React.ReactElement<TabPanelProps>).props.value),
+  );
+
+  const firstValue = panels.length > 0 ? (panels[0] as React.ReactElement<TabPanelProps>).props.value : undefined;
+
+  return (
+    <Tabs defaultValue={defaultTab ?? firstValue}>
+      <Tabs.List>
+        {panels.map((panel) => {
+          const props = (panel as React.ReactElement<TabPanelProps>).props;
+          return (
+            <Tabs.Tab key={props.value} value={props.value}>
+              {props.label ?? props.value}
+            </Tabs.Tab>
+          );
+        })}
+      </Tabs.List>
+      {panels.map((panel) => {
+        const props = (panel as React.ReactElement<TabPanelProps>).props;
+        return (
+          <Tabs.Panel key={props.value} value={props.value} pt="sm">
+            {props.children}
+          </Tabs.Panel>
+        );
+      })}
+    </Tabs>
+  );
+}
+
+interface TabPanelProps {
+  children: ReactNode;
+  value: string;
+  label?: string;
+}
+
+export function TabPanel({ children }: TabPanelProps) {
+  return <>{children}</>;
+}
+
+interface CollapsibleProps {
+  children: ReactNode;
+  title: string;
+  defaultOpen?: boolean;
+}
+
+export function Collapsible({ children, title, defaultOpen = false }: CollapsibleProps) {
+  const [opened, setOpened] = useState(defaultOpen);
+
+  return (
+    <Stack gap={0}>
+      <UnstyledButton onClick={() => setOpened((o) => !o)} py={4}>
+        <Group gap="xs" wrap="nowrap">
+          {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          <Text size="sm" fw={600}>
+            {title}
+          </Text>
+        </Group>
+      </UnstyledButton>
+      <Collapse expanded={opened}>{children}</Collapse>
+    </Stack>
+  );
+}
+
+interface StatBarProps {
+  value: number;
+  max?: number;
+  label?: string;
+  color?: string;
+}
+
+export function StatBar({ value, max = 100, label, color = "blue" }: StatBarProps) {
+  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
+
+  return (
+    <Group gap="xs" wrap="nowrap">
+      {label && (
+        <Text size="xs" w={80} ta="right" c="dimmed">
+          {label}
+        </Text>
+      )}
+      <div style={{ flex: 1, height: 8, borderRadius: 4, background: "var(--mantine-color-dark-4)", overflow: "hidden" }}>
+        <div
+          style={{
+            width: `${pct}%`,
+            height: "100%",
+            borderRadius: 4,
+            background: `var(--mantine-color-${color}-6)`,
+            transition: "width 0.3s ease",
+          }}
+        />
+      </div>
+      <Text size="xs" w={30} c="dimmed">
+        {value}
+      </Text>
+    </Group>
+  );
+}
+
+interface TypeBadgeProps {
+  type: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+}
+
+const TYPE_COLORS: Record<string, string> = {
+  normal: "gray",
+  fire: "red",
+  water: "blue",
+  electric: "yellow",
+  grass: "green",
+  ice: "cyan",
+  fighting: "orange",
+  poison: "grape",
+  ground: "yellow",
+  flying: "indigo",
+  psychic: "pink",
+  bug: "lime",
+  rock: "orange",
+  ghost: "violet",
+  dragon: "indigo",
+  dark: "dark",
+  steel: "gray",
+  fairy: "pink",
+};
+
+export function TypeBadge({ type, size = "sm" }: TypeBadgeProps) {
+  const color = TYPE_COLORS[type.toLowerCase()] ?? "gray";
+  return (
+    <Badge color={color} size={size} variant="filled" tt="capitalize">
+      {type}
+    </Badge>
+  );
+}

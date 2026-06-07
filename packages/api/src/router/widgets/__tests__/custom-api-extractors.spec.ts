@@ -107,6 +107,11 @@ const extractors: Record<string, (json: unknown, config: Record<string, unknown>
     data: JSONPath({ path: (c.jsonPath as string) ?? "$", json: json as object, wrap: false }),
     maxHeight: c.maxHeight ?? 300,
   }),
+  customJsx: (json, config) => ({
+    type: "customJsx" as const,
+    template: config.template as string,
+    data: json,
+  }),
 };
 
 function extract(type: string, json: unknown, config: Record<string, unknown>) {
@@ -205,6 +210,24 @@ describe("custom-api extractors", () => {
     expect(result.type).toBe("raw");
     expect(result.data).toBe("enabled");
     expect(result.maxHeight).toBe(200);
+  });
+
+  it("customJsx passes full JSON and template through", () => {
+    const json = { title: "Status", items: [{ name: "CPU", value: 42 }] };
+    const config = {
+      type: "customJsx" as const,
+      template: '<Stack><Title>{data.title}</Title></Stack>',
+    };
+
+    const result = extract("customJsx", json, config) as {
+      type: string;
+      template: string;
+      data: typeof json;
+    };
+
+    expect(result.type).toBe("customJsx");
+    expect(result.template).toBe(config.template);
+    expect(result.data).toEqual(json);
   });
 
   it("jellyfin countGrid extracts movies/series/episodes/songs in 4-column grid", () => {

@@ -759,7 +759,11 @@
       "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
       "successMessage": "Success Message",
       "successMessageHint": "Message shown after successful execution",
-      "enabled": "Enabled"
+      "enabled": "Enabled",
+      "template": {
+        "label": "JSX Template",
+        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+      }
     },
     "placeholder": {
       "exampleLabel": "CPU Temperature",
@@ -810,7 +814,8 @@
       "statusIndicator": "Colored status dots showing online/offline or health states",
       "countGrid": "Compact number + label counters in a tight grid",
       "raw": "Pretty-printed JSON output for debugging",
-      "actionButton": "A button that triggers a request when clicked"
+      "actionButton": "A button that triggers a request when clicked",
+      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
     },
     "method": {
       "GET": "GET",
@@ -835,7 +840,8 @@
       "statusIndicator": "Status Indicator",
       "countGrid": "Count Grid",
       "raw": "Raw JSON",
-      "actionButton": "Action Button"
+      "actionButton": "Action Button",
+      "customJsx": "Custom JSX"
     },
     "secret": {
       "apiKey": "API Key / Token",
