@@ -1,0 +1,55 @@
+packages/api/src/router/custom-widget/parse-display-config.ts
+  s_a779988d600484::t_385bbd07c9a00d 1-20
+packages/validation/src/custom-widget.ts
+  s_a779988d600484::t_dbc4c6c313f27f 318-323,325
+  s_a779988d600484::t_d948f435fb5434 261
+  s_a779988d600484::t_815cf0ea4cf017 404
+packages/api/src/router/custom-widget/auth.ts
+  s_a779988d600484::t_a04bdf3304d07c 1-41
+packages/api/package.json
+  s_a779988d600484::t_d798cab1d8b8e5 15-16
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_a779988d600484::t_fd7066492ef25f 151
+  s_a779988d600484::t_144e6929857f2a 301,304
+  s_a779988d600484::t_5d0296400b105b 85-90
+  s_a779988d600484::t_f823b784c209e9 152-156
+  s_a779988d600484::t_98e8540fc93a74 232-237
+  s_a779988d600484::t_ff0a3b38ab2f9a 422,425
+  s_a779988d600484::t_0b71955a45d44f 328
+  s_a779988d600484::t_821058fac53b5d 22-24,30-31,34-36
+packages/api/src/router/custom-widget/display-data.ts
+  s_a779988d600484::t_0709e6f132c2a2 1-146
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_a779988d600484::t_58883a9ea0140b 10-17,24
+packages/api/src/router/widgets/custom-api.ts
+  s_a779988d600484::t_0319fdd652a8a8 10-11,42,79
+packages/widgets/src/custom-api/jsx-interactive-components.tsx
+  s_a779988d600484::t_83231a796612dd 84,87
+  s_a779988d600484::t_d7ace3f6ec6cdf 215-220,222
+  s_a779988d600484::t_617b3537ea0e77 120-123,125-129,132
+  s_a779988d600484::t_427271fdf02b53 124,138
+  s_a779988d600484::t_4b2d13ffd01514 156-160,162
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_a779988d600484::t_c9395fe60fa613 65-71,74,77
+  s_a779988d600484::t_e9e906b856756d 96
+  s_a779988d600484::t_e54496ac0b7fc8 1
+  s_a779988d600484::t_c3456517407ff4 72-73,75-76
+packages/widgets/src/custom-api/extract-display-data.ts
+  s_a779988d600484::t_4d8f2622ce5437 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "1008c19e2720ee9c998a8c54e17f6faf702ff2e5",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
