@@ -11,6 +11,7 @@ import { metricToImperial } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetSize } from "../widget-size";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
@@ -29,19 +30,23 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
     onData: (data) => utils.widget.weather.atLocation.setData(input, data),
   });
 
+  const { gridWidth, gridHeight } = useWidgetSize();
+  const isCompact = gridWidth <= 1 || gridHeight <= 1;
+  const showForecast = options.hasForecast && !isCompact;
+
   return (
     <Stack
       align="center"
-      gap="sm"
+      gap={isCompact ? "xs" : "sm"}
       justify="center"
       w="100%"
       h="100%"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      {options.hasForecast ? (
+      {showForecast ? (
         <WeeklyForecast weather={weather} options={options} />
       ) : (
-        <DailyWeather weather={weather} options={options} />
+        <DailyWeather weather={weather} options={options} compact={isCompact} />
       )}
     </Stack>
   );
@@ -51,9 +56,13 @@ interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> 
   weather: RouterOutputs["widget"]["weather"]["atLocation"];
 }
 
-const DailyWeather = ({ options, weather }: WeatherProps) => {
+const DailyWeather = ({ options, weather, compact }: WeatherProps & { compact?: boolean }) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
+
+  const iconSize = compact ? 20 : 30;
+  const tempSize = compact ? 20 : 30;
+  const detailSize = compact ? 13 : 16;
 
   return (
     <>
@@ -61,14 +70,14 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         <HoverCard>
           <HoverCard.Target>
             <Box>
-              <WeatherIcon size={30} code={weather.current.weathercode} />
+              <WeatherIcon size={iconSize} code={weather.current.weathercode} />
             </Box>
           </HoverCard.Target>
           <HoverCard.Dropdown>
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
           </HoverCard.Dropdown>
         </HoverCard>
-        <Text fz={30}>
+        <Text fz={tempSize}>
           {getPreferredUnit(
             weather.current.temperature,
             options.isFormatFahrenheit,
@@ -77,10 +86,10 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         </Text>
       </Group>
       <Stack gap="xs" align="center">
-        {options.showCurrentWindSpeed && (
+        {options.showCurrentWindSpeed && !compact && (
           <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="xs">
-            <IconWind size={16} />
-            <Text fz={16}>
+            <IconWind size={detailSize} />
+            <Text fz={detailSize}>
               {t("currentWindSpeed", {
                 currentWindSpeed: (options.useImperialSpeed
                   ? metricToImperial(weather.current.windspeed)
@@ -95,8 +104,8 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
           <Group gap="xs" wrap="nowrap">
-            <IconArrowUpRight size={16} />
-            <Text fz={16}>
+            <IconArrowUpRight size={detailSize} />
+            <Text fz={detailSize}>
               {getPreferredUnit(
                 weather.daily[0]?.maxTemp,
                 options.isFormatFahrenheit,
@@ -105,8 +114,8 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
             </Text>
           </Group>
           <Group gap="xs" wrap="nowrap">
-            <IconArrowDownRight size={16} />
-            <Text fz={16}>
+            <IconArrowDownRight size={detailSize} />
+            <Text fz={detailSize}>
               {getPreferredUnit(
                 weather.daily[0]?.minTemp,
                 options.isFormatFahrenheit,
@@ -116,11 +125,11 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
           </Group>
         </Group>
       </Stack>
-      {options.showCity && (
+      {options.showCity && !compact && (
         <>
           <Group className="weather-city-group" wrap="nowrap" gap="xs">
-            <IconMapPin size={16} />
-            <Text fz={16} style={{ whiteSpace: "nowrap" }}>
+            <IconMapPin size={detailSize} />
+            <Text fz={detailSize} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
           </Group>
