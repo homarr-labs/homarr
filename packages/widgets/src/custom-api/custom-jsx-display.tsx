@@ -7,18 +7,21 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { WHITELISTED_COMPONENTS, SAFE_BINDINGS } from "./jsx-whitelist";
 
+const MAX_PARSE_ERRORS = 5;
+
+function appendParseError(prev: string[], message: string): string[] {
+  if (prev.length >= MAX_PARSE_ERRORS) return prev;
+  if (prev.includes(message)) return prev;
+  return [...prev, message];
+}
+
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const template = String(data.template ?? "");
   const apiData = data.data;
   const [parseErrors, setParseErrors] = useState<string[]>([]);
 
   const handleError = useCallback((error: Error) => {
-    setParseErrors((prev) => {
-      if (prev.length >= 5) return prev;
-      const msg = error.message;
-      if (prev.includes(msg)) return prev;
-      return [...prev, msg];
-    });
+    setParseErrors((prev) => appendParseError(prev, error.message));
   }, []);
 
   if (!template.trim()) {

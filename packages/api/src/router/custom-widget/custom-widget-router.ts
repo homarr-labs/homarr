@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { JSONPath } from "jsonpath-plus";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
@@ -20,12 +19,21 @@ import {
 } from "@homarr/validation/custom-widget";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { applyAuth } from "./auth";
+import { extractDisplayDataWithFallback } from "./display-data";
+import { parseDisplayConfig } from "./parse-display-config";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 
 const logger = createLogger({ module: "custom-widget" });
 
+const FETCH_TIMEOUT_MS = 10_000;
+
 const validateUrl = (urlString: string): URL => new URL(urlString);
+
+const updateFieldSerializers: Record<string, (value: unknown) => unknown> = {
+  displayConfig: (value) => superjson.stringify(value),
+};
 
 let _importJsonSchema: Record<string, unknown> | null = null;
 function getImportJsonSchema() {
@@ -74,13 +82,12 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
     }
 
-    let displayConfig: Record<string, unknown>;
-    try {
-      displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
-    } catch {
-      logger.error("Corrupt displayConfig in custom widget", { id: input.id });
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
-    }
+    const displayConfig = parseDisplayConfig(
+      definition.displayConfig,
+      input.id,
+      logger,
+      "Corrupt displayConfig in custom widget",
+    );
 
     return {
       ...definition,
@@ -141,7 +148,12 @@ export const customWidgetRouter = createTRPCRouter({
 
     for (const [key, value] of Object.entries(updateFields)) {
       if (value === undefined) continue;
-      updateValues[key] = key === "displayConfig" ? superjson.stringify(value) : value;
+      const serialize = updateFieldSerializers[key];
+      if (serialize) {
+        updateValues[key] = serialize(value);
+      } else {
+        updateValues[key] = value;
+      }
     }
 
     await ctx.db.update(customWidgetDefinitions).set(updateValues).where(eq(customWidgetDefinitions.id, id));
@@ -217,14 +229,12 @@ export const customWidgetRouter = createTRPCRouter({
       method: definition.method,
       requestBody: definition.requestBody,
       displayType: definition.displayType,
-      displayConfig: (() => {
-        try {
-          return superjson.parse(definition.displayConfig) as Record<string, unknown>;
-        } catch {
-          logger.error("Corrupt displayConfig during export", { id: input.id });
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
-        }
-      })(),
+      displayConfig: parseDisplayConfig(
+        definition.displayConfig,
+        input.id,
+        logger,
+        "Corrupt displayConfig during export",
+      ),
     };
   }),
 
@@ -288,29 +298,10 @@ export const customWidgetRouter = createTRPCRouter({
         headers.set("Content-Type", "application/json");
       }
 
-      const secretMap: Record<string, string> = {};
-      for (const s of secrets) {
-        secretMap[s.kind] = s.value;
-      }
-
-      const authHandlers: Record<string, (h: Headers, u: URL, key: string, name?: string) => void> = {
-        bearer: (h, _u, key) => h.set("Authorization", `Bearer ${key}`),
-        apiKeyHeader: (h, _u, key, name) => h.set(name ?? "X-API-Key", key),
-        apiKeyQuery: (_h, u, key, name) => u.searchParams.set(name ?? "api_key", key),
-      };
-
-      if (input.authType === "basic" && secretMap.username && secretMap.password) {
-        const creds = Buffer.from(`${secretMap.username}:${secretMap.password}`).toString("base64");
-        headers.set("Authorization", `Basic ${creds}`);
-      } else {
-        const handler = authHandlers[input.authType];
-        if (handler && secretMap.apiKey) {
-          handler(headers, url, secretMap.apiKey, input.headerName);
-        }
-      }
+      applyAuth(headers, url, input.authType, secrets, input.headerName);
 
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10_000);
+      const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
       try {
         const response = await fetch(url.toString(), {
@@ -334,114 +325,7 @@ export const customWidgetRouter = createTRPCRouter({
         }
 
         const json: unknown = await response.json();
-        const displayConfig = input.displayConfig;
-
-        const extractors: Record<string, (j: unknown, c: Record<string, unknown>) => unknown> = {
-          singleValue: (j, c) => ({
-            type: "singleValue",
-            label: (c.label as string) ?? "",
-            unit: (c.unit as string) ?? "",
-            value: JSONPath({ path: (c.jsonPath as string) ?? "$", json: j as object, wrap: false }),
-            valueSize: c.valueSize ?? "lg",
-            labelPosition: c.labelPosition ?? "below",
-          }),
-          keyValue: (j, c) => ({
-            type: "keyValue",
-            entries: ((c.mappings as Array<{ label: string; jsonPath: string; unit: string }>) ?? []).map((m) => ({
-              label: m.label,
-              unit: m.unit,
-              value: JSONPath({ path: m.jsonPath, json: j as object, wrap: false }),
-            })),
-            layout: c.layout ?? "list",
-            columns: c.columns ?? 2,
-          }),
-          table: (j, c) => {
-            const tablePath = (c.tablePath as string) ?? "$";
-            const columns = (c.columns as Array<{ header: string; jsonPath: string }>) ?? [];
-            const rows = JSONPath({ path: tablePath, json: j as object, wrap: true }) as unknown[];
-            const flatRows = Array.isArray(rows[0]) ? (rows[0] as unknown[]) : rows;
-            return {
-              type: "table",
-              columns: columns.map((col) => col.header),
-              rows: flatRows.map((row) =>
-                columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false })),
-              ),
-              striped: c.striped ?? true,
-              compact: c.compact ?? false,
-            };
-          },
-          statGrid: (j, c) => ({
-            type: "statGrid",
-            items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map(
-              (item) => ({
-                label: item.label,
-                unit: item.unit,
-                color: item.color ?? "blue",
-                value: JSONPath({ path: item.jsonPath, json: j as object, wrap: false }),
-              }),
-            ),
-            columns: c.columns ?? 2,
-            cardStyle: c.cardStyle ?? "filled",
-          }),
-          progressBars: (j, c) => ({
-            type: "progressBars",
-            bars: (
-              (c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ??
-              []
-            ).map((bar) => {
-              const value = JSONPath({ path: bar.valuePath, json: j as object, wrap: false });
-              const max = bar.maxPath ? JSONPath({ path: bar.maxPath, json: j as object, wrap: false }) : undefined;
-              return {
-                label: bar.label,
-                unit: bar.unit,
-                color: bar.color ?? "blue",
-                value: Number(value) || 0,
-                max: max !== undefined ? Number(max) || 100 : undefined,
-              };
-            }),
-            showPercentage: c.showPercentage ?? true,
-            barSize: c.barSize ?? "md",
-          }),
-          statusIndicator: (j, c) => ({
-            type: "statusIndicator",
-            items: ((c.items as Array<{ label: string; jsonPath: string; goodValues: string[] }>) ?? []).map((item) => {
-              const value = JSONPath({ path: item.jsonPath, json: j as object, wrap: false });
-              const isGood = item.goodValues.some((gv) => String(value).toLowerCase() === gv.toLowerCase());
-              return { label: item.label, value: String(value ?? "unknown"), isGood };
-            }),
-            layout: c.layout ?? "list",
-            dotSize: c.dotSize ?? "md",
-          }),
-          countGrid: (j, c) => ({
-            type: "countGrid",
-            items: ((c.items as Array<{ label: string; jsonPath: string; unit: string }>) ?? []).map((item) => ({
-              label: item.label,
-              unit: item.unit,
-              value: JSONPath({ path: item.jsonPath, json: j as object, wrap: false }),
-            })),
-            columns: c.columns ?? 2,
-            valueSize: c.valueSize ?? "md",
-          }),
-          raw: (j, c) => ({
-            type: "raw",
-            data: JSONPath({ path: (c.jsonPath as string) ?? "$", json: j as object, wrap: false }),
-            maxHeight: c.maxHeight ?? 300,
-          }),
-          actionButton: (_j, c) => ({
-            type: "actionButton",
-            buttonLabel: c.buttonLabel ?? "Execute",
-            buttonColor: c.buttonColor ?? "blue",
-          }),
-          customJsx: (j, c) => ({
-            type: "customJsx" as const,
-            template: c.template as string,
-            data: j,
-          }),
-        };
-
-        const displayType = (displayConfig as { type?: string }).type ?? input.displayType;
-        const extractor = extractors[displayType] ?? extractors.singleValue!;
-        const displayData = extractor!(json, displayConfig);
+        const displayData = extractDisplayDataWithFallback(json, input.displayType, input.displayConfig);
 
         return {
           success: true as const,
@@ -535,29 +419,10 @@ export const customWidgetRouter = createTRPCRouter({
       headers.set("Content-Type", "application/json");
     }
 
-    const secretMap: Record<string, string> = {};
-    for (const s of decryptedSecrets) {
-      secretMap[s.kind] = s.value;
-    }
-
-    const authHandlers: Record<string, (h: Headers, u: URL, key: string, name?: string) => void> = {
-      bearer: (h, _u, key) => h.set("Authorization", `Bearer ${key}`),
-      apiKeyHeader: (h, _u, key, name) => h.set(name ?? "X-API-Key", key),
-      apiKeyQuery: (_h, u, key, name) => u.searchParams.set(name ?? "api_key", key),
-    };
-
-    if (definition.authType === "basic" && secretMap.username && secretMap.password) {
-      const creds = Buffer.from(`${secretMap.username}:${secretMap.password}`).toString("base64");
-      headers.set("Authorization", `Basic ${creds}`);
-    } else {
-      const handler = authHandlers[definition.authType];
-      if (handler && secretMap.apiKey) {
-        handler(headers, url, secretMap.apiKey, definition.headerName ?? undefined);
-      }
-    }
+    applyAuth(headers, url, definition.authType, decryptedSecrets, definition.headerName);
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000);
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
     try {
       const response = await fetch(url.toString(), {

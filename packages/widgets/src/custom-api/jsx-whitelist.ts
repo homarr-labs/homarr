@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { createElement, type ComponentType } from "react";
 import {
   Stack,
   Group,
@@ -62,6 +62,19 @@ import {
   TypeBadge,
 } from "./jsx-interactive-components";
 
+const SAFE_URL_PATTERN = /^https?:\/\//i;
+
+function isSafeUrl(url: unknown): boolean {
+  if (typeof url !== "string") return false;
+  return SAFE_URL_PATTERN.test(url) || url.startsWith("/") || url.startsWith("#");
+}
+
+function SafeAnchor(props: Record<string, unknown>) {
+  const href = props.href;
+  const safeHref = href && isSafeUrl(href) ? href : undefined;
+  return createElement(Anchor as never, { ...props, href: safeHref });
+}
+
 export const WHITELISTED_COMPONENTS: Record<string, ComponentType<never>> = {
   Stack,
   Group,
@@ -80,7 +93,7 @@ export const WHITELISTED_COMPONENTS: Record<string, ComponentType<never>> = {
   Mark,
   Kbd,
   Blockquote,
-  Anchor,
+  Anchor: SafeAnchor,
   NumberFormatter,
   Badge,
   Card,

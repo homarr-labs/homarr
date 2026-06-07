@@ -258,7 +258,7 @@ const rawDisplayConfigSchema = z.object({
 });
 
 const FORBIDDEN_TEMPLATE_PATTERN =
-  /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bfetch\b|\bXMLHttpRequest\b/;
+  /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bfetch\b|\bXMLHttpRequest\b/i;
 
 const customJsxDisplayConfigSchema = z.object({
   type: z.literal("customJsx").describe("Display type discriminator — must be 'customJsx' when displayType is customJsx"),
@@ -315,8 +315,14 @@ export const displayConfigSchema = z
 
 export type DisplayConfig = z.infer<typeof displayConfigSchema>;
 
+const displayTypesMatch = (displayType?: string, configType?: string): boolean => {
+  if (!displayType) return true;
+  if (!configType) return true;
+  return displayType === configType;
+};
+
 const displayTypeMatchRefinement = (d: { displayType: string; displayConfig: { type: string } }) =>
-  d.displayType === d.displayConfig.type;
+  displayTypesMatch(d.displayType, d.displayConfig.type);
 const displayTypeMatchMessage = { message: "displayType must match displayConfig.type", path: ["displayConfig", "type"] };
 
 const baseDefinitionSchema = z.object({
@@ -395,10 +401,7 @@ export const customWidgetCreateSchema = baseDefinitionSchema
 export const customWidgetUpdateSchema = baseDefinitionSchema
   .partial()
   .extend({ id: z.string(), secrets: secretsInputSchema.optional() })
-  .refine(
-    (d) => !d.displayType || !d.displayConfig || d.displayType === d.displayConfig.type,
-    displayTypeMatchMessage,
-  );
+  .refine((d) => displayTypesMatch(d.displayType, d.displayConfig?.type), displayTypeMatchMessage);
 
 const customWidgetImportFieldsSchema = z.object({
   name: z

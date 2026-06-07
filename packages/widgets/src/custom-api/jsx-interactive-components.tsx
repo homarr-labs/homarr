@@ -81,11 +81,10 @@ function isTabPanel(child: ReactNode): child is React.ReactElement<TabPanelProps
 
 export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
   const panels = Children.toArray(children).filter(isTabPanel);
-
-  const firstValue = panels.length > 0 ? panels[0]!.props.value : undefined;
+  const firstPanel = panels[0];
 
   return (
-    <Tabs defaultValue={defaultTab ?? firstValue}>
+    <Tabs defaultValue={defaultTab ?? firstPanel?.props.value}>
       <Tabs.List>
         {panels.map((panel) => (
           <Tabs.Tab key={panel.props.value} value={panel.props.value}>
@@ -118,14 +117,25 @@ interface CollapsibleProps {
   defaultOpen?: boolean;
 }
 
+const COLLAPSE_CHEVRONS = {
+  closed: IconChevronDown,
+  open: IconChevronUp,
+} as const;
+
+const COLLAPSE_STATE: Record<0 | 1, keyof typeof COLLAPSE_CHEVRONS> = {
+  0: "closed",
+  1: "open",
+};
+
 export function Collapsible({ children, title, defaultOpen = false }: CollapsibleProps) {
   const [opened, setOpened] = useState(defaultOpen);
+  const Chevron = COLLAPSE_CHEVRONS[COLLAPSE_STATE[Number(opened) as 0 | 1]];
 
   return (
     <Stack gap={0}>
       <UnstyledButton onClick={() => setOpened((o) => !o)} py={4}>
         <Group gap="xs" wrap="nowrap">
-          {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          <Chevron size={14} />
           <Text size="sm" fw={600}>
             {title}
           </Text>
@@ -143,8 +153,13 @@ interface StatBarProps {
   color?: string;
 }
 
+function calcPct(value: number, max: number): number {
+  if (max <= 0) return 0;
+  return Math.min((value / max) * 100, 100);
+}
+
 export function StatBar({ value, max = 100, label, color = "blue" }: StatBarProps) {
-  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
+  const pct = calcPct(value, max);
 
   return (
     <Group gap="xs" wrap="nowrap">
@@ -197,8 +212,14 @@ const TYPE_COLORS: Record<string, string> = {
   fairy: "pink",
 };
 
+function normalizeType(type: unknown): string {
+  if (typeof type === "string") return type;
+  if (type == null) return "";
+  return String(type);
+}
+
 export function TypeBadge({ type, size = "sm" }: TypeBadgeProps) {
-  const typeStr = typeof type === "string" ? type : String(type ?? "");
+  const typeStr = normalizeType(type);
   const color = TYPE_COLORS[typeStr.toLowerCase()] ?? "gray";
   return (
     <Badge color={color} size={size} variant="filled" tt="capitalize">

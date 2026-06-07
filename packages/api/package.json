@@ -12,7 +12,8 @@
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
-    "./open-api": "./src/open-api.ts"
+    "./open-api": "./src/open-api.ts",
+    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
