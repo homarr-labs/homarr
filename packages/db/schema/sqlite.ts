@@ -502,7 +502,6 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
   requestBody: text(),
   displayType: text().$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
   displayConfig: text().default(emptySuperJSON).notNull(),
-  flowGraph: text(),
   createdAt: int({ mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),

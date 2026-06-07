@@ -619,12 +619,6 @@
           "notNull": true,
           "default": "'{\"json\": {}}'"
         },
-        "flow_graph": {
-          "name": "flow_graph",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",

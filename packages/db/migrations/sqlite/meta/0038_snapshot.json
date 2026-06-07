@@ -649,13 +649,6 @@
           "autoincrement": false,
           "default": "'{\"json\": {}}'"
         },
-        "flow_graph": {
-          "name": "flow_graph",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "integer",

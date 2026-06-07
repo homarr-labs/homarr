@@ -11,7 +11,6 @@ CREATE TABLE `custom_widget_definition` (
 	`request_body` text,
 	`display_type` text DEFAULT 'singleValue' NOT NULL,
 	`display_config` text DEFAULT '{"json": {}}' NOT NULL,
-	`flow_graph` text,
 	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`creator_id` text,

@@ -516,7 +516,6 @@ export const customWidgetDefinitions = pgTable("custom_widget_definition", {
   requestBody: text(),
   displayType: varchar({ length: 32 }).$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
   displayConfig: text().default(emptySuperJSON).notNull(),
-  flowGraph: text(),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   creatorId: varchar({ length: 64 }).references(() => users.id, { onDelete: "set null" }),
