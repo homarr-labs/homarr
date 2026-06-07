@@ -2,7 +2,7 @@
 
 import { Avatar, Group, Text, Tooltip } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
+import type { RouterOutputs } from "@homarr/api";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getIconUrl } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
@@ -16,13 +16,13 @@ import classes from "./widget-hover-overlay.module.css";
 
 interface WidgetHoverOverlayProps {
   item: SectionItem;
+  integrations: RouterOutputs["integration"]["all"] | undefined;
 }
 
-export const WidgetHoverOverlay = ({ item }: WidgetHoverOverlayProps) => {
+export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayProps) => {
   const [isEditMode] = useEditMode();
   const settings = useSettings();
   const t = useI18n();
-  const { data: integrations } = clientApi.integration.all.useQuery();
   const { definition } = widgetImports[item.kind];
   const WidgetIcon = definition.icon;
 
