@@ -494,14 +494,14 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
   name: text().notNull(),
   description: text(),
   iconUrl: text(),
-  baseUrl: text().notNull(),
+  url: text().notNull(),
   authType: text().$type<CustomWidgetAuthType>().notNull().default("none"),
   headerName: text(),
-  endpoint: text().notNull(),
   method: text().$type<CustomWidgetMethod>().notNull().default("GET"),
   requestBody: text(),
   displayType: text().$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
   displayConfig: text().default(emptySuperJSON).notNull(),
+  enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),
