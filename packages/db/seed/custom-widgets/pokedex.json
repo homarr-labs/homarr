@@ -1,0 +1,14 @@
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Pokédex",
+  "description": "Browseable Pokémon list with paginated cards and SubFetch detail popovers showing types, stats, and abilities",
+  "iconUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+  "url": "https://pokeapi.co/api/v2/pokemon?limit=50",
+  "authType": "none",
+  "method": "GET",
+  "displayType": "customJsx",
+  "displayConfig": {
+    "type": "customJsx",
+    "template": "<Stack gap=\"sm\" p=\"xs\">\n  <Group justify=\"space-between\">\n    <Title order={3}>Pokédex</Title>\n    <Badge size=\"lg\" color=\"red\">{data.count} Pokémon</Badge>\n  </Group>\n  <PaginatedList pageSize={8}>\n    {data.results.map((pokemon, i) =>\n      <Card withBorder p=\"xs\" mb=\"xs\">\n        <Group wrap=\"nowrap\" justify=\"space-between\">\n          <Group wrap=\"nowrap\" gap=\"sm\">\n            <Avatar\n              src={\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\" + String(i + 1) + \".png\"}\n              size=\"lg\"\n              radius=\"sm\"\n            />\n            <Stack gap={0}>\n              <Text fw={700} tt=\"capitalize\">{pokemon.name}</Text>\n              <Text size=\"xs\" c=\"dimmed\">#{String(i + 1).padStart(3, \"0\")}</Text>\n            </Stack>\n          </Group>\n          <SubFetch\n            url={pokemon.url}\n            definitionId={definitionId}\n            trigger=\"popover\"\n            buttonLabel=\"Details\"\n            width={400}\n            template='<Stack gap=\"xs\" p=\"xs\"><Group wrap=\"nowrap\"><Avatar src={data.sprites.front_default} size={64} radius=\"sm\" /><Stack gap={4} style={{flex:1}}><Title order={4} tt=\"capitalize\">{data.name}</Title><Text size=\"xs\" c=\"dimmed\">{data.height/10}m · {data.weight/10}kg</Text><Group gap=\"xs\">{data.types.map(t => <TypeBadge type={t.type.name} />)}</Group></Stack></Group><Divider />{data.stats.map(s => <StatBar label={s.stat.name} value={s.base_stat} max={255} />)}<Collapsible title=\"Abilities\"><Group gap=\"xs\" pt=\"xs\">{data.abilities.map(a => <Badge variant={a.is_hidden ? \"outline\" : \"filled\"} tt=\"capitalize\">{a.ability.name}</Badge>)}</Group></Collapsible></Stack>'\n          />\n        </Group>\n      </Card>\n    )}\n  </PaginatedList>\n</Stack>"
+  }
+}
