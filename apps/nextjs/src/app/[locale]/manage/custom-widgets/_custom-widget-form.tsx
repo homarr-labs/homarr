@@ -519,6 +519,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
+        await utils.widget.customApi.getData.invalidate({ definitionId });
       }
     } catch (err) {
       const serverErrors = extractServerErrors(err, values.displayType);
