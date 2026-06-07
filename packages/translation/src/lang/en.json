@@ -690,7 +690,7 @@
       },
       "create": {
         "title": "Create Custom Widget",
-        "subtitle": "Define an API endpoint, authentication, and how to display the response data."
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
       },
       "edit": {
         "title": "Edit Custom Widget"
@@ -712,16 +712,18 @@
       "removeItem": "Remove item",
       "addBar": "Add Bar",
       "duplicate": "Duplicate",
+      "copyAiPrompt": "Copy AI prompt",
+      "enable": "Enable",
+      "disable": "Disable",
       "menu": "Actions"
     },
     "field": {
       "name": "Name",
       "description": "Description",
       "iconUrl": "Icon URL",
-      "baseUrl": "Base URL",
+      "url": "URL",
       "authType": "Auth Type",
       "headerName": "Header/Query Parameter Name",
-      "endpoint": "Endpoint",
       "method": "Method",
       "requestBody": "Request Body",
       "displayType": "Display Type",
@@ -756,7 +758,8 @@
       "confirmText": "Confirmation Text",
       "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
       "successMessage": "Success Message",
-      "successMessageHint": "Message shown after successful execution"
+      "successMessageHint": "Message shown after successful execution",
+      "enabled": "Enabled"
     },
     "placeholder": {
       "exampleLabel": "CPU Temperature",
@@ -764,8 +767,7 @@
       "exampleHeader": "Name",
       "exampleUnit": "°C",
       "iconUrl": "https://...",
-      "baseUrl": "https://api.example.com",
-      "endpoint": "/api/v1/status",
+      "url": "https://api.example.com/api/v1/status",
       "headerName": "X-API-Key",
       "jsonPath": "$.data.value",
       "tablePath": "$.data.items",
@@ -797,7 +799,6 @@
     "fieldset": {
       "general": "General",
       "connection": "API Connection",
-      "request": "Request",
       "display": "Display Configuration"
     },
     "displayTypeDescription": {
@@ -853,20 +854,29 @@
       "updated": "Widget \"{name}\" updated successfully.",
       "deleted": "Widget \"{name}\" deleted.",
       "imported": "Widget imported successfully.",
+      "aiPromptCopied": "AI prompt copied to clipboard",
+      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
+      "aiPromptCopy": "Copy to clipboard",
+      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
       "createError": "Failed to create widget. Check your API endpoint is reachable.",
       "updateError": "Failed to update widget. Your changes were not saved.",
       "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
       "exportError": "Failed to export widget.",
       "duplicated": "Widget \"{name}\" duplicated.",
       "duplicateError": "Failed to duplicate widget.",
+      "toggleError": "Failed to toggle widget status.",
+      "deleteError": "Failed to delete widget.",
+      "previewError": "Failed to fetch preview. Check the URL and try again.",
       "executed": "Action executed successfully.",
       "executeError": "Action failed: {error}"
     },
     "table": {
       "name": "Name",
-      "baseUrl": "Base URL",
-      "endpoint": "Endpoint",
+      "url": "URL",
       "display": "Display"
+    },
+    "widget": {
+      "disabled": "This widget is disabled"
     }
   },
   "integration": {
@@ -3303,7 +3313,8 @@
       "noDisplayOutput": "No display output",
       "executeConfirm": "Are you sure you want to execute this action?",
       "executing": "Executing...",
-      "executeSuccess": "Action executed successfully"
+      "executeSuccess": "Action executed successfully",
+      "executeFailed": "Action failed. Check the widget configuration."
     }
   },
   "widgetPreview": {
