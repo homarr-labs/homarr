@@ -43,6 +43,141 @@ const PROMPT_RULES = `
 - \`countGrid\`: Simple grid of counts — like statGrid but simpler, no colors
 - \`raw\`: Raw JSON display — for debugging or complex data
 - \`actionButton\`: A button that triggers the API call on click — for POST/PUT actions
+- \`customJsx\`: Custom JSX layout using whitelisted Mantine components — full creative control over presentation. Set \`displayConfig.template\` to a JSX string. Access API data via \`{data.fieldName}\` bindings (e.g. \`{data.name}\`, \`{data.items[0].title}\`).
+
+## Custom JSX (\`customJsx\`) — Available Components
+When using \`customJsx\`, the template supports these whitelisted Mantine components:
+
+**Layout:** Stack, Group, Flex, Grid, Grid.Col, SimpleGrid, Center, Space, Container, AspectRatio
+**Typography:** Text, Title, Code, Highlight, Mark, Kbd, Blockquote, Anchor, NumberFormatter
+**Data display:** Badge, Card, Card.Section, Paper, Alert, ThemeIcon, ColorSwatch, Table (Thead, Tbody, Tr, Th, Td), List, List.Item, Timeline, Timeline.Item, Accordion (Item, Control, Panel), Indicator, Pill, Spoiler
+**Feedback:** Progress, Progress.Section, RingProgress, Skeleton, Loader
+**Media:** Image, Avatar, Avatar.Group, BackgroundImage, Tooltip, Divider, ScrollArea
+**Charts (@mantine/charts):** AreaChart, BarChart, LineChart, DonutChart, PieChart, RadarChart, RadialBarChart, Sparkline
+
+### Interactive Components (built-in, state-managed)
+These components manage their own internal state — they provide interactivity without event handlers:
+
+**PaginatedList** — Paginates its children with prev/next buttons.
+Props: \`pageSize\` (number, default 6)
+Usage: Wrap a \`.map()\` expression to paginate results.
+\`\`\`jsx
+<PaginatedList pageSize={8}>
+  {data.results.map(item =>
+    <Card withBorder p="xs" mb="xs">
+      <Text>{item.name}</Text>
+    </Card>
+  )}
+</PaginatedList>
+\`\`\`
+
+**TabsContainer + TabPanel** — Tabbed interface with automatic tab switching.
+TabsContainer props: \`defaultTab\` (string, optional — defaults to first tab)
+TabPanel props: \`value\` (string, required — unique tab ID), \`label\` (string, optional — tab display text)
+\`\`\`jsx
+<TabsContainer defaultTab="overview">
+  <TabPanel value="overview" label="Overview">
+    <Text>{data.description}</Text>
+  </TabPanel>
+  <TabPanel value="stats" label="Statistics">
+    <Text>Total: {data.count}</Text>
+  </TabPanel>
+</TabsContainer>
+\`\`\`
+
+**Collapsible** — Expandable/collapsible section with a title.
+Props: \`title\` (string, required), \`defaultOpen\` (boolean, default false)
+\`\`\`jsx
+<Collapsible title="Details" defaultOpen={true}>
+  <Text>{data.details}</Text>
+</Collapsible>
+\`\`\`
+
+**StatBar** — A horizontal stat bar with label/value (great for RPG-style stats, progress).
+Props: \`value\` (number), \`max\` (number, default 100), \`label\` (string), \`color\` (Mantine color)
+\`\`\`jsx
+<StatBar label="HP" value={45} max={100} color="red" />
+<StatBar label="ATK" value={80} max={255} color="orange" />
+\`\`\`
+
+**TypeBadge** — A colored badge that maps common type names to colors (normal, fire, water, electric, grass, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy).
+Props: \`type\` (string), \`size\` (xs|sm|md|lg|xl, default sm)
+\`\`\`jsx
+<Group gap="xs">
+  <TypeBadge type="fire" />
+  <TypeBadge type="flying" />
+</Group>
+\`\`\`
+
+**Available bindings in templates:**
+- \`data\` — the full API response JSON object
+- \`String(v)\`, \`Number(v)\`, \`Boolean(v)\` — type coercion helpers
+- \`Math.round\`, \`Math.floor\`, \`Math.ceil\`, \`Math.abs\`, \`Math.min\`, \`Math.max\`, \`Math.pow\`, \`Math.sqrt\`, \`Math.PI\`
+- \`JSON.stringify(v)\`, \`Array.isArray(v)\`, \`Object.keys(v)\`, \`Object.values(v)\`, \`Object.entries(v)\`
+- Expression arrows for \`.map()\`, \`.filter()\`, \`.slice()\` — e.g. \`{data.items.map(item => <Text>{item.name}</Text>)}\`
+- Ternaries for conditionals — e.g. \`{data.count > 0 ? "active" : "idle"}\`
+
+**SubFetch** — Fetches a sub-URL server-side and renders a nested JSX template with the result. Enables drill-down views (click to see details).
+Props: \`url\` (string, required — must be same hostname as parent widget URL), \`template\` (string, required — JSX template rendered with fetched data as \`data\`), \`definitionId\` (string, required — use \`{definitionId}\` binding to pass the parent widget ID for auth), \`trigger\` ("inline" | "popover", default "popover"), \`buttonLabel\` (string, default "View"), \`buttonVariant\` (string, default "light"), \`width\` (number, default 380)
+- The \`template\` prop is a JSX string using the same components and bindings as the main template (except SubFetch itself — no nesting)
+- \`trigger="popover"\`: renders a button; clicking opens a popover with fetched content (lazy-loaded on first click)
+- \`trigger="inline"\`: fetches on mount and renders directly in place
+- Use single quotes for the outer template attribute and escaped double quotes inside, or use \`&quot;\` entities
+\`\`\`jsx
+<SubFetch
+  url="https://pokeapi.co/api/v2/pokemon/pikachu"
+  definitionId={definitionId}
+  trigger="popover"
+  buttonLabel="Details"
+  template='<Stack gap="xs"><Title order={4} tt="capitalize">{data.name}</Title><Group gap="xs">{data.types.map(t => <TypeBadge type={t.type.name} />)}</Group>{data.stats.map(s => <StatBar label={s.stat.name} value={s.base_stat} max={255} />)}</Stack>'
+/>
+\`\`\`
+
+**FORBIDDEN keywords (template will be rejected):** constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch
+
+**Chart data formats:**
+- BarChart/LineChart/AreaChart: \`data={data.items}\` + \`dataKey="month"\` (x-axis key) + \`series={[{ name: "count", color: "blue" }]}\` where series \`name\` matches a numeric key in each data row
+- DonutChart/PieChart: \`data={data.items}\` where each item is \`{ name: "Label", value: 42, color: "blue" }\` — NO dataKey or series
+- Sparkline: \`data={[1,2,3]}\` — flat number array
+- NumberFormatter: \`<NumberFormatter value={data.price} thousandSeparator prefix="$" />\`
+
+### Pokédex with SubFetch Drill-Down (full example)
+API: \`https://pokeapi.co/api/v2/pokemon?limit=50\`
+\`\`\`jsx
+<Stack gap="sm" p="xs">
+  <Group justify="space-between">
+    <Title order={3}>Pokédex</Title>
+    <Badge size="lg" color="red">{data.count} Pokémon</Badge>
+  </Group>
+  <PaginatedList pageSize={8}>
+    {data.results.map((pokemon, i) =>
+      <Card withBorder p="xs" mb="xs">
+        <Group wrap="nowrap" justify="space-between">
+          <Group wrap="nowrap" gap="sm">
+            <Avatar
+              src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}
+              size="lg"
+              radius="sm"
+            />
+            <Stack gap={0}>
+              <Text fw={700} tt="capitalize">{pokemon.name}</Text>
+              <Text size="xs" c="dimmed">#{String(i + 1).padStart(3, "0")}</Text>
+            </Stack>
+          </Group>
+          <SubFetch
+            url={pokemon.url}
+            definitionId={definitionId}
+            trigger="popover"
+            buttonLabel="Details"
+            width={400}
+            template='<Stack gap="xs" p="xs"><Group wrap="nowrap"><Avatar src={data.sprites.front_default} size={64} radius="sm" /><Stack gap={4} style={{flex:1}}><Title order={4} tt="capitalize">{data.name}</Title><Text size="xs" c="dimmed">{data.height/10}m · {data.weight/10}kg</Text><Group gap="xs">{data.types.map(t => <TypeBadge type={t.type.name} />)}</Group></Stack></Group><Divider />{data.stats.map(s => <StatBar label={s.stat.name} value={s.base_stat} max={255} />)}<Collapsible title="Abilities"><Group gap="xs" pt="xs">{data.abilities.map(a => <Badge variant={a.is_hidden ? "outline" : "filled"} tt="capitalize">{a.ability.name}</Badge>)}</Group></Collapsible></Stack>'
+          />
+        </Group>
+      </Card>
+    )}
+  </PaginatedList>
+</Stack>
+\`\`\`
 
 ## API Response
 `;
