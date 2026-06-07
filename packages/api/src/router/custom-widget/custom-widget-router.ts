@@ -73,11 +73,12 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
     }
 
-    let displayConfig: Record<string, unknown> = {};
+    let displayConfig: Record<string, unknown>;
     try {
       displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
     } catch {
       logger.error("Corrupt displayConfig in custom widget", { id: input.id });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
     }
 
     return {
@@ -220,7 +221,7 @@ export const customWidgetRouter = createTRPCRouter({
           return superjson.parse(definition.displayConfig) as Record<string, unknown>;
         } catch {
           logger.error("Corrupt displayConfig during export", { id: input.id });
-          return {};
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
         }
       })(),
     };
@@ -510,6 +511,10 @@ export const customWidgetRouter = createTRPCRouter({
 
     if (!definition.enabled) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
+    }
+
+    if (definition.displayType !== "actionButton") {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Only actionButton widgets can be executed" });
     }
 
     const decryptedSecrets = definition.secrets.map((s) => ({

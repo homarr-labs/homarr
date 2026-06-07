@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge, Combobox, Group, InputBase, ScrollArea, Text, useCombobox } from "@mantine/core";
 import {
   IconBraces,
@@ -200,6 +200,12 @@ export function JsonPathTreePicker({
   const [search, setSearch] = useState(value);
   const [isTyping, setIsTyping] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (!isTyping) {
+      setSearch(value || "");
+    }
+  }, [value, isTyping]);
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
@@ -234,10 +240,11 @@ export function JsonPathTreePicker({
     return flatNodes.filter((n) => matchingPaths.has(n.path));
   }, [flatNodes, searchQuery, isSearching]);
 
+  const isChildPath = (child: string, parent: string) =>
+    child !== parent && (child.startsWith(`${parent}.`) || child.startsWith(`${parent}[`));
+
   const toggleExpand = (path: string) => {
-    const childPaths = flatNodes
-      .filter((n) => n.hasChildren && n.path.startsWith(path) && n.path !== path)
-      .map((n) => n.path);
+    const childPaths = flatNodes.filter((n) => n.hasChildren && isChildPath(n.path, path)).map((n) => n.path);
     setExpanded((prev) => {
       const isCurrentlyExpanded = prev[path] ?? false;
       const next = { ...prev, [path]: !isCurrentlyExpanded };

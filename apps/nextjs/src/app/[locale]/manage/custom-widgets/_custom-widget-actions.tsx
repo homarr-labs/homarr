@@ -94,7 +94,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       title: t("action.delete"),
       children: t("action.deleteConfirm", { name: widget.name }),
       onConfirm: () => {
-        void deleteMutation.mutateAsync(
+        deleteMutation.mutate(
           { id: widget.id },
           {
             onSuccess: () => {
