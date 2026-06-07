@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ActionIcon,
@@ -30,6 +30,56 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { CustomWidgetAuthType, CustomWidgetDisplayType } from "@homarr/validation/custom-widget";
 import { CustomWidgetPreview } from "./_custom-widget-preview";
 
+const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ctx: z.core.$ZodRefinementCtx) => void> = {
+  singleValue: (data, ctx) => {
+    if (!data.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.jsonPath, path: ["jsonPath"] });
+  },
+  keyValue: (data, ctx) => {
+    (data.mappings as Array<{ label: string; jsonPath: string }>)?.forEach((m, i) => {
+      if (!m.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: m.label, path: ["mappings", i, "label"] });
+      if (!m.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: m.jsonPath, path: ["mappings", i, "jsonPath"] });
+    });
+  },
+  table: (data, ctx) => {
+    if (!data.tablePath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.tablePath, path: ["tablePath"] });
+    (data.columns as Array<{ header: string; jsonPath: string }>)?.forEach((c, i) => {
+      if (!c.header) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: c.header, path: ["columns", i, "header"] });
+      if (!c.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: c.jsonPath, path: ["columns", i, "jsonPath"] });
+    });
+  },
+  statGrid: (data, ctx) => {
+    (data.statGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["statGridItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["statGridItems", i, "jsonPath"] });
+    });
+  },
+  progressBars: (data, ctx) => {
+    (data.progressBars as Array<{ label: string; valuePath: string }>)?.forEach((bar, i) => {
+      if (!bar.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: bar.label, path: ["progressBars", i, "label"] });
+      if (!bar.valuePath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: bar.valuePath, path: ["progressBars", i, "valuePath"] });
+    });
+  },
+  statusIndicator: (data, ctx) => {
+    (data.statusItems as Array<{ label: string; jsonPath: string; goodValues: string }>)?.forEach((item, i) => {
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["statusItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["statusItems", i, "jsonPath"] });
+      if (!item.goodValues) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.goodValues, path: ["statusItems", i, "goodValues"] });
+    });
+  },
+  countGrid: (data, ctx) => {
+    (data.countGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["countGridItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["countGridItems", i, "jsonPath"] });
+    });
+  },
+  raw: (data, ctx) => {
+    if (!data.rawJsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.rawJsonPath, path: ["rawJsonPath"] });
+  },
+  actionButton: (data, ctx) => {
+    if (!data.buttonLabel) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.buttonLabel, path: ["buttonLabel"] });
+  },
+};
+
 const formSchema = z.object({
   name: z.string().min(1).max(128),
   description: z.string(),
@@ -41,47 +91,40 @@ const formSchema = z.object({
   method: z.string(),
   requestBody: z.string(),
   displayType: z.string(),
-  // singleValue
   jsonPath: z.string(),
   label: z.string(),
   unit: z.string(),
   valueSize: z.string(),
   labelPosition: z.string(),
-  // keyValue
   mappings: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() })),
   kvLayout: z.string(),
   kvColumns: z.number(),
-  // table
   tablePath: z.string(),
   columns: z.array(z.object({ header: z.string(), jsonPath: z.string() })),
   striped: z.boolean(),
   compact: z.boolean(),
-  // statGrid
   statGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string(), color: z.string() })),
   statGridColumns: z.number(),
   cardStyle: z.string(),
-  // progressBars
   progressBars: z.array(z.object({ label: z.string(), valuePath: z.string(), maxPath: z.string(), unit: z.string(), color: z.string() })),
   showPercentage: z.boolean(),
   barSize: z.string(),
-  // statusIndicator
   statusItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), goodValues: z.string() })),
   statusLayout: z.string(),
   dotSize: z.string(),
-  // countGrid
   countGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() })),
   countGridColumns: z.number(),
   countValueSize: z.string(),
-  // raw
   rawJsonPath: z.string(),
   rawMaxHeight: z.number(),
-  // actionButton
   buttonLabel: z.string(),
   buttonColor: z.string(),
   confirmText: z.string(),
   successMessage: z.string(),
-  // secrets
-  secrets: z.array(z.object({ kind: z.string(), value: z.string() })),
+  secrets: z.array(z.object({ kind: z.string(), value: z.string(), hasValue: z.boolean().optional() })),
+}).superRefine((data, ctx) => {
+  const validator = requiredFieldValidators[data.displayType];
+  validator?.(data as unknown as Record<string, unknown>, ctx);
 });
 
 const authTypeSecretFields: Record<string, Array<{ kind: string; labelKey: string; isPassword: boolean }>> = {
@@ -166,6 +209,52 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
   actionButton: (v) => ({ type: "actionButton", buttonLabel: v.buttonLabel, buttonColor: v.buttonColor, confirmText: v.confirmText || undefined, successMessage: v.successMessage || undefined }),
 };
 
+const serverToFormFieldMap: Record<string, Record<string, string>> = {
+  statGrid: { items: "statGridItems" },
+  countGrid: { items: "countGridItems" },
+  statusIndicator: { items: "statusItems" },
+  progressBars: { bars: "progressBars" },
+  keyValue: { mappings: "mappings" },
+  table: { columns: "columns", tablePath: "tablePath" },
+  singleValue: { jsonPath: "jsonPath", label: "label", unit: "unit" },
+  raw: { jsonPath: "rawJsonPath" },
+  actionButton: { buttonLabel: "buttonLabel" },
+};
+
+function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
+  const errors: Record<string, string> = {};
+  const trpcErr = err as { data?: { zodError?: { fieldErrors?: Record<string, string[]> } }; message?: string };
+
+  if (trpcErr?.data?.zodError?.fieldErrors) {
+    for (const [field, messages] of Object.entries(trpcErr.data.zodError.fieldErrors)) {
+      if (messages?.[0]) {
+        errors[field] = messages[0];
+      }
+    }
+    return errors;
+  }
+
+  try {
+    const issues = JSON.parse(trpcErr?.message ?? "[]") as Array<{ path: (string | number)[]; message: string }>;
+    const fieldMap = serverToFormFieldMap[displayType] ?? {};
+
+    for (const issue of issues) {
+      const path = [...issue.path];
+      if (path[0] === "displayConfig") {
+        path.shift();
+        const serverField = String(path[0]);
+        const formField = fieldMap[serverField] ?? serverField;
+        path[0] = formField;
+      }
+      errors[path.join(".")] = issue.message;
+    }
+  } catch {
+    // not parseable, ignore
+  }
+
+  return errors;
+}
+
 const ALL_DISPLAY_TYPES = ["singleValue", "keyValue", "table", "statGrid", "progressBars", "statusIndicator", "countGrid", "raw", "actionButton"] as const;
 const MANTINE_COLORS = ["blue", "teal", "green", "red", "orange", "yellow", "violet", "pink", "cyan", "grape", "indigo", "lime"] as const;
 
@@ -175,6 +264,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const utils = clientApi.useUtils();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
+  const [previewRefreshSignal, setPreviewRefreshSignal] = useState(0);
 
   const form = useZodForm(formSchema, {
     initialValues: { ...defaultCreateValues, ...initialValues },
@@ -210,10 +300,15 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       } else if (definitionId) {
         await updateMutation.mutateAsync({ id: definitionId, ...payload });
         showSuccessNotification({ title: t("action.save"), message: t("notification.updated", { name: values.name }) });
+        setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
       }
-    } catch {
+    } catch (err) {
+      const serverErrors = extractServerErrors(err, values.displayType);
+      if (Object.keys(serverErrors).length > 0) {
+        form.setErrors(serverErrors);
+      }
       const errorKey = mode === "create" ? "notification.createError" : "notification.updateError";
       showErrorNotification({ title: t("action.save"), message: t(errorKey as never) });
     }
@@ -275,10 +370,12 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               {secretFields.map((field) => {
                 const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
                 if (secretIndex === -1) return null;
+                const secret = form.values.secrets[secretIndex]!;
+                const placeholder = secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
                 return field.isPassword ? (
-                  <PasswordInput key={field.kind} label={t(`secret.${field.labelKey}` as never)} {...form.getInputProps(`secrets.${secretIndex}.value`)} />
+                  <PasswordInput key={field.kind} label={t(`secret.${field.labelKey}` as never)} placeholder={placeholder} {...form.getInputProps(`secrets.${secretIndex}.value`)} />
                 ) : (
-                  <TextInput key={field.kind} label={t(`secret.${field.labelKey}` as never)} {...form.getInputProps(`secrets.${secretIndex}.value`)} />
+                  <TextInput key={field.kind} label={t(`secret.${field.labelKey}` as never)} placeholder={placeholder} {...form.getInputProps(`secrets.${secretIndex}.value`)} />
                 );
               })}
             </Stack>
@@ -315,7 +412,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Fieldset>
 
           <Box hiddenFrom="md">
-            <CustomWidgetPreview getFormValues={getPreviewInput} />
+            <CustomWidgetPreview getFormValues={getPreviewInput} refreshSignal={previewRefreshSignal} />
           </Box>
 
           <Group justify="end">
@@ -330,7 +427,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             <Button type="submit" fullWidth loading={createMutation.isPending || updateMutation.isPending}>
               {mode === "create" ? t("action.create") : t("action.save")}
             </Button>
-            <CustomWidgetPreview getFormValues={getPreviewInput} />
+            <CustomWidgetPreview getFormValues={getPreviewInput} refreshSignal={previewRefreshSignal} />
           </Stack>
         </Box>
       </Group>

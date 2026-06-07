@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./custom-api/component": "./src/custom-api/component.tsx",
     "./errors": "./src/errors/component.tsx",
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts"

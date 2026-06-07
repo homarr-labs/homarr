@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ComponentType } from "react";
 import {
+  ActionIcon,
   Button,
   Card,
   Center,
@@ -17,9 +18,10 @@ import {
   Table,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconAlertTriangle, IconCheck, IconPlayerPlay } from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
@@ -245,15 +247,30 @@ function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
+function openJsonInBrowser(json: unknown) {
+  const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
+  window.open(URL.createObjectURL(blob));
+}
+
 function RawDisplay({ data }: { data: Record<string, unknown> }) {
   const maxHeight = (data.maxHeight as number) ?? 300;
+  const jsonString = JSON.stringify(data.data, null, 2);
 
   return (
-    <ScrollArea h={maxHeight} p="xs">
-      <Code block style={{ fontSize: 11 }}>
-        {JSON.stringify(data.data, null, 2)}
-      </Code>
-    </ScrollArea>
+    <Stack gap={4} p="xs">
+      <Group justify="flex-end">
+        <Tooltip label="Open in browser JSON viewer">
+          <ActionIcon variant="subtle" size="sm" onClick={() => openJsonInBrowser(data.data)}>
+            <IconExternalLink size={14} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
+      <ScrollArea mah={maxHeight}>
+        <Code block style={{ fontSize: 12 }}>
+          {jsonString}
+        </Code>
+      </ScrollArea>
+    </Stack>
   );
 }
 
@@ -310,7 +327,7 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-const displayComponents: Record<string, ComponentType<{ data: Record<string, unknown> }>> = {
+export const displayComponents: Record<string, ComponentType<{ data: Record<string, unknown> }>> = {
   singleValue: SingleValueDisplay,
   keyValue: KeyValueDisplay,
   table: TableDisplay,

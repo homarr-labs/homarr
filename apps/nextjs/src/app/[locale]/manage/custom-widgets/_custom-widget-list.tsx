@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Group, Stack, Table, Text } from "@mantine/core";
+import { Avatar, Badge, Group, Stack, Table, Text } from "@mantine/core";
 import { IconApi } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -55,7 +55,11 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
             <Table.Tr key={def.id}>
               <Table.Td>
                 <Group gap="xs">
-                  <IconApi size={16} />
+                  {def.iconUrl ? (
+                    <Avatar size={20} radius="sm" src={def.iconUrl} styles={{ image: { objectFit: "contain" } }} />
+                  ) : (
+                    <IconApi size={16} />
+                  )}
                   <Text size="sm" fw={500} lineClamp={1}>
                     {def.name}
                   </Text>

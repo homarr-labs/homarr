@@ -15,13 +15,13 @@ const authTypeExpectedSecrets: Record<string, string[]> = {
   apiKeyQuery: ["apiKey"],
 };
 
-function buildInitialSecrets(authType: string, dbSecrets: Array<{ kind: string }>) {
+function buildInitialSecrets(authType: string, dbSecrets: Array<{ kind: string; hasValue?: boolean }>) {
   const expected = authTypeExpectedSecrets[authType] ?? [];
   const existingKinds = new Set(dbSecrets.map((s) => s.kind));
-  const result = dbSecrets.map((s) => ({ kind: s.kind, value: "" }));
+  const result = dbSecrets.map((s) => ({ kind: s.kind, value: "", hasValue: s.hasValue ?? false }));
   for (const kind of expected) {
     if (!existingKinds.has(kind)) {
-      result.push({ kind, value: "" });
+      result.push({ kind, value: "", hasValue: false });
     }
   }
   return result;

@@ -323,7 +323,7 @@ export const customWidgetRouter = createTRPCRouter({
 
         if (!response.ok) {
           const body = await response.text().catch(() => "");
-          return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo, rawResponse: body.slice(0, 2000) };
+          return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo, rawResponse: body };
         }
 
         const json: unknown = await response.json();
@@ -421,7 +421,7 @@ export const customWidgetRouter = createTRPCRouter({
         return {
           success: true as const,
           responseInfo,
-          rawResponse: JSON.stringify(json, null, 2).slice(0, 5000),
+          rawResponse: JSON.stringify(json, null, 2),
           displayData,
         };
       } catch (error) {

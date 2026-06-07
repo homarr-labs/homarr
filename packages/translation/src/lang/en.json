@@ -889,7 +889,8 @@
     "secret": {
       "apiKey": "API Key / Token",
       "username": "Username",
-      "password": "Password"
+      "password": "Password",
+      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
     },
     "preview": {
       "title": "Preview",
