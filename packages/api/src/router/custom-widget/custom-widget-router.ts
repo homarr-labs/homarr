@@ -8,7 +8,6 @@ import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { flatDefinitionToFlowGraph } from "@homarr/custom-widget-nodes";
 import {
   customWidgetCreateSchema,
   customWidgetImportSchema,
@@ -73,7 +72,6 @@ export const customWidgetRouter = createTRPCRouter({
     return {
       ...definition,
       displayConfig: superjson.parse(definition.displayConfig) as Record<string, unknown>,
-      flowGraph: definition.flowGraph ?? null,
       secrets: definition.secrets.map((s) => ({
         kind: s.kind,
         hasValue: true,
@@ -125,12 +123,8 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 
-    const { id, secrets, flowGraph, ...updateFields } = input;
+    const { id, secrets, ...updateFields } = input;
     const updateValues: Record<string, unknown> = { updatedAt: new Date() };
-
-    if (flowGraph !== undefined) {
-      updateValues.flowGraph = flowGraph;
-    }
 
     for (const [key, value] of Object.entries(updateFields)) {
       if (value === undefined) continue;
@@ -213,38 +207,6 @@ export const customWidgetRouter = createTRPCRouter({
 
     logger.info("Imported custom widget definition", { id, name: input.name });
     return { id };
-  }),
-
-  migrateToFlow: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-
-    if (!definition) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
-
-    if (definition.flowGraph) {
-      return { alreadyMigrated: true };
-    }
-
-    const flowGraph = flatDefinitionToFlowGraph({
-      baseUrl: definition.baseUrl,
-      endpoint: definition.endpoint,
-      method: definition.method,
-      authType: definition.authType,
-      headerName: definition.headerName,
-      displayType: definition.displayType,
-      displayConfig: definition.displayConfig,
-    });
-
-    await ctx.db
-      .update(customWidgetDefinitions)
-      .set({ flowGraph: JSON.stringify(flowGraph), updatedAt: new Date() })
-      .where(eq(customWidgetDefinitions.id, input.id));
-
-    logger.info("Migrated custom widget to flow graph", { id: input.id });
-    return { alreadyMigrated: false, flowGraph };
   }),
 
   preview: adminProcedure
@@ -461,7 +423,6 @@ export const customWidgetRouter = createTRPCRouter({
       requestBody: definition.requestBody,
       displayType: definition.displayType,
       displayConfig: definition.displayConfig,
-      flowGraph: definition.flowGraph,
       creatorId: ctx.session.user.id,
     });
 
@@ -553,32 +514,4 @@ export const customWidgetRouter = createTRPCRouter({
     }
   }),
 
-  migrateAll: adminProcedure.mutation(async ({ ctx }) => {
-    const definitions = await ctx.db.query.customWidgetDefinitions.findMany();
-    let migrated = 0;
-
-    for (const definition of definitions) {
-      if (definition.flowGraph) continue;
-
-      const flowGraph = flatDefinitionToFlowGraph({
-        baseUrl: definition.baseUrl,
-        endpoint: definition.endpoint,
-        method: definition.method,
-        authType: definition.authType,
-        headerName: definition.headerName,
-        displayType: definition.displayType,
-        displayConfig: definition.displayConfig,
-      });
-
-      await ctx.db
-        .update(customWidgetDefinitions)
-        .set({ flowGraph: JSON.stringify(flowGraph), updatedAt: new Date() })
-        .where(eq(customWidgetDefinitions.id, definition.id));
-
-      migrated++;
-    }
-
-    logger.info("Migrated all custom widgets to flow graphs", { count: migrated });
-    return { migrated, total: definitions.length };
-  }),
 });

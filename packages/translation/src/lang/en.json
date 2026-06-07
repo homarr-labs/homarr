@@ -705,7 +705,6 @@
       "export": "Export",
       "addMapping": "Add Mapping",
       "addColumn": "Add Column",
-      "flowEditor": "Flow Editor",
       "edit": "Edit",
       "removeMapping": "Remove mapping",
       "removeColumn": "Remove column",
@@ -812,55 +811,6 @@
       "raw": "Pretty-printed JSON output for debugging",
       "actionButton": "A button that triggers a request when clicked"
     },
-    "flowEditor": {
-      "save": "Save",
-      "test": "Test",
-      "deleteNode": "Delete Node",
-      "configure": "Configure: {nodeType}",
-      "nodeLabel": "Node Label",
-      "category": {
-        "sources": "Sources",
-        "transforms": "Transforms",
-        "displays": "Displays"
-      },
-      "node": {
-        "httpRequest": "HTTP Request",
-        "jsonPath": "JSONPath Extract",
-        "merge": "Merge",
-        "template": "Template",
-        "singleValue": "Single Value",
-        "keyValue": "Key-Value",
-        "table": "Table",
-        "lineChart": "Line Chart",
-        "areaChart": "Area Chart",
-        "barChart": "Bar Chart",
-        "sparkline": "Sparkline"
-      },
-      "option": {
-        "GET": "GET",
-        "POST": "POST",
-        "array": "Array",
-        "object": "Object"
-      },
-      "configField": {
-        "url": "URL",
-        "method": "Method",
-        "requestBody": "Request Body",
-        "expression": "JSONPath Expression",
-        "mode": "Mode",
-        "templateStr": "Template",
-        "label": "Label",
-        "unit": "Unit",
-        "labels": "Labels (comma-separated)",
-        "units": "Units (comma-separated)",
-        "columnHeaders": "Column Headers (comma-separated)",
-        "columnAccessors": "Column Accessors (comma-separated)",
-        "xKey": "X Axis Key",
-        "yKeys": "Y Axis Keys (comma-separated)",
-        "height": "Height",
-        "color": "Color"
-      }
-    },
     "method": {
       "GET": "GET",
       "POST": "POST",
@@ -907,8 +857,6 @@
       "updateError": "Failed to update widget. Your changes were not saved.",
       "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
       "exportError": "Failed to export widget.",
-      "flowSaved": "Flow graph saved successfully.",
-      "flowSaveError": "Failed to save flow graph.",
       "duplicated": "Widget \"{name}\" duplicated.",
       "duplicateError": "Failed to duplicate widget.",
       "executed": "Action executed successfully.",

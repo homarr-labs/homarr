@@ -7,8 +7,6 @@ import { decryptSecret } from "@homarr/common/server";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { executeFlowGraph } from "@homarr/custom-widget-nodes";
-import type { FlowGraph } from "@homarr/custom-widget-nodes";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "widget:customApi" });
@@ -164,23 +162,6 @@ export const customApiRouter = createTRPCRouter({
       kind: s.kind,
       value: decryptSecret(s.value),
     }));
-
-    if (definition.flowGraph) {
-      try {
-        const graph = JSON.parse(definition.flowGraph) as FlowGraph;
-        const secretMap: Record<string, string> = {};
-        for (const s of decryptedSecrets) {
-          secretMap[s.kind] = s.value;
-        }
-        return await executeFlowGraph(graph, secretMap);
-      } catch (error) {
-        logger.error("Failed to execute flow graph", { definitionId: input.definitionId, error });
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Failed to execute flow graph",
-        });
-      }
-    }
 
     const url = validateUrl(definition.baseUrl, definition.endpoint);
     const headers = new Headers({ Accept: "application/json" });

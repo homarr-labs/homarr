@@ -26,7 +26,6 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
-    "@homarr/custom-widget-nodes": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",

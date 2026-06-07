@@ -168,7 +168,6 @@ export const customWidgetCreateSchema = baseDefinitionSchema.extend({
 export const customWidgetUpdateSchema = baseDefinitionSchema.partial().extend({
   id: z.string(),
   secrets: secretsInputSchema.optional(),
-  flowGraph: z.string().optional(),
 });
 
 export const customWidgetImportSchema = z.object({
@@ -187,25 +186,3 @@ export const customWidgetImportSchema = z.object({
 });
 
 export type CustomWidgetImport = z.infer<typeof customWidgetImportSchema>;
-
-export const flowNodeSchema = z.object({
-  id: z.string(),
-  type: z.string(),
-  position: z.object({ x: z.number(), y: z.number() }),
-  data: z.record(z.string(), z.unknown()),
-});
-
-export const flowEdgeSchema = z.object({
-  id: z.string(),
-  source: z.string(),
-  target: z.string(),
-  sourceHandle: z.string().optional(),
-  targetHandle: z.string().optional(),
-});
-
-export const flowGraphSchema = z.object({
-  nodes: z.array(flowNodeSchema),
-  edges: z.array(flowEdgeSchema),
-});
-
-export type FlowGraphSchema = z.infer<typeof flowGraphSchema>;
