@@ -1,0 +1,38 @@
+packages/db/migrations/sqlite/0039_merge_custom_widget_url.sql
+  s_a779988d600484::t_78d08c2534d60c 1-23
+packages/db/schema/postgresql.ts
+  s_a779988d600484::t_ad21e7cde00f35 511
+  s_a779988d600484::t_fc665199b8cde5 518
+packages/db/migrations/sqlite/meta/_journal.json
+  s_a779988d600484::t_f4281c13f69fb7 277-283
+packages/db/migrations/mysql/meta/_journal.json
+  s_a779988d600484::t_f059458e47617c 291-297
+packages/db/migrations/postgresql/0007_merge_custom_widget_url.sql
+  s_a779988d600484::t_13d60128b43b83 1-6
+packages/db/migrations/mysql/0041_merge_custom_widget_url.sql
+  s_a779988d600484::t_d24ffaa84a94a6 1-6
+packages/db/schema/mysql.ts
+  s_a779988d600484::t_1ab3f6a0320892 512
+  s_a779988d600484::t_25165999175f49 519
+packages/db/schema/sqlite.ts
+  s_a779988d600484::t_882f9d74c339d7 497
+  s_a779988d600484::t_6a614bdefdaa3b 504
+packages/db/migrations/postgresql/meta/_journal.json
+  s_a779988d600484::t_8c36885916cb09 53-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "9cac525928d012cc2c1206932cf6ce0cdf64d501",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
