@@ -200,14 +200,7 @@ export const ImportCustomWidgetButton = () => {
       >
         {t("action.import")}
       </MobileAffixButton>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json"
-        hidden
-        onChange={handleImport}
-        aria-label="Import custom widget JSON file"
-      />
+      <input ref={fileInputRef} type="file" accept=".json" hidden onChange={handleImport} aria-label="Import custom widget" />
     </>
   );
 };

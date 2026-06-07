@@ -1,4 +1,5 @@
-import { createElement, type ComponentType } from "react";
+import type { ComponentType } from "react";
+import { createElement } from "react";
 import {
   Stack,
   Group,

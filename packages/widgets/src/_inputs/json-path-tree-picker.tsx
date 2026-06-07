@@ -185,6 +185,9 @@ interface JsonPathTreePickerProps {
   loadedHint?: string;
 }
 
+const isChildPath = (child: string, parent: string) =>
+  child !== parent && (child.startsWith(`${parent}.`) || child.startsWith(`${parent}[`));
+
 export function JsonPathTreePicker({
   value = "",
   onChange,
@@ -239,9 +242,6 @@ export function JsonPathTreePicker({
     }
     return flatNodes.filter((n) => matchingPaths.has(n.path));
   }, [flatNodes, searchQuery, isSearching]);
-
-  const isChildPath = (child: string, parent: string) =>
-    child !== parent && (child.startsWith(`${parent}.`) || child.startsWith(`${parent}[`));
 
   const toggleExpand = (path: string) => {
     const childPaths = flatNodes.filter((n) => n.hasChildren && isChildPath(n.path, path)).map((n) => n.path);

@@ -163,9 +163,9 @@ function PreviewDisplay({ data }: { data: unknown }) {
     );
   }
 
-  if (dataType && displayComponents[dataType]) {
-    const Component = displayComponents[dataType];
-    return Component ? <Component data={typed} /> : null;
+  const Component = dataType ? displayComponents[dataType] : undefined;
+  if (Component) {
+    return <Component data={typed} />;
   }
 
   return (

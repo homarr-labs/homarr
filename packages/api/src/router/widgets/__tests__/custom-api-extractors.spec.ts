@@ -115,8 +115,9 @@ const extractors: Record<string, (json: unknown, config: Record<string, unknown>
 };
 
 function extract(type: string, json: unknown, config: Record<string, unknown>) {
-  const extractor = extractors[type];
-  return extractor?.(json, config);
+  const fn = extractors[type];
+  if (!fn) throw new Error(`No extractor for type: ${type}`);
+  return fn(json, config);
 }
 
 describe("custom-api extractors", () => {

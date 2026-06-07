@@ -27,7 +27,8 @@ import { IconPicker } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { CustomWidgetAuthType, CustomWidgetDisplayType } from "@homarr/validation/custom-widget";
+import type { CustomWidgetAuthType, CustomWidgetDisplayType, CustomWidgetMethod, CustomWidgetSecretKind } from "@homarr/validation/custom-widget";
+import { displayConfigSchema } from "@homarr/validation/custom-widget";
 import { JsonPathTreePicker } from "@homarr/widgets/_inputs/json-path-tree-picker";
 
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
@@ -441,6 +442,20 @@ function extractServerErrors(err: unknown, displayType: string): Record<string, 
   return errors;
 }
 
+const listItemDefaults = {
+  mapping: { label: "", jsonPath: "$", unit: "" },
+  column: { header: "", jsonPath: "$" },
+  statGridItem: { label: "", jsonPath: "$", unit: "", color: "blue" },
+  progressBar: { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" },
+  statusItem: { label: "", jsonPath: "$", goodValues: "online,true" },
+  countGridItem: { label: "", jsonPath: "$", unit: "" },
+} as const;
+
+function cloneLast<T extends Record<string, unknown>>(arr: T[], fallback: T): T {
+  const last = arr[arr.length - 1];
+  return last ? { ...last } : { ...fallback };
+}
+
 const ALL_DISPLAY_TYPES = [
   "singleValue",
   "keyValue",
@@ -486,7 +501,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
 
   const handleSubmit = form.onSubmit(async (values) => {
     const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
-    const displayConfig = buildConfig?.(values) ?? {};
+    const displayConfig = buildConfig?.(values);
 
     const payload = {
       name: values.name,
@@ -538,22 +553,15 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
     return {
       url: values.url,
-      method: values.method as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-      authType: values.authType as "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery",
+      method: values.method as CustomWidgetMethod,
+      authType: values.authType as CustomWidgetAuthType,
       headerName: values.headerName || undefined,
       requestBody: values.requestBody || undefined,
-      displayType: values.displayType as
-        | "table"
-        | "raw"
-        | "singleValue"
-        | "keyValue"
-        | "statGrid"
-        | "progressBars"
-        | "statusIndicator"
-        | "countGrid"
-        | "actionButton",
-      displayConfig: (buildConfig?.(values) ?? {}) as Record<string, unknown>,
-      secrets: values.secrets.filter((s) => s.value),
+      displayType: values.displayType as CustomWidgetDisplayType,
+      displayConfig: buildConfig?.(values) as z.infer<typeof displayConfigSchema>,
+      secrets: values.secrets
+        .filter((s) => s.value)
+        .map((s) => ({ kind: s.kind as CustomWidgetSecretKind, value: s.value })),
       definitionId,
     };
   }, [form.values, definitionId]);
@@ -672,7 +680,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               {secretFields.map((field) => {
                 const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
                 if (secretIndex === -1) return null;
-                const secret = form.values.secrets[secretIndex] ?? { kind: field.kind, value: "", hasValue: false };
+                const secret = form.values.secrets[secretIndex];
+                if (!secret) return null;
                 const placeholder =
                   secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
                 return field.isPassword ? (
@@ -872,11 +881,7 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() =>
-            form.insertListItem("mappings", {
-              ...(form.values.mappings.at(-1) ?? { label: "", jsonPath: "$", unit: "" }),
-            })
-          }
+          onClick={() => form.insertListItem("mappings", cloneLast(form.values.mappings, listItemDefaults.mapping))}
         >
           {t("action.addMapping")}
         </Button>
@@ -933,9 +938,7 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() =>
-            form.insertListItem("columns", { ...(form.values.columns.at(-1) ?? { header: "", jsonPath: "$" }) })
-          }
+          onClick={() => form.insertListItem("columns", cloneLast(form.values.columns, listItemDefaults.column))}
         >
           {t("action.addColumn")}
         </Button>
@@ -1003,9 +1006,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statGridItems", {
-              ...(form.values.statGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "", color: "blue" }),
-            })
+            form.insertListItem("statGridItems", cloneLast(form.values.statGridItems, listItemDefaults.statGridItem))
           }
         >
           {t("action.addItem")}
@@ -1082,15 +1083,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("progressBars", {
-              ...(form.values.progressBars.at(-1) ?? {
-                label: "",
-                valuePath: "$",
-                maxPath: "",
-                unit: "",
-                color: "blue",
-              }),
-            })
+            form.insertListItem("progressBars", cloneLast(form.values.progressBars, listItemDefaults.progressBar))
           }
         >
           {t("action.addBar")}
@@ -1157,9 +1150,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statusItems", {
-              ...(form.values.statusItems.at(-1) ?? { label: "", jsonPath: "$", goodValues: "online,true" }),
-            })
+            form.insertListItem("statusItems", cloneLast(form.values.statusItems, listItemDefaults.statusItem))
           }
         >
           {t("action.addItem")}
@@ -1221,9 +1212,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("countGridItems", {
-              ...(form.values.countGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "" }),
-            })
+            form.insertListItem("countGridItems", cloneLast(form.values.countGridItems, listItemDefaults.countGridItem))
           }
         >
           {t("action.addItem")}

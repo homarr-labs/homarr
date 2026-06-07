@@ -340,7 +340,7 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   const buttonColor = (data.buttonColor as string) ?? "blue";
   const confirmText = (data.confirmText as string) || "";
   const successMessage = (data.successMessage as string) || t("executeSuccess");
-  const definitionId = data._definitionId as string | undefined;
+  const definitionId = data.widgetDefinitionId as string | undefined;
 
   const handleExecute = async () => {
     if (!definitionId) return;
@@ -477,9 +477,9 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
     );
   }
 
-  if (dataType && displayComponents[dataType]) {
-    const Component = displayComponents[dataType]!;
-    const enrichedData = dataType === "actionButton" ? { ...widgetData, _definitionId: definitionId } : widgetData;
+  const Component = dataType ? displayComponents[dataType] : undefined;
+  if (Component) {
+    const enrichedData = dataType === "actionButton" ? { ...widgetData, widgetDefinitionId: definitionId } : widgetData;
     return <Component data={enrichedData} />;
   }
 

@@ -1,4 +1,4 @@
-import { Group, Indicator, Popover, Table, TableTbody, TableTh, TableThead, TableTr, Text } from "@mantine/core";
+import { Group, Indicator, Popover, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Text } from "@mantine/core";
 
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
@@ -49,14 +49,14 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
               <ResourcePopover key={item.id} item={item}>
                 <Popover.Target>
                   <TableTr fz={isTiny ? "8px" : "xs"}>
-                    <td>
+                    <TableTd>
                       <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
-                        <Indicator size={isTiny ? 4 : 8} children={null} color={item.isRunning ? "green" : "yellow"} />
+                        <Indicator size={isTiny ? 4 : 8} color={item.isRunning ? "green" : "yellow"}>{null}</Indicator>
                         <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
                           {item.name}
                         </Text>
                       </Group>
-                    </td>
+                    </TableTd>
                     {item.type === "storage" ? (
                       <td style={{ WebkitLineClamp: "1" }}>{item.node}</td>
                     ) : (

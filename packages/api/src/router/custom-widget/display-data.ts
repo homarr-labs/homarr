@@ -137,10 +137,10 @@ export function extractDisplayData(json: unknown, displayType: string, displayCo
 
 export function extractDisplayDataWithFallback(json: unknown, displayType: string, displayConfig: Config): unknown {
   const type = (displayConfig.type as string) ?? displayType;
-  const extractor = extractors[type] ?? extractors.singleValue!;
-  return extractor(json, displayConfig);
+  const extractor = extractors[type] ?? extractors.singleValue;
+  return extractor?.(json, displayConfig);
 }
 
 export function extractActionButtonDisplay(displayConfig: Config): unknown {
-  return extractors.actionButton!(null, displayConfig);
+  return extractors.actionButton?.(null, displayConfig);
 }
