@@ -469,8 +469,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   });
 
   const handleSubmit = form.onSubmit(async (values) => {
-    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue!;
-    const displayConfig = buildConfig!(values);
+    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
+    const displayConfig = buildConfig?.(values) ?? {};
 
     const payload = {
       name: values.name,
@@ -518,15 +518,15 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
 
   const getPreviewInput = useCallback(() => {
     const values = form.values;
-    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue!;
+    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
     return {
       url: values.url,
-      method: values.method,
-      authType: values.authType,
+      method: values.method as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+      authType: values.authType as "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery",
       headerName: values.headerName || undefined,
       requestBody: values.requestBody || undefined,
-      displayType: values.displayType,
-      displayConfig: buildConfig!(values) as Record<string, unknown>,
+      displayType: values.displayType as "table" | "raw" | "singleValue" | "keyValue" | "statGrid" | "progressBars" | "statusIndicator" | "countGrid" | "actionButton",
+      displayConfig: (buildConfig?.(values) ?? {}) as Record<string, unknown>,
       secrets: values.secrets.filter((s) => s.value),
       definitionId,
     };
@@ -646,7 +646,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               {secretFields.map((field) => {
                 const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
                 if (secretIndex === -1) return null;
-                const secret = form.values.secrets[secretIndex]!;
+                const secret = form.values.secrets[secretIndex] ?? { kind: field.kind, value: "", hasValue: false };
                 const placeholder =
                   secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
                 return field.isPassword ? (
@@ -846,7 +846,7 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("mappings", { ...form.values.mappings[form.values.mappings.length - 1] })}
+          onClick={() => form.insertListItem("mappings", { ...(form.values.mappings.at(-1) ?? { label: "", jsonPath: "$", unit: "" }) })}
         >
           {t("action.addMapping")}
         </Button>
@@ -903,7 +903,7 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("columns", { ...form.values.columns[form.values.columns.length - 1] })}
+          onClick={() => form.insertListItem("columns", { ...(form.values.columns.at(-1) ?? { header: "", jsonPath: "$" }) })}
         >
           {t("action.addColumn")}
         </Button>
@@ -971,7 +971,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statGridItems", { ...form.values.statGridItems[form.values.statGridItems.length - 1] })
+            form.insertListItem("statGridItems", { ...(form.values.statGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "", color: "blue" }) })
           }
         >
           {t("action.addItem")}
@@ -1048,7 +1048,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("progressBars", { ...form.values.progressBars[form.values.progressBars.length - 1] })
+            form.insertListItem("progressBars", { ...(form.values.progressBars.at(-1) ?? { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" }) })
           }
         >
           {t("action.addBar")}
@@ -1115,7 +1115,7 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statusItems", { ...form.values.statusItems[form.values.statusItems.length - 1] })
+            form.insertListItem("statusItems", { ...(form.values.statusItems.at(-1) ?? { label: "", jsonPath: "$", goodValues: "online,true" }) })
           }
         >
           {t("action.addItem")}
@@ -1178,7 +1178,7 @@ function DisplayTypeFields({
           leftSection={<IconPlus size={14} />}
           onClick={() =>
             form.insertListItem("countGridItems", {
-              ...form.values.countGridItems[form.values.countGridItems.length - 1],
+              ...(form.values.countGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "" }),
             })
           }
         >
