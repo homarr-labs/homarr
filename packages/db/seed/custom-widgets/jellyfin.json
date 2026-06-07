@@ -1,0 +1,23 @@
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Jellyfin library",
+  "description": "Counts the number of movies, series, episodes and songs in the library",
+  "iconUrl": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
+  "url": "https://jellyfin.homelab.com/Items/Counts",
+  "authType": "apiKeyHeader",
+  "headerName": "X-Emby-Token",
+  "method": "GET",
+  "requestBody": null,
+  "displayType": "countGrid",
+  "displayConfig": {
+    "type": "countGrid",
+    "items": [
+      { "label": "Movies", "jsonPath": "$.MovieCount", "unit": "" },
+      { "label": "Series", "jsonPath": "$.SeriesCount", "unit": "" },
+      { "label": "Episodes", "jsonPath": "$.EpisodeCount", "unit": "" },
+      { "label": "Songs", "jsonPath": "$.SongCount", "unit": "" }
+    ],
+    "columns": 4,
+    "valueSize": "lg"
+  }
+}
