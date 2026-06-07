@@ -21,7 +21,13 @@ export const WidgetCustomWidgetSelectInput = ({
 
   const currentValue = form.values.options[property] as string;
 
-  const definitions = useMemo(() => (data ?? []).map((def) => ({ value: def.id, label: def.name })), [data]);
+  const definitions = useMemo(
+    () =>
+      (data ?? [])
+        .filter((def) => def.enabled || def.id === currentValue)
+        .map((def) => ({ value: def.id, label: def.name })),
+    [data, currentValue],
+  );
 
   const filteredOptions = useMemo(
     () =>

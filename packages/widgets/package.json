@@ -13,7 +13,9 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./_inputs/json-path-tree-picker": "./src/_inputs/json-path-tree-picker.tsx",
     "./custom-api/component": "./src/custom-api/component.tsx",
+    "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",
     "./errors": "./src/errors/component.tsx",
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts"
@@ -71,6 +73,7 @@
     "@tiptap/starter-kit": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
+    "jsonpath-plus": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",

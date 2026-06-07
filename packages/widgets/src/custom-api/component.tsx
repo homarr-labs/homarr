@@ -249,7 +249,9 @@ function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
 
 function openJsonInBrowser(json: unknown) {
   const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
-  window.open(URL.createObjectURL(blob));
+  const blobUrl = URL.createObjectURL(blob);
+  window.open(blobUrl);
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
 }
 
 function RawDisplay({ data }: { data: Record<string, unknown> }) {
@@ -289,13 +291,17 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   const handleExecute = async () => {
     if (!definitionId) return;
     setLastSuccess(false);
-    const result = await executeMutation.mutateAsync({ definitionId });
-    if (result.success) {
-      setLastSuccess(true);
-      showSuccessNotification({ title: buttonLabel, message: successMessage });
-      setTimeout(() => setLastSuccess(false), 3000);
-    } else {
-      showErrorNotification({ title: buttonLabel, message: result.error ?? "Request failed" });
+    try {
+      const result = await executeMutation.mutateAsync({ definitionId });
+      if (result.success) {
+        setLastSuccess(true);
+        showSuccessNotification({ title: buttonLabel, message: successMessage });
+        setTimeout(() => setLastSuccess(false), 3000);
+      } else {
+        showErrorNotification({ title: buttonLabel, message: result.error ?? t("executeFailed") });
+      }
+    } catch {
+      showErrorNotification({ title: buttonLabel, message: t("executeFailed") });
     }
   };
 
@@ -359,12 +365,13 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
 
 function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
   const t = useScopedI18n("widget.customApi");
+  const tCustomWidget = useScopedI18n("customWidget");
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
-        if (result?.type === "actionButton") return false;
+        if (result?.type === "actionButton" || result?.type === "disabled") return false;
         return 30_000;
       },
       retry: (failureCount, err) => {
@@ -396,6 +403,14 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
 
   const widgetData = data as Record<string, unknown>;
   const dataType = widgetData.type as string | undefined;
+
+  if (dataType === "disabled") {
+    return (
+      <Center h="100%">
+        <Text c="dimmed" size="sm">{tCustomWidget("widget.disabled")}</Text>
+      </Center>
+    );
+  }
 
   if (dataType && displayComponents[dataType]) {
     const Component = displayComponents[dataType]!;
