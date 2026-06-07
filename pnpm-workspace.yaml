@@ -33,7 +33,7 @@ catalog:
   "@mantine/notifications": ^9.2.2
   "@mantine/spotlight": ^9.2.2
   "@mantine/tiptap": ^9.2.2
-  "@next/eslint-plugin-next": 16.2.6
+  "@next/eslint-plugin-next": 16.2.7
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
   "@playwright/test": ^1.60.0
@@ -85,7 +85,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.15
+  "@types/react": 19.2.16
   "@types/react-dom": 19.2.3
   "@types/swagger-ui-react": ^5.18.0
   "@types/video.js": ^7.3.58
@@ -93,8 +93,8 @@ catalog:
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
   "@vitejs/plugin-react": ^5.2.0
-  "@vitest/coverage-v8": ^4.1.7
-  "@vitest/ui": ^4.1.7
+  "@vitest/coverage-v8": ^4.1.8
+  "@vitest/ui": ^4.1.8
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
@@ -137,19 +137,19 @@ catalog:
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   maria2: ^0.4.1
   mysql2: 3.22.4
-  next: 16.2.6
+  next: 16.2.7
   next-auth: 5.0.0-beta.31
   next-intl: 4.13.0
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  oxfmt: ^0.52.0
+  oxfmt: ^0.53.0
   oxlint: ^1.67.0
   pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
-  react: 19.2.6
-  react-dom: 19.2.6
+  react: 19.2.7
+  react-dom: 19.2.7
   react-error-boundary: ^6.1.2
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
@@ -172,7 +172,7 @@ catalog:
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.7
+  vitest: ^4.1.8
   winston: 3.19.0
   ws: ^8.21.0
   xml2js: ^0.6.2
