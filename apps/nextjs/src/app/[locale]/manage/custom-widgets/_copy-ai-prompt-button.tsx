@@ -45,15 +45,73 @@ const PROMPT_RULES = `
 - \`actionButton\`: A button that triggers the API call on click — for POST/PUT actions
 - \`customJsx\`: Custom JSX layout using whitelisted Mantine components — full creative control over presentation. Set \`displayConfig.template\` to a JSX string. Access API data via \`{data.fieldName}\` bindings (e.g. \`{data.name}\`, \`{data.items[0].title}\`).
 
-## Custom JSX (\`customJsx\`) — Available Components
-When using \`customJsx\`, the template supports these whitelisted Mantine components:
+## Custom JSX (\`customJsx\`) — Available Mantine Components
+When using \`customJsx\`, the template supports whitelisted Mantine UI components. These are React components from the Mantine v9 library. Use their props as documented below.
 
-**Layout:** Stack, Group, Flex, Grid, Grid.Col, SimpleGrid, Center, Space, Container, AspectRatio
-**Typography:** Text, Title, Code, Highlight, Mark, Kbd, Blockquote, Anchor, NumberFormatter
-**Data display:** Badge, Card, Card.Section, Paper, Alert, ThemeIcon, ColorSwatch, Table (Thead, Tbody, Tr, Th, Td), List, List.Item, Timeline, Timeline.Item, Accordion (Item, Control, Panel), Indicator, Pill, Spoiler
-**Feedback:** Progress, Progress.Section, RingProgress, Skeleton, Loader
-**Media:** Image, Avatar, Avatar.Group, BackgroundImage, Tooltip, Divider, ScrollArea
-**Charts (@mantine/charts):** AreaChart, BarChart, LineChart, DonutChart, PieChart, RadarChart, RadialBarChart, Sparkline
+### Layout Components
+- **Stack** — Vertical flex container. Props: \`gap\` (xs|sm|md|lg|xl or number), \`align\` (stretch|center|flex-start|flex-end), \`justify\`
+- **Group** — Horizontal flex container. Props: \`gap\`, \`justify\` (flex-start|center|space-between|space-around|flex-end), \`wrap\` (wrap|nowrap), \`grow\` (boolean)
+- **Flex** — Generic flex container. Props: \`direction\` (row|column), \`gap\`, \`align\`, \`justify\`, \`wrap\`
+- **Grid** + **Grid.Col** — CSS grid layout. Grid props: \`gutter\` (gap). Grid.Col props: \`span\` (1-12 or "auto"), \`offset\`
+- **SimpleGrid** — Auto-column grid. Props: \`cols\` (number), \`spacing\`, \`verticalSpacing\`
+- **Center** — Centers content. Props: \`inline\` (boolean)
+- **Space** — Empty spacing. Props: \`h\` (height), \`w\` (width)
+- **Container** — Max-width wrapper. Props: \`size\` (xs|sm|md|lg|xl), \`fluid\` (boolean)
+- **AspectRatio** — Maintains aspect ratio. Props: \`ratio\` (number, e.g. 16/9)
+
+### Typography Components
+- **Text** — Body text. Props: \`size\` (xs|sm|md|lg|xl), \`fw\` (font-weight number, e.g. 700), \`c\` (color: "dimmed"|"red"|"blue"|...), \`ta\` (text-align), \`tt\` (text-transform: "capitalize"|"uppercase"|"lowercase"), \`td\` (text-decoration), \`lineClamp\` (number), \`truncate\` (boolean), \`span\` (renders as span)
+- **Title** — Heading. Props: \`order\` (1-6, maps to h1-h6), \`size\`, \`c\`, \`ta\`, \`tt\`
+- **Code** — Inline code. Props: \`color\`, \`block\` (boolean for code block)
+- **Highlight** — Text with highlighted substring. Props: \`highlight\` (string or string[])
+- **Mark** — Highlighted text background. Props: \`color\`
+- **Kbd** — Keyboard key display
+- **Blockquote** — Styled quote. Props: \`color\`, \`cite\`, \`icon\`
+- **Anchor** — Link. Props: \`href\`, \`target\`, \`underline\` ("always"|"hover"|"never")
+- **NumberFormatter** — Formatted number display. Props: \`value\` (number), \`prefix\` (e.g. "$"), \`suffix\` (e.g. "%"), \`thousandSeparator\` (boolean or string), \`decimalScale\` (number)
+
+### Data Display Components
+- **Badge** — Label badge. Props: \`color\`, \`variant\` (filled|light|outline|dot|default), \`size\` (xs|sm|md|lg|xl), \`radius\`, \`tt\`
+- **Card** + **Card.Section** — Content card. Card props: \`shadow\` (xs|sm|md|lg|xl), \`padding\`/\`p\`, \`radius\`, \`withBorder\` (boolean). Card.Section props: \`withBorder\`, \`inheritPadding\`
+- **Paper** — Surface container. Props: \`shadow\`, \`p\`, \`radius\`, \`withBorder\`
+- **Alert** — Notification box. Props: \`color\`, \`variant\` (filled|light|outline), \`title\`, \`icon\`
+- **ThemeIcon** — Icon container. Props: \`color\`, \`variant\`, \`size\`, \`radius\`
+- **ColorSwatch** — Color preview. Props: \`color\` (CSS color string)
+- **Table** + **Table.Thead**, **Table.Tbody**, **Table.Tr**, **Table.Th**, **Table.Td** — HTML table. Table props: \`striped\` (boolean), \`withTableBorder\`, \`withColumnBorders\`, \`highlightOnHover\`
+- **List** + **List.Item** — Ordered/unordered list. List props: \`type\` ("ordered"|"unordered"), \`icon\`, \`spacing\`
+- **Timeline** + **Timeline.Item** — Vertical timeline. Timeline props: \`active\` (number), \`bulletSize\`. Item props: \`title\`, \`bullet\`
+- **Accordion** + **.Item** + **.Control** + **.Panel** — Collapsible sections. Item props: \`value\` (string). Control: clickable header. Panel: content.
+- **Indicator** — Dot indicator on content. Props: \`color\`, \`position\`, \`size\`, \`label\`, \`processing\` (boolean)
+- **Pill** — Removable tag. Props: \`size\`, \`withRemoveButton\`
+- **Spoiler** — Show more/less. Props: \`maxHeight\` (number), \`showLabel\`, \`hideLabel\`
+
+### Feedback Components
+- **Progress** + **Progress.Section** — Progress bar. Progress props: \`value\` (0-100), \`color\`, \`size\`, \`radius\`, \`striped\`, \`animated\`. Section props: \`value\`, \`color\`
+- **RingProgress** — Circular progress. Props: \`sections\` (array of {value, color}), \`size\`, \`thickness\`, \`label\` (ReactNode)
+- **Skeleton** — Loading placeholder. Props: \`height\`, \`width\`, \`radius\`, \`visible\` (boolean)
+- **Loader** — Spinner. Props: \`size\`, \`color\`, \`type\` (oval|bars|dots)
+
+### Media Components
+- **Image** — Responsive image. Props: \`src\`, \`alt\`, \`w\` (width), \`h\` (height), \`radius\`, \`fit\` (cover|contain|fill)
+- **Avatar** + **Avatar.Group** — User avatar. Props: \`src\`, \`alt\`, \`size\` (xs|sm|md|lg|xl or number), \`radius\` (sm|xl), \`color\`
+- **BackgroundImage** — Background image container. Props: \`src\`, \`radius\`
+- **Tooltip** — Hover tooltip. Props: \`label\` (string), \`position\` (top|bottom|left|right), \`withArrow\`
+- **Divider** — Horizontal/vertical rule. Props: \`orientation\` (horizontal|vertical), \`label\`, \`labelPosition\`, \`size\`
+- **ScrollArea** — Scrollable container. Props: \`h\` (height), \`type\` (auto|always|scroll|hover)
+
+### Charts (@mantine/charts)
+- **AreaChart**, **BarChart**, **LineChart** — Props: \`data\` (array of objects), \`dataKey\` (x-axis key), \`series\` (array of {name, color}), \`h\` (height), \`curveType\` (for Area/Line)
+- **DonutChart**, **PieChart** — Props: \`data\` (array of {name, value, color}), \`h\`, \`withLabels\`, \`withLabelsLine\`
+- **RadarChart** — Props: \`data\`, \`dataKey\`, \`series\`
+- **RadialBarChart** — Props: \`data\` (array of {name, value, color}), \`h\`
+- **Sparkline** — Props: \`data\` (flat number array), \`h\`, \`w\`, \`color\`, \`curveType\`
+
+### Common Prop Patterns
+- **Spacing/sizing:** Most components accept \`p\` (padding), \`m\` (margin), \`px\`/\`py\`/\`mx\`/\`my\`/\`pt\`/\`pb\`/\`pl\`/\`pr\`/\`mt\`/\`mb\`/\`ml\`/\`mr\` with values xs|sm|md|lg|xl or numbers
+- **Colors:** Use Mantine color names: "red", "blue", "green", "orange", "violet", "pink", "cyan", "grape", "teal", "yellow", "lime", "indigo", "gray", "dark". Add shade suffix: "red.6", "blue.4"
+- **Styles:** Use \`style={{...}}\` for inline CSS. E.g. \`style={{flex: 1, minWidth: 0}}\`
+- **Conditional rendering:** Use ternaries: \`{condition ? <Text>Yes</Text> : <Text>No</Text>}\`
+- **Responsive:** Most size/spacing props accept object: \`{{ base: "sm", md: "lg" }}\`
 
 ### Interactive Components (built-in, state-managed)
 These components manage their own internal state — they provide interactivity without event handlers:

@@ -110,6 +110,9 @@ export function extractDisplayData(
   displayConfig: Record<string, unknown>,
 ): unknown {
   const type = (displayConfig.type as string) ?? displayType;
-  const extractor = extractors[type] ?? extractors.singleValue!;
+  const extractor = extractors[type];
+  if (!extractor) {
+    throw new Error(`Unknown display type: ${type}`);
+  }
   return extractor(json, displayConfig);
 }

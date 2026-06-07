@@ -315,6 +315,10 @@ export const displayConfigSchema = z
 
 export type DisplayConfig = z.infer<typeof displayConfigSchema>;
 
+const displayTypeMatchRefinement = (d: { displayType: string; displayConfig: { type: string } }) =>
+  d.displayType === d.displayConfig.type;
+const displayTypeMatchMessage = { message: "displayType must match displayConfig.type", path: ["displayConfig", "type"] };
+
 const baseDefinitionSchema = z.object({
   name: z
     .string()
@@ -384,14 +388,17 @@ const secretsInputSchema = z.array(
   }),
 );
 
-export const customWidgetCreateSchema = baseDefinitionSchema.extend({
-  secrets: secretsInputSchema,
-});
+export const customWidgetCreateSchema = baseDefinitionSchema
+  .extend({ secrets: secretsInputSchema })
+  .refine(displayTypeMatchRefinement, displayTypeMatchMessage);
 
-export const customWidgetUpdateSchema = baseDefinitionSchema.partial().extend({
-  id: z.string(),
-  secrets: secretsInputSchema.optional(),
-});
+export const customWidgetUpdateSchema = baseDefinitionSchema
+  .partial()
+  .extend({ id: z.string(), secrets: secretsInputSchema.optional() })
+  .refine(
+    (d) => !d.displayType || !d.displayConfig || d.displayType === d.displayConfig.type,
+    displayTypeMatchMessage,
+  );
 
 const customWidgetImportFieldsSchema = z.object({
   name: z
@@ -435,17 +442,19 @@ const customWidgetImportFieldsSchema = z.object({
   displayConfig: displayConfigSchema,
 });
 
-export const customWidgetImportSchema = customWidgetImportFieldsSchema.extend({
-  $schema: z
-    .literal("homarr-custom-widget-v2")
-    .optional()
-    .describe("Schema version identifier. Should be 'homarr-custom-widget-v2' for current format."),
-  url: z
-    .string()
-    .min(1)
-    .describe(
-      "Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol.",
-    ),
-});
+export const customWidgetImportSchema = customWidgetImportFieldsSchema
+  .extend({
+    $schema: z
+      .literal("homarr-custom-widget-v2")
+      .optional()
+      .describe("Schema version identifier. Should be 'homarr-custom-widget-v2' for current format."),
+    url: z
+      .string()
+      .min(1)
+      .describe(
+        "Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol.",
+      ),
+  })
+  .refine(displayTypeMatchRefinement, displayTypeMatchMessage);
 
 export type CustomWidgetImport = z.infer<typeof customWidgetImportSchema>;

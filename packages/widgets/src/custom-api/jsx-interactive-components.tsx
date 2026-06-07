@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useState, type ReactNode } from "react";
+import { Children, isValidElement, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ActionIcon,
   Badge,
@@ -27,6 +27,14 @@ export function PaginatedList({ children, pageSize = 6 }: PaginatedListProps) {
   const items = Children.toArray(children);
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
   const [page, setPage] = useState(0);
+  const prevCountRef = useRef(items.length);
+
+  useEffect(() => {
+    if (items.length !== prevCountRef.current) {
+      setPage(0);
+      prevCountRef.current = items.length;
+    }
+  }, [items.length]);
 
   const clampedPage = Math.min(page, totalPages - 1);
   const start = clampedPage * pageSize;
@@ -67,37 +75,29 @@ interface TabsContainerProps {
   defaultTab?: string;
 }
 
-export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
-  const panels = Children.toArray(children).filter(
-    (child): child is React.ReactElement<TabPanelProps> =>
-      typeof child === "object" &&
-      child !== null &&
-      "props" in child &&
-      Boolean((child as React.ReactElement<TabPanelProps>).props.value),
-  );
+function isTabPanel(child: ReactNode): child is React.ReactElement<TabPanelProps> {
+  return isValidElement<TabPanelProps>(child) && child.type === TabPanel && typeof child.props.value === "string";
+}
 
-  const firstValue = panels.length > 0 ? (panels[0] as React.ReactElement<TabPanelProps>).props.value : undefined;
+export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
+  const panels = Children.toArray(children).filter(isTabPanel);
+
+  const firstValue = panels.length > 0 ? panels[0]!.props.value : undefined;
 
   return (
     <Tabs defaultValue={defaultTab ?? firstValue}>
       <Tabs.List>
-        {panels.map((panel) => {
-          const props = (panel as React.ReactElement<TabPanelProps>).props;
-          return (
-            <Tabs.Tab key={props.value} value={props.value}>
-              {props.label ?? props.value}
-            </Tabs.Tab>
-          );
-        })}
+        {panels.map((panel) => (
+          <Tabs.Tab key={panel.props.value} value={panel.props.value}>
+            {panel.props.label ?? panel.props.value}
+          </Tabs.Tab>
+        ))}
       </Tabs.List>
-      {panels.map((panel) => {
-        const props = (panel as React.ReactElement<TabPanelProps>).props;
-        return (
-          <Tabs.Panel key={props.value} value={props.value} pt="sm">
-            {props.children}
-          </Tabs.Panel>
-        );
-      })}
+      {panels.map((panel) => (
+        <Tabs.Panel key={panel.props.value} value={panel.props.value} pt="sm">
+          {panel.props.children}
+        </Tabs.Panel>
+      ))}
     </Tabs>
   );
 }
@@ -153,7 +153,7 @@ export function StatBar({ value, max = 100, label, color = "blue" }: StatBarProp
           {label}
         </Text>
       )}
-      <div style={{ flex: 1, height: 8, borderRadius: 4, background: "var(--mantine-color-dark-4)", overflow: "hidden" }}>
+      <div style={{ flex: 1, height: 8, borderRadius: 4, background: "var(--mantine-color-default-border)", overflow: "hidden" }}>
         <div
           style={{
             width: `${pct}%`,
@@ -198,10 +198,11 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export function TypeBadge({ type, size = "sm" }: TypeBadgeProps) {
-  const color = TYPE_COLORS[type.toLowerCase()] ?? "gray";
+  const typeStr = typeof type === "string" ? type : String(type ?? "");
+  const color = TYPE_COLORS[typeStr.toLowerCase()] ?? "gray";
   return (
     <Badge color={color} size={size} variant="filled" tt="capitalize">
-      {type}
+      {typeStr}
     </Badge>
   );
 }

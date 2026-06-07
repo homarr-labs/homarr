@@ -21,6 +21,14 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     });
   }, []);
 
+  if (!template.trim()) {
+    return (
+      <Alert color="gray" variant="light" p="xs">
+        <Text size="xs" c="dimmed">No JSX template configured</Text>
+      </Alert>
+    );
+  }
+
   return (
     <Stack gap={0} h="100%">
       <JsxParser
@@ -41,8 +49,13 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       {parseErrors.length > 0 && (
         <Alert color="yellow" variant="light" p="xs" mt="xs">
           <Text size="xs" c="dimmed">
-            {parseErrors.length} template warning(s)
+            {parseErrors.length} template warning(s):
           </Text>
+          {parseErrors.map((msg) => (
+            <Text key={msg} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
+              {msg}
+            </Text>
+          ))}
         </Alert>
       )}
     </Stack>

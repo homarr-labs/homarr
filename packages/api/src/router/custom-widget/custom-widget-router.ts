@@ -16,6 +16,7 @@ import {
   customWidgetMethods,
   customWidgetSecretKinds,
   customWidgetUpdateSchema,
+  displayConfigSchema,
 } from "@homarr/validation/custom-widget";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -258,7 +259,7 @@ export const customWidgetRouter = createTRPCRouter({
         headerName: z.string().optional(),
         requestBody: z.string().optional(),
         displayType: z.enum(customWidgetDisplayTypes),
-        displayConfig: z.record(z.string(), z.unknown()),
+        displayConfig: displayConfigSchema,
         secrets: z.array(z.object({ kind: z.enum(customWidgetSecretKinds), value: z.string() })),
         definitionId: z.string().optional(),
       }),
