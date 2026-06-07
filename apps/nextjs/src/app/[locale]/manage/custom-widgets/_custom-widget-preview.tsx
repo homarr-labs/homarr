@@ -119,7 +119,7 @@ export function CustomWidgetPreview({
                 variant="subtle"
                 leftSection={<IconExternalLink size={14} />}
                 onClick={() => {
-                  const blob = new Blob([fetchResult.rawResponse!], { type: "application/json" });
+                  const blob = new Blob([fetchResult.rawResponse ?? ""], { type: "application/json" });
                   const blobUrl = URL.createObjectURL(blob);
                   window.open(blobUrl);
                   setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
@@ -164,8 +164,8 @@ function PreviewDisplay({ data }: { data: unknown }) {
   }
 
   if (dataType && displayComponents[dataType]) {
-    const Component = displayComponents[dataType]!;
-    return <Component data={typed} />;
+    const Component = displayComponents[dataType];
+    return Component ? <Component data={typed} /> : null;
   }
 
   return (

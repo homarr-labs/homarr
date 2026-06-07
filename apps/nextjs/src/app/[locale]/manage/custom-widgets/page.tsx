@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { Group } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
