@@ -117,22 +117,6 @@ Props: \`type\` (string), \`size\` (xs|sm|md|lg|xl, default sm)
 - Expression arrows for \`.map()\`, \`.filter()\`, \`.slice()\` — e.g. \`{data.items.map(item => <Text>{item.name}</Text>)}\`
 - Ternaries for conditionals — e.g. \`{data.count > 0 ? "active" : "idle"}\`
 
-**SubFetch** — Fetches a sub-URL server-side and renders a nested JSX template with the result. Enables drill-down views (click to see details).
-Props: \`url\` (string, required — must be same hostname as parent widget URL), \`template\` (string, required — JSX template rendered with fetched data as \`data\`), \`definitionId\` (string, required — use \`{definitionId}\` binding to pass the parent widget ID for auth), \`trigger\` ("inline" | "popover", default "popover"), \`buttonLabel\` (string, default "View"), \`buttonVariant\` (string, default "light"), \`width\` (number, default 380)
-- The \`template\` prop is a JSX string using the same components and bindings as the main template (except SubFetch itself — no nesting)
-- \`trigger="popover"\`: renders a button; clicking opens a popover with fetched content (lazy-loaded on first click)
-- \`trigger="inline"\`: fetches on mount and renders directly in place
-- Use single quotes for the outer template attribute and escaped double quotes inside, or use \`&quot;\` entities
-\`\`\`jsx
-<SubFetch
-  url="https://pokeapi.co/api/v2/pokemon/pikachu"
-  definitionId={definitionId}
-  trigger="popover"
-  buttonLabel="Details"
-  template='<Stack gap="xs"><Title order={4} tt="capitalize">{data.name}</Title><Group gap="xs">{data.types.map(t => <TypeBadge type={t.type.name} />)}</Group>{data.stats.map(s => <StatBar label={s.stat.name} value={s.base_stat} max={255} />)}</Stack>'
-/>
-\`\`\`
-
 **FORBIDDEN keywords (template will be rejected):** constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch
 
 **Chart data formats:**
@@ -141,7 +125,51 @@ Props: \`url\` (string, required — must be same hostname as parent widget URL)
 - Sparkline: \`data={[1,2,3]}\` — flat number array
 - NumberFormatter: \`<NumberFormatter value={data.price} thousandSeparator prefix="$" />\`
 
-### Pokédex with SubFetch Drill-Down (full example)
+### Full Pokémon Card Example (demonstrating TypeBadge, StatBar, TabsContainer, Collapsible)
+API: \`https://pokeapi.co/api/v2/pokemon/charizard\`
+\`\`\`jsx
+<Stack gap="sm" p="xs">
+  <Group wrap="nowrap">
+    <Avatar src={data.sprites.front_default} size={80} radius="sm" />
+    <Stack gap={4} style={{flex: 1}}>
+      <Title order={3} tt="capitalize">{data.name}</Title>
+      <Text size="xs" c="dimmed">#{String(data.id).padStart(3, "0")}</Text>
+      <Group gap="xs">
+        {data.types.map(t => <TypeBadge type={t.type.name} />)}
+      </Group>
+    </Stack>
+  </Group>
+  <TabsContainer defaultTab="stats">
+    <TabPanel value="stats" label="Stats">
+      <Stack gap="xs" pt="xs">
+        {data.stats.map(s =>
+          <StatBar label={s.stat.name} value={s.base_stat} max={255} color={s.base_stat > 100 ? "green" : "red"} />
+        )}
+      </Stack>
+    </TabPanel>
+    <TabPanel value="abilities" label="Abilities">
+      <Stack gap="xs" pt="xs">
+        {data.abilities.map(a =>
+          <Badge variant={a.is_hidden ? "outline" : "filled"} tt="capitalize">
+            {a.ability.name}{a.is_hidden ? " (hidden)" : ""}
+          </Badge>
+        )}
+      </Stack>
+    </TabPanel>
+    <TabPanel value="moves" label="Moves">
+      <Collapsible title="Move list">
+        <Group gap="xs" pt="xs">
+          {data.moves.slice(0, 20).map(m =>
+            <Badge size="xs" variant="light" tt="capitalize">{m.move.name}</Badge>
+          )}
+        </Group>
+      </Collapsible>
+    </TabPanel>
+  </TabsContainer>
+</Stack>
+\`\`\`
+
+### Paginated List Example
 API: \`https://pokeapi.co/api/v2/pokemon?limit=50\`
 \`\`\`jsx
 <Stack gap="sm" p="xs">
@@ -149,29 +177,19 @@ API: \`https://pokeapi.co/api/v2/pokemon?limit=50\`
     <Title order={3}>Pokédex</Title>
     <Badge size="lg" color="red">{data.count} Pokémon</Badge>
   </Group>
-  <PaginatedList pageSize={8}>
+  <PaginatedList pageSize={10}>
     {data.results.map((pokemon, i) =>
       <Card withBorder p="xs" mb="xs">
-        <Group wrap="nowrap" justify="space-between">
-          <Group wrap="nowrap" gap="sm">
-            <Avatar
-              src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}
-              size="lg"
-              radius="sm"
-            />
-            <Stack gap={0}>
-              <Text fw={700} tt="capitalize">{pokemon.name}</Text>
-              <Text size="xs" c="dimmed">#{String(i + 1).padStart(3, "0")}</Text>
-            </Stack>
-          </Group>
-          <SubFetch
-            url={pokemon.url}
-            definitionId={definitionId}
-            trigger="popover"
-            buttonLabel="Details"
-            width={400}
-            template='<Stack gap="xs" p="xs"><Group wrap="nowrap"><Avatar src={data.sprites.front_default} size={64} radius="sm" /><Stack gap={4} style={{flex:1}}><Title order={4} tt="capitalize">{data.name}</Title><Text size="xs" c="dimmed">{data.height/10}m · {data.weight/10}kg</Text><Group gap="xs">{data.types.map(t => <TypeBadge type={t.type.name} />)}</Group></Stack></Group><Divider />{data.stats.map(s => <StatBar label={s.stat.name} value={s.base_stat} max={255} />)}<Collapsible title="Abilities"><Group gap="xs" pt="xs">{data.abilities.map(a => <Badge variant={a.is_hidden ? "outline" : "filled"} tt="capitalize">{a.ability.name}</Badge>)}</Group></Collapsible></Stack>'
+        <Group wrap="nowrap">
+          <Avatar
+            src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}
+            size="lg"
+            radius="sm"
           />
+          <Stack gap={0} style={{ flex: 1 }}>
+            <Text fw={700} tt="capitalize">{pokemon.name}</Text>
+            <Text size="xs" c="dimmed">#{String(i + 1)}</Text>
+          </Stack>
         </Group>
       </Card>
     )}

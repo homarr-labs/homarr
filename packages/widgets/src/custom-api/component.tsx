@@ -477,8 +477,7 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
 
   if (dataType && displayComponents[dataType]) {
     const Component = displayComponents[dataType]!;
-    const needsDefinitionId = dataType === "actionButton" || dataType === "customJsx";
-    const enrichedData = needsDefinitionId ? { ...widgetData, _definitionId: definitionId } : widgetData;
+    const enrichedData = dataType === "actionButton" ? { ...widgetData, _definitionId: definitionId } : widgetData;
     return <Component data={enrichedData} />;
   }
 

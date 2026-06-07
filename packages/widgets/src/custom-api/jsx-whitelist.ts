@@ -61,9 +61,8 @@ import {
   StatBar,
   TypeBadge,
 } from "./jsx-interactive-components";
-import { SubFetch } from "./sub-fetch";
 
-const BASE_COMPONENTS: Record<string, ComponentType<never>> = {
+export const WHITELISTED_COMPONENTS: Record<string, ComponentType<never>> = {
   Stack,
   Group,
   Flex,
@@ -135,13 +134,6 @@ const BASE_COMPONENTS: Record<string, ComponentType<never>> = {
   TypeBadge,
 };
 
-export const WHITELISTED_COMPONENTS_INNER: Record<string, ComponentType<never>> = BASE_COMPONENTS;
-
-export const WHITELISTED_COMPONENTS: Record<string, ComponentType<never>> = {
-  ...BASE_COMPONENTS,
-  SubFetch: SubFetch as ComponentType<never>,
-};
-
 function sanitizeData(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
   if (typeof obj !== "object") return obj;
@@ -181,7 +173,7 @@ safeObject.values = (v: object) => Object.values(v);
 safeObject.entries = (v: object) => Object.entries(v);
 Object.freeze(safeObject);
 
-export const SAFE_BINDINGS = (apiData: unknown): Record<string, unknown> => ({
+export const SAFE_BINDINGS = (apiData: unknown) => ({
   data: sanitizeData(apiData),
   String: (v: unknown) => String(v),
   Number: (v: unknown) => Number(v),

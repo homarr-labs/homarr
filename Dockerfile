@@ -46,7 +46,6 @@ COPY --from=builder /app/apps/nextjs/package.json .
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
 COPY --from=builder /app/packages/db/migrations ./db/migrations
-COPY --from=builder /app/packages/db/seed ./db/seed
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

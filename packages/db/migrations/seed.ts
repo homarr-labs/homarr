@@ -49,22 +49,12 @@ import type { Integration } from "../schema";
 
 const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
 
-// In CJS bundles (migrate.cjs at migrations/sqlite/), import.meta.url is undefined.
-// ESM: seed.ts is at migrations/seed.ts → dirname = migrations/ → ../seed/custom-widgets
-// CJS: __dirname = migrations/sqlite/ → ../../seed/custom-widgets
-const resolveSeedDir = (): string => {
-  if (typeof import.meta?.url === "string") {
-    return join(dirname(fileURLToPath(import.meta.url)), "..", "seed", "custom-widgets");
-  }
-  return join(__dirname, "..", "..", "seed", "custom-widgets");
-};
-const CUSTOM_WIDGET_SEED_DIR = resolveSeedDir();
+const CUSTOM_WIDGET_SEED_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "seed", "custom-widgets");
 
 const CUSTOM_WIDGET_SEED_IDS: Record<string, string> = {
   "dog-facts.json": "seed-dog-facts",
   "currency-exchange.json": "seed-currency-exchange",
   "jellyfin.json": "seed-jellyfin",
-  "pokedex.json": "seed-pokedex",
 };
 
 export const seedDataAsync = async (db: Database) => {

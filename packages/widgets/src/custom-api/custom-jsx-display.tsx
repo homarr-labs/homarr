@@ -10,7 +10,6 @@ import { WHITELISTED_COMPONENTS, SAFE_BINDINGS } from "./jsx-whitelist";
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const template = String(data.template ?? "");
   const apiData = data.data;
-  const definitionId = data._definitionId as string | undefined;
   const [parseErrors, setParseErrors] = useState<string[]>([]);
 
   const handleError = useCallback((error: Error) => {
@@ -22,17 +21,12 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     });
   }, []);
 
-  const bindings = SAFE_BINDINGS(apiData);
-  if (definitionId) {
-    bindings.definitionId = definitionId;
-  }
-
   return (
     <Stack gap={0} h="100%">
       <JsxParser
         jsx={template}
         components={WHITELISTED_COMPONENTS as never}
-        bindings={bindings}
+        bindings={SAFE_BINDINGS(apiData)}
         componentsOnly
         allowUnknownElements={false}
         blacklistedAttrs={[/^on.+/i, /^dangerously/i]}
