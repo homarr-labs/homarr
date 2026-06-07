@@ -323,7 +323,12 @@ export const customWidgetRouter = createTRPCRouter({
 
         if (!response.ok) {
           const body = await response.text().catch(() => "");
-          return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo, rawResponse: body };
+          return {
+            success: false as const,
+            error: `HTTP ${response.status}: ${response.statusText}`,
+            responseInfo,
+            rawResponse: body,
+          };
         }
 
         const json: unknown = await response.json();
@@ -356,28 +361,41 @@ export const customWidgetRouter = createTRPCRouter({
             return {
               type: "table",
               columns: columns.map((col) => col.header),
-              rows: flatRows.map((row) => columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false }))),
+              rows: flatRows.map((row) =>
+                columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false })),
+              ),
               striped: c.striped ?? true,
               compact: c.compact ?? false,
             };
           },
           statGrid: (j, c) => ({
             type: "statGrid",
-            items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map((item) => ({
-              label: item.label,
-              unit: item.unit,
-              color: item.color ?? "blue",
-              value: JSONPath({ path: item.jsonPath, json: j as object, wrap: false }),
-            })),
+            items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map(
+              (item) => ({
+                label: item.label,
+                unit: item.unit,
+                color: item.color ?? "blue",
+                value: JSONPath({ path: item.jsonPath, json: j as object, wrap: false }),
+              }),
+            ),
             columns: c.columns ?? 2,
             cardStyle: c.cardStyle ?? "filled",
           }),
           progressBars: (j, c) => ({
             type: "progressBars",
-            bars: ((c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ?? []).map((bar) => {
+            bars: (
+              (c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ??
+              []
+            ).map((bar) => {
               const value = JSONPath({ path: bar.valuePath, json: j as object, wrap: false });
               const max = bar.maxPath ? JSONPath({ path: bar.maxPath, json: j as object, wrap: false }) : undefined;
-              return { label: bar.label, unit: bar.unit, color: bar.color ?? "blue", value: Number(value) || 0, max: max !== undefined ? Number(max) || 100 : undefined };
+              return {
+                label: bar.label,
+                unit: bar.unit,
+                color: bar.color ?? "blue",
+                value: Number(value) || 0,
+                max: max !== undefined ? Number(max) || 100 : undefined,
+              };
             }),
             showPercentage: c.showPercentage ?? true,
             barSize: c.barSize ?? "md",
@@ -535,14 +553,14 @@ export const customWidgetRouter = createTRPCRouter({
         method: definition.method,
         headers,
         body: definition.method !== "GET" ? definition.requestBody : undefined,
-          redirect: "follow",
-          signal: controller.signal,
-        });
+        redirect: "follow",
+        signal: controller.signal,
+      });
 
-        const responseInfo = { status: response.status, statusText: response.statusText };
+      const responseInfo = { status: response.status, statusText: response.statusText };
 
-        if (!response.ok) {
-          return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo };
+      if (!response.ok) {
+        return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo };
       }
 
       logger.info("Executed custom widget action", { definitionId: input.definitionId, status: response.status });
@@ -550,10 +568,13 @@ export const customWidgetRouter = createTRPCRouter({
     } catch (error) {
       if (error instanceof TRPCError) throw error;
       logger.error("Custom widget execute failed", { definitionId: input.definitionId, error });
-      return { success: false as const, error: error instanceof Error ? error.message : "Request failed", responseInfo: null };
+      return {
+        success: false as const,
+        error: error instanceof Error ? error.message : "Request failed",
+        responseInfo: null,
+      };
     } finally {
       clearTimeout(timeout);
     }
   }),
-
 });

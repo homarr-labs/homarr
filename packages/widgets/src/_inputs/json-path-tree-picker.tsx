@@ -1,15 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  Badge,
-  Combobox,
-  Group,
-  InputBase,
-  ScrollArea,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Badge, Combobox, Group, InputBase, ScrollArea, Text, useCombobox } from "@mantine/core";
 import {
   IconBraces,
   IconChevronDown,
@@ -95,7 +87,17 @@ function flattenJson(
   expandAll = false,
 ): FlatNode[] {
   if (isPrimitive(json)) {
-    return [{ path: prefix, label: lastSegment(prefix), preview: truncateValue(json), type: getValueType(json), depth, hasChildren: false, isExpanded: false }];
+    return [
+      {
+        path: prefix,
+        label: lastSegment(prefix),
+        preview: truncateValue(json),
+        type: getValueType(json),
+        depth,
+        hasChildren: false,
+        isExpanded: false,
+      },
+    ];
   }
 
   const obj = json as object;
@@ -107,7 +109,15 @@ function flattenJson(
   if (Array.isArray(json)) {
     const isExpanded = expandAll || (expanded[prefix] ?? depth === 0);
     const preview = json.length === 0 ? "[]" : `${json.length} items`;
-    nodes.push({ path: prefix, label: lastSegment(prefix), preview, type: "array", depth, hasChildren: json.length > 0, isExpanded });
+    nodes.push({
+      path: prefix,
+      label: lastSegment(prefix),
+      preview,
+      type: "array",
+      depth,
+      hasChildren: json.length > 0,
+      isExpanded,
+    });
 
     if (isExpanded) {
       for (let i = 0; i < json.length; i++) {
@@ -121,14 +131,30 @@ function flattenJson(
   const entries = Object.entries(json as Record<string, unknown>);
   const isExpanded = expandAll || (expanded[prefix] ?? depth <= 1);
   if (depth > 0) {
-    nodes.push({ path: prefix, label: lastSegment(prefix), preview: formatObjectPreview(entries), type: "object", depth, hasChildren: entries.length > 0, isExpanded });
+    nodes.push({
+      path: prefix,
+      label: lastSegment(prefix),
+      preview: formatObjectPreview(entries),
+      type: "object",
+      depth,
+      hasChildren: entries.length > 0,
+      isExpanded,
+    });
   }
 
   if (isExpanded || depth === 0) {
     for (const [key, val] of entries) {
       const childPath = appendPath(prefix, key);
       if (isPrimitive(val)) {
-        nodes.push({ path: childPath, label: key, preview: truncateValue(val), type: getValueType(val), depth: depth + 1, hasChildren: false, isExpanded: false });
+        nodes.push({
+          path: childPath,
+          label: key,
+          preview: truncateValue(val),
+          type: getValueType(val),
+          depth: depth + 1,
+          hasChildren: false,
+          isExpanded: false,
+        });
       } else {
         nodes.push(...flattenJson(val, childPath, depth + 1, expanded, seen, expandAll));
       }
@@ -209,7 +235,9 @@ export function JsonPathTreePicker({
   }, [flatNodes, searchQuery, isSearching]);
 
   const toggleExpand = (path: string) => {
-    const childPaths = flatNodes.filter((n) => n.hasChildren && n.path.startsWith(path) && n.path !== path).map((n) => n.path);
+    const childPaths = flatNodes
+      .filter((n) => n.hasChildren && n.path.startsWith(path) && n.path !== path)
+      .map((n) => n.path);
     setExpanded((prev) => {
       const isCurrentlyExpanded = prev[path] ?? false;
       const next = { ...prev, [path]: !isCurrentlyExpanded };
@@ -337,7 +365,11 @@ function TreeNodeOption({ node, selected, isSearching }: { node: FlatNode; selec
           {node.label}
         </Text>
         {node.preview !== null && (
-          <Text size="xs" c="dimmed" style={{ flexShrink: 0, maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <Text
+            size="xs"
+            c="dimmed"
+            style={{ flexShrink: 0, maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          >
             {node.preview}
           </Text>
         )}

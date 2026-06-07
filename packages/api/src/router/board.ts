@@ -614,7 +614,7 @@ export const boardRouter = createTRPCRouter({
         boardId: board.id,
       });
 
-      const sortedLayouts = board.layouts.sort((layoutA, layoutB) => layoutA.columnCount - layoutB.columnCount);
+      const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutA.columnCount - layoutB.columnCount);
       // Fallback to biggest if none exists with columnCount bigger than addedLayout.columnCount
       const layoutToClone =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1216,7 +1216,7 @@ export const boardRouter = createTRPCRouter({
     });
 
     return {
-      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
         return permissionA.group.name.localeCompare(permissionB.group.name);
       }),
       users: userPermissions
@@ -1224,7 +1224,7 @@ export const boardRouter = createTRPCRouter({
           user,
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
         }),
       groups: dbGroupBoardPermission
@@ -1235,7 +1235,7 @@ export const boardRouter = createTRPCRouter({
           },
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
     };
@@ -1587,7 +1587,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     ...otherBoardProperties,
     layouts: layouts
       .map(({ boardId: _, ...layout }) => layout)
-      .sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
+      .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,

@@ -49,7 +49,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   );
 
   const filteredCustomWidgets = useMemo(
-    () => (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
+    () =>
+      (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
     [customWidgetDefs, search],
   );
 

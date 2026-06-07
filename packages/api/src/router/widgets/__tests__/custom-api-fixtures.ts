@@ -76,9 +76,7 @@ export const piholeResponse = {
 
 export const piholeStatusIndicatorConfig = {
   type: "statusIndicator" as const,
-  items: [
-    { label: "Pi-Hole", jsonPath: "$.status", goodValues: ["enabled"] },
-  ],
+  items: [{ label: "Pi-Hole", jsonPath: "$.status", goodValues: ["enabled"] }],
   layout: "list" as const,
   dotSize: "md" as const,
 };
@@ -103,9 +101,7 @@ export const radarrResponse = {
     { title: "Interstellar", hasFile: false, monitored: true, runtime: 169, year: 2014 },
     { title: "The Dark Knight", hasFile: true, monitored: false, runtime: 152, year: 2008 },
   ],
-  rootfolder: [
-    { path: "/movies", freeSpace: 200_000_000_000, totalSpace: 1_000_000_000_000 },
-  ],
+  rootfolder: [{ path: "/movies", freeSpace: 200_000_000_000, totalSpace: 1_000_000_000_000 }],
 };
 
 export const radarrStatGridConfig = {

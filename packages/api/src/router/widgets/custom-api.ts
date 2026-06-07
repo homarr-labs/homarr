@@ -78,28 +78,40 @@ const extractors: Record<string, (json: unknown, config: Record<string, unknown>
     return {
       type: "table",
       columns: columns.map((col) => col.header),
-      rows: flatRows.map((row) => columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false }))),
+      rows: flatRows.map((row) =>
+        columns.map((col) => JSONPath({ path: col.jsonPath, json: row as object, wrap: false })),
+      ),
       striped: c.striped ?? true,
       compact: c.compact ?? false,
     };
   },
   statGrid: (json, c) => ({
     type: "statGrid",
-    items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map((item) => ({
-      label: item.label,
-      unit: item.unit,
-      color: item.color ?? "blue",
-      value: JSONPath({ path: item.jsonPath, json: json as object, wrap: false }),
-    })),
+    items: ((c.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map(
+      (item) => ({
+        label: item.label,
+        unit: item.unit,
+        color: item.color ?? "blue",
+        value: JSONPath({ path: item.jsonPath, json: json as object, wrap: false }),
+      }),
+    ),
     columns: c.columns ?? 2,
     cardStyle: c.cardStyle ?? "filled",
   }),
   progressBars: (json, c) => ({
     type: "progressBars",
-    bars: ((c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ?? []).map((bar) => {
+    bars: (
+      (c.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ?? []
+    ).map((bar) => {
       const value = JSONPath({ path: bar.valuePath, json: json as object, wrap: false });
       const max = bar.maxPath ? JSONPath({ path: bar.maxPath, json: json as object, wrap: false }) : undefined;
-      return { label: bar.label, unit: bar.unit, color: bar.color ?? "blue", value: Number(value) || 0, max: max !== undefined ? Number(max) || 100 : undefined };
+      return {
+        label: bar.label,
+        unit: bar.unit,
+        color: bar.color ?? "blue",
+        value: Number(value) || 0,
+        max: max !== undefined ? Number(max) || 100 : undefined,
+      };
     }),
     showPercentage: c.showPercentage ?? true,
     barSize: c.barSize ?? "md",

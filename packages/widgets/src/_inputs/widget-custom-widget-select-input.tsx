@@ -83,9 +83,7 @@ export const WidgetCustomWidgetSelectInput = ({
               {def.label}
             </Combobox.Option>
           ))}
-          {filteredOptions.length === 0 && !isLoading && (
-            <Combobox.Empty>No definitions found</Combobox.Empty>
-          )}
+          {filteredOptions.length === 0 && !isLoading && <Combobox.Empty>No definitions found</Combobox.Empty>}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>

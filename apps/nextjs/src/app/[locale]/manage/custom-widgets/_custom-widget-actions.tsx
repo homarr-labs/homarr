@@ -2,7 +2,15 @@
 
 import { useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDots, IconDownload, IconToggleLeft, IconToggleRight, IconTrash, IconUpload } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconDots,
+  IconDownload,
+  IconToggleLeft,
+  IconToggleRight,
+  IconTrash,
+  IconUpload,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -38,7 +46,10 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
         onError: () => {
-          showErrorNotification({ title: widget.enabled ? t("action.disable") : t("action.enable"), message: t("notification.toggleError") });
+          showErrorNotification({
+            title: widget.enabled ? t("action.disable") : t("action.enable"),
+            message: t("notification.toggleError"),
+          });
         },
       },
     );
@@ -64,7 +75,10 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       { id: widget.id },
       {
         onSuccess: (result) => {
-          showSuccessNotification({ title: t("action.duplicate"), message: t("notification.duplicated", { name: result.name }) });
+          showSuccessNotification({
+            title: t("action.duplicate"),
+            message: t("notification.duplicated", { name: result.name }),
+          });
           void utils.customWidget.all.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
@@ -84,7 +98,10 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           { id: widget.id },
           {
             onSuccess: () => {
-              showSuccessNotification({ title: t("action.delete"), message: t("notification.deleted", { name: widget.name }) });
+              showSuccessNotification({
+                title: t("action.delete"),
+                message: t("notification.deleted", { name: widget.name }),
+              });
               void utils.customWidget.all.invalidate();
               void utils.widget.customApi.getData.invalidate({ definitionId: widget.id });
               void revalidatePathActionAsync("/manage/custom-widgets");
@@ -114,7 +131,11 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           {widget.enabled ? t("action.disable") : t("action.enable")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item onClick={handleDuplicate} leftSection={<IconCopy {...iconProps} />} disabled={duplicateMutation.isPending}>
+        <Menu.Item
+          onClick={handleDuplicate}
+          leftSection={<IconCopy {...iconProps} />}
+          disabled={duplicateMutation.isPending}
+        >
           {t("action.duplicate")}
         </Menu.Item>
         <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>

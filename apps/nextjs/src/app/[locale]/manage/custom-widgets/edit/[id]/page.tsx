@@ -82,7 +82,9 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
       compact: (config.compact as boolean) ?? false,
     }),
     statGrid: () => ({
-      statGridItems: ((config.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []).map((item) => ({
+      statGridItems: (
+        (config.items as Array<{ label: string; jsonPath: string; unit: string; color?: string }>) ?? []
+      ).map((item) => ({
         label: item.label,
         jsonPath: item.jsonPath,
         unit: item.unit,
@@ -92,7 +94,10 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
       cardStyle: (config.cardStyle as string) ?? "filled",
     }),
     progressBars: () => ({
-      progressBars: ((config.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ?? []).map((bar) => ({
+      progressBars: (
+        (config.bars as Array<{ label: string; valuePath: string; maxPath?: string; unit: string; color?: string }>) ??
+        []
+      ).map((bar) => ({
         label: bar.label,
         valuePath: bar.valuePath,
         maxPath: bar.maxPath ?? "",
@@ -103,11 +108,13 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
       barSize: (config.barSize as string) ?? "md",
     }),
     statusIndicator: () => ({
-      statusItems: ((config.items as Array<{ label: string; jsonPath: string; goodValues: string[] }>) ?? []).map((item) => ({
-        label: item.label,
-        jsonPath: item.jsonPath,
-        goodValues: item.goodValues.join(", "),
-      })),
+      statusItems: ((config.items as Array<{ label: string; jsonPath: string; goodValues: string[] }>) ?? []).map(
+        (item) => ({
+          label: item.label,
+          jsonPath: item.jsonPath,
+          goodValues: item.goodValues.join(", "),
+        }),
+      ),
       statusLayout: (config.layout as string) ?? "list",
       dotSize: (config.dotSize as string) ?? "md",
     }),

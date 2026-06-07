@@ -35,7 +35,11 @@ const valueSizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg", xl:
 function SingleValueDisplay({ data }: { data: Record<string, unknown> }) {
   const size = valueSizeMap[(data.valueSize as string) ?? "lg"] ?? "lg";
   const labelAbove = (data.labelPosition as string) === "above";
-  const label = data.label ? <Text c="dimmed" size="sm">{String(data.label)}</Text> : null;
+  const label = data.label ? (
+    <Text c="dimmed" size="sm">
+      {String(data.label)}
+    </Text>
+  ) : null;
 
   return (
     <Stack h="100%" align="center" justify="center" gap="xs">
@@ -60,9 +64,12 @@ function KeyValueDisplay({ data }: { data: Record<string, unknown> }) {
         {entries.map((entry, i) => (
           <Stack key={i} align="center" gap={2}>
             <Text size="sm" fw={600}>
-              {String(entry.value ?? "—")}{entry.unit ? ` ${entry.unit}` : ""}
+              {String(entry.value ?? "—")}
+              {entry.unit ? ` ${entry.unit}` : ""}
             </Text>
-            <Text size="xs" c="dimmed">{entry.label}</Text>
+            <Text size="xs" c="dimmed">
+              {entry.label}
+            </Text>
           </Stack>
         ))}
       </SimpleGrid>
@@ -73,9 +80,12 @@ function KeyValueDisplay({ data }: { data: Record<string, unknown> }) {
     <Stack h="100%" justify="center" gap="xs" p="sm">
       {entries.map((entry, i) => (
         <Group key={i} justify="space-between" wrap="nowrap">
-          <Text size="sm" c="dimmed">{entry.label}</Text>
+          <Text size="sm" c="dimmed">
+            {entry.label}
+          </Text>
           <Text size="sm" fw={600}>
-            {String(entry.value ?? "—")}{entry.unit ? ` ${entry.unit}` : ""}
+            {String(entry.value ?? "—")}
+            {entry.unit ? ` ${entry.unit}` : ""}
           </Text>
         </Group>
       ))}
@@ -94,13 +104,21 @@ function TableDisplay({ data }: { data: Record<string, unknown> }) {
       <Table striped={striped} highlightOnHover withTableBorder>
         <Table.Thead>
           <Table.Tr>
-            {columns.map((col, i) => <Table.Th key={i} py={compact ? 4 : undefined}>{col}</Table.Th>)}
+            {columns.map((col, i) => (
+              <Table.Th key={i} py={compact ? 4 : undefined}>
+                {col}
+              </Table.Th>
+            ))}
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
           {rows.map((row, i) => (
             <Table.Tr key={i}>
-              {row.map((cell, j) => <Table.Td key={j} py={compact ? 2 : undefined}>{String(cell ?? "—")}</Table.Td>)}
+              {row.map((cell, j) => (
+                <Table.Td key={j} py={compact ? 2 : undefined}>
+                  {String(cell ?? "—")}
+                </Table.Td>
+              ))}
             </Table.Tr>
           ))}
         </Table.Tbody>
@@ -109,7 +127,13 @@ function TableDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function StatGridCard({ item, cardStyle }: { item: { label: string; unit: string; color: string; value: unknown }; cardStyle: string }) {
+function StatGridCard({
+  item,
+  cardStyle,
+}: {
+  item: { label: string; unit: string; color: string; value: unknown };
+  cardStyle: string;
+}) {
   const { ref, height, width } = useElementSize();
   const isWide = width > height + 20;
   const hideLabel = height > 0 && height <= 38;
@@ -130,10 +154,18 @@ function StatGridCard({ item, cardStyle }: { item: { label: string; unit: string
       h="100%"
       style={{ flex: 1 }}
     >
-      <Flex h="100%" w="100%" align="center" justify="center" direction={isWide ? "row" : "column"} gap={isWide ? 8 : 4}>
+      <Flex
+        h="100%"
+        w="100%"
+        align="center"
+        justify="center"
+        direction={isWide ? "row" : "column"}
+        gap={isWide ? 8 : 4}
+      >
         <Flex direction="column" align={isWide ? "flex-start" : "center"} gap={0}>
           <Text size="md" fw={700} ta="center" lh={1.1}>
-            {String(item.value ?? "—")}{item.unit ? ` ${item.unit}` : ""}
+            {String(item.value ?? "—")}
+            {item.unit ? ` ${item.unit}` : ""}
           </Text>
           {!hideLabel && (
             <Text size="xs" c="dimmed" ta="center" tt="uppercase" lh={1.3} style={{ letterSpacing: "0.03em" }}>
@@ -152,8 +184,16 @@ function StatGridDisplay({ data }: { data: Record<string, unknown> }) {
   const cardStyle = (data.cardStyle as string) ?? "filled";
 
   return (
-    <SimpleGrid cols={columns} spacing="xs" p="xs" h="100%" style={{ gridTemplateRows: `repeat(${Math.ceil(items.length / columns)}, 1fr)` }}>
-      {items.map((item, i) => <StatGridCard key={i} item={item} cardStyle={cardStyle} />)}
+    <SimpleGrid
+      cols={columns}
+      spacing="xs"
+      p="xs"
+      h="100%"
+      style={{ gridTemplateRows: `repeat(${Math.ceil(items.length / columns)}, 1fr)` }}
+    >
+      {items.map((item, i) => (
+        <StatGridCard key={i} item={item} cardStyle={cardStyle} />
+      ))}
     </SimpleGrid>
   );
 }
@@ -173,10 +213,14 @@ function ProgressBarsDisplay({ data }: { data: Record<string, unknown> }) {
         return (
           <Stack key={i} gap={4}>
             <Group justify="space-between" wrap="nowrap">
-              <Text size="xs" fw={500}>{bar.label}</Text>
+              <Text size="xs" fw={500}>
+                {bar.label}
+              </Text>
               <Text size="xs" c="dimmed">
                 {showPercentage ? `${pct.toFixed(0)}%` : `${bar.value}${bar.unit ? ` ${bar.unit}` : ""}`}
-                {bar.max !== undefined && showPercentage ? ` (${bar.value}/${max}${bar.unit ? ` ${bar.unit}` : ""})` : ""}
+                {bar.max !== undefined && showPercentage
+                  ? ` (${bar.value}/${max}${bar.unit ? ` ${bar.unit}` : ""})`
+                  : ""}
               </Text>
             </Group>
             <Progress value={pct} size={sizeMap[barSize] ?? 14} color={bar.color} radius="sm" />
@@ -197,15 +241,21 @@ function StatusIndicatorDisplay({ data }: { data: Record<string, unknown> }) {
 
   const renderItem = (item: { label: string; value: string; isGood: boolean }, i: number) => (
     <Group key={i} gap="xs" wrap="nowrap">
-      <div style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        backgroundColor: item.isGood ? "var(--mantine-color-green-6)" : "var(--mantine-color-red-6)",
-        flexShrink: 0,
-      }} />
-      <Text size="sm" fw={500}>{item.label}</Text>
-      <Text size="xs" c="dimmed" ml="auto">{item.value}</Text>
+      <div
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          backgroundColor: item.isGood ? "var(--mantine-color-green-6)" : "var(--mantine-color-red-6)",
+          flexShrink: 0,
+        }}
+      />
+      <Text size="sm" fw={500}>
+        {item.label}
+      </Text>
+      <Text size="xs" c="dimmed" ml="auto">
+        {item.value}
+      </Text>
     </Group>
   );
 
@@ -236,7 +286,8 @@ function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
       {items.map((item, i) => (
         <Stack key={i} align="center" justify="center" gap={0}>
           <Text size={sizeMap[valueSize] ?? "md"} fw={700} lh={1.2}>
-            {String(item.value ?? "—")}{item.unit ? ` ${item.unit}` : ""}
+            {String(item.value ?? "—")}
+            {item.unit ? ` ${item.unit}` : ""}
           </Text>
           <Text size="xs" c="dimmed" tt="uppercase" ta="center" lh={1.3} style={{ letterSpacing: "0.03em" }}>
             {item.label}
@@ -354,7 +405,9 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
       <Center h="100%">
         <Stack align="center" gap="xs">
           <IconAlertTriangle size={32} color="var(--mantine-color-yellow-6)" />
-          <Text c="dimmed" size="sm">{t("noDefinition")}</Text>
+          <Text c="dimmed" size="sm">
+            {t("noDefinition")}
+          </Text>
         </Stack>
       </Center>
     );
@@ -382,7 +435,11 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
   );
 
   if (isLoading) {
-    return <Center h="100%"><Loader size="sm" /></Center>;
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
   }
 
   if (error) {
@@ -407,7 +464,9 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
   if (dataType === "disabled") {
     return (
       <Center h="100%">
-        <Text c="dimmed" size="sm">{tCustomWidget("widget.disabled")}</Text>
+        <Text c="dimmed" size="sm">
+          {tCustomWidget("widget.disabled")}
+        </Text>
       </Center>
     );
   }

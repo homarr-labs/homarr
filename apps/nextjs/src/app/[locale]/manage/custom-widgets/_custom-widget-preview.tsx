@@ -1,20 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Center,
-  Code,
-  Group,
-  Loader,
-  ScrollArea,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Alert, Badge, Button, Card, Center, Code, Group, Loader, ScrollArea, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -101,7 +88,9 @@ export function CustomWidgetPreview({
 
         {fetchResult && !fetchResult.success && (
           <Alert color="red" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs" fw={500}>{fetchResult.error}</Text>
+            <Text size="xs" fw={500}>
+              {fetchResult.error}
+            </Text>
             {fetchResult.responseInfo && (
               <Badge size="xs" color="red" variant="light" mt={4}>
                 {fetchResult.responseInfo.status} {fetchResult.responseInfo.statusText}
@@ -143,7 +132,9 @@ export function CustomWidgetPreview({
         )}
 
         {!displayData && !testError && !isTesting && (
-          <Text size="xs" c="dimmed" ta="center">{t("preview.hint")}</Text>
+          <Text size="xs" c="dimmed" ta="center">
+            {t("preview.hint")}
+          </Text>
         )}
       </Stack>
     </Card>
@@ -153,7 +144,11 @@ export function CustomWidgetPreview({
 function PreviewDisplay({ data }: { data: unknown }) {
   const typed = data as Record<string, unknown>;
   if (!typed || typeof typed !== "object") {
-    return <Text size="xs" c="dimmed">No data</Text>;
+    return (
+      <Text size="xs" c="dimmed">
+        No data
+      </Text>
+    );
   }
 
   const dataType = typed.type as string | undefined;
@@ -175,7 +170,9 @@ function PreviewDisplay({ data }: { data: unknown }) {
 
   return (
     <ScrollArea h={100}>
-      <Code block style={{ fontSize: 11 }}>{JSON.stringify(data, null, 2)}</Code>
+      <Code block style={{ fontSize: 11 }}>
+        {JSON.stringify(data, null, 2)}
+      </Code>
     </ScrollArea>
   );
 }

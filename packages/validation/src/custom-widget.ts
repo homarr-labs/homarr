@@ -41,7 +41,9 @@ const singleValueDisplayConfigSchema = z.object({
   valueSize: z
     .enum(["sm", "md", "lg", "xl"])
     .optional()
-    .describe("Font size of the displayed value: 'sm' (small), 'md' (medium), 'lg' (large, default), 'xl' (extra large)"),
+    .describe(
+      "Font size of the displayed value: 'sm' (small), 'md' (medium), 'lg' (large, default), 'xl' (extra large)",
+    ),
   labelPosition: z
     .enum(["above", "below"])
     .optional()
@@ -49,10 +51,7 @@ const singleValueDisplayConfigSchema = z.object({
 });
 
 const keyValueMappingSchema = z.object({
-  label: z
-    .string()
-    .min(1)
-    .describe("Label for this key-value pair (e.g. 'CPU', 'Memory', 'Uptime')"),
+  label: z.string().min(1).describe("Label for this key-value pair (e.g. 'CPU', 'Memory', 'Uptime')"),
   jsonPath: z
     .string()
     .min(1)
@@ -65,9 +64,7 @@ const keyValueMappingSchema = z.object({
 });
 
 const keyValueDisplayConfigSchema = z.object({
-  type: z
-    .literal("keyValue")
-    .describe("Display type discriminator — must be 'keyValue' when displayType is keyValue"),
+  type: z.literal("keyValue").describe("Display type discriminator — must be 'keyValue' when displayType is keyValue"),
   mappings: z
     .array(keyValueMappingSchema)
     .min(1)
@@ -86,10 +83,7 @@ const keyValueDisplayConfigSchema = z.object({
 });
 
 const tableColumnSchema = z.object({
-  header: z
-    .string()
-    .min(1)
-    .describe("Column header text shown in the table (e.g. 'Name', 'Status', 'Size')"),
+  header: z.string().min(1).describe("Column header text shown in the table (e.g. 'Name', 'Status', 'Size')"),
   jsonPath: z
     .string()
     .min(1)
@@ -114,26 +108,18 @@ const tableDisplayConfigSchema = z.object({
     .boolean()
     .optional()
     .describe("Whether to alternate row background colors for readability (default: true)"),
-  compact: z
-    .boolean()
-    .optional()
-    .describe("Whether to use compact row spacing (default: false)"),
+  compact: z.boolean().optional().describe("Whether to use compact row spacing (default: false)"),
 });
 
 const statGridItemSchema = z.object({
-  label: z
-    .string()
-    .min(1)
-    .describe("Label for this stat card (e.g. 'Movies', 'Series', 'Episodes')"),
+  label: z.string().min(1).describe("Label for this stat card (e.g. 'Movies', 'Series', 'Episodes')"),
   jsonPath: z
     .string()
     .min(1)
     .describe(
       "JSONPath expression to extract the stat value from the API response (e.g. $.library.movies, $.counts.series)",
     ),
-  unit: z
-    .string()
-    .describe("Unit suffix for the stat (e.g. '', 'GB', '%'). Leave empty string if no unit is needed."),
+  unit: z.string().describe("Unit suffix for the stat (e.g. '', 'GB', '%'). Leave empty string if no unit is needed."),
   color: z
     .string()
     .optional()
@@ -146,24 +132,17 @@ const statGridDisplayConfigSchema = z.object({
     .array(statGridItemSchema)
     .min(1)
     .describe("Array of stat cards — each item shows a labeled value in a colored card"),
-  columns: z
-    .number()
-    .int()
-    .min(1)
-    .max(4)
-    .optional()
-    .describe("Number of columns in the stat grid (1–4, default: 2)"),
+  columns: z.number().int().min(1).max(4).optional().describe("Number of columns in the stat grid (1–4, default: 2)"),
   cardStyle: z
     .enum(["filled", "outline", "subtle"])
     .optional()
-    .describe("Visual style of stat cards: 'filled' (solid background, default), 'outline' (border only), 'subtle' (light tint)"),
+    .describe(
+      "Visual style of stat cards: 'filled' (solid background, default), 'outline' (border only), 'subtle' (light tint)",
+    ),
 });
 
 const progressBarItemSchema = z.object({
-  label: z
-    .string()
-    .min(1)
-    .describe("Label for this progress bar (e.g. 'Disk Usage', 'Memory', 'Quota')"),
+  label: z.string().min(1).describe("Label for this progress bar (e.g. 'Disk Usage', 'Memory', 'Quota')"),
   valuePath: z
     .string()
     .min(1)
@@ -193,10 +172,7 @@ const progressBarsDisplayConfigSchema = z.object({
     .array(progressBarItemSchema)
     .min(1)
     .describe("Array of progress bar definitions — each bar shows value/max as a visual progress indicator"),
-  showPercentage: z
-    .boolean()
-    .optional()
-    .describe("Whether to display the percentage next to each bar (default: true)"),
+  showPercentage: z.boolean().optional().describe("Whether to display the percentage next to each bar (default: true)"),
   barSize: z
     .enum(["sm", "md", "lg"])
     .optional()
@@ -204,10 +180,7 @@ const progressBarsDisplayConfigSchema = z.object({
 });
 
 const statusIndicatorItemSchema = z.object({
-  label: z
-    .string()
-    .min(1)
-    .describe("Label for this status indicator (e.g. 'Web Server', 'Database', 'API')"),
+  label: z.string().min(1).describe("Label for this status indicator (e.g. 'Web Server', 'Database', 'API')"),
   jsonPath: z
     .string()
     .min(1)
@@ -241,34 +214,25 @@ const statusIndicatorDisplayConfigSchema = z.object({
 });
 
 const countGridItemSchema = z.object({
-  label: z
-    .string()
-    .min(1)
-    .describe("Label for this count (e.g. 'Movies', 'Shows', 'Albums')"),
+  label: z.string().min(1).describe("Label for this count (e.g. 'Movies', 'Shows', 'Albums')"),
   jsonPath: z
     .string()
     .min(1)
     .describe(
       "JSONPath expression to extract the count value from the API response (e.g. $.counts.movies, $.stats.total)",
     ),
-  unit: z
-    .string()
-    .describe("Unit suffix for the count (e.g. '', 'items'). Leave empty string if no unit is needed."),
+  unit: z.string().describe("Unit suffix for the count (e.g. '', 'items'). Leave empty string if no unit is needed."),
 });
 
 const countGridDisplayConfigSchema = z.object({
-  type: z.literal("countGrid").describe("Display type discriminator — must be 'countGrid' when displayType is countGrid"),
+  type: z
+    .literal("countGrid")
+    .describe("Display type discriminator — must be 'countGrid' when displayType is countGrid"),
   items: z
     .array(countGridItemSchema)
     .min(1)
     .describe("Array of count items — each shows a number with a label in a simple grid (no colors)"),
-  columns: z
-    .number()
-    .int()
-    .min(2)
-    .max(4)
-    .optional()
-    .describe("Number of columns in the count grid (2–4, default: 2)"),
+  columns: z.number().int().min(2).max(4).optional().describe("Number of columns in the count grid (2–4, default: 2)"),
   valueSize: z
     .enum(["sm", "md", "lg"])
     .optional()
@@ -349,11 +313,15 @@ const baseDefinitionSchema = z.object({
     .string()
     .url()
     .optional()
-    .describe("Optional URL to an icon image for the widget (e.g. https://example.com/icon.png). Shown in widget picker."),
+    .describe(
+      "Optional URL to an icon image for the widget (e.g. https://example.com/icon.png). Shown in widget picker.",
+    ),
   url: z
     .string()
     .min(1)
-    .describe("Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol."),
+    .describe(
+      "Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol.",
+    ),
   authType: z
     .enum(customWidgetAuthTypes)
     .describe(
@@ -375,7 +343,7 @@ const baseDefinitionSchema = z.object({
     .string()
     .optional()
     .describe(
-      "JSON string body sent with POST/PUT/PATCH requests. Must be valid JSON as a string (e.g. '{\"action\":\"restart\"}'). Omit for GET requests.",
+      'JSON string body sent with POST/PUT/PATCH requests. Must be valid JSON as a string (e.g. \'{"action":"restart"}\'). Omit for GET requests.',
     ),
   displayType: z
     .enum(customWidgetDisplayTypes)
@@ -389,8 +357,13 @@ const secretsInputSchema = z.array(
   z.object({
     kind: z
       .enum(customWidgetSecretKinds)
-      .describe("Secret type: 'apiKey' (token/key for bearer/apiKey auth), 'username' (for basic auth), 'password' (for basic auth)"),
-    value: z.string().min(1).describe("The secret value. Never include in exported JSON — configure in the UI after import."),
+      .describe(
+        "Secret type: 'apiKey' (token/key for bearer/apiKey auth), 'username' (for basic auth), 'password' (for basic auth)",
+      ),
+    value: z
+      .string()
+      .min(1)
+      .describe("The secret value. Never include in exported JSON — configure in the UI after import."),
   }),
 );
 
@@ -436,10 +409,7 @@ const customWidgetImportFieldsSchema = z.object({
     .describe(
       "HTTP method: 'GET' (fetch data), 'POST'/'PUT'/'PATCH' (with requestBody), 'DELETE' (destructive). Use GET unless the API requires otherwise.",
     ),
-  requestBody: z
-    .string()
-    .nullish()
-    .describe("JSON string body for POST/PUT/PATCH. Use null or omit for GET requests."),
+  requestBody: z.string().nullish().describe("JSON string body for POST/PUT/PATCH. Use null or omit for GET requests."),
   displayType: z
     .enum(customWidgetDisplayTypes)
     .describe(
@@ -456,7 +426,9 @@ export const customWidgetImportSchema = customWidgetImportFieldsSchema.extend({
   url: z
     .string()
     .min(1)
-    .describe("Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol."),
+    .describe(
+      "Full URL to the API endpoint to fetch data from (e.g. https://myapp.local/api/stats). Must include protocol.",
+    ),
 });
 
 export type CustomWidgetImport = z.infer<typeof customWidgetImportSchema>;

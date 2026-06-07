@@ -60,7 +60,11 @@ Describe what you want the widget to show:
 
 `;
 
-function buildAiPrompt(jsonSchema: unknown, rawResponse?: string | null, currentConfig?: Record<string, unknown> | null) {
+function buildAiPrompt(
+  jsonSchema: unknown,
+  rawResponse?: string | null,
+  currentConfig?: Record<string, unknown> | null,
+) {
   const schemaStr = JSON.stringify(jsonSchema, null, 2);
   const responseSection = rawResponse
     ? `The API returned the following JSON:\n\n\`\`\`json\n${rawResponse}\n\`\`\`\n`
@@ -114,11 +118,7 @@ export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptB
               {t("notification.aiPromptNoResponse")}
             </Text>
           )}
-          <Button
-            leftSection={<IconCopy size={16} />}
-            onClick={() => void handleCopy()}
-            fullWidth
-          >
+          <Button leftSection={<IconCopy size={16} />} onClick={() => void handleCopy()} fullWidth>
             {t("notification.aiPromptCopy")}
           </Button>
         </Stack>
