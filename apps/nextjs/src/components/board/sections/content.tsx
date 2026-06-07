@@ -19,7 +19,7 @@ export const SectionContent = () => {
    * @see https://github.com/homarr-labs/homarr/pull/1770
    */
   const sortedItems = useMemo(() => {
-    return [...items, ...innerSections].sort((itemA, itemB) => {
+    return [...items, ...innerSections].toSorted((itemA, itemB) => {
       if (itemA.yOffset === itemB.yOffset) {
         return itemA.xOffset - itemB.xOffset;
       }

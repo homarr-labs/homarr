@@ -115,12 +115,7 @@ export const collectWidgetHoverMetadata = (
       return !skip && !hidden && !unchanged;
     })
     .map(([key, optionDefinition]) => {
-      const formattedValue = formatOptionValue(
-        optionDefinition.type,
-        resolvedOptions[key],
-        optionDefinition,
-        t,
-      );
+      const formattedValue = formatOptionValue(optionDefinition.type, resolvedOptions[key], optionDefinition, t);
       return {
         label: getOptionLabel(item.kind, key, t),
         value: formattedValue ?? "",
@@ -142,7 +137,9 @@ const displayNameSources: DisplayNameSource[] = [
   },
   {
     matches: (item, options) =>
-      item.kind === "clock" && Boolean(options.customTitleToggle) && String(options.customTitle ?? "").trim().length > 0,
+      item.kind === "clock" &&
+      Boolean(options.customTitleToggle) &&
+      String(options.customTitle ?? "").trim().length > 0,
     resolve: (_, options) => String(options.customTitle).trim(),
   },
 ];
