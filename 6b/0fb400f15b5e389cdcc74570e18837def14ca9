@@ -1,0 +1,84 @@
+packages/widgets/src/custom-api/component.tsx
+  s_a779988d600484::t_bbba3d545b1ab0 34-35
+  s_a779988d600484::t_54dbdc497622d3 480-481
+  s_a779988d600484::t_18850ae8443035 3
+  s_a779988d600484::t_6b7a0aba004d21 400
+pnpm-workspace.yaml
+  s_a779988d600484::t_ee7b9aeb5e7e7a 136,154
+packages/widgets/src/custom-api/extract-display-data.ts
+  s_a779988d600484::t_0c360cdf731793 100-104
+packages/api/src/router/widgets/custom-api.ts
+  s_a779988d600484::t_f501c9c1cadbaf 151-155
+pnpm-lock.yaml
+  ai_agent 447-449,2491-2493,5412-5414,5424-5428,5434-5436,5647-5651,8498-8504,12742-12744,12753-12757,12762-12767,13046-13049,15986-15994
+packages/widgets/src/custom-api/jsx-interactive-components.tsx
+  s_a779988d600484::t_a754ef05ff55db 1-72,77-133,135-207
+  s_a779988d600484::t_c05cdaa6884bf3 73-76
+  s_a779988d600484::t_7ab768b52600ba 134
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  s_a779988d600484::t_0e4f89c423a94b 137-139
+  s_a779988d600484::t_3841910227d0fb 63
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_a779988d600484::t_4ed3c2797f1b2b 23
+packages/api/src/router/widgets/__tests__/custom-api-extractors.spec.ts
+  s_a779988d600484::t_199b652af08746 110-114
+  s_a779988d600484::t_1303b71516e142 215-232
+packages/validation/src/custom-widget.ts
+  s_a779988d600484::t_21bc0df78cda24 433
+  s_a779988d600484::t_06ceaec39362a9 16
+  s_a779988d600484::t_3d16007db4f9cc 310
+  s_a779988d600484::t_bf1c680d21d086 368
+  s_a779988d600484::t_dc654bb46f798e 263-268,273-274
+  s_a779988d600484::t_eaf06b931ae32a 260-262,269-272
+packages/translation/src/lang/en.json
+  s_a779988d600484::t_0153eac705c2bd 843-844
+  s_a779988d600484::t_b83f7b99005fe2 817-818
+  s_a779988d600484::t_dad6655b68e964 765
+  s_a779988d600484::t_847b1b8e645467 762-764,766
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_a779988d600484::t_6e9e5066962d0f 1-55,67-129,143-144,193
+  s_a779988d600484::t_771cd2cf55047e 64,66,136-142
+  s_a779988d600484::t_577316de47c1dc 130-135
+  s_a779988d600484::t_c13b0984a4b014 145-183,185-192
+  s_a779988d600484::t_59476e3f322fa9 56-63,65
+  s_a779988d600484::t_57bf5c12163a1b 184
+packages/widgets/package.json
+  s_a779988d600484::t_ee7b9aeb5e7e7a 81
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_a779988d600484::t_3ab824af34a670 1-2,4,7-10,15,30,53,55-56
+  s_a779988d600484::t_9d77b0489543d4 3,5-6,14,16-24,31-34,36-52,54
+  s_a779988d600484::t_f24631b0d461ac 11-12
+  s_a779988d600484::t_b87d73dc607fd2 13,25-29,35
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_a779988d600484::t_4ad41159bb071c 394
+  s_a779988d600484::t_eed3c54e1b867a 1252-1260,1262-1267
+  s_a779988d600484::t_3f91ba86d90a77 340
+  s_a779988d600484::t_d4bf0cb24637f9 454
+  s_a779988d600484::t_db206fa307034a 407
+  s_a779988d600484::t_30924f6ca6b78b 1261
+  s_a779988d600484::t_a7c0a61e367a70 221-231
+  s_a779988d600484::t_8219969c009587 277
+packages/widgets/src/custom-api/custom-jsx-display.spec.ts
+  s_a779988d600484::t_b7fd703207a278 143,153,160-161
+  s_a779988d600484::t_4cb50fcd8816d2 58,62
+  s_a779988d600484::t_7f5eca0e36c3a5 3-4,6-7,14-30,42
+  s_a779988d600484::t_e72a7864f51d73 118-120
+  s_a779988d600484::t_00208f01cb2f89 67-117,121-142,144-152,154-159,162-167
+  s_a779988d600484::t_35d9bd0beb50fb 1-2,5,8-13,31-41,43-57,59-61,63-66,168-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "6b0fb400f15b5e389cdcc74570e18837def14ca9",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
