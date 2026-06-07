@@ -4,6 +4,7 @@ import type { GridItemHTMLElement } from "@homarr/gridstack";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
+import { WidgetHoverOverlay } from "../items/widget-hover-overlay";
 import { BoardDynamicSection } from "./dynamic-section";
 import { GridStackItem } from "./gridstack/gridstack-item";
 import { useSectionContext } from "./section-context";
@@ -44,7 +45,6 @@ interface ItemProps {
 const Item = ({ item, innerRef }: ItemProps) => {
   const minWidth = useMinSize(item, "x");
   const minHeight = useMinSize(item, "y");
-
   return (
     <GridStackItem
       key={item.id}
@@ -59,6 +59,7 @@ const Item = ({ item, innerRef }: ItemProps) => {
       minWidth={minWidth}
       minHeight={minHeight}
     >
+      {item.type === "item" && item.kind !== "app" && <WidgetHoverOverlay item={item} />}
       {item.type === "item" ? <BoardItemContent item={item} /> : <BoardDynamicSection section={item} />}
     </GridStackItem>
   );
