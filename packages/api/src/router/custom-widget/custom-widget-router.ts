@@ -9,38 +9,42 @@ import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema"
 import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
+  customWidgetAuthTypes,
   customWidgetCreateSchema,
+  customWidgetDisplayTypes,
   customWidgetImportSchema,
+  customWidgetMethods,
+  customWidgetSecretKinds,
   customWidgetUpdateSchema,
 } from "@homarr/validation/custom-widget";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 
 const logger = createLogger({ module: "custom-widget" });
 
-const ALLOWED_PROTOCOLS = /^https?:\/\//;
-const PRIVATE_IP_RANGES = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|169\.254\.|0\.0\.0\.0|fc|fd|fe80|::1|localhost)/i;
+const validateUrl = (urlString: string): URL => new URL(urlString);
 
-const validateBaseUrl = (baseUrl: string, endpoint: string): URL => {
-  if (!ALLOWED_PROTOCOLS.test(baseUrl)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Base URL must use http or https protocol" });
+let _importJsonSchema: Record<string, unknown> | null = null;
+function getImportJsonSchema() {
+  if (!_importJsonSchema) {
+    _importJsonSchema = {
+      ...z.toJSONSchema(customWidgetImportSchema),
+      title: "Homarr Custom Widget",
+      description:
+        "Schema for importing/exporting custom widget definitions in Homarr. " +
+        "All jsonPath fields use JSONPath syntax (e.g. $.data.count, $.items[0].name). " +
+        "The displayConfig must match the chosen displayType. " +
+        "Secrets (API keys, passwords) are not included in exports and must be configured separately after import.",
+    };
   }
-  const url = new URL(endpoint, baseUrl);
-  if (PRIVATE_IP_RANGES.test(url.hostname)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Requests to private/internal addresses are not allowed" });
-  }
-  return url;
-};
-
-const ensureOwnerOrAdmin = (creatorId: string | null, userId: string, permissions: string[]) => {
-  if (permissions.includes("admin")) return;
-  if (creatorId === userId) return;
-  throw new TRPCError({ code: "FORBIDDEN", message: "You can only modify your own custom widget definitions" });
-};
+  return _importJsonSchema;
+}
 
 export const customWidgetRouter = createTRPCRouter({
+  schema: publicProcedure.query(() => getImportJsonSchema()),
+
   all: protectedProcedure.query(async ({ ctx }) => {
     const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
       orderBy: (table, { asc }) => asc(table.name),
@@ -51,11 +55,11 @@ export const customWidgetRouter = createTRPCRouter({
       name: def.name,
       description: def.description,
       iconUrl: def.iconUrl,
-      baseUrl: def.baseUrl,
-      endpoint: def.endpoint,
+      url: def.url,
       method: def.method,
       displayType: def.displayType,
       authType: def.authType,
+      enabled: def.enabled,
     }));
   }),
 
@@ -69,9 +73,17 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
     }
 
+    let displayConfig: Record<string, unknown> = {};
+    try {
+      displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
+    } catch {
+      logger.error("Corrupt displayConfig in custom widget", { id: input.id });
+    }
+
     return {
       ...definition,
-      displayConfig: superjson.parse(definition.displayConfig) as Record<string, unknown>,
+      enabled: definition.enabled,
+      displayConfig,
       secrets: definition.secrets.map((s) => ({
         kind: s.kind,
         hasValue: true,
@@ -88,10 +100,9 @@ export const customWidgetRouter = createTRPCRouter({
       name: input.name,
       description: input.description,
       iconUrl: input.iconUrl,
-      baseUrl: input.baseUrl,
+      url: input.url,
       authType: input.authType,
       headerName: input.headerName,
-      endpoint: input.endpoint,
       method: input.method,
       requestBody: input.requestBody,
       displayType: input.displayType,
@@ -133,20 +144,43 @@ export const customWidgetRouter = createTRPCRouter({
 
     await ctx.db.update(customWidgetDefinitions).set(updateValues).where(eq(customWidgetDefinitions.id, id));
 
-    if (secrets && secrets.length > 0) {
-      await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
-      await ctx.db.insert(customWidgetSecrets).values(
-        secrets.map((secret) => ({
-          kind: secret.kind,
-          value: encryptSecret(secret.value),
-          definitionId: id,
-          updatedAt: new Date(),
-        })),
-      );
+    if (secrets !== undefined) {
+      const effectiveAuthType = (updateFields.authType as string | undefined) ?? existing.authType;
+
+      if (secrets.length > 0) {
+        await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+        await ctx.db.insert(customWidgetSecrets).values(
+          secrets.map((secret) => ({
+            kind: secret.kind,
+            value: encryptSecret(secret.value),
+            definitionId: id,
+            updatedAt: new Date(),
+          })),
+        );
+      } else if (effectiveAuthType === "none") {
+        await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+      }
     }
 
     logger.info("Updated custom widget definition", { id });
   }),
+
+  toggleEnabled: adminProcedure
+    .input(z.object({ id: z.string(), enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+
+      if (!existing) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await ctx.db
+        .update(customWidgetDefinitions)
+        .set({ enabled: input.enabled, updatedAt: new Date() })
+        .where(eq(customWidgetDefinitions.id, input.id));
+    }),
 
   delete: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -161,7 +195,7 @@ export const customWidgetRouter = createTRPCRouter({
     logger.info("Deleted custom widget definition", { id: input.id });
   }),
 
-  export: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+  export: adminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.id),
     });
@@ -171,18 +205,24 @@ export const customWidgetRouter = createTRPCRouter({
     }
 
     return {
-      $schema: "homarr-custom-widget-v1" as const,
+      $schema: "homarr-custom-widget-v2" as const,
       name: definition.name,
       description: definition.description,
       iconUrl: definition.iconUrl,
-      baseUrl: definition.baseUrl,
+      url: definition.url,
       authType: definition.authType,
       headerName: definition.headerName,
-      endpoint: definition.endpoint,
       method: definition.method,
       requestBody: definition.requestBody,
       displayType: definition.displayType,
-      displayConfig: superjson.parse(definition.displayConfig) as Record<string, unknown>,
+      displayConfig: (() => {
+        try {
+          return superjson.parse(definition.displayConfig) as Record<string, unknown>;
+        } catch {
+          logger.error("Corrupt displayConfig during export", { id: input.id });
+          return {};
+        }
+      })(),
     };
   }),
 
@@ -194,10 +234,9 @@ export const customWidgetRouter = createTRPCRouter({
       name: input.name,
       description: input.description,
       iconUrl: input.iconUrl,
-      baseUrl: input.baseUrl,
+      url: input.url,
       authType: input.authType,
       headerName: input.headerName,
-      endpoint: input.endpoint,
       method: input.method,
       requestBody: input.requestBody,
       displayType: input.displayType,
@@ -212,15 +251,14 @@ export const customWidgetRouter = createTRPCRouter({
   preview: adminProcedure
     .input(
       z.object({
-        baseUrl: z.string().min(1),
-        endpoint: z.string().min(1),
-        method: z.string(),
-        authType: z.string(),
+        url: z.string().url(),
+        method: z.enum(customWidgetMethods),
+        authType: z.enum(customWidgetAuthTypes),
         headerName: z.string().optional(),
         requestBody: z.string().optional(),
-        displayType: z.string(),
+        displayType: z.enum(customWidgetDisplayTypes),
         displayConfig: z.record(z.string(), z.unknown()),
-        secrets: z.array(z.object({ kind: z.string(), value: z.string() })),
+        secrets: z.array(z.object({ kind: z.enum(customWidgetSecretKinds), value: z.string() })),
         definitionId: z.string().optional(),
       }),
     )
@@ -241,7 +279,7 @@ export const customWidgetRouter = createTRPCRouter({
         }
       }
 
-      const url = validateBaseUrl(input.baseUrl, input.endpoint);
+      const url = validateUrl(input.url);
       const headers = new Headers({ Accept: "application/json" });
 
       if (input.method !== "GET" && input.requestBody) {
@@ -277,7 +315,7 @@ export const customWidgetRouter = createTRPCRouter({
           method: input.method,
           headers,
           body: input.method !== "GET" ? input.requestBody : undefined,
-          redirect: "error",
+          redirect: "follow",
           signal: controller.signal,
         });
 
@@ -388,6 +426,7 @@ export const customWidgetRouter = createTRPCRouter({
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
+        logger.error("Custom widget preview failed", { error });
         return {
           success: false as const,
           error: error instanceof Error ? error.message : "Failed to fetch data",
@@ -415,14 +454,14 @@ export const customWidgetRouter = createTRPCRouter({
       name: `${definition.name} (copy)`,
       description: definition.description,
       iconUrl: definition.iconUrl,
-      baseUrl: definition.baseUrl,
+      url: definition.url,
       authType: definition.authType,
       headerName: definition.headerName,
-      endpoint: definition.endpoint,
       method: definition.method,
       requestBody: definition.requestBody,
       displayType: definition.displayType,
       displayConfig: definition.displayConfig,
+      enabled: definition.enabled,
       creatorId: ctx.session.user.id,
     });
 
@@ -451,14 +490,16 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
     }
 
-    ensureOwnerOrAdmin(definition.creatorId, ctx.session.user.id, ctx.session.user.permissions);
+    if (!definition.enabled) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
+    }
 
     const decryptedSecrets = definition.secrets.map((s) => ({
       kind: s.kind,
       value: decryptSecret(s.value),
     }));
 
-    const url = validateBaseUrl(definition.baseUrl, definition.endpoint);
+    const url = validateUrl(definition.url);
     const headers = new Headers({ Accept: "application/json" });
 
     if (definition.method !== "GET" && definition.requestBody) {
@@ -494,20 +535,21 @@ export const customWidgetRouter = createTRPCRouter({
         method: definition.method,
         headers,
         body: definition.method !== "GET" ? definition.requestBody : undefined,
-        redirect: "error",
-        signal: controller.signal,
-      });
+          redirect: "follow",
+          signal: controller.signal,
+        });
 
-      const responseInfo = { status: response.status, statusText: response.statusText };
+        const responseInfo = { status: response.status, statusText: response.statusText };
 
-      if (!response.ok) {
-        return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo };
+        if (!response.ok) {
+          return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo };
       }
 
       logger.info("Executed custom widget action", { definitionId: input.definitionId, status: response.status });
       return { success: true as const, responseInfo };
     } catch (error) {
       if (error instanceof TRPCError) throw error;
+      logger.error("Custom widget execute failed", { definitionId: input.definitionId, error });
       return { success: false as const, error: error instanceof Error ? error.message : "Request failed", responseInfo: null };
     } finally {
       clearTimeout(timeout);

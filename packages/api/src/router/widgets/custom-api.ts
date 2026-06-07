@@ -13,11 +13,7 @@ const logger = createLogger({ module: "widget:customApi" });
 
 const FETCH_TIMEOUT_MS = 10_000;
 
-const validateUrl = (baseUrl: string, endpoint: string): URL => {
-  const url = new URL(endpoint, baseUrl);
-
-  return url;
-};
+const validateUrl = (urlString: string): URL => new URL(urlString);
 
 const authHandlers: Record<string, (headers: Headers, url: URL, apiKey: string, headerName?: string) => void> = {
   bearer: (headers, _url, apiKey) => {
@@ -153,8 +149,18 @@ export const customApiRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
     }
 
+    if (!definition.enabled) {
+      return { type: "disabled" };
+    }
+
+    let displayConfig: Record<string, unknown>;
+    try {
+      displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
+    } catch {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
+    }
+
     if (definition.displayType === "actionButton") {
-      const displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
       return extractors.actionButton!(null, displayConfig);
     }
 
@@ -163,7 +169,7 @@ export const customApiRouter = createTRPCRouter({
       value: decryptSecret(s.value),
     }));
 
-    const url = validateUrl(definition.baseUrl, definition.endpoint);
+    const url = validateUrl(definition.url);
     const headers = new Headers({ Accept: "application/json" });
 
     if (definition.method !== "GET" && definition.requestBody) {
@@ -180,7 +186,7 @@ export const customApiRouter = createTRPCRouter({
         method: definition.method,
         headers,
         body: definition.method !== "GET" ? definition.requestBody : undefined,
-        redirect: "error",
+        redirect: "follow",
         signal: controller.signal,
       });
 
@@ -192,7 +198,6 @@ export const customApiRouter = createTRPCRouter({
       }
 
       const json: unknown = await response.json();
-      const displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
       const displayType = (displayConfig.type as string) ?? definition.displayType;
       const extractor = extractors[displayType] ?? extractors.singleValue!;
 
