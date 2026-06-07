@@ -2,14 +2,13 @@
 
 import { useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDots, IconDownload, IconPencil, IconTrash, IconUpload } from "@tabler/icons-react";
+import { IconCopy, IconDots, IconDownload, IconToggleLeft, IconToggleRight, IconTrash, IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
@@ -18,6 +17,7 @@ const iconProps = { size: 16, stroke: 1.5 };
 interface WidgetRef {
   id: string;
   name: string;
+  enabled: boolean;
 }
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
@@ -25,7 +25,24 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
+  const toggleEnabledMutation = clientApi.customWidget.toggleEnabled.useMutation();
   const utils = clientApi.useUtils();
+
+  const handleToggleEnabled = () => {
+    toggleEnabledMutation.mutate(
+      { id: widget.id, enabled: !widget.enabled },
+      {
+        onSuccess: () => {
+          void utils.customWidget.all.invalidate();
+          void utils.widget.customApi.getData.invalidate({ definitionId: widget.id });
+          void revalidatePathActionAsync("/manage/custom-widgets");
+        },
+        onError: () => {
+          showErrorNotification({ title: widget.enabled ? t("action.disable") : t("action.enable"), message: t("notification.toggleError") });
+        },
+      },
+    );
+  };
 
   const handleExport = async () => {
     try {
@@ -48,6 +65,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       {
         onSuccess: (result) => {
           showSuccessNotification({ title: t("action.duplicate"), message: t("notification.duplicated", { name: result.name }) });
+          void utils.customWidget.all.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
         onError: () => {
@@ -67,7 +85,12 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           {
             onSuccess: () => {
               showSuccessNotification({ title: t("action.delete"), message: t("notification.deleted", { name: widget.name }) });
+              void utils.customWidget.all.invalidate();
+              void utils.widget.customApi.getData.invalidate({ definitionId: widget.id });
               void revalidatePathActionAsync("/manage/custom-widgets");
+            },
+            onError: () => {
+              showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
             },
           },
         );
@@ -83,9 +106,14 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Item component={Link} href={`/manage/custom-widgets/edit/${widget.id}`} leftSection={<IconPencil {...iconProps} />}>
-          {t("action.edit")}
+        <Menu.Item
+          onClick={handleToggleEnabled}
+          leftSection={widget.enabled ? <IconToggleLeft {...iconProps} /> : <IconToggleRight {...iconProps} />}
+          disabled={toggleEnabledMutation.isPending}
+        >
+          {widget.enabled ? t("action.disable") : t("action.enable")}
         </Menu.Item>
+        <Menu.Divider />
         <Menu.Item onClick={handleDuplicate} leftSection={<IconCopy {...iconProps} />} disabled={duplicateMutation.isPending}>
           {t("action.duplicate")}
         </Menu.Item>
@@ -109,9 +137,11 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
 export const ImportCustomWidgetButton = () => {
   const t = useScopedI18n("customWidget");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const utils = clientApi.useUtils();
   const importMutation = clientApi.customWidget.import.useMutation({
     onSuccess: () => {
       showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });
+      void utils.customWidget.all.invalidate();
       void revalidatePathActionAsync("/manage/custom-widgets");
     },
     onError: () => {
@@ -131,6 +161,9 @@ export const ImportCustomWidgetButton = () => {
       } catch {
         showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
       }
+    };
+    reader.onerror = () => {
+      showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
     };
     reader.readAsText(file);
     event.target.value = "";

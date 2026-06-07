@@ -1,10 +1,11 @@
 "use client";
 
-import { Avatar, Badge, Group, Stack, Table, Text } from "@mantine/core";
-import { IconApi } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Badge, Group, Stack, Table, Text } from "@mantine/core";
+import { IconApi, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { NoResults } from "~/components/no-results";
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
@@ -20,6 +21,8 @@ const displayTypeBadgeColors: Record<string, string> = {
   raw: "gray",
   actionButton: "red",
 };
+
+const iconProps = { size: 16, stroke: 1.5 };
 
 interface CustomWidgetListProps {
   definitions: RouterOutputs["customWidget"]["all"];
@@ -44,15 +47,14 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
         <Table.Thead>
           <Table.Tr>
             <Table.Th>{t("table.name")}</Table.Th>
-            <Table.Th>{t("table.baseUrl")}</Table.Th>
-            <Table.Th>{t("table.endpoint")}</Table.Th>
+            <Table.Th>{t("table.url")}</Table.Th>
             <Table.Th>{t("table.display")}</Table.Th>
-            <Table.Th w={50} />
+            <Table.Th w={90} />
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
           {definitions.map((def) => (
-            <Table.Tr key={def.id}>
+            <Table.Tr key={def.id} style={{ opacity: def.enabled ? undefined : 0.5 }}>
               <Table.Td>
                 <Group gap="xs">
                   {def.iconUrl ? (
@@ -60,19 +62,14 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
                   ) : (
                     <IconApi size={16} />
                   )}
-                  <Text size="sm" fw={500} lineClamp={1}>
+                  <Text size="sm" fw={500} lineClamp={1} c={def.enabled ? undefined : "dimmed"}>
                     {def.name}
                   </Text>
                 </Group>
               </Table.Td>
               <Table.Td>
                 <Text size="sm" c="dimmed" lineClamp={1}>
-                  {def.baseUrl}
-                </Text>
-              </Table.Td>
-              <Table.Td>
-                <Text size="sm" c="dimmed" lineClamp={1}>
-                  {def.endpoint}
+                  {def.url}
                 </Text>
               </Table.Td>
               <Table.Td>
@@ -81,7 +78,18 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
                 </Badge>
               </Table.Td>
               <Table.Td>
-                <CustomWidgetRowActions widget={{ id: def.id, name: def.name }} />
+                <Group gap={4} justify="flex-end" wrap="nowrap">
+                  <ActionIcon
+                    component={Link}
+                    href={`/manage/custom-widgets/edit/${def.id}`}
+                    variant="filled"
+                    color="red"
+                    aria-label={t("action.edit")}
+                  >
+                    <IconPencil {...iconProps} />
+                  </ActionIcon>
+                  <CustomWidgetRowActions widget={{ id: def.id, name: def.name, enabled: def.enabled }} />
+                </Group>
               </Table.Td>
             </Table.Tr>
           ))}

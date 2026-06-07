@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ActionIcon,
@@ -18,7 +18,7 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconPlayerPlay, IconPlus, IconTrash } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -28,55 +28,58 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { CustomWidgetAuthType, CustomWidgetDisplayType } from "@homarr/validation/custom-widget";
-import { CustomWidgetPreview } from "./_custom-widget-preview";
+import { JsonPathTreePicker } from "@homarr/widgets/_inputs/json-path-tree-picker";
 
-const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ctx: z.core.$ZodRefinementCtx) => void> = {
+import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
+import { CustomWidgetPreview, type PreviewFetchResult } from "./_custom-widget-preview";
+
+const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ctx: z.core.$RefinementCtx) => void> = {
   singleValue: (data, ctx) => {
-    if (!data.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.jsonPath, path: ["jsonPath"] });
+    if (!data.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: data.jsonPath, path: ["jsonPath"] });
   },
   keyValue: (data, ctx) => {
     (data.mappings as Array<{ label: string; jsonPath: string }>)?.forEach((m, i) => {
-      if (!m.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: m.label, path: ["mappings", i, "label"] });
-      if (!m.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: m.jsonPath, path: ["mappings", i, "jsonPath"] });
+      if (!m.label) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: m.label, path: ["mappings", i, "label"] });
+      if (!m.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: m.jsonPath, path: ["mappings", i, "jsonPath"] });
     });
   },
   table: (data, ctx) => {
-    if (!data.tablePath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.tablePath, path: ["tablePath"] });
+    if (!data.tablePath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: data.tablePath, path: ["tablePath"] });
     (data.columns as Array<{ header: string; jsonPath: string }>)?.forEach((c, i) => {
-      if (!c.header) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: c.header, path: ["columns", i, "header"] });
-      if (!c.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: c.jsonPath, path: ["columns", i, "jsonPath"] });
+      if (!c.header) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: c.header, path: ["columns", i, "header"] });
+      if (!c.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: c.jsonPath, path: ["columns", i, "jsonPath"] });
     });
   },
   statGrid: (data, ctx) => {
     (data.statGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
-      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["statGridItems", i, "label"] });
-      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["statGridItems", i, "jsonPath"] });
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.label, path: ["statGridItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.jsonPath, path: ["statGridItems", i, "jsonPath"] });
     });
   },
   progressBars: (data, ctx) => {
     (data.progressBars as Array<{ label: string; valuePath: string }>)?.forEach((bar, i) => {
-      if (!bar.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: bar.label, path: ["progressBars", i, "label"] });
-      if (!bar.valuePath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: bar.valuePath, path: ["progressBars", i, "valuePath"] });
+      if (!bar.label) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: bar.label, path: ["progressBars", i, "label"] });
+      if (!bar.valuePath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: bar.valuePath, path: ["progressBars", i, "valuePath"] });
     });
   },
   statusIndicator: (data, ctx) => {
     (data.statusItems as Array<{ label: string; jsonPath: string; goodValues: string }>)?.forEach((item, i) => {
-      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["statusItems", i, "label"] });
-      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["statusItems", i, "jsonPath"] });
-      if (!item.goodValues) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.goodValues, path: ["statusItems", i, "goodValues"] });
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.label, path: ["statusItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.jsonPath, path: ["statusItems", i, "jsonPath"] });
+      if (!item.goodValues) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.goodValues, path: ["statusItems", i, "goodValues"] });
     });
   },
   countGrid: (data, ctx) => {
     (data.countGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
-      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.label, path: ["countGridItems", i, "label"] });
-      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: item.jsonPath, path: ["countGridItems", i, "jsonPath"] });
+      if (!item.label) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.label, path: ["countGridItems", i, "label"] });
+      if (!item.jsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: item.jsonPath, path: ["countGridItems", i, "jsonPath"] });
     });
   },
   raw: (data, ctx) => {
-    if (!data.rawJsonPath) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.rawJsonPath, path: ["rawJsonPath"] });
+    if (!data.rawJsonPath) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: data.rawJsonPath, path: ["rawJsonPath"] });
   },
   actionButton: (data, ctx) => {
-    if (!data.buttonLabel) ctx.addIssue({ code: "too_small", minimum: 1, type: "string", inclusive: true, input: data.buttonLabel, path: ["buttonLabel"] });
+    if (!data.buttonLabel) ctx.addIssue({ code: "too_small", minimum: 1, origin: "string", inclusive: true, input: data.buttonLabel, path: ["buttonLabel"] });
   },
 };
 
@@ -84,10 +87,9 @@ const formSchema = z.object({
   name: z.string().min(1).max(128),
   description: z.string(),
   iconUrl: z.string(),
-  baseUrl: z.string().min(1),
+  url: z.string().min(1),
   authType: z.string(),
   headerName: z.string(),
-  endpoint: z.string().min(1),
   method: z.string(),
   requestBody: z.string(),
   displayType: z.string(),
@@ -146,10 +148,9 @@ const defaultCreateValues: z.infer<typeof formSchema> = {
   name: "",
   description: "",
   iconUrl: "",
-  baseUrl: "",
+  url: "",
   authType: "none",
   headerName: "",
-  endpoint: "",
   method: "GET",
   requestBody: "",
   displayType: "singleValue",
@@ -264,7 +265,11 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const utils = clientApi.useUtils();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
+  const previewMutation = clientApi.customWidget.preview.useMutation();
   const [previewRefreshSignal, setPreviewRefreshSignal] = useState(0);
+  const [previewJson, setPreviewJson] = useState<unknown>(null);
+  const [previewFetchResult, setPreviewFetchResult] = useState<PreviewFetchResult | null>(null);
+  const hasTestedRef = useRef(false);
 
   const form = useZodForm(formSchema, {
     initialValues: { ...defaultCreateValues, ...initialValues },
@@ -278,11 +283,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       name: values.name,
       description: values.description || undefined,
       iconUrl: values.iconUrl || undefined,
-      baseUrl: values.baseUrl,
+      url: values.url,
       authType: values.authType as CustomWidgetAuthType,
       headerName: values.headerName || undefined,
-      endpoint: values.endpoint,
-      method: values.method as "GET" | "POST",
+      method: values.method as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
       requestBody: values.requestBody || undefined,
       displayType: values.displayType as CustomWidgetDisplayType,
       displayConfig: displayConfig as never,
@@ -320,8 +324,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     const values = form.values;
     const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue!;
     return {
-      baseUrl: values.baseUrl,
-      endpoint: values.endpoint,
+      url: values.url,
       method: values.method,
       authType: values.authType,
       headerName: values.headerName || undefined,
@@ -332,6 +335,41 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       definitionId,
     };
   }, [form.values, definitionId]);
+
+  const handlePreviewTest = useCallback(async () => {
+    const input = getPreviewInput();
+    if (!input.url) return;
+    try {
+      const res = await previewMutation.mutateAsync(input);
+      hasTestedRef.current = true;
+      setPreviewFetchResult({
+        success: res.success,
+        error: res.success ? undefined : res.error,
+        responseInfo: res.responseInfo,
+        rawResponse: res.rawResponse,
+      });
+      if (res.success && res.rawResponse) {
+        try {
+          setPreviewJson(JSON.parse(res.rawResponse));
+        } catch {
+          setPreviewJson(null);
+        }
+      } else {
+        setPreviewJson(null);
+      }
+    } catch {
+      setPreviewFetchResult({ success: false, error: t("notification.previewError"), responseInfo: null, rawResponse: null });
+      setPreviewJson(null);
+    }
+  }, [getPreviewInput, previewMutation]);
+
+  useEffect(() => {
+    if (previewRefreshSignal > 0 && hasTestedRef.current) {
+      void handlePreviewTest();
+    }
+  }, [previewRefreshSignal]);
+
+  const previewInput = getPreviewInput();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -347,7 +385,32 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
 
           <Fieldset legend={t("fieldset.connection")}>
             <Stack gap="sm">
-              <TextInput label={t("field.baseUrl")} required placeholder={t("placeholder.baseUrl")} {...form.getInputProps("baseUrl")} />
+              <Group align="end" wrap="nowrap" gap="xs">
+                <Select
+                  label={t("field.method")}
+                  data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({ value, label: t(`method.${value}` as never) }))}
+                  w={110}
+                  {...form.getInputProps("method")}
+                  allowDeselect={false}
+                />
+                <TextInput
+                  label={t("field.url")}
+                  required
+                  placeholder={t("placeholder.url")}
+                  style={{ flex: 1 }}
+                  {...form.getInputProps("url")}
+                />
+                <Button
+                  size="sm"
+                  variant="light"
+                  leftSection={<IconPlayerPlay size={16} />}
+                  onClick={() => void handlePreviewTest()}
+                  loading={previewMutation.isPending}
+                  disabled={!form.values.url}
+                >
+                  {t("preview.test")}
+                </Button>
+              </Group>
               <div>
                 <Text size="sm" fw={500} mb={4}>{t("field.authType")}</Text>
                 <SegmentedControl
@@ -378,17 +441,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                   <TextInput key={field.kind} label={t(`secret.${field.labelKey}` as never)} placeholder={placeholder} {...form.getInputProps(`secrets.${secretIndex}.value`)} />
                 );
               })}
-            </Stack>
-          </Fieldset>
-
-          <Fieldset legend={t("fieldset.request")}>
-            <Stack gap="sm">
-              <TextInput label={t("field.endpoint")} required placeholder={t("placeholder.endpoint")} {...form.getInputProps("endpoint")} />
-              <div>
-                <Text size="sm" fw={500} mb={4}>{t("field.method")}</Text>
-                <SegmentedControl data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({ value, label: t(`method.${value}` as never) }))} {...form.getInputProps("method")} />
-              </div>
-              {form.values.method === "POST" && (
+              {form.values.method !== "GET" && (
                 <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
               )}
             </Stack>
@@ -407,12 +460,20 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               />
               <Text size="xs" c="dimmed">{t(`displayTypeDescription.${form.values.displayType}` as never)}</Text>
 
-              <DisplayTypeFields form={form} t={t} />
+              <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
             </Stack>
           </Fieldset>
 
           <Box hiddenFrom="md">
-            <CustomWidgetPreview getFormValues={getPreviewInput} refreshSignal={previewRefreshSignal} />
+            <CustomWidgetPreview
+              getFormValues={getPreviewInput}
+              formValues={previewInput}
+              fetchResult={previewFetchResult}
+              cachedJson={previewJson}
+              onTest={() => void handlePreviewTest()}
+              isTesting={previewMutation.isPending}
+              testError={previewMutation.error?.message ?? null}
+            />
           </Box>
 
           <Group justify="end">
@@ -427,7 +488,31 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             <Button type="submit" fullWidth loading={createMutation.isPending || updateMutation.isPending}>
               {mode === "create" ? t("action.create") : t("action.save")}
             </Button>
-            <CustomWidgetPreview getFormValues={getPreviewInput} refreshSignal={previewRefreshSignal} />
+            <CopyAiPromptButton
+              rawResponse={previewFetchResult?.rawResponse}
+              currentConfig={{
+                $schema: "homarr-custom-widget-v2",
+                name: form.values.name,
+                description: form.values.description,
+                iconUrl: form.values.iconUrl,
+                url: form.values.url,
+                authType: form.values.authType,
+                headerName: form.values.headerName,
+                method: form.values.method,
+                requestBody: form.values.requestBody,
+                displayType: form.values.displayType,
+                displayConfig: previewInput.displayConfig,
+              }}
+            />
+            <CustomWidgetPreview
+              getFormValues={getPreviewInput}
+              formValues={previewInput}
+              fetchResult={previewFetchResult}
+              cachedJson={previewJson}
+              onTest={() => void handlePreviewTest()}
+              isTesting={previewMutation.isPending}
+              testError={previewMutation.error?.message ?? null}
+            />
           </Stack>
         </Box>
       </Group>
@@ -435,13 +520,20 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   );
 }
 
-function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typeof formSchema>>; t: ReturnType<typeof useScopedI18n<"customWidget">> }) {
+function DisplayTypeFields({ form, t, previewJson }: { form: ReturnType<typeof useZodForm<typeof formSchema>>; t: ReturnType<typeof useScopedI18n<"customWidget">>; previewJson: unknown }) {
   const dt = form.values.displayType;
 
   if (dt === "singleValue") {
     return (
       <>
-        <TextInput label={t("field.jsonPath")} description={t("field.jsonPathHint")} required placeholder={t("placeholder.jsonPath")} {...form.getInputProps("jsonPath")} />
+        <JsonPathTreePicker
+          json={previewJson}
+          label={t("field.jsonPath")}
+          description={t("field.jsonPathHint")}
+          required
+          placeholder={t("placeholder.jsonPath")}
+          {...form.getInputProps("jsonPath")}
+        />
         <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabel")} {...form.getInputProps("label")} />
         <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} {...form.getInputProps("unit")} />
         <Group grow>
@@ -465,14 +557,16 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.mappings.map((_m, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabelShort")} style={{ flex: 1 }} {...form.getInputProps(`mappings.${i}.label`)} />
-            <TextInput label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} style={{ flex: 1 }} {...form.getInputProps(`mappings.${i}.jsonPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} {...form.getInputProps(`mappings.${i}.jsonPath`)} />
+            </Box>
             <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} style={{ width: 80 }} {...form.getInputProps(`mappings.${i}.unit`)} />
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("mappings", i)} disabled={form.values.mappings.length <= 1} aria-label={t("action.removeMapping")}>
               <IconTrash size={16} />
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("mappings", { label: "", jsonPath: "$", unit: "" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("mappings", { ...form.values.mappings[form.values.mappings.length - 1] })}>
           {t("action.addMapping")}
         </Button>
       </Stack>
@@ -482,7 +576,14 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
   if (dt === "table") {
     return (
       <Stack gap="xs">
-        <TextInput label={t("field.tablePath")} description={t("field.tablePathHint")} required placeholder={t("placeholder.tablePath")} {...form.getInputProps("tablePath")} />
+        <JsonPathTreePicker
+          json={previewJson}
+          label={t("field.tablePath")}
+          description={t("field.tablePathHint")}
+          required
+          placeholder={t("placeholder.tablePath")}
+          {...form.getInputProps("tablePath")}
+        />
         <Group grow>
           <Switch label={t("field.striped")} {...form.getInputProps("striped", { type: "checkbox" })} />
           <Switch label={t("field.compact")} {...form.getInputProps("compact", { type: "checkbox" })} />
@@ -491,13 +592,15 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.columns.map((_col, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.header")} placeholder={t("placeholder.exampleHeader")} style={{ flex: 1 }} {...form.getInputProps(`columns.${i}.header`)} />
-            <TextInput label={t("field.jsonPath")} placeholder={t("placeholder.columnJsonPath")} style={{ flex: 1 }} {...form.getInputProps(`columns.${i}.jsonPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.jsonPath")} placeholder={t("placeholder.columnJsonPath")} {...form.getInputProps(`columns.${i}.jsonPath`)} />
+            </Box>
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("columns", i)} disabled={form.values.columns.length <= 1} aria-label={t("action.removeColumn")}>
               <IconTrash size={16} />
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("columns", { header: "", jsonPath: "$" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("columns", { ...form.values.columns[form.values.columns.length - 1] })}>
           {t("action.addColumn")}
         </Button>
       </Stack>
@@ -515,7 +618,9 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.statGridItems.map((_item, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabelShort")} style={{ flex: 1 }} {...form.getInputProps(`statGridItems.${i}.label`)} />
-            <TextInput label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} style={{ flex: 1 }} {...form.getInputProps(`statGridItems.${i}.jsonPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} {...form.getInputProps(`statGridItems.${i}.jsonPath`)} />
+            </Box>
             <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} style={{ width: 80 }} {...form.getInputProps(`statGridItems.${i}.unit`)} />
             <Select label={t("field.color")} data={MANTINE_COLORS.map((c) => ({ value: c, label: c }))} style={{ width: 100 }} {...form.getInputProps(`statGridItems.${i}.color`)} allowDeselect={false} />
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("statGridItems", i)} disabled={form.values.statGridItems.length <= 1} aria-label={t("action.removeItem")}>
@@ -523,7 +628,7 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("statGridItems", { label: "", jsonPath: "$", unit: "", color: "blue" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("statGridItems", { ...form.values.statGridItems[form.values.statGridItems.length - 1] })}>
           {t("action.addItem")}
         </Button>
       </Stack>
@@ -541,8 +646,12 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.progressBars.map((_bar, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabelShort")} style={{ flex: 1 }} {...form.getInputProps(`progressBars.${i}.label`)} />
-            <TextInput label={t("field.valuePath")} placeholder={t("placeholder.valuePath")} style={{ flex: 1 }} {...form.getInputProps(`progressBars.${i}.valuePath`)} />
-            <TextInput label={t("field.maxPath")} placeholder={t("placeholder.maxPath")} style={{ flex: 1 }} {...form.getInputProps(`progressBars.${i}.maxPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.valuePath")} placeholder={t("placeholder.valuePath")} {...form.getInputProps(`progressBars.${i}.valuePath`)} />
+            </Box>
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.maxPath")} placeholder={t("placeholder.maxPath")} {...form.getInputProps(`progressBars.${i}.maxPath`)} />
+            </Box>
             <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} style={{ width: 60 }} {...form.getInputProps(`progressBars.${i}.unit`)} />
             <Select label={t("field.color")} data={MANTINE_COLORS.map((c) => ({ value: c, label: c }))} style={{ width: 100 }} {...form.getInputProps(`progressBars.${i}.color`)} allowDeselect={false} />
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("progressBars", i)} disabled={form.values.progressBars.length <= 1} aria-label={t("action.removeItem")}>
@@ -550,7 +659,7 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("progressBars", { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("progressBars", { ...form.values.progressBars[form.values.progressBars.length - 1] })}>
           {t("action.addBar")}
         </Button>
       </Stack>
@@ -568,14 +677,16 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.statusItems.map((_item, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabelShort")} style={{ flex: 1 }} {...form.getInputProps(`statusItems.${i}.label`)} />
-            <TextInput label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} style={{ flex: 1 }} {...form.getInputProps(`statusItems.${i}.jsonPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} {...form.getInputProps(`statusItems.${i}.jsonPath`)} />
+            </Box>
             <TextInput label={t("field.goodValues")} placeholder={t("placeholder.goodValues")} style={{ flex: 1 }} {...form.getInputProps(`statusItems.${i}.goodValues`)} />
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("statusItems", i)} disabled={form.values.statusItems.length <= 1} aria-label={t("action.removeItem")}>
               <IconTrash size={16} />
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("statusItems", { label: "", jsonPath: "$", goodValues: "online,true" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("statusItems", { ...form.values.statusItems[form.values.statusItems.length - 1] })}>
           {t("action.addItem")}
         </Button>
       </Stack>
@@ -593,14 +704,16 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
         {form.values.countGridItems.map((_item, i) => (
           <Group key={i} align="end" wrap="nowrap">
             <TextInput label={t("field.label")} placeholder={t("placeholder.exampleLabelShort")} style={{ flex: 1 }} {...form.getInputProps(`countGridItems.${i}.label`)} />
-            <TextInput label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} style={{ flex: 1 }} {...form.getInputProps(`countGridItems.${i}.jsonPath`)} />
+            <Box style={{ flex: 1 }}>
+              <JsonPathTreePicker json={previewJson} label={t("field.jsonPath")} placeholder={t("placeholder.jsonPath")} {...form.getInputProps(`countGridItems.${i}.jsonPath`)} />
+            </Box>
             <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} style={{ width: 80 }} {...form.getInputProps(`countGridItems.${i}.unit`)} />
             <ActionIcon color="red" variant="subtle" onClick={() => form.removeListItem("countGridItems", i)} disabled={form.values.countGridItems.length <= 1} aria-label={t("action.removeItem")}>
               <IconTrash size={16} />
             </ActionIcon>
           </Group>
         ))}
-        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("countGridItems", { label: "", jsonPath: "$", unit: "" })}>
+        <Button variant="light" size="xs" leftSection={<IconPlus size={14} />} onClick={() => form.insertListItem("countGridItems", { ...form.values.countGridItems[form.values.countGridItems.length - 1] })}>
           {t("action.addItem")}
         </Button>
       </Stack>
@@ -610,7 +723,13 @@ function DisplayTypeFields({ form, t }: { form: ReturnType<typeof useZodForm<typ
   if (dt === "raw") {
     return (
       <>
-        <TextInput label={t("field.jsonPath")} description={t("field.jsonPathHint")} placeholder={t("placeholder.jsonPath")} {...form.getInputProps("rawJsonPath")} />
+        <JsonPathTreePicker
+          json={previewJson}
+          label={t("field.jsonPath")}
+          description={t("field.jsonPathHint")}
+          placeholder={t("placeholder.jsonPath")}
+          {...form.getInputProps("rawJsonPath")}
+        />
         <NumberInput label={t("field.maxHeight")} min={50} max={1000} step={50} {...form.getInputProps("rawMaxHeight")} />
       </>
     );

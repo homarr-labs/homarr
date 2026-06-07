@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import {
-  ActionIcon,
   Alert,
   Badge,
   Button,
   Card,
   Center,
   Code,
-  Collapse,
   Group,
   Loader,
   ScrollArea,
@@ -17,17 +15,15 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconAlertTriangle, IconChevronDown, IconChevronUp, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
+import { IconAlertTriangle, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
+import { extractDisplayData } from "@homarr/widgets/custom-api/extract-display-data";
 
 import { displayComponents } from "@homarr/widgets/custom-api/component";
 
 interface PreviewInput {
-  baseUrl: string;
-  endpoint: string;
+  url: string;
   method: string;
   authType: string;
   headerName?: string;
@@ -38,31 +34,48 @@ interface PreviewInput {
   definitionId?: string;
 }
 
-interface CustomWidgetPreviewProps {
-  getFormValues: () => PreviewInput;
-  refreshSignal?: number;
+export interface PreviewFetchResult {
+  success: boolean;
+  error?: string;
+  responseInfo: { status: number; statusText: string } | null;
+  rawResponse: string | null;
 }
 
-export function CustomWidgetPreview({ getFormValues, refreshSignal }: CustomWidgetPreviewProps) {
+interface CustomWidgetPreviewProps {
+  getFormValues: () => PreviewInput;
+  formValues: PreviewInput;
+  fetchResult: PreviewFetchResult | null;
+  cachedJson: unknown;
+  onTest: () => void;
+  isTesting: boolean;
+  testError?: string | null;
+}
+
+export function CustomWidgetPreview({
+  getFormValues,
+  formValues,
+  fetchResult,
+  cachedJson,
+  onTest,
+  isTesting,
+  testError,
+}: CustomWidgetPreviewProps) {
   const t = useScopedI18n("customWidget");
-  const previewMutation = clientApi.customWidget.preview.useMutation();
-  const [rawOpen, { toggle: toggleRaw }] = useDisclosure(false);
-  const [result, setResult] = useState<typeof previewMutation.data>(undefined);
-  const hasTestedRef = useRef(false);
 
-  const handleTest = async () => {
-    const values = getFormValues();
-    if (!values.baseUrl || !values.endpoint) return;
-    const res = await previewMutation.mutateAsync(values);
-    setResult(res);
-    hasTestedRef.current = true;
-  };
-
-  useEffect(() => {
-    if (refreshSignal && refreshSignal > 0 && hasTestedRef.current) {
-      void handleTest();
+  const displayData = useMemo((): Record<string, unknown> | null => {
+    const { displayType, displayConfig } = formValues;
+    if (displayType === "actionButton") {
+      return extractDisplayData(null, displayType, displayConfig) as Record<string, unknown>;
     }
-  }, [refreshSignal]);
+    if (!fetchResult?.success || cachedJson == null) return null;
+    return extractDisplayData(cachedJson, displayType, displayConfig) as Record<string, unknown>;
+  }, [fetchResult?.success, cachedJson, formValues]);
+
+  const handleTest = () => {
+    const values = getFormValues();
+    if (!values.url) return;
+    onTest();
+  };
 
   return (
     <Card withBorder shadow="sm" p="md">
@@ -72,75 +85,64 @@ export function CustomWidgetPreview({ getFormValues, refreshSignal }: CustomWidg
           <Button
             size="xs"
             variant="light"
-            leftSection={previewMutation.isPending ? <Loader size={14} /> : <IconPlayerPlay size={14} />}
+            leftSection={isTesting ? <Loader size={14} /> : <IconPlayerPlay size={14} />}
             onClick={handleTest}
-            loading={previewMutation.isPending}
+            loading={isTesting}
           >
             {t("preview.test")}
           </Button>
         </Group>
 
-        {previewMutation.error && (
+        {testError && (
           <Alert color="red" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs">{previewMutation.error.message}</Text>
+            <Text size="xs">{testError}</Text>
           </Alert>
         )}
 
-        {result && !result.success && (
+        {fetchResult && !fetchResult.success && (
           <Alert color="red" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs" fw={500}>{result.error}</Text>
-            {result.responseInfo && (
+            <Text size="xs" fw={500}>{fetchResult.error}</Text>
+            {fetchResult.responseInfo && (
               <Badge size="xs" color="red" variant="light" mt={4}>
-                {result.responseInfo.status} {result.responseInfo.statusText}
+                {fetchResult.responseInfo.status} {fetchResult.responseInfo.statusText}
               </Badge>
             )}
           </Alert>
         )}
 
-        {result?.success && (
+        {displayData && (formValues.displayType === "actionButton" || fetchResult?.success) && (
           <Stack gap="xs">
-            <Group gap="xs">
-              <Badge size="xs" color="green" variant="light">
-                {result.responseInfo.status} {result.responseInfo.statusText}
-              </Badge>
-            </Group>
+            {fetchResult?.success && (
+              <Group gap="xs">
+                <Badge size="xs" color="green" variant="light">
+                  {fetchResult.responseInfo?.status} {fetchResult.responseInfo?.statusText}
+                </Badge>
+              </Group>
+            )}
 
             <Card withBorder p="xs" bg="var(--mantine-color-dark-7)" mih={120}>
-              <PreviewDisplay data={result.displayData} />
+              <PreviewDisplay data={displayData} />
             </Card>
 
-            <Group gap={4}>
-              <ActionIcon size="xs" variant="subtle" onClick={toggleRaw}>
-                {rawOpen ? <IconChevronUp size={12} /> : <IconChevronDown size={12} />}
-              </ActionIcon>
-              <Text size="xs" c="dimmed" style={{ cursor: "pointer" }} onClick={toggleRaw}>
+            {fetchResult?.success && fetchResult.rawResponse && (
+              <Button
+                size="xs"
+                variant="subtle"
+                leftSection={<IconExternalLink size={14} />}
+                onClick={() => {
+                  const blob = new Blob([fetchResult.rawResponse!], { type: "application/json" });
+                  const blobUrl = URL.createObjectURL(blob);
+                  window.open(blobUrl);
+                  setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+                }}
+              >
                 {t("preview.rawResponse")}
-              </Text>
-              {rawOpen && (
-                <ActionIcon
-                  size="xs"
-                  variant="subtle"
-                  ml="auto"
-                  onClick={() => {
-                    const blob = new Blob([result.rawResponse], { type: "application/json" });
-                    window.open(URL.createObjectURL(blob));
-                  }}
-                >
-                  <IconExternalLink size={12} />
-                </ActionIcon>
-              )}
-            </Group>
-            <Collapse expanded={rawOpen}>
-              <ScrollArea mah={200}>
-                <Code block style={{ fontSize: 12 }}>
-                  {result.rawResponse}
-                </Code>
-              </ScrollArea>
-            </Collapse>
+              </Button>
+            )}
           </Stack>
         )}
 
-        {!result && !previewMutation.error && !previewMutation.isPending && (
+        {!displayData && !testError && !isTesting && (
           <Text size="xs" c="dimmed" ta="center">{t("preview.hint")}</Text>
         )}
       </Stack>

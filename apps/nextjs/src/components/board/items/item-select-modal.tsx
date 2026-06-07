@@ -49,7 +49,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   );
 
   const filteredCustomWidgets = useMemo(
-    () => (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(search.toLowerCase())),
+    () => (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
     [customWidgetDefs, search],
   );
 
@@ -147,7 +147,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
                   </Text>
                 </Group>
                 <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? def.baseUrl}
+                  {def.description ?? def.url}
                 </Text>
               </Stack>
               <Box
