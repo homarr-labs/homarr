@@ -525,7 +525,16 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       authType: values.authType as "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery",
       headerName: values.headerName || undefined,
       requestBody: values.requestBody || undefined,
-      displayType: values.displayType as "table" | "raw" | "singleValue" | "keyValue" | "statGrid" | "progressBars" | "statusIndicator" | "countGrid" | "actionButton",
+      displayType: values.displayType as
+        | "table"
+        | "raw"
+        | "singleValue"
+        | "keyValue"
+        | "statGrid"
+        | "progressBars"
+        | "statusIndicator"
+        | "countGrid"
+        | "actionButton",
       displayConfig: (buildConfig?.(values) ?? {}) as Record<string, unknown>,
       secrets: values.secrets.filter((s) => s.value),
       definitionId,
@@ -846,7 +855,11 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("mappings", { ...(form.values.mappings.at(-1) ?? { label: "", jsonPath: "$", unit: "" }) })}
+          onClick={() =>
+            form.insertListItem("mappings", {
+              ...(form.values.mappings.at(-1) ?? { label: "", jsonPath: "$", unit: "" }),
+            })
+          }
         >
           {t("action.addMapping")}
         </Button>
@@ -903,7 +916,9 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("columns", { ...(form.values.columns.at(-1) ?? { header: "", jsonPath: "$" }) })}
+          onClick={() =>
+            form.insertListItem("columns", { ...(form.values.columns.at(-1) ?? { header: "", jsonPath: "$" }) })
+          }
         >
           {t("action.addColumn")}
         </Button>
@@ -971,7 +986,9 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statGridItems", { ...(form.values.statGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "", color: "blue" }) })
+            form.insertListItem("statGridItems", {
+              ...(form.values.statGridItems.at(-1) ?? { label: "", jsonPath: "$", unit: "", color: "blue" }),
+            })
           }
         >
           {t("action.addItem")}
@@ -1048,7 +1065,15 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("progressBars", { ...(form.values.progressBars.at(-1) ?? { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" }) })
+            form.insertListItem("progressBars", {
+              ...(form.values.progressBars.at(-1) ?? {
+                label: "",
+                valuePath: "$",
+                maxPath: "",
+                unit: "",
+                color: "blue",
+              }),
+            })
           }
         >
           {t("action.addBar")}
@@ -1115,7 +1140,9 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statusItems", { ...(form.values.statusItems.at(-1) ?? { label: "", jsonPath: "$", goodValues: "online,true" }) })
+            form.insertListItem("statusItems", {
+              ...(form.values.statusItems.at(-1) ?? { label: "", jsonPath: "$", goodValues: "online,true" }),
+            })
           }
         >
           {t("action.addItem")}
