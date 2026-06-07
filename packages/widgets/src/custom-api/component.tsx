@@ -402,7 +402,7 @@ export const displayComponents: Record<string, ComponentType<{ data: Record<stri
 
 export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
-  const { definitionId } = options;
+  const { definitionId, refreshInterval } = options;
 
   if (!definitionId) {
     return (
@@ -417,19 +417,20 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
     );
   }
 
-  return <CustomApiWidgetInner definitionId={definitionId} />;
+  return <CustomApiWidgetInner definitionId={definitionId} refreshInterval={refreshInterval as number} />;
 }
 
-function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
+function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId: string; refreshInterval: number }) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
+  const intervalMs = Math.max(1000, (refreshInterval ?? 30) * 1000);
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
         if (result?.type === "actionButton" || result?.type === "disabled") return false;
-        return 30_000;
+        return intervalMs;
       },
       retry: (failureCount, err) => {
         if (err.data?.code === "NOT_FOUND") return false;

@@ -3313,6 +3313,10 @@
       "option": {
         "definitionId": {
           "label": "Definition ID"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from the API (in seconds)"
         }
       },
       "noDefinition": "No definition selected",
