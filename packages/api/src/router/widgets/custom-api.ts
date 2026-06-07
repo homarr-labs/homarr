@@ -173,7 +173,8 @@ export const customApiRouter = createTRPCRouter({
     }
 
     if (definition.displayType === "actionButton") {
-      return extractors.actionButton!(null, displayConfig);
+      const extract = extractors.actionButton ?? extractors.singleValue;
+      return extract?.(null, displayConfig);
     }
 
     const decryptedSecrets = definition.secrets.map((s) => ({
@@ -211,9 +212,9 @@ export const customApiRouter = createTRPCRouter({
 
       const json: unknown = await response.json();
       const displayType = (displayConfig.type as string) ?? definition.displayType;
-      const extractor = extractors[displayType] ?? extractors.singleValue!;
+      const extractor = extractors[displayType] ?? extractors.singleValue;
 
-      return extractor!(json, displayConfig);
+      return extractor?.(json, displayConfig);
     } catch (error) {
       if (error instanceof TRPCError) throw error;
       logger.error("Failed to fetch custom API data", { definitionId: input.definitionId, error });

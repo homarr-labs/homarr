@@ -110,7 +110,8 @@ const extractors: Record<string, (json: unknown, config: Record<string, unknown>
 };
 
 function extract(type: string, json: unknown, config: Record<string, unknown>) {
-  return extractors[type]!(json, config);
+  const extractor = extractors[type];
+  return extractor?.(json, config);
 }
 
 describe("custom-api extractors", () => {
@@ -122,10 +123,10 @@ describe("custom-api extractors", () => {
 
     expect(result.type).toBe("statGrid");
     expect(result.items).toHaveLength(2);
-    expect(result.items[0]!.value).toBe(42);
-    expect(result.items[0]!.label).toBe("Missing");
-    expect(result.items[0]!.color).toBe("red");
-    expect(result.items[1]!.value).toBe(5);
+    expect(result.items[0]?.value).toBe(42);
+    expect(result.items[0]?.label).toBe("Missing");
+    expect(result.items[0]?.color).toBe("red");
+    expect(result.items[1]?.value).toBe(5);
   });
 
   it("proxmox progressBars extracts memory and disk usage", () => {
@@ -136,9 +137,9 @@ describe("custom-api extractors", () => {
 
     expect(result.type).toBe("progressBars");
     expect(result.bars).toHaveLength(2);
-    expect(result.bars[0]!.value).toBe(12_884_901_888);
-    expect(result.bars[0]!.max).toBe(34_359_738_368);
-    expect(result.bars[1]!.label).toBe("Disk");
+    expect(result.bars[0]?.value).toBe(12_884_901_888);
+    expect(result.bars[0]?.max).toBe(34_359_738_368);
+    expect(result.bars[1]?.label).toBe("Disk");
   });
 
   it("disk table extracts filesystem rows", () => {
@@ -151,8 +152,8 @@ describe("custom-api extractors", () => {
     expect(result.type).toBe("table");
     expect(result.columns).toEqual(["Mount", "Size", "Used"]);
     expect(result.rows).toHaveLength(3);
-    expect(result.rows[0]![0]).toBe("/");
-    expect(result.rows[2]![2]).toBe("95%");
+    expect(result.rows[0]?.[0]).toBe("/");
+    expect(result.rows[2]?.[2]).toBe("95%");
   });
 
   it("pihole statusIndicator detects enabled state", () => {
@@ -163,8 +164,8 @@ describe("custom-api extractors", () => {
 
     expect(result.type).toBe("statusIndicator");
     expect(result.items).toHaveLength(1);
-    expect(result.items[0]!.isGood).toBe(true);
-    expect(result.items[0]!.value).toBe("enabled");
+    expect(result.items[0]?.isGood).toBe(true);
+    expect(result.items[0]?.value).toBe("enabled");
   });
 
   it("pihole countGrid extracts all 4 stats", () => {
@@ -175,11 +176,11 @@ describe("custom-api extractors", () => {
 
     expect(result.type).toBe("countGrid");
     expect(result.items).toHaveLength(4);
-    expect(result.items[0]!.value).toBe(12_847);
-    expect(result.items[1]!.value).toBe(48_291);
-    expect(result.items[2]!.value).toBe(26.6);
-    expect(result.items[2]!.unit).toBe("%");
-    expect(result.items[3]!.value).toBe(14);
+    expect(result.items[0]?.value).toBe(12_847);
+    expect(result.items[1]?.value).toBe(48_291);
+    expect(result.items[2]?.value).toBe(26.6);
+    expect(result.items[2]?.unit).toBe("%");
+    expect(result.items[3]?.value).toBe(14);
   });
 
   it("radarr statGrid with outline card style", () => {
@@ -191,8 +192,8 @@ describe("custom-api extractors", () => {
 
     expect(result.type).toBe("statGrid");
     expect(result.cardStyle).toBe("outline");
-    expect(result.items[0]!.value).toBe(15);
-    expect(result.items[1]!.value).toBe(3);
+    expect(result.items[0]?.value).toBe(15);
+    expect(result.items[1]?.value).toBe(3);
   });
 
   it("raw extractor returns raw data at path", () => {

@@ -434,8 +434,8 @@ export const customWidgetRouter = createTRPCRouter({
         };
 
         const displayType = (displayConfig as { type?: string }).type ?? input.displayType;
-        const extractor = extractors[displayType] ?? extractors.singleValue!;
-        const displayData = extractor!(json, displayConfig);
+        const extractor = extractors[displayType] ?? extractors.singleValue;
+        const displayData = extractor?.(json, displayConfig);
 
         return {
           success: true as const,
