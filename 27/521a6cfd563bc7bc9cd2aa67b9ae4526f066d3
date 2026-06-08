@@ -1,0 +1,29 @@
+packages/integrations/src/beszel/test/beszel-integration.spec.ts
+  s_418dc48b19ebb2::t_e696161baca4e6 111
+  s_418dc48b19ebb2::t_24c8bb3074d50f 118
+  s_418dc48b19ebb2::t_3d34c894aa591d 77-79
+  s_418dc48b19ebb2::t_5adc83ff475913 94
+  s_418dc48b19ebb2::t_b097bb353d953e 130
+  s_418dc48b19ebb2::t_062c72c178459c 137-141
+  s_418dc48b19ebb2::t_539a6740ee37c0 151
+  s_418dc48b19ebb2::t_7acc9e0c323870 136
+  s_418dc48b19ebb2::t_18849330991daa 119-123
+  s_418dc48b19ebb2::t_9aa407ab2a8844 189
+  s_418dc48b19ebb2::t_96af33b305eaec 170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "27521a6cfd563bc7bc9cd2aa67b9ae4526f066d3",
+  "prompts": {},
+  "sessions": {
+    "s_418dc48b19ebb2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "590b33f2-3f1d-49b2-b3f0-45b978bc7bed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
