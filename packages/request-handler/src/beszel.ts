@@ -15,6 +15,15 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 
 export type { BeszelSystemRow } from "@homarr/integrations/types";
 
+/**
+ * Maps raw Beszel API responses (BeszelSystem + BeszelSystemDetails) into a
+ * normalized BeszelSystemRow for widget consumption.
+ *
+ * BeszelSystemInfo uses short field names (see beszel-types.ts for full docs):
+ * cpu=CPU%, mp=memory%, dp=disk%, g=GPU%, la=loadAvg, u=uptime(s), v=version,
+ * bb=bandwidth(bytes/s), b=bandwidth(Mbps legacy), dt=disk temp, bat=battery,
+ * sv=[running,total] services, h=hostname, m=CPU model, c=cores, ct=threads
+ */
 function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | null): BeszelSystemRow {
   const info = system.info;
   return {
@@ -26,6 +35,7 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
     disk: info.dp,
     gpu: info.g ?? 0,
     loadAvg: info.la ?? null,
+    // bb = bytes/s (newer), b = Mbps (legacy, multiply to get bytes/s)
     netBytes: info.bb ?? (info.b ?? 0) * 1_000_000,
     temp: info.dt ?? null,
     battery: info.bat ?? null,

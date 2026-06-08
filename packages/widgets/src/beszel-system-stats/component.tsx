@@ -57,6 +57,8 @@ export default function BeszelSystemStatsWidget({
     includeDocker: showDocker,
   });
 
+  // BeszelSystemStats fields are documented in beszel-types.ts.
+  // mu/du = bytes, dr/dw = bytes/s, b = public bandwidth [sent,recv] bytes/s, ns/nr = all-interface bytes/s
   const BYTES_TO_GB = 1024 * 1024 * 1024;
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
@@ -75,6 +77,7 @@ export default function BeszelSystemStatsWidget({
     }),
     [t],
   );
+  // b = public interface bandwidth (preferred), ns/nr = all-interface traffic (fallback)
   const networkMap = useCallback(
     (s: { ns: number; nr: number; b?: [number, number] }) => ({
       [t("chart.network.sent")]: s.b?.[0] ?? s.ns,

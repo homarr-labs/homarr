@@ -82,6 +82,7 @@ export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] |
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 
+// c = CPU (%), m = memory (bytes), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
 const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
   memory: (c) => c?.m ?? 0,
