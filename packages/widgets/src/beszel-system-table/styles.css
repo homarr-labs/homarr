@@ -8,6 +8,12 @@
   text-overflow: ellipsis;
 }
 
+.beszel-table td .mantine-Text-root,
+.beszel-table td .mantine-Group-root {
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
 .beszel-table .mantine-datatable-header-cell-sortable-icon {
   opacity: 0;
   transition: opacity 150ms;

@@ -1,14 +1,8 @@
 import { IconTable } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
+import { statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
-
-const statusOptions = [
-  { value: "all", label: "All Systems" },
-  { value: "up", label: "Up" },
-  { value: "down", label: "Down" },
-  { value: "paused", label: "Paused" },
-];
 
 const sortOptions = [
   { value: "name", label: "System" },

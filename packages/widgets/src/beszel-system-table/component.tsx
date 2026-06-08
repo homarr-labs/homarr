@@ -24,8 +24,9 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
-import { statusColorMap, thresholdColor, loadAvgColor } from "../beszel/_shared/colors";
-import { formatBytes, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
+import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
+import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
+import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -49,36 +50,15 @@ const getSizeConfig = (width: number): SizeConfig => {
 export default function BeszelSystemTableWidget({
   options,
   integrationIds,
+  isEditMode,
   width,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const [results] = clientApi.widget.beszel.getSystems.useSuspenseQuery({ integrationIds });
-  const utils = clientApi.useUtils();
   const size = getSizeConfig(width);
 
-  clientApi.widget.beszel.subscribeSystems.useSubscription(
-    { integrationIds },
-    {
-      onData(data) {
-        utils.widget.beszel.getSystems.setData({ integrationIds }, (prev) => {
-          if (!prev) return prev;
-          return prev.map((r) =>
-            r.integrationId === data.integrationId ? { ...r, systems: data.systems, updatedAt: data.timestamp } : r,
-          );
-        });
-      },
-    },
-  );
-
-  const allSystems = useMemo(
-    () => results.flatMap((r) => r.systems.map((s) => ({ ...s, _key: `${r.integrationId}:${s.id}` }))),
-    [results],
-  );
-
-  const filteredSystems = useMemo(() => {
-    if (options.statusFilter === "all") return allSystems;
-    return allSystems.filter((s) => s.status === options.statusFilter);
-  }, [allSystems, options.statusFilter]);
+  useBeszelSystemsSubscription(integrationIds, !isEditMode);
+  const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
     columnAccessor: options.sortBy,
@@ -99,7 +79,7 @@ export default function BeszelSystemTableWidget({
 
   const PercentCell = ({ value }: { value: number }) => (
     <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
-      <Text size={size.fontSize} fw={500} miw={size.valueMiw} ta="right">
+      <Text size={size.fontSize} fw={500} miw={size.valueMiw} ta="right" style={{ whiteSpace: "nowrap" }}>
         {formatPercent(value)}
       </Text>
       <Progress value={value} color={thresholdColor(value)} size={size.progressSize} style={{ flex: 1 }} />
@@ -118,7 +98,7 @@ export default function BeszelSystemTableWidget({
         ),
         sortable: true,
         render: (record) => (
-          <Group gap={4} wrap="nowrap">
+          <Group gap={8} wrap="nowrap">
             <Indicator color={statusColorMap[record.status]} size={7} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
@@ -180,7 +160,7 @@ export default function BeszelSystemTableWidget({
         ),
         sortable: true,
         render: (record) => (
-          <Group gap={4} wrap="nowrap">
+          <Group gap={8} wrap="nowrap">
             <Indicator
               color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
               size={7}
@@ -198,7 +178,11 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <Text size={size.fontSize}>{formatBytes(record.netBytes)}</Text>,
+        render: (record) => (
+          <Text size={size.fontSize} style={{ whiteSpace: "nowrap" }}>
+            {formatByteRate(record.netBytes)}
+          </Text>
+        ),
       },
       options.showTemp && {
         accessor: "temp",
@@ -263,6 +247,7 @@ export default function BeszelSystemTableWidget({
 
   return (
     <DataTable
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
       withTableBorder={false}
       borderRadius={0}
       highlightOnHover
