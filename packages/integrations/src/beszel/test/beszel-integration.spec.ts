@@ -75,8 +75,10 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
     test("each system has required fields", async () => {
       const systems = await integration.getSystemsAsync();
       const system = systems[0];
-      expect(system).toBeDefined();
-      systemId = system?.id ?? "";
+      if (!system) {
+        throw new Error("Expected at least one system");
+      }
+      systemId = system.id;
 
       expect(system.id).toBeDefined();
       expect(system.name).toBeDefined();
