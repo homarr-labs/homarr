@@ -1,0 +1,75 @@
+packages/widgets/src/beszel-alerts/index.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-17
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_e6412627c4c1f5::t_762784b5825105 1-205
+packages/widgets/src/beszel-alerts/component.tsx
+  s_e6412627c4c1f5::t_762784b5825105 1-127
+packages/integrations/src/beszel/beszel-integration.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-296
+packages/api/src/router/widgets/index.ts
+  s_e6412627c4c1f5::t_762784b5825105 6
+packages/integrations/src/beszel/beszel-types.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-244
+packages/request-handler/src/health-monitoring.ts
+  s_e6412627c4c1f5::t_762784b5825105 11
+packages/widgets/src/beszel-system-grid/index.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-35
+packages/integrations/src/types.ts
+  s_e6412627c4c1f5::t_762784b5825105 21
+development/beszel.docker-compose.yml
+  s_e6412627c4c1f5::t_046dc365617011 1-27
+packages/widgets/src/beszel-system-table/styles.css
+  s_e6412627c4c1f5::t_762784b5825105 1-18
+packages/widgets/src/beszel-system-table/index.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-56
+packages/widgets/src/beszel/_shared/format.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-29
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e6412627c4c1f5::t_762784b5825105 1-280
+packages/integrations/src/beszel/test/beszel-integration.spec.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-226
+packages/api/src/router/board.ts
+  s_e6412627c4c1f5::t_762784b5825105 1607-1624,1640
+packages/translation/src/lang/en.json
+  s_e6412627c4c1f5::t_762784b5825105 3104-3314
+packages/widgets/src/index.tsx
+  s_e6412627c4c1f5::t_762784b5825105 51-54,102-105
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_e6412627c4c1f5::t_762784b5825105 8
+packages/cron-jobs/src/jobs/integrations/health-monitoring.ts
+  s_e6412627c4c1f5::t_762784b5825105 13-15
+packages/widgets/src/beszel/_shared/types.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-23
+packages/integrations/src/base/creator.ts
+  s_e6412627c4c1f5::t_762784b5825105 4,129
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_e6412627c4c1f5::t_762784b5825105 1-361
+packages/widgets/src/beszel-system-stats/index.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-31
+packages/definitions/src/integration.ts
+  s_e6412627c4c1f5::t_762784b5825105 436-443
+packages/widgets/src/beszel/_shared/colors.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-21
+packages/request-handler/src/beszel.ts
+  s_e6412627c4c1f5::t_762784b5825105 1-134
+packages/api/src/router/widgets/beszel.ts
+  s_e6412627c4c1f5::t_046dc365617011 1-137
+packages/definitions/src/widget.ts
+  s_e6412627c4c1f5::t_762784b5825105 42-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "6757fbe956e9e255e34a4ccdc1f8eee53792a0b8",
+  "prompts": {},
+  "sessions": {
+    "s_e6412627c4c1f5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "57a1d7d9-0991-4415-bf66-c43816821f10",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
