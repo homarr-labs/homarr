@@ -109,7 +109,7 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
   async requestAsync(integration, input) {
-    const config = timePeriodConfig[input.timePeriod] ?? timePeriodConfig["1h"]!;
+    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
     const instance = await createIntegrationAsync(integration);
     const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     const containerStats = input.includeDocker
