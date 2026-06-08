@@ -1,0 +1,83 @@
+packages/integrations/src/base/creator.ts
+  s_4568f4598d0aca::t_cf9da09251c484 5
+  s_4568f4598d0aca::t_b55b98bbdfb2fe 120
+packages/integrations/test/volumes/beszel/id_ed25519
+  s_4568f4598d0aca::t_ccace9a1487897 1-7
+packages/definitions/src/integration.ts
+  s_4568f4598d0aca::t_54351196b17fb7 373-379
+  s_4568f4598d0aca::t_dceba9c6049650 461
+  s_4568f4598d0aca::t_c4784aa787802e 550
+packages/api/src/router/widgets/system-usage.ts
+  s_4568f4598d0aca::t_6bda031c378a8b 1-49
+packages/integrations/test/beszel.spec.ts
+  s_4568f4598d0aca::t_ccace9a1487897 1-112,114-176
+  s_4568f4598d0aca::t_271f57000ca14d 113
+packages/widgets/src/index.tsx
+  s_4568f4598d0aca::t_7f2c48f0a96c4b 90
+  s_4568f4598d0aca::t_6bb534b1260e2d 47
+packages/integrations/src/mock/data/system-usage.ts
+  s_4568f4598d0aca::t_991cdff081c5d3 1-38
+packages/integrations/src/types.ts
+  s_4568f4598d0aca::t_7cee6ac7da3553 21
+packages/widgets/src/system-usage/component.tsx
+  s_4568f4598d0aca::t_8beda59097c1ca 1-40,46-228
+  s_4568f4598d0aca::t_dcb2800692e3ca 41-45
+packages/integrations/src/mock/mock-integration.ts
+  s_4568f4598d0aca::t_30458ac9df1646 67
+  s_4568f4598d0aca::t_52c184c3f5409a 137-140
+  s_4568f4598d0aca::t_5beddb18e9183a 18
+  s_4568f4598d0aca::t_2141d13da777fb 33
+  s_4568f4598d0aca::t_b2b627eecf0554 51
+packages/translation/src/lang/en.json
+  s_4568f4598d0aca::t_de5e40ad8a5c0f 3902-3904
+  s_4568f4598d0aca::t_1c084847c77056 814-816
+  s_4568f4598d0aca::t_302ac0d3443468 3042-3082
+packages/request-handler/src/system-usage.ts
+  s_4568f4598d0aca::t_3e6c3e65b5c516 1-20
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_4568f4598d0aca::t_82b8c26bf5b50d 159
+packages/widgets/src/system-usage/index.ts
+  s_4568f4598d0aca::t_757eb11d3cdfe1 5
+  s_4568f4598d0aca::t_8e556905f7eba6 1-4,6-15,19-22,32-43
+  s_4568f4598d0aca::t_1469de557aea46 16-18,23-31
+packages/api/src/router/widgets/index.ts
+  s_4568f4598d0aca::t_a3b50cb00a25c7 35
+packages/api/src/middlewares/integration.ts
+  s_4568f4598d0aca::t_366d43850b2736 16
+  s_4568f4598d0aca::t_ff238e60515c62 170-181
+packages/definitions/src/widget.ts
+  s_4568f4598d0aca::t_d09df740fc6324 33
+packages/widgets/src/system-usage/errors/no-system-selected-error.ts
+  s_4568f4598d0aca::t_6106042fee6f99 1-19
+packages/ui/src/icons/index.ts
+  s_4568f4598d0aca::t_c1e0283def8a39 13-54
+packages/cron-jobs/src/jobs/integrations/system-usage.ts
+  s_4568f4598d0aca::t_a609f31ea955d8 12-16
+  s_4568f4598d0aca::t_8ebd1ea63e2be5 17
+  s_4568f4598d0aca::t_a40246bd113631 1-11,18-20
+packages/integrations/src/interfaces/system-usage/system-usage-integration.ts
+  s_4568f4598d0aca::t_52cab932d2202e 1-6
+packages/integrations/src/interfaces/system-usage/system-usage-types.ts
+  s_4568f4598d0aca::t_39dff3a27936c2 1-31
+packages/cron-jobs/src/index.ts
+  s_4568f4598d0aca::t_f44d2b44fa90ed 59
+  s_4568f4598d0aca::t_ee38aa764925be 21
+packages/widgets/src/system-usage/item.tsx
+  s_4568f4598d0aca::t_152619fcf01fbf 1-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "c81fef83dc089efc0732a879a6c335fdf889b448",
+  "prompts": {},
+  "sessions": {
+    "s_4568f4598d0aca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "567ab496-d77d-4dfd-a530-8044205818a5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
