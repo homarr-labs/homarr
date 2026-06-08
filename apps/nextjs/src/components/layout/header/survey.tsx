@@ -190,11 +190,7 @@ const SurveyMenuItem = () => {
   }
 
   return (
-    <Menu.Item
-      onClick={() => surveyModalStore.set(true)}
-      leftSection={<IconMessageCircle size="1rem" />}
-      color="grape"
-    >
+    <Menu.Item onClick={() => surveyModalStore.set(true)} leftSection={<IconMessageCircle size="1rem" />} color="grape">
       Share your feedback
     </Menu.Item>
   );
