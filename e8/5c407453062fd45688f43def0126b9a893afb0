@@ -1,0 +1,23 @@
+nginx.conf
+  s_6d865fc7a8b709::t_216a641cdac42f 19
+scripts/run.sh
+  s_6d865fc7a8b709::t_fc26cd2e3b216c 21
+  s_6d865fc7a8b709::t_56979cb4b2458e 24
+  s_6d865fc7a8b709::t_8c906805d398fa 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e85c407453062fd45688f43def0126b9a893afb0",
+  "prompts": {},
+  "sessions": {
+    "s_6d865fc7a8b709": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2a9089af-6f49-4b0b-82cb-fa69c5c27344",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
