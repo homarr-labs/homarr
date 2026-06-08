@@ -122,80 +122,84 @@ export const boardRouter = createTRPCRouter({
     .output(z.array(boardSummarySchema))
     .meta({
       openapi: { method: "GET", path: "/api/boards", tags: ["boards"], protect: true },
-      mcp: { enabled: true, description: "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags" },
+      mcp: {
+        enabled: true,
+        description:
+          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags",
+      },
     })
     .query(async ({ ctx }) => {
-    const userId = ctx.session?.user.id;
-    const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-      where: eq(boardUserPermissions.userId, userId ?? ""),
-    });
+      const userId = ctx.session?.user.id;
+      const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.userId, userId ?? ""),
+      });
 
-    const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, userId ?? ""),
-      with: {
-        group: {
-          with: {
-            boardPermissions: {},
+      const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, userId ?? ""),
+        with: {
+          group: {
+            with: {
+              boardPermissions: {},
+            },
           },
         },
-      },
-    });
-    const boardIds = permissionsOfCurrentUserWhenPresent
-      .map((permission) => permission.boardId)
-      .concat(
-        permissionsOfCurrentUserGroupsWhenPresent
-          .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-          .flat(),
-      );
+      });
+      const boardIds = permissionsOfCurrentUserWhenPresent
+        .map((permission) => permission.boardId)
+        .concat(
+          permissionsOfCurrentUserGroupsWhenPresent
+            .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
+            .flat(),
+        );
 
-    const currentUserWhenPresent = await ctx.db.query.users.findFirst({
-      where: eq(users.id, userId ?? ""),
-    });
+      const currentUserWhenPresent = await ctx.db.query.users.findFirst({
+        where: eq(users.id, userId ?? ""),
+      });
 
-    const dbBoards = await ctx.db.query.boards.findMany({
-      columns: {
-        id: true,
-        name: true,
-        logoImageUrl: true,
-        isPublic: true,
-      },
-      with: {
-        creator: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            email: true,
+      const dbBoards = await ctx.db.query.boards.findMany({
+        columns: {
+          id: true,
+          name: true,
+          logoImageUrl: true,
+          isPublic: true,
+        },
+        with: {
+          creator: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
+            },
+          },
+          userPermissions: {
+            where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+          },
+          groupPermissions: {
+            where:
+              permissionsOfCurrentUserGroupsWhenPresent.length >= 1
+                ? inArray(
+                    boardGroupPermissions.groupId,
+                    permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
+                  )
+                : undefined,
           },
         },
-        userPermissions: {
-          where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
-        },
-        groupPermissions: {
-          where:
-            permissionsOfCurrentUserGroupsWhenPresent.length >= 1
-              ? inArray(
-                  boardGroupPermissions.groupId,
-                  permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
-                )
-              : undefined,
-        },
-      },
-      // Allow viewing all boards if the user has the permission
-      where: ctx.session?.user.permissions.includes("board-view-all")
-        ? undefined
-        : or(
-            eq(boards.isPublic, true),
-            eq(boards.creatorId, ctx.session?.user.id ?? ""),
-            boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
-          ),
-    });
-    return dbBoards.map((board) => ({
-      ...board,
-      isHome: currentUserWhenPresent?.homeBoardId === board.id,
-      isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
-    }));
-  }),
+        // Allow viewing all boards if the user has the permission
+        where: ctx.session?.user.permissions.includes("board-view-all")
+          ? undefined
+          : or(
+              eq(boards.isPublic, true),
+              eq(boards.creatorId, ctx.session?.user.id ?? ""),
+              boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+            ),
+      });
+      return dbBoards.map((board) => ({
+        ...board,
+        isHome: currentUserWhenPresent?.homeBoardId === board.id,
+        isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+      }));
+    }),
   search: publicProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
     .query(async ({ ctx, input }) => {
@@ -274,7 +278,11 @@ export const boardRouter = createTRPCRouter({
     .requiresPermission("board-create")
     .meta({
       openapi: { method: "POST", path: "/api/boards", tags: ["boards"], protect: true },
-      mcp: { enabled: true, description: "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId }. Requires board-create permission" },
+      mcp: {
+        enabled: true,
+        description:
+          "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId }. Requires board-create permission",
+      },
     })
     .input(boardCreateSchema)
     .output(z.object({ boardId: z.string() }))
@@ -565,15 +573,19 @@ export const boardRouter = createTRPCRouter({
   deleteBoard: protectedProcedure
     .meta({
       openapi: { method: "DELETE", path: "/api/boards/{id}", tags: ["boards"], protect: true },
-      mcp: { enabled: true, description: "Delete a board by its ID. Requires full permission on the board. Use board_getAllBoards to find the board ID" },
+      mcp: {
+        enabled: true,
+        description:
+          "Delete a board by its ID. Requires full permission on the board. Use board_getAllBoards to find the board ID",
+      },
     })
     .input(z.object({ id: z.string() }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
-    await ctx.db.delete(boards).where(eq(boards.id, input.id));
-  }),
+      await ctx.db.delete(boards).where(eq(boards.id, input.id));
+    }),
   setHomeBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
@@ -635,7 +647,7 @@ export const boardRouter = createTRPCRouter({
         boardId: board.id,
       });
 
-      const sortedLayouts = board.layouts.sort((layoutA, layoutB) => layoutA.columnCount - layoutB.columnCount);
+      const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutA.columnCount - layoutB.columnCount);
       // Fallback to biggest if none exists with columnCount bigger than addedLayout.columnCount
       const layoutToClone =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1237,7 +1249,7 @@ export const boardRouter = createTRPCRouter({
     });
 
     return {
-      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
         return permissionA.group.name.localeCompare(permissionB.group.name);
       }),
       users: userPermissions
@@ -1245,7 +1257,7 @@ export const boardRouter = createTRPCRouter({
           user,
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
         }),
       groups: dbGroupBoardPermission
@@ -1256,7 +1268,7 @@ export const boardRouter = createTRPCRouter({
           },
           permission,
         }))
-        .sort((permissionA, permissionB) => {
+        .toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
     };
@@ -1390,7 +1402,7 @@ export const boardRouter = createTRPCRouter({
 
       const emptySection = board.sections
         .filter((s) => s.kind === "empty")
-        .sort((a, b) => (a.yOffset ?? 0) - (b.yOffset ?? 0))[0];
+        .toSorted((a, b) => (a.yOffset ?? 0) - (b.yOffset ?? 0))[0];
 
       if (!emptySection) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no empty section to place items in" });
@@ -1443,7 +1455,10 @@ export const boardRouter = createTRPCRouter({
         }
 
         if (!placed) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Board section is full, no free grid position available" });
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Board section is full, no free grid position available",
+          });
         }
       }
 
@@ -1452,7 +1467,9 @@ export const boardRouter = createTRPCRouter({
       }
 
       if (input.integrationIds.length > 0) {
-        await ctx.db.insert(integrationItems).values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
+        await ctx.db
+          .insert(integrationItems)
+          .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
       }
 
       return { itemId };
@@ -1716,7 +1733,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     ...otherBoardProperties,
     layouts: layouts
       .map(({ boardId: _, ...layout }) => layout)
-      .sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
+      .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,
