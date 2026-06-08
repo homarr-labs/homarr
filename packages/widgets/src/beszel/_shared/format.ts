@@ -1,10 +1,51 @@
-export const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return "0 B/s";
-  const units = ["B/s", "KB/s", "MB/s", "GB/s"];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  const value = bytes / Math.pow(1024, i);
-  return `${value.toFixed(value < 10 ? 2 : 1)} ${units[i]}`;
+const byteUnits = ["B", "KB", "MB", "GB", "TB"] as const;
+const rateUnits = ["B/s", "KB/s", "MB/s", "GB/s"] as const;
+
+const formatScaled = (value: number, units: readonly string[], zeroLabel: string): string => {
+  if (!value || !Number.isFinite(value)) return zeroLabel;
+  const i = Math.max(0, Math.min(Math.floor(Math.log(Math.abs(value)) / Math.log(1024)), units.length - 1));
+  const scaled = value / 1024 ** i;
+  const decimals = scaled < 10 ? 2 : 1;
+  return `${scaled.toFixed(decimals)} ${units[i]!}`;
 };
+
+const formatScaledCompact = (value: number, units: readonly string[], zeroLabel: string): string => {
+  if (!value || !Number.isFinite(value)) return zeroLabel;
+  const i = Math.max(0, Math.min(Math.floor(Math.log(Math.abs(value)) / Math.log(1024)), units.length - 1));
+  const scaled = value / 1024 ** i;
+  return `${scaled < 10 ? scaled.toFixed(1) : Math.round(scaled)}${units[i]!}`;
+};
+
+export const formatByteRate = (value: number): string => formatScaled(value, rateUnits, "0 B/s");
+
+export const formatStorageBytes = (bytes: number): string => formatScaled(bytes, byteUnits, "0 B");
+
+export const formatGB = (value: number): string => {
+  if (!value || !Number.isFinite(value)) return "0 GB";
+  return `${value.toFixed(2)} GB`;
+};
+
+export const formatMB = (value: number): string => {
+  if (!value || !Number.isFinite(value)) return "0 MB";
+  return `${value.toFixed(1)} MB`;
+};
+
+export const chartAxisFormatters = {
+  percent: (value: number) => `${Number(value).toFixed(1)}%`,
+  percentPrecise: (value: number) => `${Number(value).toFixed(1)}%`,
+  gb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}G`),
+  mb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}M`),
+  bytes: (value: number) => formatScaledCompact(Number(value), byteUnits, "0"),
+  rate: (value: number) => formatScaledCompact(Number(value), rateUnits, "0"),
+} as const;
+
+export const getBandwidthRates = (stats: { b?: [number, number] }): { sent: number; recv: number } => ({
+  sent: stats.b?.[0] ?? 0,
+  recv: stats.b?.[1] ?? 0,
+});
+
+export const getContainerNetworkRate = (container: { b?: [number, number] }): number =>
+  (container.b?.[0] ?? 0) + (container.b?.[1] ?? 0);
 
 export const formatUptime = (seconds: number): string => {
   const days = Math.floor(seconds / 86400);
