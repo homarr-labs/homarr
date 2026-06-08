@@ -1,0 +1,19 @@
+packages/api/src/open-api.ts
+  s_c3c72f13aa79cd::t_0c9e778b93d36a 6,14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1a3c4c43fe72e2dadaa221b7ef1e0685a05287e3",
+  "prompts": {},
+  "sessions": {
+    "s_c3c72f13aa79cd": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "24c3fc21-bf31-4ac8-8b66-1f7b1d1a6a62",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
