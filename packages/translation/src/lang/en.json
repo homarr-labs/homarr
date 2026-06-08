@@ -3496,7 +3496,7 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
-            "api": "API",
+            "api": "API & MCP",
             "certificates": "Certificates",
             "tasks": "Tasks"
           }
