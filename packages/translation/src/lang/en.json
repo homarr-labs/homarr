@@ -3233,6 +3233,7 @@
       },
       "empty": "No alerts configured",
       "history": "History",
+      "resolved": "Resolved",
       "status": {
         "triggered": "Triggered",
         "ok": "OK"
@@ -3280,7 +3281,8 @@
         "memory": {
           "title": "Memory Usage",
           "subtitle": "Precise utilization at the recorded time",
-          "series": "Used"
+          "series": "Used",
+          "cache": "Cache/Buffers"
         },
         "disk": {
           "title": "Disk Usage",

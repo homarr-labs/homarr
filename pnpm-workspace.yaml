@@ -132,6 +132,8 @@ catalog:
   json5: ^2.2.3
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
+  lucide-react: ^1.17.0
+  mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   maria2: ^0.4.1
   mysql2: 3.22.4
