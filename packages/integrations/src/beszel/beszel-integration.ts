@@ -23,7 +23,7 @@ import type {
   UpdateAlertInput,
 } from "./beszel-types";
 
-const escapeFilterValue = (value: string) => value.replace(/'/g, "\\'");
+const escapeFilterValue = (value: string) => value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 
 interface BeszelSession {
   token: string;
