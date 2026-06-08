@@ -6,17 +6,7 @@ import { IconBellOff, IconCircleCheck, IconFlame, IconHistory } from "@tabler/ic
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { LucideIcon } from "lucide-react";
-import {
-  Activity,
-  Battery,
-  Cpu,
-  HardDrive,
-  MemoryStick,
-  Monitor,
-  Network,
-  Server,
-  Thermometer,
-} from "lucide-react";
+import { Activity, Battery, Cpu, HardDrive, MemoryStick, Monitor, Network, Server, Thermometer } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -90,7 +80,9 @@ export default function BeszelAlertsWidget({
 
   const history = useMemo(() => {
     const all = results.flatMap((r) => r.history.map((h) => ({ ...h, _key: `${r.integrationId}:${h.id}` })));
-    return all.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()).slice(0, options.maxHistoryItems);
+    return all
+      .toSorted((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
+      .slice(0, options.maxHistoryItems);
   }, [results, options.maxHistoryItems]);
 
   const triggeredAlerts = alerts.filter((a) => a.triggered);
@@ -104,7 +96,9 @@ export default function BeszelAlertsWidget({
             <ThemeIcon variant="light" color="gray" size="lg" radius="xl">
               <IconBellOff size={18} />
             </ThemeIcon>
-            <Text size="sm" c="dimmed">{t("empty")}</Text>
+            <Text size="sm" c="dimmed">
+              {t("empty")}
+            </Text>
           </Stack>
         )}
 
@@ -245,9 +239,7 @@ function AlertRow({ name, value, min, systemName, triggered }: AlertRowProps) {
       style={{
         borderRadius: "var(--mantine-radius-sm)",
         borderLeft: `3px solid var(--mantine-color-${triggered ? "red" : "green"}-6)`,
-        backgroundColor: triggered
-          ? "var(--mantine-color-red-light)"
-          : "var(--mantine-color-default-hover)",
+        backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
       }}
     >
       <Icon size={14} opacity={0.7} style={{ flexShrink: 0 }} />
@@ -256,7 +248,9 @@ function AlertRow({ name, value, min, systemName, triggered }: AlertRowProps) {
           <Text size="xs" fw={600} truncate>
             {systemName}
           </Text>
-          <Text size="xs" c="dimmed">·</Text>
+          <Text size="xs" c="dimmed">
+            ·
+          </Text>
           <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
             {name}
           </Text>

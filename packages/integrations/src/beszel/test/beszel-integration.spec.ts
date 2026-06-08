@@ -144,7 +144,6 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
     });
   });
 
-
   describe("alert CRUD", () => {
     let alertId: string;
 

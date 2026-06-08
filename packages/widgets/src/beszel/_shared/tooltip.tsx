@@ -78,9 +78,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
 
   if (!isActive) return null;
 
-  const sorted = [...(payload ?? [])]
-    .filter((p) => p.value > 0)
-    .sort((a, b) => b.value - a.value);
+  const sorted = [...(payload ?? [])].filter((p) => p.value > 0).toSorted((a, b) => b.value - a.value);
 
   if (!sorted.length) return null;
 

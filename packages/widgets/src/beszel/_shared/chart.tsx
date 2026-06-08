@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
@@ -22,8 +21,14 @@ interface ChartPanelProps {
 export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
   <Stack gap={4}>
     <Group gap="xs">
-      <Text size="sm" fw={600}>{title}</Text>
-      {subtitle && <Text size="xs" c="dimmed">{subtitle}</Text>}
+      <Text size="sm" fw={600}>
+        {title}
+      </Text>
+      {subtitle && (
+        <Text size="xs" c="dimmed">
+          {subtitle}
+        </Text>
+      )}
     </Group>
     {children}
   </Stack>
@@ -41,7 +46,12 @@ export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, ...pr
     withDots={false}
     withXAxis
     withYAxis
-    yAxisProps={{ ...yAxisBase, ...(yAxisDomain ? { domain: yAxisDomain } : {}), tickFormatter: yAxisFormatter, ...yAxisProps }}
+    yAxisProps={{
+      ...yAxisBase,
+      ...(yAxisDomain ? { domain: yAxisDomain } : {}),
+      tickFormatter: yAxisFormatter,
+      ...yAxisProps,
+    }}
     {...props}
   />
 );
@@ -52,7 +62,7 @@ export const useSystemChartData = (
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    return [...systemStats].reverse().map((r) => ({
+    return [...systemStats].toReversed().map((r) => ({
       time: formatTime(r.created),
       ...mapFn(r.stats),
     }));
@@ -86,7 +96,7 @@ export const useDockerChartData = (
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric]!;
-    return [...containerStats].reverse().map((record) => {
+    return [...containerStats].toReversed().map((record) => {
       const point: Record<string, unknown> = { time: formatTime(record.created) };
       for (const name of containerNames) {
         point[name] = extract(record.stats.find((c) => c.n === name));

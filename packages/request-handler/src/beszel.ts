@@ -60,7 +60,6 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
   queryKey: "beszelSystems",
 });
 
-
 export interface BeszelAlertsData {
   alerts: BeszelAlert[];
   history: BeszelAlertHistory[];
@@ -74,9 +73,7 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
   async requestAsync(integration, input) {
     const instance = await createIntegrationAsync(integration);
     const alerts = await instance.getAlertsAsync();
-    const history = input.includeHistory
-      ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems)
-      : [];
+    const history = input.includeHistory ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems) : [];
     return { alerts, history };
   },
   cacheDuration: dayjs.duration(15, "seconds"),

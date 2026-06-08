@@ -68,7 +68,7 @@ export default function BeszelSystemTableWidget({
   const sortedSystems = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
     const dir = directionMultiplier[sortStatus.direction] ?? 1;
-    return [...filteredSystems].sort((a, b) => {
+    return [...filteredSystems].toSorted((a, b) => {
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;
@@ -161,10 +161,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => (
           <Group gap={8} wrap="nowrap">
-            <Indicator
-              color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
-              size={7}
-            />
+            <Indicator color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"} size={7} />
             <Text size={size.fontSize}>{formatLoadAvg(record.loadAvg)}</Text>
           </Group>
         ),
@@ -203,9 +200,7 @@ export default function BeszelSystemTableWidget({
             <Text inherit>{t("column.battery")}</Text>
           </Group>
         ),
-        render: (record) => (
-          <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>
-        ),
+        render: (record) => <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>,
       },
       options.showServices && {
         accessor: "services",

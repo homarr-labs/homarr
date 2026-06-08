@@ -44,17 +44,14 @@ export class BeszelIntegration extends Integration {
       return existingSession;
     }
 
-    const response = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/collections/users/auth-with-password"),
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identity: this.getSecretValue("username"),
-          password: this.getSecretValue("password"),
-        }),
-      },
-    );
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/collections/users/auth-with-password"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        identity: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+      }),
+    });
 
     if (!response.ok) {
       throw new ResponseError(response);
@@ -66,10 +63,7 @@ export class BeszelIntegration extends Integration {
     return session;
   }
 
-  private async fetchWithAuthAsync(
-    url: URL,
-    options: { method?: string; body?: string } = {},
-  ) {
+  private async fetchWithAuthAsync(url: URL, options: { method?: string; body?: string } = {}) {
     let session = await this.authenticateAsync();
 
     const doFetch = (token: string) =>
@@ -97,8 +91,6 @@ export class BeszelIntegration extends Integration {
     return response;
   }
 
-
-
   public async getSystemsAsync(): Promise<BeszelSystem[]> {
     const response = await this.fetchWithAuthAsync(
       this.url("/api/collections/systems/records", { perPage: "500", sort: "-updated" }),
@@ -114,11 +106,7 @@ export class BeszelIntegration extends Integration {
     return (await response.json()) as BeszelSystemDetails;
   }
 
-  public async getSystemStatsAsync(
-    systemId: string,
-    type = "1m",
-    perPage = 60,
-  ): Promise<BeszelSystemStatsRecord[]> {
+  public async getSystemStatsAsync(systemId: string, type = "1m", perPage = 60): Promise<BeszelSystemStatsRecord[]> {
     const filter = `system='${escapeFilterValue(systemId)}' && type='${escapeFilterValue(type)}'`;
     const response = await this.fetchWithAuthAsync(
       this.url("/api/collections/system_stats/records", {
@@ -186,9 +174,7 @@ export class BeszelIntegration extends Integration {
     if (systemId) {
       params.filter = `system='${escapeFilterValue(systemId)}'`;
     }
-    const response = await this.fetchWithAuthAsync(
-      this.url("/api/collections/alerts/records", params),
-    );
+    const response = await this.fetchWithAuthAsync(this.url("/api/collections/alerts/records", params));
     const data = (await response.json()) as PocketBaseListResponse<BeszelAlert>;
     return data.items;
   }
@@ -201,29 +187,24 @@ export class BeszelIntegration extends Integration {
     if (systemId) {
       params.filter = `system='${escapeFilterValue(systemId)}'`;
     }
-    const response = await this.fetchWithAuthAsync(
-      this.url("/api/collections/alerts_history/records", params),
-    );
+    const response = await this.fetchWithAuthAsync(this.url("/api/collections/alerts_history/records", params));
     const data = (await response.json()) as PocketBaseListResponse<BeszelAlertHistory>;
     return data.items;
   }
 
   public async createAlertAsync(systemId: string, input: CreateAlertInput): Promise<BeszelAlert> {
     const session = await this.authenticateAsync();
-    const response = await this.fetchWithAuthAsync(
-      this.url("/api/collections/alerts/records"),
-      {
-        method: "POST",
-        body: JSON.stringify({
-          system: systemId,
-          user: session.userId,
-          name: input.name,
-          value: input.value,
-          min: input.min ?? 0,
-          triggered: false,
-        }),
-      },
-    );
+    const response = await this.fetchWithAuthAsync(this.url("/api/collections/alerts/records"), {
+      method: "POST",
+      body: JSON.stringify({
+        system: systemId,
+        user: session.userId,
+        name: input.name,
+        value: input.value,
+        min: input.min ?? 0,
+        triggered: false,
+      }),
+    });
     return (await response.json()) as BeszelAlert;
   }
 
@@ -239,37 +220,29 @@ export class BeszelIntegration extends Integration {
   }
 
   public async deleteAlertAsync(alertId: string): Promise<void> {
-    await this.fetchWithAuthAsync(
-      this.url(`/api/collections/alerts/records/${alertId}` as `/${string}`),
-      { method: "DELETE" },
-    );
+    await this.fetchWithAuthAsync(this.url(`/api/collections/alerts/records/${alertId}` as `/${string}`), {
+      method: "DELETE",
+    });
   }
 
   public async pauseSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(
-      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
-      {
-        method: "PATCH",
-        body: JSON.stringify({ status: "paused" }),
-      },
-    );
+    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
+      method: "PATCH",
+      body: JSON.stringify({ status: "paused" }),
+    });
   }
 
   public async resumeSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(
-      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
-      {
-        method: "PATCH",
-        body: JSON.stringify({ status: "pending" }),
-      },
-    );
+    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
+      method: "PATCH",
+      body: JSON.stringify({ status: "pending" }),
+    });
   }
 
   public async deleteSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(
-      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
-      { method: "DELETE" },
-    );
+    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
+      method: "DELETE",
+    });
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

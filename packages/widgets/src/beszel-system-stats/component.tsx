@@ -60,19 +60,28 @@ export default function BeszelSystemStatsWidget({
   const BYTES_TO_GB = 1024 * 1024 * 1024;
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
-  const memoryMap = useCallback((s: { mu: number; mb: number }) => ({
-    [t("chart.memory.series")]: s.mu / BYTES_TO_GB,
-    [t("chart.memory.cache")]: (s.mb ?? 0) / BYTES_TO_GB,
-  }), [t]);
+  const memoryMap = useCallback(
+    (s: { mu: number; mb: number }) => ({
+      [t("chart.memory.series")]: s.mu / BYTES_TO_GB,
+      [t("chart.memory.cache")]: (s.mb ?? 0) / BYTES_TO_GB,
+    }),
+    [t],
+  );
   const diskMap = useCallback((s: { du: number }) => ({ [t("chart.disk.series")]: s.du / BYTES_TO_GB }), [t]);
-  const diskIOMap = useCallback((s: { dr?: number; dw?: number }) => ({
-    [t("chart.diskIO.read")]: s.dr ?? 0,
-    [t("chart.diskIO.write")]: s.dw ?? 0,
-  }), [t]);
-  const networkMap = useCallback((s: { ns: number; nr: number }) => ({
-    [t("chart.network.sent")]: s.ns,
-    [t("chart.network.recv")]: s.nr,
-  }), [t]);
+  const diskIOMap = useCallback(
+    (s: { dr?: number; dw?: number }) => ({
+      [t("chart.diskIO.read")]: s.dr ?? 0,
+      [t("chart.diskIO.write")]: s.dw ?? 0,
+    }),
+    [t],
+  );
+  const networkMap = useCallback(
+    (s: { ns: number; nr: number }) => ({
+      [t("chart.network.sent")]: s.ns,
+      [t("chart.network.recv")]: s.nr,
+    }),
+    [t],
+  );
 
   const cpuData = useSystemChartData(statsResult?.systemStats, cpuMap);
   const memoryData = useSystemChartData(statsResult?.systemStats, memoryMap);
