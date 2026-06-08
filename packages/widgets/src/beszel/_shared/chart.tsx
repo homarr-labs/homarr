@@ -85,7 +85,7 @@ type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number
 const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
   memory: (c) => c?.m ?? 0,
-  network: (c) => c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0),
+  network: (c) => (c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0)),
 };
 
 export const useDockerChartData = (
