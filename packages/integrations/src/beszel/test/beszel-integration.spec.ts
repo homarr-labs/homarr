@@ -7,8 +7,6 @@ vi.hoisted(() => {
   process.env.ENABLE_DNS_CACHING = "false";
 });
 
-import type { BeszelSystem } from "../beszel-types";
-
 const BESZEL_URL = process.env.BESZEL_TEST_URL ?? "http://localhost:8090";
 const BESZEL_EMAIL = process.env.BESZEL_TEST_EMAIL ?? "";
 const BESZEL_PASSWORD = process.env.BESZEL_TEST_PASSWORD ?? "";
@@ -76,8 +74,9 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
 
     test("each system has required fields", async () => {
       const systems = await integration.getSystemsAsync();
-      const system = systems[0]!;
-      systemId = system.id;
+      const system = systems[0];
+      expect(system).toBeDefined();
+      systemId = system?.id ?? "";
 
       expect(system.id).toBeDefined();
       expect(system.name).toBeDefined();
@@ -92,7 +91,7 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
   describe("getSystemDetailsAsync", () => {
     test("returns system details with hardware info", async () => {
       const systems = await integration.getSystemsAsync();
-      systemId = systems[0]!.id;
+      systemId = systems[0]?.id ?? "";
 
       const details = await integration.getSystemDetailsAsync(systemId);
 
@@ -109,37 +108,37 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
   describe("getSystemStatsAsync", () => {
     test("returns time-series stats records", async () => {
       const systems = await integration.getSystemsAsync();
-      systemId = systems[0]!.id;
+      systemId = systems[0]?.id ?? "";
 
       const stats = await integration.getSystemStatsAsync(systemId, "1m", 5);
 
       expect(stats).toBeInstanceOf(Array);
       if (stats.length === 0) return;
 
-      const record = stats[0]!;
-      expect(record.stats).toBeDefined();
-      expect(typeof record.stats.cpu).toBe("number");
-      expect(typeof record.stats.mp).toBe("number");
-      expect(typeof record.stats.dp).toBe("number");
-      expect(record.created).toBeDefined();
+      const record = stats[0];
+      expect(record?.stats).toBeDefined();
+      expect(typeof record?.stats.cpu).toBe("number");
+      expect(typeof record?.stats.mp).toBe("number");
+      expect(typeof record?.stats.dp).toBe("number");
+      expect(record?.created).toBeDefined();
     });
   });
 
   describe("getContainersAsync", () => {
     test("returns container list", async () => {
       const systems = await integration.getSystemsAsync();
-      systemId = systems[0]!.id;
+      systemId = systems[0]?.id ?? "";
 
       const containers = await integration.getContainersAsync(systemId);
       expect(containers).toBeInstanceOf(Array);
 
       if (containers.length > 0) {
-        const container = containers[0]!;
-        expect(container.name).toBeDefined();
-        expect(container.image).toBeDefined();
-        expect(container.status).toBeDefined();
-        expect(typeof container.cpu).toBe("number");
-        expect(typeof container.memory).toBe("number");
+        const container = containers[0];
+        expect(container?.name).toBeDefined();
+        expect(container?.image).toBeDefined();
+        expect(container?.status).toBeDefined();
+        expect(typeof container?.cpu).toBe("number");
+        expect(typeof container?.memory).toBe("number");
       }
     });
   });
@@ -149,7 +148,7 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
 
     test("creates an alert", async () => {
       const systems = await integration.getSystemsAsync();
-      systemId = systems[0]!.id;
+      systemId = systems[0]?.id ?? "";
 
       const alert = await integration.createAlertAsync(systemId, {
         name: "CPU",
@@ -168,7 +167,7 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
       const alerts = await integration.getAlertsAsync(systemId);
       const found = alerts.find((a) => a.id === alertId);
       expect(found).toBeDefined();
-      expect(found!.name).toBe("CPU");
+      expect(found?.name).toBe("CPU");
     });
 
     test("updates alert threshold", async () => {
@@ -187,7 +186,7 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
   describe("system actions", () => {
     test("pauses and resumes a system", async () => {
       const systems = await integration.getSystemsAsync();
-      systemId = systems[0]!.id;
+      systemId = systems[0]?.id ?? "";
 
       await integration.pauseSystemAsync(systemId);
       const afterPause = await integration.getSystemsAsync();
