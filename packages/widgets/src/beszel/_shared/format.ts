@@ -1,3 +1,10 @@
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
+
 const byteUnits = ["B", "KB", "MB", "GB", "TB"] as const;
 const rateUnits = ["B/s", "KB/s", "MB/s", "GB/s"] as const;
 
@@ -35,14 +42,7 @@ export const chartAxisFormatters = {
   rate: (value: number) => formatScaledCompact(Number(value), rateUnits, "0"),
 } as const;
 
-export const formatUptime = (seconds: number): string => {
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
-  if (days > 0) return `${days} day${days > 1 ? "s" : ""}`;
-  if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""}`;
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${minutes} min`;
-};
+export const formatUptime = (seconds: number): string => dayjs.duration(seconds, "seconds").humanize();
 
 export const formatTemp = (celsius: number | null, fahrenheit: boolean): string => {
   if (celsius === null) return "—";
