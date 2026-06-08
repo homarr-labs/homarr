@@ -6,6 +6,7 @@ import { auth } from "@homarr/auth/next";
 
 import { CurrentUserAvatar } from "~/components/user-avatar";
 import { UserAvatarMenu } from "~/components/user-avatar-menu";
+import { SurveyIndicator } from "./survey";
 import { UpdateIndicator } from "./update";
 
 export const UserButton = async () => {
@@ -16,9 +17,11 @@ export const UserButton = async () => {
     <UserAvatarMenu availableUpdatesPromise={availableUpdatesPromise}>
       <UnstyledButton>
         <Suspense fallback={<CurrentUserAvatar size="md" />}>
-          <UpdateIndicator availableUpdatesPromise={availableUpdatesPromise} disabled={!isAdmin}>
-            <CurrentUserAvatar size="md" />
-          </UpdateIndicator>
+          <SurveyIndicator>
+            <UpdateIndicator availableUpdatesPromise={availableUpdatesPromise} disabled={!isAdmin}>
+              <CurrentUserAvatar size="md" />
+            </UpdateIndicator>
+          </SurveyIndicator>
         </Suspense>
       </UnstyledButton>
     </UserAvatarMenu>

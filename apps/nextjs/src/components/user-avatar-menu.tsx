@@ -18,6 +18,7 @@ import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { AvailableUpdatesMenuItem } from "./layout/header/update";
+import { SurveyMenuItem, SurveyModal } from "./layout/header/survey";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
@@ -51,50 +52,54 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
   }, [logoutUrl, openModal, router]);
 
   return (
-    // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
-    <Menu width={300} withinPortal keepMounted>
-      <Menu.Dropdown>
-        <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
-        <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
-          {t("homeBoard")}
-        </Menu.Item>
-        <Menu.Divider />
-
-        <Menu.Item p={0} closeMenuOnClick={false} component="div">
-          <CurrentColorSchemeCombobox />
-        </Menu.Item>
-        <Menu.Item p={0} closeMenuOnClick={false} component="div">
-          <CurrentLanguageCombobox />
-        </Menu.Item>
-        <Menu.Divider />
-        {Boolean(session.data) && (
-          <>
-            <Menu.Item
-              component={Link}
-              href={`/manage/users/${session.data?.user.id}/general`}
-              leftSection={<IconSettings size="1rem" />}
-            >
-              {t("preferences")}
-            </Menu.Item>
-
-            <Menu.Item component={Link} href="/manage" leftSection={<IconTool size="1rem" />}>
-              {t("management")}
-            </Menu.Item>
-          </>
-        )}
-        <Menu.Divider />
-        {session.status === "authenticated" ? (
-          <Menu.Item onClick={handleSignout} leftSection={<IconLogout size="1rem" />} color="red">
-            {t("logout")}
+    <>
+      <SurveyModal />
+      {/* We use keepMounted so we can add event listeners to prevent navigating away without saving the board */}
+      <Menu width={300} withinPortal keepMounted>
+        <Menu.Dropdown>
+          <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
+          <SurveyMenuItem />
+          <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
+            {t("homeBoard")}
           </Menu.Item>
-        ) : (
-          <Menu.Item component={Link} href="/auth/login" leftSection={<IconLogin size="1rem" />}>
-            {t("login")}
+          <Menu.Divider />
+
+          <Menu.Item p={0} closeMenuOnClick={false} component="div">
+            <CurrentColorSchemeCombobox />
           </Menu.Item>
-        )}
-      </Menu.Dropdown>
-      <Menu.Target>{children}</Menu.Target>
-    </Menu>
+          <Menu.Item p={0} closeMenuOnClick={false} component="div">
+            <CurrentLanguageCombobox />
+          </Menu.Item>
+          <Menu.Divider />
+          {Boolean(session.data) && (
+            <>
+              <Menu.Item
+                component={Link}
+                href={`/manage/users/${session.data?.user.id}/general`}
+                leftSection={<IconSettings size="1rem" />}
+              >
+                {t("preferences")}
+              </Menu.Item>
+
+              <Menu.Item component={Link} href="/manage" leftSection={<IconTool size="1rem" />}>
+                {t("management")}
+              </Menu.Item>
+            </>
+          )}
+          <Menu.Divider />
+          {session.status === "authenticated" ? (
+            <Menu.Item onClick={handleSignout} leftSection={<IconLogout size="1rem" />} color="red">
+              {t("logout")}
+            </Menu.Item>
+          ) : (
+            <Menu.Item component={Link} href="/auth/login" leftSection={<IconLogin size="1rem" />}>
+              {t("login")}
+            </Menu.Item>
+          )}
+        </Menu.Dropdown>
+        <Menu.Target>{children}</Menu.Target>
+      </Menu>
+    </>
   );
 };
 
