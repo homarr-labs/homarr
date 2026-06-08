@@ -18,12 +18,14 @@ interface RateLimitStore {
 const TOKEN_RATE_WINDOW_MS = 60_000;
 const TOKEN_MAX_FAILURES = 10;
 
-const globalStore = globalThis as unknown as { mcpTokenRateLimit?: RateLimitStore };
-if (!globalStore.mcpTokenRateLimit) {
-  globalStore.mcpTokenRateLimit = { failures: new Map(), timer: null };
+declare global {
+  var mcpTokenRateLimit: RateLimitStore | undefined;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const store = globalStore.mcpTokenRateLimit!;
+
+const store = globalThis.mcpTokenRateLimit ?? (globalThis.mcpTokenRateLimit = {
+  failures: new Map(),
+  timer: null,
+});
 const tokenFailures = store.failures;
 
 if (!store.timer) {

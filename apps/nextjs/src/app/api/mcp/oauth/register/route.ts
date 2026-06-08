@@ -8,12 +8,14 @@ interface RateLimitStore {
 const REGISTER_RATE_WINDOW_MS = 60_000;
 const REGISTER_MAX_ATTEMPTS = 5;
 
-const globalStore = globalThis as unknown as { mcpRegisterRateLimit?: RateLimitStore };
-if (!globalStore.mcpRegisterRateLimit) {
-  globalStore.mcpRegisterRateLimit = { attempts: new Map(), timer: null };
+declare global {
+  var mcpRegisterRateLimit: RateLimitStore | undefined;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const store = globalStore.mcpRegisterRateLimit!;
+
+const store = globalThis.mcpRegisterRateLimit ?? (globalThis.mcpRegisterRateLimit = {
+  attempts: new Map(),
+  timer: null,
+});
 const registerAttempts = store.attempts;
 
 if (!store.timer) {

@@ -34,18 +34,16 @@ interface OAuthStore {
   cleanupTimer: ReturnType<typeof setInterval> | null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const globalStore = globalThis as unknown as { mcpOAuthStore?: OAuthStore };
-if (!globalStore.mcpOAuthStore) {
-  globalStore.mcpOAuthStore = {
-    clients: new Map(),
-    authCodes: new Map(),
-    pendingAuths: new Map(),
-    cleanupTimer: null,
-  };
+declare global {
+  var mcpOAuthStore: OAuthStore | undefined;
 }
 
-const store = globalStore.mcpOAuthStore;
+const store = globalThis.mcpOAuthStore ?? (globalThis.mcpOAuthStore = {
+  clients: new Map(),
+  authCodes: new Map(),
+  pendingAuths: new Map(),
+  cleanupTimer: null,
+});
 const clients = store.clients;
 const authCodes = store.authCodes;
 const pendingAuths = store.pendingAuths;
