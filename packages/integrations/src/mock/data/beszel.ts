@@ -10,11 +10,46 @@ import type {
 } from "../../beszel/beszel-types";
 
 const mockSystems: { name: string; host: string; os: string; cpu: string; cores: number; mem: number }[] = [
-  { name: "web-server", host: "192.168.1.10", os: "Ubuntu 24.04", cpu: "AMD Ryzen 9 7950X", cores: 16, mem: 64 * 1024 * 1024 * 1024 },
-  { name: "nas-01", host: "192.168.1.20", os: "Debian 12", cpu: "Intel Xeon E-2388G", cores: 8, mem: 32 * 1024 * 1024 * 1024 },
-  { name: "pi-cluster-1", host: "192.168.1.30", os: "Raspberry Pi OS", cpu: "ARM Cortex-A76", cores: 4, mem: 8 * 1024 * 1024 * 1024 },
-  { name: "media-server", host: "192.168.1.40", os: "Proxmox VE 8.2", cpu: "Intel i7-13700K", cores: 16, mem: 128 * 1024 * 1024 * 1024 },
-  { name: "backup-node", host: "192.168.1.50", os: "TrueNAS SCALE", cpu: "Intel Xeon E5-2680", cores: 12, mem: 48 * 1024 * 1024 * 1024 },
+  {
+    name: "web-server",
+    host: "192.168.1.10",
+    os: "Ubuntu 24.04",
+    cpu: "AMD Ryzen 9 7950X",
+    cores: 16,
+    mem: 64 * 1024 * 1024 * 1024,
+  },
+  {
+    name: "nas-01",
+    host: "192.168.1.20",
+    os: "Debian 12",
+    cpu: "Intel Xeon E-2388G",
+    cores: 8,
+    mem: 32 * 1024 * 1024 * 1024,
+  },
+  {
+    name: "pi-cluster-1",
+    host: "192.168.1.30",
+    os: "Raspberry Pi OS",
+    cpu: "ARM Cortex-A76",
+    cores: 4,
+    mem: 8 * 1024 * 1024 * 1024,
+  },
+  {
+    name: "media-server",
+    host: "192.168.1.40",
+    os: "Proxmox VE 8.2",
+    cpu: "Intel i7-13700K",
+    cores: 16,
+    mem: 128 * 1024 * 1024 * 1024,
+  },
+  {
+    name: "backup-node",
+    host: "192.168.1.50",
+    os: "TrueNAS SCALE",
+    cpu: "Intel Xeon E5-2680",
+    cores: 12,
+    mem: 48 * 1024 * 1024 * 1024,
+  },
 ];
 
 const containerNames = ["nginx", "postgres", "redis", "grafana", "prometheus", "traefik", "minio", "gitea"];
@@ -61,7 +96,11 @@ function generateContainerStats(names: string[]): BeszelContainerStats[] {
   }));
 }
 
-function generateTimeSeries<T>(count: number, intervalMinutes: number, generator: () => T): (T & { id: string; system: string; type: string; created: string; updated: string })[] {
+function generateTimeSeries<T>(
+  count: number,
+  intervalMinutes: number,
+  generator: () => T,
+): (T & { id: string; system: string; type: string; created: string; updated: string })[] {
   const now = Date.now();
   return Array.from({ length: count }, (_, i) => ({
     id: `mock-stat-${i}`,
@@ -80,7 +119,7 @@ export class BeszelMockService {
       name: sys.name,
       host: sys.host,
       port: "45876",
-      status: i === 2 ? "paused" as const : "up" as const,
+      status: i === 2 ? ("paused" as const) : ("up" as const),
       info: {
         h: sys.name,
         cpu: rand(5, 85),
@@ -124,12 +163,20 @@ export class BeszelMockService {
     };
   }
 
-  public async getSystemStatsAsync(_systemId: string, _type: string, perPage: number): Promise<BeszelSystemStatsRecord[]> {
+  public async getSystemStatsAsync(
+    _systemId: string,
+    _type: string,
+    perPage: number,
+  ): Promise<BeszelSystemStatsRecord[]> {
     const baseLoad = rand(10, 60);
     return generateTimeSeries(perPage, 1, () => ({ stats: generateSystemStats(baseLoad) }));
   }
 
-  public async getContainerStatsAsync(_systemId: string, _type: string, perPage: number): Promise<BeszelContainerStatsRecord[]> {
+  public async getContainerStatsAsync(
+    _systemId: string,
+    _type: string,
+    perPage: number,
+  ): Promise<BeszelContainerStatsRecord[]> {
     const names = containerNames.slice(0, randInt(3, containerNames.length));
     return generateTimeSeries(perPage, 1, () => ({ stats: generateContainerStats(names) }));
   }
@@ -137,9 +184,33 @@ export class BeszelMockService {
   public async getAlertsAsync(): Promise<BeszelAlert[]> {
     return [
       { id: "mock-alert-1", user: "mock-user", system: "mock-sys-1", name: "CPU", triggered: true, value: 90, min: 5 },
-      { id: "mock-alert-2", user: "mock-user", system: "mock-sys-2", name: "Memory", triggered: false, value: 80, min: 10 },
-      { id: "mock-alert-3", user: "mock-user", system: "mock-sys-1", name: "Disk", triggered: false, value: 85, min: 15 },
-      { id: "mock-alert-4", user: "mock-user", system: "mock-sys-4", name: "Temperature", triggered: true, value: 75, min: 3 },
+      {
+        id: "mock-alert-2",
+        user: "mock-user",
+        system: "mock-sys-2",
+        name: "Memory",
+        triggered: false,
+        value: 80,
+        min: 10,
+      },
+      {
+        id: "mock-alert-3",
+        user: "mock-user",
+        system: "mock-sys-1",
+        name: "Disk",
+        triggered: false,
+        value: 85,
+        min: 15,
+      },
+      {
+        id: "mock-alert-4",
+        user: "mock-user",
+        system: "mock-sys-4",
+        name: "Temperature",
+        triggered: true,
+        value: 75,
+        min: 3,
+      },
     ];
   }
 

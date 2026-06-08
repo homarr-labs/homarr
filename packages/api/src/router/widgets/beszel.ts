@@ -12,22 +12,24 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const beszelRouter = createTRPCRouter({
-  getSystems: publicProcedure.concat(createManyIntegrationMiddleware("query", "beszel", "mock")).query(async ({ ctx }) => {
-    const results = await Promise.all(
-      ctx.integrations.map(async (integration) => {
-        const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          systems: data,
-          updatedAt: timestamp,
-        };
-      }),
-    );
-    return results;
-  }),
+  getSystems: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .query(async ({ ctx }) => {
+      const results = await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            systems: data,
+            updatedAt: timestamp,
+          };
+        }),
+      );
+      return results;
+    }),
 
   subscribeSystems: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))

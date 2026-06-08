@@ -41,8 +41,7 @@ import {
 } from "../schema";
 import type { Integration } from "../schema";
 
-const isTruthyEnv = (value: string | undefined) =>
-  ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
