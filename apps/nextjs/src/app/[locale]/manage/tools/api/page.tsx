@@ -8,9 +8,9 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";
-import { extractToolsFromProcedures } from "trpc-to-mcp";
 
 import { createMetaTitle } from "~/metadata";
+import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
 import { ApiKeysManagement } from "./components/api-keys";
 import { ApiPageTabs } from "./components/api-page-tabs";
 import { ScalarApiReference } from "./components/scalar-api-reference";
@@ -22,9 +22,8 @@ let cachedToolGroups: McpToolGroup[] | null = null;
 function getMcpToolGroups(): McpToolGroup[] {
   if (cachedToolGroups) return cachedToolGroups;
 
-  const tools = extractToolsFromProcedures(mcpRouter);
+  const tools = extractMcpTools();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const procedures = (mcpRouter as any)._def.procedures as Record<string, { _def?: { type?: string } }>;
   const procedureTypeMap = new Map<string, "query" | "mutation">();
   for (const [key, proc] of Object.entries(procedures)) {

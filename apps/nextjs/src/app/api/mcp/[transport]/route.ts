@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 import { userAgent } from "next/server";
 import { createMcpHandler } from "mcp-handler";
 import type { McpTool } from "trpc-to-mcp";
-import { extractToolsFromProcedures } from "trpc-to-mcp";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
@@ -13,7 +12,8 @@ import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 
-import packageJson from "../../../../../../../package.json";
+import { getPackageVersion } from "~/versions/package-reader";
+import { extractMcpTools } from "../_extract-tools";
 
 const logger = createLogger({ module: "mcpRoute" });
 
@@ -25,15 +25,14 @@ interface RateLimitStore {
   cleanupTimer: ReturnType<typeof setInterval> | null;
 }
 
-const globalRateLimit = globalThis as unknown as { mcpRateLimit?: RateLimitStore };
-if (!globalRateLimit.mcpRateLimit) {
-  globalRateLimit.mcpRateLimit = {
-    authFailures: new Map(),
-    cleanupTimer: null,
-  };
+declare global {
+  var mcpRateLimit: RateLimitStore | undefined;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const rateLimitStore = globalRateLimit.mcpRateLimit!;
+
+const rateLimitStore = globalThis.mcpRateLimit ?? (globalThis.mcpRateLimit = {
+  authFailures: new Map(),
+  cleanupTimer: null,
+});
 const authFailures = rateLimitStore.authFailures;
 
 if (!rateLimitStore.cleanupTimer) {
@@ -88,7 +87,7 @@ function normalizeSchema(schema: McpTool["inputSchema"]) {
 
 function getTools() {
   if (!toolsCache) {
-    toolsCache = extractToolsFromProcedures(mcpRouter).map((tool) => ({
+    toolsCache = extractMcpTools().map((tool) => ({
       ...tool,
       inputSchema: normalizeSchema(tool.inputSchema),
     }));
@@ -190,7 +189,6 @@ const mcpHandler = createMcpHandler(
       }
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const procedure = tool.pathInRouter.reduce<any>((acc, part) => acc?.[part], caller);
         if (typeof procedure !== "function") {
           return {
@@ -218,7 +216,7 @@ const mcpHandler = createMcpHandler(
     instructions: SERVER_INSTRUCTIONS,
     serverInfo: {
       name: "homarr",
-      version: packageJson.version,
+      version: getPackageVersion(),
     },
   },
   {
