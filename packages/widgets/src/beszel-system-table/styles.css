@@ -1,0 +1,18 @@
+.beszel-table th {
+  white-space: nowrap;
+}
+
+.beszel-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.beszel-table .mantine-datatable-header-cell-sortable-icon {
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.beszel-table th:hover .mantine-datatable-header-cell-sortable-icon {
+  opacity: 1;
+}

@@ -1,6 +1,7 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { BeszelIntegration } from "../beszel/beszel-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
@@ -125,6 +126,7 @@ export const integrationCreators = {
   speedtestTracker: SpeedtestTrackerIntegration,
   umami: UmamiIntegration,
   peaNut: PeaNutIntegration,
+  beszel: BeszelIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

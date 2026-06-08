@@ -1,0 +1,134 @@
+import dayjs from "dayjs";
+
+import { createIntegrationAsync } from "@homarr/integrations";
+import type {
+  BeszelAlert,
+  BeszelAlertHistory,
+  BeszelContainerStatsRecord,
+  BeszelSystem,
+  BeszelSystemDetails,
+  BeszelSystemStatsRecord,
+} from "@homarr/integrations/types";
+
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+
+export interface BeszelSystemRow {
+  id: string;
+  name: string;
+  status: "up" | "down" | "paused" | "pending";
+  cpu: number;
+  memory: number;
+  disk: number;
+  gpu: number;
+  loadAvg: [number, number, number] | null;
+  netBytes: number;
+  temp: number | null;
+  battery: [number, number] | null;
+  services: number;
+  uptime: number;
+  agentVersion: string;
+  hostname: string;
+  cpuModel: string;
+  cores: number;
+  memoryTotal: number;
+  osName: string;
+}
+
+function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | null): BeszelSystemRow {
+  const info = system.info;
+  return {
+    id: system.id,
+    name: system.name,
+    status: system.status,
+    cpu: info.cpu,
+    memory: info.mp,
+    disk: info.dp,
+    gpu: info.g ?? 0,
+    loadAvg: info.la ?? null,
+    netBytes: info.bb ?? (info.b ?? 0) * 1_000_000,
+    temp: info.dt ?? null,
+    battery: info.bat ?? null,
+    services: info.sv?.[0] ?? 0,
+    uptime: info.u,
+    agentVersion: info.v,
+    hostname: details?.hostname ?? info.h ?? system.name,
+    cpuModel: details?.cpu ?? info.m ?? "Unknown",
+    cores: details?.cores ?? info.ct ?? info.c ?? 1,
+    memoryTotal: details?.memory ?? 0,
+    osName: details?.os_name ?? "",
+  };
+}
+
+export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler<
+  BeszelSystemRow[],
+  "beszel",
+  Record<string, never>
+>({
+  async requestAsync(integration) {
+    const instance = await createIntegrationAsync(integration);
+    const systems = await instance.getSystemsAsync();
+    const enriched = await Promise.all(
+      systems.map(async (system) => {
+        const details = await instance.getSystemDetailsAsync(system.id).catch(() => null);
+        return mapToSystemRow(system, details);
+      }),
+    );
+    return enriched;
+  },
+  cacheDuration: dayjs.duration(5, "seconds"),
+  queryKey: "beszelSystems",
+});
+
+
+export interface BeszelAlertsData {
+  alerts: BeszelAlert[];
+  history: BeszelAlertHistory[];
+}
+
+export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
+  BeszelAlertsData,
+  "beszel",
+  { includeHistory: boolean; maxHistoryItems: number }
+>({
+  async requestAsync(integration, input) {
+    const instance = await createIntegrationAsync(integration);
+    const alerts = await instance.getAlertsAsync();
+    const history = input.includeHistory
+      ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems)
+      : [];
+    return { alerts, history };
+  },
+  cacheDuration: dayjs.duration(15, "seconds"),
+  queryKey: "beszelAlerts",
+});
+
+const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
+  "1h": { type: "1m", perPage: 60 },
+  "12h": { type: "10m", perPage: 72 },
+  "24h": { type: "20m", perPage: 72 },
+  "1w": { type: "120m", perPage: 84 },
+  "30d": { type: "480m", perPage: 90 },
+};
+
+export interface BeszelStatsData {
+  systemStats: BeszelSystemStatsRecord[];
+  containerStats: BeszelContainerStatsRecord[];
+}
+
+export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
+  BeszelStatsData,
+  "beszel",
+  { systemId: string; timePeriod: string; includeDocker: boolean }
+>({
+  async requestAsync(integration, input) {
+    const config = timePeriodConfig[input.timePeriod] ?? timePeriodConfig["1h"]!;
+    const instance = await createIntegrationAsync(integration);
+    const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
+    const containerStats = input.includeDocker
+      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch(() => [])
+      : [];
+    return { systemStats, containerStats };
+  },
+  cacheDuration: dayjs.duration(30, "seconds"),
+  queryKey: "beszelStats",
+});

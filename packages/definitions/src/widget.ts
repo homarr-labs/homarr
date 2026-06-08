@@ -39,5 +39,9 @@ export const widgetKinds = [
   "speedtestTracker",
   "umami",
   "ups",
+  "beszelSystemTable",
+  "beszelSystemGrid",
+  "beszelAlerts",
+  "beszelSystemStats",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

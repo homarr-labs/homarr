@@ -1,0 +1,280 @@
+"use client";
+
+import "./styles.css";
+
+import { useMemo, useState } from "react";
+import { Group, Indicator, Progress, Text } from "@mantine/core";
+import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
+import {
+  Activity,
+  Battery,
+  Cpu,
+  HardDrive,
+  MemoryStick,
+  Monitor,
+  Network,
+  Server,
+  Thermometer,
+  Wifi,
+} from "lucide-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
+
+import type { WidgetComponentProps } from "../definition";
+import type { BeszelSystemRow } from "../beszel/_shared/types";
+import { statusColorMap, thresholdColor, loadAvgColor } from "../beszel/_shared/colors";
+import { formatBytes, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
+
+const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
+
+type SystemRowWithKey = BeszelSystemRow & { _key: string };
+
+interface SizeConfig {
+  iconSize: number;
+  fontSize: "xs" | "10px";
+  progressSize: "xs" | "sm";
+  cellPadding: number;
+  valueMiw: number;
+}
+
+const getSizeConfig = (width: number): SizeConfig => {
+  if (width < 400) {
+    return { iconSize: 10, fontSize: "10px", progressSize: "xs", cellPadding: 2, valueMiw: 30 };
+  }
+  return { iconSize: 14, fontSize: "xs", progressSize: "sm", cellPadding: 4, valueMiw: 38 };
+};
+
+export default function BeszelSystemTableWidget({
+  options,
+  integrationIds,
+  width,
+}: WidgetComponentProps<"beszelSystemTable">) {
+  const t = useScopedI18n("widget.beszelSystemTable");
+  const [results] = clientApi.widget.beszel.getSystems.useSuspenseQuery({ integrationIds });
+  const utils = clientApi.useUtils();
+  const size = getSizeConfig(width);
+
+  clientApi.widget.beszel.subscribeSystems.useSubscription(
+    { integrationIds },
+    {
+      onData(data) {
+        utils.widget.beszel.getSystems.setData({ integrationIds }, (prev) => {
+          if (!prev) return prev;
+          return prev.map((r) =>
+            r.integrationId === data.integrationId ? { ...r, systems: data.systems, updatedAt: data.timestamp } : r,
+          );
+        });
+      },
+    },
+  );
+
+  const allSystems = useMemo(
+    () => results.flatMap((r) => r.systems.map((s) => ({ ...s, _key: `${r.integrationId}:${s.id}` }))),
+    [results],
+  );
+
+  const filteredSystems = useMemo(() => {
+    if (options.statusFilter === "all") return allSystems;
+    return allSystems.filter((s) => s.status === options.statusFilter);
+  }, [allSystems, options.statusFilter]);
+
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
+    columnAccessor: options.sortBy,
+    direction: options.sortDirection as "asc" | "desc",
+  });
+
+  const sortedSystems = useMemo(() => {
+    const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
+    const dir = directionMultiplier[sortStatus.direction] ?? 1;
+    return [...filteredSystems].sort((a, b) => {
+      const aVal = a[accessor] ?? 0;
+      const bVal = b[accessor] ?? 0;
+      if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;
+      if (typeof aVal === "number" && typeof bVal === "number") return (aVal - bVal) * dir;
+      return 0;
+    });
+  }, [filteredSystems, sortStatus]);
+
+  const PercentCell = ({ value }: { value: number }) => (
+    <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
+      <Text size={size.fontSize} fw={500} miw={size.valueMiw} ta="right">
+        {formatPercent(value)}
+      </Text>
+      <Progress value={value} color={thresholdColor(value)} size={size.progressSize} style={{ flex: 1 }} />
+    </Group>
+  );
+
+  const columns = useMemo((): DataTableColumn<SystemRowWithKey>[] => {
+    const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
+      {
+        accessor: "name",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Server size={size.iconSize} />
+            <Text inherit>{t("column.system")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => (
+          <Group gap={4} wrap="nowrap">
+            <Indicator color={statusColorMap[record.status]} size={7} />
+            <Text size={size.fontSize} fw={500} truncate>
+              {record.name}
+            </Text>
+          </Group>
+        ),
+      },
+      options.showCpu && {
+        accessor: "cpu",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Cpu size={size.iconSize} />
+            <Text inherit>{t("column.cpu")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <PercentCell value={record.cpu} />,
+      },
+      options.showMemory && {
+        accessor: "memory",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <MemoryStick size={size.iconSize} />
+            <Text inherit>{t("column.memory")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <PercentCell value={record.memory} />,
+      },
+      options.showDisk && {
+        accessor: "disk",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <HardDrive size={size.iconSize} />
+            <Text inherit>{t("column.disk")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <PercentCell value={record.disk} />,
+      },
+      options.showGpu && {
+        accessor: "gpu",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Monitor size={size.iconSize} />
+            <Text inherit>{t("column.gpu")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <PercentCell value={record.gpu} />,
+      },
+      options.showLoadAvg && {
+        accessor: "loadAvg",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Activity size={size.iconSize} />
+            <Text inherit>{t("column.loadAvg")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => (
+          <Group gap={4} wrap="nowrap">
+            <Indicator
+              color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
+              size={7}
+            />
+            <Text size={size.fontSize}>{formatLoadAvg(record.loadAvg)}</Text>
+          </Group>
+        ),
+      },
+      options.showNet && {
+        accessor: "netBytes",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Network size={size.iconSize} />
+            <Text inherit>{t("column.net")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{formatBytes(record.netBytes)}</Text>,
+      },
+      options.showTemp && {
+        accessor: "temp",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Thermometer size={size.iconSize} />
+            <Text inherit>{t("column.temp")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
+      },
+      options.showBattery && {
+        accessor: "battery",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Battery size={size.iconSize} />
+            <Text inherit>{t("column.battery")}</Text>
+          </Group>
+        ),
+        render: (record) => (
+          <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>
+        ),
+      },
+      options.showServices && {
+        accessor: "services",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Server size={size.iconSize} />
+            <Text inherit>{t("column.services")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.services}</Text>,
+      },
+      options.showUptime && {
+        accessor: "uptime",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Activity size={size.iconSize} />
+            <Text inherit>{t("column.uptime")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{formatUptime(record.uptime)}</Text>,
+      },
+      options.showAgent && {
+        accessor: "agentVersion",
+        title: (
+          <Group gap={4} wrap="nowrap">
+            <Wifi size={size.iconSize} />
+            <Text inherit>{t("column.agent")}</Text>
+          </Group>
+        ),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.agentVersion}</Text>,
+      },
+    ];
+
+    return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
+  }, [options, t, size]);
+
+  return (
+    <DataTable
+      withTableBorder={false}
+      borderRadius={0}
+      highlightOnHover
+      fz={size.fontSize}
+      records={sortedSystems}
+      columns={columns}
+      sortStatus={sortStatus}
+      onSortStatusChange={setSortStatus}
+      noRecordsText={t("noRecords")}
+      idAccessor="_key"
+      height="100%"
+      className="beszel-table"
+    />
+  );
+}

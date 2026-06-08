@@ -1,0 +1,17 @@
+import { IconBell } from "@tabler/icons-react";
+import { z } from "zod/v4";
+
+import { createWidgetDefinition } from "../definition";
+import { optionsBuilder } from "../options";
+
+export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
+  icon: IconBell,
+  supportedIntegrations: ["beszel"],
+  integrationsRequired: true,
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      showHistory: factory.switch({ defaultValue: true }),
+      maxHistoryItems: factory.number({ defaultValue: 10, validate: z.number().min(1).max(100) }),
+    }));
+  },
+}).withDynamicImport(() => import("./component"));

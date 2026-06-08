@@ -3101,6 +3101,217 @@
       "status": {
         "unhealthy": "Unhealthy"
       }
+    },
+    "beszelSystemTable": {
+      "name": "Beszel Systems (Table)",
+      "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
+      "option": {
+        "statusFilter": {
+          "label": "Status filter"
+        },
+        "sortBy": {
+          "label": "Sort by"
+        },
+        "sortDirection": {
+          "label": "Sort direction"
+        },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showGpu": {
+          "label": "Show GPU"
+        },
+        "showLoadAvg": {
+          "label": "Show load average"
+        },
+        "showNet": {
+          "label": "Show network"
+        },
+        "showTemp": {
+          "label": "Show temperature"
+        },
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showServices": {
+          "label": "Show services"
+        },
+        "showUptime": {
+          "label": "Show uptime"
+        },
+        "showAgent": {
+          "label": "Show agent version"
+        }
+      },
+      "noRecords": "No systems found",
+      "column": {
+        "system": "System",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "Beszel Systems (Grid)",
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "statusFilter": {
+          "label": "Status filter"
+        },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showGpu": {
+          "label": "Show GPU"
+        },
+        "showLoadAvg": {
+          "label": "Show load average"
+        },
+        "showNet": {
+          "label": "Show network"
+        },
+        "showTemp": {
+          "label": "Show temperature"
+        },
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showServices": {
+          "label": "Show services"
+        },
+        "showUptime": {
+          "label": "Show uptime"
+        },
+        "showAgent": {
+          "label": "Show agent version"
+        }
+      },
+      "metric": {
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
+      }
+    },
+    "beszelAlerts": {
+      "name": "Beszel Alerts",
+      "description": "View Beszel alert configurations and history",
+      "option": {
+        "showHistory": {
+          "label": "Show alert history"
+        },
+        "maxHistoryItems": {
+          "label": "Max history items"
+        }
+      },
+      "empty": "No alerts configured",
+      "history": "History",
+      "status": {
+        "triggered": "Triggered",
+        "ok": "OK"
+      }
+    },
+    "beszelSystemStats": {
+      "name": "Beszel System Stats",
+      "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
+      "option": {
+        "timePeriod": {
+          "label": "Time period"
+        },
+        "showCpu": {
+          "label": "Show CPU chart"
+        },
+        "showMemory": {
+          "label": "Show memory chart"
+        },
+        "showDisk": {
+          "label": "Show disk chart"
+        },
+        "showDiskIO": {
+          "label": "Show disk I/O chart"
+        },
+        "showNetwork": {
+          "label": "Show network chart"
+        },
+        "showDockerCpu": {
+          "label": "Show Docker CPU chart"
+        },
+        "showDockerMemory": {
+          "label": "Show Docker memory chart"
+        },
+        "showDockerNetwork": {
+          "label": "Show Docker network chart"
+        }
+      },
+      "selectSystem": "Select system",
+      "chart": {
+        "cpu": {
+          "title": "CPU Usage",
+          "subtitle": "Average system-wide CPU utilization",
+          "series": "CPU"
+        },
+        "memory": {
+          "title": "Memory Usage",
+          "subtitle": "Precise utilization at the recorded time",
+          "series": "Used"
+        },
+        "disk": {
+          "title": "Disk Usage",
+          "subtitle": "Usage of root partition",
+          "series": "Used"
+        },
+        "diskIO": {
+          "title": "Disk I/O",
+          "subtitle": "Throughput of root filesystem",
+          "read": "Read",
+          "write": "Write"
+        },
+        "network": {
+          "title": "Bandwidth",
+          "subtitle": "Network traffic of public interfaces",
+          "sent": "Sent",
+          "recv": "Received"
+        },
+        "dockerCpu": {
+          "title": "Docker CPU Usage",
+          "subtitle": "Average CPU utilization of containers"
+        },
+        "dockerMemory": {
+          "title": "Docker Memory Usage",
+          "subtitle": "Memory usage of docker containers"
+        },
+        "dockerNetwork": {
+          "title": "Docker Network I/O",
+          "subtitle": "Network traffic of docker containers"
+        }
+      }
     }
   },
   "widgetPreview": {
