@@ -25,7 +25,7 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
-  supportedIntegrations: ["beszel"],
+  supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({

@@ -29,6 +29,7 @@ import { NetworkControllerSummaryMockService } from "./data/network-controller-s
 import { NotificationsMockService } from "./data/notifications";
 import { SmartHomeMockService } from "./data/smart-home";
 import { SystemHealthMonitoringMockService } from "./data/system-health-monitoring";
+import { BeszelMockService } from "./data/beszel";
 import { UpsSummaryMockService } from "./data/ups-summary";
 
 export class MockIntegration
@@ -61,6 +62,7 @@ export class MockIntegration
   private static readonly networkController = new NetworkControllerSummaryMockService();
   private static readonly notifications = new NotificationsMockService();
   private static readonly smartHome = new SmartHomeMockService();
+  private static readonly beszel = new BeszelMockService();
   private static readonly upsSummary = new UpsSummaryMockService();
 
   protected async testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
@@ -130,4 +132,12 @@ export class MockIntegration
 
   // UpsSummaryIntegration
   getUpsSummariesAsync = MockIntegration.upsSummary.getUpsSummariesAsync.bind(MockIntegration.upsSummary);
+
+  // BeszelIntegration
+  getSystemsAsync = MockIntegration.beszel.getSystemsAsync.bind(MockIntegration.beszel);
+  getSystemDetailsAsync = MockIntegration.beszel.getSystemDetailsAsync.bind(MockIntegration.beszel);
+  getSystemStatsAsync = MockIntegration.beszel.getSystemStatsAsync.bind(MockIntegration.beszel);
+  getContainerStatsAsync = MockIntegration.beszel.getContainerStatsAsync.bind(MockIntegration.beszel);
+  getAlertsAsync = MockIntegration.beszel.getAlertsAsync.bind(MockIntegration.beszel);
+  getAlertHistoryAsync = MockIntegration.beszel.getAlertHistoryAsync.bind(MockIntegration.beszel);
 }

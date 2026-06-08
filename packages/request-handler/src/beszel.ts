@@ -52,7 +52,7 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
 
 export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler<
   BeszelSystemRow[],
-  "beszel",
+  "beszel" | "mock",
   Record<string, never>
 >({
   async requestAsync(integration) {
@@ -77,7 +77,7 @@ export interface BeszelAlertsData {
 
 export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
   BeszelAlertsData,
-  "beszel",
+  "beszel" | "mock",
   { includeHistory: boolean; maxHistoryItems: number }
 >({
   async requestAsync(integration, input) {
@@ -105,7 +105,7 @@ export interface BeszelStatsData {
 
 export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
   BeszelStatsData,
-  "beszel",
+  "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
   async requestAsync(integration, input) {

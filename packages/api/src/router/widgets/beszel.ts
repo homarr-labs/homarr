@@ -12,7 +12,7 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const beszelRouter = createTRPCRouter({
-  getSystems: publicProcedure.concat(createManyIntegrationMiddleware("query", "beszel")).query(async ({ ctx }) => {
+  getSystems: publicProcedure.concat(createManyIntegrationMiddleware("query", "beszel", "mock")).query(async ({ ctx }) => {
     const results = await Promise.all(
       ctx.integrations.map(async (integration) => {
         const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
@@ -30,7 +30,7 @@ export const beszelRouter = createTRPCRouter({
   }),
 
   subscribeSystems: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel"))
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; systems: BeszelSystemRow[]; timestamp: Date }>((emit) => {
         const unsubscribes = ctx.integrations.map((integration) => {
@@ -50,7 +50,7 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   getAlerts: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel"))
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
         includeHistory: z.boolean().default(true),
@@ -86,7 +86,7 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   subscribeAlerts: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel"))
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
         includeHistory: z.boolean().default(true),
@@ -111,7 +111,7 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   getSystemStats: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel"))
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
         systemId: z.string(),

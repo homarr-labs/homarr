@@ -410,7 +410,12 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
       options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
     }),
   ),
-  // Row 9: notebook + dockerContainers + weather = 12
+  // Row 9: beszelSystemGrid + beszelAlerts = 12
+  { kind: "beszelSystemGrid", width: 8, height: 3, needsIntegration: true },
+  { kind: "beszelAlerts", width: 4, height: 3, needsIntegration: true },
+  // Row 10: beszelSystemTable = 12
+  { kind: "beszelSystemTable", width: 12, height: 3, needsIntegration: true },
+  // Row 11: notebook + dockerContainers + weather = 12
   { kind: "notebook", width: 4, height: 4, needsIntegration: false },
   { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
   { kind: "weather", width: 2, height: 1, needsIntegration: false },

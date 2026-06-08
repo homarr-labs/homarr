@@ -13,7 +13,7 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
-  supportedIntegrations: ["beszel"],
+  supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({

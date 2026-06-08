@@ -6,7 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
-  supportedIntegrations: ["beszel"],
+  supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
