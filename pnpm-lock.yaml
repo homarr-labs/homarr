@@ -1773,6 +1773,9 @@ importers:
       undici:
         specifier: 'catalog:'
         version: 7.24.6
+      ws:
+        specifier: 'catalog:'
+        version: 8.21.0
       xml2js:
         specifier: 'catalog:'
         version: 0.6.2
@@ -1786,6 +1789,9 @@ importers:
       '@types/node-unifi':
         specifier: 'catalog:'
         version: 2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)
+      '@types/ws':
+        specifier: 'catalog:'
+        version: 8.18.1
       '@types/xml2js':
         specifier: 'catalog:'
         version: 0.4.14
@@ -10573,7 +10579,7 @@ snapshots:
       eventemitter2: 6.4.9
       http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.24.6)
       tough-cookie: 5.1.2
-      ws: 8.20.1
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - debug
