@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_b7846cdc3498ca::t_e6ba05dd319d12 11,62-63,83
+nginx.conf
+  s_b7846cdc3498ca::t_38006d7fb7f824 10-11,14-17
+  s_b7846cdc3498ca::t_eab9011553f7b1 18-21
+packages/api/src/trpc.ts
+  s_b7846cdc3498ca::t_28c0989eeff607 70-71,73
+  s_b7846cdc3498ca::t_930293fa088ac3 72
+package.json
+  s_b7846cdc3498ca::t_c9225ef19b7c7c 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "9b4f82386409ce15006750d1fdb0b9957f147390",
+  "prompts": {},
+  "sessions": {
+    "s_b7846cdc3498ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8fcf93ef-4ce6-4adc-9581-cfe88ac9d8f1",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}
