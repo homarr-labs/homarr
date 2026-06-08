@@ -205,7 +205,7 @@ export default function BeszelSystemStatsWidget({
                       type="stacked"
                       series={containerSeries}
                       fillOpacity={0.6}
-                      yAxisFormatter={chartAxisFormatters.percentPrecise}
+                      yAxisFormatter={chartAxisFormatters.percent}
                       tooltipProps={tooltipPercentTotal}
                     />
                   </ChartPanel>

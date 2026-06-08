@@ -25,27 +25,15 @@ export const formatGB = (value: number): string => {
   return `${value.toFixed(2)} GB`;
 };
 
-export const formatMB = (value: number): string => {
-  if (!value || !Number.isFinite(value)) return "0 MB";
-  return `${value.toFixed(1)} MB`;
-};
+export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
 export const chartAxisFormatters = {
-  percent: (value: number) => `${Number(value).toFixed(1)}%`,
-  percentPrecise: (value: number) => `${Number(value).toFixed(1)}%`,
+  percent: formatPercent,
   gb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}G`),
   mb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}M`),
   bytes: (value: number) => formatScaledCompact(Number(value), byteUnits, "0"),
   rate: (value: number) => formatScaledCompact(Number(value), rateUnits, "0"),
 } as const;
-
-export const getBandwidthRates = (stats: { b?: [number, number] }): { sent: number; recv: number } => ({
-  sent: stats.b?.[0] ?? 0,
-  recv: stats.b?.[1] ?? 0,
-});
-
-export const getContainerNetworkRate = (container: { b?: [number, number] }): number =>
-  (container.b?.[0] ?? 0) + (container.b?.[1] ?? 0);
 
 export const formatUptime = (seconds: number): string => {
   const days = Math.floor(seconds / 86400);
@@ -61,8 +49,6 @@ export const formatTemp = (celsius: number | null, fahrenheit: boolean): string 
   if (fahrenheit) return `${((celsius * 9) / 5 + 32).toFixed(1)} °F`;
   return `${celsius.toFixed(2)} °C`;
 };
-
-export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
 export const formatLoadAvg = (la: [number, number, number] | null): string => {
   if (!la) return "—";

@@ -20,11 +20,6 @@ export const statusColorMap: Record<BeszelSystemStatus, string> = {
   pending: "yellow",
 };
 
-export const alertColorMap: Record<string, string> = {
-  triggered: "red",
-  ok: "green",
-};
-
 export const containerColors = [
   "blue.6",
   "teal.6",
