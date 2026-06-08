@@ -12,10 +12,12 @@ declare global {
   var mcpRegisterRateLimit: RateLimitStore | undefined;
 }
 
-const store = globalThis.mcpRegisterRateLimit ?? (globalThis.mcpRegisterRateLimit = {
-  attempts: new Map(),
-  timer: null,
-});
+const store =
+  globalThis.mcpRegisterRateLimit ??
+  (globalThis.mcpRegisterRateLimit = {
+    attempts: new Map(),
+    timer: null,
+  });
 const registerAttempts = store.attempts;
 
 if (!store.timer) {

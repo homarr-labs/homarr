@@ -29,10 +29,12 @@ declare global {
   var mcpRateLimit: RateLimitStore | undefined;
 }
 
-const rateLimitStore = globalThis.mcpRateLimit ?? (globalThis.mcpRateLimit = {
-  authFailures: new Map(),
-  cleanupTimer: null,
-});
+const rateLimitStore =
+  globalThis.mcpRateLimit ??
+  (globalThis.mcpRateLimit = {
+    authFailures: new Map(),
+    cleanupTimer: null,
+  });
 const authFailures = rateLimitStore.authFailures;
 
 if (!rateLimitStore.cleanupTimer) {
@@ -203,7 +205,10 @@ const mcpHandler = createMcpHandler(
         };
       } catch (error) {
         const message = sanitizeErrorMessage(error);
-        logger.warn("MCP tool execution failed", { tool: name, error: error instanceof Error ? error.message : String(error) });
+        logger.warn("MCP tool execution failed", {
+          tool: name,
+          error: error instanceof Error ? error.message : String(error),
+        });
         return {
           content: [{ type: "text" as const, text: JSON.stringify({ error: message }) }],
           isError: true,
@@ -248,7 +253,11 @@ const handler = async (req: NextRequest) => {
   const { ua } = userAgent(req);
 
   if (!checkAuthRateLimit(ipAddress)) {
-    return jsonErrorResponse(429, { error: "rate_limited", hint: "Too many failed authentication attempts. Try again later." }, { "Retry-After": "60" });
+    return jsonErrorResponse(
+      429,
+      { error: "rate_limited", hint: "Too many failed authentication attempts. Try again later." },
+      { "Retry-After": "60" },
+    );
   }
 
   if (!apiKeyValue) {
@@ -256,7 +265,10 @@ const handler = async (req: NextRequest) => {
     const baseUrl = extractBaseUrlFromHeaders(req.headers);
     return jsonErrorResponse(
       401,
-      { error: "unauthorized", hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server" },
+      {
+        error: "unauthorized",
+        hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server",
+      },
       { "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"` },
     );
   }
@@ -270,7 +282,10 @@ const handler = async (req: NextRequest) => {
 
   if (!session) {
     recordAuthFailure(ipAddress);
-    return jsonErrorResponse(401, { error: "invalid_token", hint: "The API key was not found or the token is incorrect." });
+    return jsonErrorResponse(401, {
+      error: "invalid_token",
+      hint: "The API key was not found or the token is incorrect.",
+    });
   }
 
   clearAuthFailures(ipAddress);

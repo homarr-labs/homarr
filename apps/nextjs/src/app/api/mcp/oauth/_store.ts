@@ -38,12 +38,14 @@ declare global {
   var mcpOAuthStore: OAuthStore | undefined;
 }
 
-const store = globalThis.mcpOAuthStore ?? (globalThis.mcpOAuthStore = {
-  clients: new Map(),
-  authCodes: new Map(),
-  pendingAuths: new Map(),
-  cleanupTimer: null,
-});
+const store =
+  globalThis.mcpOAuthStore ??
+  (globalThis.mcpOAuthStore = {
+    clients: new Map(),
+    authCodes: new Map(),
+    pendingAuths: new Map(),
+    cleanupTimer: null,
+  });
 const clients = store.clients;
 const authCodes = store.authCodes;
 const pendingAuths = store.pendingAuths;

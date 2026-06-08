@@ -292,8 +292,12 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
             <AccordionItem key={group.namespace} value={group.namespace}>
               <AccordionControl>
                 <Group gap="xs">
-                  <Text size="sm" fw={600}>{group.namespace}</Text>
-                  <Badge size="xs" variant="light" circle>{group.tools.length}</Badge>
+                  <Text size="sm" fw={600}>
+                    {group.namespace}
+                  </Text>
+                  <Badge size="xs" variant="light" circle>
+                    {group.tools.length}
+                  </Badge>
                 </Group>
               </AccordionControl>
               <AccordionPanel>
@@ -304,8 +308,12 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                         {toolTypeDisplay[tool.type].method}
                       </Badge>
                       <div>
-                        <Code fz="xs" fw={600}>{tool.name}</Code>
-                        <Text size="xs" c="dimmed" lh={1.4}>{tool.description}</Text>
+                        <Code fz="xs" fw={600}>
+                          {tool.name}
+                        </Code>
+                        <Text size="xs" c="dimmed" lh={1.4}>
+                          {tool.description}
+                        </Text>
                       </div>
                     </div>
                   ))}

@@ -22,10 +22,12 @@ declare global {
   var mcpTokenRateLimit: RateLimitStore | undefined;
 }
 
-const store = globalThis.mcpTokenRateLimit ?? (globalThis.mcpTokenRateLimit = {
-  failures: new Map(),
-  timer: null,
-});
+const store =
+  globalThis.mcpTokenRateLimit ??
+  (globalThis.mcpTokenRateLimit = {
+    failures: new Map(),
+    timer: null,
+  });
 const tokenFailures = store.failures;
 
 if (!store.timer) {
@@ -133,10 +135,9 @@ export async function POST(req: Request) {
       scope: "mcp:tools",
     });
   } catch (error) {
-    logger.error("Failed to create API key during OAuth token exchange", { error: error instanceof Error ? error.message : String(error) });
-    return Response.json(
-      { error: "server_error", error_description: "Failed to issue access token" },
-      { status: 500 },
-    );
+    logger.error("Failed to create API key during OAuth token exchange", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return Response.json({ error: "server_error", error_description: "Failed to issue access token" }, { status: 500 });
   }
 }
