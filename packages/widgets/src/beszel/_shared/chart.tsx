@@ -19,7 +19,7 @@ interface ChartPanelProps {
 }
 
 export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
-  <Stack gap={4}>
+  <Stack gap={4} style={{ minWidth: 0, overflow: "hidden" }}>
     <Group gap="xs">
       <Text size="sm" fw={600}>
         {title}
@@ -39,13 +39,14 @@ type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "with
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, ...props }: BeszelAreaChartProps) => (
+export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, style, ...props }: BeszelAreaChartProps) => (
   <AreaChart
     dataKey="time"
     curveType="monotone"
     withDots={false}
     withXAxis
     withYAxis
+    style={{ minWidth: 0, ...style }}
     yAxisProps={{
       ...yAxisBase,
       ...(yAxisDomain ? { domain: yAxisDomain } : {}),
