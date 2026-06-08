@@ -11,18 +11,10 @@ import {
   Button,
   Code,
   CopyButton,
-  Divider,
   Group,
   List,
   ListItem,
   Stack,
-  Table,
-  TableScrollContainer,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
   Text,
   ThemeIcon,
   Title,
@@ -41,7 +33,6 @@ import {
   IconTools,
   IconWorld,
 } from "@tabler/icons-react";
-import { useMediaQuery } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -50,6 +41,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CopyApiKeyModal } from "./copy-api-key-modal";
 import type { McpToolGroup } from "./api-page-tabs";
+import classes from "./mcp-tools-accordion.module.css";
 
 const toolTypeDisplay: Record<"query" | "mutation", { color: string; method: string }> = {
   query: { color: "blue", method: "GET" },
@@ -64,7 +56,6 @@ interface McpInstructionsProps {
 
 export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstructionsProps) {
   const t = useScopedI18n("management.page.tool.api.tab.mcp");
-  const isDesktop = useMediaQuery("(min-width: 48em)");
   const { openModal } = useModalAction(CopyApiKeyModal);
   const { mutate: createApiKey, isPending } = clientApi.apiKeys.create.useMutation({
     async onSuccess(data) {
@@ -296,114 +287,34 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
             count: String(toolGroups.reduce((sum, g) => sum + g.tools.length, 0)),
           })}
         </Text>
-        <TableScrollContainer minWidth={500} mx="xs">
-          <Table
-            verticalSpacing="xs"
-            horizontalSpacing="sm"
-            layout="fixed"
-            withRowBorders
-            withColumnBorders
-            highlightOnHover
-          >
-            <TableThead>
-              <TableTr>
-                {isDesktop && <TableTh w={75}>{t("availableTools.columnType")}</TableTh>}
-                <TableTh w={250}>{t("availableTools.columnName")}</TableTh>
-                <TableTh>{t("availableTools.columnDescription")}</TableTh>
-              </TableTr>
-            </TableThead>
-            <TableTbody>
-              {toolGroups.flatMap((group) =>
-                group.tools.map((tool) => (
-                  <TableTr key={tool.name}>
-                    {isDesktop && (
-                      <TableTd>
-                        <Badge size="xs" radius="xs" variant="light" color={toolTypeDisplay[tool.type].color}>
-                          {toolTypeDisplay[tool.type].method}
-                        </Badge>
-                      </TableTd>
-                    )}
-                    <TableTd>
-                      <Code fz="xs" fw={600}>
-                        {tool.name}
-                      </Code>
-                    </TableTd>
-                    <TableTd>
-                      <Text size="xs" c="dimmed">
-                        {tool.description}
-                      </Text>
-                    </TableTd>
-                  </TableTr>
-                )),
-              )}
-            </TableTbody>
-          </Table>
-        </TableScrollContainer>
+        <Accordion variant="separated" multiple>
+          {toolGroups.map((group) => (
+            <AccordionItem key={group.namespace} value={group.namespace}>
+              <AccordionControl>
+                <Group gap="xs">
+                  <Text size="sm" fw={600}>{group.namespace}</Text>
+                  <Badge size="xs" variant="light" circle>{group.tools.length}</Badge>
+                </Group>
+              </AccordionControl>
+              <AccordionPanel>
+                <Stack gap={6}>
+                  {group.tools.map((tool) => (
+                    <div key={tool.name} className={classes.toolRow}>
+                      <Badge size="sm" w={50} radius="xs" variant="light" color={toolTypeDisplay[tool.type].color}>
+                        {toolTypeDisplay[tool.type].method}
+                      </Badge>
+                      <div>
+                        <Code fz="xs" fw={600}>{tool.name}</Code>
+                        <Text size="xs" c="dimmed" lh={1.4}>{tool.description}</Text>
+                      </div>
+                    </div>
+                  ))}
+                </Stack>
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
-
-      <Divider />
-
-      <Accordion variant="default">
-        <AccordionItem value="troubleshooting">
-          <AccordionControl>
-            <Group gap="xs">
-              <IconAlertTriangle size={16} />
-              <Text size="sm" fw={500}>
-                {t("troubleshooting.title")}
-              </Text>
-            </Group>
-          </AccordionControl>
-          <AccordionPanel>
-            <Stack gap="md">
-              <div>
-                <Text size="sm" fw={500}>
-                  {t("troubleshooting.missingHeader.title")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("troubleshooting.missingHeader.description", {
-                    header: "ApiKey",
-                    section: "headers",
-                  })}
-                </Text>
-              </div>
-              <div>
-                <Text size="sm" fw={500}>
-                  {t("troubleshooting.invalidFormat.title")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("troubleshooting.invalidFormat.description")}
-                </Text>
-              </div>
-              <div>
-                <Text size="sm" fw={500}>
-                  {t("troubleshooting.invalidKey.title")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("troubleshooting.invalidKey.description")}
-                </Text>
-              </div>
-              <div>
-                <Text size="sm" fw={500}>
-                  {t("troubleshooting.connectionRefused.title")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("troubleshooting.connectionRefused.description", {
-                    localhost: "localhost",
-                  })}
-                </Text>
-              </div>
-              <div>
-                <Text size="sm" fw={500}>
-                  {t("troubleshooting.toolsNotAppearing.title")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("troubleshooting.toolsNotAppearing.description")}
-                </Text>
-              </div>
-            </Stack>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
     </Stack>
   );
 }
