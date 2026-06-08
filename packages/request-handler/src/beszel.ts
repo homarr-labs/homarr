@@ -7,32 +7,13 @@ import type {
   BeszelContainerStatsRecord,
   BeszelSystem,
   BeszelSystemDetails,
+  BeszelSystemRow,
   BeszelSystemStatsRecord,
 } from "@homarr/integrations/types";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export interface BeszelSystemRow {
-  id: string;
-  name: string;
-  status: "up" | "down" | "paused" | "pending";
-  cpu: number;
-  memory: number;
-  disk: number;
-  gpu: number;
-  loadAvg: [number, number, number] | null;
-  netBytes: number;
-  temp: number | null;
-  battery: [number, number] | null;
-  services: number;
-  uptime: number;
-  agentVersion: string;
-  hostname: string;
-  cpuModel: string;
-  cores: number;
-  memoryTotal: number;
-  osName: string;
-}
+export type { BeszelSystemRow } from "@homarr/integrations/types";
 
 function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | null): BeszelSystemRow {
   const info = system.info;
