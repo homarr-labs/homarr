@@ -65,5 +65,8 @@ ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 
+ARG PORT=7575
+EXPOSE ${PORT}
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]

@@ -9,7 +9,7 @@
     "dev": "pnpm with-env next dev",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "start": "pnpm with-env next start",
+    "start": "pnpm with-env next start -p ${PORT:-3000}",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
