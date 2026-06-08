@@ -76,9 +76,9 @@ export default function BeszelSystemStatsWidget({
     [t],
   );
   const networkMap = useCallback(
-    (s: { ns: number; nr: number }) => ({
-      [t("chart.network.sent")]: s.ns,
-      [t("chart.network.recv")]: s.nr,
+    (s: { ns: number; nr: number; b?: [number, number] }) => ({
+      [t("chart.network.sent")]: s.b?.[0] ?? s.ns,
+      [t("chart.network.recv")]: s.b?.[1] ?? s.nr,
     }),
     [t],
   );
