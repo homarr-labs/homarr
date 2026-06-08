@@ -34,7 +34,7 @@
   min-height: 28px;
   padding: 4px 8px;
   border: 1px solid var(--border-color);
-  border-radius: 0 0 var(--mantine-radius-md) var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-md);
   background-color: var(--background-color);
   box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
   backdrop-filter: blur(8px);
@@ -107,4 +107,10 @@
 .metadataValue {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    display: none;
+  }
 }
