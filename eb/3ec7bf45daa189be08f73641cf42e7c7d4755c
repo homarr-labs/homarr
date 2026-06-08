@@ -10,7 +10,7 @@
 ---
 {
   "schema_version": "authorship/3.0.0",
-  "git_ai_version": "1.4.11",
+  "git_ai_version": "1.5.6",
   "base_commit_sha": "eb3ec7bf45daa189be08f73641cf42e7c7d4755c",
   "prompts": {},
   "sessions": {
