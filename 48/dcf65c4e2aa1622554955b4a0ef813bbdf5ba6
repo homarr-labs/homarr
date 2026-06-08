@@ -1,0 +1,25 @@
+development/beszel.docker-compose.yml
+  s_e6412627c4c1f5::t_de388d944d549f 22
+development/beszel_socket/.gitignore
+  s_e6412627c4c1f5::t_a82993e2462110 1-2
+development/beszel_agent_data/fingerprint
+  s_e6412627c4c1f5::t_27197af5f0b9f8 1
+development/beszel_data/.gitignore
+  s_e6412627c4c1f5::t_3e8793bc53edfe 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "48dcf65c4e2aa1622554955b4a0ef813bbdf5ba6",
+  "prompts": {},
+  "sessions": {
+    "s_e6412627c4c1f5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "57a1d7d9-0991-4415-bf66-c43816821f10",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
