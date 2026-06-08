@@ -28,11 +28,71 @@ interface MockSystemDef {
 }
 
 const mockSystems: MockSystemDef[] = [
-  { name: "web-server", host: "192.168.1.10", os: "Ubuntu 24.04", cpu: "AMD Ryzen 9 7950X", cores: 16, mem: 64 * GB, arch: "amd64", baseCpu: 35, baseMem: 55, baseDisk: 42, containers: [0, 1, 2, 3, 5] },
-  { name: "nas-01", host: "192.168.1.20", os: "Debian 12", cpu: "Intel Xeon E-2388G", cores: 8, mem: 32 * GB, arch: "amd64", baseCpu: 12, baseMem: 70, baseDisk: 68, containers: [1, 2, 6] },
-  { name: "pi-cluster-1", host: "192.168.1.30", os: "Raspberry Pi OS", cpu: "ARM Cortex-A76", cores: 4, mem: 8 * GB, arch: "aarch64", baseCpu: 45, baseMem: 82, baseDisk: 35, containers: [0, 2, 7] },
-  { name: "media-server", host: "192.168.1.40", os: "Proxmox VE 8.2", cpu: "Intel i7-13700K", cores: 16, mem: 128 * GB, arch: "amd64", baseCpu: 22, baseMem: 48, baseDisk: 55, containers: [0, 1, 2, 3, 4, 5, 6, 7] },
-  { name: "backup-node", host: "192.168.1.50", os: "TrueNAS SCALE", cpu: "Intel Xeon E5-2680", cores: 12, mem: 48 * GB, arch: "amd64", baseCpu: 8, baseMem: 30, baseDisk: 78, containers: [1, 6] },
+  {
+    name: "web-server",
+    host: "192.168.1.10",
+    os: "Ubuntu 24.04",
+    cpu: "AMD Ryzen 9 7950X",
+    cores: 16,
+    mem: 64 * GB,
+    arch: "amd64",
+    baseCpu: 35,
+    baseMem: 55,
+    baseDisk: 42,
+    containers: [0, 1, 2, 3, 5],
+  },
+  {
+    name: "nas-01",
+    host: "192.168.1.20",
+    os: "Debian 12",
+    cpu: "Intel Xeon E-2388G",
+    cores: 8,
+    mem: 32 * GB,
+    arch: "amd64",
+    baseCpu: 12,
+    baseMem: 70,
+    baseDisk: 68,
+    containers: [1, 2, 6],
+  },
+  {
+    name: "pi-cluster-1",
+    host: "192.168.1.30",
+    os: "Raspberry Pi OS",
+    cpu: "ARM Cortex-A76",
+    cores: 4,
+    mem: 8 * GB,
+    arch: "aarch64",
+    baseCpu: 45,
+    baseMem: 82,
+    baseDisk: 35,
+    containers: [0, 2, 7],
+  },
+  {
+    name: "media-server",
+    host: "192.168.1.40",
+    os: "Proxmox VE 8.2",
+    cpu: "Intel i7-13700K",
+    cores: 16,
+    mem: 128 * GB,
+    arch: "amd64",
+    baseCpu: 22,
+    baseMem: 48,
+    baseDisk: 55,
+    containers: [0, 1, 2, 3, 4, 5, 6, 7],
+  },
+  {
+    name: "backup-node",
+    host: "192.168.1.50",
+    os: "TrueNAS SCALE",
+    cpu: "Intel Xeon E5-2680",
+    cores: 12,
+    mem: 48 * GB,
+    arch: "amd64",
+    baseCpu: 8,
+    baseMem: 30,
+    baseDisk: 78,
+    containers: [1, 6],
+  },
 ];
 
 const containerProfiles: { name: string; cpuBase: number; memMB: number; netKB: number }[] = [
@@ -64,11 +124,15 @@ function smoothWalk(base: number, amplitude: number, steps: number, lo: number, 
 
 function resolveSystem(systemId: string): MockSystemDef {
   const idx = Number(systemId.replace("mock-sys-", "")) - 1;
-  return mockSystems[idx] ?? mockSystems[0] ?? mockSystems.find(Boolean) as MockSystemDef;
+  return mockSystems[idx] ?? mockSystems[0] ?? (mockSystems.find(Boolean) as MockSystemDef);
 }
 
 const typeToMinutes: Record<string, number> = {
-  "1m": 1, "10m": 10, "20m": 20, "120m": 120, "480m": 480,
+  "1m": 1,
+  "10m": 10,
+  "20m": 20,
+  "120m": 120,
+  "480m": 480,
 };
 
 function generateSystemStatsSeries(count: number, sys: MockSystemDef): BeszelSystemStats[] {
@@ -90,13 +154,13 @@ function generateSystemStatsSeries(count: number, sys: MockSystemDef): BeszelSys
       cpu,
       la: [cpu / 20 + rand(0, 0.5), cpu / 25 + rand(0, 0.3), cpu / 30 + rand(0, 0.2)] as [number, number, number],
       m: memTotal,
-      mu: memTotal * memPct / 100,
+      mu: (memTotal * memPct) / 100,
       mp: memPct,
       mb: rand(0.5, 4) * GB,
       s: 4 * GB,
       su: rand(0, 2) * GB,
       d: diskTotal,
-      du: diskTotal * diskPct / 100,
+      du: (diskTotal * diskPct) / 100,
       dp: diskPct,
       dr: (diskReadWalk[i] ?? 5) * MB,
       dw: (diskWriteWalk[i] ?? 3) * MB,
@@ -125,13 +189,19 @@ function generateContainerStatsSeries(count: number, profiles: typeof containerP
   );
 }
 
-function buildTimeSeries<T>(systemId: string, count: number, intervalMinutes: number, type: string, dataPoints: T[]): (T & { id: string; system: string; type: string; created: string; updated: string })[] {
+function buildTimeSeries<T>(
+  systemId: string,
+  count: number,
+  intervalMinutes: number,
+  type: string,
+  dataPoints: T[],
+): (T & { id: string; system: string; type: string; created: string; updated: string })[] {
   const now = Date.now();
   const items = dataPoints.slice(0, count).map((data, i) => {
     const ts = new Date(now - (count - i) * intervalMinutes * 60_000).toISOString();
     return { id: `mock-stat-${i}`, system: systemId, type, created: ts, updated: ts, ...data };
   });
-  return items.reverse();
+  return items.toReversed();
 }
 
 const statusByIndex: Record<number, "up" | "paused" | "down"> = { 2: "paused", 4: "down" };
@@ -186,27 +256,73 @@ export class BeszelMockService {
     };
   }
 
-  public async getSystemStatsAsync(systemId: string, type: string, perPage: number): Promise<BeszelSystemStatsRecord[]> {
+  public async getSystemStatsAsync(
+    systemId: string,
+    type: string,
+    perPage: number,
+  ): Promise<BeszelSystemStatsRecord[]> {
     const sys = resolveSystem(systemId);
     const intervalMinutes = typeToMinutes[type] ?? 1;
     const statsSeries = generateSystemStatsSeries(perPage, sys);
-    return buildTimeSeries(systemId, perPage, intervalMinutes, type, statsSeries.map((stats) => ({ stats })));
+    return buildTimeSeries(
+      systemId,
+      perPage,
+      intervalMinutes,
+      type,
+      statsSeries.map((stats) => ({ stats })),
+    );
   }
 
-  public async getContainerStatsAsync(systemId: string, type: string, perPage: number): Promise<BeszelContainerStatsRecord[]> {
+  public async getContainerStatsAsync(
+    systemId: string,
+    type: string,
+    perPage: number,
+  ): Promise<BeszelContainerStatsRecord[]> {
     const sys = resolveSystem(systemId);
     const intervalMinutes = typeToMinutes[type] ?? 1;
-    const selectedProfiles = sys.containers.map((i) => containerProfiles[i]).filter(Boolean) as typeof containerProfiles;
+    const selectedProfiles = sys.containers
+      .map((i) => containerProfiles[i])
+      .filter(Boolean) as typeof containerProfiles;
     const series = generateContainerStatsSeries(perPage, selectedProfiles);
-    return buildTimeSeries(systemId, perPage, intervalMinutes, type, series.map((stats) => ({ stats })));
+    return buildTimeSeries(
+      systemId,
+      perPage,
+      intervalMinutes,
+      type,
+      series.map((stats) => ({ stats })),
+    );
   }
 
   public async getAlertsAsync(): Promise<BeszelAlert[]> {
     return [
       { id: "mock-alert-1", user: "mock-user", system: "mock-sys-1", name: "CPU", triggered: true, value: 90, min: 5 },
-      { id: "mock-alert-2", user: "mock-user", system: "mock-sys-2", name: "Memory", triggered: false, value: 80, min: 10 },
-      { id: "mock-alert-3", user: "mock-user", system: "mock-sys-1", name: "Disk", triggered: false, value: 85, min: 15 },
-      { id: "mock-alert-4", user: "mock-user", system: "mock-sys-4", name: "Temperature", triggered: true, value: 75, min: 3 },
+      {
+        id: "mock-alert-2",
+        user: "mock-user",
+        system: "mock-sys-2",
+        name: "Memory",
+        triggered: false,
+        value: 80,
+        min: 10,
+      },
+      {
+        id: "mock-alert-3",
+        user: "mock-user",
+        system: "mock-sys-1",
+        name: "Disk",
+        triggered: false,
+        value: 85,
+        min: 15,
+      },
+      {
+        id: "mock-alert-4",
+        user: "mock-user",
+        system: "mock-sys-4",
+        name: "Temperature",
+        triggered: true,
+        value: 75,
+        min: 3,
+      },
     ];
   }
 
