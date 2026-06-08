@@ -370,6 +370,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
     defaultPort: 80,
   },
+  beszel: {
+    name: "Beszel",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/beszel.svg",
+    category: ["systemUsage"],
+    documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
+  },
   unraid: {
     name: "Unraid",
     secretKinds: [["apiKey"]],
@@ -451,6 +458,7 @@ export const integrationDefs = {
       "networkController",
       "notifications",
       "smartHomeServer",
+      "systemUsage",
       "ups",
     ],
     documentationUrl: null,
@@ -539,6 +547,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "systemUsage",
   "ups",
 ] as const;
 

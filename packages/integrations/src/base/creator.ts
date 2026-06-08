@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { BeszelIntegration } from "../beszel/beszel-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -116,6 +117,7 @@ export const integrationCreators = {
   ntfy: NTFYIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
+  beszel: BeszelIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,

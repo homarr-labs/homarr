@@ -30,6 +30,7 @@ export const widgetKinds = [
   "firewall",
   "notifications",
   "systemResources",
+  "systemUsage",
   "coolify",
   "systemDisks",
   "timetable",

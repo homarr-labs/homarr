@@ -15,6 +15,7 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { IMediaTranscodingIntegration } from "../interfaces/media-transcoding/media-transcoding-integration";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type { ISystemUsageIntegration } from "../interfaces/system-usage/system-usage-integration";
 import type { IUpsSummaryIntegration } from "../interfaces/ups-summary/ups-summary-integration";
 import { CalendarMockService } from "./data/calendar";
 import { ClusterHealthMonitoringMockService } from "./data/cluster-health-monitoring";
@@ -29,6 +30,7 @@ import { NetworkControllerSummaryMockService } from "./data/network-controller-s
 import { NotificationsMockService } from "./data/notifications";
 import { SmartHomeMockService } from "./data/smart-home";
 import { SystemHealthMonitoringMockService } from "./data/system-health-monitoring";
+import { SystemUsageMockService } from "./data/system-usage";
 import { UpsSummaryMockService } from "./data/ups-summary";
 
 export class MockIntegration
@@ -46,6 +48,7 @@ export class MockIntegration
     IMediaTranscodingIntegration,
     NetworkControllerSummaryIntegration,
     ISmartHomeIntegration,
+    ISystemUsageIntegration,
     IUpsSummaryIntegration
 {
   private static readonly dnsHole = new DnsHoleMockService();
@@ -61,6 +64,7 @@ export class MockIntegration
   private static readonly networkController = new NetworkControllerSummaryMockService();
   private static readonly notifications = new NotificationsMockService();
   private static readonly smartHome = new SmartHomeMockService();
+  private static readonly systemUsage = new SystemUsageMockService();
   private static readonly upsSummary = new UpsSummaryMockService();
 
   protected async testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
@@ -130,4 +134,8 @@ export class MockIntegration
 
   // UpsSummaryIntegration
   getUpsSummariesAsync = MockIntegration.upsSummary.getUpsSummariesAsync.bind(MockIntegration.upsSummary);
+
+  // SystemUsageIntegration
+  getSystemsAsync = MockIntegration.systemUsage.getSystemsAsync.bind(MockIntegration.systemUsage);
+  getSystemDetailsAsync = MockIntegration.systemUsage.getSystemDetailsAsync.bind(MockIntegration.systemUsage);
 }

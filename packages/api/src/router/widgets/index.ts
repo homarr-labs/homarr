@@ -32,4 +32,5 @@ export const widgetRouter = createTRPCRouter({
   speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
+  systemUsage: lazy(() => import("./system-usage").then((mod) => mod.systemUsageRouter)),
 });

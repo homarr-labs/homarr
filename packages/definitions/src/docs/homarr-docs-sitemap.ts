@@ -156,6 +156,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/adguard-home"
   | "/docs/integrations/anchor"
   | "/docs/integrations/aria2"
+  | "/docs/integrations/beszel"
   | "/docs/integrations/codeberg"
   | "/docs/integrations/coolify"
   | "/docs/integrations/dash-dot"

@@ -44,6 +44,7 @@ import * as speedtestTracker from "./speedtest-tracker";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
+import * as systemUsage from "./system-usage";
 import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
@@ -86,6 +87,7 @@ export const widgetImports = {
   notifications,
   mediaReleases,
   systemResources,
+  systemUsage,
   coolify,
   systemDisks,
   timetable,

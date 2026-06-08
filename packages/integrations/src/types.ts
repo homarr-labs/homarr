@@ -18,3 +18,4 @@ export * from "./interfaces/timetable/timetable-types";
 export * from "./tracearr/tracearr-types";
 export * from "./speedtest-tracker/speedtest-tracker-types";
 export * from "./umami/umami-types";
+export * from "./interfaces/system-usage/system-usage-types";
