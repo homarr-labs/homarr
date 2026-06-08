@@ -18,13 +18,10 @@ fi
 export AUTH_SECRET=$(openssl rand -base64 32)
 
 export PORT=${PORT:-7575}
+export INTERNAL_NEXTJS_PORT=7901
 
-# Start nginx proxy
-# 1. Replace the HOSTNAME and PORT in the nginx template file
-# 2. Create the nginx configuration file from the template
-# 3. Start the nginx server
 export HOSTNAME
-envsubst '${HOSTNAME} ${PORT}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+envsubst '${HOSTNAME} ${PORT} ${INTERNAL_NEXTJS_PORT}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
 NGINX_PID=$!
@@ -38,7 +35,7 @@ else
     REDIS_PID=$!
 fi
 
-PORT=3000 node apps/nextjs/server.js &
+PORT=$INTERNAL_NEXTJS_PORT node apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
