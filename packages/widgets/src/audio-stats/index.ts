@@ -16,6 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
   icon: IconHeadphones,
   supportedIntegrations: ["navidrome", "audiobookshelf"],
   integrationsRequired: true,
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
