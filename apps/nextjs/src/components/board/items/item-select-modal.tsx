@@ -23,10 +23,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const { data: integrationData } = clientApi.integration.all.useQuery();
   const settings = useSettings();
 
-  const availableKinds = useMemo(
-    () => new Set((integrationData ?? []).map((i) => i.kind)),
-    [integrationData],
-  );
+  const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
 
   const items = useMemo(
     () =>
