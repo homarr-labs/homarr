@@ -40,10 +40,15 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
     [t],
   );
 
-  const filteredItems = useMemo(
-    () => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())),
-    [items, search],
-  );
+  const filteredItems = useMemo(() => {
+    const query = search.toLowerCase().trim();
+    if (!query) return items;
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query) ||
+        item.supportedIntegrations.some((kind) => getIntegrationName(kind).toLowerCase().includes(query)),
+    );
+  }, [items, search]);
 
   const handleAdd = (kind: WidgetKind) => {
     const definition = widgetImports[kind].definition;
