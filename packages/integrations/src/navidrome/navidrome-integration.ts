@@ -69,10 +69,7 @@ export class NavidromeIntegration extends Integration {
 
   private async getArtistCountAsync(): Promise<number> {
     const response = await this.subsonicRequestAsync("/rest/getArtists.view", {}, { tolerateEmptyLibrary: true });
-    return asArray(response.artists?.index).reduce(
-      (count, index) => count + asArray(index.artist).length,
-      0,
-    );
+    return asArray(response.artists?.index).reduce((count, index) => count + asArray(index.artist).length, 0);
   }
 
   private async getAlbumAndSongCountsAsync(): Promise<{ albumCount: number; songCount: number }> {

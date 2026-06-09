@@ -16,7 +16,10 @@ export const audioStatsRouter = createTRPCRouter({
           return (await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false })).data;
         },
         audiobookshelf: async () => {
-          const handler = audiobookshelfRequestHandler.handler({ ...ctx.integration, kind: "audiobookshelf" as const }, {});
+          const handler = audiobookshelfRequestHandler.handler(
+            { ...ctx.integration, kind: "audiobookshelf" as const },
+            {},
+          );
           return (await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false })).data;
         },
       } as const;

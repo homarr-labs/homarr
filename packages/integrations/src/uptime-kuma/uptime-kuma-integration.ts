@@ -94,8 +94,7 @@ export class UptimeKumaIntegration extends Integration {
       .map((monitor) => monitor.uptimePercent24h)
       .filter((value): value is number => value !== null);
 
-    const averageUptimePercent =
-      uptimeValues.reduce((sum, value) => sum + value, 0) / Math.max(uptimeValues.length, 1);
+    const averageUptimePercent = uptimeValues.reduce((sum, value) => sum + value, 0) / Math.max(uptimeValues.length, 1);
 
     return {
       totalMonitors: monitors.length,
