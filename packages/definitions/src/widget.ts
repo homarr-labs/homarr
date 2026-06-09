@@ -40,19 +40,13 @@ export const widgetKinds = [
   "speedtestTracker",
   "uptimeKuma",
   "audioStats",
-  "audiobookshelf",
-  "navidrome",
   "umami",
   "ups",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 
-export const deprecatedWidgetKinds = new Set<WidgetKind>(["navidrome", "audiobookshelf"]);
-
 export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
   uptimeKuma: { width: 2, height: 3 },
   audioStats: { width: 2, height: 2 },
-  audiobookshelf: { width: 2, height: 2 },
   paperlessNgx: { width: 2, height: 2 },
-  navidrome: { width: 2, height: 2 },
 };

@@ -9,7 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 import type { AudioStatsBackend, AudioStatsDisplayOptions } from "./shared";
-import { getGridCols, getIconSize, getVisibleStats, translationScopeByBackend } from "./shared";
+import { AUDIO_STATS_TRANSLATION_SCOPE, getGridCols, getIconSize, getVisibleStats } from "./shared";
 
 const rootClassByCompact = {
   true: classes.rootCompact,
@@ -31,7 +31,6 @@ interface AudioStatsContentProps {
   stats: NavidromeDashboardData | AudiobookshelfDashboardData;
   options: AudioStatsDisplayOptions;
   width: number;
-  translationScope?: keyof typeof translationScopeByBackend;
 }
 
 export function AudioStatsContent({
@@ -39,9 +38,8 @@ export function AudioStatsContent({
   stats,
   options,
   width,
-  translationScope = "audioStats",
 }: AudioStatsContentProps) {
-  const t = useScopedI18n(translationScopeByBackend[translationScope]);
+  const t = useScopedI18n(AUDIO_STATS_TRANSLATION_SCOPE);
   const visibleStats = getVisibleStats(backend, options, stats);
   const compactKey = String(options.compactMode ?? false) as keyof typeof rootClassByCompact;
   const gridCols = getGridCols(width, visibleStats.length, options.compactMode ?? false);

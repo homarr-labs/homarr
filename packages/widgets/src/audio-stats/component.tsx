@@ -34,7 +34,6 @@ export default function AudioStatsWidget({ integrationIds, options, width }: Wid
       stats={response.data}
       options={displayOptions}
       width={width}
-      translationScope="audioStats"
     />
   );
 }

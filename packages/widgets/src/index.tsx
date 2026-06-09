@@ -9,8 +9,6 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as anchorNote from "./anchor-note";
 import * as audioStats from "./audio-stats";
-import * as audiobookshelf from "./audiobookshelf";
-import * as navidrome from "./navidrome";
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
@@ -101,8 +99,6 @@ export const widgetImports = {
   speedtestTracker,
   uptimeKuma,
   audioStats,
-  audiobookshelf,
-  navidrome,
   umami,
   ups,
 } satisfies WidgetImportRecord;

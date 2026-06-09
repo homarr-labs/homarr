@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Card, Center, Group, Stack, Text, Tooltip } from "
 
 import { clientApi } from "@homarr/api/client";
 import { createId, objectEntries } from "@homarr/common";
-import { deprecatedWidgetKinds, getIconUrl, getIntegrationName } from "@homarr/definitions";
+import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -26,7 +26,6 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const items = useMemo(
     () =>
       objectEntries(widgetImports)
-        .filter(([kind]) => !deprecatedWidgetKinds.has(kind))
         .map(([kind, value]) => ({
           kind,
           supportedIntegrations:

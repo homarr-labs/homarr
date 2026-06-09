@@ -166,8 +166,4 @@ export const getIconSize = (width: number, compact: boolean): number => {
   return match?.size ?? fallbackIconSize[String(compact) as keyof typeof fallbackIconSize];
 };
 
-export const translationScopeByBackend = {
-  navidrome: "widget.navidrome",
-  audiobookshelf: "widget.audiobookshelf",
-  audioStats: "widget.audioStats",
-} as const;
+export const AUDIO_STATS_TRANSLATION_SCOPE = "widget.audioStats" as const;
