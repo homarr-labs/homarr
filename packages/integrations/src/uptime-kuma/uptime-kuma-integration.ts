@@ -69,15 +69,9 @@ export class UptimeKumaIntegration extends Integration {
     const latestHeartbeat = heartbeats.at(-1);
     const uptimeKey = `${monitor.id}_24`;
     const uptimeRaw = heartbeat.uptimeList[uptimeKey];
-    let uptimePercent24h: number | null = null;
-    if (typeof uptimeRaw === "number") {
-      uptimePercent24h = uptimeRaw * 100;
-    }
-
-    let status: UptimeKumaMonitorCategory = "paused";
-    if (latestHeartbeat) {
-      status = uptimeKumaHeartbeatCategoryMap[latestHeartbeat.status] ?? "down";
-    }
+    const uptimePercent24h = typeof uptimeRaw === "number" ? uptimeRaw * 100 : null;
+    const status: UptimeKumaMonitorCategory =
+      (latestHeartbeat && (uptimeKumaHeartbeatCategoryMap[latestHeartbeat.status] ?? "down")) || "paused";
 
     return {
       id: monitor.id,
@@ -100,11 +94,8 @@ export class UptimeKumaIntegration extends Integration {
       .map((monitor) => monitor.uptimePercent24h)
       .filter((value): value is number => value !== null);
 
-    let averageUptimePercent = 0;
-    if (uptimeValues.length > 0) {
-      const totalUptime = uptimeValues.reduce((sum, value) => sum + value, 0);
-      averageUptimePercent = totalUptime / uptimeValues.length;
-    }
+    const averageUptimePercent =
+      uptimeValues.reduce((sum, value) => sum + value, 0) / Math.max(uptimeValues.length, 1);
 
     return {
       totalMonitors: monitors.length,
@@ -116,24 +107,20 @@ export class UptimeKumaIntegration extends Integration {
     };
   }
 
-  private async getStatusPageAsync() {
-    const response = await fetchWithTrustedCertificatesAsync(this.statusPageUrl());
-
+  private async fetchOkAsync(url: string | URL) {
+    const response = await fetchWithTrustedCertificatesAsync(url);
     if (!response.ok) {
       throw new ResponseError(response);
     }
-
     return response;
   }
 
-  private async getHeartbeatAsync() {
-    const response = await fetchWithTrustedCertificatesAsync(this.heartbeatUrl());
+  private getStatusPageAsync() {
+    return this.fetchOkAsync(this.statusPageUrl());
+  }
 
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return response;
+  private getHeartbeatAsync() {
+    return this.fetchOkAsync(this.heartbeatUrl());
   }
 
   private statusPageUrl() {

@@ -39,29 +39,23 @@ export class PaperlessNgxIntegration extends Integration {
     };
   }
 
-  private async fetchStatisticsAsync() {
-    const url = this.url("/api/statistics/");
-    const response = await fetchWithTrustedCertificatesAsync(url, {
+  private async fetchAuthenticatedAsync(path: `/${string}`) {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
     });
-
     if (!response.ok) {
       throw new ResponseError(response);
     }
+    return response;
+  }
 
+  private async fetchStatisticsAsync() {
+    const response = await this.fetchAuthenticatedAsync("/api/statistics/");
     return paperlessNgxStatisticsSchema.parse(await response.json());
   }
 
   private async fetchCountAsync(path: `/${string}`) {
-    const url = this.url(path);
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
+    const response = await this.fetchAuthenticatedAsync(path);
     return paperlessNgxPaginatedCountSchema.parse(await response.json()).count;
   }
 

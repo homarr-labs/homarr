@@ -19,17 +19,8 @@ const emptyLibraryMessage = "Library not found or empty";
 
 const subsonicAuthErrorCodes = new Set([40, 41]);
 
-const asArray = <TValue>(value: TValue | TValue[] | undefined): TValue[] => {
-  if (value === undefined) {
-    return [];
-  }
-
-  if (Array.isArray(value)) {
-    return value;
-  }
-
-  return [value];
-};
+const asArray = <TValue>(value: TValue | TValue[] | undefined): TValue[] =>
+  [value].flat().filter((item): item is TValue => item !== undefined);
 
 export class NavidromeIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -78,13 +69,10 @@ export class NavidromeIntegration extends Integration {
 
   private async getArtistCountAsync(): Promise<number> {
     const response = await this.subsonicRequestAsync("/rest/getArtists.view", {}, { tolerateEmptyLibrary: true });
-    let count = 0;
-
-    for (const index of asArray(response.artists?.index)) {
-      count += asArray(index.artist).length;
-    }
-
-    return count;
+    return asArray(response.artists?.index).reduce(
+      (count, index) => count + asArray(index.artist).length,
+      0,
+    );
   }
 
   private async getAlbumAndSongCountsAsync(): Promise<{ albumCount: number; songCount: number }> {
