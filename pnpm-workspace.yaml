@@ -155,7 +155,7 @@ catalog:
   recharts: ^3.8.1
   sass: ^1.100.0
   semantic-release: ^25.0.3
-  semver-parser: ^4.2.0
+  semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
   swagger-ui-react: ^5.32.6
