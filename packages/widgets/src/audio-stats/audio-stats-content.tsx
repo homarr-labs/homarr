@@ -33,12 +33,7 @@ interface AudioStatsContentProps {
   width: number;
 }
 
-export function AudioStatsContent({
-  backend,
-  stats,
-  options,
-  width,
-}: AudioStatsContentProps) {
+export function AudioStatsContent({ backend, stats, options, width }: AudioStatsContentProps) {
   const t = useScopedI18n(AUDIO_STATS_TRANSLATION_SCOPE);
   const visibleStats = getVisibleStats(backend, options, stats);
   const compactKey = String(options.compactMode ?? false) as keyof typeof rootClassByCompact;

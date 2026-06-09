@@ -28,12 +28,5 @@ export default function AudioStatsWidget({ integrationIds, options, width }: Wid
 
   const displayOptions = { ...defaultDisplayOptions, ...options };
 
-  return (
-    <AudioStatsContent
-      backend={response.kind}
-      stats={response.data}
-      options={displayOptions}
-      width={width}
-    />
-  );
+  return <AudioStatsContent backend={response.kind} stats={response.data} options={displayOptions} width={width} />;
 }
