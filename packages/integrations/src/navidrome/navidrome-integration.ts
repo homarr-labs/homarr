@@ -1,4 +1,3 @@
-
 import { ParseError, ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -7,11 +6,7 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type {
-  NavidromeDashboardData,
-  NavidromeNowPlayingEntry,
-  SubsonicResponseBody,
-} from "./navidrome-types";
+import type { NavidromeDashboardData, NavidromeNowPlayingEntry, SubsonicResponseBody } from "./navidrome-types";
 import { subsonicResponseSchema } from "./navidrome-types";
 
 const logger = createLogger({ module: "navidromeIntegration" });
@@ -60,9 +55,7 @@ export class NavidromeIntegration extends Integration {
         return TestConnectionError.UnauthorizedResult(401);
       }
 
-      return TestConnectionError.UnknownResult(
-        new Error(subsonicResponse.error?.message ?? "Subsonic request failed"),
-      );
+      return TestConnectionError.UnknownResult(new Error(subsonicResponse.error?.message ?? "Subsonic request failed"));
     }
 
     return { success: true };

@@ -52,48 +52,48 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         songCount,
       }));
 
-    mockFetch.mockImplementation(
-      (url) => {
-        const urlStr = toUrlString(url);
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
 
-        if (urlStr.includes("getArtists")) {
-          return Promise.resolve(
-            new Response(subsonicOk({ artists: { index: [{ name: "A", artist: [{ id: "1", name: "Artist" }] }] } }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getAlbumList2")) {
-          const offsetMatch = urlStr.match(/offset=(\d+)/);
-          const offset = Number(offsetMatch?.[1] ?? 0);
-
-          if (offset === 0) {
-            return Promise.resolve(
-              new Response(subsonicOk({ albumList2: { album: makeAlbums(500, 10) } }), { status: 200 }),
-            ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-          }
-
-          if (offset === 500) {
-            return Promise.resolve(
-              new Response(subsonicOk({ albumList2: { album: makeAlbums(200, 5) } }), { status: 200 }),
-            ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-          }
-
-          return Promise.resolve(
-            new Response(subsonicOk({ albumList2: {} }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getNowPlaying")) {
-          return Promise.resolve(
-            new Response(subsonicOk({ nowPlaying: {} }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
+      if (urlStr.includes("getArtists")) {
         return Promise.resolve(
-          new Response(subsonicOk({}), { status: 200 }),
+          new Response(subsonicOk({ artists: { index: [{ name: "A", artist: [{ id: "1", name: "Artist" }] }] } }), {
+            status: 200,
+          }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      },
-    );
+      }
+
+      if (urlStr.includes("getAlbumList2")) {
+        const offsetMatch = urlStr.match(/offset=(\d+)/);
+        const offset = Number(offsetMatch?.[1] ?? 0);
+
+        if (offset === 0) {
+          return Promise.resolve(
+            new Response(subsonicOk({ albumList2: { album: makeAlbums(500, 10) } }), { status: 200 }),
+          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+        }
+
+        if (offset === 500) {
+          return Promise.resolve(
+            new Response(subsonicOk({ albumList2: { album: makeAlbums(200, 5) } }), { status: 200 }),
+          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+        }
+
+        return Promise.resolve(new Response(subsonicOk({ albumList2: {} }), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >;
+      }
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(new Response(subsonicOk({ nowPlaying: {} }), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
 
     const integration = createIntegration();
     const result = await integration.getDashboardDataAsync();
@@ -105,33 +105,31 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
   });
 
   test("handles empty library gracefully", async () => {
-    mockFetch.mockImplementation(
-      (url) => {
-        const urlStr = toUrlString(url);
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
 
-        if (urlStr.includes("getArtists")) {
-          return Promise.resolve(
-            new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getAlbumList2")) {
-          return Promise.resolve(
-            new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getNowPlaying")) {
-          return Promise.resolve(
-            new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
+      if (urlStr.includes("getArtists")) {
         return Promise.resolve(
-          new Response(subsonicOk({}), { status: 200 }),
+          new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      },
-    );
+      }
+
+      if (urlStr.includes("getAlbumList2")) {
+        return Promise.resolve(
+          new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(
+          new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
 
     const integration = createIntegration();
     const result = await integration.getDashboardDataAsync();
@@ -145,9 +143,9 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
   test("throws on non-empty-library subsonic error", async () => {
     mockFetch.mockImplementation(
       () =>
-        Promise.resolve(
-          new Response(subsonicFailed("Permission denied"), { status: 200 }),
-        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>,
+        Promise.resolve(new Response(subsonicFailed("Permission denied"), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >,
     );
 
     const integration = createIntegration();
@@ -155,37 +153,38 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
   });
 
   test("now playing maps entries correctly", async () => {
-    mockFetch.mockImplementation(
-      (url) => {
-        const urlStr = toUrlString(url);
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
 
-        if (urlStr.includes("getNowPlaying")) {
-          return Promise.resolve(
-            new Response(subsonicOk({
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(
+          new Response(
+            subsonicOk({
               nowPlaying: {
                 entry: { title: "Song", artist: "Band", album: "LP", username: "user1", playerName: "Chrome" },
               },
-            }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getArtists")) {
-          return Promise.resolve(
-            new Response(subsonicOk({ artists: {} }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        if (urlStr.includes("getAlbumList2")) {
-          return Promise.resolve(
-            new Response(subsonicOk({ albumList2: {} }), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
-        return Promise.resolve(
-          new Response(subsonicOk({}), { status: 200 }),
+            }),
+            { status: 200 },
+          ),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      },
-    );
+      }
+
+      if (urlStr.includes("getArtists")) {
+        return Promise.resolve(new Response(subsonicOk({ artists: {} }), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >;
+      }
+
+      if (urlStr.includes("getAlbumList2")) {
+        return Promise.resolve(new Response(subsonicOk({ albumList2: {} }), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
 
     const integration = createIntegration();
     const result = await integration.getDashboardDataAsync();

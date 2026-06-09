@@ -54,7 +54,11 @@ describe("getVisibleStats", () => {
   };
 
   test("returns only enabled navidrome stats", () => {
-    const result = getVisibleStats("navidrome", { showArtists: true, showAlbums: false, showSongs: true }, navidromeStats);
+    const result = getVisibleStats(
+      "navidrome",
+      { showArtists: true, showAlbums: false, showSongs: true },
+      navidromeStats,
+    );
     expect(result).toHaveLength(2);
     expect(result.map((s) => s.statKey)).toEqual(["artists", "songs"]);
     expect(result[0]?.value).toBe(100);
@@ -64,7 +68,13 @@ describe("getVisibleStats", () => {
   test("returns only enabled audiobookshelf stats", () => {
     const result = getVisibleStats(
       "audiobookshelf",
-      { showLibraryCount: true, showAudiobooks: true, showPodcasts: false, showListeningTime: false, showActiveSessions: true },
+      {
+        showLibraryCount: true,
+        showAudiobooks: true,
+        showPodcasts: false,
+        showListeningTime: false,
+        showActiveSessions: true,
+      },
       audiobookshelfStats,
     );
     expect(result).toHaveLength(3);
@@ -77,11 +87,7 @@ describe("getVisibleStats", () => {
   });
 
   test("formats listening time as duration string", () => {
-    const result = getVisibleStats(
-      "audiobookshelf",
-      { showListeningTime: true },
-      audiobookshelfStats,
-    );
+    const result = getVisibleStats("audiobookshelf", { showListeningTime: true }, audiobookshelfStats);
     expect(result).toHaveLength(1);
     expect(typeof result[0]?.value).toBe("string");
   });

@@ -2,7 +2,10 @@ import { z } from "zod/v4";
 
 export const paperlessNgxStatisticsSchema = z.object({
   documents_total: z.number(),
-  documents_inbox: z.number().nullable().transform((value) => value ?? 0),
+  documents_inbox: z
+    .number()
+    .nullable()
+    .transform((value) => value ?? 0),
 });
 
 export const paperlessNgxPaginatedCountSchema = z.object({

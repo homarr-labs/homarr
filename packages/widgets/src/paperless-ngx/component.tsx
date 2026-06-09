@@ -1,14 +1,9 @@
 "use client";
 
-import { Fragment, type CSSProperties } from "react";
+import { Fragment } from "react";
+import type { CSSProperties } from "react";
 import { RingProgress, Text } from "@mantine/core";
-import {
-  IconFileDescription,
-  IconFileText,
-  IconInbox,
-  IconTag,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -74,11 +69,7 @@ const heroPartVisibility = {
   ring: "showInboxRing",
 } as const;
 
-export default function PaperlessNgxWidget({
-  integrationIds,
-  options,
-  width,
-}: WidgetComponentProps<"paperlessNgx">) {
+export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
   const [stats] = clientApi.widget.paperlessNgx.getStats.useSuspenseQuery({
     integrationId: integrationIds[0] ?? "",
@@ -150,9 +141,7 @@ export default function PaperlessNgxWidget({
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           {visibleHeroParts.map(([partKey]) => (
-            <Fragment key={partKey}>
-              {heroPartRenderers[partKey as keyof typeof heroPartRenderers]}
-            </Fragment>
+            <Fragment key={partKey}>{heroPartRenderers[partKey as keyof typeof heroPartRenderers]}</Fragment>
           ))}
         </div>
       )}

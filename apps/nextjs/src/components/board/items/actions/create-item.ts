@@ -20,7 +20,7 @@ export const createItemCallback =
   (previous: Board): Board => {
     const firstSection = previous.sections
       .filter((section): section is EmptySection => section.kind === "empty")
-      .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
+      .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
       .at(0);
 
     if (!firstSection) return previous;

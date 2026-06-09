@@ -20,7 +20,10 @@ import type {
 const mediaTypeCountField = {
   book: "totalAudiobooks",
   podcast: "totalPodcasts",
-} as const satisfies Record<AudiobookshelfLibrary["mediaType"], keyof Pick<AudiobookshelfDashboardData, "totalAudiobooks" | "totalPodcasts">>;
+} as const satisfies Record<
+  AudiobookshelfLibrary["mediaType"],
+  keyof Pick<AudiobookshelfDashboardData, "totalAudiobooks" | "totalPodcasts">
+>;
 
 export class AudiobookshelfIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

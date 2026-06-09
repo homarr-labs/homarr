@@ -63,7 +63,9 @@ export function AudioStatsContent({
   const nowPlayingTracks =
     navidromeStats?.nowPlaying.slice(
       0,
-      nowPlayingLimitByListVisibility[String(options.showNowPlayingList) as keyof typeof nowPlayingLimitByListVisibility],
+      nowPlayingLimitByListVisibility[
+        String(options.showNowPlayingList) as keyof typeof nowPlayingLimitByListVisibility
+      ],
     ) ?? [];
 
   const hasContent = visibleStats.length > 0 || showNowPlayingSection;
@@ -76,10 +78,7 @@ export function AudioStatsContent({
           style={{ "--stat-cols": gridCols } as CSSProperties}
         >
           {visibleStats.map(({ optionKey, statKey, value, Icon }) => (
-            <div
-              key={optionKey}
-              className={`${classes.statTile} ${statTileClassByCompact[compactKey]}`}
-            >
+            <div key={optionKey} className={`${classes.statTile} ${statTileClassByCompact[compactKey]}`}>
               <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
               <span className={classes.statValue}>{value}</span>
               <span className={classes.statLabel}>{t(statKey as never)}</span>
@@ -95,10 +94,9 @@ export function AudioStatsContent({
             <span className={classes.nowPlayingTitle}>{t("nowPlaying" as never)}</span>
             {!options.showNowPlayingList && (
               <Badge className={classes.nowPlayingCount} variant="light" size="sm">
-                {(t as unknown as (key: string, params?: { count: number }) => string)(
-                  "nowPlayingCount",
-                  { count: navidromeStats.nowPlaying.length },
-                )}
+                {(t as unknown as (key: string, params?: { count: number }) => string)("nowPlayingCount", {
+                  count: navidromeStats.nowPlaying.length,
+                })}
               </Badge>
             )}
           </div>

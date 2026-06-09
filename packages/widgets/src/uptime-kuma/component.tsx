@@ -94,9 +94,7 @@ export default function UptimeKumaWidget({
     throw new NoIntegrationDataError();
   }
 
-  return (
-    <UptimeKumaContent integrationIds={integrationIds} isEditMode={isEditMode} options={options} width={width} />
-  );
+  return <UptimeKumaContent integrationIds={integrationIds} isEditMode={isEditMode} options={options} width={width} />;
 }
 
 interface UptimeKumaContentProps {

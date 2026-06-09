@@ -80,21 +80,19 @@ describe("UptimeKumaIntegration.getDashboardDataAsync", () => {
   };
 
   const mockResponses = () => {
-    mockFetch.mockImplementation(
-      (url) => {
-        const urlStr = toUrlString(url);
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
 
-        if (urlStr.includes("/heartbeat/")) {
-          return Promise.resolve(
-            new Response(JSON.stringify(heartbeatResponse), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
-
+      if (urlStr.includes("/heartbeat/")) {
         return Promise.resolve(
-          new Response(JSON.stringify(statusPageResponse), { status: 200 }),
+          new Response(JSON.stringify(heartbeatResponse), { status: 200 }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      },
-    );
+      }
+
+      return Promise.resolve(
+        new Response(JSON.stringify(statusPageResponse), { status: 200 }),
+      ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+    });
   };
 
   test("aggregates monitor counts correctly", async () => {
@@ -123,21 +121,22 @@ describe("UptimeKumaIntegration.getDashboardDataAsync", () => {
       uptimeList: { "10_24": 1 },
     };
 
-    mockFetch.mockImplementation(
-      (url) => {
-        const urlStr = toUrlString(url);
-        if (urlStr.includes("/heartbeat/")) {
-          return Promise.resolve(
-            new Response(JSON.stringify(unknownHeartbeat), { status: 200 }),
-          ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-        }
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+      if (urlStr.includes("/heartbeat/")) {
         return Promise.resolve(
-          new Response(JSON.stringify({
-            publicGroupList: [{ id: 1, name: "G", monitorList: [{ id: 10, name: "Svc" }] }],
-          }), { status: 200 }),
+          new Response(JSON.stringify(unknownHeartbeat), { status: 200 }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      },
-    );
+      }
+      return Promise.resolve(
+        new Response(
+          JSON.stringify({
+            publicGroupList: [{ id: 1, name: "G", monitorList: [{ id: 10, name: "Svc" }] }],
+          }),
+          { status: 200 },
+        ),
+      ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+    });
 
     const integration = createIntegration([{ kind: "slug", value: "default" }]);
     const result = await integration.getDashboardDataAsync();
