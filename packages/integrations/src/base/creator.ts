@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -30,12 +31,14 @@ import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integrati
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
+import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
+import { PaperlessNgxIntegration } from "../paperless-ngx/paperless-ngx-integration";
 import { PeaNutIntegration } from "../peanut/peanut-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
@@ -48,6 +51,7 @@ import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-trac
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UmamiIntegration } from "../umami/umami-integration";
+import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
@@ -122,8 +126,12 @@ export const integrationCreators = {
   glances: GlancesIntegration,
   searchCh: SearchChIntegration,
   immich: ImmichIntegration,
+  paperlessNgx: PaperlessNgxIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
+  audiobookshelf: AudiobookshelfIntegration,
+  navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
+  uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 

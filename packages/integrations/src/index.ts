@@ -33,6 +33,9 @@ export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
 export { TracearrIntegration } from "./tracearr/tracearr-integration";
 export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
+export { AudiobookshelfIntegration } from "./audiobookshelf/audiobookshelf-integration";
+export { NavidromeIntegration } from "./navidrome/navidrome-integration";
+export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
 
@@ -61,6 +64,7 @@ export type {
 export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
+export type { PaperlessNgxStats } from "./paperless-ngx/paperless-ngx-types";
 export type {
   AnchorNote,
   AnchorNotePermission,
@@ -70,6 +74,9 @@ export type {
 } from "./anchor/anchor-types";
 export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 export type { SpeedtestTrackerDashboardData } from "./speedtest-tracker/speedtest-tracker-types";
+export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshelf-types";
+export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
+export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
 
 // Schemas

@@ -808,10 +808,13 @@
       "firewall": "Firewall",
       "timetable": "Timetable",
       "photoService": "Photos",
+      "documents": "Documents",
       "notes": "Notes",
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "mediaLibrary": "Media Library",
+      "uptimeMonitoring": "Uptime Monitoring"
     },
     "testConnection": {
       "action": {
@@ -1084,6 +1087,10 @@
         "privateKey": {
           "label": "Private key",
           "newLabel": "New private key"
+        },
+        "slug": {
+          "label": "Status page slug",
+          "newLabel": "New status page slug"
         }
       }
     },
@@ -1091,6 +1098,30 @@
       "use": "Select integrations in items",
       "interact": "Interact with integrations",
       "full": "Full integration access"
+    },
+    "audiobookshelf": {
+      "name": "Audiobookshelf",
+      "description": "Self-hosted audiobook and podcast server"
+    },
+    "navidrome": {
+      "name": "Navidrome",
+      "description": "Self-hosted music streaming server with Subsonic API compatibility"
+    },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Self-hosted uptime monitoring with public status pages",
+      "secret": {
+        "slug": {
+          "description": "The slug of your public status page. Defaults to \"default\" if not set."
+        },
+        "apiKey": {
+          "description": "Optional API key for authenticated /metrics access"
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Document management system for archiving and organizing scanned documents"
     }
   },
   "media": {
@@ -2429,6 +2460,51 @@
         }
       }
     },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Overview of your Paperless-ngx document archive",
+      "documentsTotal": "Total Documents",
+      "documentsInbox": "Inbox",
+      "correspondents": "Correspondents",
+      "tags": "Tags",
+      "documentTypes": "Document Types",
+      "inboxRatio": "Inbox Ratio",
+      "inbox": "inbox",
+      "total": "total",
+      "option": {
+        "showInboxRatio": {
+          "label": "Show inbox ratio",
+          "description": "Display the inbox-to-total document ratio in the hero section"
+        },
+        "showInboxRing": {
+          "label": "Show inbox ring",
+          "description": "Display a progress ring alongside the inbox ratio"
+        },
+        "showDocumentsTotal": {
+          "label": "Show total documents",
+          "description": "Show the total number of documents in your archive"
+        },
+        "showDocumentsInbox": {
+          "label": "Show inbox count",
+          "description": "Show the number of unprocessed documents in the inbox"
+        },
+        "showCorrespondents": {
+          "label": "Show correspondents",
+          "description": "Show the total number of correspondents"
+        },
+        "showTags": {
+          "label": "Show tags",
+          "description": "Show the total number of tags"
+        },
+        "showDocumentTypes": {
+          "label": "Show document types",
+          "description": "Show the total number of document types"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Paperless-ngx data"
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Server Stats",
       "description": "Information about your Immich instance",
@@ -3035,6 +3111,189 @@
       "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
         "internalServerError": "Failed to fetch speedtest data"
+      }
+    },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Monitor uptime statistics from your Uptime Kuma status page",
+      "option": {
+        "showAverageUptime": {
+          "label": "Show average uptime",
+          "description": "Display the combined 24-hour average uptime percentage"
+        },
+        "showUptimeRing": {
+          "label": "Show uptime ring",
+          "description": "Display a progress ring alongside the average uptime value"
+        },
+        "showTotalMonitors": {
+          "label": "Show total monitors",
+          "description": "Display the total number of configured monitors"
+        },
+        "showUpCount": {
+          "label": "Show up count",
+          "description": "Display how many monitors are currently up"
+        },
+        "showDownCount": {
+          "label": "Show down count",
+          "description": "Display how many monitors are currently down"
+        },
+        "showPausedCount": {
+          "label": "Show paused count",
+          "description": "Display how many monitors are currently paused"
+        }
+      },
+      "averageUptime": "Average uptime (24h)",
+      "stats": {
+        "totalMonitors": "Total monitors",
+        "upCount": "Up",
+        "downCount": "Down",
+        "pausedCount": "Paused"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch uptime data"
+      }
+    },
+    "audioStats": {
+      "name": "Audio stats",
+      "description": "Library and playback statistics from Navidrome or Audiobookshelf",
+      "option": {
+        "showArtists": {
+          "label": "Show artists",
+          "description": "Show the total number of artists in your music library (Navidrome)"
+        },
+        "showAlbums": {
+          "label": "Show albums",
+          "description": "Show the total number of albums in your music library (Navidrome)"
+        },
+        "showSongs": {
+          "label": "Show songs",
+          "description": "Show the total number of songs in your music library (Navidrome)"
+        },
+        "showNowPlaying": {
+          "label": "Show now playing",
+          "description": "Show tracks currently being played (Navidrome)"
+        },
+        "showNowPlayingList": {
+          "label": "Show now playing list",
+          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
+        },
+        "maxNowPlayingItems": {
+          "label": "Max now playing items",
+          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
+        },
+        "showLibraryCount": {
+          "label": "Show library count",
+          "description": "Show the number of libraries on your instance (Audiobookshelf)"
+        },
+        "showAudiobooks": {
+          "label": "Show audiobooks",
+          "description": "Show the total number of audiobooks across all libraries (Audiobookshelf)"
+        },
+        "showPodcasts": {
+          "label": "Show podcasts",
+          "description": "Show the total number of podcasts across all libraries (Audiobookshelf)"
+        },
+        "showListeningTime": {
+          "label": "Show listening time",
+          "description": "Show your total listening time (Audiobookshelf)"
+        },
+        "showActiveSessions": {
+          "label": "Show active sessions",
+          "description": "Show the number of currently active playback sessions (Audiobookshelf)"
+        },
+        "compactMode": {
+          "label": "Compact mode",
+          "description": "Use a denser layout with smaller tiles, ideal for small widget sizes"
+        }
+      },
+      "artists": "Artists",
+      "albums": "Albums",
+      "songs": "Songs",
+      "libraryCount": "Libraries",
+      "audiobooks": "Audiobooks",
+      "podcasts": "Podcasts",
+      "listeningTime": "Listening Time",
+      "activeSessions": "Active Sessions",
+      "nowPlaying": "Now Playing",
+      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
+      "error": {
+        "internalServerError": "Failed to fetch audio stats data"
+      }
+    },
+    "audiobookshelf": {
+      "name": "Audiobookshelf",
+      "description": "Statistics from your Audiobookshelf instance",
+      "option": {
+        "showLibraryCount": {
+          "label": "Show library count",
+          "description": "Show the number of libraries on your instance"
+        },
+        "showAudiobooks": {
+          "label": "Show audiobooks",
+          "description": "Show the total number of audiobooks across all libraries"
+        },
+        "showPodcasts": {
+          "label": "Show podcasts",
+          "description": "Show the total number of podcasts across all libraries"
+        },
+        "showListeningTime": {
+          "label": "Show listening time",
+          "description": "Show your total listening time"
+        },
+        "showActiveSessions": {
+          "label": "Show active sessions",
+          "description": "Show the number of currently active playback sessions"
+        },
+        "compactMode": {
+          "label": "Compact mode",
+          "description": "Use a denser layout with smaller tiles, ideal for small widget sizes"
+        }
+      },
+      "libraryCount": "Libraries",
+      "audiobooks": "Audiobooks",
+      "podcasts": "Podcasts",
+      "listeningTime": "Listening Time",
+      "activeSessions": "Active Sessions",
+      "error": {
+        "internalServerError": "Failed to fetch Audiobookshelf data"
+      }
+    },
+    "navidrome": {
+      "name": "Navidrome",
+      "description": "Statistics from your Navidrome music server",
+      "option": {
+        "showArtists": {
+          "label": "Show artists",
+          "description": "Show the total number of artists in your library"
+        },
+        "showAlbums": {
+          "label": "Show albums",
+          "description": "Show the total number of albums in your library"
+        },
+        "showSongs": {
+          "label": "Show songs",
+          "description": "Show the total number of songs in your library"
+        },
+        "showNowPlaying": {
+          "label": "Show now playing",
+          "description": "Show tracks currently being played"
+        },
+        "showNowPlayingList": {
+          "label": "Show now playing list",
+          "description": "Show individual tracks instead of only the active stream count"
+        },
+        "maxNowPlayingItems": {
+          "label": "Max now playing items",
+          "description": "Maximum number of tracks to show in the now playing list"
+        }
+      },
+      "artists": "Artists",
+      "albums": "Albums",
+      "songs": "Songs",
+      "nowPlaying": "Now Playing",
+      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
+      "error": {
+        "internalServerError": "Failed to fetch Navidrome data"
       }
     },
     "systemResources": {

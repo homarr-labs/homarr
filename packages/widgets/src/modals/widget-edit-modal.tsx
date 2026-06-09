@@ -117,6 +117,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
+          canSelectMultiple={innerProps.kind !== "audioStats"}
           {...form.getInputProps("integrationIds")}
         />
       )}

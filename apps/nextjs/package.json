@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "pnpm with-env next dev -p 3005",
     "format": "oxfmt .",
     "lint": "oxlint",
     "start": "pnpm with-env next start",
