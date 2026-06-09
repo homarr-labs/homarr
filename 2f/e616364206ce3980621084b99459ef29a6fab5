@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_54eadb91a468f1::t_df0b859c58e348 43-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2fe616364206ce3980621084b99459ef29a6fab5",
+  "prompts": {},
+  "sessions": {
+    "s_54eadb91a468f1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ac182926-57a2-42f3-86e5-adca2b273cb5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}
