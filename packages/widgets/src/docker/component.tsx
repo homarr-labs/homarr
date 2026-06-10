@@ -123,7 +123,7 @@ const createColumns = (
     enableSorting: false,
     Cell({ row }) {
       const utils = clientApi.useUtils();
-      
+      // eslint-disable-next-line no-restricted-syntax
       const onSettled = async () => {
         await utils.docker.getContainers.invalidate();
       };
@@ -272,22 +272,22 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
           }}
           p={4}
         >
+          <Group gap={4}>
+            <IconBrandDocker size={20} />
+            <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+          </Group>
+
           <Group gap="xl">
-            <Group gap={4}>
-              <IconBrandDocker size={20} />
-              <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
-            </Group>
-            
-            <Text size="sm" c="green.5">
+            <Text size="sm" c={cpuUsageColor(totals.cpu, "running")}>
               Total CPU: {totals.cpu.toFixed(2)}%
             </Text>
             
-            <Text size="sm" c="orange.5">
+            <Text size="sm" c={memoryUsageColor(totals.memory, "running")}>
               Total Mem: {humanFileSize(totals.memory)}
             </Text>
-          </Group>
 
-          <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
+            <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
+          </Group>
         </Group>
       )}
     </Stack>
