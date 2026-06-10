@@ -106,7 +106,7 @@ catalogs:
       specifier: ^1.60.0
       version: 1.60.0
     '@scalar/api-reference-react':
-      specifier: ^0.9.34
+      specifier: ^0.9.42
       version: 0.9.42
     '@semantic-release/changelog':
       specifier: ^6.0.3
@@ -16471,7 +16471,7 @@ snapshots:
       mdast-util-to-string: 4.0.0
       micromark-util-classify-character: 2.0.1
       micromark-util-decode-string: 2.0.1
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zwitch: 2.0.4
 
   mdast-util-to-string@4.0.0:
