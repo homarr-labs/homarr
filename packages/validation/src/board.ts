@@ -96,6 +96,10 @@ export const boardCreateSchema = z.object({
 
 export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
 
+const boardPermissionEntrySchema = z.object({
+  permission: z.enum(boardPermissions),
+});
+
 export const boardSummarySchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -111,6 +115,8 @@ export const boardSummarySchema = z.object({
     .nullable(),
   isHome: z.boolean(),
   isMobileHome: z.boolean(),
+  userPermissions: z.array(boardPermissionEntrySchema),
+  groupPermissions: z.array(boardPermissionEntrySchema),
 });
 
 export const addItemToBoardSchema = z.object({
