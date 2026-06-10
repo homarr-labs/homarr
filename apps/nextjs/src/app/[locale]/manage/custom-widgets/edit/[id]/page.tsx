@@ -60,6 +60,7 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
     buttonColor: "blue",
     confirmText: "",
     successMessage: "",
+    template: "",
   };
 
   const typeOverrides: Record<string, () => Record<string, unknown>> = {
@@ -132,6 +133,9 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
       buttonColor: (config.buttonColor as string) ?? "blue",
       confirmText: (config.confirmText as string) ?? "",
       successMessage: (config.successMessage as string) ?? "",
+    }),
+    customJsx: () => ({
+      template: (config.template as string) ?? "",
     }),
   };
 

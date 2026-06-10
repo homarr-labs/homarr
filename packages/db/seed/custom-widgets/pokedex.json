@@ -1,0 +1,14 @@
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Pokédex — Charizard",
+  "description": "Detailed Pokémon card with types, stats, tabs, pagination, and collapsible info",
+  "iconUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+  "url": "https://pokeapi.co/api/v2/pokemon/charizard",
+  "authType": "none",
+  "method": "GET",
+  "displayType": "customJsx",
+  "displayConfig": {
+    "type": "customJsx",
+    "template": "<Stack gap=\"sm\" p=\"xs\">\n  <Group wrap=\"nowrap\">\n    <Avatar\n      src={data.sprites.front_default}\n      size={80}\n      radius=\"sm\"\n    />\n    <Stack gap={4} style={{flex: 1}}>\n      <Title order={3} tt=\"capitalize\">{data.name}</Title>\n      <Text size=\"xs\" c=\"dimmed\">#{String(data.id).padStart(3, \"0\")} · {data.height / 10} m · {data.weight / 10} kg</Text>\n      <Group gap=\"xs\">\n        {data.types.map(t =>\n          <TypeBadge type={t.type.name} />\n        )}\n      </Group>\n    </Stack>\n  </Group>\n  <TabsContainer defaultTab=\"stats\">\n    <TabPanel value=\"stats\" label=\"Stats\">\n      <Stack gap=\"xs\" pt=\"xs\">\n        {data.stats.map(s =>\n          <StatBar label={s.stat.name} value={s.base_stat} max={255} color={s.base_stat > 100 ? \"green\" : s.base_stat > 60 ? \"yellow\" : \"red\"} />\n        )}\n      </Stack>\n    </TabPanel>\n    <TabPanel value=\"abilities\" label=\"Abilities\">\n      <Collapsible title=\"Abilities\" defaultOpen={true}>\n        <Group gap=\"xs\" pt=\"xs\">\n          {data.abilities.map(a =>\n            <Badge variant={a.is_hidden ? \"outline\" : \"filled\"} color={a.is_hidden ? \"gray\" : \"blue\"} tt=\"capitalize\">\n              {a.ability.name}{a.is_hidden ? \" (hidden)\" : \"\"}\n            </Badge>\n          )}\n        </Group>\n      </Collapsible>\n    </TabPanel>\n    <TabPanel value=\"moves\" label=\"Moves\">\n      <PaginatedList pageSize={12}>\n        {data.moves.map(m =>\n          <Badge size=\"xs\" variant=\"light\" tt=\"capitalize\" mb={4}>{m.move.name}</Badge>\n        )}\n      </PaginatedList>\n    </TabPanel>\n  </TabsContainer>\n</Stack>"
+  }
+}

@@ -78,6 +78,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-jsx-parser": "catalog:",
     "react-markdown": "catalog:",
     "react-quill-new": "catalog:",
     "recharts": "catalog:",

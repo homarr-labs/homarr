@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { ComponentType } from "react";
 import {
@@ -29,6 +30,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+
+const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
 const valueSizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg", xl: "xl" };
 
@@ -337,7 +340,7 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   const buttonColor = (data.buttonColor as string) ?? "blue";
   const confirmText = (data.confirmText as string) || "";
   const successMessage = (data.successMessage as string) || t("executeSuccess");
-  const definitionId = data._definitionId as string | undefined;
+  const definitionId = data.widgetDefinitionId as string | undefined;
 
   const handleExecute = async () => {
     if (!definitionId) return;
@@ -394,11 +397,12 @@ export const displayComponents: Record<string, ComponentType<{ data: Record<stri
   countGrid: CountGridDisplay,
   raw: RawDisplay,
   actionButton: ActionButtonDisplay,
+  customJsx: CustomJsxDisplay,
 };
 
 export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
-  const { definitionId } = options;
+  const { definitionId, refreshInterval } = options;
 
   if (!definitionId) {
     return (
@@ -413,19 +417,21 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
     );
   }
 
-  return <CustomApiWidgetInner definitionId={definitionId} />;
+  return <CustomApiWidgetInner definitionId={definitionId} refreshInterval={refreshInterval as number} />;
 }
 
-function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
+function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId: string; refreshInterval: number }) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
+  const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
+  const intervalMs = Math.max(1000, safeInterval * 1000);
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
         if (result?.type === "actionButton" || result?.type === "disabled") return false;
-        return 30_000;
+        return intervalMs;
       },
       retry: (failureCount, err) => {
         if (err.data?.code === "NOT_FOUND") return false;
@@ -471,9 +477,9 @@ function CustomApiWidgetInner({ definitionId }: { definitionId: string }) {
     );
   }
 
-  if (dataType && displayComponents[dataType]) {
-    const Component = displayComponents[dataType]!;
-    const enrichedData = dataType === "actionButton" ? { ...widgetData, _definitionId: definitionId } : widgetData;
+  const Component = dataType ? displayComponents[dataType] : undefined;
+  if (Component) {
+    const enrichedData = dataType === "actionButton" ? { ...widgetData, widgetDefinitionId: definitionId } : widgetData;
     return <Component data={enrichedData} />;
   }
 
