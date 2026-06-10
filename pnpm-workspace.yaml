@@ -82,7 +82,7 @@ catalog:
   "@types/crypto-js": ^4.2.2
   "@types/css-modules": ^1.0.5
   "@types/dockerode": ^4.0.1
-  "@types/node": ^24.12.4
+  "@types/node": ^24.13.1
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
