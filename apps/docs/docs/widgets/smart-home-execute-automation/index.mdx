@@ -1,0 +1,50 @@
+---
+title: 'Execute Automation'
+description: 'Trigger an automation with one click'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { smartHomeExecuteAutomationWidget } from '.';
+import { homeAssistantIntegration } from '@site/docs/integrations/home-assistant';
+
+
+<WidgetHeader
+  widget={smartHomeExecuteAutomationWidget}
+  categories={['Automation']}
+/>
+
+The execute automation widget allows you to trigger an automation with one click.
+
+### Screenshots
+
+import empty from './img/empty.png';
+import withDisplayname from './img/with-displayname.png';
+
+<div className="flex gap-1">
+  <img src={empty} alt="smart-home-execute-automation empty" width={128 * 1.5} height={128 * 1.5} />
+  <img src={withDisplayname} alt="smart-home-execute-automation with-displayname" width={128 * 1.5} height={128 * 1.5} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: homeAssistantIntegration,
+}]} />
+
+### Interactions
+
+- Trigger the automation by clicking on the widget.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={smartHomeExecuteAutomationWidget.configuration} />

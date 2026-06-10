@@ -1,0 +1,34 @@
+---
+title: 'Speedtest Tracker'
+description: 'Speedtest Tracker is a self-hosted internet performance tracking application.'
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { speedtestTrackerIntegration } from '.';
+import { speedtestTrackerWidget } from '@site/docs/widgets/speedtest-tracker';
+
+
+<IntegrationHeader
+    integration={speedtestTrackerIntegration}
+    categories={['Speedtest']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: speedtestTrackerWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: []
+}]} />

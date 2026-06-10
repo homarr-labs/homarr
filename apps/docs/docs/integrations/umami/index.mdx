@@ -1,0 +1,53 @@
+---
+title: 'Umami'
+description: 'Privacy-focused, open-source web analytics'
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { umamiIntegration } from '.';
+import { umamiWidget } from '../../widgets/umami';
+
+<IntegrationHeader
+  integration={umamiIntegration}
+  categories={['Analytics']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+  items={[
+    { widget: umamiWidget }
+  ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+:::tip URL configuration
+- **Umami Cloud:** Use `https://api.umami.is/v1`
+- **Self-hosted:** Use `http://your-umami-host:3000/api`
+:::
+
+### Secrets
+<IntegrationSecrets secrets={[
+  {
+    credentials: ['apiKey'],
+    steps: [
+      'Log in to your Umami instance (or Umami Cloud at https://cloud.umami.is)',
+      'Open Settings → API Keys',
+      'Click "Create API key"',
+      'Enter a name, e.g. "Homarr", and save',
+      'Copy the generated API key into Homarr',
+    ]
+  },
+  {
+    credentials: ['username', 'password'],
+    steps: [
+      'Use the username and password of your Umami account',
+      'Note: username/password auth is for self-hosted instances only — Umami Cloud requires an API key',
+    ]
+  }
+]} />

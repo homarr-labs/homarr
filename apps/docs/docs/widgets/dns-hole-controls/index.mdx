@@ -1,0 +1,54 @@
+---
+title: 'DNS Hole Controls'
+description: "Control PiHole or AdGuard from your dashboard."
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { dnsHoleControlsWidget } from '.';
+import { adguardHomeIntegration } from '@site/docs/integrations/adguard-home';
+import { piHoleIntegration } from '@site/docs/integrations/pi-hole';
+
+
+<WidgetHeader
+  widget={dnsHoleControlsWidget}
+  categories={['DNS Hole']}
+/>
+
+This widget allows you to enable or disable your DNS Hole.
+
+### Screenshots
+
+import bigSize from './img/big.png';
+import smallSize from './img/small.png';
+
+
+<img src={bigSize} alt="dns-hole-controls big-size with-toggle-all-buttons" width={256} height={128} />
+<img src={smallSize} alt="dns-hole-controls small-size no-toggle-all-buttons" width={128} height={128} />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: adguardHomeIntegration,
+}, {
+  integration: piHoleIntegration,
+}]} />
+
+### Interactions
+
+- Enable / Disable one dns-hole by clicking on the badge.
+- Disable one dns-hole in x seconds by clicking on the clock icon.
+- Do all of the above for all dns-holes by using the top button row.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={dnsHoleControlsWidget.configuration} />

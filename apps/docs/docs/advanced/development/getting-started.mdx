@@ -1,0 +1,68 @@
+---
+title: Getting started
+tags:
+  - Developer
+  - Technical documentation
+  - Code
+  - Programming
+sidebar_position: 1
+---
+
+## Setting up your development environment
+
+This guide will help you set up your development environment to start contributing to homarr.
+
+### Prerequisites
+
+- **Node.js (lts)**: You can download it from the [official website](https://nodejs.org/).
+- **pnpm (latest)**: You can install it by running `npm install -g pnpm`.
+- **Git**: You can download it from the [official website](https://git-scm.com/).
+- **Docker or Docker Desktop**: You can download it from the [official website](https://www.docker.com/).
+- **A GitHub account**: You can create one on the [official website](https://github.com/).
+
+### Setting up the project
+
+1. Fork the repository by clicking on the "Fork" button on the top right corner of the repository page.
+
+![Fork button](./img/fork.png)
+
+2. Clone the repository to your local machine with `git clone`. You can find the url to use by clicking on the "Code" button on the top right corner of your forks repository page.
+
+![Clone button](./img/clone.png)
+
+3. Change directory to the project folder with `cd homarr`.
+
+4. Install the dependencies with `pnpm install`.
+
+5. Start redis by running `pnpm run docker:dev`. This will run a docker-compose file with a redis service.
+
+6. Copy the `.env.example` file to `.env` and replace `DB_URL` with the full path you want to use for the sqlite database file. For example `DB_URL='C:\\Dev\\homarr\\packages\\db\\db.sqlite'`
+
+7. Run the migrations to create the sqlite db file with `pnpm run db:migration:sqlite:run`.
+
+8. Start the development server with `pnpm dev` and wait for a message that says `✓ Ready in 10.7s`
+
+9. Open your browser and navigate to [http://localhost:3000](http://localhost:3000). (Loading the page might take up to 2 minutes the first time)
+
+### Useful npm scripts
+
+#### During development
+
+- `pnpm dev`: Start the development server.
+- `pnpm cli`: Run cli commands.
+- `pnpm db:migration:sqlite:run`: Run the migrations to create or update the sqlite db file.
+- `pnpm db:migration:sqlite:generate`: Generate a new migration file for the sqlite db. Also works with `mysql`.
+- `pnpm db:studio`: Open a visual studio for the database.
+- `pnpm package:new`: Create a new package in the monorepo.
+
+#### Checking code quality
+
+- `pnpm lint`: Run the linter to check for code quality issues.
+- `pnpm format:fix`: Run the formatter to fix code style issues.
+- `pnpm test`: Run the tests. You can also use `pnpm test:ui` to get a UI for the tests.
+- `pnpm typecheck`: Run the typescript type checker.
+
+#### Building the project
+- `pnpm build`: Build the project for production.
+- `docker build -t homarr .`: Build a docker image for the project.
+- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:latest`: Run the created docker image.

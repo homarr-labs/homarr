@@ -1,0 +1,36 @@
+---
+title: 'Deluge'
+description: "Deluge is a lightweight, Free Software, cross-platform BitTorrent client."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IconDownload } from "@tabler/icons-react";
+import Alert from '@theme/Admonition';
+import { delugeIntegration } from '.';
+import { downloadsWidget } from '@site/docs/widgets/downloads';
+
+
+<IntegrationHeader
+    integration={delugeIntegration}
+    categories={['Torrent client']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: downloadsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['password'],
+    steps: [],
+}]} />

@@ -1,0 +1,55 @@
+---
+authors:
+  - meierschlumpf
+---
+
+# Migrate from 0.15.10+ to 1.0.0
+
+In this guide, we will show you how to migrate from Homarr 0.15.10+ to 1.0.0.
+If you are still on a version before 0.15.10, please update to 0.15.10 where we introduced the migration export page.
+
+<!-- truncate -->
+
+## Export your data
+
+As 1.0 is a complete rewrite of Homarr and therefor not compatible with the old docker mounts, we need to export your data first.
+For this you can navigate to the `Migrate to 1.0` page which you can find under `Management` > `Tools` > `Migrate to 1.0`.
+Here you can select which things you want to export and download the zip file.
+It will also show you a secret key which you will need to import the secret data like user password hashes, salts and integration secrets.
+
+![Export page](./img/old-homarr-export-data.png)
+
+## Create a parallel installation
+
+We highly recommend to create a parallel installation of Homarr 1.0.0.
+So if something with for example the import does not quite work, the data in the old installation is still available.
+To do this you can follow the appropriate [installation guide](https://homarr.dev/docs/category/installation-1) for your system.
+Please note that if you are using docker you need to specify a diffrent external port for the new installation as the old one had the same port.
+So in your compose file the ports would be `7576:7575` instead of `7575:7575`.
+
+## Import your data
+Once the installation is completed you can access the new installation. During the onboarding you'll need to select `Import from Homarr before 1.0`.
+
+![Onboarding initial step](./img/onboarding-step-1.png)
+
+After that you can upload the zip file you downloaded in the first step.
+
+![Onboarding import dropzone](./img/old-homarr-import-dropzone.png)
+
+After that you'll get a list with all your boards that can be imported. You can configure how it should be imported and can select which screensizes it should import.
+
+![Onboarding import list](./img/old-homarr-import-choose-imported-data.png)
+
+Once you have selected everything you can click on `Confirm import and continue` which will open the encryption key input dialog where you can input the secret key you got during the export.
+
+![Onboarding import key input](./img/old-homarr-import-decryption-token.png)
+
+After that you can continue the onboarding and you should see all your boards and data in the new installation.
+
+See [After the installation](https://homarr.dev/docs/getting-started/after-the-installation) for more information.
+
+## Remove the old installation
+
+After you are happy with the new installation and everything is working as expected you can remove the old installation.
+Please make sure to backup the data before you remove the old installation.
+Also once the port 7575 is free again you can change the port mapping of the new installation to `7575:7575` if you want to.

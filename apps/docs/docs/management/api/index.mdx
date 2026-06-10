@@ -1,0 +1,78 @@
+---
+title: API
+tags:
+  - API
+  - Development
+  - Interface
+---
+
+import SwaggerUI from "swagger-ui-react"
+import "swagger-ui-react/swagger-ui.css"
+
+Using the Homarr API, you can interface with the application with your own code and business logic.
+It enables you to trigger almost all actions that you can perform from the Homarr UI.
+With the API, you can build resilient systems that automatically update Homarr with data - for example syncing it with
+your deployments in a cluster or dynamically adding integrations depending on how many replicas you run.
+
+This page is language-neutral, and you must implement the API on your own in your desired language.
+It requires you to know your programming language well and have a basic understanding of HTTP, JSON and networking.
+You can test out API endpoints using any OpenAPI client - for example [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) or [Hoppscotch](https://hoppscotch.io/).
+
+## Opening the API specification
+The specification is implemented according to the OpenAPI standard.
+To access the documentation, you'll need to spin up an instance of Homarr.
+Navigate to ``Management`` > ``Tools`` > ``API``.
+You can copy the JSON url into your OpenAPI client or try out the endpoints directly from your browser.
+
+## Authentication
+Many endpoints will require you to authenticate. At the top of the Swagger documentation, you'll find a button to authenticate yourself with a API key.
+You can obtain API keys from the "Authentication" tab at the top of the page.
+API keys will not expire and can be used indefinitely.
+
+### API Key Format
+API keys are provided in the format `<id>.<token>`. When making requests, include the key in the `ApiKey` header:
+
+```
+ApiKey: abc123def456.xyz789tokenvalue...
+```
+
+### Supported Endpoints
+API key authentication works with both endpoint types:
+
+| Endpoint Type | Path Pattern | API Key Support |
+|--------------|--------------|-----------------|
+| OpenAPI | `/api/...` | ✅ Supported |
+| tRPC | `/api/trpc/...` | ✅ Supported |
+
+If no API key is provided, Homarr falls back to session cookie authentication (for browser-based access).
+
+### Usage Examples
+
+**OpenAPI endpoint:**
+```bash
+curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/health/live
+```
+
+**tRPC endpoint:**
+```bash
+curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/trpc/app.all
+```
+
+### Use Cases
+API key authentication enables programmatic access for:
+- Automation scripts and CI/CD pipelines
+- Third-party integrations
+- Custom dashboards and monitoring tools
+- Container orchestration systems that need to sync app definitions
+
+## Specification
+
+:::info
+
+This section is automatically being updated hourly.
+Last update:
+``TEST`` <!-- OPEN_API_SPEC_LAST_UPDATED -->
+
+:::
+
+<SwaggerUI url="/api/open-api-schema.json" />
