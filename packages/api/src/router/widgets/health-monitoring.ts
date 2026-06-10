@@ -9,6 +9,13 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Unraid/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
+      },
+    })
     .concat(
       createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
     )
@@ -16,7 +23,9 @@ export const healthMonitoringRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = systemInfoRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
 
           return {
             integrationId: integration.id,
@@ -32,7 +41,11 @@ export const healthMonitoringRouter = createTRPCRouter({
       createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
     )
     .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; healthInfo: SystemHealthMonitoring; timestamp: Date }>((emit) => {
+      return observable<{
+        integrationId: string;
+        healthInfo: SystemHealthMonitoring;
+        timestamp: Date;
+      }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
           const innerHandler = systemInfoRequestHandler.handler(integration, {});
@@ -53,10 +66,19 @@ export const healthMonitoringRouter = createTRPCRouter({
       });
     }),
   getClusterHealthStatus: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get Proxmox cluster health status including nodes, VMs, and resource usage. REQUIRED: integrationId (single Proxmox integration ID from integration_all)",
+      },
+    })
     .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
+        forceUpdate: false,
+      });
       return data;
     }),
   subscribeClusterHealthStatus: publicProcedure
