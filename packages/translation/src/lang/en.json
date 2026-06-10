@@ -684,6 +684,211 @@
       "add": "Add an app"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "Custom Widgets",
+        "noResults": "No custom widgets yet. Create your first one!",
+        "loading": "Loading..."
+      },
+      "create": {
+        "title": "Create Custom Widget",
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
+      },
+      "edit": {
+        "title": "Edit Custom Widget"
+      }
+    },
+    "action": {
+      "create": "Create",
+      "import": "Import",
+      "save": "Save",
+      "delete": "Delete Custom Widget",
+      "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "export": "Export",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "edit": "Edit",
+      "removeMapping": "Remove mapping",
+      "removeColumn": "Remove column",
+      "addItem": "Add Item",
+      "removeItem": "Remove item",
+      "addBar": "Add Bar",
+      "duplicate": "Duplicate",
+      "copyAiPrompt": "Copy AI prompt",
+      "enable": "Enable",
+      "disable": "Disable",
+      "menu": "Actions"
+    },
+    "field": {
+      "name": "Name",
+      "description": "Description",
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Auth Type",
+      "headerName": "Header/Query Parameter Name",
+      "method": "Method",
+      "requestBody": "Request Body",
+      "displayType": "Display Type",
+      "jsonPath": "JSON Path",
+      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
+      "label": "Label",
+      "unit": "Unit",
+      "mappings": "Mappings",
+      "tablePath": "Array JSON Path",
+      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
+      "columns": "Columns",
+      "header": "Header",
+      "items": "Items",
+      "gridColumns": "Grid Columns",
+      "cardStyle": "Card Style",
+      "bars": "Bars",
+      "valuePath": "Value JSON Path",
+      "maxPath": "Max Value JSON Path",
+      "showPercentage": "Show Percentage",
+      "barSize": "Bar Size",
+      "goodValues": "Good Values (comma-separated)",
+      "dotSize": "Dot Size",
+      "valueSize": "Value Size",
+      "labelPosition": "Label Position",
+      "kvLayout": "Layout",
+      "striped": "Striped Rows",
+      "compact": "Compact Mode",
+      "maxHeight": "Max Height (px)",
+      "color": "Color",
+      "buttonLabel": "Button Label",
+      "buttonColor": "Button Color",
+      "confirmText": "Confirmation Text",
+      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
+      "successMessage": "Success Message",
+      "successMessageHint": "Message shown after successful execution",
+      "enabled": "Enabled",
+      "template": {
+        "label": "JSX Template",
+        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperature",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blue"
+    },
+    "cardStyleOption": {
+      "filled": "Filled",
+      "outline": "Outline",
+      "subtle": "Subtle"
+    },
+    "layoutOption": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "sizeOption": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large",
+      "xl": "Extra Large"
+    },
+    "labelPositionOption": {
+      "above": "Above",
+      "below": "Below"
+    },
+    "fieldset": {
+      "general": "General",
+      "connection": "API Connection",
+      "display": "Display Configuration"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Show one extracted value with a label and unit",
+      "keyValue": "Show multiple labeled values side by side",
+      "table": "Show rows of data in a table format",
+      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
+      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
+      "statusIndicator": "Colored status dots showing online/offline or health states",
+      "countGrid": "Compact number + label counters in a tight grid",
+      "raw": "Pretty-printed JSON output for debugging",
+      "actionButton": "A button that triggers a request when clicked",
+      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "None",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Key (Header)",
+      "apiKeyQuery": "API Key (Query)"
+    },
+    "displayType": {
+      "singleValue": "Single Value",
+      "keyValue": "Key-Value",
+      "table": "Table",
+      "statGrid": "Stat Grid",
+      "progressBars": "Progress Bars",
+      "statusIndicator": "Status Indicator",
+      "countGrid": "Count Grid",
+      "raw": "Raw JSON",
+      "actionButton": "Action Button",
+      "customJsx": "Custom JSX"
+    },
+    "secret": {
+      "apiKey": "API Key / Token",
+      "username": "Username",
+      "password": "Password",
+      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "preview": {
+      "title": "Preview",
+      "test": "Test",
+      "hint": "Click Test to preview the API response with your current configuration.",
+      "rawResponse": "Raw JSON response"
+    },
+    "notification": {
+      "created": "Widget \"{name}\" created successfully.",
+      "updated": "Widget \"{name}\" updated successfully.",
+      "deleted": "Widget \"{name}\" deleted.",
+      "imported": "Widget imported successfully.",
+      "aiPromptCopied": "AI prompt copied to clipboard",
+      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
+      "aiPromptCopy": "Copy to clipboard",
+      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
+      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
+      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "updateError": "Failed to update widget. Your changes were not saved.",
+      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "exportError": "Failed to export widget.",
+      "duplicated": "Widget \"{name}\" duplicated.",
+      "duplicateError": "Failed to duplicate widget.",
+      "toggleError": "Failed to toggle widget status.",
+      "deleteError": "Failed to delete widget.",
+      "previewError": "Failed to fetch preview. Check the URL and try again.",
+      "executed": "Action executed successfully.",
+      "executeError": "Action failed: {error}"
+    },
+    "table": {
+      "name": "Name",
+      "url": "URL",
+      "display": "Display"
+    },
+    "widget": {
+      "disabled": "This widget is disabled"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -3288,6 +3493,26 @@
         "unhealthy": "Unhealthy"
       }
     },
+    "customApi": {
+      "name": "Custom API",
+      "description": "Display data from any external API with custom configuration.",
+      "option": {
+        "definitionId": {
+          "label": "Definition ID"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from the API (in seconds)"
+        }
+      },
+      "noDefinition": "No definition selected",
+      "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "noDisplayOutput": "No display output",
+      "executeConfirm": "Are you sure you want to execute this action?",
+      "executing": "Executing...",
+      "executeSuccess": "Action executed successfully",
+      "executeFailed": "Action failed. Check the widget configuration."
+    },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
@@ -3879,6 +4104,7 @@
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrations",
+        "customWidgets": "Custom Widgets",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -5126,6 +5352,18 @@
         },
         "edit": {
           "label": "Edit"
+        }
+      },
+      "custom-widgets": {
+        "label": "Custom widgets",
+        "new": {
+          "label": "New"
+        },
+        "edit": {
+          "label": "Edit",
+          "flow": {
+            "label": "Flow"
+          }
         }
       },
       "users": {

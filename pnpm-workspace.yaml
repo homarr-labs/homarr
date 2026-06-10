@@ -134,9 +134,11 @@ catalog:
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
+  jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.17.0
+  "mantine-contextmenu": ^7.15.1
   mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
@@ -156,6 +158,7 @@ catalog:
   react: 19.2.7
   react-dom: 19.2.7
   react-error-boundary: ^6.1.2
+  react-jsx-parser: ^2.4.1
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1

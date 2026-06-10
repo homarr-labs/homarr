@@ -390,6 +390,9 @@ catalogs:
     json5:
       specifier: ^2.2.3
       version: 2.2.3
+    jsonpath-plus:
+      specifier: ^10.4.0
+      version: 10.4.0
     jszip:
       specifier: ^3.10.1
       version: 3.10.1
@@ -459,6 +462,9 @@ catalogs:
     react-error-boundary:
       specifier: ^6.1.2
       version: 6.1.2
+    react-jsx-parser:
+      specifier: ^2.4.1
+      version: 2.4.1
     react-markdown:
       specifier: ^10.1.0
       version: 10.1.0
@@ -582,6 +588,10 @@ patchedDependencies:
 importers:
 
   .:
+    dependencies:
+      jsonpath-plus:
+        specifier: 'catalog:'
+        version: 10.4.0
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
@@ -1199,6 +1209,9 @@ importers:
       '@trpc/tanstack-react-query':
         specifier: 'catalog:'
         version: 11.17.0(@tanstack/react-query@5.101.0(react@19.2.7))(@trpc/client@11.17.0(@trpc/server@11.17.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.17.0(typescript@5.9.3))(react@19.2.7)(typescript@5.9.3)
+      jsonpath-plus:
+        specifier: 'catalog:'
+        version: 10.4.0
       lodash.clonedeep:
         specifier: 'catalog:'
         version: 4.5.0
@@ -1547,6 +1560,9 @@ importers:
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2523,6 +2539,9 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
+      jsonpath-plus:
+        specifier: 'catalog:'
+        version: 10.4.0
       lucide-react:
         specifier: 'catalog:'
         version: 1.17.0(react@19.2.7)
@@ -2541,6 +2560,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.7(react@19.2.7)
+      react-jsx-parser:
+        specifier: 'catalog:'
+        version: 2.4.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-markdown:
         specifier: 'catalog:'
         version: 10.1.0(@types/react@19.2.16)(react@19.2.7)
@@ -5721,16 +5743,27 @@ packages:
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
 
+  '@types/prop-types@15.7.15':
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+
   '@types/qs@6.9.16':
     resolution: {integrity: sha512-7i+zxXdPD0T4cKDuxCUXJ4wHcsJLwENa6Z3dCu8cfCK743OGy5Nu1RmAGqDPsoTDINVEcdXKRvR/zre+P2Ku1A==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
 
+  '@types/react-dom@18.3.7':
+    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
+    peerDependencies:
+      '@types/react': ^18.0.0
+
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
       '@types/react': ^19.2.0
+
+  '@types/react@18.3.31':
+    resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
 
   '@types/react@19.2.16':
     resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
@@ -6050,6 +6083,11 @@ packages:
     engines: {node: '>=10.13.0'}
     peerDependencies:
       acorn: ^8.14.0
+
+  acorn-jsx@5.3.2:
+    resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
+    peerDependencies:
+      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
   acorn@8.16.0:
     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
@@ -7986,8 +8024,8 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jsonpath-plus@10.3.0:
-    resolution: {integrity: sha512-8TNmfeTCk2Le33A3vRRwtuworG/L5RrgMvdjhKZxvyShO+mBu2fP50OWUjRLNtvw344DdDarFh9buFAZs5ujeA==}
+  jsonpath-plus@10.4.0:
+    resolution: {integrity: sha512-T92WWatJXmhBbKsgH/0hl+jxjdXrifi5IKeMY02DWggRxX0UElcbVzPlmgLTbvsPeW1PasQ6xE2Q75stkhGbsA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -9216,6 +9254,13 @@ packages:
 
   react-is@19.2.7:
     resolution: {integrity: sha512-kZFnouyVv7eP/Phmrlo9FK+zcAdriZJvzxXHF1Sl1P377WSGe2G/JxVolhTrB/jeV47lKImhNUsijjHAAbcl/A==}
+
+  react-jsx-parser@2.4.1:
+    resolution: {integrity: sha512-gE25DiHseuKmSbb5O1K1IkyQ/bwth3zl4z3EdW8XMhwrb2agUpuh8GvqHFvGwh/wdZjDDuadGrSR2lEgjcOvqQ==}
+    engines: {bun: ^1.1.27}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
 
   react-markdown@10.1.0:
     resolution: {integrity: sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ==}
@@ -11908,7 +11953,7 @@ snapshots:
       hpagent: 1.2.0
       isomorphic-ws: 5.0.0(ws@8.20.1)
       js-yaml: 4.1.1
-      jsonpath-plus: 10.3.0
+      jsonpath-plus: 10.4.0
       node-fetch: 2.7.0
       openid-client: 6.3.3
       rfc4648: 1.5.4
@@ -13721,13 +13766,27 @@ snapshots:
 
   '@types/prismjs@1.26.6': {}
 
+  '@types/prop-types@15.7.15':
+    optional: true
+
   '@types/qs@6.9.16': {}
 
   '@types/range-parser@1.2.7': {}
 
+  '@types/react-dom@18.3.7(@types/react@18.3.31)':
+    dependencies:
+      '@types/react': 18.3.31
+    optional: true
+
   '@types/react-dom@19.2.3(@types/react@19.2.16)':
     dependencies:
       '@types/react': 19.2.16
+
+  '@types/react@18.3.31':
+    dependencies:
+      '@types/prop-types': 15.7.15
+      csstype: 3.2.3
+    optional: true
 
   '@types/react@19.2.16':
     dependencies:
@@ -14112,6 +14171,10 @@ snapshots:
       negotiator: 1.0.0
 
   acorn-import-phases@1.0.4(acorn@8.16.0):
+    dependencies:
+      acorn: 8.16.0
+
+  acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
 
@@ -16066,7 +16129,7 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jsonpath-plus@10.3.0:
+  jsonpath-plus@10.4.0:
     dependencies:
       '@jsep-plugin/assignment': 1.3.0(jsep@1.4.0)
       '@jsep-plugin/regex': 1.0.4(jsep@1.4.0)
@@ -17494,6 +17557,16 @@ snapshots:
       react: 19.2.7
 
   react-is@19.2.7: {}
+
+  react-jsx-parser@2.4.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    dependencies:
+      acorn: 8.16.0
+      acorn-jsx: 5.3.2(acorn@8.16.0)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+    optionalDependencies:
+      '@types/react': 18.3.31
+      '@types/react-dom': 18.3.7(@types/react@18.3.31)
 
   react-markdown@10.1.0(@types/react@19.2.16)(react@19.2.7):
     dependencies:

@@ -57,6 +57,7 @@ import * as beszelAlerts from "./beszel-alerts";
 import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as customApi from "./custom-api";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -110,6 +111,7 @@ export const widgetImports = {
   beszelSystemGrid,
   beszelAlerts,
   beszelSystemStats,
+  customApi,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

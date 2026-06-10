@@ -107,5 +107,8 @@
       "core-js-pure",
       "protobufjs"
     ]
+  },
+  "dependencies": {
+    "jsonpath-plus": "catalog:"
   }
 }

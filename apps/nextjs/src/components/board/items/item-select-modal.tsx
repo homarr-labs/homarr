@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Avatar, Box, Button, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
+import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { createId, objectEntries } from "@homarr/common";
@@ -21,6 +22,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
+  const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
   const settings = useSettings();
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
@@ -28,6 +30,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const items = useMemo(
     () =>
       objectEntries(widgetImports)
+        .filter(([kind]) => kind !== "customApi")
         .map(([kind, value]) => ({
           kind,
           supportedIntegrations:
@@ -51,6 +54,20 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         item.supportedIntegrations.some((kind) => getIntegrationName(kind).toLowerCase().includes(query)),
     );
   }, [items, search]);
+
+  const filteredCustomWidgets = useMemo(
+    () =>
+      (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
+    [customWidgetDefs, search],
+  );
+
+  const handleAddCustomWidget = (definitionId: string) => {
+    const itemId = createId();
+    const defaultOptions = reduceWidgetOptionsWithDefaultValues("customApi", settings);
+    createItem({ id: itemId, kind: "customApi", integrationIds: [] });
+    updateItemOptions({ itemId, newOptions: { ...defaultOptions, definitionId } });
+    actions.closeModal();
+  };
 
   const handleAdd = (kind: WidgetKind) => {
     const definition = widgetImports[kind].definition;
@@ -113,7 +130,61 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         />
       ))}
 
-      {filteredItems.length === 0 && (
+      {filteredCustomWidgets.length > 0 && (
+        <>
+          <Divider
+            label={t("customWidget.page.list.title")}
+            labelPosition="center"
+            my="sm"
+            style={{ gridColumn: "1 / -1" }}
+          />
+          {filteredCustomWidgets.map((def) => (
+            <Card
+              key={def.id}
+              h={selectGridCardHeight}
+              withBorder
+              pos="relative"
+              style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+              onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+              onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+            >
+              <Stack h="100%" gap="xs">
+                <Group gap="sm" wrap="nowrap" align="flex-start">
+                  {def.iconUrl ? (
+                    <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
+                  ) : (
+                    <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+                  )}
+                  <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
+                    {def.name}
+                  </Text>
+                </Group>
+                <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+                  {def.description ?? def.url}
+                </Text>
+              </Stack>
+              <Box
+                pos="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                p="xs"
+                style={{
+                  opacity: "var(--_hover-opacity)",
+                  transition: "opacity 150ms ease",
+                  background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+                }}
+              >
+                <Button onClick={() => handleAddCustomWidget(def.id)} variant="light" size="xs" fullWidth>
+                  {t("item.create.addToBoard")}
+                </Button>
+              </Box>
+            </Card>
+          ))}
+        </>
+      )}
+
+      {filteredItems.length === 0 && filteredCustomWidgets.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

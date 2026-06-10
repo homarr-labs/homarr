@@ -36,4 +36,5 @@ export const widgetRouter = createTRPCRouter({
   audioStats: lazy(() => import("./audio-stats").then((mod) => mod.audioStatsRouter)),
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
+  customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
 });

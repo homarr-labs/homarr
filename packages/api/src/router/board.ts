@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
@@ -1768,7 +1769,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           options: superjson.parse<Record<string, unknown>>(item.options),
         }),
       )
-      .filter((item) => item !== null),
+      .filter((item): item is NonNullable<typeof item> => item !== null),
   };
 };
 
@@ -1780,10 +1781,13 @@ const forKind = <T extends WidgetKind>(kind: T) =>
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
 
+const boardLogger = createLogger({ module: "board" });
+
 const parseItem = (item: unknown) => {
   const result = outputItemSchema.safeParse(item);
 
   if (!result.success) {
+    boardLogger.warn("Failed to parse board item, skipping", { error: result.error.message });
     return null;
   }
   return result.data;

@@ -1,6 +1,11 @@
+import { readFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import SuperJSON from "superjson";
 
 import { createId, objectKeys } from "@homarr/common";
+import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
@@ -15,7 +20,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
+import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -38,10 +43,19 @@ import {
   searchEngines,
   sections,
   users,
+  customWidgetDefinitions,
 } from "../schema";
 import type { Integration } from "../schema";
 
 const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+
+const CUSTOM_WIDGET_SEED_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "seed", "custom-widgets");
+
+const CUSTOM_WIDGET_SEED_IDS: Record<string, string> = {
+  "dog-facts.json": "seed-dog-facts",
+  "currency-exchange.json": "seed-currency-exchange",
+  "jellyfin.json": "seed-jellyfin",
+};
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -57,6 +71,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedDefaultIntegrationsAsync(db);
   await seedDefaultAppsAsync(db);
   await seedDefaultBoardAsync(db);
+  await seedDefaultCustomWidgetsAsync(db);
   await seedBoardWidgetsAsync(db);
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
@@ -550,6 +565,57 @@ const seedDemoUserAsync = async (db: Database) => {
   console.log(
     "Demo mode enabled: created demo user, mock integration, and sample board with widgets. Disable by setting DEMO_MODE=false.",
   );
+};
+
+const seedDefaultCustomWidgetsAsync = async (db: Database) => {
+  const seedIds = Object.values(CUSTOM_WIDGET_SEED_IDS);
+  const beforeCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
+
+  const seedResults = await Promise.all(
+    Object.entries(CUSTOM_WIDGET_SEED_IDS).map(async ([filename, id]) => {
+      try {
+        const raw = await readFile(join(CUSTOM_WIDGET_SEED_DIR, filename), "utf-8");
+        const parsed = customWidgetImportSchema.parse(JSON.parse(raw));
+
+        return {
+          id,
+          name: parsed.name,
+          description: parsed.description ?? null,
+          iconUrl: parsed.iconUrl ?? null,
+          url: parsed.url,
+          authType: parsed.authType,
+          headerName: parsed.headerName ?? null,
+          method: parsed.method,
+          requestBody: parsed.requestBody ?? null,
+          displayType: parsed.displayType,
+          displayConfig: SuperJSON.stringify(parsed.displayConfig),
+          enabled: false,
+          creatorId: null,
+        };
+      } catch (error) {
+        console.error(`Failed to parse custom widget seed file: ${filename}`, error);
+        return null;
+      }
+    }),
+  );
+
+  const seedValues = seedResults.filter((v): v is NonNullable<typeof v> => v !== null);
+  if (seedValues.length === 0) return;
+
+  await db
+    .insert(customWidgetDefinitions)
+    .values(seedValues)
+    .onConflictDoNothing({ target: customWidgetDefinitions.id });
+
+  const afterCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
+  const createdCount = afterCount - beforeCount;
+
+  if (createdCount === 0) {
+    console.log("Skipping seeding of default custom widgets as they already exist");
+    return;
+  }
+
+  console.log(`Created ${createdCount} default custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {
