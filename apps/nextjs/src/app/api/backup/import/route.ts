@@ -129,14 +129,20 @@ export async function POST(req: Request) {
   let tempDb: InstanceType<typeof Database> | null = null;
 
   try {
-    const dbEntry = zip.getEntry("db.sqlite")!;
+    const dbEntry = zip.getEntry("db.sqlite");
+    if (!dbEntry) {
+      return NextResponse.json({ error: "Invalid backup: missing db.sqlite" }, { status: 400 });
+    }
     fs.writeFileSync(tempPath, dbEntry.getData());
 
     tempDb = new Database(tempPath);
     const drizzleDb = drizzle(tempDb, { casing: DB_CASING });
     migrate(drizzleDb, { migrationsFolder });
 
-    const metadataEntry = zip.getEntry("metadata.json")!;
+    const metadataEntry = zip.getEntry("metadata.json");
+    if (!metadataEntry) {
+      return NextResponse.json({ error: "Invalid backup: missing metadata.json" }, { status: 400 });
+    }
     const metadata = JSON.parse(metadataEntry.getData().toString());
 
     const rawKey = metadata.encryptionKey ?? zip.getEntry("encryption-key.txt")?.getData().toString().trim();

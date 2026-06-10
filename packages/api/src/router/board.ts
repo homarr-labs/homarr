@@ -1430,8 +1430,10 @@ export const boardRouter = createTRPCRouter({
         for (const il of existingInSection) {
           for (let y = il.yOffset; y < il.yOffset + il.height; y++) {
             while (occupied.length <= y) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
+            const occupiedRow = occupied[y];
+            if (!occupiedRow) continue;
             for (let x = il.xOffset; x < il.xOffset + il.width; x++) {
-              occupied[y]![x] = true;
+              occupiedRow[x] = true;
             }
           }
         }
@@ -1439,8 +1441,10 @@ export const boardRouter = createTRPCRouter({
         let placed = false;
         for (let y = 0; y < 9999 && !placed; y++) {
           if (!occupied[y]) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
+          const occupiedRow = occupied[y];
+          if (!occupiedRow) continue;
           for (let x = 0; x < layout.columnCount && !placed; x++) {
-            if (!occupied[y]![x]) {
+            if (!occupiedRow[x]) {
               layoutRows.push({
                 itemId,
                 sectionId: emptySection.id,

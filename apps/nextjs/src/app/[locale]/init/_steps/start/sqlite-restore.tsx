@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Collapse, Stack, Text } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { IconDatabaseImport } from "@tabler/icons-react";
 
 import { getMantineColor } from "@homarr/common";

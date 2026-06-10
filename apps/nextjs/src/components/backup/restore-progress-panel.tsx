@@ -17,12 +17,12 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { MigrationFile } from "./types";
 
-const BASE_PHASE_DURATIONS: Record<string, number> = {
+const BASE_PHASE_DURATIONS = {
   extracting: 1200,
   encrypting: 1500,
   swapping: 800,
   restarting: 10000,
-};
+} as const;
 
 const MIGRATION_STEP_DURATION = 100;
 
@@ -45,7 +45,7 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
 
   const steps = useMemo((): TimelineStep[] => {
     const result: TimelineStep[] = [
-      { key: "extracting", label: t("extracting"), icon: IconFileZip, duration: BASE_PHASE_DURATIONS.extracting! },
+      { key: "extracting", label: t("extracting"), icon: IconFileZip, duration: BASE_PHASE_DURATIONS.extracting },
     ];
 
     if (migrations.length > 0) {
@@ -67,9 +67,9 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
     }
 
     result.push(
-      { key: "encrypting", label: t("encrypting"), icon: IconKey, duration: BASE_PHASE_DURATIONS.encrypting! },
-      { key: "swapping", label: t("swapping"), icon: IconTransform, duration: BASE_PHASE_DURATIONS.swapping! },
-      { key: "restarting", label: t("restarting"), icon: IconRefresh, duration: BASE_PHASE_DURATIONS.restarting! },
+      { key: "encrypting", label: t("encrypting"), icon: IconKey, duration: BASE_PHASE_DURATIONS.encrypting },
+      { key: "swapping", label: t("swapping"), icon: IconTransform, duration: BASE_PHASE_DURATIONS.swapping },
+      { key: "restarting", label: t("restarting"), icon: IconRefresh, duration: BASE_PHASE_DURATIONS.restarting },
     );
 
     return result;
@@ -80,10 +80,10 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
 
     let cancelled = false;
     const run = async () => {
-      for (let i = 0; i < steps.length; i++) {
+      for (const [i, step] of steps.entries()) {
         if (cancelled) return;
         setCurrentStepIdx(i);
-        await new Promise((r) => setTimeout(r, steps[i]!.duration));
+        await new Promise((r) => setTimeout(r, step.duration));
       }
       if (!cancelled) {
         onComplete?.();
