@@ -1,0 +1,19 @@
+apps/nextjs/src/app/api/backup/sql-wasm/route.ts
+  s_65eb5a0f296edf::t_508326d764a204 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ae9a54c3eb6c4e85da1175d4e281eb6e9494f5e4",
+  "prompts": {},
+  "sessions": {
+    "s_65eb5a0f296edf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "17059b15-dc38-4d70-8e3c-e208500f63b4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
