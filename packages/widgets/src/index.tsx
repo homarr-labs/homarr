@@ -53,6 +53,7 @@ import * as weather from "./weather";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
+export { useWidgetSize, WidgetSizeProvider } from "./widget-size";
 
 export const widgetImports = {
   clock,

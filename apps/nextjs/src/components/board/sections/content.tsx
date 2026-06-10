@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import type { GridItemHTMLElement } from "@homarr/gridstack";
+import { WidgetSizeProvider } from "@homarr/widgets";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
@@ -18,7 +19,7 @@ export const SectionContent = () => {
    * @see https://github.com/homarr-labs/homarr/pull/1770
    */
   const sortedItems = useMemo(() => {
-    return [...items, ...innerSections].sort((itemA, itemB) => {
+    return [...items, ...innerSections].toSorted((itemA, itemB) => {
       if (itemA.yOffset === itemB.yOffset) {
         return itemA.xOffset - itemB.xOffset;
       }
@@ -59,7 +60,13 @@ const Item = ({ item, innerRef }: ItemProps) => {
       minWidth={minWidth}
       minHeight={minHeight}
     >
-      {item.type === "item" ? <BoardItemContent item={item} /> : <BoardDynamicSection section={item} />}
+      {item.type === "item" ? (
+        <WidgetSizeProvider gridWidth={item.width} gridHeight={item.height}>
+          <BoardItemContent item={item} />
+        </WidgetSizeProvider>
+      ) : (
+        <BoardDynamicSection section={item} />
+      )}
     </GridStackItem>
   );
 };
