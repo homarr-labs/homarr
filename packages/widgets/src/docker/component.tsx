@@ -123,7 +123,7 @@ const createColumns = (
     enableSorting: false,
     Cell({ row }) {
       const utils = clientApi.useUtils();
-      // eslint-disable-next-line no-restricted-syntax
+      
       const onSettled = async () => {
         await utils.docker.getContainers.invalidate();
       };
@@ -200,6 +200,17 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
 
   const totalContainers = containers.length;
 
+  const totals = useMemo(() => {
+    return containers.reduce(
+      (acc, container) => {
+        acc.cpu += safeValue(container.cpuUsage);
+        acc.memory += safeValue(container.memoryUsage);
+        return acc;
+      },
+      { cpu: 0, memory: 0 }
+    );
+  }, [containers]);
+
   const columns = useMemo(() => createColumns(t), [t]);
 
   const table = useTranslatedMantineReactTable({
@@ -261,9 +272,19 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
           }}
           p={4}
         >
-          <Group gap={4}>
-            <IconBrandDocker size={20} />
-            <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+          <Group gap="xl">
+            <Group gap={4}>
+              <IconBrandDocker size={20} />
+              <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+            </Group>
+            
+            <Text size="sm" c="green.5">
+              Total CPU: {totals.cpu.toFixed(2)}%
+            </Text>
+            
+            <Text size="sm" c="orange.5">
+              Total Mem: {humanFileSize(totals.memory)}
+            </Text>
           </Group>
 
           <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
