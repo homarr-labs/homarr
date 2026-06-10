@@ -364,7 +364,7 @@ export const integrationDefs = {
   },
   truenas: {
     name: "TrueNAS",
-    secretKinds: [["username", "password"]],
+    secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/truenas"),

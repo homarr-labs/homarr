@@ -47,12 +47,14 @@
     "timezones-ical-library": "catalog:",
     "tsdav": "catalog:",
     "undici": "catalog:",
+    "ws": "catalog:",
     "xml2js": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "catalog:",
+    "@types/ws": "catalog:",
     "@types/xml2js": "catalog:",
     "typescript": "catalog:"
   }
