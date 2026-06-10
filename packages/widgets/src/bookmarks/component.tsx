@@ -14,7 +14,7 @@ import classes from "./bookmark.module.css";
 
 export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
-  const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
+  const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
     select(data) {
       return data.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
     },

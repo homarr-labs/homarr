@@ -7,6 +7,7 @@ import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 
 function round(value: number) {
@@ -24,7 +25,12 @@ function calculateChangePercentage(currentPrice: number, previousClose: number) 
 export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
   const theme = useMantineTheme();
-  const [{ data }] = clientApi.widget.stockPrice.getPriceHistory.useSuspenseQuery(options);
+  const { data: result } = clientApi.widget.stockPrice.getPriceHistory.useQuery(options, {
+    staleTime: 5 * 60 * 1000,
+  });
+
+  if (!result) return <WidgetEmptyState />;
+  const { data } = result;
 
   const stockValuesChange = round(calculateChange(data.priceHistory.at(-1) ?? 0, data.previousClose));
   const stockValuesChangePercentage = round(

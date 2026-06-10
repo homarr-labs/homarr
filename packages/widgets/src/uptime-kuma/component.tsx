@@ -9,6 +9,7 @@ import { formatNumber } from "@homarr/common";
 import type { UptimeKumaDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -106,7 +107,10 @@ interface UptimeKumaContentProps {
 
 function UptimeKumaContent({ integrationIds, isEditMode, options, width }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const [dashboardData] = clientApi.widget.uptimeKuma.getDashboard.useSuspenseQuery({ integrationIds });
+  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery(
+    { integrationIds },
+    { staleTime: 30 * 1000 },
+  );
 
   const utils = clientApi.useUtils();
   clientApi.widget.uptimeKuma.subscribeToDashboard.useSubscription(
@@ -126,6 +130,8 @@ function UptimeKumaContent({ integrationIds, isEditMode, options, width }: Uptim
       },
     },
   );
+
+  if (!dashboardData) return <WidgetEmptyState />;
 
   const combined = dashboardData.reduce<UptimeKumaDashboardData>(
     (acc, item) => ({

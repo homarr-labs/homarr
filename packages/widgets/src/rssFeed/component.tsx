@@ -12,8 +12,8 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const [feedEntries] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(input, {
-    refetchOnMount: false,
+  const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input, {
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
@@ -26,7 +26,7 @@ const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]
         return oldData
           ?.filter((entry) => entry.feedUrl !== updatedData.url)
           .concat(updatedData.entries)
-          .sort((entryA, entryB) => {
+          .toSorted((entryA, entryB) => {
             return entryA.published && entryB.published
               ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
               : 0;

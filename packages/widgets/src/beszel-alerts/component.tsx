@@ -36,11 +36,14 @@ export default function BeszelAlertsWidget({
   isEditMode,
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useScopedI18n("widget.beszelAlerts");
-  const [results] = clientApi.widget.beszel.getAlerts.useSuspenseQuery({
-    integrationIds,
-    includeHistory: options.showHistory,
-    maxHistoryItems: options.maxHistoryItems,
-  });
+  const { data: results = [] } = clientApi.widget.beszel.getAlerts.useQuery(
+    {
+      integrationIds,
+      includeHistory: options.showHistory,
+      maxHistoryItems: options.maxHistoryItems,
+    },
+    { staleTime: 30 * 1000 },
+  );
   const utils = clientApi.useUtils();
 
   clientApi.widget.beszel.subscribeAlerts.useSubscription(

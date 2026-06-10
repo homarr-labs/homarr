@@ -23,7 +23,9 @@ export default function SmartHomeEntityStateWidget({
     entityId: options.entityId,
     integrationId,
   };
-  const [entityState] = clientApi.widget.smartHome.entityState.useSuspenseQuery(input);
+  const { data: entityState } = clientApi.widget.smartHome.entityState.useQuery(input, {
+    staleTime: 60 * 1000,
+  });
 
   const utils = clientApi.useUtils();
 

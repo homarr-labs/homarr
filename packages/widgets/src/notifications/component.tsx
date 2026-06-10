@@ -12,13 +12,13 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 export default function NotificationsWidget({ options, integrationIds }: WidgetComponentProps<"notifications">) {
-  const [notificationIntegrations] = clientApi.widget.notifications.getNotifications.useSuspenseQuery(
+  const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery(
     {
       ...options,
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

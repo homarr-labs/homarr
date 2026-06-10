@@ -132,6 +132,9 @@ catalogs:
     '@tabler/icons-react':
       specifier: ^3.44.0
       version: 3.44.0
+    '@tanstack/query-persist-client-core':
+      specifier: ^5.101.0
+      version: 5.101.0
     '@tanstack/react-query':
       specifier: ^5.101.0
       version: 5.101.0
@@ -790,6 +793,9 @@ importers:
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
+      '@tanstack/query-persist-client-core':
+        specifier: 'catalog:'
+        version: 5.101.0
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.101.0(react@19.2.7)
@@ -5208,6 +5214,9 @@ packages:
   '@tanstack/query-devtools@5.101.0':
     resolution: {integrity: sha512-MVqw17k08RQtGGLEL654+dX/btbX9p/8WjkznO//zusLTMaObxi3Q+MoFwGVkC9K3tqjn8qrrNhJevXx4fJTeQ==}
 
+  '@tanstack/query-persist-client-core@5.101.0':
+    resolution: {integrity: sha512-LH99WepGVLwlLfuOcQcPK7f3Xg/Gf+xlMMIj9xWu/8oQ3egnDzjr+a4HvEmi6PGob5SmGXvmDKZaH5+In9dzjw==}
+
   '@tanstack/react-query-devtools@5.101.0':
     resolution: {integrity: sha512-cpZA0+WqKXwrwMfiWZEGGF6QrIWVQFbhBtxqDF5sQsAfrFf47HIE6fiPbQU3wyAUEN2+7UNqLCQe7oG6m3f93w==}
     peerDependencies:
@@ -9006,10 +9015,6 @@ packages:
 
   postcss@8.5.15:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.5.8:
-    resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres-array@2.0.0:
@@ -13188,6 +13193,10 @@ snapshots:
 
   '@tanstack/query-devtools@5.101.0': {}
 
+  '@tanstack/query-persist-client-core@5.101.0':
+    dependencies:
+      '@tanstack/query-core': 5.101.0
+
   '@tanstack/react-query-devtools@5.101.0(@tanstack/react-query@5.101.0(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@tanstack/query-devtools': 5.101.0
@@ -17218,12 +17227,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.8:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
   postgres-array@2.0.0: {}
 
   postgres-bytea@1.0.0: {}
@@ -18772,7 +18775,7 @@ snapshots:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.8
+      postcss: 8.5.15
       rollup: 4.60.0
       tinyglobby: 0.2.15
     optionalDependencies:

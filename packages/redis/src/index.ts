@@ -13,6 +13,8 @@ export {
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
+  createQueryCacheChannel,
+  getAllQueryCacheAsync,
 } from "./lib/channel";
 
 export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";
