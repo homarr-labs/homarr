@@ -16,6 +16,7 @@
     "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
+    "dev:docs": "pnpm -F @homarr/docs dev",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
