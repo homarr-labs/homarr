@@ -41,8 +41,7 @@ import {
 } from "../schema";
 import type { Integration } from "../schema";
 
-const isTruthyEnv = (value: string | undefined) =>
-  ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -410,7 +409,13 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
       options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
     }),
   ),
-  // Row 9: notebook + dockerContainers + weather = 12
+  // Row 9: beszelSystemGrid + beszelAlerts = 12
+  { kind: "beszelSystemGrid", width: 8, height: 3, needsIntegration: true },
+  { kind: "beszelAlerts", width: 4, height: 3, needsIntegration: true },
+  // Row 10: beszelSystemTable + beszelSystemStats = 12
+  { kind: "beszelSystemTable", width: 6, height: 3, needsIntegration: true },
+  { kind: "beszelSystemStats", width: 6, height: 4, needsIntegration: true },
+  // Row 11: notebook + dockerContainers + weather = 12
   { kind: "notebook", width: 4, height: 4, needsIntegration: false },
   { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
   { kind: "weather", width: 2, height: 1, needsIntegration: false },

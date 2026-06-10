@@ -51,11 +51,14 @@ export const WidgetIntegrationSelect = ({
   });
 
   const handleValueSelect = (selectedValue: string) => {
-    onChange(
-      multiSelectValues.includes(selectedValue)
-        ? multiSelectValues.filter((value) => value !== selectedValue)
-        : [...multiSelectValues, selectedValue],
-    );
+    if (multiSelectValues.includes(selectedValue)) {
+      onChange(multiSelectValues.filter((value) => value !== selectedValue));
+    } else if (canSelectMultiple) {
+      onChange([...multiSelectValues, selectedValue]);
+    } else {
+      onChange([selectedValue]);
+    }
+
     if (!canSelectMultiple) {
       combobox.closeDropdown();
     }

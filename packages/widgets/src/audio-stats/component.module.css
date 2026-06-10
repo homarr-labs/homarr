@@ -1,0 +1,185 @@
+.root {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(6px, 3cqi, 12px);
+  gap: clamp(4px, 2cqi, 8px);
+  overflow: hidden;
+}
+
+.rootCompact {
+  padding: clamp(4px, 2cqi, 8px);
+  gap: clamp(2px, 1cqi, 4px);
+}
+
+.grid {
+  display: grid;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 8px);
+  grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+}
+
+.gridCompact {
+  gap: clamp(2px, 1cqi, 4px);
+}
+
+.statTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+  height: 100%;
+  gap: clamp(2px, 1.5cqi, 4px);
+  padding: clamp(4px, 2cqi, 8px);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  overflow: hidden;
+}
+
+.statTileCompact {
+  gap: clamp(1px, 0.8cqi, 2px);
+  padding: clamp(2px, 1.2cqi, 5px);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.statIcon {
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.statLabel {
+  font-size: clamp(8px, 2.5cqi, 11px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statTileCompact .statLabel {
+  font-size: clamp(7px, 2cqi, 9px);
+}
+
+.statValue {
+  font-size: clamp(13px, 5cqi, 20px);
+  font-weight: 700;
+  color: var(--mantine-primary-color-filled);
+  line-height: 1.1;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statTileCompact .statValue {
+  font-size: clamp(11px, 4cqi, 16px);
+}
+
+.nowPlaying {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 1.2cqi, 5px);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.nowPlayingHeader {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1.5cqi, 6px);
+  font-size: clamp(10px, 2.8cqi, 12px);
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.nowPlayingTitle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nowPlayingCount {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+.nowPlayingList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.8cqi, 4px);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.nowPlayingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(4px, 1.5cqi, 6px);
+  padding: clamp(3px, 1.2cqi, 6px) clamp(4px, 1.5cqi, 8px);
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.trackTitle {
+  font-size: clamp(9px, 2.6cqi, 12px);
+  font-weight: 500;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackArtist {
+  font-size: clamp(8px, 2.2cqi, 10px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackUser {
+  flex-shrink: 0;
+  max-width: clamp(40px, 22cqi, 88px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyState {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: clamp(11px, 3cqi, 13px);
+  text-align: center;
+}
