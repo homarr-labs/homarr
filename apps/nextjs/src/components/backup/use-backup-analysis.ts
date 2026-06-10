@@ -109,8 +109,7 @@ export const useBackupAnalysis = () => {
         };
 
         if (pendingMigrations.length > 0) {
-          for (let i = 0; i < pendingMigrations.length; i++) {
-            const migration = pendingMigrations[i]!;
+          for (const [i, migration] of pendingMigrations.entries()) {
             setMigrationProgress({
               current: i + 1,
               total: pendingMigrations.length,

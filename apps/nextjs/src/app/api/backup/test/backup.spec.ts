@@ -85,7 +85,7 @@ describe("SQLite backup", () => {
 
       const dbEntry = readBack.getEntry("db.sqlite");
       expect(dbEntry).toBeDefined();
-      expect(dbEntry!.header.size).toBeGreaterThan(0);
+      expect(dbEntry?.header.size).toBeGreaterThan(0);
     });
 
     it("should produce a valid SQLite database in the ZIP", () => {
@@ -256,7 +256,7 @@ describe("SQLite backup", () => {
       const app = backupDb.prepare('SELECT "name" FROM "app" WHERE "id" = ?').get("app-1") as { name: string } | undefined;
 
       expect(app).toBeDefined();
-      expect(app!.name).toBe("TestApp");
+      expect(app?.name).toBe("TestApp");
 
       backupDb.close();
       sqlite.close();
@@ -283,7 +283,7 @@ describe("SQLite backup", () => {
 
       const board = importDb.prepare('SELECT "name" FROM "board" WHERE "id" = ?').get("board-1") as { name: string } | undefined;
       expect(board).toBeDefined();
-      expect(board!.name).toBe("TestBoard");
+      expect(board?.name).toBe("TestBoard");
 
       importDb.close();
     });
