@@ -112,9 +112,13 @@ export const createGetSetChannel = <TData>(name: string) => {
     /**
      * Set data in the channel
      * @param data data to be stored in the channel
+     * @param options optional TTL in seconds
      */
-    setAsync: async (data: TData) => {
+    setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
       await getSetClient.set(name, superjson.stringify(data));
+      if (options?.ttlSeconds) {
+        await getSetClient.expire(name, options.ttlSeconds);
+      }
     },
     /**
      * Remove data from the channel
