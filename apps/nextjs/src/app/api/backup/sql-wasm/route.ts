@@ -21,7 +21,7 @@ export async function GET() {
     cachedWasm = fs.readFileSync(found);
   }
 
-  return new NextResponse(cachedWasm, {
+  return new NextResponse(new Uint8Array(cachedWasm), {
     headers: {
       "Content-Type": "application/wasm",
       "Cache-Control": "public, max-age=31536000, immutable",
