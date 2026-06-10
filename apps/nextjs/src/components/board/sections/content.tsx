@@ -2,8 +2,12 @@ import { useMemo } from "react";
 
 import type { GridItemHTMLElement } from "@homarr/gridstack";
 
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
+import { WidgetHoverOverlay } from "../items/widget-hover-overlay";
 import { BoardDynamicSection } from "./dynamic-section";
 import { GridStackItem } from "./gridstack/gridstack-item";
 import { useSectionContext } from "./section-context";
@@ -11,6 +15,7 @@ import { useSectionItems } from "./use-section-items";
 
 export const SectionContent = () => {
   const { innerSections, items, refs } = useSectionContext();
+  const { data: integrations } = clientApi.integration.all.useQuery();
 
   /**
    * IMPORTANT: THE ORDER OF THE BELOW ITEMS HAS TO MATCH THE ORDER OF
@@ -18,7 +23,7 @@ export const SectionContent = () => {
    * @see https://github.com/homarr-labs/homarr/pull/1770
    */
   const sortedItems = useMemo(() => {
-    return [...items, ...innerSections].sort((itemA, itemB) => {
+    return [...items, ...innerSections].toSorted((itemA, itemB) => {
       if (itemA.yOffset === itemB.yOffset) {
         return itemA.xOffset - itemB.xOffset;
       }
@@ -30,7 +35,7 @@ export const SectionContent = () => {
   return (
     <>
       {sortedItems.map((item) => (
-        <Item key={item.id} item={item} innerRef={refs.items.current[item.id]} />
+        <Item key={item.id} item={item} innerRef={refs.items.current[item.id]} integrations={integrations} />
       ))}
     </>
   );
@@ -39,12 +44,12 @@ export const SectionContent = () => {
 interface ItemProps {
   item: DynamicSectionItem | SectionItem;
   innerRef: React.RefObject<GridItemHTMLElement | null> | undefined;
+  integrations: RouterOutputs["integration"]["all"] | undefined;
 }
 
-const Item = ({ item, innerRef }: ItemProps) => {
+const Item = ({ item, innerRef, integrations }: ItemProps) => {
   const minWidth = useMinSize(item, "x");
   const minHeight = useMinSize(item, "y");
-
   return (
     <GridStackItem
       key={item.id}
@@ -59,6 +64,7 @@ const Item = ({ item, innerRef }: ItemProps) => {
       minWidth={minWidth}
       minHeight={minHeight}
     >
+      {item.type === "item" && item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
       {item.type === "item" ? <BoardItemContent item={item} /> : <BoardDynamicSection section={item} />}
     </GridStackItem>
   );

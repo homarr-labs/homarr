@@ -60,6 +60,7 @@ import * as weather from "./weather";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
+export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 
 export const widgetImports = {
   clock,
