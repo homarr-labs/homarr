@@ -37,22 +37,21 @@ interface SizeConfig {
   gap: number;
 }
 
+const defaultSizeConfig: SizeConfig = {
+  iconSize: 10,
+  fontSize: "10px",
+  progressSize: "xs",
+  labelMiw: 40,
+  valueMiw: 30,
+  rowHeight: 18,
+  cardPadding: 4,
+  badgeHeight: 20,
+  badgeSize: "xs",
+  gap: 2,
+};
+
 const sizeThresholds: [number, SizeConfig][] = [
-  [
-    0,
-    {
-      iconSize: 10,
-      fontSize: "10px",
-      progressSize: "xs",
-      labelMiw: 40,
-      valueMiw: 30,
-      rowHeight: 18,
-      cardPadding: 4,
-      badgeHeight: 20,
-      badgeSize: "xs",
-      gap: 2,
-    },
-  ],
+  [0, defaultSizeConfig],
   [
     160,
     {
@@ -87,7 +86,7 @@ const sizeThresholds: [number, SizeConfig][] = [
 
 const getSizeConfig = (cellWidth: number, cellHeight: number): SizeConfig => {
   const basis = Math.min(cellWidth, cellHeight);
-  let config = sizeThresholds[0]![1];
+  let config = defaultSizeConfig;
   for (const [threshold, cfg] of sizeThresholds) {
     if (basis >= threshold) config = cfg;
   }
@@ -254,7 +253,7 @@ const metricRenderers = [
     key: "showBattery",
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => {
       const batteryIcons = [Battery, BatteryCharging] as const;
-      const Icon = batteryIcons[Math.min(1, s.battery?.[1] ?? 0)]!;
+      const Icon = batteryIcons[Math.min(1, s.battery?.[1] ?? 0)] ?? Battery;
       return (
         <MetricRow
           key="bat"

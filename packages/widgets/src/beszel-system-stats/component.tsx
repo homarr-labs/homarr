@@ -99,7 +99,7 @@ export default function BeszelSystemStatsWidget({
 
   const containerSeries = containerNames.map((name, i) => ({
     name,
-    color: containerColors[i % containerColors.length]!,
+    color: containerColors[i % containerColors.length] as string,
   }));
 
   const cols = width > 600 ? 2 : 1;

@@ -97,7 +97,8 @@ export const useDockerChartData = (
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
-    const extract = defaultContainerExtractors[metric]!;
+    const extract = defaultContainerExtractors[metric];
+    if (!extract) return [];
     return [...containerStats].toReversed().map((record) => {
       const point: Record<string, unknown> = { time: formatTime(record.created) };
       for (const name of containerNames) {

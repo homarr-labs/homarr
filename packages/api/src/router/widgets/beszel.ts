@@ -6,7 +6,7 @@ import {
   beszelStatsRequestHandler,
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
-import type { BeszelAlertsData, BeszelStatsData, BeszelSystemRow } from "@homarr/request-handler/beszel";
+import type { BeszelAlertsData, BeszelSystemRow } from "@homarr/request-handler/beszel";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";

@@ -13,14 +13,14 @@ const formatScaled = (value: number, units: readonly string[], zeroLabel: string
   const i = Math.max(0, Math.min(Math.floor(Math.log(Math.abs(value)) / Math.log(1024)), units.length - 1));
   const scaled = value / 1024 ** i;
   const decimals = scaled < 10 ? 2 : 1;
-  return `${scaled.toFixed(decimals)} ${units[i]!}`;
+  return `${scaled.toFixed(decimals)} ${units[i] ?? ""}`;
 };
 
 const formatScaledCompact = (value: number, units: readonly string[], zeroLabel: string): string => {
   if (!value || !Number.isFinite(value)) return zeroLabel;
   const i = Math.max(0, Math.min(Math.floor(Math.log(Math.abs(value)) / Math.log(1024)), units.length - 1));
   const scaled = value / 1024 ** i;
-  return `${scaled < 10 ? scaled.toFixed(1) : Math.round(scaled)}${units[i]!}`;
+  return `${scaled < 10 ? scaled.toFixed(1) : Math.round(scaled)}${units[i] ?? ""}`;
 };
 
 export const formatByteRate = (value: number): string => formatScaled(value, rateUnits, "0 B/s");
