@@ -198,7 +198,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/sonarr"
   | "/docs/integrations/speedtest-tracker"
   | "/docs/integrations/tdarr"
-  | "/docs/integrations/technitium-dns"
   | "/docs/integrations/tracearr"
   | "/docs/integrations/transmission"
   | "/docs/integrations/truenas"
