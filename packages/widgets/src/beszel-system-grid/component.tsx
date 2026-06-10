@@ -344,7 +344,10 @@ export default function BeszelSystemGridWidget({
   height,
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
-  const [results] = clientApi.widget.beszel.getSystems.useSuspenseQuery({ integrationIds });
+  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+    { integrationIds },
+    { staleTime: 30 * 1000 },
+  );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);

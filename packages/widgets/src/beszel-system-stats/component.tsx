@@ -39,7 +39,10 @@ export default function BeszelSystemStatsWidget({
   width,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
-  const [systemsResult] = clientApi.widget.beszel.getSystems.useSuspenseQuery({ integrationIds });
+  const { data: systemsResult = [] } = clientApi.widget.beszel.getSystems.useQuery(
+    { integrationIds },
+    { staleTime: 30 * 1000 },
+  );
 
   const systems = useMemo(
     () => systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name }))),
@@ -50,12 +53,15 @@ export default function BeszelSystemStatsWidget({
 
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
 
-  const [statsResult] = clientApi.widget.beszel.getSystemStats.useSuspenseQuery({
-    integrationIds,
-    systemId: selectedSystem ?? systems[0]?.value ?? "",
-    timePeriod: options.timePeriod as "1h" | "12h" | "24h" | "1w" | "30d",
-    includeDocker: showDocker,
-  });
+  const { data: statsResult } = clientApi.widget.beszel.getSystemStats.useQuery(
+    {
+      integrationIds,
+      systemId: selectedSystem ?? systems[0]?.value ?? "",
+      timePeriod: options.timePeriod as "1h" | "12h" | "24h" | "1w" | "30d",
+      includeDocker: showDocker,
+    },
+    { staleTime: 30 * 1000 },
+  );
 
   // BeszelSystemStats fields are documented in beszel-types.ts.
   // mu/du = bytes, dr/dw = bytes/s, b = public bandwidth [sent,recv] bytes/s, ns/nr = all-interface bytes/s

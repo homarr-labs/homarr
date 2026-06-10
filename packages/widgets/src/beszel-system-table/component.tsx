@@ -54,7 +54,10 @@ export default function BeszelSystemTableWidget({
   width,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
-  const [results] = clientApi.widget.beszel.getSystems.useSuspenseQuery({ integrationIds });
+  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+    { integrationIds },
+    { staleTime: 30 * 1000 },
+  );
   const size = getSizeConfig(width);
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
