@@ -1,0 +1,47 @@
+apps/docs/package.json
+  s_6d61b414731daa::t_b4e884b14bf46c 2,12-57
+  s_6d61b414731daa::t_c79181dcb7fecd 8-9
+apps/docs/.oxlintrc.json
+  s_6d61b414731daa::t_02ac7a6741644f 1-33
+apps/docs/src/components/pages/home/dataflow/dataflow.tsx
+  s_6d61b414731daa::t_aeb7b82aff071a 72
+  s_6d61b414731daa::t_70d8f4b0bfa791 6-12
+  s_6d61b414731daa::t_9499141b52dd0a 108
+apps/docs/src/declarations.d.ts
+  s_6d61b414731daa::t_72546a80e0f194 5-25
+  s_6d61b414731daa::t_85196bb29a0e26 1-4
+apps/docs/src/components/carbon.tsx
+  s_6d61b414731daa::t_df2df36c08ffbf 7-9
+apps/docs/README.md
+  s_6d61b414731daa::t_2f7baf96946340 1-18,20-105
+  s_6d61b414731daa::t_099af46be05046 19
+apps/docs/docusaurus.config.ts
+  s_6d61b414731daa::t_4443116e3fabd9 67
+  s_6d61b414731daa::t_ed02b14a9405ae 60
+  s_6d61b414731daa::t_a80374f568d22f 245-248,250-252
+  s_6d61b414731daa::t_190044246ffeab 249
+  s_6d61b414731daa::t_82c06c9f29b3a6 267
+  s_6d61b414731daa::t_5dd23878e5e03e 50
+apps/docs/src/components/integrations/secrets.tsx
+  s_6d61b414731daa::t_542a7784878809 74-78
+apps/docs/plugins/validate-docs-coverage.ts
+  s_6d61b414731daa::t_7dd837fd6c3b93 8-12,20-25
+  s_6d61b414731daa::t_ca5d23c4a8f93a 5-6
+  s_6d61b414731daa::t_8eae6267cab570 1-4,7,13-19,26-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fb0fd9787e11447c47c9684efe106cb1403949a4",
+  "prompts": {},
+  "sessions": {
+    "s_6d61b414731daa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de711b7a-5949-4ab2-942d-f31b6bf2d776",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
