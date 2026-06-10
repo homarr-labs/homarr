@@ -20,4 +20,8 @@ export const useSectionContext = () => {
   return context;
 };
 
+export const useOptionalSectionContext = () => {
+  return useContext(SectionContext);
+};
+
 export const SectionProvider = SectionContext.Provider;

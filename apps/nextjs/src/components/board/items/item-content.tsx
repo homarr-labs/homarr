@@ -19,6 +19,10 @@ import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
   item: SectionItem;
+  fallbackDimensions?: {
+    width: number;
+    height: number;
+  };
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
@@ -27,9 +31,11 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
-export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+export const BoardItemContent = ({ item, fallbackDimensions }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
+  const fallbackWidth = fallbackDimensions?.width ?? 0;
+  const fallbackHeight = fallbackDimensions?.height ?? 0;
 
   return (
     <>
@@ -52,7 +58,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         }}
         p={0}
       >
-        <InnerContent item={item} width={width} height={height} />
+        <InnerContent item={item} width={width || fallbackWidth} height={height || fallbackHeight} />
       </Card>
       {item.advancedOptions.title?.trim() && (
         <Badge

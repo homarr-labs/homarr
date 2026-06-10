@@ -12,7 +12,7 @@ import { widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useSectionContext } from "../sections/section-context";
+import { useOptionalSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";
 
@@ -41,7 +41,8 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
-  const { gridstack } = useSectionContext().refs;
+  const sectionContext = useOptionalSectionContext();
+  const gridstack = sectionContext?.refs.gridstack;
   const settings = useSettings();
 
   // Reset error boundary on next render if item has been edited
@@ -128,7 +129,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         <Menu.Item
           leftSection={<IconLayoutKanban size={16} />}
           onClick={() => {
-            if (!gridstack.current) return;
+            if (!gridstack?.current) return;
             openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
           }}
         >

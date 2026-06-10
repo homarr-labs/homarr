@@ -1,48 +1,21 @@
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { CategoryMenu } from "./category/category-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";
-
-const localStorageKey = (sectionId: string) => `homarr-section-collapsed-${sectionId}`;
+import { useCategoryCollapse } from "./use-category-collapse";
 
 interface Props {
   section: CategorySection;
 }
 
 export const BoardCategorySection = ({ section }: Props) => {
-  const { status } = useSession();
-  const { mutate } = clientApi.section.changeCollapsed.useMutation();
   const board = useRequiredBoard();
-
-  const initialCollapsed =
-    typeof window !== "undefined"
-      ? (localStorage.getItem(localStorageKey(section.id)) ?? String(section.collapsed)) === "true"
-      : section.collapsed;
-
-  const [opened, { toggle }] = useDisclosure(initialCollapsed, {
-    onOpen() {
-      if (status === "authenticated") {
-        mutate({ sectionId: section.id, collapsed: true });
-      } else if (status === "unauthenticated") {
-        localStorage.setItem(localStorageKey(section.id), "true");
-      }
-    },
-    onClose() {
-      if (status === "authenticated") {
-        mutate({ sectionId: section.id, collapsed: false });
-      } else if (status === "unauthenticated") {
-        localStorage.setItem(localStorageKey(section.id), "false");
-      }
-    },
-  });
+  const [opened, { toggle }] = useCategoryCollapse(section);
 
   return (
     <Card style={{ "--opacity": board.opacity / 100 }} radius={board.itemRadius} p={0} className={classes.itemCard}>
