@@ -1,0 +1,28 @@
+AGENTS.md
+  s_6d61b414731daa::t_f0f6195eab7fc9 3-53
+  s_6d61b414731daa::t_f7ec6b5ec8f8c9 1-2,54-83
+.cursor/rules/documentation-sync.mdc
+  s_6d61b414731daa::t_03221c28566690 1-50
+.cursor/rules/codebase-context.mdc
+  s_6d61b414731daa::t_87072e8532dbcd 194-206
+  s_6d61b414731daa::t_1355317d31f62c 24-26
+  s_6d61b414731daa::t_ffd433a86c44fc 18
+  s_6d61b414731daa::t_320690b9d658fc 34
+  s_6d61b414731daa::t_a3303893a614fa 180-181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9b739435e480601d30a447bdd9a623f8860010fb",
+  "prompts": {},
+  "sessions": {
+    "s_6d61b414731daa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de711b7a-5949-4ab2-942d-f31b6bf2d776",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
