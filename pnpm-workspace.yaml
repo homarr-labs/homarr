@@ -21,6 +21,7 @@ catalog:
   "@immich/sdk": ^2.7.5
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
+  "@modelcontextprotocol/sdk": 1.26.0
   "@mantine/charts": ^9.3.0
   "@mantine/colors-generator": ^9.3.0
   "@mantine/core": ^9.3.0
@@ -86,7 +87,7 @@ catalog:
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.16
   "@types/react-dom": 19.2.3
-  "@types/swagger-ui-react": ^5.18.0
+  "@scalar/api-reference-react": ^0.9.34
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
@@ -98,6 +99,8 @@ catalog:
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.17
+  jszip: ^3.10.1
+  sql.js: ^1.12.0
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
   better-sqlite3: ^12.10.0
@@ -133,8 +136,11 @@ catalog:
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
+  lucide-react: ^1.17.0
   "mantine-contextmenu": ^7.15.1
+  mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
+  mcp-handler: ^1.1.0
   maria2: ^0.4.1
   mysql2: 3.22.4
   next: 16.2.7
@@ -161,9 +167,9 @@ catalog:
   semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
-  swagger-ui-react: ^5.32.6
   testcontainers: ^12.0.1
   timezones-ical-library: ^2.2.0
+  trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
   tsx: 4.20.4

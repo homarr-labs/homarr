@@ -102,6 +102,10 @@
   overflow-y: auto;
 }
 
+.grid-stack > .grid-stack-item[data-type="item"] {
+  overflow: visible;
+}
+
 .grid-stack.grid-stack-animate {
   transition: none;
 }

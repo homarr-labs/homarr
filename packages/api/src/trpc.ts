@@ -8,6 +8,7 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import type { McpMeta } from "trpc-to-mcp";
 import type { OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod/v4";
 
@@ -39,7 +40,11 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  logger.info("Received tRPC request", { source, userId: session?.user.id, userName: session?.user.name });
+  logger.info("Received tRPC request", {
+    source,
+    userId: session?.user.id,
+    userName: session?.user.name,
+  });
 
   return {
     session,
@@ -56,7 +61,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
  */
 const t = initTRPC
   .context<typeof createTRPCContext>()
-  .meta<OpenApiMeta>()
+  .meta<OpenApiMeta & McpMeta>()
   .create({
     transformer: superjson,
     errorFormatter: ({ shape, error }) => ({

@@ -13,12 +13,21 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const mediaRequestsRouter = createTRPCRouter({
   getLatestRequests: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get latest media requests from Overseerr/Jellyseerr with their status (pending, approved, declined, available). REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
           return {
             integration: {
               id: integration.id,
@@ -30,8 +39,13 @@ export const mediaRequestsRouter = createTRPCRouter({
         }),
       );
       return results
-        .flatMap(({ data, integration }) => data.map((request) => ({ ...request, integrationId: integration.id })))
-        .sort((dataA, dataB) => {
+        .flatMap(({ data, integration }) =>
+          data.map((request) => ({
+            ...request,
+            integrationId: integration.id,
+          })),
+        )
+        .toSorted((dataA, dataB) => {
           if (dataA.status === dataB.status) {
             return dataB.createdAt.getTime() - dataA.createdAt.getTime();
           }
@@ -69,12 +83,21 @@ export const mediaRequestsRouter = createTRPCRouter({
       });
     }),
   getStats: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get media request statistics including total counts and top requesters. REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestStatsRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
           return {
             integration: {
               id: integration.id,
@@ -88,25 +111,42 @@ export const mediaRequestsRouter = createTRPCRouter({
       return {
         stats: results.flatMap((result) => result.data.stats),
         users: results
-          .map((result) => result.data.users.map((user) => ({ ...user, integration: result.integration })))
+          .map((result) =>
+            result.data.users.map((user) => ({
+              ...user,
+              integration: result.integration,
+            })),
+          )
           .flat()
-          .sort(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
+          .toSorted(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
         integrations: results.map((result) => result.integration),
       };
     }),
   answerRequest: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Approve or decline a pending media request. REQUIRED: integrationId (single Overseerr/Jellyseerr integration ID), requestId (number from getLatestRequests), answer ('approve' or 'decline')",
+      },
+    })
     .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
-    .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
+    .input(
+      z.object({
+        requestId: z.number(),
+        answer: z.enum(["approve", "decline"]),
+      }),
+    )
     .mutation(async ({ ctx: { integration }, input }) => {
       const integrationInstance = await createIntegrationAsync(integration);
       const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
-      if (input.answer === "approve") {
-        await integrationInstance.approveRequestAsync(input.requestId);
-        await innerHandler.invalidateAsync();
-        return;
-      }
-      await integrationInstance.declineRequestAsync(input.requestId);
+      const answerActions = {
+        approve: (id: number) => integrationInstance.approveRequestAsync(id),
+        decline: (id: number) => integrationInstance.declineRequestAsync(id),
+      } as const;
+
+      await answerActions[input.answer](input.requestId);
       await innerHandler.invalidateAsync();
     }),
 });

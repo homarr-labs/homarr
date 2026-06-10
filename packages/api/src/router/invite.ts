@@ -20,11 +20,21 @@ export const inviteRouter = createTRPCRouter({
             id: true,
             expirationDate: true,
           })
-          .extend({ creator: z.object({ name: z.string().nullable(), id: z.string() }) }),
+          .extend({
+            creator: z.object({ name: z.string().nullable(), id: z.string() }),
+          }),
       ),
     )
     .input(z.undefined())
-    .meta({ openapi: { method: "GET", path: "/api/invites", tags: ["invites"], protect: true } })
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/invites",
+        tags: ["invites"],
+        protect: true,
+      },
+      mcp: { enabled: true, description: "List all user invites" },
+    })
     .query(async ({ ctx }) => {
       throwIfCredentialsDisabled();
       return await ctx.db.query.invites.findMany({
@@ -50,7 +60,19 @@ export const inviteRouter = createTRPCRouter({
       }),
     )
     .output(z.object({ id: z.string(), token: z.string() }))
-    .meta({ openapi: { method: "POST", path: "/api/invites", tags: ["invites"], protect: true } })
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/invites",
+        tags: ["invites"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Create a new user invite link. REQUIRED: expirationDate (ISO date string for when the invite expires). Returns the invite ID and token",
+      },
+    })
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       const id = createId();
@@ -76,7 +98,15 @@ export const inviteRouter = createTRPCRouter({
       }),
     )
     .output(z.undefined())
-    .meta({ openapi: { method: "DELETE", path: "/api/invites/{id}", tags: ["invites"], protect: true } })
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/invites/{id}",
+        tags: ["invites"],
+        protect: true,
+      },
+      mcp: { enabled: true, description: "Delete an invite by ID. REQUIRED: id (invite ID string)" },
+    })
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       const dbInvite = await ctx.db.query.invites.findFirst({

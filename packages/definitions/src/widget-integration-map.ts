@@ -33,8 +33,11 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   timetable: ["searchCh"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
+  paperlessNgx: ["paperlessNgx"],
   tracearr: ["tracearr"],
   speedtestTracker: ["speedtestTracker"],
+  uptimeKuma: ["uptimeKuma"],
+  audioStats: ["navidrome", "audiobookshelf"],
   anchorNote: ["anchor"],
 };
 

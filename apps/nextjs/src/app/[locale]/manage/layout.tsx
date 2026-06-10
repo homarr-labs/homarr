@@ -11,6 +11,7 @@ import {
   IconBrandTablerFilled,
   IconCertificate,
   IconClipboardListFilled,
+  IconDatabaseExport,
   IconDirectionsFilled,
   IconGitFork,
   IconHelpSquareRoundedFilled,
@@ -29,6 +30,7 @@ import {
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createDocumentationLink } from "@homarr/definitions";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -160,6 +162,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconClipboardListFilled,
           href: "/manage/tools/tasks",
           hidden: !session?.user.permissions.includes("admin"),
+        },
+        {
+          label: t("items.tools.items.backup"),
+          icon: IconDatabaseExport,
+          href: "/manage/tools/backup",
+          hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
         },
       ],
     },

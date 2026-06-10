@@ -117,6 +117,10 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
+          canSelectMultiple={
+            ((widgetImports[innerProps.kind].definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) >
+            1
+          }
           {...form.getInputProps("integrationIds")}
         />
       )}

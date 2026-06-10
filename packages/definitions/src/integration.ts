@@ -17,6 +17,7 @@ export const integrationSecretKindObject = {
   privateKey: { isPublic: false, multiline: true },
   githubAppId: { isPublic: true, multiline: false },
   githubInstallationId: { isPublic: true, multiline: false },
+  slug: { isPublic: true, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -401,6 +402,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
     defaultPort: 2283,
   },
+  paperlessNgx: {
+    name: "Paperless-ngx",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/paperless-ngx.svg",
+    category: ["documents"],
+    documentationUrl: null,
+    defaultPort: 8000,
+  },
   tracearr: {
     name: "Tracearr",
     secretKinds: [["apiKey"]],
@@ -417,6 +426,31 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
     defaultPort: 80,
   },
+  uptimeKuma: {
+    name: "Uptime Kuma",
+    secretKinds: [[], ["slug"], ["slug", "apiKey"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
+    category: ["uptimeMonitoring"],
+    documentationUrl: null,
+    defaultPort: 3001,
+  },
+  audiobookshelf: {
+    name: "Audiobookshelf",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/audiobookshelf.svg",
+    category: ["mediaLibrary"],
+    documentationUrl: null,
+    defaultPort: 13378,
+    apiKeySettingsPath: "/account",
+  },
+  navidrome: {
+    name: "Navidrome",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
+    category: ["mediaLibrary"],
+    documentationUrl: null,
+    defaultPort: 4533,
+  },
   umami: {
     name: "Umami",
     secretKinds: [["username", "password"], ["apiKey"]],
@@ -432,6 +466,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
     category: ["ups"],
     documentationUrl: null,
+  },
+  beszel: {
+    name: "Beszel",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: null,
+    defaultPort: 8090,
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -452,6 +494,7 @@ export const integrationDefs = {
       "notifications",
       "smartHomeServer",
       "ups",
+      "uptimeMonitoring",
     ],
     documentationUrl: null,
   },
@@ -540,6 +583,9 @@ export const integrationCategories = [
   "speedtest",
   "analytics",
   "ups",
+  "documents",
+  "mediaLibrary",
+  "uptimeMonitoring",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

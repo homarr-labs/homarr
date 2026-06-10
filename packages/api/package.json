@@ -13,7 +13,8 @@
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
-    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts"
+    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
+    "./mcp": "./src/mcp.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -52,6 +53,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "superjson": "catalog:",
+    "trpc-to-mcp": "catalog:",
     "trpc-to-openapi": "catalog:",
     "zod": "catalog:"
   },

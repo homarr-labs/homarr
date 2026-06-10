@@ -74,6 +74,8 @@
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "jsonpath-plus": "catalog:",
+    "lucide-react": "catalog:",
+    "mantine-datatable": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",

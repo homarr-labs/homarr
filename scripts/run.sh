@@ -10,8 +10,11 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
-    # We disable redis logs during migration as the redis client is not yet started
     DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+    if [ $? -ne 0 ]; then
+        echo "ERROR: DB migrations failed, aborting startup"
+        exit 1
+    fi
 fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
@@ -36,26 +39,38 @@ else
     REDIS_PID=$!
 fi
 
-node apps/nextjs/server.js &
-NEXTJS_PID=$!
+SHUTTING_DOWN=false
 
-# Function to handle SIGTERM and shut down services
 terminate() {
-    echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $NEXTJS_PID 2>/dev/null
-    wait
-    # kill redis-server last because of logging of other services and only if $REDIS_PID is set
+    SHUTTING_DOWN=true
+    echo "Shutting down..."
+    kill -TERM $NEXTJS_PID 2>/dev/null
+    wait $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID 2>/dev/null
+    wait $NGINX_PID 2>/dev/null
     if [ -n "$REDIS_PID" ]; then
         kill -TERM $REDIS_PID 2>/dev/null
-        wait
+        wait $REDIS_PID 2>/dev/null
     fi
     echo "Shutdown complete."
     exit 0
 }
 
-# When SIGTERM (docker stop <container>) / SIGINT (ctrl+c) is received, run the terminate function
 trap terminate TERM INT
 
-# Wait for all processes
-wait $NEXTJS_PID
-terminate
+node apps/nextjs/server.js &
+NEXTJS_PID=$!
+
+while true; do
+    wait $NEXTJS_PID
+    EXIT_CODE=$?
+
+    if [ "$SHUTTING_DOWN" = true ]; then
+        break
+    fi
+
+    echo "Next.js exited with code $EXIT_CODE, restarting in 1s..."
+    sleep 1
+    node apps/nextjs/server.js &
+    NEXTJS_PID=$!
+done

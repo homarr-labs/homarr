@@ -8,6 +8,7 @@ import {
   IconPasswordUser,
   IconPlug,
   IconServer,
+  IconTag,
   IconUser,
 } from "@tabler/icons-react";
 
@@ -28,4 +29,5 @@ export const integrationSecretIcons = {
   githubAppId: IconCode,
   githubInstallationId: IconPlug,
   privateKey: IconKey,
+  slug: IconTag,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;
