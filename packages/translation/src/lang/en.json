@@ -7,7 +7,10 @@
         "description": "To get started, please select how you want to set up your Homarr instance.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0"
+          "importOldmarr": "Import from Homarr before 1.0",
+          "restoreSqlite": "Restore from SQLite backup",
+          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
+          "backToOptions": "← Back to setup options"
         }
       },
       "import": {
@@ -3498,7 +3501,8 @@
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificates",
-            "tasks": "Tasks"
+            "tasks": "Tasks",
+            "backup": "Backup"
           }
         },
         "settings": "Settings",
@@ -4037,6 +4041,125 @@
                 }
               }
             }
+          }
+        },
+        "backup": {
+          "title": "Full Database Backup",
+          "metaTitle": "Backup & Restore",
+          "export": {
+            "title": "Export Database",
+            "description": "Download a full backup of your SQLite database including all settings, users, boards, and encrypted integration secrets. The backup is bundled as a ZIP file with the encryption key and metadata.",
+            "button": "Download Backup",
+            "error": "Export failed",
+            "confirm": {
+              "title": "Sensitive data export",
+              "warningTitle": "This export contains your entire database.",
+              "warningBody": "The backup includes all users, integration secrets (encrypted), API keys, board configurations, and app data. Store the exported file securely and do not share it.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "submit": "Export Database",
+              "cancel": "Cancel"
+            }
+          },
+          "import": {
+            "title": "Restore Database",
+            "description": "Upload a previously exported backup ZIP to restore your database. This will replace your entire database. If the backup was created with a different encryption key, secrets will be automatically re-encrypted.",
+            "warning": "Restoring a backup will completely replace your current database and restart the application. This action cannot be undone.",
+            "dropzone": {
+              "title": "Drop your backup ZIP here or click to browse",
+              "description": "Only .zip files from a Homarr SQLite backup are accepted"
+            },
+            "changeFile": "Change file",
+            "button": "Restore Database",
+            "success": {
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The application is restarting..."
+            },
+            "error": "Import failed"
+          },
+          "preview": {
+            "title": "Backup Contents",
+            "exported": "Exported {date}",
+            "loading": "Analyzing backup file...",
+            "errorTitle": "Preview Error",
+            "entity": "Entity",
+            "count": "Count",
+            "boards": "Boards",
+            "entities": {
+              "board": "Boards",
+              "user": "Users",
+              "app": "Apps",
+              "integration": "Integrations",
+              "item": "Widgets",
+              "media": "Media",
+              "search_engine": "Search Engines"
+            },
+            "analyzeError": "Failed to analyze backup file",
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite"
+          },
+          "restore": {
+            "dropzone": {
+              "title": "Drop your backup ZIP here",
+              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
+            },
+            "analyzing": "Analyzing backup...",
+            "changeFile": "Change file",
+            "continueToRestore": "Continue to restore",
+            "tryAgain": "Try again",
+            "analysisError": "Analysis Error",
+            "preview": {
+              "title": "Backup Contents",
+              "exported": "Exported {date}",
+              "entity": "Entity",
+              "count": "Count",
+              "boards": "Boards",
+              "entities": {
+                "board": "Boards",
+                "user": "Users",
+                "app": "Apps",
+                "integration": "Integrations",
+                "item": "Widgets",
+                "media": "Media",
+                "search_engine": "Search Engines"
+              },
+              "migrationsApplied": "{count} migration applied",
+              "migrationsAppliedPlural": "{count} migrations applied",
+              "migrationsOlderVersion": "This backup was from an older Homarr version. {count} schema migration was applied to bring it up to date.",
+              "migrationsOlderVersionPlural": "This backup was from an older Homarr version. {count} schema migrations were applied to bring it up to date.",
+              "migrationsUpToDate": "Database schema is up to date ({count} migrations applied)",
+              "upToDate": "Up to date",
+              "migrationsPending": "{count} pending"
+            },
+            "migration": {
+              "title": "Applying migrations ({current}/{total})",
+              "migrationLabel": "Migration {index}"
+            },
+            "confirm": {
+              "title": "Destructive action",
+              "warningTitle": "This will permanently replace your entire database.",
+              "warningBody": "All current boards, users, apps, integrations, settings, and sessions will be lost. This action cannot be undone. The application will restart after the restore.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "cancel": "Cancel",
+              "submit": "Restore Database"
+            },
+            "progress": {
+              "title": "Restoring database...",
+              "extracting": "Extracting backup archive",
+              "migrating": "Applying database migrations",
+              "encrypting": "Re-encrypting integration secrets",
+              "swapping": "Replacing database file",
+              "restarting": "Restarting server"
+            },
+            "complete": {
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
+            },
+            "failed": {
+              "title": "Restore Failed"
+            },
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite",
+            "analyzeError": "Failed to analyze backup"
           }
         }
       },
