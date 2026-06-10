@@ -1,7 +1,3 @@
-import { readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import SuperJSON from "superjson";
 
 import { createId, objectKeys } from "@homarr/common";
@@ -49,13 +45,68 @@ import type { Integration } from "../schema";
 
 const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
 
-const CUSTOM_WIDGET_SEED_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "seed", "custom-widgets");
-
-const CUSTOM_WIDGET_SEED_IDS: Record<string, string> = {
-  "dog-facts.json": "seed-dog-facts",
-  "currency-exchange.json": "seed-currency-exchange",
-  "jellyfin.json": "seed-jellyfin",
-};
+const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> = [
+  {
+    id: "seed-dog-facts",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Random Dog Fact",
+      description: "Displays a random fun fact about dogs",
+      url: "https://dogapi.dog/api/v2/facts",
+      authType: "none",
+      method: "GET",
+      displayType: "singleValue",
+      displayConfig: { type: "singleValue", jsonPath: "$.data[0].attributes.body", label: "Dog Fact", unit: "", valueSize: "sm", labelPosition: "above" },
+    },
+  },
+  {
+    id: "seed-currency-exchange",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Currency Exchange (JPY)",
+      description: "Converts 50 Japanese Yen to EUR and USD using European Central Bank rates",
+      url: "https://api.frankfurter.dev/v1/latest?from=JPY&to=EUR,USD&amount=50",
+      authType: "none",
+      method: "GET",
+      displayType: "keyValue",
+      displayConfig: {
+        type: "keyValue",
+        mappings: [
+          { label: "50 JPY → EUR", jsonPath: "$.rates.EUR", unit: "€" },
+          { label: "50 JPY → USD", jsonPath: "$.rates.USD", unit: "$" },
+        ],
+        layout: "list",
+        columns: 2,
+      },
+    },
+  },
+  {
+    id: "seed-jellyfin",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Jellyfin library",
+      description: "Counts the number of movies, series, episodes and songs in the library",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
+      url: "https://jellyfin.homelab.com/Items/Counts",
+      authType: "apiKeyHeader",
+      headerName: "X-Emby-Token",
+      method: "GET",
+      requestBody: null,
+      displayType: "countGrid",
+      displayConfig: {
+        type: "countGrid",
+        items: [
+          { label: "Movies", jsonPath: "$.MovieCount", unit: "" },
+          { label: "Series", jsonPath: "$.SeriesCount", unit: "" },
+          { label: "Episodes", jsonPath: "$.EpisodeCount", unit: "" },
+          { label: "Songs", jsonPath: "$.SongCount", unit: "" },
+        ],
+        columns: 4,
+        valueSize: "lg",
+      },
+    },
+  },
+];
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -568,38 +619,28 @@ const seedDemoUserAsync = async (db: Database) => {
 };
 
 const seedDefaultCustomWidgetsAsync = async (db: Database) => {
-  const seedIds = Object.values(CUSTOM_WIDGET_SEED_IDS);
+  const seedIds = CUSTOM_WIDGET_SEEDS.map((s) => s.id);
   const beforeCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
 
-  const seedResults = await Promise.all(
-    Object.entries(CUSTOM_WIDGET_SEED_IDS).map(async ([filename, id]) => {
-      try {
-        const raw = await readFile(join(CUSTOM_WIDGET_SEED_DIR, filename), "utf-8");
-        const parsed = customWidgetImportSchema.parse(JSON.parse(raw));
+  const seedValues = CUSTOM_WIDGET_SEEDS.map((seed) => {
+    const parsed = customWidgetImportSchema.parse(seed.data);
+    return {
+      id: seed.id,
+      name: parsed.name,
+      description: parsed.description ?? null,
+      iconUrl: parsed.iconUrl ?? null,
+      url: parsed.url,
+      authType: parsed.authType,
+      headerName: parsed.headerName ?? null,
+      method: parsed.method,
+      requestBody: parsed.requestBody ?? null,
+      displayType: parsed.displayType,
+      displayConfig: SuperJSON.stringify(parsed.displayConfig),
+      enabled: false,
+      creatorId: null,
+    };
+  });
 
-        return {
-          id,
-          name: parsed.name,
-          description: parsed.description ?? null,
-          iconUrl: parsed.iconUrl ?? null,
-          url: parsed.url,
-          authType: parsed.authType,
-          headerName: parsed.headerName ?? null,
-          method: parsed.method,
-          requestBody: parsed.requestBody ?? null,
-          displayType: parsed.displayType,
-          displayConfig: SuperJSON.stringify(parsed.displayConfig),
-          enabled: false,
-          creatorId: null,
-        };
-      } catch (error) {
-        console.error(`Failed to parse custom widget seed file: ${filename}`, error);
-        return null;
-      }
-    }),
-  );
-
-  const seedValues = seedResults.filter((v): v is NonNullable<typeof v> => v !== null);
   if (seedValues.length === 0) return;
 
   await db
