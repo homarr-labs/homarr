@@ -3,8 +3,7 @@ import { JSONPath } from "jsonpath-plus";
 type Config = Record<string, unknown>;
 type Extractor = (json: unknown, config: Config) => unknown;
 
-const query = (json: unknown, path: string) =>
-  JSONPath({ path, json: json as object, wrap: false });
+const query = (json: unknown, path: string) => JSONPath({ path, json: json as object, wrap: false });
 
 const queryRows = (json: unknown, path: string): unknown[] => {
   const rows = JSONPath({ path, json: json as object, wrap: true }) as unknown[];

@@ -2,22 +2,8 @@
 
 import type { ReactNode } from "react";
 import { Children, isValidElement, useEffect, useRef, useState } from "react";
-import {
-  ActionIcon,
-  Badge,
-  Collapse,
-  Group,
-  Stack,
-  Tabs,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
-import {
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronUp,
-} from "@tabler/icons-react";
+import { ActionIcon, Badge, Collapse, Group, Stack, Tabs, Text, UnstyledButton } from "@mantine/core";
+import { IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp } from "@tabler/icons-react";
 
 interface PaginatedListProps {
   children: ReactNode;
@@ -169,7 +155,15 @@ export function StatBar({ value, max = 100, label, color = "blue" }: StatBarProp
           {label}
         </Text>
       )}
-      <div style={{ flex: 1, height: 8, borderRadius: 4, background: "var(--mantine-color-default-border)", overflow: "hidden" }}>
+      <div
+        style={{
+          flex: 1,
+          height: 8,
+          borderRadius: 4,
+          background: "var(--mantine-color-default-border)",
+          overflow: "hidden",
+        }}
+      >
         <div
           style={{
             width: `${pct}%`,

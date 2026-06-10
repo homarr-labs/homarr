@@ -7,8 +7,8 @@ export function CustomWidgetBetaBanner() {
   return (
     <Alert variant="light" color="yellow" title="Custom Widgets are in Beta" icon={<IconFlask />}>
       <Text size="sm">
-        This feature is experimental and will probably change a lot in the future. If you encounter bugs, wish it did more, or find something confusing, then please
-        complain to us as much as possible! Only feedback posted on the{" "}
+        This feature is experimental and will probably change a lot in the future. If you encounter bugs, wish it did
+        more, or find something confusing, then please complain to us as much as possible! Only feedback posted on the{" "}
         <Anchor href={FEEDBACK_URL} target="_blank" fw={600}>
           official discussion thread
         </Anchor>{" "}

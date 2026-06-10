@@ -27,8 +27,13 @@ import { IconPicker } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { CustomWidgetAuthType, CustomWidgetDisplayType, CustomWidgetMethod, CustomWidgetSecretKind } from "@homarr/validation/custom-widget";
-import { displayConfigSchema } from "@homarr/validation/custom-widget";
+import type {
+  CustomWidgetAuthType,
+  CustomWidgetDisplayType,
+  CustomWidgetMethod,
+  CustomWidgetSecretKind,
+} from "@homarr/validation/custom-widget";
+import type { displayConfigSchema } from "@homarr/validation/custom-widget";
 import { JsonPathTreePicker } from "@homarr/widgets/_inputs/json-path-tree-picker";
 
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
@@ -1271,7 +1276,9 @@ function DisplayTypeFields({
       <Textarea
         label={t("field.template.label")}
         description={t("field.template.description")}
-        placeholder={'<Stack gap="sm">\n  <Title order={3}>{data.name}</Title>\n  <Text>{data.description}</Text>\n</Stack>'}
+        placeholder={
+          '<Stack gap="sm">\n  <Title order={3}>{data.name}</Title>\n  <Text>{data.description}</Text>\n</Stack>'
+        }
         minRows={8}
         maxRows={20}
         autosize

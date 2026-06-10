@@ -261,15 +261,20 @@ const FORBIDDEN_TEMPLATE_PATTERN =
   /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bfetch\b|\bXMLHttpRequest\b/i;
 
 const customJsxDisplayConfigSchema = z.object({
-  type: z.literal("customJsx").describe("Display type discriminator — must be 'customJsx' when displayType is customJsx"),
+  type: z
+    .literal("customJsx")
+    .describe("Display type discriminator — must be 'customJsx' when displayType is customJsx"),
   template: z
     .string()
     .min(1)
     .max(10000)
     .refine((t) => !FORBIDDEN_TEMPLATE_PATTERN.test(t), {
-      message: "Template contains forbidden keywords (constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch)",
+      message:
+        "Template contains forbidden keywords (constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch)",
     })
-    .describe("JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Forbidden keywords: constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch"),
+    .describe(
+      "JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Forbidden keywords: constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch",
+    ),
 });
 
 const actionButtonDisplayConfigSchema = z.object({
@@ -323,7 +328,10 @@ const displayTypesMatch = (displayType?: string, configType?: string): boolean =
 
 const displayTypeMatchRefinement = (d: { displayType: string; displayConfig: { type: string } }) =>
   displayTypesMatch(d.displayType, d.displayConfig.type);
-const displayTypeMatchMessage = { message: "displayType must match displayConfig.type", path: ["displayConfig", "type"] };
+const displayTypeMatchMessage = {
+  message: "displayType must match displayConfig.type",
+  path: ["displayConfig", "type"],
+};
 
 const baseDefinitionSchema = z.object({
   name: z

@@ -1,4 +1,15 @@
-import { Group, Indicator, Popover, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Text } from "@mantine/core";
+import {
+  Group,
+  Indicator,
+  Popover,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+} from "@mantine/core";
 
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
@@ -39,7 +50,7 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
       </TableThead>
       <TableTbody>
         {data
-          .sort((itemA, itemB) => {
+          .toSorted((itemA, itemB) => {
             const nodeResult = itemA.node.localeCompare(itemB.node);
             if (nodeResult !== 0) return nodeResult;
             return itemA.name.localeCompare(itemB.name);
@@ -51,7 +62,9 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
                   <TableTr fz={isTiny ? "8px" : "xs"}>
                     <TableTd>
                       <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
-                        <Indicator size={isTiny ? 4 : 8} color={item.isRunning ? "green" : "yellow"}>{null}</Indicator>
+                        <Indicator size={isTiny ? 4 : 8} color={item.isRunning ? "green" : "yellow"}>
+                          {null}
+                        </Indicator>
                         <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
                           {item.name}
                         </Text>

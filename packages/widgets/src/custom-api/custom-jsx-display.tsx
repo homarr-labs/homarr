@@ -27,7 +27,9 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   if (!template.trim()) {
     return (
       <Alert color="gray" variant="light" p="xs">
-        <Text size="xs" c="dimmed">No JSX template configured</Text>
+        <Text size="xs" c="dimmed">
+          No JSX template configured
+        </Text>
       </Alert>
     );
   }

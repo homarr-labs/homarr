@@ -45,7 +45,7 @@ describe("CustomJsxDisplay", () => {
 
   it("renders Mantine components with data bindings", async () => {
     await renderDisplay({
-      template: '<Stack><Title order={3}>{data.name}</Title><Badge>{data.count}</Badge></Stack>',
+      template: "<Stack><Title order={3}>{data.name}</Title><Badge>{data.count}</Badge></Stack>",
       data: { name: "Server A", count: "3" },
     });
 
@@ -140,7 +140,12 @@ describe("CustomJsxDisplay", () => {
 
     it("Math helpers work correctly", () => {
       const bindings = SAFE_BINDINGS({});
-      const math = bindings.Math as { round: (v: number) => number; floor: (v: number) => number; ceil: (v: number) => number; abs: (v: number) => number };
+      const math = bindings.Math as {
+        round: (v: number) => number;
+        floor: (v: number) => number;
+        ceil: (v: number) => number;
+        abs: (v: number) => number;
+      };
 
       expect(math.round(3.7)).toBe(4);
       expect(math.floor(3.7)).toBe(3);
@@ -157,7 +162,11 @@ describe("CustomJsxDisplay", () => {
 
     it("Object/Array helpers work correctly", () => {
       const bindings = SAFE_BINDINGS({});
-      const obj = bindings.Object as { keys: (v: object) => string[]; values: (v: object) => unknown[]; entries: (v: object) => [string, unknown][] };
+      const obj = bindings.Object as {
+        keys: (v: object) => string[];
+        values: (v: object) => unknown[];
+        entries: (v: object) => [string, unknown][];
+      };
       const arr = bindings.Array as { isArray: (v: unknown) => boolean };
 
       expect(obj.keys({ a: 1, b: 2 })).toEqual(["a", "b"]);

@@ -218,7 +218,7 @@ describe("custom-api extractors", () => {
     const json = { title: "Status", items: [{ name: "CPU", value: 42 }] };
     const config = {
       type: "customJsx" as const,
-      template: '<Stack><Title>{data.title}</Title></Stack>',
+      template: "<Stack><Title>{data.title}</Title></Stack>",
     };
 
     const result = extract("customJsx", json, config) as {

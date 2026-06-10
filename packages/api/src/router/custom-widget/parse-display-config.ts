@@ -5,12 +5,7 @@ import type { createLogger } from "@homarr/core/infrastructure/logs";
 
 type Logger = ReturnType<typeof createLogger>;
 
-export function parseDisplayConfig(
-  raw: string,
-  id: string,
-  logger: Logger,
-  context: string,
-): Record<string, unknown> {
+export function parseDisplayConfig(raw: string, id: string, logger: Logger, context: string): Record<string, unknown> {
   try {
     return superjson.parse(raw) as Record<string, unknown>;
   } catch {

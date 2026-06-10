@@ -54,14 +54,7 @@ import {
   Sparkline,
 } from "@mantine/charts";
 
-import {
-  PaginatedList,
-  TabsContainer,
-  TabPanel,
-  Collapsible,
-  StatBar,
-  TypeBadge,
-} from "./jsx-interactive-components";
+import { PaginatedList, TabsContainer, TabPanel, Collapsible, StatBar, TypeBadge } from "./jsx-interactive-components";
 
 const SAFE_URL_PATTERN = /^https?:\/\//i;
 
