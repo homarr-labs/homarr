@@ -48,6 +48,10 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
+import * as beszelSystemTable from "./beszel-system-table";
+import * as beszelSystemGrid from "./beszel-system-grid";
+import * as beszelAlerts from "./beszel-alerts";
+import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -95,6 +99,10 @@ export const widgetImports = {
   speedtestTracker,
   umami,
   ups,
+  beszelSystemTable,
+  beszelSystemGrid,
+  beszelAlerts,
+  beszelSystemStats,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

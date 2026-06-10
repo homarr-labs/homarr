@@ -80,6 +80,8 @@
     "isomorphic-dompurify": "catalog:",
     "jszip": "catalog:",
     "jotai": "catalog:",
+    "lucide-react": "catalog:",
+    "mantine-datatable": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "postcss-preset-mantine": "catalog:",

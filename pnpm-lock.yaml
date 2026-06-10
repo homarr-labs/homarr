@@ -393,6 +393,12 @@ catalogs:
     lodash.clonedeep:
       specifier: ^4.5.0
       version: 4.5.0
+    lucide-react:
+      specifier: ^1.17.0
+      version: 1.17.0
+    mantine-datatable:
+      specifier: ^9.2.2
+      version: 9.2.2
     mantine-react-table:
       specifier: npm:mantine-react-table-open@9.0.3
       version: 9.0.3
@@ -835,6 +841,12 @@ importers:
       jotai:
         specifier: 'catalog:'
         version: 2.20.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.16)(react@19.2.7)
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.17.0(react@19.2.7)
+      mantine-datatable:
+        specifier: 'catalog:'
+        version: 9.2.2(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.2.2(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2484,6 +2496,12 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.17.0(react@19.2.7)
+      mantine-datatable:
+        specifier: 'catalog:'
+        version: 9.2.2(@mantine/core@9.2.2(@mantine/hooks@9.2.2(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.2.2(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -7478,6 +7496,11 @@ packages:
     resolution: {integrity: sha512-DqC6n3QQ77zdFpCMASA1a3Jlb64Hv2N2DciFGkO/4L9+q/IpIAuRlKOvCXabtRW6cQf8usbmM6BE/TOPysCdIA==}
     engines: {bun: '>=1.0.0', deno: '>=1.30.0', node: '>=8.0.0'}
 
+  lucide-react@1.17.0:
+    resolution: {integrity: sha512-9FA9evdox/JQL5PT57fdA1x/yg8T7knJ98+zjTL3UfKza6pflQUUh3XtaQIHKvnsJw1lmsEyHVlt5jchYxOQ5w==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   m3u8-parser@7.2.0:
     resolution: {integrity: sha512-CRatFqpjVtMiMaKXxNvuI3I++vUumIXVVT/JpCpdU/FynV/ceVw1qpPyyBNindL+JlPMSesx+WX1QJaZEJSaMQ==}
 
@@ -7490,6 +7513,15 @@ packages:
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
+
+  mantine-datatable@9.2.2:
+    resolution: {integrity: sha512-pSWIAggUQC1I4lNUzwVoNm85CIkx8jst0syzRo8N9CrTHdc+Z2+8aFLfBniSHbF4nJyLE6nkeAcb8uvFdHbVfw==}
+    peerDependencies:
+      '@mantine/core': '>=9.0'
+      '@mantine/hooks': '>=9.0'
+      clsx: '>=2'
+      react: '>=19'
+      react-dom: '>=19'
 
   mantine-react-table-open@9.0.3:
     resolution: {integrity: sha512-HsrBU4KZluj96FPvvH0wcLzog0m5LIMdwB/59oj6BpftLGEibiLxX00G+tDM06PL2jXuiRxiGKPJ4oQOV+VK8w==}
@@ -14850,6 +14882,10 @@ snapshots:
       yallist: 3.1.1
 
   lru.min@1.1.4: {}
+
+  lucide-react@1.17.0(react@19.2.7):
+    dependencies:
+      react: 19.2.7
 
   m3u8-parser@7.2.0:
     dependencies:
