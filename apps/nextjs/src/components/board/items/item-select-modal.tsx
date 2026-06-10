@@ -23,6 +23,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const { data: integrationData } = clientApi.integration.all.useQuery();
   const settings = useSettings();
 
+  const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
+
   const items = useMemo(
     () =>
       objectEntries(widgetImports)
@@ -40,10 +42,15 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
     [t],
   );
 
-  const filteredItems = useMemo(
-    () => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())),
-    [items, search],
-  );
+  const filteredItems = useMemo(() => {
+    const query = search.toLowerCase().trim();
+    if (!query) return items;
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query) ||
+        item.supportedIntegrations.some((kind) => getIntegrationName(kind).toLowerCase().includes(query)),
+    );
+  }, [items, search]);
 
   const handleAdd = (kind: WidgetKind) => {
     const definition = widgetImports[kind].definition;
@@ -98,7 +105,12 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
       }}
     >
       {filteredItems.map((item) => (
-        <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
+        <WidgetItem
+          key={item.kind}
+          item={item}
+          onSelect={() => handleAdd(item.kind)}
+          hasMatchingIntegration={item.supportedIntegrations.some((kind) => availableKinds.has(kind))}
+        />
       ))}
 
       {filteredItems.length === 0 && (
@@ -116,6 +128,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
 const WidgetItem = ({
   item,
   onSelect,
+  hasMatchingIntegration,
 }: {
   item: {
     kind: WidgetKind;
@@ -125,6 +138,7 @@ const WidgetItem = ({
     icon: TablerIcon;
   };
   onSelect: () => void;
+  hasMatchingIntegration: boolean;
 }) => {
   const t = useI18n();
 
@@ -133,7 +147,12 @@ const WidgetItem = ({
       h={selectGridCardHeight}
       withBorder
       pos="relative"
-      style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+      style={{
+        overflow: "hidden",
+        "--_hover-opacity": "0",
+        borderColor: hasMatchingIntegration ? "var(--mantine-color-blue-6)" : undefined,
+        borderWidth: hasMatchingIntegration ? 2 : undefined,
+      }}
       onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
       onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
     >
