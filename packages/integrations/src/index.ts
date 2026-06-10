@@ -1,5 +1,6 @@
 // General integrations
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
+export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
 export { Aria2Integration } from "./download-client/aria2/aria2-integration";
 export { DelugeIntegration } from "./download-client/deluge/deluge-integration";

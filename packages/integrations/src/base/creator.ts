@@ -42,6 +42,7 @@ import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PaperlessNgxIntegration } from "../paperless-ngx/paperless-ngx-integration";
 import { PeaNutIntegration } from "../peanut/peanut-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
+import { createTechnitiumDnsIntegrationAsync } from "../technitium/technitium-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
@@ -83,6 +84,7 @@ export const integrationCreators = {
   anchor: AnchorIntegration,
   piHole: [createPiHoleIntegrationAsync],
   adGuardHome: AdGuardHomeIntegration,
+  technitiumDns: [createTechnitiumDnsIntegrationAsync],
   homeAssistant: HomeAssistantIntegration,
   jellyfin: JellyfinIntegration,
   plex: PlexIntegration,
