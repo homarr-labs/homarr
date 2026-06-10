@@ -40,10 +40,7 @@ interface UpsContentProps {
 
 function UpsContent({ integrationIds, options, isEditMode, width }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
-  const { data } = clientApi.widget.ups.getSummaries.useQuery(
-    { integrationIds },
-    { staleTime: 30 * 1000 },
-  );
+  const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds }, { staleTime: 30 * 1000 });
 
   const utils = clientApi.useUtils();
   clientApi.widget.ups.subscribeSummaries.useSubscription(
