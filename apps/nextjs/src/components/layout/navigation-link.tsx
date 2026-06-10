@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { NavLink } from "@mantine/core";
@@ -15,8 +16,21 @@ const TourTarget = ({ id, children }: { id?: string; children: ReactNode }) => {
   return <OnboardingTour.Target id={id}>{children}</OnboardingTour.Target>;
 };
 
-const NavLinkHref = (props: NavigationLinkHref) => {
+const pathMatches = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+const useClientPathname = () => {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return { pathname, isClient };
+};
+
+const NavLinkHref = (props: NavigationLinkHref) => {
+  const { pathname, isClient } = useClientPathname();
   const tourId = props["data-onboarding-tour-id"];
   const link = props.external ? (
     <NavLink component="a" label={props.label} leftSection={props.icon} href={props.href} target="_blank" />
@@ -26,15 +40,15 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       label={props.label}
       leftSection={props.icon}
       href={props.href}
-      active={pathname === props.href || pathname.startsWith(`${props.href}/`)}
+      active={isClient && pathMatches(pathname, props.href)}
     />
   );
   return <TourTarget id={tourId}>{link}</TourTarget>;
 };
 
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
-  const pathname = usePathname();
-  const isActive = props.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
+  const { pathname, isClient } = useClientPathname();
+  const isActive = isClient && props.items.some((item) => pathMatches(pathname, item.href));
   const nav = (
     <NavLink label={props.label} leftSection={props.icon} defaultOpened={isActive}>
       {props.items.map((item) => (

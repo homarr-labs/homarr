@@ -35,8 +35,11 @@ export const widgetKinds = [
   "timetable",
   "immich-serverStats",
   "immich-albumCarousel",
+  "paperlessNgx",
   "tracearr",
   "speedtestTracker",
+  "uptimeKuma",
+  "audioStats",
   "umami",
   "ups",
   "beszelSystemTable",
@@ -45,3 +48,9 @@ export const widgetKinds = [
   "beszelSystemStats",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
+
+export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
+  uptimeKuma: { width: 2, height: 3 },
+  audioStats: { width: 2, height: 2 },
+  paperlessNgx: { width: 2, height: 2 },
+};

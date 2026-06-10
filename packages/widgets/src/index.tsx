@@ -8,6 +8,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as anchorNote from "./anchor-note";
+import * as audioStats from "./audio-stats";
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
@@ -34,6 +35,7 @@ import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
+import * as paperlessNgx from "./paperless-ngx";
 import * as notifications from "./notifications";
 import type { WidgetOptionDefinition } from "./options";
 import * as releases from "./releases";
@@ -41,6 +43,7 @@ import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as speedtestTracker from "./speedtest-tracker";
+import * as uptimeKuma from "./uptime-kuma";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
@@ -95,8 +98,11 @@ export const widgetImports = {
   timetable,
   "immich-serverStats": immichServerStats,
   "immich-albumCarousel": immichAlbumCarousel,
+  paperlessNgx,
   tracearr,
   speedtestTracker,
+  uptimeKuma,
+  audioStats,
   umami,
   ups,
   beszelSystemTable,

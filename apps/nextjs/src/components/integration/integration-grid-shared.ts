@@ -57,6 +57,9 @@ export const categoryTranslationKeys: Record<string, string> = {
   mediaMonitoring: "integration.category.mediaMonitoring",
   speedtest: "integration.category.speedtest",
   analytics: "integration.category.analytics",
+  documents: "integration.category.documents",
+  mediaLibrary: "integration.category.mediaLibrary",
+  uptimeMonitoring: "integration.category.uptimeMonitoring",
 };
 
 export interface IntegrationGridItem {
