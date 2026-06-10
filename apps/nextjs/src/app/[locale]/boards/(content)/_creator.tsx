@@ -42,6 +42,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
       getInitialBoardAsync: getInitialBoard,
+      withTour: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {

@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "密码",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "至少包含 8 个字符",
           "lowercase": "包含小写字母",
@@ -1404,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "在新标签页中打开"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "书签",

@@ -19,6 +19,9 @@
 
 <!-- Links -->
 <p align="center">
+  <a href="https://demo.homarr.dev">
+    <strong>Live Demo 🎮</strong>
+  </a> •
   <a href="https://homarr.dev/docs/category/installation-1/">
     <strong>Install 💻</strong>
   </a> •
@@ -246,13 +249,20 @@
 </a>
 </td>
 <td align="center">
+<a href="null" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg" alt="PeaNUT" width="90" height="90" />
+  <br/>  
+  <p align="center">PeaNUT</p>
+</a>
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/pi-hole" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg" alt="Pi-hole" width="90" height="90" />
   <br/>  
   <p align="center">Pi-hole</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/plex" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg" alt="Plex" width="90" height="90" />
   <br/>  
@@ -293,15 +303,15 @@
   <br/>  
   <p align="center">Radarr</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/readarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/readarr.svg" alt="Readarr" width="90" height="90" />
   <br/>  
   <p align="center">Readarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/sabnzbd" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sabnzbd.svg" alt="SABnzbd" width="90" height="90" />
   <br/>  
@@ -342,15 +352,15 @@
   <br/>  
   <p align="center">Speedtest<br/>Tracker</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/tdarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png" alt="Tdarr" width="90" height="90" />
   <br/>  
   <p align="center">Tdarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/tracearr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg" alt="Tracearr" width="90" height="90" />
   <br/>  

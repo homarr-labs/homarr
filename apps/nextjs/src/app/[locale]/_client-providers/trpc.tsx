@@ -17,11 +17,14 @@ import {
 import superjson from "superjson";
 import type { SuperJSONResult } from "superjson";
 
+import { TRPCClientError } from "@trpc/client";
+
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { queryCacheDefaultStaleTimeMs } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
+import { showWarningNotification } from "@homarr/notifications";
 
 import { createWidgetQueryPersister } from "./query-cache-persister";
 
@@ -60,6 +63,20 @@ export function TRPCReactProvider(props: PropsWithChildren) {
           queries: {
             persister: queryPersister.persisterFn,
             staleTime: queryCacheDefaultStaleTimeMs,
+          },
+          mutations: {
+            onError(error) {
+              if (
+                error instanceof TRPCClientError &&
+                error.data?.code === "FORBIDDEN" &&
+                error.message === "Mutations are disabled in demo mode"
+              ) {
+                showWarningNotification({
+                  title: "Demo mode",
+                  message: "This action is disabled in demo mode.",
+                });
+              }
+            },
           },
         },
       }),

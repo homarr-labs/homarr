@@ -3,9 +3,11 @@ import { lazy } from "@trpc/server";
 import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
+  beszel: lazy(() => import("./beszel").then((mod) => mod.beszelRouter)),
   anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
   immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
+  paperlessNgx: lazy(() => import("./paperless-ngx").then((mod) => mod.paperlessNgxRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
   weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
   app: lazy(() => import("./app").then((mod) => mod.appRouter)),
@@ -30,5 +32,8 @@ export const widgetRouter = createTRPCRouter({
   timetable: lazy(() => import("./timetable").then((mod) => mod.timetableRouter)),
   tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
   speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
+  uptimeKuma: lazy(() => import("./uptime-kuma").then((mod) => mod.uptimeKumaRouter)),
+  audioStats: lazy(() => import("./audio-stats").then((mod) => mod.audioStatsRouter)),
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
+  ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
 });

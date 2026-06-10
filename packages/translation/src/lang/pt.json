@@ -132,6 +132,7 @@
       },
       "password": {
         "label": "",
+        "suggestionsTitle": "",
         "suggestion": {
           "length": "",
           "lowercase": "",
@@ -1403,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {

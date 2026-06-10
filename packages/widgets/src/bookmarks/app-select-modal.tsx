@@ -2,13 +2,13 @@
 
 import { memo, useState } from "react";
 import type { SelectProps } from "@mantine/core";
-import { Button, Group, Loader, Select, Stack } from "@mantine/core";
+import { Group, Loader, Select, Stack } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
-import { createModal } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 interface InnerProps {
@@ -47,6 +47,7 @@ export const AppSelectModal = createModal<InnerProps>(({ actions, innerProps }) 
           label={t("app.action.select.label")}
           searchable
           clearable
+          data-autofocus
           leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
           nothingFoundMessage={t("app.action.select.notFound")}
           renderOption={renderSelectOption}
@@ -61,19 +62,13 @@ export const AppSelectModal = createModal<InnerProps>(({ actions, innerProps }) 
               })) ?? []
           }
         />
-        <Group justify="end">
-          <Button variant="default" onClick={actions.closeModal}>
-            {t("common.action.cancel")}
-          </Button>
-          <Button type="submit" loading={loading}>
-            {confirmLabel}
-          </Button>
-        </Group>
+        <ModalFormFooter onCancel={actions.closeModal} submitLabel={confirmLabel} loading={loading} />
       </Stack>
     </form>
   );
 }).withOptions({
   defaultTitle: (t) => t("app.action.select.label"),
+  size: modalSizeForm,
 });
 
 const iconProps = {

@@ -21,7 +21,19 @@ export const appRouter = createTRPCRouter({
   getPaginated: protectedProcedure
     .input(paginatedSchema)
     .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
-    .meta({ openapi: { method: "GET", path: "/api/apps/paginated", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/apps/paginated",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "List apps with pagination. OPTIONAL: search (string to filter by name), pageSize (number, default 10), page (number, default 1). All fields are optional — call with no arguments to get the first page",
+      },
+    })
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
       const totalCount = await ctx.db.$count(apps, whereQuery);
@@ -41,16 +53,40 @@ export const appRouter = createTRPCRouter({
   all: protectedProcedure
     .input(z.void())
     .output(z.array(selectAppSchema))
-    .meta({ openapi: { method: "GET", path: "/api/apps", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/apps",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: { enabled: true, description: "List all apps" },
+    })
     .query(({ ctx }) => {
       return ctx.db.query.apps.findMany({
         orderBy: asc(apps.name),
       });
     }),
   search: protectedProcedure
-    .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
+    .input(
+      z.object({
+        query: z.string(),
+        limit: z.number().min(1).max(100).default(10),
+      }),
+    )
     .output(z.array(selectAppSchema))
-    .meta({ openapi: { method: "GET", path: "/api/apps/search", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/apps/search",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description: "Search apps by name. REQUIRED: query (search string). OPTIONAL: limit (number, default 10)",
+      },
+    })
     .query(({ ctx, input }) => {
       return ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
@@ -62,7 +98,14 @@ export const appRouter = createTRPCRouter({
     .input(z.void())
     .output(
       z.array(
-        selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, pingUrl: true, description: true }),
+        selectAppSchema.pick({
+          id: true,
+          name: true,
+          iconUrl: true,
+          href: true,
+          pingUrl: true,
+          description: true,
+        }),
       ),
     )
     .meta({
@@ -89,7 +132,15 @@ export const appRouter = createTRPCRouter({
   byId: publicProcedure
     .input(byIdSchema)
     .output(selectAppSchema)
-    .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/apps/{id}",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: { enabled: true, description: "Get a single app by its ID. REQUIRED: id (app ID string)" },
+    })
     .query(async ({ ctx, input }) => {
       const repository = new AppRepository(ctx.db, ctx.session?.user ?? null);
       const app = await repository.getByIdAsync(input.id);
@@ -111,7 +162,19 @@ export const appRouter = createTRPCRouter({
     .requiresPermission("app-create")
     .input(appManageSchema)
     .output(z.object({ appId: z.string() }).and(selectAppSchema))
-    .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/apps",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL, http/https or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
+      },
+    })
     .mutation(async ({ ctx, input }) => {
       const id = createId();
       const insertValues = {
@@ -146,7 +209,19 @@ export const appRouter = createTRPCRouter({
     .requiresPermission("app-modify-all")
     .input(convertIntersectionToZodObject(appEditSchema))
     .output(z.void())
-    .meta({ openapi: { method: "PATCH", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/apps/{id}",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Update an existing app. REQUIRED: id (app ID), name, iconUrl, href. OPTIONAL: description (string or null), pingUrl (URL or empty string)",
+      },
+    })
     .mutation(async ({ ctx, input }) => {
       const app = await ctx.db.query.apps.findFirst({
         where: eq(apps.id, input.id),
@@ -173,7 +248,15 @@ export const appRouter = createTRPCRouter({
   delete: permissionRequiredProcedure
     .requiresPermission("app-full-all")
     .output(z.void())
-    .meta({ openapi: { method: "DELETE", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/apps/{id}",
+        tags: ["apps"],
+        protect: true,
+      },
+      mcp: { enabled: true, description: "Delete an app by ID. REQUIRED: id (app ID string)" },
+    })
     .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(apps).where(eq(apps.id, input.id));

@@ -5,6 +5,7 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  widgetKinds,
 } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
@@ -94,3 +95,27 @@ export const boardCreateSchema = z.object({
 });
 
 export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
+
+export const boardSummarySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  logoImageUrl: z.string().nullable(),
+  isPublic: z.boolean(),
+  creator: z
+    .object({
+      id: z.string(),
+      name: z.string().nullable(),
+      image: z.string().nullable(),
+      email: z.string().nullable(),
+    })
+    .nullable(),
+  isHome: z.boolean(),
+  isMobileHome: z.boolean(),
+});
+
+export const addItemToBoardSchema = z.object({
+  boardId: z.string(),
+  kind: zodEnumFromArray(widgetKinds),
+  options: z.record(z.string(), z.unknown()).default({}),
+  integrationIds: z.array(z.string()).default([]),
+});

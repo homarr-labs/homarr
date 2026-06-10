@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import type { PropsWithChildren } from "react";
 import { redirect } from "next/navigation";
 import {
   AccordionControl,
@@ -8,12 +7,8 @@ import {
   ActionIcon,
   ActionIconGroup,
   Anchor,
-  Button,
   Divider,
   Group,
-  Menu,
-  MenuDropdown,
-  MenuTarget,
   Stack,
   Table,
   TableTbody,
@@ -23,7 +18,7 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
-import { IconChevronDown, IconPencil, IconPlugX } from "@tabler/icons-react";
+import { IconPencil, IconPlugX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -34,13 +29,12 @@ import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
-import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
-import { env } from "~/env";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
-import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
 import classes from "./page.module.css";
 
 interface IntegrationsPageProps {
@@ -67,40 +61,21 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       title={t("page.list.title")}
       primaryAction={
         canCreateIntegrations ? (
-          <ManageMobilePrimaryAction>
-            <IntegrationSelectMenu>
-              <MenuTarget>
-                <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-              </MenuTarget>
-            </IntegrationSelectMenu>
-          </ManageMobilePrimaryAction>
+          <TourTarget id="manage-integrations-create">
+            <MobileAffixButton component={Link} href="/manage/integrations/new">
+              {t("action.create")}
+            </MobileAffixButton>
+          </TourTarget>
         ) : undefined
       }
       floatingPrimaryAction={canCreateIntegrations}
     >
-      <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      <TourTarget id="manage-integrations-list">
+        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
+      </TourTarget>
     </ManagePageLayout>
   );
 }
-
-const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
-  return (
-    <Menu
-      width={256}
-      trapFocus
-      position="bottom-end"
-      withinPortal
-      shadow="md"
-      keepMounted={false}
-      withInitialFocusPlaceholder={false}
-    >
-      {children}
-      <MenuDropdown>
-        <IntegrationCreateDropdownContent enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
-      </MenuDropdown>
-    </Menu>
-  );
-};
 
 interface IntegrationListProps {
   integrations: RouterOutputs["integration"]["all"];
@@ -134,12 +109,12 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
 
   return (
     <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
-      {entries.map(([kind, integrations], index) => (
+      {entries.map(([kind, kindIntegrations], index) => (
         <AccordionItem key={kind} value={kind} data-first={index === 0} data-last={index === entries.length - 1}>
           <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
             <Group>
               <Text>{getIntegrationName(kind)}</Text>
-              <CountBadge count={integrations.length} />
+              <CountBadge count={kindIntegrations.length} />
             </Group>
           </AccordionControl>
           <AccordionPanel>
@@ -152,7 +127,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                 </TableTr>
               </TableThead>
               <TableTbody>
-                {integrations.map((integration) => (
+                {kindIntegrations.map((integration) => (
                   <TableTr key={integration.id}>
                     <TableTd>{integration.name}</TableTd>
                     <TableTd>
@@ -173,7 +148,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                             >
                               <IconPencil size={16} stroke={1.5} />
                             </ActionIcon>
-                            <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                            <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
                           </ActionIconGroup>
                         )}
                       </Group>
@@ -184,9 +159,9 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
             </Table>
 
             <Stack gap="xs" hiddenFrom="md">
-              {integrations.map((integration, index) => (
+              {kindIntegrations.map((integration, integrationIndex) => (
                 <Fragment key={integration.id}>
-                  {index !== 0 && <Divider />}
+                  {integrationIndex !== 0 && <Divider />}
                   <Stack gap={0}>
                     <Group justify="space-between" align="center" wrap="nowrap">
                       <Text>{integration.name}</Text>
@@ -201,7 +176,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                           >
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>
-                          <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                          <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
                         </ActionIconGroup>
                       )}
                     </Group>

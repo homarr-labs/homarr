@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Group, Stack, Switch, Text } from "@mantine/core";
+import { Button, Group, Stack, Switch, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
@@ -12,6 +12,8 @@ import { defaultServerSettings } from "@homarr/server-settings";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { settingsInitSchema } from "@homarr/validation/settings";
+
+import { InitStepCard } from "../../_components/init-step-card";
 
 export const InitSettings = () => {
   const tSection = useScopedI18n("management.page.settings.section");
@@ -29,8 +31,8 @@ export const InitSettings = () => {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmitAsync)}>
-      <Stack>
-        <Card w={64 * 12 + 8} maw="90vw">
+      <Stack w="100%">
+        <InitStepCard>
           <Stack gap="sm">
             <Text fw={500}>{tSection("analytics.title")}</Text>
 
@@ -38,8 +40,8 @@ export const InitSettings = () => {
               <AnalyticsRow kind="general" {...form.getInputProps("analytics.enableGeneral", { type: "checkbox" })} />
             </Stack>
           </Stack>
-        </Card>
-        <Card w={64 * 12 + 8} maw="90vw">
+        </InitStepCard>
+        <InitStepCard>
           <Stack gap="sm">
             <Text fw={500}>{tSection("crawlingAndIndexing.title")}</Text>
 
@@ -62,7 +64,7 @@ export const InitSettings = () => {
               />
             </Stack>
           </Stack>
-        </Card>
+        </InitStepCard>
 
         <Button type="submit" loading={form.submitting} rightSection={<IconArrowRight size={16} stroke={1.5} />}>
           {t("common.action.continue")}

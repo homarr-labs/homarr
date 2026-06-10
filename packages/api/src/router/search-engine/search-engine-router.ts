@@ -6,12 +6,9 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { asc, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
-import { createIntegrationAsync } from "@homarr/integrations";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
 import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
-import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "searchEngineRouter" });
@@ -148,20 +145,6 @@ export const searchEngineRouter = createTRPCRouter({
       limit: input.limit,
     });
   }),
-  getMediaRequestOptions: protectedProcedure
-    .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
-    .input(mediaRequestOptionsSchema)
-    .query(async ({ ctx, input }) => {
-      const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
-    }),
-  requestMedia: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
-    .input(mediaRequestRequestSchema)
-    .mutation(async ({ ctx, input }) => {
-      const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
-    }),
   create: permissionRequiredProcedure
     .requiresPermission("search-engine-create")
     .input(searchEngineManageSchema)

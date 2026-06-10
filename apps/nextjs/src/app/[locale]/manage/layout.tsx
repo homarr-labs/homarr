@@ -10,6 +10,7 @@ import {
   IconBrandTablerFilled,
   IconCertificate,
   IconClipboardListFilled,
+  IconDatabaseExport,
   IconDirectionsFilled,
   IconGitFork,
   IconHelpSquareRoundedFilled,
@@ -28,6 +29,7 @@ import {
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createDocumentationLink } from "@homarr/definitions";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -36,6 +38,7 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
+import { ManageTourProvider } from "~/components/onboarding/manage-tour";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const t = await getScopedI18n("management.navbar");
@@ -45,11 +48,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.home"),
       icon: IconHomeFilled,
       href: "/manage",
+      "data-onboarding-tour-id": "manage-welcome",
     },
     {
       icon: IconLayoutDashboardFilled,
       href: "/manage/boards",
       label: t("items.boards"),
+      "data-onboarding-tour-id": "manage-boards",
     },
     {
       icon: IconBox,
@@ -59,12 +64,14 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       iconProps: {
         strokeWidth: 2.5,
       },
+      "data-onboarding-tour-id": "manage-apps",
     },
     {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
       hidden: !session,
+      "data-onboarding-tour-id": "manage-integrations",
     },
     {
       icon: IconSearch,
@@ -74,17 +81,20 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       iconProps: {
         strokeWidth: 2.5,
       },
+      "data-onboarding-tour-id": "manage-search-engines",
     },
     {
       icon: IconPhotoFilled,
       href: "/manage/medias",
       label: t("items.medias"),
       hidden: !session,
+      "data-onboarding-tour-id": "manage-medias",
     },
     {
       icon: IconUserFilled,
       label: t("items.users.label"),
       hidden: !session?.user.permissions.includes("admin"),
+      "data-onboarding-tour-id": "manage-users",
       items: [
         {
           label: t("items.users.items.manage"),
@@ -146,6 +156,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "/manage/tools/tasks",
           hidden: !session?.user.permissions.includes("admin"),
         },
+        {
+          label: t("items.tools.items.backup"),
+          icon: IconDatabaseExport,
+          href: "/manage/tools/backup",
+          hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
+        },
       ],
     },
     {
@@ -153,6 +169,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       href: "/manage/settings",
       icon: IconSettingsFilled,
       hidden: !session?.user.permissions.includes("admin"),
+      "data-onboarding-tour-id": "manage-settings",
     },
     {
       label: t("items.help.label"),
@@ -191,11 +208,17 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     },
   ];
 
-  return (
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+
+  const shell = (
     <ClientShell hasNavigation>
       <MainHeader></MainHeader>
       <MainNavigation links={navigationLinks}></MainNavigation>
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );
+
+  if (!session) return shell;
+
+  return <ManageTourProvider isAdmin={isAdmin}>{shell}</ManageTourProvider>;
 }
