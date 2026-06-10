@@ -17,12 +17,11 @@ fi
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
 
-# Start nginx proxy
-# 1. Replace the HOSTNAME in the nginx template file
-# 2. Create the nginx configuration file from the template
-# 3. Start the nginx server
+export PORT=${PORT:-7575}
+export INTERNAL_NEXTJS_PORT=7901
+
 export HOSTNAME
-envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+envsubst '${HOSTNAME} ${PORT} ${INTERNAL_NEXTJS_PORT}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
 NGINX_PID=$!
@@ -36,7 +35,7 @@ else
     REDIS_PID=$!
 fi
 
-node apps/nextjs/server.js &
+PORT=$INTERNAL_NEXTJS_PORT node apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
