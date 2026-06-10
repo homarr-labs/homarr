@@ -186,7 +186,7 @@ catalog:
   xml2js: ^0.6.2
   yaml: 2.9.0
   zod: ^4.4.3
-  zod-form-data: ^3.0.1
+  zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
 catalogMode: strict
 minimumReleaseAge: 4320
