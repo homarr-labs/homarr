@@ -8,6 +8,7 @@ import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
@@ -71,9 +72,12 @@ const heroPartVisibility = {
 
 export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
-  const [stats] = clientApi.widget.paperlessNgx.getStats.useSuspenseQuery({
-    integrationId: integrationIds[0] ?? "",
-  });
+  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery(
+    { integrationId: integrationIds[0] ?? "" },
+    { staleTime: 5 * 60 * 1000 },
+  );
+
+  if (!stats) return <WidgetEmptyState />;
 
   const canShowInboxHero = options.showDocumentsInbox && options.showDocumentsTotal;
   const showHero = options.showInboxRatio && canShowInboxHero;
