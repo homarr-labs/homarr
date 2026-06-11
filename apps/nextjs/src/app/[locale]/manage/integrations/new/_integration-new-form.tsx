@@ -97,9 +97,11 @@ export const NewIntegrationForm = ({
     },
   });
 
+  const utils = clientApi.useUtils();
   const { mutateAsync: createIntegrationAsync, isPending: isCreatePending } = clientApi.integration.create.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/integrations");
+      await utils.integration.all.invalidate();
     },
   });
   const { mutateAsync: createOnboardingIntegrationAsync, isPending: isOnboardingCreatePending } =
