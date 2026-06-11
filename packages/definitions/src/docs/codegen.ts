@@ -5,6 +5,8 @@ import { XMLParser } from "fast-xml-parser";
 import { z } from "zod/v4";
 
 import { createDocumentationLink } from "./index";
+import { integrationDocSlugs } from "./integration-doc-slugs";
+import { widgetDocSlugs } from "./widget-doc-slugs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -66,8 +68,17 @@ const main = async () => {
   const sitemapXml = await fetchSitemapAsync();
   const sitemapData = parseXml(sitemapXml);
   const paths = mapSitemapXmlToPaths(sitemapData);
-  // Adding sitemap as it's not in the sitemap.xml and we need it for this file
   paths.push("/sitemap.xml");
+
+  const slugMapPaths = [
+    ...Object.values(integrationDocSlugs).filter(Boolean).map((slug) => `/docs/integrations/${slug}`),
+    ...Object.values(widgetDocSlugs).filter(Boolean).map((slug) => `/docs/widgets/${slug}`),
+  ];
+  for (const p of slugMapPaths) {
+    if (!paths.includes(p)) {
+      paths.push(p);
+    }
+  }
   const sitemapPathType = createSitemapPathType(paths);
   await updateSitemapTypeFileAsync(sitemapPathType);
 };
