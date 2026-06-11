@@ -21,7 +21,7 @@ catalog:
   "@immich/sdk": ^2.7.5
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
-  "@modelcontextprotocol/sdk": 1.26.0
+  "@modelcontextprotocol/sdk": 1.29.0
   "@mantine/charts": ^9.3.0
   "@mantine/colors-generator": ^9.3.0
   "@mantine/core": ^9.3.0
