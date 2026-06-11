@@ -1,0 +1,61 @@
+apps/docs/docs/widgets/beszel-system-stats/index.mdx
+  s_6bf29823378515::t_3e1cfd83876e47 1-20,22-39
+  s_6bf29823378515::t_9494a740b5a0eb 21
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_6bf29823378515::t_c308c8494ed5b7 1-29
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_6bf29823378515::t_80017fd64ef6a2 362-369
+  s_6bf29823378515::t_1068184a3e39c1 160
+apps/docs/docs/widgets/beszel-system-grid/index.ts
+  s_6bf29823378515::t_698ca1c24d5c3e 1-89
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_6bf29823378515::t_f9cf2614d1174d 47-51
+apps/docs/docs/integrations/beszel/index.ts
+  s_6bf29823378515::t_193770f21acbff 1-9
+packages/definitions/src/integration.ts
+  s_6bf29823378515::t_8298fff0fd6efb 482
+apps/docs/docs/widgets/beszel-alerts/index.ts
+  s_6bf29823378515::t_ebb46ad1fbae9e 1-26
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_6bf29823378515::t_0001641a1541a0 58
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_6bf29823378515::t_8da149ed083a43 53-55
+  s_6bf29823378515::t_f8d71ab11a4dcc 30
+  s_6bf29823378515::t_5550501188ca98 1-29,31-52,56-93,97-98
+  s_6bf29823378515::t_53e7e2ea97441f 94-96,99-100
+apps/docs/docs/widgets/beszel-system-stats/index.ts
+  s_6bf29823378515::t_27f7ddf83a4a14 1-71
+apps/docs/docs/integrations/beszel/index.mdx
+  s_6bf29823378515::t_ea7bcde2a102a8 1-54
+apps/docs/docs/widgets/beszel-system-table/index.ts
+  s_6bf29823378515::t_0501c88eb1dd51 1-119
+apps/docs/docs/management/tools/_category_.json
+  s_6bf29823378515::t_7857b658181c31 1-5
+apps/docs/docs/management/tools/backup/index.mdx
+  s_6bf29823378515::t_18cbfd87f6f72f 27-28
+  s_6bf29823378515::t_1f63ab9a02b1e8 1-26,29-66
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_6bf29823378515::t_eb9d8a633e9c40 1-34
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_6bf29823378515::t_e342b3ecb87e2b 1-39
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_6bf29823378515::t_f7a0e853897dae 1-39
+apps/docs/docs/widgets/custom-api/index.ts
+  s_6bf29823378515::t_2c93eca92e5322 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d3bb20dbe8042847a37c2b98146f4b436db4d24c",
+  "prompts": {},
+  "sessions": {
+    "s_6bf29823378515": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2e354943-e472-4607-b9c9-9435e217f723",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
