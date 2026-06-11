@@ -138,7 +138,7 @@ catalog:
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.17.0
-  "mantine-contextmenu": ^7.17.1
+  "mantine-contextmenu": ^9.2.1
   mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
