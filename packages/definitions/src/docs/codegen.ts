@@ -56,33 +56,39 @@ const updateSitemapTypeFileAsync = async (sitemapPathType: string) => {
     sitemapPathType +
     ";\n";
 
-  await fs.writeFile(path.join(__dirname, "homarr-docs-sitemap.ts"), content);
+  await fs.writeFile(outputPath, content);
 };
 
-/**
- * This script fetches the sitemap.xml and generates the HomarrDocumentationPath type
- * which is used for typesafe documentation links
- */
-// eslint-disable-next-line no-restricted-syntax
-const main = async () => {
-  const sitemapXml = await fetchSitemapAsync();
-  const sitemapData = parseXml(sitemapXml);
-  const paths = mapSitemapXmlToPaths(sitemapData);
-  paths.push("/sitemap.xml");
+const slugMapPaths = [
+  ...Object.values(integrationDocSlugs).filter(Boolean).map((slug) => `/docs/integrations/${slug}`),
+  ...Object.values(widgetDocSlugs).filter(Boolean).map((slug) => `/docs/widgets/${slug}`),
+];
 
-  const slugMapPaths = [
-    ...Object.values(integrationDocSlugs)
-      .filter(Boolean)
-      .map((slug) => `/docs/integrations/${slug}`),
-    ...Object.values(widgetDocSlugs)
-      .filter(Boolean)
-      .map((slug) => `/docs/widgets/${slug}`),
-  ];
+const outputPath = path.join(__dirname, "homarr-docs-sitemap.ts");
+
+const main = async () => {
+  let paths: string[];
+  try {
+    const sitemapXml = await fetchSitemapAsync();
+    const sitemapData = parseXml(sitemapXml);
+    paths = mapSitemapXmlToPaths(sitemapData);
+  } catch {
+    const exists = await fs.access(outputPath).then(() => true, () => false);
+    if (exists) {
+      console.warn("Could not fetch sitemap from homarr.dev, keeping existing generated file");
+      return;
+    }
+    console.warn("Could not fetch sitemap from homarr.dev and no existing file, generating from slug maps only");
+    paths = [];
+  }
+
+  paths.push("/sitemap.xml");
   for (const p of slugMapPaths) {
     if (!paths.includes(p)) {
       paths.push(p);
     }
   }
+
   const sitemapPathType = createSitemapPathType(paths);
   await updateSitemapTypeFileAsync(sitemapPathType);
 };
