@@ -44,7 +44,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
                     router.replace("/manage/integrations");
                   }
                   void revalidatePathActionAsync("/manage/integrations");
-                  void utils.integration.all.invalidate();
+                  void utils.integration.invalidate();
                 },
                 onError: () => {
                   showErrorNotification({

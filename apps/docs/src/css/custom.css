@@ -93,7 +93,7 @@
 }
 
 .menu__list {
-  transition: all 0.s ease-in-out !important;
+  transition: all 0.5s ease-in-out !important;
 }
 
 .announcementBar_node_modules-\@docusaurus-theme-classic-lib-theme-AnnouncementBar-styles-module {

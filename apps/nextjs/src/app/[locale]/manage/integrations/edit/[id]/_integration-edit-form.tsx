@@ -103,7 +103,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
-          void utils.integration.all.invalidate();
+          void utils.integration.invalidate();
           void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
         onError: () => {
