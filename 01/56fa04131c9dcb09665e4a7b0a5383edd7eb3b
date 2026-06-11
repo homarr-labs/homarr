@@ -1,0 +1,21 @@
+package.json
+  s_78b4baa0d2e00c::t_f4bd2be9098cb7 67
+deployments/prebuilt-debian/package.json
+  s_78b4baa0d2e00c::t_48919891a7914a 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0156fa04131c9dcb09665e4a7b0a5383edd7eb3b",
+  "prompts": {},
+  "sessions": {
+    "s_78b4baa0d2e00c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b4a79297-dd44-4d15-88e4-f73789588b11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
