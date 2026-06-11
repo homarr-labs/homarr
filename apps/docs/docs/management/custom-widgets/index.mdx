@@ -1,0 +1,100 @@
+---
+title: Custom Widgets
+tags:
+  - Management
+  - Widgets
+  - Custom
+  - API
+---
+
+Custom widgets let you create your own dashboard widgets that fetch data from any external API and render it with configurable displays. They are managed from the **Management → Custom Widgets** page (admin only).
+
+:::note Beta
+Custom widgets are currently in beta. Share feedback and report issues in the [GitHub discussion](https://github.com/homarr-labs/homarr/discussions/5916).
+:::
+
+## Overview
+
+Custom widgets connect to any HTTP API endpoint and display the response data using one of several built-in display types. You can create multiple widget definitions, each with its own API configuration, display settings, and optional secrets for authentication.
+
+## Creating a Custom Widget
+
+Navigate to **Management → Custom Widgets** and click **New Custom Widget**. You'll need to configure:
+
+### API Configuration
+
+- **URL** — The full URL of the API endpoint to fetch
+- **Method** — HTTP method (`GET`, `POST`, etc.)
+- **Headers** — Custom HTTP headers (e.g. `Authorization`, `Content-Type`)
+- **Body** — Request body for POST/PUT methods
+- **Auth type** — Authentication method (`none`, `bearer`, `basic`, `API key in header`, `API key in query`)
+
+### Secrets
+
+Custom widgets support encrypted secret storage for API keys and passwords. Secrets are stored using AES-256-CBC encryption (same as integration secrets) and are **excluded from exports** for security.
+
+### Display Configuration
+
+Choose from the following display types:
+
+| Display Type | Description |
+|---|---|
+| **Single Value** | Shows a single extracted value prominently |
+| **Key-Value** | Displays data as labeled key-value pairs |
+| **Table** | Renders data in a table layout |
+| **Stat Grid** | Shows multiple statistics in a grid |
+| **Progress Bars** | Visualizes values as progress bars |
+| **Status Indicator** | Shows status with colored indicators |
+| **Count Grid** | Displays count values in a grid layout |
+| **Raw** | Shows the raw API response |
+| **Action Button** | A button that triggers an API call when clicked |
+| **Custom JSX** | Write custom JSX templates using whitelisted Mantine components |
+
+:::tip Refresh interval
+When adding a Custom API widget to a board, you can configure its **refresh interval** (1–3600 seconds, default 30s) in the widget's board options.
+:::
+
+## Custom JSX Display
+
+The Custom JSX display type lets you write JSX templates to create rich, interactive displays. For security, only whitelisted components are allowed:
+
+- **Mantine components** — `Text`, `Badge`, `Group`, `Stack`, `Paper`, `Progress`, `RingProgress`, `ThemeIcon`, `Anchor`, `Image`, `Divider`, `Code`, `Table`, and more
+- **Interactive components** — `PaginatedList`, `TabsContainer`, `Collapsible`, `StatBar`, `TypeBadge`
+
+Templates have access to the API response data and can use JSONPath expressions to extract values.
+
+:::warning Security
+The JSX sandbox blocks dangerous patterns like `eval`, `Function`, `__proto__`, and `javascript:` URLs. However, only admins can create custom widgets.
+:::
+
+## Live Preview
+
+The widget editor includes a live preview panel that shows how the widget will look with real API data. Use the **Debug** panel to inspect the raw API response and test JSONPath expressions.
+
+## Copy AI Prompt
+
+Click the **Copy AI Prompt** button to copy a prompt containing the API's JSON Schema and sample response. Paste this into an LLM to get help writing JSONPath expressions or Custom JSX templates.
+
+## Import & Export
+
+Custom widget definitions can be exported as JSON files and imported on other Homarr instances:
+
+- **Export** — Downloads a JSON file with the widget definition (secrets are excluded)
+- **Import** — Upload a previously exported JSON file to create a new widget definition
+- The export format uses `$schema: "homarr-custom-widget-v2"`
+
+## Using Custom Widgets on a Board
+
+Once created, custom widgets appear in the widget picker when editing a board. Each custom widget definition can be added to any board like a built-in widget.
+
+## Seed Fixtures
+
+Homarr ships with example custom widget definitions (disabled by default) to help you get started:
+
+- **Currency Exchange (JPY)** — Live exchange rates
+- **Random Dog Fact** — Random dog facts
+- **Jellyfin library** — Jellyfin server statistics
+
+Enable them from the custom widgets management page or use them as templates for your own widgets.
+
+Additional examples like the Pokédex are available as importable JSON files in the repository under `packages/db/seed/custom-widgets/`.
