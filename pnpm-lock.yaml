@@ -757,8 +757,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.8))(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@fec/remark-a11y-emoji':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^4.0.2
+        version: 4.0.2
       '@tsconfig/docusaurus':
         specifier: ^2.0.9
         version: 2.0.9
@@ -4811,9 +4811,9 @@ packages:
   '@fastify/proxy-addr@5.1.0':
     resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
 
-  '@fec/remark-a11y-emoji@3.1.0':
-    resolution: {integrity: sha512-cYjCutvrValbQ2dykKhEE6OBTsEGpAJzeJnDtGKXhk2JYkMNSlKPnUk/kRFHH+PHmrAF+FlNIU28XKD+nYy7jQ==}
-    engines: {node: '>=10.0'}
+  '@fec/remark-a11y-emoji@4.0.2':
+    resolution: {integrity: sha512-Au3jSkt66PRwTKTCYm7KzTGfMzUmn1LYPK+cyrytfzjfOPkHpohrLcGYPLsgxV8nzc4vXxt3Ay7MlBrmeIfFLg==}
+    engines: {node: '>=16.0'}
 
   '@floating-ui/core@1.7.5':
     resolution: {integrity: sha512-1Ih4WTWyw0+lKyFMcBHGbb5U5FtuHJuujoyyr5zTaWS5EYMeT6Jb2AuDeftsCsEuchO+mM2ij5+q9crhydzLhQ==}
@@ -17171,7 +17171,7 @@ snapshots:
       stringify-object: 3.3.0
       tslib: 2.8.1
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       url-loader: 4.1.1(file-loader@6.2.0(webpack@5.107.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(lightningcss@1.32.0)(postcss@8.5.8)))(webpack@5.107.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(lightningcss@1.32.0)(postcss@8.5.8))
       vfile: 6.0.3
       webpack: 5.107.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.8))(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.8)
@@ -17239,7 +17239,7 @@ snapshots:
       schema-dts: 1.1.5
       srcset: 4.0.0
       tslib: 2.8.1
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       utility-types: 3.11.0
       webpack: 5.107.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.8))(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.8)
     transitivePeerDependencies:
@@ -18233,9 +18233,9 @@ snapshots:
       '@fastify/forwarded': 3.0.1
       ipaddr.js: 2.3.0
 
-  '@fec/remark-a11y-emoji@3.1.0':
+  '@fec/remark-a11y-emoji@4.0.2':
     dependencies:
-      emoji-regex: 9.2.2
+      emoji-regex: 10.6.0
       gemoji: 6.1.0
       mdast-util-find-and-replace: 1.1.1
       unist-util-visit: 2.0.3
@@ -19063,7 +19063,7 @@ snapshots:
       unified: 11.0.5
       unist-util-position-from-estree: 2.0.0
       unist-util-stringify-position: 4.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -24456,7 +24456,7 @@ snapshots:
       nth-check: 2.1.1
       property-information: 7.0.0
       space-separated-tokens: 2.0.2
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zwitch: 2.0.4
 
   hast-util-to-estree@3.1.3:

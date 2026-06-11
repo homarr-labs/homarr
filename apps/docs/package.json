@@ -50,7 +50,7 @@
     "@docusaurus/module-type-aliases": "^3.10.1",
     "@docusaurus/tsconfig": "^3.10.1",
     "@docusaurus/types": "^3.10.1",
-    "@fec/remark-a11y-emoji": "^3.1.0",
+    "@fec/remark-a11y-emoji": "^4.0.2",
     "@tsconfig/docusaurus": "^2.0.9",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
