@@ -1,0 +1,34 @@
+apps/docs/src/css/custom.css
+  s_78b4baa0d2e00c::t_843bc2a1d5272c 96
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_78b4baa0d2e00c::t_a3d84e2fd5d471 108-112
+  s_78b4baa0d2e00c::t_3b1c7413e6883b 104
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_78b4baa0d2e00c::t_6d020f1478e631 106
+pnpm-workspace.yaml
+  s_78b4baa0d2e00c::t_582451b16ac00f 180
+test/renovate.spec.ts
+  s_78b4baa0d2e00c::t_c1c92ea198778f 11-14
+apps/nextjs/src/app/[locale]/manage/integrations/_integration-buttons.tsx
+  s_78b4baa0d2e00c::t_00d40fb7f440bf 47
+.github/renovate.json5
+  s_78b4baa0d2e00c::t_c3ab65a3bae819 25
+pnpm-lock.yaml
+  s_78b4baa0d2e00c::t_b4b830cc107dd2 523-524,1148,1500,1926,1965,2270,16917-16950,16998,17002-17003,17039,17107,17131,17150,17182-17184,17198,17230-17232,17244,17273-17274,17280,17308-17309,17341-17342,17375,17407,17440,17473-17475,17509-17510,17517,17558,17604-17606,17651-17652,17684,17724,17852-17873,17877-17878,17943-17983,18440,18444,22243,22901,23008,23018,24111,24757,24784,24789,26184,26444,27037,27696,28868,28936,28950,29385,29641,29676,29862
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "93bcc5945feb59e559c9827bcdc679930bf1ddce",
+  "prompts": {},
+  "sessions": {
+    "s_78b4baa0d2e00c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b4a79297-dd44-4d15-88e4-f73789588b11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
