@@ -193,6 +193,7 @@ catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false
 engineStrict: true
+verifyDepsBeforeRun: warn
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
