@@ -30,7 +30,7 @@
   "options": {
     "reportUnusedDisableDirectives": "off"
   },
-  "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", "**/lang/*.d.json.ts", ".next/**"],
+  "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", "**/lang/*.d.json.ts", ".next/**", "apps/docs/.docusaurus/**", "apps/docs/build/**"],
   "settings": {
     "react": { "version": "19" }
   }

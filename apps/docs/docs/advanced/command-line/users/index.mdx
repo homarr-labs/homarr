@@ -1,0 +1,79 @@
+# Users
+
+:::info
+
+This guide requires that you understand [how to access the CLI](../).
+
+:::
+
+Using these commands, you can manage the users from the CLI:
+```bash
+Group of commands to manage users
+
+Usage:
+  homarr users [command]
+
+Available Commands:
+  list              List all users (id, username, email)
+  delete            Delete a user by id or username
+  update-password   Update the password for a user (credentials provider only)
+
+Flags:
+  -h, --help      help for users
+  -v, --version   version for homarr-cli
+
+Use "homarr users [command] --help" for more information about a command.
+```
+
+## List Users
+
+- Requires a database connection
+
+```bash
+ID                              Username        Email
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+yj52ek5cyb6du4bp4osbkjry        admin           xxxx@example.com
+```
+
+## Delete User
+
+- Requires a database connection
+- Requires one parameter: ``id`` or ``username``
+
+```bash
+Delete a user by id or username
+
+Usage:
+  homarr users delete [flags]
+
+Flags:
+  -i, --id string         ID of the user
+  -u, --username string   Name of the user
+  -h, --help              help for users delete
+  -v, --version           version for homarr-cli
+```
+
+## Update Password
+
+- Updates the password of an user
+- Requires database connection
+- Requires either a username or id
+- Requires a password (which will be encrypted by Homarr)
+
+```bash
+Update the password for a user (credentials provider only)
+
+Usage:
+  homarr users update-password [flags]
+
+Flags:
+  -i, --id string         ID of the user
+  -u, --username string   Name of the user
+  -p, --password          New password
+  -h, --help              help for users update-password
+  -v, --version           version for homarr-cli
+```

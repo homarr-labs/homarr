@@ -1,0 +1,49 @@
+---
+title: 'Umami Analytics'
+description: 'Display visitor stats from your Umami analytics instance'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { umamiWidget } from '.';
+import { umamiIntegration } from '@site/docs/integrations/umami';
+
+<WidgetHeader
+  widget={umamiWidget}
+  categories={['Analytics']}
+/>
+
+The Umami Analytics widget displays key visitor metrics from a website tracked by your [Umami](https://umami.is) instance — pageviews, unique visitors, visits, bounce rate, avg. visit duration, and real-time active visitor count. The widget body can be switched between a visitor/event chart, a multi-event chart, and ranked top pages or referrers lists.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: umamiIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={umamiWidget.configuration} />
+
+### View modes
+
+| View | Description |
+|---|---|
+| **Chart** | Bar chart or sparkline of unique visitors over the selected time frame. Optionally overlay a single named event as a second series. |
+| **Events chart** | Multi-select one or more named events and chart each as its own colored series — no visitor baseline. Supports bar and sparkline. |
+| **Top pages** | Ranked list of URLs by pageview count for the selected time frame. |
+| **Top referrers** | Ranked list of referrer sources by session count. Direct traffic (no referrer) is labeled "Direct". |
+
+### Notes
+
+- The **Website** selector is populated automatically from the websites tracked by the connected Umami integration. No manual ID entry is required.
+- **Event names** for the Event and Events selectors are fetched from Umami's metrics API based on the past 30 days of activity.
+- Active visitor count refreshes every 30 seconds independently of the main data cache.
+- All other data is cached for 5 minutes and refreshed in the background by a cron job.

@@ -1,0 +1,44 @@
+---
+title: 'Timetable'
+description: 'Displays departure times for a station.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { timetableWidget } from '.';
+import { searchChIntegration } from '@site/docs/integrations/search-ch';
+
+
+<WidgetHeader
+  widget={timetableWidget}
+  categories={['Timetable']}
+/>
+
+The Timetable widget provides real-time departure times for a selected station.
+
+### Screenshots
+
+import trainDepartures from './img/train-departures.png';
+import streetDepartures from './img/street-departures.png';
+
+<div className="flex gap-2">
+  <img src={trainDepartures} alt="timetable-widget-train-departures" width={128 * 2} />
+  <img src={streetDepartures} alt="timetable-widget-bus-and-tram-departures" width={128 * 2} />
+</div>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: searchChIntegration,
+  note: 'Switzerland only'
+}]} />
+
+### Configuration
+<WidgetConfig configuration={timetableWidget.configuration} />

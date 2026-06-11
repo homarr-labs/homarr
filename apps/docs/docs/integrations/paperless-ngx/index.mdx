@@ -1,0 +1,41 @@
+---
+title: 'Paperless-ngx'
+description: "Paperless-ngx is a document management system that transforms your physical documents into a searchable online archive."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { paperlessNgxIntegration } from '.';
+import { paperlessNgxWidget } from '@site/docs/widgets/paperless-ngx';
+
+
+<IntegrationHeader
+    integration={paperlessNgxIntegration}
+    categories={['Documents']}
+/>
+
+Paperless-ngx provides document statistics including total documents, inbox count, correspondents, tags, and document types.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: paperlessNgxWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+        'Open your Paperless-ngx instance',
+        'Navigate to Settings → Django Admin → Tokens',
+        'Create a new token for your user',
+        'Copy the token value',
+    ]
+}]} />

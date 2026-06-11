@@ -1,0 +1,46 @@
+---
+title: 'Anchor Note'
+description: 'Display and edit a selected note from Anchor'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { anchorNoteWidget } from '.';
+import { anchorIntegration } from '@site/docs/integrations/anchor';
+
+
+<WidgetHeader
+  widget={anchorNoteWidget}
+  categories={['Notes']}
+/>
+
+The Anchor Note widget shows a selected note from your Anchor integration. If your note permissions allow it, you can also edit the note title and content directly in Homarr.
+
+### Screenshots
+
+import anchorNoteWidgetScreenshot from './img/widget.png';
+
+<img src={anchorNoteWidgetScreenshot} alt="anchor-note-widget" width={256} height={256} />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: anchorIntegration
+}]} />
+
+### Interactions
+
+- Click **Edit** to start editing the selected note.
+- Click **Save** to persist changes to Anchor.
+- Click **Cancel** to discard unsaved changes.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={anchorNoteWidget.configuration} />

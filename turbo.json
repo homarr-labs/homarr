@@ -13,8 +13,30 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx", "!**/*.spec.ts", "!**/__tests__/**"],
-      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".output/**", ".vercel/output/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!**/*.spec.ts",
+        "!**/__tests__/**",
+        "!**/*.md",
+        "!**/*.mdx",
+        "!**/README*",
+        "!**/CHANGELOG*",
+        "!**/LICENSE*",
+        "!**/*.stories.{ts,tsx}"
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".output/**", ".vercel/output/**", "build/**"]
+    },
+    "@homarr/cli#build": {
+      "outputs": ["cli.cjs"]
+    },
+    "@homarr/db#build": {
+      "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]
+    },
+    "@homarr/docs#build": {
+      "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
+      "outputs": ["build/**", ".docusaurus/**"]
     },
     "dev": {
       "persistent": true,
