@@ -1,4 +1,3 @@
-import { TablerIcon } from "@tabler/icons-react";
 import { DocsHeader } from "../ui/header";
 import { WidgetDefinition } from "@site/src/types";
 

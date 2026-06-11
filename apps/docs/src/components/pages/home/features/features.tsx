@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  IconAccessible,
   IconAdjustments,
   IconDragDrop,
   IconIcons,
