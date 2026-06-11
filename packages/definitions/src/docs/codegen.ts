@@ -71,8 +71,12 @@ const main = async () => {
   paths.push("/sitemap.xml");
 
   const slugMapPaths = [
-    ...Object.values(integrationDocSlugs).filter(Boolean).map((slug) => `/docs/integrations/${slug}`),
-    ...Object.values(widgetDocSlugs).filter(Boolean).map((slug) => `/docs/widgets/${slug}`),
+    ...Object.values(integrationDocSlugs)
+      .filter(Boolean)
+      .map((slug) => `/docs/integrations/${slug}`),
+    ...Object.values(widgetDocSlugs)
+      .filter(Boolean)
+      .map((slug) => `/docs/widgets/${slug}`),
   ];
   for (const p of slugMapPaths) {
     if (!paths.includes(p)) {
