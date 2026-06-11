@@ -175,7 +175,7 @@ catalog:
   tsdav: ^2.2.2
   tsx: 4.20.4
   turbo: ^2.9.16
-  typescript: ^5.9.3
+  typescript: ^6.0.3
   undici: 8.4.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
