@@ -86,7 +86,7 @@ catalog:
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
-  "@types/react": 19.2.16
+  "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
   "@scalar/api-reference-react": ^0.9.42
   "@types/video.js": ^7.3.58
