@@ -101,7 +101,7 @@ catalog:
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.17
   jszip: ^3.10.1
-  sql.js: ^1.12.0
+  sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
   better-sqlite3: ^12.10.0

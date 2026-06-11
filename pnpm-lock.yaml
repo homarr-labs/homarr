@@ -487,7 +487,7 @@ catalogs:
       specifier: ^4.2.1
       version: 4.2.1
     sql.js:
-      specifier: ^1.12.0
+      specifier: ^1.14.1
       version: 1.14.1
     superjson:
       specifier: 2.2.6
