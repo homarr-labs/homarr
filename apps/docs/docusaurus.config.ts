@@ -29,6 +29,9 @@ const config: Config = {
       fasterByDefault: true,
       mdx1CompatDisabledByDefault: false,
     },
+    faster: {
+      swcHtmlMinimizer: false,
+    },
   },
 
   markdown: {
