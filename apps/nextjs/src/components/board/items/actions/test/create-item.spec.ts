@@ -52,7 +52,7 @@ describe("item actions create-item", () => {
         ],
       }),
     );
-    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount);
+    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, 9999, { height: 1, width: 1 });
   });
   test("should correctly pass dynamic section and items to getFirstEmptyPosition", () => {
     // Arrange
@@ -104,6 +104,8 @@ describe("item actions create-item", () => {
     expect(spy).toHaveBeenCalledWith(
       [expect.objectContaining(itemAndSectionPosition), expect.objectContaining(itemAndSectionPosition)],
       layout.columnCount,
+      9999,
+      { height: 1, width: 1 },
     );
   });
 });
