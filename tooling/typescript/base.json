@@ -19,10 +19,9 @@
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
+    "types": ["node"],
     "paths": {
-      "@homarr/node-unifi": ["${configDir}/../../node_modules/@types/node-unifi"],
-      "*": ["node_modules/*"]
+      "@homarr/node-unifi": ["${configDir}/../../node_modules/@types/node-unifi"]
     }
   },
   "exclude": ["node_modules", "build", "dist", ".next"]

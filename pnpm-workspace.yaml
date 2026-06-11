@@ -93,7 +93,7 @@ catalog:
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
   "@umami/node": ^0.4.0
-  "@vitejs/plugin-react": ^5.2.0
+  "@vitejs/plugin-react": ^6.0.2
   "@vitest/coverage-v8": ^4.1.8
   "@vitest/ui": ^4.1.8
   "@xterm/addon-canvas": ^0.7.0
@@ -175,7 +175,8 @@ catalog:
   tsdav: ^2.2.2
   tsx: 4.20.4
   turbo: ^2.9.16
-  typescript: ^5.9.3
+  typescript: ^6.0.3
+  vite: ^8.0.16
   undici: 8.4.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
