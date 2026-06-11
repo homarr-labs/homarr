@@ -10,6 +10,8 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
 
+export const IMAGE_PROXY_REDIS_TTL_SECONDS = 86400;
+
 const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
   createGetSetChannel<{
@@ -45,7 +47,7 @@ export class ImageProxy {
     return this.createImageUrl(id);
   }
 
-  public async forwardImageAsync(id: string): Promise<Blob | null> {
+  public async forwardImageAsync(id: string): Promise<ArrayBuffer | null> {
     const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
     if (!urlAndHeaders) {
       return null;
@@ -69,16 +71,16 @@ export class ImageProxy {
       return null;
     }
 
-    const blob = (await response.blob()) as Blob;
+    const arrayBuffer = await response.arrayBuffer();
     logger.debug("Forwarding image succeeded", {
       id,
       url: this.redactUrl(urlAndHeaders.url),
       headers: this.redactHeaders(urlAndHeaders.headers),
       proxyUrl,
-      size: `${(blob.size / 1024).toFixed(1)}KB`,
+      size: `${(arrayBuffer.byteLength / 1024).toFixed(1)}KB`,
     });
 
-    return blob;
+    return arrayBuffer;
   }
 
   private createImageUrl(id: string): string {
@@ -113,11 +115,14 @@ export class ImageProxy {
 
     const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
-    await urlHeaderChannel.setAsync({
-      url: encryptSecret(url),
-      headers: encryptSecret(JSON.stringify(headers ?? null)),
-    });
-    await hashChannel.setAsync(id);
+    await urlHeaderChannel.setAsync(
+      {
+        url: encryptSecret(url),
+        headers: encryptSecret(JSON.stringify(headers ?? null)),
+      },
+      { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
+    );
+    await hashChannel.setAsync(id, { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS });
 
     logger.debug("Stored image in the proxy", {
       id,

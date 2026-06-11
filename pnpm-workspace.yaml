@@ -82,13 +82,13 @@ catalog:
   "@types/crypto-js": ^4.2.2
   "@types/css-modules": ^1.0.5
   "@types/dockerode": ^4.0.1
-  "@types/node": ^24.12.4
+  "@types/node": ^24.13.1
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.16
   "@types/react-dom": 19.2.3
-  "@scalar/api-reference-react": ^0.9.34
+  "@scalar/api-reference-react": ^0.9.42
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
@@ -138,7 +138,7 @@ catalog:
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.17.0
-  "mantine-contextmenu": ^7.15.1
+  "mantine-contextmenu": ^7.17.1
   mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
@@ -176,7 +176,7 @@ catalog:
   tsx: 4.20.4
   turbo: ^2.9.16
   typescript: ^5.9.3
-  undici: 7.24.6
+  undici: 8.4.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
@@ -186,7 +186,7 @@ catalog:
   xml2js: ^0.6.2
   yaml: 2.9.0
   zod: ^4.4.3
-  zod-form-data: ^3.0.1
+  zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
 catalogMode: strict
 minimumReleaseAge: 4320
