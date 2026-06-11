@@ -1,5 +1,5 @@
-import { TablerIcon } from '@tabler/icons-react';
-import { ReactNode } from 'react';
+import { TablerIcon } from "@tabler/icons-react";
+import { ReactNode } from "react";
 
 export interface IntegrationDefinition {
   name: string;
@@ -18,11 +18,11 @@ export interface WidgetConfigurationItem {
   description: ReactNode;
   values:
     | string
-    | { type: 'boolean' }
-    | { type: 'string' }
-    | { type: 'select'; options: string[] }
-    | { type: 'object'; name: string; configuration: WidgetConfiguration }
-    | { type: 'array'; name: string; configuration: WidgetConfiguration };
+    | { type: "boolean" }
+    | { type: "string" }
+    | { type: "select"; options: string[] }
+    | { type: "object"; name: string; configuration: WidgetConfiguration }
+    | { type: "array"; name: string; configuration: WidgetConfiguration };
   defaultValue: string;
 }
 

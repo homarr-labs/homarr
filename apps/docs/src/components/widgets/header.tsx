@@ -1,6 +1,6 @@
-import { TablerIcon } from '@tabler/icons-react';
-import { DocsHeader } from '../ui/header';
-import { WidgetDefinition } from '@site/src/types';
+import { TablerIcon } from "@tabler/icons-react";
+import { DocsHeader } from "../ui/header";
+import { WidgetDefinition } from "@site/src/types";
 
 interface WidgetHeaderProps {
   widget: WidgetDefinition;

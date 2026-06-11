@@ -1,7 +1,7 @@
-import { useColorMode } from '@docusaurus/theme-common';
-import { IntegrationDefinition } from '@site/src/types';
-import { IconExternalLink } from '@tabler/icons-react';
-import { getIntegrationIconUrl } from '../integrations/header';
+import { useColorMode } from "@docusaurus/theme-common";
+import { IntegrationDefinition } from "@site/src/types";
+import { IconExternalLink } from "@tabler/icons-react";
+import { getIntegrationIconUrl } from "../integrations/header";
 
 interface WidgetIntegrationsProps {
   items: {
@@ -32,9 +32,7 @@ export const WidgetIntegrations = ({ items }: WidgetIntegrationsProps) => {
 
               <div className="flex flex-col gap-0">
                 <span className="text-base font-bold">{item.integration.name}</span>
-                <span className="text-sm dark:text-[#999999] text-[#696969]">
-                  {item.integration.description}
-                </span>
+                <span className="text-sm dark:text-[#999999] text-[#696969]">{item.integration.description}</span>
                 {item.note && <span className="text-xs text-yellow-500 mt-1">{item.note}</span>}
               </div>
             </div>

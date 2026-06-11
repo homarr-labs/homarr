@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Badge } from '../ui/badge';
+import { ReactNode } from "react";
+import { Badge } from "../ui/badge";
 
 interface DocsHeaderProps {
   title: string;

@@ -1,10 +1,10 @@
-import { IconCloud, IconWind, IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-react';
-import { CommonWidgetProps, WidgetCard } from './card';
-import clsx from 'clsx';
+import { IconCloud, IconWind, IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react";
+import { CommonWidgetProps, WidgetCard } from "./card";
+import clsx from "clsx";
 
 export const WeatherWidget = ({ className }: CommonWidgetProps) => {
   return (
-    <WidgetCard width={1} className={clsx('gap-2', className)}>
+    <WidgetCard width={1} className={clsx("gap-2", className)}>
       <div className="flex gap-2 justify-center items-center">
         <IconCloud size={20} />
         <span className="text-xl font-bold">10.8°C</span>

@@ -1,8 +1,8 @@
-import { Line } from '@nivo/line';
-import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react';
-import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { CommonWidgetProps, WidgetCard } from './card';
+import { Line } from "@nivo/line";
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
+import { CommonWidgetProps, WidgetCard } from "./card";
 
 export const StockWidget = ({ className }: CommonWidgetProps) => {
   const [stockTrend, setStockTrend] = useState<{ x: number; y: number }[]>(generateStockTrend());
@@ -20,27 +20,27 @@ export const StockWidget = ({ className }: CommonWidgetProps) => {
   const upwardTrend = stockTrend[0].y < stockTrend[stockTrend.length - 1].y;
 
   return (
-    <WidgetCard width={2} className={clsx('!p-0', className)}>
+    <WidgetCard width={2} className={clsx("!p-0", className)}>
       <div className="absolute top-2 left-2 flex gap-1 font-bold items-center">
-        {upwardTrend && <IconTrendingUp size={20} color={'green'} />}
-        {!upwardTrend && <IconTrendingDown size={20} color={'red'} />}
+        {upwardTrend && <IconTrendingUp size={20} color={"green"} />}
+        {!upwardTrend && <IconTrendingDown size={20} color={"red"} />}
         HOMR
       </div>
       <Line
         height={128}
         width={244}
-        colors={[upwardTrend ? 'green' : 'red']}
+        colors={[upwardTrend ? "green" : "red"]}
         data={[
           {
-            id: 'stock',
+            id: "stock",
             data: stockTrend,
           },
         ]}
-        curve={'natural'}
+        curve={"natural"}
         enablePoints={false}
         enableGridX={false}
         enableGridY={false}
-        yScale={{ type: 'linear', min: 'auto' }}
+        yScale={{ type: "linear", min: "auto" }}
         enableArea={true}
         margin={{ bottom: 0, left: 4, right: 4, top: 40 }}
         axisBottom={null}

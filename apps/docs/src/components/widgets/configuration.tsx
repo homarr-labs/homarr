@@ -1,4 +1,4 @@
-import { WidgetConfiguration, WidgetConfigurationItem } from '@site/src/types';
+import { WidgetConfiguration, WidgetConfigurationItem } from "@site/src/types";
 
 interface WidgetConfigProps {
   configuration: WidgetConfiguration;
@@ -49,11 +49,11 @@ const ConfigTable = (props: WidgetConfigProps) => {
   );
 };
 
-const ConfigValues = ({ values }: Pick<WidgetConfigurationItem, 'values'>) => {
-  if (typeof values === 'string') return <span>{values}</span>;
-  if (values.type === 'boolean') return <span>yes / no</span>;
-  if (values.type === 'string') return <span>String</span>;
-  if (values.type === 'select') {
+const ConfigValues = ({ values }: Pick<WidgetConfigurationItem, "values">) => {
+  if (typeof values === "string") return <span>{values}</span>;
+  if (values.type === "boolean") return <span>yes / no</span>;
+  if (values.type === "string") return <span>String</span>;
+  if (values.type === "select") {
     return (
       <ul>
         {values.options.map((option) => (
@@ -64,18 +64,17 @@ const ConfigValues = ({ values }: Pick<WidgetConfigurationItem, 'values'>) => {
   }
 
   const reference = <a href={`#${values.name}`}>{values.name}</a>;
-  if (values.type === 'object') return reference;
-  if (values.type === 'array') return <span>{reference}[]</span>;
+  if (values.type === "object") return reference;
+  if (values.type === "array") return <span>{reference}[]</span>;
 };
 
 const getInnerConfigs = (config: WidgetConfiguration) => {
-  const configItems: Extract<WidgetConfigurationItem['values'], { type: 'object' | 'array' }>[] =
-    [];
+  const configItems: Extract<WidgetConfigurationItem["values"], { type: "object" | "array" }>[] = [];
   config.items.forEach((item) => {
     if (
       item.values &&
-      typeof item.values === 'object' &&
-      (item.values.type === 'object' || item.values.type === 'array')
+      typeof item.values === "object" &&
+      (item.values.type === "object" || item.values.type === "array")
     ) {
       configItems.push(item.values);
       const innerItems = getInnerConfigs(item.values.configuration);

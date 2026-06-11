@@ -1,8 +1,8 @@
-import { getRndInteger } from '@site/src/tools/math';
-import { useEffect, useState } from 'react';
-import { CommonWidgetProps, WidgetCard } from './card';
-import clsx from 'clsx';
-import { generateSlug } from 'random-word-slugs';
+import { getRndInteger } from "@site/src/tools/math";
+import { useEffect, useState } from "react";
+import { CommonWidgetProps, WidgetCard } from "./card";
+import clsx from "clsx";
+import { generateSlug } from "random-word-slugs";
 
 export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
   const [downloads, setDownloads] = useState<Download[]>([]);
@@ -13,10 +13,7 @@ export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
         const filteredPrev = prev.filter((download) => download.progress !== 100);
 
         filteredPrev.forEach((download, index) => {
-          download.progress = Math.min(
-            100,
-            download.progress + getRndInteger(0, index < 2 ? 16 : 8)
-          );
+          download.progress = Math.min(100, download.progress + getRndInteger(0, index < 2 ? 16 : 8));
         });
 
         if (filteredPrev.length < 3 && filteredPrev.length === prev.length) {
@@ -33,7 +30,7 @@ export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
   }, []);
 
   return (
-    <WidgetCard width={2} className={clsx('overflow-hidden !p-0', className)}>
+    <WidgetCard width={2} className={clsx("overflow-hidden !p-0", className)}>
       <table className="mb-0 w-full h-full text-xs">
         <thead className="inline-block w-full">
           <tr className="inline-block w-full">
@@ -48,10 +45,7 @@ export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
                 <td className="border-none text-nowrap p-2">{file.filename}</td>
                 <td className="border-none p-2 w-full">
                   <div className="overflow-hidden rounded-xl h-2 w-full bg-zinc-600">
-                    <div
-                      className="bg-green-600 h-full animated-width"
-                      style={{ width: `${file.progress}%` }}
-                    ></div>
+                    <div className="bg-green-600 h-full animated-width" style={{ width: `${file.progress}%` }}></div>
                   </div>
                 </td>
               </tr>
@@ -68,7 +62,7 @@ interface Download {
   progress: number;
 }
 
-const formats = ['mkv', 'mp4'];
+const formats = ["mkv", "mp4"];
 
 const generateRandomDownload = (): Download => {
   const randomMovie = generateSlug(2);

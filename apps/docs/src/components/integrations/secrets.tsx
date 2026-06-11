@@ -1,79 +1,71 @@
-import {
-  IconCode,
-  IconKey,
-  IconKeyOff,
-  IconLink,
-  IconPassword,
-  IconPlug,
-  IconUser,
-} from '@tabler/icons-react';
-import TabItem from '@theme/TabItem';
-import Tabs from '@theme/Tabs';
-import { ReactNode } from 'react';
-import Alert from '@theme/Admonition';
+import { IconCode, IconKey, IconKeyOff, IconLink, IconPassword, IconPlug, IconUser } from "@tabler/icons-react";
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+import { ReactNode } from "react";
+import Alert from "@theme/Admonition";
 
 const secretKinds = {
   apiKey: {
-    name: 'API Key',
-    description: 'API Key from the service for authentication.',
+    name: "API Key",
+    description: "API Key from the service for authentication.",
     icon: IconKey,
   },
   username: {
-    name: 'Username',
-    description: 'Account username for authentication.',
+    name: "Username",
+    description: "Account username for authentication.",
     icon: IconUser,
   },
   password: {
-    name: 'Password',
-    description: 'Account password for authentication.',
+    name: "Password",
+    description: "Account password for authentication.",
     icon: IconPassword,
   },
   tokenId: {
-    name: 'Token ID',
-    description: 'Token ID used for authentication',
+    name: "Token ID",
+    description: "Token ID used for authentication",
   },
   realm: {
-    name: 'Realm',
-    description: 'The realm used for authentication, most of the time this is pve',
+    name: "Realm",
+    description: "The realm used for authentication, most of the time this is pve",
   },
   topic: {
-    name: 'Topic',
-    description: 'The topic to from which notifications should be retrieved.',
+    name: "Topic",
+    description: "The topic to from which notifications should be retrieved.",
   },
   personalAccessToken: {
-    name: 'Personal Access Token',
-    description: 'A personal access token for authentication.',
+    name: "Personal Access Token",
+    description: "A personal access token for authentication.",
     icon: IconKey,
   },
   opnsenseApiKey: {
-    name: 'Api Key (Key)',
-    description: 'The Key part of the API Key for authentication.',
+    name: "Api Key (Key)",
+    description: "The Key part of the API Key for authentication.",
     icon: IconKey,
   },
   opnsenseApiSecret: {
-    name: 'Api Key (Secret)',
-    description: 'The Secret part of the API Key for authentication.',
+    name: "Api Key (Secret)",
+    description: "The Secret part of the API Key for authentication.",
     icon: IconPassword,
   },
-  githubAppId: { name: 'App ID', description: 'The ID of the GitHub App', icon: IconCode },
+  githubAppId: { name: "App ID", description: "The ID of the GitHub App", icon: IconCode },
   githubInstallationId: {
-    name: 'Installation ID',
-    description: 'The ID of the GitHub Installation',
+    name: "Installation ID",
+    description: "The ID of the GitHub Installation",
     icon: IconPlug,
   },
   privateKey: {
-    name: 'Private Key',
-    description: 'The private key for authentication',
+    name: "Private Key",
+    description: "The private key for authentication",
     icon: IconKey,
   },
   url: {
-    name: 'Url',
-    description: 'The url of the service',
+    name: "Url",
+    description: "The url of the service",
     icon: IconLink,
   },
   slug: {
-    name: 'Slug',
-    description: 'The slug or path identifier for the resource',
+    name: "Slug",
+    description: "The slug or path identifier for the resource",
     icon: IconLink,
   },
 };
@@ -97,15 +89,15 @@ export const IntegrationSecrets = ({ secrets }: IntegrationSecretsProps) => {
       <div className="flex gap-6 rounded-xl border border-solid dark:border-[#333] border-[#e5e7eb] shadow-sm w-full items-center justify-between [&>*]:w-full">
         <Tabs className="[&>li]:w-full [&>li]:justify-center">
           {secrets.map((secret) => {
-            const key = secret.credentials.join('-');
+            const key = secret.credentials.join("-");
             const Icon =
-              secret.credentials.map((value) => secretKinds[value]).find((value) => 'icon' in value)
-                ?.icon || IconKeyOff;
+              secret.credentials.map((value) => secretKinds[value]).find((value) => "icon" in value)?.icon ||
+              IconKeyOff;
             const tabLabel =
               secret.tabLabel ??
               (secret.credentials.length === 0
-                ? 'No Authentication'
-                : secret.credentials.map((value) => secretKinds[value].name).join(' & '));
+                ? "No Authentication"
+                : secret.credentials.map((value) => secretKinds[value].name).join(" & "));
 
             return (
               <TabItem

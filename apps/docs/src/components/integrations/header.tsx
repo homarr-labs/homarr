@@ -1,6 +1,6 @@
-import { IntegrationDefinition } from '@site/src/types';
-import { DocsHeader } from '../ui/header';
-import { useColorMode } from '@docusaurus/theme-common';
+import { IntegrationDefinition } from "@site/src/types";
+import { DocsHeader } from "../ui/header";
+import { useColorMode } from "@docusaurus/theme-common";
 
 interface IntegrationHeaderProps {
   integration: IntegrationDefinition;
@@ -14,19 +14,14 @@ export const IntegrationHeader = (props: IntegrationHeaderProps) => {
     <DocsHeader
       title={props.integration.name}
       description={props.integration.description}
-      icon={
-        <img src={getIntegrationIconUrl(props.integration, isDarkTheme)} width={48} height={48} />
-      }
+      icon={<img src={getIntegrationIconUrl(props.integration, isDarkTheme)} width={48} height={48} />}
       categories={props.categories}
     />
   );
 };
 
-export const getIntegrationIconUrl = (
-  integration: IntegrationDefinition,
-  isDarkTheme: boolean
-): string =>
-  typeof integration.iconUrl === 'string'
+export const getIntegrationIconUrl = (integration: IntegrationDefinition, isDarkTheme: boolean): string =>
+  typeof integration.iconUrl === "string"
     ? integration.iconUrl
     : isDarkTheme
       ? integration.iconUrl.dark
