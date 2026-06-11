@@ -154,7 +154,6 @@ export type HomarrDocumentationPath =
   | "/docs/getting-started/installation/synology"
   | "/docs/getting-started/installation/unraid"
   | "/docs/integrations/adguard-home"
-  | "/docs/integrations/technitium-dns"
   | "/docs/integrations/anchor"
   | "/docs/integrations/aria2"
   | "/docs/integrations/codeberg"
