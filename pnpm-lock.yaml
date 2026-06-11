@@ -550,8 +550,8 @@ catalogs:
       specifier: ^4.4.3
       version: 4.4.3
     zod-form-data:
-      specifier: ^3.0.1
-      version: 3.0.1
+      specifier: ^3.0.2
+      version: 3.0.2
     zod-validation-error:
       specifier: ^5.0.0
       version: 5.0.0
@@ -2044,7 +2044,7 @@ importers:
         version: 4.4.3
       zod-form-data:
         specifier: 'catalog:'
-        version: 3.0.1(zod@4.4.3)
+        version: 3.0.2(zod@4.4.3)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -2390,7 +2390,7 @@ importers:
         version: 4.4.3
       zod-form-data:
         specifier: 'catalog:'
-        version: 3.0.1(zod@4.4.3)
+        version: 3.0.2(zod@4.4.3)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -10695,8 +10695,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@3.0.1:
-    resolution: {integrity: sha512-uwSrDzpLDoXeAxePjPHrjjMelE5pk5zL5JcwLFISvqidGjtPl7hcheH584xGcS76c9IRHq6tqdGkf+A4eKO6Cw==}
+  zod-form-data@3.0.2:
+    resolution: {integrity: sha512-iN8oSINKqNHJ90T+SHUvHg2gfvF+gyVvg4nK1RYYhMUDUpUWaqwqawLbJNDxxrM59pgE0kdcMfqKVwK55Bm5cw==}
     peerDependencies:
       zod: '>= 3.25.0'
 
@@ -19144,7 +19144,7 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@3.0.1(zod@4.4.3):
+  zod-form-data@3.0.2(zod@4.4.3):
     dependencies:
       '@rvf/set-get': 7.0.1
       zod: 4.4.3
