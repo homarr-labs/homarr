@@ -9,10 +9,8 @@ const config: Config = {
   url: 'https://homarr.dev',
   baseUrl: '/',
   favicon: 'img/logo.png',
-  // Used for publishing to GitHub Pages
   organizationName: 'homarr-labs',
-  projectName: 'documentation',
-  // Has to be set even if not using translations
+  projectName: 'homarr',
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -21,6 +19,16 @@ const config: Config = {
   onBrokenMarkdownLinks: 'throw',
   onBrokenAnchors: 'throw',
   onDuplicateRoutes: 'throw',
+
+  future: {
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: true,
+      siteStorageNamespacing: true,
+      fasterByDefault: true,
+      mdx1CompatDisabledByDefault: false,
+    },
+  },
 
   markdown: {
     mermaid: true,
@@ -265,6 +273,19 @@ const config: Config = {
     ],
     'docusaurus-plugin-image-zoom',
     require.resolve('./plugins/validate-docs-coverage'),
+    function disableExpensiveBundlerOptimizationPlugin() {
+      return {
+        name: 'disable-expensive-bundler-optimizations',
+        configureWebpack(_config: unknown, isServer: boolean) {
+          return {
+            optimization: {
+              concatenateModules: process.env.CI != null && process.env.CI !== 'false' ? !isServer : false,
+            },
+          };
+        },
+      };
+    },
+    '@signalwire/docusaurus-plugin-llms-txt',
     async function tailwindCssPlugin(context, options) {
       return {
         name: 'docusaurus-tailwindcss',
