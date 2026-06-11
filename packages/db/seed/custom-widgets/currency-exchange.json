@@ -1,0 +1,18 @@
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Currency Exchange (JPY)",
+  "description": "Converts 50 Japanese Yen to EUR and USD using European Central Bank rates",
+  "url": "https://api.frankfurter.dev/v1/latest?from=JPY&to=EUR,USD&amount=50",
+  "authType": "none",
+  "method": "GET",
+  "displayType": "keyValue",
+  "displayConfig": {
+    "type": "keyValue",
+    "mappings": [
+      { "label": "50 JPY → EUR", "jsonPath": "$.rates.EUR", "unit": "€" },
+      { "label": "50 JPY → USD", "jsonPath": "$.rates.USD", "unit": "$" }
+    ],
+    "layout": "list",
+    "columns": 2
+  }
+}

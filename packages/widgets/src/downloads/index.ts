@@ -28,7 +28,7 @@ const columnsList = [
 ] as const satisfies (keyof ExtendedDownloadClientItem)[];
 const sortingExclusion = ["actions", "id", "state"] as const satisfies readonly (typeof columnsList)[number][];
 const columnsSort = columnsList.filter((column) =>
-  sortingExclusion.some((exclusion) => exclusion !== column),
+  sortingExclusion.every((exclusion) => exclusion !== column),
 ) as Exclude<typeof columnsList, (typeof sortingExclusion)[number]>;
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {

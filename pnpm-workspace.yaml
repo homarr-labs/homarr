@@ -21,6 +21,7 @@ catalog:
   "@immich/sdk": ^2.7.5
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
+  "@modelcontextprotocol/sdk": 1.26.0
   "@mantine/charts": ^9.3.0
   "@mantine/colors-generator": ^9.3.0
   "@mantine/core": ^9.3.0
@@ -44,6 +45,7 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
+  "@tanstack/query-persist-client-core": ^5.101.0
   "@tanstack/react-query": ^5.101.0
   "@tanstack/react-query-devtools": ^5.101.0
   "@tanstack/react-query-next-experimental": ^5.101.0
@@ -80,13 +82,13 @@ catalog:
   "@types/crypto-js": ^4.2.2
   "@types/css-modules": ^1.0.5
   "@types/dockerode": ^4.0.1
-  "@types/node": ^24.12.4
+  "@types/node": ^24.13.1
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.16
   "@types/react-dom": 19.2.3
-  "@types/swagger-ui-react": ^5.18.0
+  "@scalar/api-reference-react": ^0.9.42
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
@@ -98,6 +100,8 @@ catalog:
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.17
+  jszip: ^3.10.1
+  sql.js: ^1.12.0
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
   better-sqlite3: ^12.10.0
@@ -126,13 +130,18 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.11.0
-  isomorphic-dompurify: ^3.15.0
+  isomorphic-dompurify: ^3.16.0
   jotai: ^2.20.0
   jsdom: ^29.1.1
   json5: ^2.2.3
+  jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
+  lucide-react: ^1.17.0
+  "mantine-contextmenu": ^7.17.1
+  mantine-datatable: ^9.2.2
   mantine-react-table: npm:mantine-react-table-open@9.0.3
+  mcp-handler: ^1.1.0
   maria2: ^0.4.1
   mysql2: 3.22.4
   next: 16.2.7
@@ -149,6 +158,7 @@ catalog:
   react: 19.2.7
   react-dom: 19.2.7
   react-error-boundary: ^6.1.2
+  react-jsx-parser: ^2.4.1
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
@@ -158,15 +168,15 @@ catalog:
   semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
-  swagger-ui-react: ^5.32.6
   testcontainers: ^12.0.1
   timezones-ical-library: ^2.2.0
+  trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
   tsx: 4.20.4
   turbo: ^2.9.16
   typescript: ^5.9.3
-  undici: 7.24.6
+  undici: 8.4.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.7
   vite-tsconfig-paths: ^6.1.1
@@ -176,7 +186,7 @@ catalog:
   xml2js: ^0.6.2
   yaml: 2.9.0
   zod: ^4.4.3
-  zod-form-data: ^3.0.1
+  zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
 catalogMode: strict
 minimumReleaseAge: 4320

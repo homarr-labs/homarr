@@ -66,8 +66,7 @@ e2e/shared/tmp
 #personal backgrounds
 apps/nextjs/public/images/background.png
 
-# next-intl
-en.d.json.ts
+
 
 # personal agent config
 .opencode

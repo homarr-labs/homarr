@@ -7,6 +7,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { humanFileSize } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
@@ -32,17 +33,14 @@ const getDisplayText = (item: { used: string; available: string; percentage: num
 
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery(queryInput);
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput, {
+    staleTime: 5 * 1000,
+  });
   const utils = clientApi.useUtils();
 
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
   const t = useI18n();
-
-  const lastItem = data.at(-1);
-
-  if (!lastItem) return null;
-  const { fileSystem, smart } = lastItem.healthInfo;
 
   clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(queryInput, {
     onData(data) {
@@ -51,6 +49,11 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
       );
     },
   });
+
+  const lastItem = data.at(-1);
+
+  if (!lastItem) return <WidgetEmptyState />;
+  const { fileSystem, smart } = lastItem.healthInfo;
 
   if (fileSystem.length === 0) {
     throw new NoIntegrationDataError();

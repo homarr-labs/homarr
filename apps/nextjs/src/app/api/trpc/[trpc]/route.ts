@@ -44,7 +44,8 @@ const handler = auth(async (req) => {
   const response = await fetchRequestHandler({
     endpoint: trpcPath,
     router: appRouter,
-    req,
+    // mcp-handler globally augments Request with `auth?: AuthInfo`, conflicting with NextAuth's `auth: Session | null`
+    req: req as unknown as Request,
     createContext: () => createTRPCContext({ session, headers: req.headers }),
     onError({ error, path, type }) {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));

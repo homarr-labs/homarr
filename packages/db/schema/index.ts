@@ -49,6 +49,8 @@ export const {
   sectionLayouts,
   trustedCertificateHostnames,
   cronJobConfigurations,
+  customWidgetDefinitions,
+  customWidgetSecrets,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;
@@ -57,3 +59,5 @@ export type Session = InferSelectModel<typeof schema.sessions>;
 export type VerificationToken = InferSelectModel<typeof schema.verificationTokens>;
 export type Integration = InferSelectModel<typeof schema.integrations>;
 export type IntegrationSecret = InferSelectModel<typeof schema.integrationSecrets>;
+export type CustomWidgetDefinition = InferSelectModel<typeof schema.customWidgetDefinitions>;
+export type CustomWidgetSecret = InferSelectModel<typeof schema.customWidgetSecrets>;

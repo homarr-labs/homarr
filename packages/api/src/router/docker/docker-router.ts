@@ -16,10 +16,18 @@ import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 export const dockerRouter = createTRPCRouter({
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List all Docker containers with their state, image, CPU/memory usage, and ports",
+      },
+    })
     .concat(dockerMiddleware())
     .query(async () => {
       const innerHandler = dockerContainersRequestHandler.handler({});
-      const result = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const result = await innerHandler.getCachedOrUpdatedDataAsync({
+        forceUpdate: false,
+      });
 
       const { data, timestamp } = result;
 
@@ -50,6 +58,12 @@ export const dockerRouter = createTRPCRouter({
     }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Start Docker containers. REQUIRED: ids (array of container ID strings from docker_getContainers)",
+      },
+    })
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
@@ -65,6 +79,12 @@ export const dockerRouter = createTRPCRouter({
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Stop Docker containers. REQUIRED: ids (array of container ID strings from docker_getContainers)",
+      },
+    })
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
@@ -80,6 +100,13 @@ export const dockerRouter = createTRPCRouter({
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Restart Docker containers. REQUIRED: ids (array of container ID strings from docker_getContainers)",
+      },
+    })
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
@@ -95,6 +122,13 @@ export const dockerRouter = createTRPCRouter({
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Remove/delete Docker containers. REQUIRED: ids (array of container ID strings from docker_getContainers)",
+      },
+    })
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
@@ -110,6 +144,13 @@ export const dockerRouter = createTRPCRouter({
     }),
   logs: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Fetch logs from a Docker container. REQUIRED: id (container ID from docker_getContainers). OPTIONAL: tail (number 1-1000, default 200)",
+      },
+    })
     .concat(dockerMiddleware())
     .input(
       z.object({

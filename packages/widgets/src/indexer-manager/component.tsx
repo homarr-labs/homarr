@@ -18,10 +18,10 @@ export default function IndexerManagerWidget({
   height,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const [indexersData] = clientApi.widget.indexerManager.getIndexersStatus.useSuspenseQuery(
+  const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery(
     { integrationIds },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

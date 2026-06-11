@@ -7,7 +7,13 @@ export const infoRouter = createTRPCRouter({
   getInfo: protectedProcedure
     .input(z.void())
     .output(z.object({ version: z.string() }))
-    .meta({ openapi: { method: "GET", path: "/api/info", tags: ["info"] } })
+    .meta({
+      openapi: { method: "GET", path: "/api/info", tags: ["info"] },
+      mcp: {
+        enabled: true,
+        description: "Get Homarr server version information",
+      },
+    })
     .query(() => {
       return {
         version: packageJson.version,

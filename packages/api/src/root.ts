@@ -24,10 +24,12 @@ export const appRouter = createTRPCRouter({
   cronJobs: lazy(() => import("./router/cron-jobs").then((mod) => mod.cronJobsRouter)),
   apiKeys: lazy(() => import("./router/apiKeys").then((mod) => mod.apiKeysRouter)),
   media: lazy(() => import("./router/medias/media-router").then((mod) => mod.mediaRouter)),
+  queryCache: lazy(() => import("./router/query-cache").then((mod) => mod.queryCacheRouter)),
   updateChecker: lazy(() => import("./router/update-checker").then((mod) => mod.updateCheckerRouter)),
   certificates: lazy(() => import("./router/certificates/certificate-router").then((mod) => mod.certificateRouter)),
   bangs: lazy(() => import("./router/bangs/bangs-router").then((mod) => mod.bangsRouter)),
   info: lazy(() => import("./router/info").then((mod) => mod.infoRouter)),
+  customWidget: lazy(() => import("./router/custom-widget/custom-widget-router").then((mod) => mod.customWidgetRouter)),
 });
 
 // export type definition of API

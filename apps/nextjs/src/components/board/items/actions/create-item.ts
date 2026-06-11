@@ -2,6 +2,7 @@ import { getBoardLayouts } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
 import type { WidgetKind } from "@homarr/definitions";
+import { widgetDefaultSizes } from "@homarr/definitions";
 
 import type { Board, EmptySection, Item, ItemLayout } from "~/app/[locale]/boards/_types";
 import { getFirstEmptyPosition } from "./empty-position";
@@ -19,7 +20,7 @@ export const createItemCallback =
   (previous: Board): Board => {
     const firstSection = previous.sections
       .filter((section): section is EmptySection => section.kind === "empty")
-      .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
+      .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
       .at(0);
 
     if (!firstSection) return previous;
@@ -28,7 +29,7 @@ export const createItemCallback =
       id: id ?? createId(),
       kind,
       options,
-      layouts: createItemLayouts(previous, firstSection),
+      layouts: createItemLayouts(previous, firstSection, kind),
       integrationIds,
       advancedOptions: {
         title: null,
@@ -48,15 +49,20 @@ export const createItemCallback =
     };
   };
 
-const createItemLayouts = (board: Board, currentSection: EmptySection): ItemLayout[] => {
+const defaultItemSize = { width: 1, height: 1 };
+
+const getWidgetItemSize = (kind: WidgetKind) => widgetDefaultSizes[kind] ?? defaultItemSize;
+
+const createItemLayouts = (board: Board, currentSection: EmptySection, kind: WidgetKind): ItemLayout[] => {
   const layouts = getBoardLayouts(board);
+  const itemSize = getWidgetItemSize(kind);
 
   return layouts.map((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
     const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
 
     const emptyPosition = boardLayout
-      ? getFirstEmptyPosition(elements, boardLayout.columnCount)
+      ? getFirstEmptyPosition(elements, boardLayout.columnCount, 9999, itemSize)
       : { xOffset: 0, yOffset: 0 };
 
     if (!emptyPosition) {
@@ -64,8 +70,8 @@ const createItemLayouts = (board: Board, currentSection: EmptySection): ItemLayo
     }
 
     return {
-      width: 1,
-      height: 1,
+      width: itemSize.width,
+      height: itemSize.height,
       ...emptyPosition,
       sectionId: currentSection.id,
       layoutId,
