@@ -8,6 +8,7 @@ const config: Config = {
   tagline: "A simple yet powerful dashboard for your server.",
   url: "https://homarr.dev",
   baseUrl: "/",
+  trailingSlash: true,
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
