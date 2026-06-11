@@ -1,0 +1,62 @@
+---
+title: 'Technitium DNS'
+description: "Technitium DNS Server is a self-hosted DNS server with ad-blocking and network-wide filtering capabilities."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import Alert from '@theme/Admonition';
+import { technitiumDnsIntegration } from '.';
+import { dnsHoleSummaryWidget } from '@site/docs/widgets/dns-hole-summary';
+import { dnsHoleControlsWidget } from '@site/docs/widgets/dns-hole-controls';
+
+<IntegrationHeader
+    integration={technitiumDnsIntegration}
+    categories={['DNS Hole']}
+/>
+
+<Alert type="note" className='my-2'>
+    Homarr supports Technitium DNS v11 and above. The correct API version is detected automatically — no manual configuration is required.
+</Alert>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: dnsHoleSummaryWidget,
+    },{
+        widget: dnsHoleControlsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+
+<Alert type="info" className='my-2'>
+    The **API token** option is recommended. API tokens are non-expiring and do not require storing your admin password in Homarr.
+    Username and password authentication uses a session token that expires after inactivity, triggering a silent re-login on the next request.
+</Alert>
+
+<Alert type="warning" className='my-2'>
+    The **DNS Hole Controls** widget (enabling, disabling, and timed disabling of blocking) requires the token to have settings-level permissions.
+    The **DNS Hole Summary** widget (stats only) works with any valid token.
+    If Homarr cannot read the blocking status due to insufficient permissions, the status indicator will be hidden but statistics will still be shown.
+</Alert>
+
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+        "Open the Technitium DNS web console and sign in.",
+        "Click on your username in the top-right corner and select \"Create API Token\".",
+        "Give the token a name (e.g. \"Homarr\") and click \"Create Token\".",
+        "Copy the generated token and paste it into the API Key field in Homarr."
+    ]
+}, {
+    credentials: ['username', 'password'],
+    steps: [],
+    body: "Enter your Technitium DNS admin credentials. Homarr will exchange them for a session token and transparently re-authenticate when the session expires."
+}]} />

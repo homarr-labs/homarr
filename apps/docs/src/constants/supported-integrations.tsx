@@ -26,6 +26,7 @@ export const supportedIntegrations = [
     iconUrl: "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/adguardhome.svg",
     name: "AdguardHome",
   },
+  { iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg", name: "Technitium" },
   { iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/tdarr.png", name: "Tdarr" },
   { iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/prowlarr.svg", name: "Prowlarr" },
   { iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/ical.svg", name: "iCal" },

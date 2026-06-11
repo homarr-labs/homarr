@@ -21,7 +21,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   overseerr: "overseerr",
   piHole: "pi-hole",
   adGuardHome: "adguard-home",
-  technitiumDns: null,
+  technitiumDns: "technitium-dns",
   homeAssistant: "home-assistant",
   openmediavault: "open-media-vault",
   dashDot: "dash-dot",
