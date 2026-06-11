@@ -22,11 +22,14 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.1",
+    "@docusaurus/faster": "^3.10.1",
     "@docusaurus/plugin-content-docs": "^3.10.1",
     "@docusaurus/plugin-sitemap": "^3.10.1",
     "@docusaurus/preset-classic": "^3.10.1",
     "@homarr/definitions": "workspace:^",
     "@mdx-js/react": "^3.1.1",
+    "@scalar/api-reference-react": "catalog:",
+    "@signalwire/docusaurus-plugin-llms-txt": "^1.2.2",
     "@nivo/line": "^0.99.0",
     "@tabler/icons-react": "catalog:",
     "autoprefixer": "^10.5.0",
@@ -40,7 +43,6 @@
     "random-word-slugs": "^0.1.7",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "swagger-ui-react": "catalog:",
     "swiper": "^12.2.0",
     "tailwindcss": "^3.4.19"
   },

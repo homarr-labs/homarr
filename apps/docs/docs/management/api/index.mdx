@@ -6,8 +6,7 @@ tags:
   - Interface
 ---
 
-import SwaggerUI from "swagger-ui-react"
-import "swagger-ui-react/swagger-ui.css"
+import { ApiReferenceReact } from "@scalar/api-reference-react"
 
 Using the Homarr API, you can interface with the application with your own code and business logic.
 It enables you to trigger almost all actions that you can perform from the Homarr UI.
@@ -25,7 +24,7 @@ Navigate to ``Management`` > ``Tools`` > ``API``.
 You can copy the JSON url into your OpenAPI client or try out the endpoints directly from your browser.
 
 ## Authentication
-Many endpoints will require you to authenticate. At the top of the Swagger documentation, you'll find a button to authenticate yourself with a API key.
+Many endpoints will require you to authenticate. At the top of the API reference, you'll find a button to authenticate yourself with an API key.
 You can obtain API keys from the "Authentication" tab at the top of the page.
 API keys will not expire and can be used indefinitely.
 
@@ -75,4 +74,11 @@ Last update:
 
 :::
 
-<SwaggerUI url="/api/open-api-schema.json" />
+<ApiReferenceReact
+  configuration={{
+    url: "/api/open-api-schema.json",
+    theme: "kepler",
+    hideModels: false,
+    hideDownloadButton: false,
+  }}
+/>
