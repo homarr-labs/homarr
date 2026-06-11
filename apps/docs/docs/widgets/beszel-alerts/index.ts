@@ -4,8 +4,7 @@ import { IconBell } from "@tabler/icons-react";
 export const beszelAlertsWidget: WidgetDefinition = {
   icon: IconBell,
   name: "Beszel Alerts",
-  description:
-    "View Beszel alert configurations and history with triggered/ok status indicators.",
+  description: "View Beszel alert configurations and history with triggered/ok status indicators.",
   path: "../../widgets/beszel-alerts",
   configuration: {
     items: [

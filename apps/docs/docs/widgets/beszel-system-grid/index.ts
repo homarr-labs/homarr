@@ -4,8 +4,7 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 export const beszelSystemGridWidget: WidgetDefinition = {
   icon: IconLayoutGrid,
   name: "Beszel Systems (Grid)",
-  description:
-    "Card grid view of all Beszel-monitored systems with real-time metrics.",
+  description: "Card grid view of all Beszel-monitored systems with real-time metrics.",
   path: "../../widgets/beszel-system-grid",
   configuration: {
     items: [

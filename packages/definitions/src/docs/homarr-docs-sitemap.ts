@@ -157,7 +157,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/anchor"
   | "/docs/integrations/aria2"
   | "/docs/integrations/audiobookshelf"
-  | "/docs/integrations/beszel"
   | "/docs/integrations/codeberg"
   | "/docs/integrations/coolify"
   | "/docs/integrations/dash-dot"
@@ -318,6 +317,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/navidrome"
   | "/docs/integrations/umami"
   | "/docs/integrations/peanut"
+  | "/docs/integrations/beszel"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/app"
@@ -364,6 +364,4 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/beszel-system-grid"
   | "/docs/widgets/beszel-alerts"
   | "/docs/widgets/beszel-system-stats"
-  | "/docs/widgets/custom-api"
-  | "/docs/management/tools/backup"
-  | "/docs/management/custom-widgets";
+  | "/docs/widgets/custom-api";

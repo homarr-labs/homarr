@@ -4,8 +4,7 @@ import { IconTable } from "@tabler/icons-react";
 export const beszelSystemTableWidget: WidgetDefinition = {
   icon: IconTable,
   name: "Beszel Systems (Table)",
-  description:
-    "Table view of all Beszel-monitored systems with sortable columns and status indicators.",
+  description: "Table view of all Beszel-monitored systems with sortable columns and status indicators.",
   path: "../../widgets/beszel-system-table",
   configuration: {
     items: [
@@ -23,19 +22,7 @@ export const beszelSystemTableWidget: WidgetDefinition = {
         description: "Default column to sort the table by",
         values: {
           type: "select",
-          options: [
-            "System",
-            "CPU",
-            "Memory",
-            "Disk",
-            "GPU",
-            "Load Avg",
-            "Net",
-            "Temp",
-            "Services",
-            "Uptime",
-            "Agent",
-          ],
+          options: ["System", "CPU", "Memory", "Disk", "GPU", "Load Avg", "Net", "Temp", "Services", "Uptime", "Agent"],
         },
         defaultValue: "System",
       },

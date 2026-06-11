@@ -4,8 +4,7 @@ import { IconChartAreaLine } from "@tabler/icons-react";
 export const beszelSystemStatsWidget: WidgetDefinition = {
   icon: IconChartAreaLine,
   name: "Beszel System Stats",
-  description:
-    "Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel.",
+  description: "Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel.",
   path: "../../widgets/beszel-system-stats",
   configuration: {
     items: [
