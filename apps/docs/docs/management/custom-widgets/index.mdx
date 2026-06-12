@@ -1,0 +1,208 @@
+---
+tags:
+  - Custom Widgets
+  - API
+  - Widgets
+  - JSX
+---
+
+# Custom Widgets
+
+:::warning
+
+Custom widgets are a new feature. Share feedback, ask questions, and discuss ideas in our [GitHub Discussions](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets).
+
+:::
+
+Custom widgets allow you to fetch data from any HTTP API and display it on your Homarr dashboard. You define the API endpoint, authentication, and how the response should be rendered - no code compilation or server restart required.
+
+## Creating a Custom Widget
+
+To create a custom widget, navigate to the **Custom Widgets** section in the management sidebar and click the **Add** button. Fill in the configuration:
+
+- **Name** - Display name shown in the widget picker and on the dashboard
+- **Description** - Optional description shown in tooltips and management UI
+- **Icon URL** - Optional URL to an icon image for the widget
+- **URL** - The API endpoint to fetch data from (must include protocol, e.g. `https://api.example.com/stats`)
+- **Authentication** - How the API request is authenticated:
+  - `none` - Public APIs with no authentication
+  - `bearer` - Bearer token authentication
+  - `basic` - HTTP Basic auth (username + password)
+  - `apiKeyHeader` - API key sent as a custom HTTP header
+  - `apiKeyQuery` - API key sent as a query parameter
+- **Header Name** - Custom header or query parameter name for API key auth (e.g. `X-API-Key`)
+- **HTTP Method** - `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`
+- **Request Body** - JSON string body for `POST`/`PUT`/`PATCH` requests
+- **Display Type** - How the API response is rendered (see below)
+
+## Display Types
+
+| Display Type         | Description                                          | Best For                                 |
+| -------------------- | ---------------------------------------------------- | ---------------------------------------- |
+| **Single Value**     | Extracts a single value with a label and unit        | Metrics: temperature, uptime, user count |
+| **Key Value**        | Multiple labeled key-value pairs with optional units | System stats: CPU, memory, disk          |
+| **Table**            | API array data rendered as a sortable table          | Lists of items with columns              |
+| **Stat Grid**        | Labeled values in colored stat cards                 | Counts: movies, series, albums           |
+| **Progress Bars**    | Values as progress bars with percentages             | Usage: disk, quota, capacity             |
+| **Status Indicator** | Green/red status dots for health checks              | Service monitoring                       |
+| **Count Grid**       | Simple counts in a grid (no colors)                  | Library counts                           |
+| **Raw**              | Pretty-prints the raw JSON response                  | Debugging                                |
+| **Action Button**    | Clickable button executing the API request           | Triggers: restart, clear cache           |
+| **Custom JSX**       | Custom JSX template with Mantine v9 components       | Full layout control                      |
+
+### AI-Powered JSX Generation
+
+When editing or creating a custom widget with the **Custom JSX** display type, you'll find a **Copy Prompt** button. Clicking it copies a pre-formatted prompt describing your widget's name, API endpoint, and available Mantine components. Paste this into your preferred AI assistant (ChatGPT, Claude, Copilot, etc.) to generate a JSX template tailored to your data.
+
+<details>
+<summary>Example: Pokédex widget using Custom JSX</summary>
+
+```json
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Pokédex",
+  "description": "Browseable Pokémon list",
+  "iconUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+  "url": "https://pokeapi.co/api/v2/pokemon?limit=75",
+  "authType": "none",
+  "method": "GET",
+  "displayType": "customJsx",
+  "displayConfig": {
+    "type": "customJsx",
+    "template": "<Stack gap=\"md\" p=\"xs\">\n  <Card withBorder radius=\"xl\" p=\"md\" shadow=\"md\">\n    <Group justify=\"space-between\">\n      <Title order={3}>Pokédex</Title>\n    </Group>\n  </Card>\n  <PaginatedList pageSize={12}>\n    <Grid gutter=\"sm\">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target=\"_blank\" underline=\"never\">\n            <Card withBorder radius=\"xl\" p=\"xs\" shadow=\"md\">\n              <Stack gap=\"sm\" align=\"center\">\n                <Group justify=\"space-between\" style={{ width: \"100%\" }}>\n                  <Badge size=\"sm\" color=\"red\">#{i + 1}</Badge>\n                  <Text fw={800} tt=\"capitalize\">{pokemon.name}</Text>\n                </Group>\n                <Avatar\n                  src={\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\" + (i + 1) + \".png\"}\n                  size={92}\n                  radius=\"xl\"\n                />\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>"
+  }
+}
+```
+
+</details>
+
+## Importing and Exporting
+
+Custom widgets can be exported and imported as JSON files. To export, select the widget in the list and click the export button. To import, click the import button and paste the JSON. Secrets (API keys, passwords) are never included in exports and must be configured after import.
+
+The import format uses `"$schema": "homarr-custom-widget-v2"` to identify the widget version.
+
+## Available Mantine Components for Custom JSX
+
+When using the `customJsx` display type, your template has access to a whitelist of [Mantine v9](https://mantine.dev) components. Unrecognized components, event handlers, and dangerous tags are stripped for security.
+
+### Layout
+
+| Component           | Doc                                           |
+| ------------------- | --------------------------------------------- |
+| `Stack`             | [docs](https://mantine.dev/core/stack)        |
+| `Group`             | [docs](https://mantine.dev/core/group)        |
+| `Flex`              | [docs](https://mantine.dev/core/flex)         |
+| `Grid` / `Grid.Col` | [docs](https://mantine.dev/core/grid)         |
+| `SimpleGrid`        | [docs](https://mantine.dev/core/simple-grid)  |
+| `Center`            | [docs](https://mantine.dev/core/center)       |
+| `Container`         | [docs](https://mantine.dev/core/container)    |
+| `Space`             | [docs](https://mantine.dev/core/space)        |
+| `AspectRatio`       | [docs](https://mantine.dev/core/aspect-ratio) |
+
+### Typography & Content
+
+| Component         | Doc                                               |
+| ----------------- | ------------------------------------------------- |
+| `Text`            | [docs](https://mantine.dev/core/text)             |
+| `Title`           | [docs](https://mantine.dev/core/title)            |
+| `Code`            | [docs](https://mantine.dev/core/code)             |
+| `Highlight`       | [docs](https://mantine.dev/core/highlight)        |
+| `Mark`            | [docs](https://mantine.dev/core/mark)             |
+| `Kbd`             | [docs](https://mantine.dev/core/kbd)              |
+| `Blockquote`      | [docs](https://mantine.dev/core/blockquote)       |
+| `Anchor`          | [docs](https://mantine.dev/core/anchor)           |
+| `NumberFormatter` | [docs](https://mantine.dev/core/number-formatter) |
+
+### Data Display
+
+| Component                 | Doc                                               |
+| ------------------------- | ------------------------------------------------- |
+| `Badge`                   | [docs](https://mantine.dev/core/badge)            |
+| `Card` / `Card.Section`   | [docs](https://mantine.dev/core/card)             |
+| `Paper`                   | [docs](https://mantine.dev/core/paper)            |
+| `Alert`                   | [docs](https://mantine.dev/core/alert)            |
+| `ThemeIcon`               | [docs](https://mantine.dev/core/theme-icon)       |
+| `ColorSwatch`             | [docs](https://mantine.dev/core/color-swatch)     |
+| `Avatar` / `Avatar.Group` | [docs](https://mantine.dev/core/avatar)           |
+| `Image`                   | [docs](https://mantine.dev/core/image)            |
+| `BackgroundImage`         | [docs](https://mantine.dev/core/background-image) |
+| `Indicator`               | [docs](https://mantine.dev/core/indicator)        |
+| `Pill`                    | [docs](https://mantine.dev/core/pill)             |
+| `Spoiler`                 | [docs](https://mantine.dev/core/spoiler)          |
+
+### Tables
+
+| Component                               | Doc                                    |
+| --------------------------------------- | -------------------------------------- |
+| `Table` / `Table.Thead` / `Table.Tbody` | [docs](https://mantine.dev/core/table) |
+| `Table.Tr` / `Table.Th` / `Table.Td`    | [docs](https://mantine.dev/core/table) |
+
+### Lists
+
+| Component                    | Doc                                       |
+| ---------------------------- | ----------------------------------------- |
+| `List` / `List.Item`         | [docs](https://mantine.dev/core/list)     |
+| `Timeline` / `Timeline.Item` | [docs](https://mantine.dev/core/timeline) |
+
+### Feedback & Loading
+
+| Component                       | Doc                                            |
+| ------------------------------- | ---------------------------------------------- |
+| `Progress` / `Progress.Section` | [docs](https://mantine.dev/core/progress)      |
+| `RingProgress`                  | [docs](https://mantine.dev/core/ring-progress) |
+| `Skeleton`                      | [docs](https://mantine.dev/core/skeleton)      |
+| `Loader`                        | [docs](https://mantine.dev/core/loader)        |
+
+### Navigation & Overlay
+
+| Component                                                                | Doc                                          |
+| ------------------------------------------------------------------------ | -------------------------------------------- |
+| `TabsContainer` / `TabPanel`                                             | Custom interactive component                 |
+| `Accordion` / `Accordion.Item` / `Accordion.Control` / `Accordion.Panel` | [docs](https://mantine.dev/core/accordion)   |
+| `ScrollArea`                                                             | [docs](https://mantine.dev/core/scroll-area) |
+| `Tooltip`                                                                | [docs](https://mantine.dev/core/tooltip)     |
+
+### Charts
+
+| Component        | Doc                                                 |
+| ---------------- | --------------------------------------------------- |
+| `AreaChart`      | [docs](https://mantine.dev/charts/area-chart)       |
+| `BarChart`       | [docs](https://mantine.dev/charts/bar-chart)        |
+| `LineChart`      | [docs](https://mantine.dev/charts/line-chart)       |
+| `DonutChart`     | [docs](https://mantine.dev/charts/donut-chart)      |
+| `PieChart`       | [docs](https://mantine.dev/charts/pie-chart)        |
+| `RadarChart`     | [docs](https://mantine.dev/charts/radar-chart)      |
+| `RadialBarChart` | [docs](https://mantine.dev/charts/radial-bar-chart) |
+| `Sparkline`      | [docs](https://mantine.dev/charts/sparkline)        |
+
+### Interactive Components
+
+| Component       | Description                              |
+| --------------- | ---------------------------------------- |
+| `PaginatedList` | Client-side pagination wrapper           |
+| `Collapsible`   | Expandable/collapsible section           |
+| `StatBar`       | Horizontal stat bar                      |
+| `TypeBadge`     | Type-styled badge                        |
+| `Divider`       | [docs](https://mantine.dev/core/divider) |
+
+## Template Bindings
+
+Your template receives:
+
+- `data` - The sanitized API response object. Access fields via `data.fieldName` or `data.results[0].name`.
+- `String(v)` - Type-safe string conversion
+- `Number(v)` - Type-safe number conversion
+- `Boolean(v)` - Type-safe boolean conversion
+- `Math` - Safe subset: `round`, `floor`, `ceil`, `abs`, `min`, `max`, `pow`, `sqrt`, `PI`
+- `JSON.stringify(v)` - JSON serialization
+- `Array.isArray(v)` - Array type check
+- `Object.keys(v)`, `Object.values(v)`, `Object.entries(v)` - Object utilities
+
+## Security Constraints
+
+- Event handlers (`onClick`, `onChange`, etc.) are stripped
+- Dangerous HTML attributes (`dangerouslySetInnerHTML`) are stripped
+- `script`, `iframe`, `object`, `embed`, `form`, `style`, `link`, `meta`, `base` tags are forbidden
+- Template strings containing `eval`, `Function`, `import`, `require`, `globalThis`, `window`, `document`, `fetch` are rejected
+- Anchor `href` attributes are validated to only allow `https://`, relative (`/`), and hash (`#`) URLs

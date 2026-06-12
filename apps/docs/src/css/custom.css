@@ -1,8 +1,8 @@
+@import url(https://api.fontshare.com/v2/css?f[]=work-sans@2,1&display=swap);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url(https://api.fontshare.com/v2/css?f[]=work-sans@2,1&display=swap);
 
 :root {
   --ifm-color-primary: #fa5252;
@@ -18,14 +18,14 @@
 
   --aa-primary-color-rgb: #fa5252 !important;
   --aa-muted-color-rgb: #fa5252 !important;
-  --aa-background-color-rgb: 200,200,200 !important;
+  --aa-background-color-rgb: 200, 200, 200 !important;
 
-  --ifm-font-family-base: 'Work Sans', sans-serif;
+  --ifm-font-family-base: "Work Sans", sans-serif;
   --ifm-color-content-inverse: var(--ifm-color-emphasis-100);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #fa5252;
   --ifm-color-primary-dark: #f93232;
   --ifm-color-primary-darker: #f92222;
@@ -37,10 +37,9 @@
   --homarr-secondary-bg: #181818;
   --ifm-color-content-inverse: var(--ifm-color-emphasis-100);
 
-
   --aa-primary-color-rgb: #fa5252 !important;
   --aa-muted-color-rgb: #fa5252 !important;
-  --aa-background-color-rgb: 24,24,24 !important;
+  --aa-background-color-rgb: 24, 24, 24 !important;
 }
 
 .aa-DetachedOverlay {
@@ -75,7 +74,7 @@
 }
 
 .footer__copyright span.copyright_text {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .medium-zoom-overlay {
@@ -87,12 +86,16 @@
 }
 
 .menu__list {
-  transition: all 0.s ease-in-out !important;
+  transition: all 0s ease-in-out !important;
 }
 
 .announcementBar_node_modules-\@docusaurus-theme-classic-lib-theme-AnnouncementBar-styles-module {
   background-color: transparent !important;
-  background-image: radial-gradient(circle,  rgb(253, 126, 20) 0%, rgb(250, 82, 82) 100%) !important;
+  background-image: radial-gradient(
+    circle,
+    rgb(253, 126, 20) 0%,
+    rgb(250, 82, 82) 100%
+  ) !important;
   font-weight: 600;
 }
 
@@ -130,7 +133,7 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
   color: var(--ifm-color-primary);
 }
 
-:is(p, h3, h4, h5, h6):has(+ :is(ul, ol)){
+:is(p, h3, h4, h5, h6):has(+ :is(ul, ol)) {
   margin-bottom: 4px !important;
 }
 
@@ -159,7 +162,6 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
   padding: 6px 12px;
 }
 
-
 .hero-cards {
   transform: rotate(20deg) scale(0.8) skew(21deg);
   -webkit-transform: rotate(20deg) scale(0.8) skew(21deg);
@@ -175,7 +177,7 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
 }
 
 .app-card img {
-  transition:  transform 0.1s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 
 .app-card:hover img {
@@ -183,7 +185,7 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
 }
 
 .hover-animation {
-  animation:  hover-animation 5s ease-in-out forwards;
+  animation: hover-animation 5s ease-in-out forwards;
   animation-iteration-count: infinite;
 }
 
