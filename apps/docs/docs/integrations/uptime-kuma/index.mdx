@@ -1,0 +1,44 @@
+---
+title: 'Uptime Kuma'
+description: "Uptime Kuma is a self-hosted monitoring tool that tracks the availability of your services and websites."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { uptimeKumaIntegration } from '.';
+import { uptimeKumaWidget } from '@site/docs/widgets/uptime-kuma';
+
+
+<IntegrationHeader
+    integration={uptimeKumaIntegration}
+    categories={['Monitoring']}
+/>
+
+Uptime Kuma monitors the availability of your services and provides uptime statistics through its status page API.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: uptimeKumaWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['slug'],
+    steps: [
+        'Navigate to your Uptime Kuma instance',
+        'Go to Status Pages and create or select a status page',
+        'The slug is the URL path of your status page (e.g. "default" for /status/default)',
+    ]
+}]} />
+
+:::tip
+If you don't specify a slug, Homarr will use `default` as the status page slug.
+:::

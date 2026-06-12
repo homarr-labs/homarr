@@ -24,6 +24,7 @@ import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from 
 import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "../search-button.module.css";
@@ -34,12 +35,12 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -73,6 +74,7 @@ export default function MediaServerWidget({
     },
   );
 
+  if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (

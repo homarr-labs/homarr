@@ -8,6 +8,7 @@ import type { UpsStatus, UpsSummary } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
@@ -39,7 +40,7 @@ interface UpsContentProps {
 
 function UpsContent({ integrationIds, options, isEditMode, width }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
-  const [data] = clientApi.widget.ups.getSummaries.useSuspenseQuery({ integrationIds });
+  const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds }, { staleTime: 30 * 1000 });
 
   const utils = clientApi.useUtils();
   clientApi.widget.ups.subscribeSummaries.useSubscription(
@@ -58,6 +59,8 @@ function UpsContent({ integrationIds, options, isEditMode, width }: UpsContentPr
       },
     },
   );
+
+  if (!data) return <WidgetEmptyState />;
 
   const devices = data.flatMap((instance) =>
     instance.summaries.map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),

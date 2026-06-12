@@ -1,5 +1,7 @@
 import { defaultShouldDehydrateQuery, QueryClient } from "@tanstack/react-query";
 
+import { queryCacheDefaultStaleTimeMs } from "./query-cache";
+
 /**
  * Creates a headers callback for a given source
  * It will set the x-trpc-source header and cookies if needed
@@ -58,7 +60,7 @@ export const makeQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 5 * 1000,
+        staleTime: queryCacheDefaultStaleTimeMs,
       },
       dehydrate: {
         shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === "pending",

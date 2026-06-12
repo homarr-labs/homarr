@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
 import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconLoader } from "@tabler/icons-react";
+import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
@@ -13,6 +13,7 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
@@ -22,20 +23,19 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const [app] = clientApi.app.byId.useSuspenseQuery(
+  const { data: app } = clientApi.app.byId.useQuery(
     {
       id: options.appId,
     },
     {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
     },
   );
   useRegisterSpotlightContextResults(
-    `app-${app.id}`,
-    app.href
+    `app-${app?.id ?? options.appId}`,
+    app?.href
       ? [
           {
             id: app.id,
@@ -44,7 +44,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
             interaction() {
               return {
                 type: "link",
-                // We checked above that app.href is defined
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 href: app.href!,
                 newTab: options.openInNewTab,
@@ -55,6 +54,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
       : [],
     [app, options.openInNewTab],
   );
+
+  if (!app) return <WidgetEmptyState />;
 
   const isTiny = height < 100 || width < 100;
   const isColumnLayout = options.layout.startsWith("column");
@@ -130,7 +131,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
-        <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
+        <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />}>
           <PingIndicator appId={app.id} />
         </Suspense>
       ) : null}

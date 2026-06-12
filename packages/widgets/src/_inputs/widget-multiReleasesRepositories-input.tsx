@@ -457,7 +457,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
                   isNaN(precision) || precision <= 0
                     ? undefined
                     : {
-                        ...(tempRepository.versionFilter ?? {}),
+                        ...tempRepository.versionFilter,
                         precision,
                       },
               });
@@ -561,11 +561,11 @@ const ImportRepositorySelect = ({
               {tRepository("versionFilter.label")}:
             </Text>
 
-            <Code>{repository.versionFilter.prefix && repository.versionFilter.prefix}</Code>
+            <Code>{repository.versionFilter.prefix}</Code>
             <Code color="var(--mantine-primary-color-light)" fw={700}>
               {versionFilterPrecisionOptions[repository.versionFilter.precision]}
             </Code>
-            <Code>{repository.versionFilter.suffix && repository.versionFilter.suffix}</Code>
+            <Code>{repository.versionFilter.suffix}</Code>
           </Group>
         )}
       </Group>

@@ -1,0 +1,88 @@
+---
+authors:
+  - manuel-rw
+---
+
+# Homarr 1.0 - complete rewrite of all systems
+We proudly present to you - Homarr ``1.0``.
+We have started work on this new version back in 2023 and have worked tirelessly for months on this brand-new dashboard.
+
+This isn't our usual update. ``1.0`` doesn't use the same code from previous versions, but has been written from the ground up.
+Therefore, this version contains an unusual amount of breaking changes.
+This will be a one time occurrence and version > ``1.0`` will have less breaking changes.
+This time more important than every; **read the breaking changes** list and **create a backup** before updating.
+Some third party installation methods may take multiple days or weeks to update to the new version.
+
+See [this guide on how to import your previous Homarr dashboard](/docs/getting-started/after-the-installation#importing-a-zip-from-version-before-100)
+
+## Changes at a glance
+- **Asynchronous integrations system**: In versions prior to ``1.0``, we fetched data upon each request synchronously.
+This means that the user had to wait for the requests to finish so any data would appear.
+A page reload will trigger another request - and worse, this will happen for every user accessing your dashboard.
+In ``1.0``, we have implemented a new system that gets rid of this system and scales linearly.
+It will fetch data in background, even if you are not on the page.
+- **Permissions system**: You can now use detailed permissions to allow or prohibit users from certain actions.
+For easier management, you can organize users into groups and manage them all at the same time.
+- **Integration testing**: Starting from ``1.0``, we will require you to test the integration before you can use it.
+This guarantees that you've configured your integration correctly and helps you find errors faster.
+- **Re-imagined widgets**: All widgets have been rewritten & improved. They offer much better performance,
+reliability and scalability compared to < ``1.0``.
+- **Improved performance**: We have upgraded the underlying framework of Homarr and take advantage
+of an in-memory message bus and websockets to deliver data near realtime to you.
+
+<!-- truncate -->
+
+## Breaking changes
+:::warning
+
+Please consult the breaking changes list & upgrade guide if you used third-party installation methods.
+
+:::
+
+- Docker Image
+  - Removed support for ``arm/v7`` -> upgrade to newer architectures as an alternative
+  - Renamed image from ``ghcr.io/ajnart/homarr`` to ``ghcr.io/homarr-labs/homarr``. We now use semantic versioning for our release numbers.
+- Environment Variables
+  - New required env variable ``SECRET_ENCRYPTION_KEY`` used for encryption of secrets in the database
+  - Removed ``DISABLE_ANALYTICS``, can now be configured via UI
+  - Renamed ``AUTH_PROVIDER`` to ``AUTH_PROVIDERS``
+  - Renamed ``DATABASE_URL`` to ``DB_URL`` and made it optional conditionally. If ``DB_HOST`` is set, this is optional - otherwise it's required.
+  - Changed ``DOCKER_HOST`` to two new variables for hostnames (``DOCKER_HOSTNAMES``) and ports (``DOCKER_PORTS``). This allows for multiple docker integrations to be configured.
+  - ``AUTH_LOGOUT_REDIRECT_URL`` must now be a valid Url
+  - Increased minimum length of ``AUTH_OIDC_CLIENT_ID`` to 1
+  - Increased minimum length of ``AUTH_OIDC_CLIENT_SECRET`` to 1
+  - Removed ``AUTH_OIDC_TIMEOUT``
+  - Removed ``AUTH_LDAP_ADMIN_GROUP``, ``AUTH_LDAP_OWNER_GROUP``, ``AUTH_OIDC_ADMIN_GROUP`` and ``AUTH_OIDC_OWNER_GROUP`` -> groups are now managed without manual env binding
+  - ``CI`` will now also trigger an env validation skip like ``SKIP_ENV_VALIDATION``
+- Mounts
+  - Removed ``/app/data/configs`` -> JSON configs have been removed in favour of relation databases
+  - Removed ``/app/public/icons`` -> Images can not be uploaded via the [media management](/docs/management/media/) in the UI
+  - Moved ``/data`` to ``/appdata`` and restructured contents (not backwards compatible!) -> Create a backup before migration of the entire directory to copy data to new Homarr
+- Widgets:
+  - Calendar:
+    - Removed option ``Use Sonarr v4 API``
+    - Removed option ``Use Sonarr v5 API``
+    - Removed option ``Font Size``
+    - Removed option ``Hide week days``
+  - Download speed: We have removed this widget in favour of the brand new download widget which will also display this data.
+  - Dash. widget: We have removed this widget in favour of the System Health Widget. It will also display all data and some more than the old widget.
+- Database:
+  - Changed schema of the database to a completely new schema. They are not backwards compatible. Please export the data from old Homarr in the UI and import it in ``1.0``
+  - Removed all usage of JSON files to store data. Import JSON files in Homarr ``1.0`` to import your dashboards.
+  - Removed ``schemaVersion`` from JSON and use the drizzle migrations to keep track of schema versions and take care of migrations.
+- Web Server:
+  - Added an internal Nginx proxy to forward requests to two servers inside the container for technical reasons.
+  This could impact edge cases with iframes, cookies and custom setups.
+- Dependencies
+  - We now depend on [Redis](https://redis.io/) as a real time messaging bus
+- Development (relevant for contributors):
+  - Migrated to [pnpm](https://pnpm.io/)
+  - Migrated to a mono-repository
+  - All source code has been migrated to the [homarr-labs GitHub organization](https://github.com/homarr-labs)
+- Platform specific breaking changes:
+  - TrueNAS
+    - The TrueCharts app chart is permanently deprecated and no longer maintained / supported. Please migrate to Electric Eel or a different Kubernetes platform.
+  - Unraid
+    - The Homarr app must be reinstalled. The existing directories on your disk are not compatible with Homarr 1.0. Export your old data in < `` 1.0`` and install using different file system locations.
+  - Kubernetes
+    - The official Helm chart has moved from https://github.com/oben01/charts to https://github.com/homarr-labs/charts

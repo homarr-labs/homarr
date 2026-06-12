@@ -1,0 +1,40 @@
+---
+title: 'Weather'
+description: 'Displays the current weather information of a set location.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { weatherWidget } from '.';
+
+
+<WidgetHeader
+  widget={weatherWidget}
+  categories={["Weather"]}
+/>
+
+The Weather Widget uses your location to display the current, highest and lowest temperature.
+
+### Screenshots
+
+import forecastWeather from './img/forecast.png';
+import currentWeather from './img/current.png';
+
+<div className="flex flex-col gap-1">
+  <img src={forecastWeather} alt="weather forecast-5-days" width={128 * 4.5} />
+  <img src={currentWeather} alt="weather current" width={128 * 3} />
+</div>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={weatherWidget.configuration} />
+
+### Data source
+
+We use the Open Meteo API to fetch the weather and locations.
+If you need to whitelist the api, please use the following URL: `https://open-meteo.com`

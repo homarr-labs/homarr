@@ -1,6 +1,7 @@
 import SuperJSON from "superjson";
 
 import { createId, objectKeys } from "@homarr/common";
+import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
@@ -15,7 +16,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
+import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -38,11 +39,101 @@ import {
   searchEngines,
   sections,
   users,
+  customWidgetDefinitions,
 } from "../schema";
 import type { Integration } from "../schema";
 
-const isTruthyEnv = (value: string | undefined) =>
-  ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+
+const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> = [
+  {
+    id: "seed-dog-facts",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Random Dog Fact",
+      description: "Displays a random fun fact about dogs",
+      url: "https://dogapi.dog/api/v2/facts",
+      authType: "none",
+      method: "GET",
+      displayType: "singleValue",
+      displayConfig: {
+        type: "singleValue",
+        jsonPath: "$.data[0].attributes.body",
+        label: "Dog Fact",
+        unit: "",
+        valueSize: "sm",
+        labelPosition: "above",
+      },
+    },
+  },
+  {
+    id: "seed-currency-exchange",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Currency Exchange (JPY)",
+      description: "Converts 50 Japanese Yen to EUR and USD using European Central Bank rates",
+      url: "https://api.frankfurter.dev/v1/latest?from=JPY&to=EUR,USD&amount=50",
+      authType: "none",
+      method: "GET",
+      displayType: "keyValue",
+      displayConfig: {
+        type: "keyValue",
+        mappings: [
+          { label: "50 JPY → EUR", jsonPath: "$.rates.EUR", unit: "€" },
+          { label: "50 JPY → USD", jsonPath: "$.rates.USD", unit: "$" },
+        ],
+        layout: "list",
+        columns: 2,
+      },
+    },
+  },
+  {
+    id: "seed-jellyfin",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Jellyfin library",
+      description: "Counts the number of movies, series, episodes and songs in the library",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
+      url: "https://jellyfin.homelab.com/Items/Counts",
+      authType: "apiKeyHeader",
+      headerName: "X-Emby-Token",
+      method: "GET",
+      requestBody: null,
+      displayType: "countGrid",
+      displayConfig: {
+        type: "countGrid",
+        items: [
+          { label: "Movies", jsonPath: "$.MovieCount", unit: "" },
+          { label: "Series", jsonPath: "$.SeriesCount", unit: "" },
+          { label: "Episodes", jsonPath: "$.EpisodeCount", unit: "" },
+          { label: "Songs", jsonPath: "$.SongCount", unit: "" },
+        ],
+        columns: 4,
+        valueSize: "lg",
+      },
+    },
+  },
+  {
+    id: "seed-pokedex",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Pokédex",
+      description: "Browseable Pokémon list",
+      iconUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+      url: "https://pokeapi.co/api/v2/pokemon?limit=75",
+      authType: "none",
+      headerName: null,
+      method: "GET",
+      requestBody: null,
+      displayType: "customJsx",
+      displayConfig: {
+        type: "customJsx",
+        template:
+          '<Stack gap="md" p="xs">\n  <Card\n    withBorder\n    radius="xl"\n    p="md"\n    shadow="md"\n    style={{\n      background: "linear-gradient(135deg, rgba(250,82,82,0.22), rgba(253,126,20,0.10), rgba(255,255,255,0.03))",\n      border: "1px solid rgba(250,82,82,0.35)",\n      overflow: "hidden"\n    }}\n  >\n    <Group justify="space-between" wrap="nowrap">\n      <Stack gap={2}>\n        <Title order={3}>Pokédex</Title>\n      </Stack>\n    </Group>\n  </Card>\n\n  <PaginatedList pageSize={12}>\n    <Grid gutter="sm">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target="_blank" underline="never">\n            <Card\n              withBorder\n              radius="xl"\n              p="xs"\n              shadow="md"\n              style={{\n                cursor: "pointer",\n                position: "relative",\n                overflow: "hidden",\n                minHeight: 190,\n                background: "linear-gradient(160deg, rgba(255,255,255,0.12), rgba(250,82,82,0.10), rgba(0,0,0,0.04))",\n                border: "1px solid rgba(250,82,82,0.28)",\n                transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease"\n              }}\n            >\n              <Stack gap="sm" align="center">\n                <Group justify="space-between" wrap="nowrap" style={{ width: "100%" }}>\n                  <Badge size="sm" color="red" variant="filled">\n                    #{String(i + 1).padStart(3, "0")}\n                  </Badge>\n                  <Text fw={800} tt="capitalize" ta="right" truncate style={{ maxWidth: 120 }}>\n                    {pokemon.name}\n                  </Text>\n                </Group>\n\n                <Paper\n                  radius="xl"\n                  p="xs"\n                  withBorder\n                  style={{\n                    background: "radial-gradient(circle, rgba(255,255,255,0.95), rgba(250,82,82,0.16))",\n                    border: "1px solid rgba(255,255,255,0.45)",\n                    boxShadow: "inset 0 0 20px rgba(255,255,255,0.25)"\n                  }}\n                >\n                  <Avatar\n                    src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}\n                    alt={pokemon.name}\n                    size={92}\n                    radius="xl"\n                    style={{\n                      transition: "transform 180ms ease",\n                      filter: "drop-shadow(0 8px 10px rgba(0,0,0,0.25))"\n                    }}\n                  />\n                </Paper>\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>',
+      },
+    },
+  },
+];
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -58,6 +149,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedDefaultIntegrationsAsync(db);
   await seedDefaultAppsAsync(db);
   await seedDefaultBoardAsync(db);
+  await seedDefaultCustomWidgetsAsync(db);
   await seedBoardWidgetsAsync(db);
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
@@ -410,7 +502,13 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
       options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
     }),
   ),
-  // Row 9: notebook + dockerContainers + weather = 12
+  // Row 9: beszelSystemGrid + beszelAlerts = 12
+  { kind: "beszelSystemGrid", width: 8, height: 3, needsIntegration: true },
+  { kind: "beszelAlerts", width: 4, height: 3, needsIntegration: true },
+  // Row 10: beszelSystemTable + beszelSystemStats = 12
+  { kind: "beszelSystemTable", width: 6, height: 3, needsIntegration: true },
+  { kind: "beszelSystemStats", width: 6, height: 4, needsIntegration: true },
+  // Row 11: notebook + dockerContainers + weather = 12
   { kind: "notebook", width: 4, height: 4, needsIntegration: false },
   { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
   { kind: "weather", width: 2, height: 1, needsIntegration: false },
@@ -545,6 +643,47 @@ const seedDemoUserAsync = async (db: Database) => {
   console.log(
     "Demo mode enabled: created demo user, mock integration, and sample board with widgets. Disable by setting DEMO_MODE=false.",
   );
+};
+
+const seedDefaultCustomWidgetsAsync = async (db: Database) => {
+  const seedIds = CUSTOM_WIDGET_SEEDS.map((s) => s.id);
+  const beforeCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
+
+  const seedValues = CUSTOM_WIDGET_SEEDS.map((seed) => {
+    const parsed = customWidgetImportSchema.parse(seed.data);
+    return {
+      id: seed.id,
+      name: parsed.name,
+      description: parsed.description ?? null,
+      iconUrl: parsed.iconUrl ?? null,
+      url: parsed.url,
+      authType: parsed.authType,
+      headerName: parsed.headerName ?? null,
+      method: parsed.method,
+      requestBody: parsed.requestBody ?? null,
+      displayType: parsed.displayType,
+      displayConfig: SuperJSON.stringify(parsed.displayConfig),
+      enabled: false,
+      creatorId: null,
+    };
+  });
+
+  if (seedValues.length === 0) return;
+
+  await db
+    .insert(customWidgetDefinitions)
+    .values(seedValues)
+    .onConflictDoNothing({ target: customWidgetDefinitions.id });
+
+  const afterCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
+  const createdCount = afterCount - beforeCount;
+
+  if (createdCount === 0) {
+    console.log("Skipping seeding of default custom widgets as they already exist");
+    return;
+  }
+
+  console.log(`Created ${createdCount} default custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {

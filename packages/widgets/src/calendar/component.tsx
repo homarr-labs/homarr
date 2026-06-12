@@ -39,8 +39,8 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const [data] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(input, {
-    refetchOnMount: false,
+  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
@@ -61,7 +61,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     },
   });
 
-  const events = useMemo(() => data.flatMap((item) => item.events), [data]);
+  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
   return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} />;
 };
@@ -152,13 +152,10 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           .filter(
             (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
           )
-          .sort((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
+          .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
         return (
           <CalendarDay
-            // new Date() does not work here, because for timezones like UTC-7 it will
-            // show one day earlier (probably due to the time being set to 00:00)
-            // see https://github.com/homarr-labs/homarr/pull/3120
             date={dayjs(tileDate).toDate()}
             events={eventsForDate}
             disabled={isEditMode || eventsForDate.length === 0}

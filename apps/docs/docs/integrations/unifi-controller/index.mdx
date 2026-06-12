@@ -1,0 +1,40 @@
+---
+title: 'Unifi Controller'
+description: "Unifi Controller is a network management platform for Unifi devices."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconTopologyFull } from "@tabler/icons-react";
+import { unifiControllerIntegration } from '.';
+import { networkControllerSummaryWidget } from '@site/docs/widgets/network-controller-summary';
+import { networkControllerStatusWidget } from '@site/docs/widgets/network-controller-status';
+
+
+<IntegrationHeader
+  integration={unifiControllerIntegration}
+  categories={['Network controller']}
+/>
+
+This integration is using the [node-unifi](https://www.npmjs.com/package/node-unifi) library under the hood to connect to the Unifi Controller.
+Therfore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro controllers as well as self-hosted UniFi controllers.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: networkControllerSummaryWidget },
+        { widget: networkControllerStatusWidget}
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: []
+}]} />

@@ -1,0 +1,34 @@
+---
+title: 'Uptime Kuma'
+description: 'Displays monitor uptime statistics, average uptime percentage, and service status counts.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { uptimeKumaWidget } from '.';
+import { uptimeKumaIntegration } from '@site/docs/integrations/uptime-kuma';
+
+
+<WidgetHeader
+  widget={uptimeKumaWidget}
+  categories={['Monitoring']}
+/>
+
+This widget displays uptime statistics from your Uptime Kuma status page, including a visual uptime ring, average uptime percentage, and per-status monitor counts.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: uptimeKumaIntegration,
+  note: "Displays monitors from the configured status page"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={uptimeKumaWidget.configuration} />

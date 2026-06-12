@@ -1,0 +1,52 @@
+---
+title: 'Tracearr'
+description: 'Monitor media server streams, user activity, and policy violations.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { tracearrWidget } from '.';
+import { tracearrIntegration } from '@site/docs/integrations/tracearr';
+
+
+<WidgetHeader
+  widget={tracearrWidget}
+  categories={['Media Monitoring']}
+/>
+
+The Tracearr widget provides a real-time monitoring dashboard for your media server activity. It displays active streams, user statistics, recent watching history, and policy violations.
+
+### Sections
+
+| Section | Description |
+|---|---|
+| **Stats Bar** | Displays Active Streams, Total Users, Transcode Count, and Total Bandwidth at a glance. |
+| **Active Streams** | Shows currently playing media with poster art, user info, progress bar, resolution, and transcoding status (Direct Play or Transcode). |
+| **Recent Activity** | A paginated list of watching history with user avatars and watched status. |
+| **Violations** | Alerts for policy violations (e.g., concurrent stream limits) with severity levels. |
+
+### Screenshots
+
+import widgetOverview from './img/widget-overview.png';
+import streamsAndStats from './img/streams-and-stats.png';
+
+<div className="flex flex-col gap-2">
+  <img src={widgetOverview} alt="tracearr-widget-overview" width={128 * 4} />
+  <img src={streamsAndStats} alt="tracearr-streams-and-stats" width={128 * 4} />
+</div>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: tracearrIntegration,
+}]} />
+
+### Configuration
+<WidgetConfig configuration={tracearrWidget.configuration} />

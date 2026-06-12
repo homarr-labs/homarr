@@ -52,7 +52,7 @@ jobs:
           xargs -r -a /tmp/changed-files pnpm exec oxfmt --write
 
       - name: Commit fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "style: auto-fix lint and format"
 

@@ -81,7 +81,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     );
   }, [groupedRepositories]);
 
-  const [results] = clientApi.useSuspenseQueries((t) =>
+  const queryResults = clientApi.useQueries((t) =>
     batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
         integrationId,
@@ -92,6 +92,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         })),
       }),
     ),
+  );
+
+  const results = useMemo(
+    () => queryResults.map((q) => q.data).filter((d): d is NonNullable<typeof d> => d != null),
+    [queryResults],
   );
 
   const repositories = useMemo(() => {
@@ -121,7 +126,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         (repository) =>
           "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
-      .sort((repoA, repoB) => {
+      .toSorted((repoA, repoB) => {
         if ("error" in repoA) return -1;
         if ("error" in repoB) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;

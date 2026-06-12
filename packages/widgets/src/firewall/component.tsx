@@ -184,12 +184,12 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
 
 export const useUpdatingCpuStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();
-  const [firewallsCpuData] = clientApi.widget.firewall.getFirewallCpuStatus.useSuspenseQuery(
+  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -225,12 +225,12 @@ export const useUpdatingCpuStatus = (integrationIds: string[]) => {
 
 export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();
-  const [firewallsMemoryData] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
+  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 15 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -266,12 +266,12 @@ export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
 
 export const useUpdatingVersionStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();
-  const [firewallsVersionData] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
+  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -306,12 +306,12 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
 
 export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();
-  const [firewallsInterfacesData] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
+  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 30 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,

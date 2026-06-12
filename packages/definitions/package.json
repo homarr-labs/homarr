@@ -12,7 +12,8 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./docs/*": "./src/docs/*.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

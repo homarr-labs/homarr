@@ -1,0 +1,40 @@
+---
+title: 'Immich Server Stats'
+description: 'Information about your Immich instance'
+hide_title: true
+---
+
+import { immichIntegration } from '../../integrations/immich';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { immichServerStatsWidget } from '.';
+
+
+<WidgetHeader
+  widget={immichServerStatsWidget}
+  categories={['Photos server']}
+/>
+
+### Screenshots
+
+import screen from './img/screen.png';
+
+
+<img src={screen} height={256} alt="immich server stats size-big" />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: immichIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+
+### Configuration
+<WidgetConfig configuration={immichServerStatsWidget.configuration} />
+

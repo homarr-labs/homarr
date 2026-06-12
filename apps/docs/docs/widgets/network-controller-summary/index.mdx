@@ -1,0 +1,39 @@
+---
+title: 'Network Controller Summary'
+description: 'Displays the summary of a Network Controller'
+hide_title: true
+---
+
+import { unifiControllerIntegration } from '@site/docs/integrations/unifi-controller';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import { networkControllerSummaryWidget } from '.';
+
+
+<WidgetHeader
+  widget={networkControllerSummaryWidget}
+  categories={['Network controller']}
+/>
+
+Shows information whether your WAN is connected, Wi-Fi is active and several other information.
+
+### Screenshots
+
+import summaryCard from './img/summary.png';
+
+<img src={summaryCard} alt="network-controller-summary" width={128 * 1.5} height={128 * 1.5} />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: unifiControllerIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />

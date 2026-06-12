@@ -1,0 +1,48 @@
+---
+title: 'PeaNUT'
+description: 'A tiny dashboard for Network UPS Tools (NUT) servers.'
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { peaNutIntegration } from '.';
+import { upsWidget } from '@site/docs/widgets/ups';
+
+<IntegrationHeader
+  integration={peaNutIntegration}
+  categories={['UPS', 'Hardware']}
+/>
+
+[PeaNUT](https://github.com/Brandawg93/PeaNUT) exposes the data of your [Network UPS Tools](https://networkupstools.org/) servers
+over a REST API, which Homarr reads to display the status of your UPS devices.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+      widget: upsWidget,
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+PeaNUT secures its API with HTTP Basic authentication when the `WEB_USERNAME` and `WEB_PASSWORD` environment variables
+are set on the PeaNUT instance. Provide the same credentials here. If the instance runs with `AUTH_DISABLED=true`, no
+secrets are required.
+
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [
+      "Set WEB_USERNAME and WEB_PASSWORD on your PeaNUT instance.",
+      "Create an integration in Homarr with the PeaNUT URL and those credentials.",
+    ],
+},{
+    credentials: [],
+    steps: [
+      "If PeaNUT runs with AUTH_DISABLED=true, create the integration with no credentials.",
+    ],
+}]} />
