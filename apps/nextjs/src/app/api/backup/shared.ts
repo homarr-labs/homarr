@@ -8,5 +8,4 @@ const migrationsFolderCandidates = [
   "/app/db/migrations/sqlite",
 ];
 
-export const findMigrationsFolder = () =>
-  migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));
+export const findMigrationsFolder = () => migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));

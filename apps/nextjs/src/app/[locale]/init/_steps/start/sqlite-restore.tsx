@@ -16,11 +16,7 @@ export const InitSqliteRestore = () => {
   if (expanded) {
     return (
       <Stack gap="sm">
-        <Button
-          variant="subtle"
-          size="xs"
-          onClick={() => setExpanded(false)}
-        >
+        <Button variant="subtle" size="xs" onClick={() => setExpanded(false)}>
           {t("backToOptions")}
         </Button>
         <Text size="sm" c="dimmed">

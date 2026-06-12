@@ -91,7 +91,9 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
     };
 
     void run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [active, onComplete, steps]);
 
   if (!active && currentStepIdx === -1) return null;
@@ -107,12 +109,7 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
         </Group>
 
         <Box pl={4}>
-          <Timeline
-            active={currentStepIdx}
-            bulletSize={24}
-            lineWidth={2}
-            color="blue"
-          >
+          <Timeline active={currentStepIdx} bulletSize={24} lineWidth={2} color="blue">
             {steps.map((step, i) => {
               const isDone = i < currentStepIdx;
               const isActive = i === currentStepIdx;
@@ -138,7 +135,16 @@ export const RestoreProgressPanel = ({ active, migrations, onComplete }: Restore
                   }
                 >
                   <Group gap="xs" mt={-4}>
-                    <step.icon size={16} color={isDone ? "var(--mantine-color-green-6)" : isActive ? "var(--mantine-color-blue-5)" : "var(--mantine-color-dimmed)"} />
+                    <step.icon
+                      size={16}
+                      color={
+                        isDone
+                          ? "var(--mantine-color-green-6)"
+                          : isActive
+                            ? "var(--mantine-color-blue-5)"
+                            : "var(--mantine-color-dimmed)"
+                      }
+                    />
                     <Text
                       size={isMigration ? "xs" : "sm"}
                       fw={isActive ? 600 : 400}

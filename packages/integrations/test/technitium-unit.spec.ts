@@ -748,10 +748,7 @@ describe("auth mechanism per version", () => {
 // ─── testingAsync (session cleanup) ──────────────────────────────────────────
 
 // Calls the protected testingAsync directly with a custom fetchAsync.
-function callTestingAsync(
-  integration: TechnitiumDnsIntegration,
-  fetchAsync: typeof fetchWithTrustedCertificatesAsync,
-) {
+function callTestingAsync(integration: TechnitiumDnsIntegration, fetchAsync: typeof fetchWithTrustedCertificatesAsync) {
   return (
     integration as unknown as {
       testingAsync: (input: { fetchAsync: typeof fetchWithTrustedCertificatesAsync }) => Promise<unknown>;
@@ -760,7 +757,6 @@ function callTestingAsync(
 }
 
 describe("testingAsync (session cleanup)", () => {
-
   test("credentials auth calls logout endpoint after successful test", async () => {
     sessionData = null;
     const fetchMock = vi.fn();

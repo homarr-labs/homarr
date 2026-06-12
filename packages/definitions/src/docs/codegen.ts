@@ -60,8 +60,12 @@ const updateSitemapTypeFileAsync = async (sitemapPathType: string) => {
 };
 
 const slugMapPaths = [
-  ...Object.values(integrationDocSlugs).filter(Boolean).map((slug) => `/docs/integrations/${slug}`),
-  ...Object.values(widgetDocSlugs).filter(Boolean).map((slug) => `/docs/widgets/${slug}`),
+  ...Object.values(integrationDocSlugs)
+    .filter(Boolean)
+    .map((slug) => `/docs/integrations/${slug}`),
+  ...Object.values(widgetDocSlugs)
+    .filter(Boolean)
+    .map((slug) => `/docs/widgets/${slug}`),
 ];
 
 const outputPath = path.join(__dirname, "homarr-docs-sitemap.ts");
@@ -73,7 +77,10 @@ const main = async () => {
     const sitemapData = parseXml(sitemapXml);
     paths = mapSitemapXmlToPaths(sitemapData);
   } catch {
-    const exists = await fs.access(outputPath).then(() => true, () => false);
+    const exists = await fs.access(outputPath).then(
+      () => true,
+      () => false,
+    );
     if (exists) {
       console.warn("Could not fetch sitemap from homarr.dev, keeping existing generated file");
       return;
