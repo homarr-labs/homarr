@@ -1,3 +1,31 @@
+## [1.65.0](https://github.com/homarr-labs/homarr/compare/v1.64.0...v1.65.0) (2026-06-12)
+
+### Features
+
+* add MCP server for AI assistant integration ([#5882](https://github.com/homarr-labs/homarr/issues/5882)) ([6baff7b](https://github.com/homarr-labs/homarr/commit/6baff7be3dc8f2473d93d17862b6d0b2df5c4d15))
+* add Technitium DNS integration, usable with DNS Hole widgets ([#5832](https://github.com/homarr-labs/homarr/issues/5832)) ([cd1a82a](https://github.com/homarr-labs/homarr/commit/cd1a82a640101cdca88d1e825edb11bd51f5ce66))
+* add Uptime Kuma, Audiobookshelf, Paperless-ngx, and Navidrome integrations ([#5910](https://github.com/homarr-labs/homarr/issues/5910)) ([d77c6f8](https://github.com/homarr-labs/homarr/commit/d77c6f8d4e50108f50831ee365e382a535acb254))
+* **beszel:** add Beszel integration with system monitoring widgets ([#5900](https://github.com/homarr-labs/homarr/issues/5900)) ([a4db9cf](https://github.com/homarr-labs/homarr/commit/a4db9cf0dcd8034015064f9d23f2d351b1d0c50a))
+* **board:** add widget hover overlay on dashboard ([#5888](https://github.com/homarr-labs/homarr/issues/5888)) ([29bd710](https://github.com/homarr-labs/homarr/commit/29bd7101b180acfb750c7d4414c30bd6450065e2))
+* custom widgets ([#5889](https://github.com/homarr-labs/homarr/issues/5889)) ([aecbca2](https://github.com/homarr-labs/homarr/commit/aecbca2b81ad1693c599e3168fd0c0723311b3b4))
+* **docs:** migrate documentation site into monorepo ([#5912](https://github.com/homarr-labs/homarr/issues/5912)) ([9e421c6](https://github.com/homarr-labs/homarr/commit/9e421c67bd87b5b7065118afedd08e7eb2140773))
+* **lang:** add Finnish language support ([#5892](https://github.com/homarr-labs/homarr/issues/5892)) ([2fb7bde](https://github.com/homarr-labs/homarr/commit/2fb7bde9002c2670aa49db804e352c3821fa8097))
+* search widgets by integration type when adding items ([#5909](https://github.com/homarr-labs/homarr/issues/5909)) ([48e1844](https://github.com/homarr-labs/homarr/commit/48e1844b5b9dc6d322bc22a972fdd29b6e03d3d2))
+* SQLite backup & restore with WASM preview ([#5887](https://github.com/homarr-labs/homarr/issues/5887)) ([5d1f268](https://github.com/homarr-labs/homarr/commit/5d1f268438b84bd19f5a79658a43931dd874cd41))
+* **ui:** add global query cache leveraging Redis ([#5811](https://github.com/homarr-labs/homarr/issues/5811)) ([74443a4](https://github.com/homarr-labs/homarr/commit/74443a49b2330b7d71c5ccdb873c61b270d1c72a))
+
+### Bug Fixes
+
+* **boards:** add permissions to board summary schema to fix manage page crash ([#5917](https://github.com/homarr-labs/homarr/issues/5917)) ([a42af0e](https://github.com/homarr-labs/homarr/commit/a42af0e678b58b6c63a8bac4978fb2951c6ddef8))
+* **ci:** rename baseBranches to baseBranchPatterns in renovate config ([15e061c](https://github.com/homarr-labs/homarr/commit/15e061cf03f2301996aaf11a25095194e5759fb5))
+* **db:** inline custom widget seed data to fix CJS migration crash ([f26007a](https://github.com/homarr-labs/homarr/commit/f26007a29a0b04765baba72122d38a9e5c639a0b))
+* **definitions:** gracefully handle sitemap fetch failure in codegen ([7f8b012](https://github.com/homarr-labs/homarr/commit/7f8b0121b303fa09a213c73e6a690463e9fc6b44))
+* **docs:** add trailingSlash for GitHub Pages compatibility ([28ceb37](https://github.com/homarr-labs/homarr/commit/28ceb37cbfe45f8ce45fd88e6a8c87ffe4c9b5c2))
+* **docs:** disable swcHtmlMinimizer and fix broken links ([905f795](https://github.com/homarr-labs/homarr/commit/905f795b5607744d0aeec4bb65d84aabd1505047))
+* gracefully skip widgets with unknown kind instead of crashing ([#5915](https://github.com/homarr-labs/homarr/issues/5915)) ([484b8cf](https://github.com/homarr-labs/homarr/commit/484b8cf9f18122a298dc7fae1027653cd287c09c))
+* **image-proxy:** use ArrayBuffer instead of Blob to prevent OOM on Node v24 ([#5926](https://github.com/homarr-labs/homarr/issues/5926)) ([3e464a7](https://github.com/homarr-labs/homarr/commit/3e464a76f2d1e5985f259270a4258f3db4f17c18))
+* **integrations:** support truenas json-rpc api, certificate trust, and api key auth ([#5861](https://github.com/homarr-labs/homarr/issues/5861)) ([f6d5f97](https://github.com/homarr-labs/homarr/commit/f6d5f97933cd257ee8851f2d6a27f56e2942076d))
+
 ## [1.64.0](https://github.com/homarr-labs/homarr/compare/v1.63.0...v1.64.0) (2026-06-05)
 
 ### Features
