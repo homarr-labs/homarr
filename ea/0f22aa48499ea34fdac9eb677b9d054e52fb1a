@@ -1,0 +1,25 @@
+apps/docs/docusaurus.config.ts
+  s_6d61b414731daa::t_fb2097f76777b5 31-33
+  s_6d61b414731daa::t_6e6d55d41c26ec 11
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_6d61b414731daa::t_4c22f9653cc4d2 24
+  s_6d61b414731daa::t_29c1829fd6edf0 348-350,353
+apps/docs/docs/community/donate.mdx
+  s_6d61b414731daa::t_b5122cc73a0db3 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ea0f22aa48499ea34fdac9eb677b9d054e52fb1a",
+  "prompts": {},
+  "sessions": {
+    "s_6d61b414731daa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de711b7a-5949-4ab2-942d-f31b6bf2d776",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
