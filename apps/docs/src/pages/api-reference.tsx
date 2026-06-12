@@ -17,10 +17,7 @@ export default function ApiReferencePage() {
                 hideDownloadButton: false,
                 mcp: { disabled: true },
                 customCss: `
-                  .scalar-api-client__footer { display: none !important; }
-                  [class*="scalar-"] [class*="powered-by"],
-                  .scalar-app .scalar-powered-by,
-                  [data-testid="powered-by"] { display: none !important; }
+                  .scalar-sidebar-footer a[href="https://www.scalar.com"] { display: none !important; }
                 `,
               }}
             />
