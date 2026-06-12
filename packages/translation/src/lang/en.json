@@ -4920,6 +4920,8 @@
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
       "footer": "Total {count} containers"
+      "totalCpu": "Total CPU: {cpu}%",
+      "totalMemory": "Total Mem: {memory}"
     },
     "field": {
       "name": {
