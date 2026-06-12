@@ -58,7 +58,7 @@ jobs:
           echo "OpenAPI spec updated ($(jq '.paths | length' /tmp/openapi.json) paths)"
 
       - name: Commit updated spec
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           add: "apps/docs/static/api/"
           default_author: github_actor

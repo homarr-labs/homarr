@@ -54,6 +54,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
 
   const hasUrlSecret = initialSecretsKinds.includes("url");
 
+  const utils = clientApi.useUtils();
   const router = useRouter();
   const form = useZodForm(formSchema, {
     initialValues: {
@@ -102,6 +103,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
+          void utils.integration.invalidate();
           void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
         onError: () => {

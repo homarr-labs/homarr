@@ -19,6 +19,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
   const t = useScopedI18n("integration.page.delete");
   const router = useRouter();
   const { openConfirmModal } = useConfirmModal();
+  const utils = clientApi.useUtils();
   const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
 
   return (
@@ -43,6 +44,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
                     router.replace("/manage/integrations");
                   }
                   void revalidatePathActionAsync("/manage/integrations");
+                  void utils.integration.invalidate();
                 },
                 onError: () => {
                   showErrorNotification({

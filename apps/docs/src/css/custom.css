@@ -1,8 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
 
 @import url(https://api.fontshare.com/v2/css?f[]=work-sans@2,1&display=swap);
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --spacing-128: 32rem;
+  --breakpoint-3xl: 1697px;
+}
 
 :root {
   --ifm-color-primary: #fa5252;
@@ -87,7 +93,7 @@
 }
 
 .menu__list {
-  transition: all 0.s ease-in-out !important;
+  transition: all 0.5s ease-in-out !important;
 }
 
 .announcementBar_node_modules-\@docusaurus-theme-classic-lib-theme-AnnouncementBar-styles-module {

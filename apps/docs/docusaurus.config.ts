@@ -289,13 +289,11 @@ const config: Config = {
       };
     },
     "@signalwire/docusaurus-plugin-llms-txt",
-    async function tailwindCssPlugin(context, options) {
+    async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",
         configurePostCss(postcssOptions) {
-          // Appends TailwindCSS and AutoPrefixer.
-          postcssOptions.plugins.push(require("tailwindcss"));
-          postcssOptions.plugins.push(require("autoprefixer"));
+          postcssOptions.plugins.push(require("@tailwindcss/postcss"));
           return postcssOptions;
         },
       };
