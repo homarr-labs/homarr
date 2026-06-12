@@ -19,7 +19,7 @@ export default async function NewCustomWidgetPage() {
   return (
     <>
       <DynamicBreadcrumb />
-      <Container size="xl">
+      <Container fluid>
         <Stack>
           <div>
             <Title>{t("page.create.title")}</Title>

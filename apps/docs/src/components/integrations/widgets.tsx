@@ -32,7 +32,7 @@ export const IntegrationCapabilites = ({ items }: IntegrationCapabilitesProps) =
               className="flex gap-6 rounded-xl border border-solid dark:border-[#333] border-[#e5e7eb] p-4 shadow-sm w-full items-center justify-between"
             >
               <div className="flex gap-6 items-center">
-                <div className="w-10 h-10 flex justify-center items-center bg-red-500 bg-opacity-10 rounded-md">
+                <div className="w-10 h-10 flex justify-center items-center bg-red-500/10 rounded-md">
                   <capability.icon size={24} stroke={1.5} className="stroke-red-500" />
                 </div>
 

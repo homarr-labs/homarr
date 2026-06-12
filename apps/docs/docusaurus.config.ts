@@ -17,7 +17,6 @@ const config: Config = {
     locales: ["en"],
   },
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "throw",
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
 
@@ -37,6 +36,9 @@ const config: Config = {
   markdown: {
     mermaid: true,
     format: "detect",
+    hooks: {
+      onBrokenMarkdownLinks: "throw",
+    },
   },
 
   themes: ["@docusaurus/theme-mermaid"],
@@ -60,7 +62,7 @@ const config: Config = {
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: ({ docPath }) => `https://github.com/homarr-labs/homarr/edit/dev/apps/docs/docs/${docPath}`,
           remarkPlugins: [a11yEmoji],
-          exclude: ["**/custom-widget.mdx"],
+          exclude: [],
           showLastUpdateAuthor: false,
           showLastUpdateTime: false,
         },

@@ -150,7 +150,13 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
     });
   },
   statusIndicator: (data, ctx) => {
-    (data.statusItems as Array<{ label: string; jsonPath: string; goodValues: string }>)?.forEach((item, i) => {
+    (
+      data.statusItems as Array<{
+        label: string;
+        jsonPath: string;
+        goodValues: string;
+      }>
+    )?.forEach((item, i) => {
       if (!item.label)
         ctx.addIssue({
           code: "too_small",
@@ -260,15 +266,34 @@ const formSchema = z
     columns: z.array(z.object({ header: z.string(), jsonPath: z.string() })),
     striped: z.boolean(),
     compact: z.boolean(),
-    statGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string(), color: z.string() })),
+    statGridItems: z.array(
+      z.object({
+        label: z.string(),
+        jsonPath: z.string(),
+        unit: z.string(),
+        color: z.string(),
+      }),
+    ),
     statGridColumns: z.number(),
     cardStyle: z.string(),
     progressBars: z.array(
-      z.object({ label: z.string(), valuePath: z.string(), maxPath: z.string(), unit: z.string(), color: z.string() }),
+      z.object({
+        label: z.string(),
+        valuePath: z.string(),
+        maxPath: z.string(),
+        unit: z.string(),
+        color: z.string(),
+      }),
     ),
     showPercentage: z.boolean(),
     barSize: z.string(),
-    statusItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), goodValues: z.string() })),
+    statusItems: z.array(
+      z.object({
+        label: z.string(),
+        jsonPath: z.string(),
+        goodValues: z.string(),
+      }),
+    ),
     statusLayout: z.string(),
     dotSize: z.string(),
     countGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() })),
@@ -281,7 +306,13 @@ const formSchema = z
     confirmText: z.string(),
     successMessage: z.string(),
     template: z.string(),
-    secrets: z.array(z.object({ kind: z.string(), value: z.string(), hasValue: z.boolean().optional() })),
+    secrets: z.array(
+      z.object({
+        kind: z.string(),
+        value: z.string(),
+        hasValue: z.boolean().optional(),
+      }),
+    ),
   })
   .superRefine((data, ctx) => {
     const validator = requiredFieldValidators[data.displayType];
@@ -362,12 +393,31 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     valueSize: v.valueSize,
     labelPosition: v.labelPosition,
   }),
-  keyValue: (v) => ({ type: "keyValue", mappings: v.mappings, layout: v.kvLayout, columns: v.kvColumns }),
-  table: (v) => ({ type: "table", tablePath: v.tablePath, columns: v.columns, striped: v.striped, compact: v.compact }),
-  statGrid: (v) => ({ type: "statGrid", items: v.statGridItems, columns: v.statGridColumns, cardStyle: v.cardStyle }),
+  keyValue: (v) => ({
+    type: "keyValue",
+    mappings: v.mappings,
+    layout: v.kvLayout,
+    columns: v.kvColumns,
+  }),
+  table: (v) => ({
+    type: "table",
+    tablePath: v.tablePath,
+    columns: v.columns,
+    striped: v.striped,
+    compact: v.compact,
+  }),
+  statGrid: (v) => ({
+    type: "statGrid",
+    items: v.statGridItems,
+    columns: v.statGridColumns,
+    cardStyle: v.cardStyle,
+  }),
   progressBars: (v) => ({
     type: "progressBars",
-    bars: v.progressBars.map((b) => ({ ...b, maxPath: b.maxPath || undefined })),
+    bars: v.progressBars.map((b) => ({
+      ...b,
+      maxPath: b.maxPath || undefined,
+    })),
     showPercentage: v.showPercentage,
     barSize: v.barSize,
   }),
@@ -389,7 +439,11 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     columns: v.countGridColumns,
     valueSize: v.countValueSize,
   }),
-  raw: (v) => ({ type: "raw", jsonPath: v.rawJsonPath, maxHeight: v.rawMaxHeight }),
+  raw: (v) => ({
+    type: "raw",
+    jsonPath: v.rawJsonPath,
+    maxHeight: v.rawMaxHeight,
+  }),
   actionButton: (v) => ({
     type: "actionButton",
     buttonLabel: v.buttonLabel,
@@ -415,7 +469,10 @@ const serverToFormFieldMap: Record<string, Record<string, string>> = {
 
 function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
   const errors: Record<string, string> = {};
-  const trpcErr = err as { data?: { zodError?: { fieldErrors?: Record<string, string[]> } }; message?: string };
+  const trpcErr = err as {
+    data?: { zodError?: { fieldErrors?: Record<string, string[]> } };
+    message?: string;
+  };
 
   if (trpcErr?.data?.zodError?.fieldErrors) {
     for (const [field, messages] of Object.entries(trpcErr.data.zodError.fieldErrors)) {
@@ -427,7 +484,10 @@ function extractServerErrors(err: unknown, displayType: string): Record<string, 
   }
 
   try {
-    const issues = JSON.parse(trpcErr?.message ?? "[]") as Array<{ path: (string | number)[]; message: string }>;
+    const issues = JSON.parse(trpcErr?.message ?? "[]") as Array<{
+      path: (string | number)[];
+      message: string;
+    }>;
     const fieldMap = serverToFormFieldMap[displayType] ?? {};
 
     for (const issue of issues) {
@@ -451,7 +511,13 @@ const listItemDefaults = {
   mapping: { label: "", jsonPath: "$", unit: "" },
   column: { header: "", jsonPath: "$" },
   statGridItem: { label: "", jsonPath: "$", unit: "", color: "blue" },
-  progressBar: { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" },
+  progressBar: {
+    label: "",
+    valuePath: "$",
+    maxPath: "",
+    unit: "",
+    color: "blue",
+  },
   statusItem: { label: "", jsonPath: "$", goodValues: "online,true" },
   countGridItem: { label: "", jsonPath: "$", unit: "" },
 } as const;
@@ -521,7 +587,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       displayConfig: displayConfig as never,
       secrets: values.secrets
         .filter((s) => s.value)
-        .map((s) => ({ kind: s.kind as "apiKey" | "username" | "password", value: s.value })),
+        .map((s) => ({
+          kind: s.kind as "apiKey" | "username" | "password",
+          value: s.value,
+        })),
     };
 
     try {
@@ -535,7 +604,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         router.push(`/manage/custom-widgets/edit/${result.id}`);
       } else if (definitionId) {
         await updateMutation.mutateAsync({ id: definitionId, ...payload });
-        showSuccessNotification({ title: t("action.save"), message: t("notification.updated", { name: values.name }) });
+        showSuccessNotification({
+          title: t("action.save"),
+          message: t("notification.updated", { name: values.name }),
+        });
         setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
@@ -547,7 +619,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         form.setErrors(serverErrors);
       }
       const errorKey = mode === "create" ? "notification.createError" : "notification.updateError";
-      showErrorNotification({ title: t("action.save"), message: t(errorKey as never) });
+      showErrorNotification({
+        title: t("action.save"),
+        message: t(errorKey as never),
+      });
     }
   });
 
@@ -566,7 +641,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       displayConfig: buildConfig?.(values) as z.infer<typeof displayConfigSchema>,
       secrets: values.secrets
         .filter((s) => s.value)
-        .map((s) => ({ kind: s.kind as CustomWidgetSecretKind, value: s.value })),
+        .map((s) => ({
+          kind: s.kind as CustomWidgetSecretKind,
+          value: s.value,
+        })),
       definitionId,
     };
   }, [form.values, definitionId]);
@@ -749,7 +827,18 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Group>
         </Stack>
 
-        <Box w={340} style={{ flexShrink: 0, position: "sticky", top: 100, alignSelf: "start" }} visibleFrom="md">
+        <Box
+          w={480}
+          style={{
+            flexShrink: 0,
+            position: "sticky",
+            top: 80,
+            alignSelf: "start",
+            maxHeight: "calc(100vh - 100px)",
+            overflow: "auto",
+          }}
+          visibleFrom="md"
+        >
           <Stack gap="sm">
             <Button type="submit" fullWidth loading={createMutation.isPending || updateMutation.isPending}>
               {mode === "create" ? t("action.create") : t("action.save")}
@@ -817,13 +906,19 @@ function DisplayTypeFields({
         <Group grow>
           <Select
             label={t("field.valueSize")}
-            data={["sm", "md", "lg", "xl"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg", "xl"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("valueSize")}
             allowDeselect={false}
           />
           <Select
             label={t("field.labelPosition")}
-            data={["above", "below"].map((v) => ({ value: v, label: t(`labelPositionOption.${v}` as never) }))}
+            data={["above", "below"].map((v) => ({
+              value: v,
+              label: t(`labelPositionOption.${v}` as never),
+            }))}
             {...form.getInputProps("labelPosition")}
             allowDeselect={false}
           />
@@ -838,7 +933,10 @@ function DisplayTypeFields({
         <Group grow>
           <Select
             label={t("field.kvLayout")}
-            data={["list", "grid"].map((v) => ({ value: v, label: t(`layoutOption.${v}` as never) }))}
+            data={["list", "grid"].map((v) => ({
+              value: v,
+              label: t(`layoutOption.${v}` as never),
+            }))}
             {...form.getInputProps("kvLayout")}
             allowDeselect={false}
           />
@@ -958,7 +1056,10 @@ function DisplayTypeFields({
           <NumberInput label={t("field.gridColumns")} min={1} max={4} {...form.getInputProps("statGridColumns")} />
           <Select
             label={t("field.cardStyle")}
-            data={["filled", "outline", "subtle"].map((v) => ({ value: v, label: t(`cardStyleOption.${v}` as never) }))}
+            data={["filled", "outline", "subtle"].map((v) => ({
+              value: v,
+              label: t(`cardStyleOption.${v}` as never),
+            }))}
             {...form.getInputProps("cardStyle")}
             allowDeselect={false}
           />
@@ -1027,7 +1128,10 @@ function DisplayTypeFields({
           <Switch label={t("field.showPercentage")} {...form.getInputProps("showPercentage", { type: "checkbox" })} />
           <Select
             label={t("field.barSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("barSize")}
             allowDeselect={false}
           />
@@ -1103,13 +1207,19 @@ function DisplayTypeFields({
         <Group grow>
           <Select
             label={t("field.kvLayout")}
-            data={["list", "grid"].map((v) => ({ value: v, label: t(`layoutOption.${v}` as never) }))}
+            data={["list", "grid"].map((v) => ({
+              value: v,
+              label: t(`layoutOption.${v}` as never),
+            }))}
             {...form.getInputProps("statusLayout")}
             allowDeselect={false}
           />
           <Select
             label={t("field.dotSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("dotSize")}
             allowDeselect={false}
           />
@@ -1171,7 +1281,10 @@ function DisplayTypeFields({
           <NumberInput label={t("field.gridColumns")} min={2} max={4} {...form.getInputProps("countGridColumns")} />
           <Select
             label={t("field.valueSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("countValueSize")}
             allowDeselect={false}
           />
