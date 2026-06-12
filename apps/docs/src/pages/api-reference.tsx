@@ -7,9 +7,7 @@ export default function ApiReferencePage() {
     <Layout title="API Reference" description="Homarr OpenAPI Reference">
       <BrowserOnly fallback={<div style={{ height: "100vh" }} />}>
         {() => {
-          const {
-            ThemedApiReference,
-          } = require("@site/src/components/themed-api-reference");
+          const { ThemedApiReference } = require("@site/src/components/themed-api-reference");
           return (
             <ThemedApiReference
               configuration={{
