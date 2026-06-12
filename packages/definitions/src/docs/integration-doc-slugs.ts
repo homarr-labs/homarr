@@ -55,6 +55,6 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   navidrome: "navidrome",
   umami: "umami",
   peaNut: "peanut",
-  beszel: null,
+  beszel: "beszel",
   mock: null,
 };

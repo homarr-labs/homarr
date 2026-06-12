@@ -17,6 +17,8 @@
     "./custom-api/component": "./src/custom-api/component.tsx",
     "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",
     "./errors": "./src/errors/component.tsx",
+    "./errors/classes": "./src/errors/index.ts",
+    "./widget-integration-select": "./src/widget-integration-select.tsx",
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts"
   },

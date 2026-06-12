@@ -8,6 +8,7 @@ const config: Config = {
   tagline: "A simple yet powerful dashboard for your server.",
   url: "https://homarr.dev",
   baseUrl: "/",
+  trailingSlash: true,
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
@@ -26,6 +27,9 @@ const config: Config = {
       siteStorageNamespacing: true,
       fasterByDefault: true,
       mdx1CompatDisabledByDefault: false,
+    },
+    faster: {
+      swcHtmlMinimizer: false,
     },
   },
 
@@ -287,13 +291,11 @@ const config: Config = {
       };
     },
     "@signalwire/docusaurus-plugin-llms-txt",
-    async function tailwindCssPlugin(context, options) {
+    async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",
         configurePostCss(postcssOptions) {
-          // Appends TailwindCSS and AutoPrefixer.
-          postcssOptions.plugins.push(require("tailwindcss"));
-          postcssOptions.plugins.push(require("autoprefixer"));
+          postcssOptions.plugins.push(require("@tailwindcss/postcss"));
           return postcssOptions;
         },
       };

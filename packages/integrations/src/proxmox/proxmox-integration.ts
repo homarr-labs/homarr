@@ -55,7 +55,8 @@ export class ProxmoxIntegration extends Integration implements IClusterHealthMon
       host: this.url("/").host,
       tokenID: `${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}`,
       tokenSecret: this.getSecretValue("apiKey"),
-      fetch: fetchAsync,
+      // proxmox-api bundles its own undici types which are incompatible with the project's undici version
+      fetch: fetchAsync as any,
     });
   }
 }

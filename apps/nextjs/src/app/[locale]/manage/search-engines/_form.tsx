@@ -2,7 +2,7 @@
 
 import type { SegmentedControlItem } from "@mantine/core";
 import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
-import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
+import { WidgetIntegrationSelect } from "@homarr/widgets/widget-integration-select";
 import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

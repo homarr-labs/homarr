@@ -1,0 +1,34 @@
+---
+title: 'Beszel Systems (Table)'
+description: 'Table view of all Beszel-monitored systems with sortable columns and status indicators.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { beszelSystemTableWidget } from '.';
+import { beszelIntegration } from '@site/docs/integrations/beszel';
+
+
+<WidgetHeader
+  widget={beszelSystemTableWidget}
+  categories={['System Monitoring']}
+/>
+
+This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, and the table supports sorting by any column.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: beszelIntegration,
+  note: "Displays all monitored systems in a sortable table"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={beszelSystemTableWidget.configuration} />
