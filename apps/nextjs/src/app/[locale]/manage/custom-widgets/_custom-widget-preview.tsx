@@ -1,8 +1,25 @@
 "use client";
 
 import { useMemo } from "react";
-import { Alert, Badge, Button, Card, Center, Code, Group, Loader, ScrollArea, Stack, Text, Title } from "@mantine/core";
-import { IconAlertTriangle, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Center,
+  Code,
+  Group,
+  Loader,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import {
+  IconAlertTriangle,
+  IconExternalLink,
+  IconPlayerPlay,
+} from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
 import { extractDisplayData } from "@homarr/widgets/custom-api/extract-display-data";
@@ -52,10 +69,16 @@ export function CustomWidgetPreview({
   const displayData = useMemo((): Record<string, unknown> | null => {
     const { displayType, displayConfig } = formValues;
     if (displayType === "actionButton") {
-      return extractDisplayData(null, displayType, displayConfig) as Record<string, unknown>;
+      return extractDisplayData(null, displayType, displayConfig) as Record<
+        string,
+        unknown
+      >;
     }
     if (!fetchResult?.success || cachedJson == null) return null;
-    return extractDisplayData(cachedJson, displayType, displayConfig) as Record<string, unknown>;
+    return extractDisplayData(cachedJson, displayType, displayConfig) as Record<
+      string,
+      unknown
+    >;
   }, [fetchResult?.success, cachedJson, formValues]);
 
   const handleTest = () => {
@@ -72,7 +95,9 @@ export function CustomWidgetPreview({
           <Button
             size="xs"
             variant="light"
-            leftSection={isTesting ? <Loader size={14} /> : <IconPlayerPlay size={14} />}
+            leftSection={
+              isTesting ? <Loader size={14} /> : <IconPlayerPlay size={14} />
+            }
             onClick={handleTest}
             loading={isTesting}
           >
@@ -93,43 +118,55 @@ export function CustomWidgetPreview({
             </Text>
             {fetchResult.responseInfo && (
               <Badge size="xs" color="red" variant="light" mt={4}>
-                {fetchResult.responseInfo.status} {fetchResult.responseInfo.statusText}
+                {fetchResult.responseInfo.status}{" "}
+                {fetchResult.responseInfo.statusText}
               </Badge>
             )}
           </Alert>
         )}
 
-        {displayData && (formValues.displayType === "actionButton" || fetchResult?.success) && (
-          <Stack gap="xs">
-            {fetchResult?.success && (
-              <Group gap="xs">
-                <Badge size="xs" color="green" variant="light">
-                  {fetchResult.responseInfo?.status} {fetchResult.responseInfo?.statusText}
-                </Badge>
-              </Group>
-            )}
+        {displayData &&
+          (formValues.displayType === "actionButton" ||
+            fetchResult?.success) && (
+            <Stack gap="xs">
+              {fetchResult?.success && (
+                <Group gap="xs">
+                  <Badge size="xs" color="green" variant="light">
+                    {fetchResult.responseInfo?.status}{" "}
+                    {fetchResult.responseInfo?.statusText}
+                  </Badge>
+                </Group>
+              )}
 
-            <Card withBorder p="xs" bg="var(--mantine-color-dark-7)" mih={120}>
-              <PreviewDisplay data={displayData} />
-            </Card>
-
-            {fetchResult?.success && fetchResult.rawResponse && (
-              <Button
-                size="xs"
-                variant="subtle"
-                leftSection={<IconExternalLink size={14} />}
-                onClick={() => {
-                  const blob = new Blob([fetchResult.rawResponse ?? ""], { type: "application/json" });
-                  const blobUrl = URL.createObjectURL(blob);
-                  window.open(blobUrl);
-                  setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
-                }}
+              <Card
+                withBorder
+                p="xs"
+                bg="var(--mantine-color-dark-7)"
+                mah={320}
+                style={{ overflow: "auto" }}
               >
-                {t("preview.rawResponse")}
-              </Button>
-            )}
-          </Stack>
-        )}
+                <PreviewDisplay data={displayData} />
+              </Card>
+
+              {fetchResult?.success && fetchResult.rawResponse && (
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  leftSection={<IconExternalLink size={14} />}
+                  onClick={() => {
+                    const blob = new Blob([fetchResult.rawResponse ?? ""], {
+                      type: "application/json",
+                    });
+                    const blobUrl = URL.createObjectURL(blob);
+                    window.open(blobUrl);
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+                  }}
+                >
+                  {t("preview.rawResponse")}
+                </Button>
+              )}
+            </Stack>
+          )}
 
         {!displayData && !testError && !isTesting && (
           <Text size="xs" c="dimmed" ta="center">
@@ -156,7 +193,11 @@ function PreviewDisplay({ data }: { data: unknown }) {
   if (dataType === "actionButton") {
     return (
       <Center p="sm">
-        <Button size="sm" color={(typed.buttonColor as string) ?? "blue"} disabled>
+        <Button
+          size="sm"
+          color={(typed.buttonColor as string) ?? "blue"}
+          disabled
+        >
           {(typed.buttonLabel as string) ?? "Execute"}
         </Button>
       </Center>

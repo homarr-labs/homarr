@@ -163,7 +163,7 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
   return (
     <>
       <DynamicBreadcrumb dynamicMappings={new Map([[params.id, definition.name]])} nonInteractable={["edit"]} />
-      <Container size="xl">
+      <Container fluid>
         <Stack>
           <Title>{definition.name}</Title>
           <CustomWidgetBetaBanner />

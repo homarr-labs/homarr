@@ -24,7 +24,10 @@ import { z } from "zod/v4";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type {
@@ -40,7 +43,10 @@ import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 import { CustomWidgetPreview } from "./_custom-widget-preview";
 import type { PreviewFetchResult } from "./_custom-widget-preview";
 
-const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ctx: z.core.$RefinementCtx) => void> = {
+const requiredFieldValidators: Record<
+  string,
+  (data: Record<string, unknown>, ctx: z.core.$RefinementCtx) => void
+> = {
   singleValue: (data, ctx) => {
     if (!data.jsonPath)
       ctx.addIssue({
@@ -53,26 +59,28 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
       });
   },
   keyValue: (data, ctx) => {
-    (data.mappings as Array<{ label: string; jsonPath: string }>)?.forEach((m, i) => {
-      if (!m.label)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: m.label,
-          path: ["mappings", i, "label"],
-        });
-      if (!m.jsonPath)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: m.jsonPath,
-          path: ["mappings", i, "jsonPath"],
-        });
-    });
+    (data.mappings as Array<{ label: string; jsonPath: string }>)?.forEach(
+      (m, i) => {
+        if (!m.label)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: m.label,
+            path: ["mappings", i, "label"],
+          });
+        if (!m.jsonPath)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: m.jsonPath,
+            path: ["mappings", i, "jsonPath"],
+          });
+      },
+    );
   },
   table: (data, ctx) => {
     if (!data.tablePath)
@@ -84,73 +92,85 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
         input: data.tablePath,
         path: ["tablePath"],
       });
-    (data.columns as Array<{ header: string; jsonPath: string }>)?.forEach((c, i) => {
-      if (!c.header)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: c.header,
-          path: ["columns", i, "header"],
-        });
-      if (!c.jsonPath)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: c.jsonPath,
-          path: ["columns", i, "jsonPath"],
-        });
-    });
+    (data.columns as Array<{ header: string; jsonPath: string }>)?.forEach(
+      (c, i) => {
+        if (!c.header)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: c.header,
+            path: ["columns", i, "header"],
+          });
+        if (!c.jsonPath)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: c.jsonPath,
+            path: ["columns", i, "jsonPath"],
+          });
+      },
+    );
   },
   statGrid: (data, ctx) => {
-    (data.statGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
-      if (!item.label)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: item.label,
-          path: ["statGridItems", i, "label"],
-        });
-      if (!item.jsonPath)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: item.jsonPath,
-          path: ["statGridItems", i, "jsonPath"],
-        });
-    });
+    (data.statGridItems as Array<{ label: string; jsonPath: string }>)?.forEach(
+      (item, i) => {
+        if (!item.label)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: item.label,
+            path: ["statGridItems", i, "label"],
+          });
+        if (!item.jsonPath)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: item.jsonPath,
+            path: ["statGridItems", i, "jsonPath"],
+          });
+      },
+    );
   },
   progressBars: (data, ctx) => {
-    (data.progressBars as Array<{ label: string; valuePath: string }>)?.forEach((bar, i) => {
-      if (!bar.label)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: bar.label,
-          path: ["progressBars", i, "label"],
-        });
-      if (!bar.valuePath)
-        ctx.addIssue({
-          code: "too_small",
-          minimum: 1,
-          origin: "string",
-          inclusive: true,
-          input: bar.valuePath,
-          path: ["progressBars", i, "valuePath"],
-        });
-    });
+    (data.progressBars as Array<{ label: string; valuePath: string }>)?.forEach(
+      (bar, i) => {
+        if (!bar.label)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: bar.label,
+            path: ["progressBars", i, "label"],
+          });
+        if (!bar.valuePath)
+          ctx.addIssue({
+            code: "too_small",
+            minimum: 1,
+            origin: "string",
+            inclusive: true,
+            input: bar.valuePath,
+            path: ["progressBars", i, "valuePath"],
+          });
+      },
+    );
   },
   statusIndicator: (data, ctx) => {
-    (data.statusItems as Array<{ label: string; jsonPath: string; goodValues: string }>)?.forEach((item, i) => {
+    (
+      data.statusItems as Array<{
+        label: string;
+        jsonPath: string;
+        goodValues: string;
+      }>
+    )?.forEach((item, i) => {
       if (!item.label)
         ctx.addIssue({
           code: "too_small",
@@ -181,7 +201,9 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
     });
   },
   countGrid: (data, ctx) => {
-    (data.countGridItems as Array<{ label: string; jsonPath: string }>)?.forEach((item, i) => {
+    (
+      data.countGridItems as Array<{ label: string; jsonPath: string }>
+    )?.forEach((item, i) => {
       if (!item.label)
         ctx.addIssue({
           code: "too_small",
@@ -253,25 +275,48 @@ const formSchema = z
     unit: z.string(),
     valueSize: z.string(),
     labelPosition: z.string(),
-    mappings: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() })),
+    mappings: z.array(
+      z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() }),
+    ),
     kvLayout: z.string(),
     kvColumns: z.number(),
     tablePath: z.string(),
     columns: z.array(z.object({ header: z.string(), jsonPath: z.string() })),
     striped: z.boolean(),
     compact: z.boolean(),
-    statGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string(), color: z.string() })),
+    statGridItems: z.array(
+      z.object({
+        label: z.string(),
+        jsonPath: z.string(),
+        unit: z.string(),
+        color: z.string(),
+      }),
+    ),
     statGridColumns: z.number(),
     cardStyle: z.string(),
     progressBars: z.array(
-      z.object({ label: z.string(), valuePath: z.string(), maxPath: z.string(), unit: z.string(), color: z.string() }),
+      z.object({
+        label: z.string(),
+        valuePath: z.string(),
+        maxPath: z.string(),
+        unit: z.string(),
+        color: z.string(),
+      }),
     ),
     showPercentage: z.boolean(),
     barSize: z.string(),
-    statusItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), goodValues: z.string() })),
+    statusItems: z.array(
+      z.object({
+        label: z.string(),
+        jsonPath: z.string(),
+        goodValues: z.string(),
+      }),
+    ),
     statusLayout: z.string(),
     dotSize: z.string(),
-    countGridItems: z.array(z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() })),
+    countGridItems: z.array(
+      z.object({ label: z.string(), jsonPath: z.string(), unit: z.string() }),
+    ),
     countGridColumns: z.number(),
     countValueSize: z.string(),
     rawJsonPath: z.string(),
@@ -281,14 +326,23 @@ const formSchema = z
     confirmText: z.string(),
     successMessage: z.string(),
     template: z.string(),
-    secrets: z.array(z.object({ kind: z.string(), value: z.string(), hasValue: z.boolean().optional() })),
+    secrets: z.array(
+      z.object({
+        kind: z.string(),
+        value: z.string(),
+        hasValue: z.boolean().optional(),
+      }),
+    ),
   })
   .superRefine((data, ctx) => {
     const validator = requiredFieldValidators[data.displayType];
     validator?.(data as unknown as Record<string, unknown>, ctx);
   });
 
-const authTypeSecretFields: Record<string, Array<{ kind: string; labelKey: string; isPassword: boolean }>> = {
+const authTypeSecretFields: Record<
+  string,
+  Array<{ kind: string; labelKey: string; isPassword: boolean }>
+> = {
   bearer: [{ kind: "apiKey", labelKey: "apiKey", isPassword: true }],
   basic: [
     { kind: "username", labelKey: "username", isPassword: false },
@@ -328,7 +382,9 @@ const defaultCreateValues: z.infer<typeof formSchema> = {
   statGridItems: [{ label: "", jsonPath: "$", unit: "", color: "blue" }],
   statGridColumns: 2,
   cardStyle: "filled",
-  progressBars: [{ label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" }],
+  progressBars: [
+    { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" },
+  ],
   showPercentage: true,
   barSize: "md",
   statusItems: [{ label: "", jsonPath: "$", goodValues: "online,true" }],
@@ -353,7 +409,10 @@ interface CustomWidgetFormProps {
   definitionId?: string;
 }
 
-const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>) => Record<string, unknown>> = {
+const displayConfigBuilders: Record<
+  string,
+  (values: z.infer<typeof formSchema>) => Record<string, unknown>
+> = {
   singleValue: (v) => ({
     type: "singleValue",
     jsonPath: v.jsonPath,
@@ -362,12 +421,31 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     valueSize: v.valueSize,
     labelPosition: v.labelPosition,
   }),
-  keyValue: (v) => ({ type: "keyValue", mappings: v.mappings, layout: v.kvLayout, columns: v.kvColumns }),
-  table: (v) => ({ type: "table", tablePath: v.tablePath, columns: v.columns, striped: v.striped, compact: v.compact }),
-  statGrid: (v) => ({ type: "statGrid", items: v.statGridItems, columns: v.statGridColumns, cardStyle: v.cardStyle }),
+  keyValue: (v) => ({
+    type: "keyValue",
+    mappings: v.mappings,
+    layout: v.kvLayout,
+    columns: v.kvColumns,
+  }),
+  table: (v) => ({
+    type: "table",
+    tablePath: v.tablePath,
+    columns: v.columns,
+    striped: v.striped,
+    compact: v.compact,
+  }),
+  statGrid: (v) => ({
+    type: "statGrid",
+    items: v.statGridItems,
+    columns: v.statGridColumns,
+    cardStyle: v.cardStyle,
+  }),
   progressBars: (v) => ({
     type: "progressBars",
-    bars: v.progressBars.map((b) => ({ ...b, maxPath: b.maxPath || undefined })),
+    bars: v.progressBars.map((b) => ({
+      ...b,
+      maxPath: b.maxPath || undefined,
+    })),
     showPercentage: v.showPercentage,
     barSize: v.barSize,
   }),
@@ -389,7 +467,11 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     columns: v.countGridColumns,
     valueSize: v.countValueSize,
   }),
-  raw: (v) => ({ type: "raw", jsonPath: v.rawJsonPath, maxHeight: v.rawMaxHeight }),
+  raw: (v) => ({
+    type: "raw",
+    jsonPath: v.rawJsonPath,
+    maxHeight: v.rawMaxHeight,
+  }),
   actionButton: (v) => ({
     type: "actionButton",
     buttonLabel: v.buttonLabel,
@@ -413,12 +495,20 @@ const serverToFormFieldMap: Record<string, Record<string, string>> = {
   customJsx: { template: "template" },
 };
 
-function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
+function extractServerErrors(
+  err: unknown,
+  displayType: string,
+): Record<string, string> {
   const errors: Record<string, string> = {};
-  const trpcErr = err as { data?: { zodError?: { fieldErrors?: Record<string, string[]> } }; message?: string };
+  const trpcErr = err as {
+    data?: { zodError?: { fieldErrors?: Record<string, string[]> } };
+    message?: string;
+  };
 
   if (trpcErr?.data?.zodError?.fieldErrors) {
-    for (const [field, messages] of Object.entries(trpcErr.data.zodError.fieldErrors)) {
+    for (const [field, messages] of Object.entries(
+      trpcErr.data.zodError.fieldErrors,
+    )) {
       if (messages?.[0]) {
         errors[field] = messages[0];
       }
@@ -427,7 +517,10 @@ function extractServerErrors(err: unknown, displayType: string): Record<string, 
   }
 
   try {
-    const issues = JSON.parse(trpcErr?.message ?? "[]") as Array<{ path: (string | number)[]; message: string }>;
+    const issues = JSON.parse(trpcErr?.message ?? "[]") as Array<{
+      path: (string | number)[];
+      message: string;
+    }>;
     const fieldMap = serverToFormFieldMap[displayType] ?? {};
 
     for (const issue of issues) {
@@ -451,12 +544,21 @@ const listItemDefaults = {
   mapping: { label: "", jsonPath: "$", unit: "" },
   column: { header: "", jsonPath: "$" },
   statGridItem: { label: "", jsonPath: "$", unit: "", color: "blue" },
-  progressBar: { label: "", valuePath: "$", maxPath: "", unit: "", color: "blue" },
+  progressBar: {
+    label: "",
+    valuePath: "$",
+    maxPath: "",
+    unit: "",
+    color: "blue",
+  },
   statusItem: { label: "", jsonPath: "$", goodValues: "online,true" },
   countGridItem: { label: "", jsonPath: "$", unit: "" },
 } as const;
 
-function cloneLast<T extends Record<string, unknown>>(arr: T[], fallback: T): T {
+function cloneLast<T extends Record<string, unknown>>(
+  arr: T[],
+  fallback: T,
+): T {
   const last = arr[arr.length - 1];
   return last ? { ...last } : { ...fallback };
 }
@@ -488,7 +590,11 @@ const MANTINE_COLORS = [
   "lime",
 ] as const;
 
-export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
+export function CustomWidgetForm({
+  mode,
+  initialValues,
+  definitionId,
+}: CustomWidgetFormProps) {
   const router = useRouter();
   const t = useScopedI18n("customWidget");
   const utils = clientApi.useUtils();
@@ -497,7 +603,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const previewMutation = clientApi.customWidget.preview.useMutation();
   const [previewRefreshSignal, setPreviewRefreshSignal] = useState(0);
   const [previewJson, setPreviewJson] = useState<unknown>(null);
-  const [previewFetchResult, setPreviewFetchResult] = useState<PreviewFetchResult | null>(null);
+  const [previewFetchResult, setPreviewFetchResult] =
+    useState<PreviewFetchResult | null>(null);
   const hasTestedRef = useRef(false);
 
   const form = useZodForm(formSchema, {
@@ -505,7 +612,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   });
 
   const handleSubmit = form.onSubmit(async (values) => {
-    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
+    const buildConfig =
+      displayConfigBuilders[values.displayType] ??
+      displayConfigBuilders.singleValue;
     const displayConfig = buildConfig?.(values);
 
     const payload = {
@@ -521,7 +630,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       displayConfig: displayConfig as never,
       secrets: values.secrets
         .filter((s) => s.value)
-        .map((s) => ({ kind: s.kind as "apiKey" | "username" | "password", value: s.value })),
+        .map((s) => ({
+          kind: s.kind as "apiKey" | "username" | "password",
+          value: s.value,
+        })),
     };
 
     try {
@@ -535,7 +647,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         router.push(`/manage/custom-widgets/edit/${result.id}`);
       } else if (definitionId) {
         await updateMutation.mutateAsync({ id: definitionId, ...payload });
-        showSuccessNotification({ title: t("action.save"), message: t("notification.updated", { name: values.name }) });
+        showSuccessNotification({
+          title: t("action.save"),
+          message: t("notification.updated", { name: values.name }),
+        });
         setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
@@ -546,8 +661,14 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       if (Object.keys(serverErrors).length > 0) {
         form.setErrors(serverErrors);
       }
-      const errorKey = mode === "create" ? "notification.createError" : "notification.updateError";
-      showErrorNotification({ title: t("action.save"), message: t(errorKey as never) });
+      const errorKey =
+        mode === "create"
+          ? "notification.createError"
+          : "notification.updateError";
+      showErrorNotification({
+        title: t("action.save"),
+        message: t(errorKey as never),
+      });
     }
   });
 
@@ -555,7 +676,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
 
   const getPreviewInput = useCallback(() => {
     const values = form.values;
-    const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
+    const buildConfig =
+      displayConfigBuilders[values.displayType] ??
+      displayConfigBuilders.singleValue;
     return {
       url: values.url,
       method: values.method as CustomWidgetMethod,
@@ -563,10 +686,15 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       headerName: values.headerName || undefined,
       requestBody: values.requestBody || undefined,
       displayType: values.displayType as CustomWidgetDisplayType,
-      displayConfig: buildConfig?.(values) as z.infer<typeof displayConfigSchema>,
+      displayConfig: buildConfig?.(values) as z.infer<
+        typeof displayConfigSchema
+      >,
       secrets: values.secrets
         .filter((s) => s.value)
-        .map((s) => ({ kind: s.kind as CustomWidgetSecretKind, value: s.value })),
+        .map((s) => ({
+          kind: s.kind as CustomWidgetSecretKind,
+          value: s.value,
+        })),
       definitionId,
     };
   }, [form.values, definitionId]);
@@ -617,9 +745,19 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         <Stack gap="lg" style={{ flex: 1, minWidth: 0 }}>
           <Fieldset legend={t("fieldset.general")}>
             <Stack gap="sm">
-              <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
-              <Textarea label={t("field.description")} {...form.getInputProps("description")} />
-              <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
+              <TextInput
+                label={t("field.name")}
+                required
+                {...form.getInputProps("name")}
+              />
+              <Textarea
+                label={t("field.description")}
+                {...form.getInputProps("description")}
+              />
+              <IconPicker
+                withAsterisk={false}
+                {...form.getInputProps("iconUrl")}
+              />
             </Stack>
           </Fieldset>
 
@@ -628,10 +766,12 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               <Group align="end" wrap="nowrap" gap="xs">
                 <Select
                   label={t("field.method")}
-                  data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({
-                    value,
-                    label: t(`method.${value}` as never),
-                  }))}
+                  data={["GET", "POST", "PUT", "DELETE", "PATCH"].map(
+                    (value) => ({
+                      value,
+                      label: t(`method.${value}` as never),
+                    }),
+                  )}
                   w={110}
                   {...form.getInputProps("method")}
                   allowDeselect={false}
@@ -660,17 +800,27 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                 </Text>
                 <SegmentedControl
                   fullWidth
-                  data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"].map((value) => ({
+                  data={[
+                    "none",
+                    "bearer",
+                    "basic",
+                    "apiKeyHeader",
+                    "apiKeyQuery",
+                  ].map((value) => ({
                     value,
                     label: t(`authType.${value}` as never),
                   }))}
                   {...form.getInputProps("authType")}
                   onChange={(value) => {
                     form.setFieldValue("authType", value);
-                    const newSecrets = (authTypeSecretFields[value] ?? []).map((f) => ({
-                      kind: f.kind,
-                      value: form.values.secrets.find((s) => s.kind === f.kind)?.value ?? "",
-                    }));
+                    const newSecrets = (authTypeSecretFields[value] ?? []).map(
+                      (f) => ({
+                        kind: f.kind,
+                        value:
+                          form.values.secrets.find((s) => s.kind === f.kind)
+                            ?.value ?? "",
+                      }),
+                    );
                     form.setFieldValue("secrets", newSecrets);
                   }}
                 />
@@ -683,12 +833,16 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                 />
               )}
               {secretFields.map((field) => {
-                const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
+                const secretIndex = form.values.secrets.findIndex(
+                  (s) => s.kind === field.kind,
+                );
                 if (secretIndex === -1) return null;
                 const secret = form.values.secrets[secretIndex];
                 if (!secret) return null;
                 const placeholder =
-                  secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
+                  secret.hasValue && !secret.value
+                    ? t("secret.savedPlaceholder" as never)
+                    : undefined;
                 return field.isPassword ? (
                   <PasswordInput
                     key={field.kind}
@@ -706,7 +860,11 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                 );
               })}
               {form.values.method !== "GET" && (
-                <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
+                <Textarea
+                  label={t("field.requestBody")}
+                  minRows={3}
+                  {...form.getInputProps("requestBody")}
+                />
               )}
             </Stack>
           </Fieldset>
@@ -723,7 +881,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                 allowDeselect={false}
               />
               <Text size="xs" c="dimmed">
-                {t(`displayTypeDescription.${form.values.displayType}` as never)}
+                {t(
+                  `displayTypeDescription.${form.values.displayType}` as never,
+                )}
               </Text>
 
               <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
@@ -743,15 +903,33 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Box>
 
           <Group justify="end">
-            <Button type="submit" loading={createMutation.isPending || updateMutation.isPending}>
+            <Button
+              type="submit"
+              loading={createMutation.isPending || updateMutation.isPending}
+            >
               {mode === "create" ? t("action.create") : t("action.save")}
             </Button>
           </Group>
         </Stack>
 
-        <Box w={340} style={{ flexShrink: 0, position: "sticky", top: 100, alignSelf: "start" }} visibleFrom="md">
+        <Box
+          w={480}
+          style={{
+            flexShrink: 0,
+            position: "sticky",
+            top: 80,
+            alignSelf: "start",
+            maxHeight: "calc(100vh - 100px)",
+            overflow: "auto",
+          }}
+          visibleFrom="md"
+        >
           <Stack gap="sm">
-            <Button type="submit" fullWidth loading={createMutation.isPending || updateMutation.isPending}>
+            <Button
+              type="submit"
+              fullWidth
+              loading={createMutation.isPending || updateMutation.isPending}
+            >
               {mode === "create" ? t("action.create") : t("action.save")}
             </Button>
             <CopyAiPromptButton
@@ -813,17 +991,27 @@ function DisplayTypeFields({
           placeholder={t("placeholder.exampleLabel")}
           {...form.getInputProps("label")}
         />
-        <TextInput label={t("field.unit")} placeholder={t("placeholder.exampleUnit")} {...form.getInputProps("unit")} />
+        <TextInput
+          label={t("field.unit")}
+          placeholder={t("placeholder.exampleUnit")}
+          {...form.getInputProps("unit")}
+        />
         <Group grow>
           <Select
             label={t("field.valueSize")}
-            data={["sm", "md", "lg", "xl"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg", "xl"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("valueSize")}
             allowDeselect={false}
           />
           <Select
             label={t("field.labelPosition")}
-            data={["above", "below"].map((v) => ({ value: v, label: t(`labelPositionOption.${v}` as never) }))}
+            data={["above", "below"].map((v) => ({
+              value: v,
+              label: t(`labelPositionOption.${v}` as never),
+            }))}
             {...form.getInputProps("labelPosition")}
             allowDeselect={false}
           />
@@ -838,12 +1026,20 @@ function DisplayTypeFields({
         <Group grow>
           <Select
             label={t("field.kvLayout")}
-            data={["list", "grid"].map((v) => ({ value: v, label: t(`layoutOption.${v}` as never) }))}
+            data={["list", "grid"].map((v) => ({
+              value: v,
+              label: t(`layoutOption.${v}` as never),
+            }))}
             {...form.getInputProps("kvLayout")}
             allowDeselect={false}
           />
           {form.values.kvLayout === "grid" && (
-            <NumberInput label={t("field.gridColumns")} min={1} max={3} {...form.getInputProps("kvColumns")} />
+            <NumberInput
+              label={t("field.gridColumns")}
+              min={1}
+              max={3}
+              {...form.getInputProps("kvColumns")}
+            />
           )}
         </Group>
         <Text size="sm" fw={500}>
@@ -886,7 +1082,12 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("mappings", cloneLast(form.values.mappings, listItemDefaults.mapping))}
+          onClick={() =>
+            form.insertListItem(
+              "mappings",
+              cloneLast(form.values.mappings, listItemDefaults.mapping),
+            )
+          }
         >
           {t("action.addMapping")}
         </Button>
@@ -906,8 +1107,14 @@ function DisplayTypeFields({
           {...form.getInputProps("tablePath")}
         />
         <Group grow>
-          <Switch label={t("field.striped")} {...form.getInputProps("striped", { type: "checkbox" })} />
-          <Switch label={t("field.compact")} {...form.getInputProps("compact", { type: "checkbox" })} />
+          <Switch
+            label={t("field.striped")}
+            {...form.getInputProps("striped", { type: "checkbox" })}
+          />
+          <Switch
+            label={t("field.compact")}
+            {...form.getInputProps("compact", { type: "checkbox" })}
+          />
         </Group>
         <Text size="sm" fw={500}>
           {t("field.columns")}
@@ -943,7 +1150,12 @@ function DisplayTypeFields({
           variant="light"
           size="xs"
           leftSection={<IconPlus size={14} />}
-          onClick={() => form.insertListItem("columns", cloneLast(form.values.columns, listItemDefaults.column))}
+          onClick={() =>
+            form.insertListItem(
+              "columns",
+              cloneLast(form.values.columns, listItemDefaults.column),
+            )
+          }
         >
           {t("action.addColumn")}
         </Button>
@@ -955,10 +1167,18 @@ function DisplayTypeFields({
     return (
       <Stack gap="xs">
         <Group grow>
-          <NumberInput label={t("field.gridColumns")} min={1} max={4} {...form.getInputProps("statGridColumns")} />
+          <NumberInput
+            label={t("field.gridColumns")}
+            min={1}
+            max={4}
+            {...form.getInputProps("statGridColumns")}
+          />
           <Select
             label={t("field.cardStyle")}
-            data={["filled", "outline", "subtle"].map((v) => ({ value: v, label: t(`cardStyleOption.${v}` as never) }))}
+            data={["filled", "outline", "subtle"].map((v) => ({
+              value: v,
+              label: t(`cardStyleOption.${v}` as never),
+            }))}
             {...form.getInputProps("cardStyle")}
             allowDeselect={false}
           />
@@ -1011,7 +1231,13 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statGridItems", cloneLast(form.values.statGridItems, listItemDefaults.statGridItem))
+            form.insertListItem(
+              "statGridItems",
+              cloneLast(
+                form.values.statGridItems,
+                listItemDefaults.statGridItem,
+              ),
+            )
           }
         >
           {t("action.addItem")}
@@ -1024,10 +1250,16 @@ function DisplayTypeFields({
     return (
       <Stack gap="xs">
         <Group grow>
-          <Switch label={t("field.showPercentage")} {...form.getInputProps("showPercentage", { type: "checkbox" })} />
+          <Switch
+            label={t("field.showPercentage")}
+            {...form.getInputProps("showPercentage", { type: "checkbox" })}
+          />
           <Select
             label={t("field.barSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("barSize")}
             allowDeselect={false}
           />
@@ -1088,7 +1320,10 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("progressBars", cloneLast(form.values.progressBars, listItemDefaults.progressBar))
+            form.insertListItem(
+              "progressBars",
+              cloneLast(form.values.progressBars, listItemDefaults.progressBar),
+            )
           }
         >
           {t("action.addBar")}
@@ -1103,13 +1338,19 @@ function DisplayTypeFields({
         <Group grow>
           <Select
             label={t("field.kvLayout")}
-            data={["list", "grid"].map((v) => ({ value: v, label: t(`layoutOption.${v}` as never) }))}
+            data={["list", "grid"].map((v) => ({
+              value: v,
+              label: t(`layoutOption.${v}` as never),
+            }))}
             {...form.getInputProps("statusLayout")}
             allowDeselect={false}
           />
           <Select
             label={t("field.dotSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("dotSize")}
             allowDeselect={false}
           />
@@ -1155,7 +1396,10 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("statusItems", cloneLast(form.values.statusItems, listItemDefaults.statusItem))
+            form.insertListItem(
+              "statusItems",
+              cloneLast(form.values.statusItems, listItemDefaults.statusItem),
+            )
           }
         >
           {t("action.addItem")}
@@ -1168,10 +1412,18 @@ function DisplayTypeFields({
     return (
       <Stack gap="xs">
         <Group grow>
-          <NumberInput label={t("field.gridColumns")} min={2} max={4} {...form.getInputProps("countGridColumns")} />
+          <NumberInput
+            label={t("field.gridColumns")}
+            min={2}
+            max={4}
+            {...form.getInputProps("countGridColumns")}
+          />
           <Select
             label={t("field.valueSize")}
-            data={["sm", "md", "lg"].map((v) => ({ value: v, label: t(`sizeOption.${v}` as never) }))}
+            data={["sm", "md", "lg"].map((v) => ({
+              value: v,
+              label: t(`sizeOption.${v}` as never),
+            }))}
             {...form.getInputProps("countValueSize")}
             allowDeselect={false}
           />
@@ -1217,7 +1469,13 @@ function DisplayTypeFields({
           size="xs"
           leftSection={<IconPlus size={14} />}
           onClick={() =>
-            form.insertListItem("countGridItems", cloneLast(form.values.countGridItems, listItemDefaults.countGridItem))
+            form.insertListItem(
+              "countGridItems",
+              cloneLast(
+                form.values.countGridItems,
+                listItemDefaults.countGridItem,
+              ),
+            )
           }
         >
           {t("action.addItem")}
@@ -1250,7 +1508,11 @@ function DisplayTypeFields({
   if (dt === "actionButton") {
     return (
       <Stack gap="sm">
-        <TextInput label={t("field.buttonLabel")} required {...form.getInputProps("buttonLabel")} />
+        <TextInput
+          label={t("field.buttonLabel")}
+          required
+          {...form.getInputProps("buttonLabel")}
+        />
         <Select
           label={t("field.buttonColor")}
           data={MANTINE_COLORS.map((c) => ({ value: c, label: c }))}
