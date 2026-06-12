@@ -317,6 +317,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/navidrome"
   | "/docs/integrations/umami"
   | "/docs/integrations/peanut"
+  | "/docs/integrations/beszel"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/app"
@@ -358,4 +359,9 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/uptime-kuma"
   | "/docs/widgets/audio-stats"
   | "/docs/widgets/umami"
-  | "/docs/widgets/ups";
+  | "/docs/widgets/ups"
+  | "/docs/widgets/beszel-system-table"
+  | "/docs/widgets/beszel-system-grid"
+  | "/docs/widgets/beszel-alerts"
+  | "/docs/widgets/beszel-system-stats"
+  | "/docs/widgets/custom-api";

@@ -479,7 +479,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
     category: ["healthMonitoring"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)

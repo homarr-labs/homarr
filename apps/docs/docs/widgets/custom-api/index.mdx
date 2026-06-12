@@ -1,0 +1,29 @@
+---
+title: 'Custom API'
+description: 'Displays data from a custom API endpoint using configurable display types and optional JSX templates.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { customApiWidget } from '.';
+
+
+<WidgetHeader
+  widget={customApiWidget}
+  categories={['Custom', 'API']}
+/>
+
+This widget fetches data from a custom API endpoint defined in [Custom Widgets management](/docs/management/custom-widgets) and renders it using configurable display types.
+
+Custom API widgets are created and configured through the admin management page. Each widget definition specifies the API endpoint, authentication, display type, and refresh interval.
+
+See the [Custom Widgets documentation](/docs/management/custom-widgets) for full details on creating and configuring custom widgets.
+
+### Adding the widget
+
+<AddingWidget />
+
+:::note
+Custom API widgets must first be created in **Management → Custom Widgets** before they appear in the widget picker.
+:::

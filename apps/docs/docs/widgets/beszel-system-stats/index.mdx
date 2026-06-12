@@ -1,0 +1,39 @@
+---
+title: 'Beszel System Stats'
+description: 'Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { beszelSystemStatsWidget } from '.';
+import { beszelIntegration } from '@site/docs/integrations/beszel';
+
+import beszelSystemStats from './img/beszel-system-stats.png';
+
+<WidgetHeader
+  widget={beszelSystemStatsWidget}
+  categories={['System Monitoring', 'Charts']}
+/>
+
+This widget displays time-series charts for a selected Beszel system, including CPU, memory, disk, network, and Docker container metrics. Data is cached and refreshed periodically. You can select a time period ranging from 1 hour to 30 days.
+
+### Screenshots
+
+<img src={beszelSystemStats} alt="Beszel System Stats widget showing CPU, memory, disk and network charts" />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: beszelIntegration,
+  note: "Displays time-series charts for a selected system"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={beszelSystemStatsWidget.configuration} />
