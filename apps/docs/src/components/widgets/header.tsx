@@ -13,11 +13,7 @@ export const WidgetHeader = (props: WidgetHeaderProps) => {
       description={props.widget.description}
       icon={
         <div className="w-12 h-12 flex justify-center items-center bg-red-500/10 rounded-md">
-          <props.widget.icon
-            size={32}
-            stroke={1.5}
-            className="stroke-red-500"
-          />
+          <props.widget.icon size={32} stroke={1.5} className="stroke-red-500" />
         </div>
       }
       categories={props.categories}

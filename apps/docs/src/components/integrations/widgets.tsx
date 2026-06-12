@@ -19,9 +19,7 @@ interface IntegrationCapabilitesProps {
   )[];
 }
 
-export const IntegrationCapabilites = ({
-  items,
-}: IntegrationCapabilitesProps) => {
+export const IntegrationCapabilites = ({ items }: IntegrationCapabilitesProps) => {
   return (
     <div className="flex flex-col gap-4 mt-4 w-full">
       <div className="flex flex-col gap-2">
@@ -35,23 +33,13 @@ export const IntegrationCapabilites = ({
             >
               <div className="flex gap-6 items-center">
                 <div className="w-10 h-10 flex justify-center items-center bg-red-500/10 rounded-md">
-                  <capability.icon
-                    size={24}
-                    stroke={1.5}
-                    className="stroke-red-500"
-                  />
+                  <capability.icon size={24} stroke={1.5} className="stroke-red-500" />
                 </div>
 
                 <div className="flex flex-col gap-0">
                   <span className="text-base font-bold">{capability.name}</span>
-                  <span className="text-sm dark:text-[#999999] text-[#696969]">
-                    {capability.description}
-                  </span>
-                  {item.note && (
-                    <span className="text-xs text-yellow-500 mt-1">
-                      {item.note}
-                    </span>
-                  )}
+                  <span className="text-sm dark:text-[#999999] text-[#696969]">{capability.description}</span>
+                  {item.note && <span className="text-xs text-yellow-500 mt-1">{item.note}</span>}
                 </div>
               </div>
 
@@ -59,14 +47,8 @@ export const IntegrationCapabilites = ({
                 href={capability.path}
                 className="border border-solid border-[#e5e7eb] dark:border-[#333] p-2 py-1 rounded-md gap-2 flex justify-center items-center hover:no-underline hover:bg-slate-100 dark:hover:bg-gray-800"
               >
-                <IconExternalLink
-                  size={16}
-                  stroke={1.5}
-                  className="dark:stroke-white stroke-black"
-                />
-                <span className="dark:text-white text-black font-medium text-sm">
-                  Details
-                </span>
+                <IconExternalLink size={16} stroke={1.5} className="dark:stroke-white stroke-black" />
+                <span className="dark:text-white text-black font-medium text-sm">Details</span>
               </a>
             </div>
           );
