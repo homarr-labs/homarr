@@ -272,21 +272,25 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
           }}
           p={4}
         >
-          <Group gap={4}>
-            <IconBrandDocker size={20} />
-            <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+          <Group gap={4} wrap="nowrap">
+            <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
+            <Text size="sm" truncate="end">
+              {t("table.footer", { count: totalContainers.toString() })}
+            </Text>
           </Group>
 
-          <Group gap="xl">
-            <Text size="sm" c={cpuUsageColor(totals.cpu, "running")}>
-              Total CPU: {totals.cpu.toFixed(2)}%
+          <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
+            <Text size="sm" c={cpuUsageColor(totals.cpu, "running")} style={{ whiteSpace: "nowrap" }}>
+              {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
             </Text>
             
-            <Text size="sm" c={memoryUsageColor(totals.memory, "running")}>
-              Total Mem: {humanFileSize(totals.memory)}
+            <Text size="sm" c={memoryUsageColor(totals.memory, "running")} style={{ whiteSpace: "nowrap" }}>
+              {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
             </Text>
 
-            <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+              {t("table.updated", { when: relativeTime })}
+            </Text>
           </Group>
         </Group>
       )}
