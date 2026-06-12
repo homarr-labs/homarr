@@ -6,8 +6,6 @@ tags:
   - Interface
 ---
 
-import { ThemedApiReference } from "@site/src/components/themed-api-reference";
-
 Using the Homarr API, you can interface with the application with your own code and business logic.
 It enables you to trigger almost all actions that you can perform from the Homarr UI.
 With the API, you can build resilient systems that automatically update Homarr with data - for example syncing it with
@@ -23,6 +21,8 @@ The specification is implemented according to the OpenAPI standard.
 To access the documentation, you'll need to spin up an instance of Homarr.
 Navigate to `Management` > `Tools` > `API`.
 You can copy the JSON url into your OpenAPI client or try out the endpoints directly from your browser.
+
+Alternatively, you can [open the full API reference](/api/open-api-schema.json) directly.
 
 ## Authentication
 
@@ -71,14 +71,3 @@ API key authentication enables programmatic access for:
 - Third-party integrations
 - Custom dashboards and monitoring tools
 - Container orchestration systems that need to sync app definitions
-
-## Specification
-
-<ThemedApiReference
-  configuration={{
-    url: "/api/open-api-schema.json",
-    theme: "kepler",
-    hideModels: false,
-    hideDownloadButton: false,
-  }}
-/>
