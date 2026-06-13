@@ -748,7 +748,7 @@ describe("addMember should add member to group", () => {
       });
 
     // Assert
-    await expect(actAsync()).rejects.toThrow("Credentials provider is disabled");
+    await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
   });
 });
 
@@ -872,7 +872,7 @@ describe("removeMember should remove member from group", () => {
       });
 
     // Assert
-    await expect(actAsync()).rejects.toThrow("Credentials provider is disabled");
+    await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
   });
 });
 

@@ -1,12 +1,27 @@
 import { notFound } from "next/navigation";
-import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import {
+  Alert,
+  Anchor,
+  Center,
+  Group,
+  Stack,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTr,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
+import {
+  canManageGroupMembersLocally,
+  isProviderEnabled,
+} from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
@@ -40,14 +55,27 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
 
   const filteredMembers = searchParams.search
     ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
+      group.members.filter((member) =>
+        member.name
+          ?.toLowerCase()
+          .includes(searchParams.search!.trim().toLowerCase()),
+      )
     : group.members;
 
-  const providerTypes = isProviderEnabled("credentials")
-    ? env.AUTH_PROVIDERS.length > 1
+  const oidcGroupsManagedLocally =
+    isProviderEnabled("oidc") && env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT;
+  const canManageMembers = canManageGroupMembersLocally();
+  const hasUnmanageableProviders = env.AUTH_PROVIDERS.some(
+    (provider) =>
+      provider !== "credentials" &&
+      !(provider === "oidc" && oidcGroupsManagedLocally),
+  );
+
+  const providerTypes = !canManageMembers
+    ? "external"
+    : hasUnmanageableProviders
       ? "mixed"
-      : "credentials"
-    : "external";
+      : "credentials";
 
   return (
     <Stack>
@@ -57,16 +85,27 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
         <ReservedGroupAlert />
       ) : (
         providerTypes !== "credentials" && (
-          <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+          <Alert
+            variant="light"
+            color="yellow"
+            icon={<IconExclamationCircle size="1rem" stroke={1.5} />}
+          >
             {t(`group.memberNotice.${providerTypes}`)}
           </Alert>
         )
       )}
 
       <Group justify="space-between">
-        <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
-        {isProviderEnabled("credentials") && !isReserved && (
-          <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        <SearchInput
+          placeholder={`${tMembers("search")}...`}
+          defaultValue={searchParams.search}
+        />
+        {canManageMembers && !isReserved && (
+          <AddGroupMember
+            groupId={group.id}
+            presentUserIds={group.members.map((member) => member.id)}
+            includeExternalProviders={Boolean(oidcGroupsManagedLocally)}
+          />
         )}
       </Group>
       {filteredMembers.length === 0 && (
@@ -79,7 +118,13 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
+            <Row
+              key={group.id}
+              member={member}
+              groupId={group.id}
+              disabled={isReserved}
+              oidcGroupsManagedLocally={Boolean(oidcGroupsManagedLocally)}
+            />
           ))}
         </TableTbody>
       </Table>
@@ -91,9 +136,19 @@ interface RowProps {
   member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
   disabled?: boolean;
+  oidcGroupsManagedLocally: boolean;
 }
 
-const Row = ({ member, groupId, disabled }: RowProps) => {
+const Row = ({
+  member,
+  groupId,
+  disabled,
+  oidcGroupsManagedLocally,
+}: RowProps) => {
+  const canBeRemoved =
+    member.provider === "credentials" ||
+    (member.provider === "oidc" && oidcGroupsManagedLocally);
+
   return (
     <TableTr>
       <TableTd>
@@ -105,7 +160,9 @@ const Row = ({ member, groupId, disabled }: RowProps) => {
         </Group>
       </TableTd>
       <TableTd w={100}>
-        {member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}
+        {canBeRemoved && !disabled && (
+          <RemoveGroupMember user={member} groupId={groupId} />
+        )}
       </TableTd>
     </TableTr>
   );

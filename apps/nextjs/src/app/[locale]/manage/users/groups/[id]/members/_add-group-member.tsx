@@ -13,9 +13,10 @@ import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 interface AddGroupMemberProps {
   groupId: string;
   presentUserIds: string[];
+  includeExternalProviders?: boolean;
 }
 
-export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps) => {
+export const AddGroupMember = ({ groupId, presentUserIds, includeExternalProviders }: AddGroupMemberProps) => {
   const tMembersAdd = useScopedI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
   const { openModal } = useModalAction(UserSelectModal);
@@ -32,13 +33,13 @@ export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps)
           await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
         },
         presentUserIds,
-        excludeExternalProviders: true,
+        excludeExternalProviders: !includeExternalProviders,
       },
       {
         title: tMembersAdd("label"),
       },
     );
-  }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd]);
+  }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd, includeExternalProviders]);
 
   return <MobileAffixButton onClick={handleAddMember}>{tMembersAdd("label")}</MobileAffixButton>;
 };

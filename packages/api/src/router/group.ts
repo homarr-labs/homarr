@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { canManageGroupMembersLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
-import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
@@ -315,10 +315,10 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
-      throwIfCredentialsDisabled();
+      throwIfGroupMembersCannotBeManagedLocally();
 
       const user = await ctx.db.query.users.findFirst({
-        where: eq(groups.id, input.userId),
+        where: eq(users.id, input.userId),
       });
 
       if (!user) {
@@ -339,7 +339,7 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
-      throwIfCredentialsDisabled();
+      throwIfGroupMembersCannotBeManagedLocally();
 
       await ctx.db
         .delete(groupMembers)
@@ -367,6 +367,15 @@ const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Action is forbidden for reserved group names",
+    });
+  }
+};
+
+const throwIfGroupMembersCannotBeManagedLocally = () => {
+  if (!canManageGroupMembersLocally()) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Group members cannot be managed locally",
     });
   }
 };
