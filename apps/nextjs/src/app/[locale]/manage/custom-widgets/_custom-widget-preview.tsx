@@ -109,7 +109,7 @@ export function CustomWidgetPreview({
               </Group>
             )}
 
-            <Card withBorder p="xs" bg="var(--mantine-color-dark-7)" mih={120}>
+            <Card withBorder p="xs" bg="var(--mantine-color-dark-7)" mah={320} style={{ overflow: "auto" }}>
               <PreviewDisplay data={displayData} />
             </Card>
 
@@ -119,7 +119,9 @@ export function CustomWidgetPreview({
                 variant="subtle"
                 leftSection={<IconExternalLink size={14} />}
                 onClick={() => {
-                  const blob = new Blob([fetchResult.rawResponse ?? ""], { type: "application/json" });
+                  const blob = new Blob([fetchResult.rawResponse ?? ""], {
+                    type: "application/json",
+                  });
                   const blobUrl = URL.createObjectURL(blob);
                   window.open(blobUrl);
                   setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);

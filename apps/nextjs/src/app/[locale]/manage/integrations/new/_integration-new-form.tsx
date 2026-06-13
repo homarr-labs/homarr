@@ -97,13 +97,19 @@ export const NewIntegrationForm = ({
     },
   });
 
+  const utils = clientApi.useUtils();
   const { mutateAsync: createIntegrationAsync, isPending: isCreatePending } = clientApi.integration.create.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/integrations");
+      await utils.integration.invalidate();
     },
   });
   const { mutateAsync: createOnboardingIntegrationAsync, isPending: isOnboardingCreatePending } =
-    clientApi.onboard.createIntegration.useMutation();
+    clientApi.onboard.createIntegration.useMutation({
+      async onSuccess() {
+        await utils.integration.invalidate();
+      },
+    });
   const isPending = isCreatePending || isOnboardingCreatePending;
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 

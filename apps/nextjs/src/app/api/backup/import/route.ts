@@ -39,7 +39,9 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
 
   if (rows.length === 0) return;
 
-  const updateStmt = tempDb.prepare('UPDATE "integrationSecret" SET "value" = ? WHERE "integration_id" = ? AND "kind" = ?');
+  const updateStmt = tempDb.prepare(
+    'UPDATE "integrationSecret" SET "value" = ? WHERE "integration_id" = ? AND "kind" = ?',
+  );
   const transaction = tempDb.transaction(() => {
     for (const row of rows) {
       const parts = row.value.split(".");
@@ -148,14 +150,13 @@ export async function POST(req: Request) {
     const rawKey = metadata.encryptionKey ?? zip.getEntry("encryption-key.txt")?.getData().toString().trim();
     const importedKey = typeof rawKey === "string" && rawKey.length > 0 ? rawKey : undefined;
 
-    const secretCount = (
-      tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number }
-    ).count;
+    const secretCount = (tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number })
+      .count;
 
     if (secretCount > 0 && !importedKey) {
       throw new Error(
         "Backup contains integration secrets but no encryption key. " +
-        "Cannot restore without the original SECRET_ENCRYPTION_KEY.",
+          "Cannot restore without the original SECRET_ENCRYPTION_KEY.",
       );
     }
 

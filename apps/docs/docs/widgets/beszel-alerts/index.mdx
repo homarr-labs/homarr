@@ -1,0 +1,39 @@
+---
+title: 'Beszel Alerts'
+description: 'View Beszel alert configurations and history with triggered/ok status indicators.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { beszelAlertsWidget } from '.';
+import { beszelIntegration } from '@site/docs/integrations/beszel';
+
+import beszelAlerts from './img/beszel-alerts.png';
+
+<WidgetHeader
+  widget={beszelAlertsWidget}
+  categories={['System Monitoring', 'Alerts']}
+/>
+
+This widget displays your Beszel alert configurations separated by status (triggered and ok). It also shows alert history with timestamps. Alerts are updated in real time via WebSocket subscriptions.
+
+### Screenshots
+
+<img src={beszelAlerts} alt="Beszel Alerts widget showing triggered and ok alerts with history" />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: beszelIntegration,
+  note: "Displays alert configurations and trigger history"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={beszelAlertsWidget.configuration} />

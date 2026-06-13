@@ -50,10 +50,10 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
                   <Table.Td>{t(`entities.${key}` as never)}</Table.Td>
                   <Table.Td ta="right">
                     <Group gap={4} justify="flex-end">
-                      {(analysis.counts[key] ?? 0) > 0 && (
-                        <IconCheck size={14} color="var(--mantine-color-green-6)" />
-                      )}
-                      <Text size="sm" ff="monospace">{analysis.counts[key] ?? 0}</Text>
+                      {(analysis.counts[key] ?? 0) > 0 && <IconCheck size={14} color="var(--mantine-color-green-6)" />}
+                      <Text size="sm" ff="monospace">
+                        {analysis.counts[key] ?? 0}
+                      </Text>
                     </Group>
                   </Table.Td>
                 </Table.Tr>
@@ -63,9 +63,13 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
 
           {analysis.boardNames.length > 0 && (
             <Group gap="xs" wrap="wrap">
-              <Text size="sm" fw={500}>{t("boards")}:</Text>
+              <Text size="sm" fw={500}>
+                {t("boards")}:
+              </Text>
               {analysis.boardNames.map((name) => (
-                <Badge key={name} variant="light" size="sm">{name}</Badge>
+                <Badge key={name} variant="light" size="sm">
+                  {name}
+                </Badge>
               ))}
             </Group>
           )}

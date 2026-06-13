@@ -49,7 +49,9 @@ export const DangerousActionConfirmation = ({
 
         <Alert color={color} variant="light" icon={<IconAlertTriangle size={20} />}>
           <Stack gap={4}>
-            <Text size="sm" fw={600}>{warningTitle}</Text>
+            <Text size="sm" fw={600}>
+              {warningTitle}
+            </Text>
             <Text size="sm">{warningBody}</Text>
           </Stack>
         </Alert>
@@ -76,12 +78,7 @@ export const DangerousActionConfirmation = ({
           <Button variant="subtle" color="gray" onClick={onCancel} disabled={disabled}>
             {cancelLabel}
           </Button>
-          <Button
-            color={color}
-            leftSection={submitIcon}
-            onClick={onConfirm}
-            disabled={!isMatch || disabled}
-          >
+          <Button color={color} leftSection={submitIcon} onClick={onConfirm} disabled={!isMatch || disabled}>
             {submitLabel}
           </Button>
         </Group>

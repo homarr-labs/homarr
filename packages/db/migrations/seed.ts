@@ -56,7 +56,14 @@ const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> 
       authType: "none",
       method: "GET",
       displayType: "singleValue",
-      displayConfig: { type: "singleValue", jsonPath: "$.data[0].attributes.body", label: "Dog Fact", unit: "", valueSize: "sm", labelPosition: "above" },
+      displayConfig: {
+        type: "singleValue",
+        jsonPath: "$.data[0].attributes.body",
+        label: "Dog Fact",
+        unit: "",
+        valueSize: "sm",
+        labelPosition: "above",
+      },
     },
   },
   {
@@ -103,6 +110,26 @@ const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> 
         ],
         columns: 4,
         valueSize: "lg",
+      },
+    },
+  },
+  {
+    id: "seed-pokedex",
+    data: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Pokédex",
+      description: "Browseable Pokémon list",
+      iconUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+      url: "https://pokeapi.co/api/v2/pokemon?limit=75",
+      authType: "none",
+      headerName: null,
+      method: "GET",
+      requestBody: null,
+      displayType: "customJsx",
+      displayConfig: {
+        type: "customJsx",
+        template:
+          '<Stack gap="md" p="xs">\n  <Card\n    withBorder\n    radius="xl"\n    p="md"\n    shadow="md"\n    style={{\n      background: "linear-gradient(135deg, rgba(250,82,82,0.22), rgba(253,126,20,0.10), rgba(255,255,255,0.03))",\n      border: "1px solid rgba(250,82,82,0.35)",\n      overflow: "hidden"\n    }}\n  >\n    <Group justify="space-between" wrap="nowrap">\n      <Stack gap={2}>\n        <Title order={3}>Pokédex</Title>\n      </Stack>\n    </Group>\n  </Card>\n\n  <PaginatedList pageSize={12}>\n    <Grid gutter="sm">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target="_blank" underline="never">\n            <Card\n              withBorder\n              radius="xl"\n              p="xs"\n              shadow="md"\n              style={{\n                cursor: "pointer",\n                position: "relative",\n                overflow: "hidden",\n                minHeight: 190,\n                background: "linear-gradient(160deg, rgba(255,255,255,0.12), rgba(250,82,82,0.10), rgba(0,0,0,0.04))",\n                border: "1px solid rgba(250,82,82,0.28)",\n                transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease"\n              }}\n            >\n              <Stack gap="sm" align="center">\n                <Group justify="space-between" wrap="nowrap" style={{ width: "100%" }}>\n                  <Badge size="sm" color="red" variant="filled">\n                    #{String(i + 1).padStart(3, "0")}\n                  </Badge>\n                  <Text fw={800} tt="capitalize" ta="right" truncate style={{ maxWidth: 120 }}>\n                    {pokemon.name}\n                  </Text>\n                </Group>\n\n                <Paper\n                  radius="xl"\n                  p="xs"\n                  withBorder\n                  style={{\n                    background: "radial-gradient(circle, rgba(255,255,255,0.95), rgba(250,82,82,0.16))",\n                    border: "1px solid rgba(255,255,255,0.45)",\n                    boxShadow: "inset 0 0 20px rgba(255,255,255,0.25)"\n                  }}\n                >\n                  <Avatar\n                    src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}\n                    alt={pokemon.name}\n                    size={92}\n                    radius="xl"\n                    style={{\n                      transition: "transform 180ms ease",\n                      filter: "drop-shadow(0 8px 10px rgba(0,0,0,0.25))"\n                    }}\n                  />\n                </Paper>\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>',
       },
     },
   },

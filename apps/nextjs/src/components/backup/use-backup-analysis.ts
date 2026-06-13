@@ -64,117 +64,124 @@ export const useBackupAnalysis = () => {
   const [migrationProgress, setMigrationProgress] = useState<MigrationProgress | null>(null);
   const dbRef = useRef<any>(null);
 
-  const analyzeFile = useCallback(async (file: File) => {
-    setLoading(true);
-    setError(null);
-    setAnalysis(null);
-    setMigrationProgress(null);
-
-    try {
-      const [JSZip, initSqlJs, allMigrations, wasmBinary] = await Promise.all([
-        import("jszip").then((m) => m.default),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        import("sql.js").then((m: any) => m.default),
-        fetchMigrations(),
-        fetch("/api/backup/sql-wasm").then((r) => {
-          if (!r.ok) throw new Error("Failed to load SQL WASM binary");
-          return r.arrayBuffer();
-        }),
-      ]);
-
-      const arrayBuffer = await file.arrayBuffer();
-      const zip = await JSZip.loadAsync(arrayBuffer);
-
-      const metadataFile = zip.file("metadata.json");
-      if (!metadataFile) throw new Error(t("invalidMissingMetadata"));
-      const dbFile = zip.file("db.sqlite");
-      if (!dbFile) throw new Error(t("invalidMissingDb"));
-
-      const metadata = JSON.parse(await metadataFile.async("string"));
-      const dbBuffer = await dbFile.async("uint8array");
-
-      const SQL = await initSqlJs({ wasmBinary });
-
-      const db = new SQL.Database(dbBuffer);
-      dbRef.current = db;
+  const analyzeFile = useCallback(
+    async (file: File) => {
+      setLoading(true);
+      setError(null);
+      setAnalysis(null);
+      setMigrationProgress(null);
 
       try {
-        const appliedCount = getAppliedMigrationCount(db);
-        const pendingMigrations = allMigrations.filter((m) => m.idx >= appliedCount);
+        const [JSZip, initSqlJs, allMigrations, wasmBinary] = await Promise.all([
+          import("jszip").then((m) => m.default),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          import("sql.js").then((m: any) => m.default),
+          fetchMigrations(),
+          fetch("/api/backup/sql-wasm").then((r) => {
+            if (!r.ok) throw new Error("Failed to load SQL WASM binary");
+            return r.arrayBuffer();
+          }),
+        ]);
 
-        const migrations: MigrationStatus = {
-          applied: appliedCount,
-          pending: pendingMigrations,
-          total: allMigrations.length,
-        };
+        const arrayBuffer = await file.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
 
-        if (pendingMigrations.length > 0) {
-          for (const [i, migration] of pendingMigrations.entries()) {
-            setMigrationProgress({
-              current: i + 1,
-              total: pendingMigrations.length,
-              tag: migration.tag,
-              phase: "applying",
-            });
+        const metadataFile = zip.file("metadata.json");
+        if (!metadataFile) throw new Error(t("invalidMissingMetadata"));
+        const dbFile = zip.file("db.sqlite");
+        if (!dbFile) throw new Error(t("invalidMissingDb"));
 
-            await delay(100);
+        const metadata = JSON.parse(await metadataFile.async("string"));
+        const dbBuffer = await dbFile.async("uint8array");
 
-            try {
-              const statements = migration.sql
-                .split("--> statement-breakpoint")
-                .map((s) => s.trim())
-                .filter(Boolean);
+        const SQL = await initSqlJs({ wasmBinary });
 
-              for (const stmt of statements) {
-                db.run(stmt);
-              }
+        const db = new SQL.Database(dbBuffer);
+        dbRef.current = db;
 
-              db.run(
-                `INSERT INTO "${DRIZZLE_MIGRATIONS_TABLE}" ("hash", "created_at") VALUES (?, ?)`,
-                [migration.tag, Date.now()],
-              );
-            } catch (migrationErr) {
+        try {
+          const appliedCount = getAppliedMigrationCount(db);
+          const pendingMigrations = allMigrations.filter((m) => m.idx >= appliedCount);
+
+          const migrations: MigrationStatus = {
+            applied: appliedCount,
+            pending: pendingMigrations,
+            total: allMigrations.length,
+          };
+
+          if (pendingMigrations.length > 0) {
+            for (const [i, migration] of pendingMigrations.entries()) {
               setMigrationProgress({
                 current: i + 1,
                 total: pendingMigrations.length,
                 tag: migration.tag,
-                phase: "error",
+                phase: "applying",
               });
-              throw new Error(
-                `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`,
-              );
+
+              await delay(100);
+
+              try {
+                const statements = migration.sql
+                  .split("--> statement-breakpoint")
+                  .map((s) => s.trim())
+                  .filter(Boolean);
+
+                for (const stmt of statements) {
+                  db.run(stmt);
+                }
+
+                db.run(`INSERT INTO "${DRIZZLE_MIGRATIONS_TABLE}" ("hash", "created_at") VALUES (?, ?)`, [
+                  migration.tag,
+                  Date.now(),
+                ]);
+              } catch (migrationErr) {
+                setMigrationProgress({
+                  current: i + 1,
+                  total: pendingMigrations.length,
+                  tag: migration.tag,
+                  phase: "error",
+                });
+                throw new Error(
+                  `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`, { cause: migrationErr },
+                );
+              }
+
+              setMigrationProgress({
+                current: i + 1,
+                total: pendingMigrations.length,
+                tag: migration.tag,
+                phase: "done",
+              });
+
+              await delay(50);
             }
-
-            setMigrationProgress({
-              current: i + 1,
-              total: pendingMigrations.length,
-              tag: migration.tag,
-              phase: "done",
-            });
-
-            await delay(50);
           }
+
+          const counts = countEntities(db);
+          const boardNames = getBoardNames(db);
+
+          setMigrationProgress(null);
+          setAnalysis({ metadata, counts, boardNames, migrations });
+        } finally {
+          db.close();
+          dbRef.current = null;
         }
-
-        const counts = countEntities(db);
-        const boardNames = getBoardNames(db);
-
-        setMigrationProgress(null);
-        setAnalysis({ metadata, counts, boardNames, migrations });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t("analyzeError"));
       } finally {
-        db.close();
-        dbRef.current = null;
+        setLoading(false);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("analyzeError"));
-    } finally {
-      setLoading(false);
-    }
-  }, [t]);
+    },
+    [t],
+  );
 
   const reset = useCallback(() => {
     if (dbRef.current) {
-      try { dbRef.current.close(); } catch { /* already closed */ }
+      try {
+        dbRef.current.close();
+      } catch {
+        /* already closed */
+      }
       dbRef.current = null;
     }
     setAnalysis(null);

@@ -1,0 +1,38 @@
+---
+title: 'Tracearr'
+description: "Tracearr is a comprehensive media monitoring solution that tracks streams, user activity, and policy violations in your media server (including Plex, Jellyfin, Emby)."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { tracearrIntegration } from '.';
+import { tracearrWidget } from '@site/docs/widgets/tracearr';
+
+
+<IntegrationHeader
+  integration={tracearrIntegration}
+  categories={['Media Monitoring']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: tracearrWidget }
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+        <span>
+            In Tracearr, go to <strong>Settings → API</strong> and generate or copy your API key.
+        </span>
+    ]
+}]} />

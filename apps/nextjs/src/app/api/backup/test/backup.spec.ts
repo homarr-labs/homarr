@@ -80,7 +80,10 @@ describe("SQLite backup", () => {
       zip.writeZip(zipPath);
 
       const readBack = new AdmZip(zipPath);
-      const entryNames = readBack.getEntries().map((e) => e.entryName).sort();
+      const entryNames = readBack
+        .getEntries()
+        .map((e) => e.entryName)
+        .toSorted();
       expect(entryNames).toEqual(["db.sqlite", "metadata.json"]);
 
       const dbEntry = readBack.getEntry("db.sqlite");
@@ -97,9 +100,9 @@ describe("SQLite backup", () => {
       sqlite.close();
 
       const backupDb = new Database(backupPath, { readonly: true });
-      const tables = backupDb
-        .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
-        .all() as { name: string }[];
+      const tables = backupDb.prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name").all() as {
+        name: string;
+      }[];
 
       expect(tables.map((t) => t.name)).toContain("board");
       expect(tables.map((t) => t.name)).toContain("user");
@@ -124,7 +127,10 @@ describe("SQLite backup", () => {
     it("should accept valid backup ZIP with all entries", () => {
       const zip = new AdmZip();
       zip.addFile("db.sqlite", Buffer.from("dummy"));
-      zip.addFile("metadata.json", Buffer.from(JSON.stringify({ dbDialect: "sqlite", encryptionKey: generateHexKey() })));
+      zip.addFile(
+        "metadata.json",
+        Buffer.from(JSON.stringify({ dbDialect: "sqlite", encryptionKey: generateHexKey() })),
+      );
 
       const entries = zip.getEntries().map((e) => e.entryName);
       const required = ["db.sqlite", "metadata.json"];
@@ -173,9 +179,11 @@ describe("SQLite backup", () => {
       const oldKeyBuf = Buffer.from(oldKey, "hex");
       const newKeyBuf = Buffer.from(newKey, "hex");
 
-      const rows = sqlite
-        .prepare('SELECT "integration_id", "kind", "value" FROM "integrationSecret"')
-        .all() as { integration_id: string; kind: string; value: string }[];
+      const rows = sqlite.prepare('SELECT "integration_id", "kind", "value" FROM "integrationSecret"').all() as {
+        integration_id: string;
+        kind: string;
+        value: string;
+      }[];
 
       const updateStmt = sqlite.prepare(
         'UPDATE "integrationSecret" SET "value" = ? WHERE "integration_id" = ? AND "kind" = ?',
@@ -253,7 +261,9 @@ describe("SQLite backup", () => {
       sqlite.exec(`VACUUM INTO '${backupPath}'`);
 
       const backupDb = new Database(backupPath, { readonly: true });
-      const app = backupDb.prepare('SELECT "name" FROM "app" WHERE "id" = ?').get("app-1") as { name: string } | undefined;
+      const app = backupDb.prepare('SELECT "name" FROM "app" WHERE "id" = ?').get("app-1") as
+        | { name: string }
+        | undefined;
 
       expect(app).toBeDefined();
       expect(app?.name).toBe("TestApp");
@@ -281,7 +291,9 @@ describe("SQLite backup", () => {
       const drizzleDb = drizzle(importDb, { casing: DB_CASING });
       migrate(drizzleDb, { migrationsFolder: MIGRATIONS_FOLDER });
 
-      const board = importDb.prepare('SELECT "name" FROM "board" WHERE "id" = ?').get("board-1") as { name: string } | undefined;
+      const board = importDb.prepare('SELECT "name" FROM "board" WHERE "id" = ?').get("board-1") as
+        | { name: string }
+        | undefined;
       expect(board).toBeDefined();
       expect(board?.name).toBe("TestBoard");
 

@@ -115,13 +115,19 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       >
         <Group justify="center" gap="xl" mih={variant === "standalone" ? 200 : 160} style={{ pointerEvents: "none" }}>
           <Dropzone.Accept>
-            <IconUpload style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-blue-6)" }} stroke={1.5} />
+            <IconUpload
+              style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-blue-6)" }}
+              stroke={1.5}
+            />
           </Dropzone.Accept>
           <Dropzone.Reject>
             <IconX style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-red-6)" }} stroke={1.5} />
           </Dropzone.Reject>
           <Dropzone.Idle>
-            <IconFileZip style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
+            <IconFileZip
+              style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+              stroke={1.5}
+            />
           </Dropzone.Idle>
           <div>
             <Text size="xl" inline>
@@ -143,8 +149,12 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <Group gap="sm">
             <IconFileZip size={20} />
             <div>
-              <Text size="sm" fw={500}>{file?.name}</Text>
-              <Text size="xs" c="dimmed">{file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}</Text>
+              <Text size="sm" fw={500}>
+                {file?.name}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
+              </Text>
             </div>
           </Group>
           <Button variant="subtle" size="xs" onClick={handleClear}>
@@ -152,14 +162,14 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           </Button>
         </Group>
 
-        {loading && migrationProgress && (
-          <MigrationProgressPanel progress={migrationProgress} />
-        )}
+        {loading && migrationProgress && <MigrationProgressPanel progress={migrationProgress} />}
 
         {loading && !migrationProgress && (
           <Group justify="center" py="xl">
             <Loader size="sm" />
-            <Text size="sm" c="dimmed">{t("analyzing")}</Text>
+            <Text size="sm" c="dimmed">
+              {t("analyzing")}
+            </Text>
           </Group>
         )}
 
@@ -173,10 +183,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <>
             <BackupPreviewPanel analysis={analysis} />
             <Group justify="flex-end">
-              <Button
-                rightSection={<IconArrowRight size={16} />}
-                onClick={() => setStep("confirm")}
-              >
+              <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep("confirm")}>
                 {t("continueToRestore")}
               </Button>
             </Group>
@@ -190,10 +197,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     return (
       <Stack gap="md">
         {analysis && <BackupPreviewPanel analysis={analysis} />}
-        <RestoreConfirmation
-          onConfirm={handleConfirm}
-          onCancel={() => setStep("preview")}
-        />
+        <RestoreConfirmation onConfirm={handleConfirm} onCancel={() => setStep("preview")} />
       </Stack>
     );
   }

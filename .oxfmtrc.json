@@ -3,5 +3,5 @@
   "printWidth": 120,
   "endOfLine": "lf",
   "sortPackageJson": true,
-  "ignorePatterns": ["**/*.cjs", "**/lang/**", "static-data/**", "CHANGELOG.md"]
+  "ignorePatterns": ["**/*.cjs", "**/lang/**", "static-data/**", "CHANGELOG.md", "apps/docs/.docusaurus/**", "apps/docs/build/**", "apps/docs/blog/**"]
 }

@@ -5,6 +5,8 @@ import { XMLParser } from "fast-xml-parser";
 import { z } from "zod/v4";
 
 import { createDocumentationLink } from "./index";
+import { integrationDocSlugs } from "./integration-doc-slugs";
+import { widgetDocSlugs } from "./widget-doc-slugs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -54,20 +56,46 @@ const updateSitemapTypeFileAsync = async (sitemapPathType: string) => {
     sitemapPathType +
     ";\n";
 
-  await fs.writeFile(path.join(__dirname, "homarr-docs-sitemap.ts"), content);
+  await fs.writeFile(outputPath, content);
 };
 
-/**
- * This script fetches the sitemap.xml and generates the HomarrDocumentationPath type
- * which is used for typesafe documentation links
- */
-// eslint-disable-next-line no-restricted-syntax
+const slugMapPaths = [
+  ...Object.values(integrationDocSlugs)
+    .filter(Boolean)
+    .map((slug) => `/docs/integrations/${slug}`),
+  ...Object.values(widgetDocSlugs)
+    .filter(Boolean)
+    .map((slug) => `/docs/widgets/${slug}`),
+];
+
+const outputPath = path.join(__dirname, "homarr-docs-sitemap.ts");
+
 const main = async () => {
-  const sitemapXml = await fetchSitemapAsync();
-  const sitemapData = parseXml(sitemapXml);
-  const paths = mapSitemapXmlToPaths(sitemapData);
-  // Adding sitemap as it's not in the sitemap.xml and we need it for this file
+  let paths: string[];
+  try {
+    const sitemapXml = await fetchSitemapAsync();
+    const sitemapData = parseXml(sitemapXml);
+    paths = mapSitemapXmlToPaths(sitemapData);
+  } catch {
+    const exists = await fs.access(outputPath).then(
+      () => true,
+      () => false,
+    );
+    if (exists) {
+      console.warn("Could not fetch sitemap from homarr.dev, keeping existing generated file");
+      return;
+    }
+    console.warn("Could not fetch sitemap from homarr.dev and no existing file, generating from slug maps only");
+    paths = [];
+  }
+
   paths.push("/sitemap.xml");
+  for (const p of slugMapPaths) {
+    if (!paths.includes(p)) {
+      paths.push(p);
+    }
+  }
+
   const sitemapPathType = createSitemapPathType(paths);
   await updateSitemapTypeFileAsync(sitemapPathType);
 };

@@ -1,0 +1,37 @@
+---
+title: 'Emby'
+description: "Emby is a media server platform that allows you to organize, manage, and stream your personal media collection."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconVideo, IconTicket } from "@tabler/icons-react";
+import { embyIntegration } from '.';
+import { mediaServerWidget } from '@site/docs/widgets/media-server';
+import { mediaReleasesWidget } from '@site/docs/widgets/media-releases';
+
+
+<IntegrationHeader
+    integration={embyIntegration}
+    categories={['Media server']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: mediaServerWidget }, 
+        { widget: mediaReleasesWidget }
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: []
+}]} />

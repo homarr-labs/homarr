@@ -1,0 +1,60 @@
+# Integrations
+
+:::info
+
+This guide requires that you understand [how to access the CLI](../).
+
+:::
+
+Using these commands, you can manage the integrations from the CLI:
+```bash
+Group of commands to manage integrations
+
+Usage:
+  homarr integrations [command]
+
+Available Commands:
+  list     List all integrations (id and name)
+  delete   Delete an integration by id or name
+
+Flags:
+  -h, --help      help for integrations
+  -v, --version   version for homarr-cli
+
+Use "homarr integrations [command] --help" for more information about a command.
+```
+
+## List Integrations
+
+- Requires a database connection
+- Lists all configured integrations
+
+```bash
+List all integrations (id and name)
+
+Usage:
+  homarr integrations list [flags]
+
+Flags:
+  -h, --help      help for integrations list
+  -v, --version   version for homarr-cli
+```
+
+## Delete Integration
+
+- Requires a database connection
+- Requires one parameter: ``id`` or ``name``
+- Deletes an integration permanently from the database
+
+```bash
+Delete an integration by id or name
+
+Usage:
+  homarr integrations delete [flags]
+
+Flags:
+  -i, --id string     ID of the integration
+  -n, --name string   Name of the integration
+  -h, --help          help for integrations delete
+  -v, --version       version for homarr-cli
+```

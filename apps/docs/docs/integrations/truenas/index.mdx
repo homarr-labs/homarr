@@ -1,0 +1,61 @@
+---
+title: 'TrueNAS'
+description: "Enterprise network-attached storage for your home, office, and cloud."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { truenasIntegration } from '.';
+import { systemResourcesWidget } from '@site/docs/widgets/system-resources';
+import { healthMonitoringWidget } from '@site/docs/widgets/health-monitoring';
+import Alert from '@theme/Admonition';
+
+
+<IntegrationHeader
+  integration={truenasIntegration}
+  categories={['NAS', 'Hardware']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+      { widget: healthMonitoringWidget },
+      { widget: systemResourcesWidget },
+      ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+<Alert type="info" title="Use the HTTPS address">
+    TrueNAS only serves its API over HTTPS, so enter the <code>https://</code> URL of your TrueNAS web interface. If it uses a self-signed certificate (the default), add it under <a href="/docs/management/certificates">Management &gt; Tools &gt; Certificates</a> so Homarr can establish the connection.
+</Alert>
+
+### Secrets
+<IntegrationSecrets secrets={[
+    {
+        credentials: ['apiKey'],
+        header: <Alert type="tip" title="Recommended">
+            API key authentication is the recommended method. It works across current TrueNAS versions and does not depend on user group membership.
+        </Alert>,
+        steps: [
+            "In the TrueNAS web interface, click your user avatar in the top-right corner and select \"API Keys\".",
+            "Click \"Add\", give the key a name such as \"Homarr\", and confirm.",
+            "Copy the generated key immediately - TrueNAS only shows it once - and paste it as the API Key when creating the integration in Homarr.",
+        ],
+    },
+    {
+        credentials: ['username', 'password'],
+        steps: [
+            "In the TrueNAS web interface, go to \"Credentials\" > \"Users\" > \"Add\" and create a user with a secure password.",
+            "Grant the user administrative access so Homarr can read system, pool, and reporting data.",
+            "Save the user and create the integration in Homarr with these credentials.",
+        ],
+        body: <Alert type="caution" title="Administrative access required">
+            The account must have administrative API access. The <code>auxiliary_administrator</code> group was removed in TrueNAS 25.10; on that version or newer, use API key authentication instead, or assign the user a full-admin role.
+        </Alert>,
+    },
+]} />

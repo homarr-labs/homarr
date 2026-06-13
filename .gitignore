@@ -69,5 +69,8 @@ apps/nextjs/public/images/background.png
 
 
 # personal agent config
-AGENTS.md
 .opencode
+
+# docusaurus
+apps/docs/.docusaurus
+apps/docs/build

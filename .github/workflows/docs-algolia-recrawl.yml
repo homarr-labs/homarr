@@ -1,0 +1,58 @@
+name: "[Docs] Algolia Recrawl"
+
+on:
+  workflow_run:
+    workflows: ["[Deployment] Documentation"]
+    types: [completed]
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recrawl:
+    if: >-
+      ${{
+        (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request')
+        || github.event_name == 'workflow_dispatch'
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Check Algolia crawler secrets
+        run: |
+          missing=0
+          for secret in ALGOLIA_CRAWLER_ID ALGOLIA_CRAWLER_USER_ID ALGOLIA_CRAWLER_API_KEY; do
+            if [ -z "${!secret}" ]; then
+              echo "::warning::Missing repository secret: $secret"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "Add crawler secrets to enable automatic recrawls."
+            exit 1
+          fi
+        env:
+          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+
+      - name: Wait for GitHub Pages to serve the new deployment
+        run: sleep 60
+
+      - name: Trigger Algolia DocSearch recrawl
+        uses: cssnr/algolia-crawler-action@v2
+        with:
+          crawler_id: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          crawler_user_id: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
+          crawler_api_key: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+
+      - name: Verify search index
+        working-directory: apps/docs
+        run: pnpm verify:search
