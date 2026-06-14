@@ -7,7 +7,10 @@
         "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
         "action": {
           "scratch": "Von vorne beginnen",
-          "importOldmarr": "Import von Homarr vor 1.0"
+          "importOldmarr": "Import von Homarr vor 1.0",
+          "restoreSqlite": "Aus SQLite-Backup wiederherstellen",
+          "restoreSqliteDescription": "Laden Sie eine vollständige SQLite-Datenbanksicherung von einer vorherigen Homarr-Instanz hoch. Dies wird alle Boards, Benutzer, Apps, Integrationen und Einstellungen wiederherstellen.",
+          "backToOptions": "← Zurück zu Setup Optionen"
         }
       },
       "import": {
@@ -90,6 +93,48 @@
         "title": "Einstellungen",
         "subtitle": "Server-Einstellungen konfigurieren."
       },
+      "integrations": {
+        "title": "Integrationen",
+        "subtitle": "Wählen Sie die von Ihnen verwendeten Dienste aus.",
+        "description": "Wählen Sie die Integrationen, die Sie verbinden möchten. Ihr Dashboard wird automatisch mit passenden Widgets eingerichtet.",
+        "action": {
+          "continue": "Weiter",
+          "skip": "Vorerst überspringen"
+        },
+        "configure": {
+          "progress": "{current} von {total}",
+          "skip": "Diese Integration überspringen",
+          "finishing": "Dashboard wird eingerichtet...",
+          "error": {
+            "title": "Einrichtung fehlgeschlagen",
+            "message": "Beim Einrichten des Dashboards ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+          },
+          "helpers": {
+            "tooltip": "URL Helfer",
+            "description": "Diese Helfer versuchen die URL für deine Dienste zu erraten. Wenn dies nicht funktioniert, gib einfach die Adresse manuell ein."
+          }
+        },
+        "urlTemplate": {
+          "label": "Basis URL",
+          "placeholder": "homelab.local oder 192.168.1.1",
+          "hint": "Geben Sie Ihre Basis-Domain oder IP ein, um die Integrations-URLs automatisch auszufüllen",
+          "warning": "Wenn Sie jetzt Ihre Basis-URL einstellen, werden alle Integration-URLs automatisch ausgefüllt, was Ihnen Zeit während des Setups spart",
+          "preview": "z.B. {example}",
+          "mode": {
+            "subdomain": "Sub-Domain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker erkannte {count} Dienste",
+          "detectedBreakdown": "{integrations} Integrationen · {apps} Anwendungen",
+          "summary": "Homarr erkannte {apps} Anwendungen, {integrations} von denen Integrationen integriert sind",
+          "appBadge": "Anwendung",
+          "appSectionLabel": "Zum Dashboard hinzuzufügende Apps ({count} gewählt)",
+          "scanning": "Durchsuche Docker...",
+          "scanningDescription": "Suche nach laufenden Containern auf Ihrem System"
+        }
+      },
       "finish": {
         "title": "Einrichtung abschließen",
         "subtitle": "Es kann losgehen!",
@@ -132,7 +177,7 @@
       },
       "password": {
         "label": "Passwort",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Passwort Empfehlungen",
         "suggestion": {
           "length": "Enthält mindestens 8 Zeichen",
           "lowercase": "Enthält Kleinbuchstaben",
@@ -160,7 +205,7 @@
         "label": "Suchergebnisse in neuem Tab öffnen"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "DuckDuckGo Bangs aktivieren"
       }
     },
     "error": {
@@ -253,10 +298,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo Bangs erfolgreich umgeschaltet"
           },
           "error": {
-            "message": ""
+            "message": "DuckDuckGo Bangs können nicht umgeschaltet werden"
           }
         }
       },
@@ -639,6 +684,211 @@
       "add": "App hinzufügen"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "Benutzerdefinierte Widgets",
+        "noResults": "Noch keine benutzerdefinierten Widgets gefunden. Erstellen Sie Ihr erstes Widget!",
+        "loading": "Wird geladen..."
+      },
+      "create": {
+        "title": "Benutzerdefiniertes Widget erstellen",
+        "subtitle": "Definieren sie die API URL, Authentifizierung und wie die Daten angezeigt werden sollen."
+      },
+      "edit": {
+        "title": "Benutzerdefiniertes Widget bearbeiten"
+      }
+    },
+    "action": {
+      "create": "Erstellen",
+      "import": "Importieren",
+      "save": "Speichern",
+      "delete": "Benutzerdefiniertes Widget löschen",
+      "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "export": "Exportieren",
+      "addMapping": "Zuordnung hinzufügen",
+      "addColumn": "Spalte hinzufügen",
+      "edit": "Bearbeiten",
+      "removeMapping": "Zuordnung entfernen",
+      "removeColumn": "Spalte entfernen",
+      "addItem": "Element hinzufügen",
+      "removeItem": "Element entfernen",
+      "addBar": "Leiste hinzufügen",
+      "duplicate": "Duplizieren",
+      "copyAiPrompt": "KI Prompt kopieren",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "menu": "Aktionen"
+    },
+    "field": {
+      "name": "Name",
+      "description": "Beschreibung",
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Authentifizierungstyp",
+      "headerName": "Name des Kopf-/Abfrage-Parameters",
+      "method": "Methode",
+      "requestBody": "Body anfordern",
+      "displayType": "Anzeigetyp",
+      "jsonPath": "JSON Pfad",
+      "jsonPathHint": "Verwenden Sie JSONPath Syntax um Werte zu extrahieren, z.B. $.data.temperature oder $.items[0].name",
+      "label": "Kategorie",
+      "unit": "Einheit",
+      "mappings": "Zuordnungen",
+      "tablePath": "JSON Pfad anordnen",
+      "tablePathHint": "Pfad zum Array in der Antwort, z.B. $.data.items",
+      "columns": "Spalten",
+      "header": "Kopfzeile",
+      "items": "Elemente",
+      "gridColumns": "Rasterspalten",
+      "cardStyle": "Kartenstil",
+      "bars": "Balken",
+      "valuePath": "JSON Wert Pfad",
+      "maxPath": "Maximaler Wert des JSON Pfades",
+      "showPercentage": "Prozentwert anzeigen",
+      "barSize": "Balkengröße",
+      "goodValues": "Gute Werte (durch Komma getrennt)",
+      "dotSize": "Punkt Größe",
+      "valueSize": "Größe des Wertes",
+      "labelPosition": "Labelposition",
+      "kvLayout": "Darstellung",
+      "striped": "Gestreifte Reihen",
+      "compact": "Kompakte Darstellung",
+      "maxHeight": "Maximale Höhe (px)",
+      "color": "Farbe",
+      "buttonLabel": "Bezeichnung des Knopfes",
+      "buttonColor": "Farbe des Knopfes",
+      "confirmText": "Text zur Bestätigung",
+      "confirmTextHint": "Wenn gesetzt, erscheint vor der Ausführung der Anfrage ein Bestätigungsdialog",
+      "successMessage": "Erfolgsmeldung",
+      "successMessageHint": "Nachricht, die nach erfolgreicher Ausführung angezeigt wird",
+      "enabled": "Aktiviert",
+      "template": {
+        "label": "JSX Vorlage",
+        "description": "Mantine JSX-Vorlage. Zugriff auf API-Antwortfelder über Datenbindungen (z.B. data.name). Verwenden Sie nur Inhalte der Whitelist. Verboten: Konstruktor, __proto__, eval, Funktion, Fenster, Dokument."
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperatur",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API Schlüssel",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, wahr, oben",
+      "color": "blau"
+    },
+    "cardStyleOption": {
+      "filled": "Gefüllt",
+      "outline": "Umrandung",
+      "subtle": "Dezent"
+    },
+    "layoutOption": {
+      "list": "Liste",
+      "grid": "Raster"
+    },
+    "sizeOption": {
+      "sm": "Klein",
+      "md": "Mittel",
+      "lg": "Groß",
+      "xl": "Extragroß"
+    },
+    "labelPositionOption": {
+      "above": "Oberhalb",
+      "below": "Unterhalb"
+    },
+    "fieldset": {
+      "general": "Allgemein",
+      "connection": "API Anbindung",
+      "display": "Anzeigeeinstellungen"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Einen extrahierten Wert mit Label und Einheit anzeigen",
+      "keyValue": "Mehrere markierte Werte nebeneinander anzeigen",
+      "table": "Datenzeilen im Tabellenformat anzeigen",
+      "statGrid": "Farbige Statistikkarten im Raster — wie Pi-Hole oder Speedtest Widgets",
+      "progressBars": "Fortschrittsbalken mit Nutzung oder Fertigstellung — für Festplatte, Speicher, Quoten",
+      "statusIndicator": "Farbige Statuspunkte, die den Online/Offline Status oder Gesundheitszustand anzeigen",
+      "countGrid": "Kompakter Nummern + Label Zähler in einem engen Raster",
+      "raw": "Ansehrlich gedruckte JSON-Ausgabe zum Debuggen",
+      "actionButton": "Eine Schaltfläche welche eine Anfrage auslöst wenn sie angeklickt wird",
+      "customJsx": "Benutzerdefiniertes JSX-Layout mit Whitelist Mantine Komponenten und vollständiger API-Datenbindung"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "Keine",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Schlüssel (Kopfzeile)",
+      "apiKeyQuery": "API-Schlüssel (Abfrage)"
+    },
+    "displayType": {
+      "singleValue": "Einzelwert",
+      "keyValue": "Schlüsselwert",
+      "table": "Tabelle",
+      "statGrid": "Statistikraster",
+      "progressBars": "Fortschrittsbalken",
+      "statusIndicator": "Statusanzeige",
+      "countGrid": "Raster zählen",
+      "raw": "Rohes JSON",
+      "actionButton": "Aktionstaste",
+      "customJsx": "Benutzerdefiniertes JSX"
+    },
+    "secret": {
+      "apiKey": "API Schlüssel / Token",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "savedPlaceholder": "••••••• (gespeichert, leer lassen zum Behalten)"
+    },
+    "preview": {
+      "title": "Vorschau",
+      "test": "Test",
+      "hint": "Klicken Sie auf Test, um eine Vorschau der API Antwort mit Ihrer aktuellen Konfiguration zu erhalten.",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "Name",
+      "url": "URL",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Benutzerdefinierte App URL"
+      },
+      "apiKeySettings": {
+        "label": ""
       }
     },
     "action": {
       "create": "Neue Integration"
+    },
+    "grid": {
+      "widgetCount": "",
+      "noWidgets": "",
+      "detected": ""
+    },
+    "category": {
+      "dnsHole": "DNS",
+      "mediaService": "",
+      "calendar": "Kalender",
+      "mediaSearch": "Suche",
+      "mediaRelease": "Veröffentlichungen",
+      "mediaRequest": "Anfragen",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Verschiedenes",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexer",
+      "healthMonitoring": "Gesundheit",
+      "search": "Suche",
+      "mediaTranscoding": "Transkodierung",
+      "networkController": "Netzwerk",
+      "releasesProvider": "Veröffentlichungen",
+      "notifications": "Benachrichtigungen",
+      "firewall": "Firewall",
+      "timetable": "",
+      "photoService": "Fotos",
+      "documents": "",
+      "notes": "",
+      "mediaMonitoring": "",
+      "speedtest": "",
+      "analytics": "",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "Privater Schlüssel",
           "newLabel": "Neuer privater Schlüssel"
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "Integrationen in Elementen auswählen",
       "interact": "Mit Integrationen interagieren",
       "full": "Voller Zugriff auf Integrationen"
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1068,6 +1384,7 @@
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
+      "skip": "",
       "change": "Verändern",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
@@ -1089,8 +1406,8 @@
       "checkLogs": "Logs für weitere Details prüfen",
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen",
-      "show": "",
-      "hide": ""
+      "show": "Anzeigen",
+      "hide": "Ausblenden"
     },
     "here": "Hier",
     "iconPicker": {
@@ -1099,7 +1416,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "Hell",
         "dark": "Dunkel"
       }
@@ -1256,7 +1573,7 @@
         "label": {
           "create": "Neue Kategorie",
           "changePosition": "Position wechseln",
-          "settings": ""
+          "settings": "Einstellungen"
         }
       },
       "openAllInNewTabs": {
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "Element bearbeiten",
+      "tab": {
+        "widget": "Widget bearbeiten",
+        "app": "App bearbeiten"
+      },
+      "app": {
+        "propagationNotice": ""
+      },
       "advancedOptions": {
         "label": "Erweiterte Einstellungen",
         "title": "Erweiterte Einstellungen Optionen"
@@ -2065,6 +2389,37 @@
         "title": "Instanzen"
       }
     },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "tracearr": {
       "name": "",
       "description": "",
@@ -2311,6 +2666,51 @@
             "target": "Ziel Codec"
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "immich-serverStats": {
@@ -2921,6 +3321,113 @@
         "internalServerError": ""
       }
     },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Systemressourcen",
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
@@ -2984,6 +3491,239 @@
       },
       "status": {
         "unhealthy": "Fehlerhaft"
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4104,7 @@
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrationen",
+        "customWidgets": "",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
         "users": {
@@ -3380,9 +4121,10 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
-            "api": "API",
+            "api": "API & MCP",
             "certificates": "Zertifikate",
-            "tasks": "Aufgaben"
+            "tasks": "Aufgaben",
+            "backup": ""
           }
         },
         "settings": "Einstellungen",
@@ -3495,7 +4237,24 @@
               },
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
-              "accessibility": "Barrierefreiheit"
+              "accessibility": "Barrierefreiheit",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "",
+                  "notStarted": ""
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": ""
+                }
+              }
             }
           },
           "security": {
@@ -3903,7 +4662,215 @@
                   "actions": "Aktionen"
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3990,6 +4957,12 @@
     },
     "action": {
       "title": "Aktionen",
+      "logs": {
+        "label": "",
+        "page": {
+          "title": ""
+        }
+      },
       "start": {
         "label": "Starten",
         "notification": {
@@ -4381,6 +5354,18 @@
           "label": "Bearbeiten"
         }
       },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "Benutzer",
         "create": {
@@ -4402,7 +5387,10 @@
           "label": "Aufgaben"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": ""
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
@@ -4551,13 +5539,141 @@
                 "label": "Neue Gruppe erstellen"
               }
             }
+          },
+          "preferences": {
+            "title": "",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": ""
+              }
+            },
+            "notification": {
+              "error": {
+                "message": ""
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": ""
+              },
+              "boolean": {
+                "enabled": "",
+                "disabled": ""
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "locale": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "",
         "requestMovie": "Einen Film anfordern",
         "requestSeries": "Eine Serie anfordern",
-        "openIn": "In {kind} öffnen"
+        "openIn": "In {kind} öffnen",
+        "group": {
+          "title": ""
+        },
+        "action": {
+          "search": {
+            "label": "",
+            "description": "",
+            "disabled": {
+              "noIntegration": "",
+              "scoped": ""
+            }
+          }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
+        }
       },
       "external": {
         "help": "Externe Suchmaschine verwenden",
@@ -4833,7 +5949,11 @@
             "table": {
               "header": {
                 "season": "Staffel",
-                "episodes": "Episoden"
+                "episodes": "Episoden",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
               }
             },
             "button": {
@@ -4942,6 +6062,73 @@
         "info": "Info",
         "warn": "Hinweis",
         "error": "Fehler"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "usersList": {
+        "title": "",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "editMode": {
+        "title": "",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": ""
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
       }
     }
   }
