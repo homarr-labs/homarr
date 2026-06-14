@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Avatar, Group, Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -26,6 +27,19 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
   const { definition } = widgetImports[item.kind];
   const WidgetIcon = definition.icon;
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isCompact, setIsCompact] = useState(false);
+
+  useEffect(() => {
+    const el = wrapperRef.current?.parentElement;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setIsCompact((entry?.contentRect.width ?? 999) < 220);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const translate = ((key: string) => t(key as never)) as Translator;
   const displayName = resolveWidgetDisplayName(item, settings, translate);
 
@@ -46,7 +60,7 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
   }
 
   return (
-    <div className={classes.wrapper}>
+    <div ref={wrapperRef} className={classes.wrapper}>
       <div className={classes.panel}>
         <div className={classes.nameSection}>
           <WidgetIcon size={14} stroke={1.75} className={classes.widgetIcon} />
@@ -55,7 +69,7 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
           </Text>
         </div>
 
-        {hasIntegrations && (
+        {!isCompact && hasIntegrations && (
           <Avatar.Group spacing="xs" className={classes.integrations}>
             {connectedIntegrations.map((integration) => (
               <Tooltip key={integration.id} label={integration.name} withArrow position="top">
@@ -70,7 +84,7 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
           </Avatar.Group>
         )}
 
-        {hasMetadata && (
+        {!isCompact && hasMetadata && (
           <Group className={classes.metadata} gap={4}>
             {metadataItems.map((metadataItem) => (
               <div key={`${metadataItem.label}-${metadataItem.value}`} className={classes.metadataItem}>
