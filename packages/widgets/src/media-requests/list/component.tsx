@@ -1,17 +1,33 @@
 "use client";
 
-import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
-import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Anchor,
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  Group,
+  Image,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
+import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
+import classes from "../search-button.module.css";
 
 export default function MediaServerWidget({
   integrationIds,
@@ -19,12 +35,12 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -43,7 +59,7 @@ export default function MediaServerWidget({
           const newData = filteredData.concat(
             data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
           );
-          return newData.sort((dataA, dataB) => {
+          return newData.toSorted((dataA, dataB) => {
             if (dataA.status === dataB.status) {
               return dataB.createdAt.getTime() - dataA.createdAt.getTime();
             }
@@ -58,27 +74,49 @@ export default function MediaServerWidget({
     },
   );
 
+  if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (
-    <ScrollArea
-      className="mediaRequests-list-scrollArea"
-      scrollbarSize="md"
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
-    >
-      <Stack className="mediaRequests-list-list" gap="xs" p="sm">
-        {mediaRequests.map((mediaRequest) => (
-          <MediaRequestCard
-            key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
-            request={mediaRequest}
-            isTiny={width <= 256}
-            options={options}
-          />
-        ))}
-      </Stack>
-    </ScrollArea>
+    <Box className={classes.searchRoot}>
+      {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
+      <ScrollArea
+        className="mediaRequests-list-scrollArea"
+        scrollbarSize="md"
+        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      >
+        <Stack className="mediaRequests-list-list" gap="xs" p="sm">
+          {mediaRequests.map((mediaRequest) => (
+            <MediaRequestCard
+              key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
+              request={mediaRequest}
+              isTiny={width <= 256}
+              options={options}
+            />
+          ))}
+        </Stack>
+      </ScrollArea>
+    </Box>
   );
 }
+
+const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {
+  const t = useScopedI18n("search.mode.media");
+
+  return (
+    <Tooltip label={t("action.search.label")}>
+      <ActionIcon
+        className={classes.searchButton}
+        variant="light"
+        size="sm"
+        aria-label={t("action.search.label")}
+        onClick={() => openMediaRequestSearch({ integrationIds })}
+      >
+        <IconSearch size={16} />
+      </ActionIcon>
+    </Tooltip>
+  );
+};
 
 interface MediaRequestCardProps {
   request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"][number];

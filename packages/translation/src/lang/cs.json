@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Heslo",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Obsahuje alespoň 8 znaků",
           "lowercase": "Obsahuje malé písmeno",
           "uppercase": "Obsahuje velké písmeno",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "Přečtěte si dokumentaci",
       "checkLogs": "Pro více podrobností zkontrolujte logy",
       "tryAgain": "Zkusit znovu",
-      "loading": "Načítání"
+      "loading": "Načítání",
+      "show": "",
+      "hide": ""
     },
     "here": "zde",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "Nová kategorie",
-          "changePosition": "Změnit pozici"
+          "changePosition": "Změnit pozici",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1397,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

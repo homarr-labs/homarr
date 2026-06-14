@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
-import { Card, Center, Group, Loader, Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
+import { Card, Center, Group, Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
@@ -85,8 +85,13 @@ export const CommonChart = ({
       )}
       {data.length <= 1 ? (
         <Center pos="absolute" w="100%" h="100%">
-          <Stack px={"xs"} align={"center"}>
-            <Loader type="bars" size={height > 100 ? "md" : "xs"} color={"rgba(94, 94, 94, 1)"} />
+          <Stack px={"xs"} align={"center"} gap={4}>
+            {showIcon && <Icon color={"var(--mantine-color-dimmed)"} size={height > 100 ? 20 : 14} stroke={1.5} />}
+            {showText && (
+              <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"} ta="center">
+                {title}
+              </Text>
+            )}
           </Stack>
         </Center>
       ) : (

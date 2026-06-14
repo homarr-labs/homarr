@@ -1,0 +1,40 @@
+---
+title: 'Nextcloud'
+description: "Nextcloud is a self-hosted productivity platform that provides file storage, collaboration tools, and more."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconCalendar } from "@tabler/icons-react";
+import Alert from '@theme/Admonition';
+import { nextcloudIntegration } from '.';
+import { calendarWidget } from '@site/docs/widgets/calendar';
+import { notificationsWidget } from '@site/docs/widgets/notifications';
+
+<IntegrationHeader
+  integration={nextcloudIntegration}
+  categories={['Calendar', 'Notifications']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: calendarWidget },
+        { widget: notificationsWidget }
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [],
+    header: <Alert type="info">
+      Users who use 2FA will have to use Nextcloud's App Password tool to grant Homarr access, as 2FA breaks the traditional process. For more information, see [Nextcloud's Documentation](https://docs.nextcloud.com/server/stable/admin_manual/configuration_user/authentication.html#app-passwords)
+    </Alert>,
+}]} />

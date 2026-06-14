@@ -5,6 +5,7 @@ import { clientApi } from "@homarr/api/client";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
 import { ResourceAccordionItem } from "./resource-accordion-item";
@@ -34,12 +35,12 @@ export const ClusterHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
-  const [healthData] = clientApi.widget.healthMonitoring.getClusterHealthStatus.useSuspenseQuery(
+  const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery(
     {
       integrationId,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -55,6 +56,8 @@ export const ClusterHealthMonitoring = ({
       },
     },
   );
+
+  if (!healthData) return <WidgetEmptyState />;
 
   const activeNodes = healthData.nodes.reduce(running, 0);
   const activeVMs = healthData.vms.reduce(running, 0);

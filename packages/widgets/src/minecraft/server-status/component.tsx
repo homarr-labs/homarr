@@ -7,10 +7,13 @@ import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MinecraftServerStatusWidget({ options }: WidgetComponentProps<"minecraftServerStatus">) {
-  const [{ data }] = clientApi.widget.minecraft.getServerStatus.useSuspenseQuery(options);
+  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options, {
+    staleTime: 5 * 60 * 1000,
+  });
   const utils = clientApi.useUtils();
   clientApi.widget.minecraft.subscribeServerStatus.useSubscription(options, {
     onData(data) {
@@ -21,6 +24,9 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
     },
   });
   const tStatus = useScopedI18n("widget.minecraftServerStatus.status");
+
+  if (!result) return <WidgetEmptyState />;
+  const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
 

@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Mật khẩu",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Bao gồm ít nhất 8 kí tự",
           "lowercase": "Bao gồm chữ thường",
           "uppercase": "Bao gồm chữ in hoa",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Thử lại",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Đổi vị trí"
+          "changePosition": "Đổi vị trí",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1397,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

@@ -85,6 +85,16 @@ export abstract class Integration {
     return this.createUrl(this.integration.externalUrl ?? this.integration.url, path, queryParams);
   }
 
+  protected webSocketUrl(
+    path: `/${string}`,
+    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
+  ) {
+    const url = this.url(path, queryParams);
+    // http -> ws, https -> wss
+    url.protocol = url.protocol.replace("http", "ws");
+    return url;
+  }
+
   public async testConnectionAsync(): Promise<TestingResult> {
     try {
       const url = new URL(this.integration.url);

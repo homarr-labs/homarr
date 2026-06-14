@@ -20,6 +20,7 @@ type GroupItem = {
   name: string;
   description?: string;
   icon: TablerIcon | string;
+  disabled?: boolean;
   useInteraction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
 };
 
@@ -37,7 +38,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       );
 
     return (
-      <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
+      <Group w="100%" wrap="nowrap" align="center" px="md" py="xs" opacity={item.disabled ? 0.55 : 1}>
         {icon}
         <Stack gap={0}>
           <Text>{item.name}</Text>
@@ -91,9 +92,7 @@ const createDefaultSearchEntries = (
   query: string,
   t: TranslationFunction,
 ): GroupItem[] => {
-  if (!session?.user && !defaultSearchEngine) {
-    return [];
-  }
+  if (!session?.user && !defaultSearchEngine) return [];
 
   if (!defaultSearchEngine) {
     return [

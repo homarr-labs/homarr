@@ -22,7 +22,7 @@
       automerge: true,
     },
     {
-      // disallow automerge for onlyBuiltDependencies
+      // disallow automerge for allowBuilds dependencies (native builds need manual verification)
       matchPackageNames: [
         "@tree-sitter-grammars/tree-sitter-yaml",
         "bcrypt",
@@ -46,7 +46,7 @@
   updateInternalDeps: true,
   rangeStrategy: "bump",
   automerge: false,
-  baseBranches: ["dev"],
+  baseBranchPatterns: ["dev"],
   dependencyDashboard: false,
   // prevent special characters in branch names (otherwise git errors occur on windows)
   branchNameStrict: true,

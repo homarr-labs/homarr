@@ -1,0 +1,66 @@
+---
+title: SQLite Backup & Restore
+tags:
+  - Management
+  - Backup
+  - Restore
+  - SQLite
+---
+
+The SQLite Backup & Restore feature allows you to export and import your entire Homarr database as a portable ZIP file. This is useful for creating backups, migrating between instances, or recovering from failures.
+
+:::info SQLite only
+This feature is only available when using the SQLite database driver (`DB_DRIVER=better-sqlite3`). MySQL and PostgreSQL users should use their respective database backup tools.
+:::
+
+## Accessing Backup & Restore
+
+Navigate to **Management → Tools → Backup** from the sidebar. This page is only visible when running with SQLite.
+
+## Exporting a Backup
+
+Click the **Export** button to download a ZIP archive containing:
+
+- **`db.sqlite`** — A consistent snapshot of your database (created via `VACUUM INTO`)
+- **`metadata.json`** — Contains:
+  - `homarrVersion` — The version of Homarr that created the backup
+  - `exportedAt` — Timestamp of the export
+  - `dbDialect` — The database dialect (`sqlite`)
+  - `encryptionKey` — Your `SECRET_ENCRYPTION_KEY` (needed to decrypt integration secrets)
+
+:::caution
+The exported ZIP contains your encryption key and database. Store it securely and do not share it publicly.
+:::
+
+A confirmation dialog will ask you to type **"I understand"** before the export proceeds.
+
+## Importing a Backup
+
+1. Click the **Import** button and upload a previously exported ZIP file
+2. Homarr analyzes the backup **entirely in your browser** using WebAssembly (sql.js) — no data is sent to the server during preview
+3. The preview shows:
+   - **Entity counts** — How many boards, apps, users, integrations, etc. are in the backup
+   - **Board names** — A list of all boards contained in the backup
+   - **Migration status** — If the backup is from an older version, Homarr shows each pending database migration as animated timeline steps
+4. Review the preview and type **"I understand"** to confirm
+5. Homarr applies any pending migrations, re-encrypts integration secrets if the `SECRET_ENCRYPTION_KEY` differs between instances, and replaces the live database
+6. The server automatically restarts to pick up the new database
+
+:::tip
+The import process is **backward-compatible** with older backups that used a separate `encryption-key.txt` file instead of embedding the key in `metadata.json`.
+:::
+
+## Onboarding Integration
+
+When setting up a fresh Homarr instance with SQLite, the onboarding wizard includes a **"Restore from SQLite backup"** option. This lets you upload a backup ZIP to bootstrap your new instance with data from a previous installation.
+
+## Docker Restart Behavior
+
+After a successful import, only the Next.js process restarts — nginx and Redis remain running. The `run.sh` script automatically restarts Next.js in a loop, so the application comes back online within seconds. Running `docker stop` still works gracefully.
+
+## Best Practices
+
+- **Back up regularly** — Create exports before major updates or configuration changes
+- **Test restores** — Periodically verify your backups by importing them on a test instance
+- **Secure storage** — Keep backups in an encrypted or access-controlled location since they contain your encryption key
+- **Check versions** — Backups from newer versions cannot be imported into older Homarr instances; always import into the same or newer version

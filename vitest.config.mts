@@ -9,11 +9,6 @@ export default defineConfig({
     environment: "jsdom",
     include: ["**/*.spec.ts"],
     clearMocks: true,
-    poolOptions: {
-      threads: {
-        singleThread: false,
-      },
-    },
     coverage: {
       provider: "v8",
       reporter: ["html", "json-summary", "json"],

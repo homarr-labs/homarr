@@ -82,7 +82,7 @@
         "form": {
           "name": {
             "label": "Gruppens namn",
-            "description": ""
+            "description": "Namnet måste matcha admin-grupp i extern tjänst"
           }
         }
       },
@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Lösenord",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Använd minst 8 tecken",
           "lowercase": "Använd liten bokstav",
           "uppercase": "Använd stor bokstav",
@@ -159,7 +160,7 @@
         "label": "Visa sökresultat i ny flik"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Aktivera DuckDuckGo bangs"
       }
     },
     "error": {
@@ -252,10 +253,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs inställningen ändrad"
           },
           "error": {
-            "message": ""
+            "message": "DuckDuckGo bangs inställningen kunde inte ändras"
           }
         }
       },
@@ -350,12 +351,12 @@
             "description": "Tillåt medlemmar att addera valfri applikation på sina tavlor"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla appar",
+            "description": "Tillåt att medlemmar modifierar alla appar"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till appar",
+            "description": "Tillåt att medlemmar hanterar, använder och raderar alla appar"
           }
         }
       },
@@ -363,20 +364,20 @@
         "title": "Tavlor",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Skapa tavlor",
+            "description": "Tillåt att medlemmar skapar tavlor"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Se alla tavlor",
+            "description": "Tillåt att medlemmar ser alla tavlor"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla tavlor",
+            "description": "Tillåt att medlemmar modifierar alla tavlor (Detta inkluderar inte åtkomstkontroll eller farozonen)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till tavlor",
+            "description": "Tillåt att medlemmar ser, modifierar och tar bort alla tavlor (detta inkluderar åtkomstkontroll och farozonen)"
           }
         }
       },
@@ -392,38 +393,38 @@
             "description": "Tillåter medlemmar att addera valfri integration till sina tavlor"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interagera med alla integrationer",
+            "description": "Tillåt att medlemmar interagerar med alla integrationer"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till integrationer",
+            "description": "Tillåt att medlemmar hanterar, använder och interagerar med alla integrationer"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Media",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Ladda upp media",
+            "description": "Tillåt att medlemmar laddar upp media"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Se all media",
+            "description": "Tillåt att medlemmar ser all media"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till media",
+            "description": "Tillåt att medlemmar hanterar och raderar all media"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Annat",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Se loggar",
+            "description": "Tillåt att medlemmar ser loggar"
           }
         }
       },
@@ -435,32 +436,32 @@
             "description": "Tillåt medlemmar att skapa sökmotorer"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifiera alla sökmotorer",
+            "description": "Tillåt att medlemmar modifierar alla sökmotorer"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Fullständiga rättigheter till sökmotorer",
+            "description": "Tillåt att medlemmar hanterar och raderar alla sökmotorer"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Vissa medlemmar är från externa tjänster och kan inte hantera här",
+      "external": "Alla medlemmar är från externa tjänster och kan inte hanteras här"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Denna grupp är reserverad för systemet så vissa åtgärder är begränsade. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
         "label": "Addera en grupp",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen har skapats"
           },
           "error": {
-            "message": ""
+            "message": "Gruppen kunde inte skapas"
           }
         }
       },
@@ -470,7 +471,7 @@
         "confirm": "Är du säker på att du vill överföra ägarskapet för gruppen {name} till {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Överfört grupp {group} till {user}"
           },
           "error": {
             "message": "Kunde inte överföra ägarskap"
@@ -501,38 +502,38 @@
         "notification": {
           "success": {
             "title": "Behörigheter sparade",
-            "message": ""
+            "message": "Rättigheterna sparade"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Rättigheterna ej sparade",
+            "message": "Rättigheterna har inte sparats"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen {name} har sparats"
           },
           "error": {
-            "message": ""
+            "message": "Kunde inte spara gruppen {name}"
           }
         }
       },
       "select": {
         "label": "Välj en grupp",
-        "notFound": ""
+        "notFound": "Ingen grupp hittad"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
               "title": "Inställningarna sparades",
-              "message": ""
+              "message": "Inställningarna för tavlan har sparats"
             },
             "error": {
               "title": "Kunde inte spara inställningarna",
-              "message": ""
+              "message": "Kunde inte spara inställningarna för tavlan"
             }
           }
         }
@@ -540,10 +541,10 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ordning ändrad"
           },
           "error": {
-            "message": ""
+            "message": "Ordningen kunde ändras"
           }
         }
       }
@@ -559,20 +560,20 @@
       "list": {
         "title": "Applikationer",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Det finns inga appar ännu",
+          "action": "Skapa din första app"
         }
       },
       "create": {
         "title": "Addera applikation",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet lyckades",
+            "message": "Appen skapades framgångsrikt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet misslyckades",
+            "message": "Appen kunde inte skapas"
           }
         }
       },
@@ -581,11 +582,11 @@
         "notification": {
           "success": {
             "title": "Ändringarna har sparats",
-            "message": ""
+            "message": "Appen sparades"
           },
           "error": {
             "title": "Misslyckades med att spara ändringarna",
-            "message": ""
+            "message": "Appen kunde inte sparas"
           }
         }
       },
@@ -594,12 +595,12 @@
         "message": "Är du säker på att du vill ta bort applikationen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning lyckades",
+            "message": "Appen har tagits bort"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning misslyckades",
+            "message": "Kunde inte ta bort appen"
           }
         }
       }
@@ -612,21 +613,21 @@
         "label": "Beskrivning"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Använd annan URL för ping",
+          "description": "Användbart om Homarr kan komma åt appen direkt via ett internt host-namn eller nätverk för att undvika bandbreddsanvändning hos internetleverantör"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Välj app",
+        "notFound": "Ingen app hittades",
         "search": "Sök efter en applikation",
-        "noResults": "",
+        "noResults": "Inga resultat",
         "action": "Välj {app}",
         "title": "Välj en applikation att lägga till på tavlan"
       },
@@ -642,56 +643,56 @@
     "page": {
       "list": {
         "title": "Integrationer",
-        "search": "",
+        "search": "Sök integrationer",
         "noResults": {
-          "title": ""
+          "title": "Det finns inga integrationer ännu"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ny {name} integration",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet lyckades",
+            "message": "Integrationen har skapats"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Skapandet misslyckades",
+            "message": "Integrationen kunde inte skapas"
           }
         },
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Befintlig",
+              "label": "Välj befintlig app"
             },
             "new": {
-              "title": "",
+              "title": "Ny",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "App URL",
+                "description": "URL:en som appen kommer att öppna när den används från tavlan"
               }
             }
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Redigera {name} integration",
         "notification": {
           "success": {
             "title": "Ändringarna har sparats",
-            "message": ""
+            "message": "Integrationen sparad"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunde inte tillämpa ändringar",
+            "message": "Integrationen kunde inte sparas"
           }
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Länka en app",
+            "remove": "Ta bort länk",
+            "select": "Välj en app att länka till"
           }
         }
       },
@@ -700,12 +701,12 @@
         "message": "Är du säker på att du vill ta bort integrationen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning lyckades",
+            "message": "Integrationen har tagits bort"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Borttagning misslyckades",
+            "message": "Kunde inte ta bort integrationen"
           }
         }
       }
@@ -715,44 +716,44 @@
         "label": "Namn"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Skapa sökmotor",
+        "description": "Integrationen \"{kind}\" kan inte användas med sökmotorer. Markera detta för att automatiskt konfigurera sökmotorn."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Länkad app"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Skapa app",
+        "description": "Skapa en app med samma namn och ikon som integrationen. Lämna fältet nedan tomt för att skapa en app med integrationens URL."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Egen app-URL"
       }
     },
     "action": {
-      "create": ""
+      "create": "Ny integration"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testa anslutningen och skapa",
+        "edit": "Testa anslutningen och skapa"
       },
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Orsak med mer detaljer"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Okänt fel",
+          "description": "Ett okänt fel inträffade, öppna orsaken nedan för att se mer detaljer"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Parsningsfel",
+          "description": "Svaret kunde inte analyseras. Verifiera att URL pekar på bas-URL för tjänsten."
         },
         "authorization": {
           "title": "",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Försök igen",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Ändra position"
+          "changePosition": "Ändra position",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Öppna i en ny flik"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Bokmärken",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "Den här tavlan är offentlig",
           "private": "Den här tavlan är privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

@@ -69,7 +69,7 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
   };
 
   return (
-    <Stack mb="sm">
+    <Stack w="100%" mb="sm">
       <ImportSettingsCard
         settings={settings}
         updateSetting={(setting, value) => {

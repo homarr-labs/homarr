@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Geslo",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "",
           "lowercase": "Vključuje male črke",
           "uppercase": "Vključuje velike tiskane črke",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": ""
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Poskusite znova",
-      "loading": ""
+      "loading": "",
+      "show": "",
+      "hide": ""
     },
     "here": "",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Spremeni položaj"
+          "changePosition": "Spremeni položaj",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1397,6 +1404,9 @@
           "label": ""
         },
         "openNewTab": {
+          "label": ""
+        },
+        "withBorder": {
           "label": ""
         },
         "items": {
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

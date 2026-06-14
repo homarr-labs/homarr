@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "パスワード",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "少なくとも 8 文字以上を含む",
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "メディアを開く"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "ドキュメントを確認する",
       "checkLogs": "詳細はログを確認してください",
       "tryAgain": "リトライ",
-      "loading": "読み込み中"
+      "loading": "読み込み中",
+      "show": "",
+      "hide": ""
     },
     "here": "こちら",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "新しいカテゴリー",
-          "changePosition": "ポジションを変更する"
+          "changePosition": "ポジションを変更する",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "新しいタブで開く"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "ブックマーク",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "このボードは公開中です",
           "private": "このボードは非公開です"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

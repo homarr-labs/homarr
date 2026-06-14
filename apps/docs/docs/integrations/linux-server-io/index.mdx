@@ -1,0 +1,34 @@
+---
+title: 'LinuxServer.io'
+description: "LinuxServer.io is a platform for managing and deploying containerized applications."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { linuxServerIoIntegration } from '.';
+import { releasesWidget } from '@site/docs/widgets/releases';
+
+
+<IntegrationHeader
+    integration={linuxServerIoIntegration}
+    categories={['Container Management', 'Software']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: releasesWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: [],
+    steps: []
+}]} />

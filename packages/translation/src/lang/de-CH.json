@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Passwort",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Enthält mindestens 8 Zeichen",
           "lowercase": "Enthält Kleinbuchstaben",
           "uppercase": "Enthält Großbuchstaben",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "Medium öffnen"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "Die Dokumentation ansehen",
       "checkLogs": "Logs für weitere Details prüfen",
       "tryAgain": "Erneut versuchen",
-      "loading": "Wird geladen"
+      "loading": "Wird geladen",
+      "show": "",
+      "hide": ""
     },
     "here": "Hier",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "Neue Kategorie",
-          "changePosition": "Position wechseln"
+          "changePosition": "Position wechseln",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "In neuem Tab öffnen"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Lesezeichen",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "Dieses Board ist öffentlich",
           "private": "Dieses Board ist privat"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

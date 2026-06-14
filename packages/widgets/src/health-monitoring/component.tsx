@@ -18,7 +18,7 @@ const isClusterIntegration = (integration: { kind: IntegrationKind }) =>
   integration.kind === "proxmox" || integration.kind === "mock";
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const [integrations] = clientApi.integration.byIds.useSuspenseQuery(props.integrationIds);
+  const { data: integrations = [] } = clientApi.integration.byIds.useQuery(props.integrationIds);
   const t = useI18n();
 
   const clusterIntegrationId = integrations.find(isClusterIntegration)?.id;

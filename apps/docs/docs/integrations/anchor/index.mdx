@@ -1,0 +1,40 @@
+---
+title: 'Anchor'
+description: "Anchor is a self-hosted note-taking application."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { anchorIntegration } from '.';
+import { anchorNoteWidget } from '@site/docs/widgets/anchor-note';
+
+
+<IntegrationHeader
+  integration={anchorIntegration}
+  categories={['Notes']}
+/>
+
+The Anchor integration lets Homarr connect to your Anchor instance so you can display and edit selected notes directly from your dashboard.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+  items={[{
+    widget: anchorNoteWidget
+  }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+  credentials: ['apiKey'],
+  steps: [
+    'Open your Anchor instance.',
+    'Generate or copy an API key from Anchor settings.',
+    'Paste that key into the API Key secret field in Homarr.'
+  ]
+}]} />

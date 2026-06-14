@@ -1,0 +1,54 @@
+---
+title: 'Beszel'
+description: "Beszel is a lightweight server monitoring platform with Docker stats, historical data, and alert functions."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { beszelIntegration } from '.';
+import { beszelSystemStatsWidget } from '@site/docs/widgets/beszel-system-stats';
+import { beszelSystemGridWidget } from '@site/docs/widgets/beszel-system-grid';
+import { beszelSystemTableWidget } from '@site/docs/widgets/beszel-system-table';
+import { beszelAlertsWidget } from '@site/docs/widgets/beszel-alerts';
+
+import beszelDashboard from './img/beszel-dashboard.png';
+
+<IntegrationHeader
+    integration={beszelIntegration}
+    categories={['System Monitoring']}
+/>
+
+Beszel monitors your servers in real time via lightweight agents, collecting CPU, memory, disk, network, GPU, temperature, and Docker container metrics. It stores historical data and supports configurable alerts.
+
+### Screenshots
+
+<img src={beszelDashboard} alt="Beszel dashboard overview showing all four widgets" />
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: beszelSystemStatsWidget },
+        { widget: beszelSystemGridWidget },
+        { widget: beszelSystemTableWidget },
+        { widget: beszelAlertsWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [
+        'Open your Beszel hub instance (default port 8090)',
+        'Use the same credentials you use to log in to the Beszel web UI',
+    ]
+}]} />
+
+:::tip
+Beszel uses PocketBase under the hood. The default admin credentials are set during the initial Beszel setup.
+:::

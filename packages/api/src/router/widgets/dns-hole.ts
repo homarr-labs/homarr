@@ -14,12 +14,21 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get DNS blocking statistics from Pi-hole/AdGuard (queries, blocked, percentage). REQUIRED: integrationIds (array of Pi-hole/AdGuard integration IDs from integration_all)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
 
           return {
             integration: {
@@ -63,6 +72,13 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   enable: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Enable DNS blocking on Pi-hole/AdGuard. REQUIRED: integrationId (single Pi-hole/AdGuard integration ID from integration_all)",
+      },
+    })
     .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
@@ -76,6 +92,13 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   disable: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Disable DNS blocking on Pi-hole/AdGuard. REQUIRED: integrationId (single integration ID). OPTIONAL: duration (number of seconds for temporary disable — omit for permanent disable)",
+      },
+    })
     .input(
       z.object({
         duration: z.number().optional(),

@@ -1,7 +1,9 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { BeszelIntegration } from "../beszel/beszel-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
@@ -31,13 +33,17 @@ import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integrati
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
+import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
+import { PaperlessNgxIntegration } from "../paperless-ngx/paperless-ngx-integration";
+import { PeaNutIntegration } from "../peanut/peanut-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
+import { createTechnitiumDnsIntegrationAsync } from "../technitium/technitium-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
@@ -48,6 +54,7 @@ import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-trac
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UmamiIntegration } from "../umami/umami-integration";
+import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
@@ -78,6 +85,7 @@ export const integrationCreators = {
   anchor: AnchorIntegration,
   piHole: [createPiHoleIntegrationAsync],
   adGuardHome: AdGuardHomeIntegration,
+  technitiumDns: [createTechnitiumDnsIntegrationAsync],
   homeAssistant: HomeAssistantIntegration,
   jellyfin: JellyfinIntegration,
   plex: PlexIntegration,
@@ -122,9 +130,15 @@ export const integrationCreators = {
   glances: GlancesIntegration,
   searchCh: SearchChIntegration,
   immich: ImmichIntegration,
+  paperlessNgx: PaperlessNgxIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
+  audiobookshelf: AudiobookshelfIntegration,
+  navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
   gluetun: GluetunIntegration,
+  uptimeKuma: UptimeKumaIntegration,
+  peaNut: PeaNutIntegration,
+  beszel: BeszelIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

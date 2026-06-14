@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { DirectionProvider, MantineProvider } from "@mantine/core";
+import { DirectionProvider, MantineProvider, v8CssVariablesResolver } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
@@ -22,6 +22,7 @@ export const CustomMantineProvider = ({
         defaultColorScheme={defaultColorScheme}
         colorSchemeManager={manager}
         theme={theme}
+        cssVariablesResolver={v8CssVariablesResolver}
       >
         {children}
       </MantineProvider>

@@ -87,13 +87,13 @@ export default function DownloadClientsWidget({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
+  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
     {
       integrationIds,
       limitPerIntegration: options.limitPerIntegration,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -101,7 +101,6 @@ export default function DownloadClientsWidget({
   );
   const utils = clientApi.useUtils();
 
-  //Translations
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
 

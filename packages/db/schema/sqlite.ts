@@ -27,6 +27,12 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import type {
+  CustomWidgetAuthType,
+  CustomWidgetDisplayType,
+  CustomWidgetMethod,
+  CustomWidgetSecretKind,
+} from "@homarr/validation/custom-widget";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
@@ -62,6 +68,8 @@ export const users = sqliteTable("user", {
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
+  completedManageTour: int({ mode: "boolean" }).default(false).notNull(),
+  completedBoardTour: int({ mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(
@@ -481,6 +489,47 @@ export const onboarding = sqliteTable("onboarding", {
   previousStep: text().$type<OnboardingStep>(),
 });
 
+export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  description: text(),
+  iconUrl: text(),
+  url: text().notNull(),
+  authType: text().$type<CustomWidgetAuthType>().notNull().default("none"),
+  headerName: text(),
+  method: text().$type<CustomWidgetMethod>().notNull().default("GET"),
+  requestBody: text(),
+  displayType: text().$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
+  displayConfig: text().default(emptySuperJSON).notNull(),
+  enabled: int({ mode: "boolean" }).notNull().default(true),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  creatorId: text().references(() => users.id, { onDelete: "set null" }),
+});
+
+export const customWidgetSecrets = sqliteTable(
+  "custom_widget_secret",
+  {
+    kind: text().$type<CustomWidgetSecretKind>().notNull(),
+    value: text().$type<`${string}.${string}`>().notNull(),
+    updatedAt: int({ mode: "timestamp" })
+      .$onUpdateFn(() => new Date())
+      .notNull(),
+    definitionId: text()
+      .notNull()
+      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.definitionId, table.kind],
+    }),
+  }),
+);
+
 export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
   name: text().notNull().primaryKey(),
   cronExpression: text().notNull(),
@@ -749,5 +798,20 @@ export const layoutRelations = relations(layouts, ({ one, many }) => ({
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const customWidgetDefinitionRelations = relations(customWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(customWidgetSecrets),
+  creator: one(users, {
+    fields: [customWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one }) => ({
+  definition: one(customWidgetDefinitions, {
+    fields: [customWidgetSecrets.definitionId],
+    references: [customWidgetDefinitions.id],
   }),
 }));

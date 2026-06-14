@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Пароль",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
           "uppercase": "Включає велику літеру",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "Відкрити медіа"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "Переглянути документацію",
       "checkLogs": "Щоб дізнатися більше, перевірте логи",
       "tryAgain": "Повторіть спробу",
-      "loading": "Завантаження"
+      "loading": "Завантаження",
+      "show": "",
+      "hide": ""
     },
     "here": "тут",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "Нова категорія",
-          "changePosition": "Змінити положення"
+          "changePosition": "Змінити положення",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Відкрити в новій вкладці"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Закладки",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "Ця дошка є публічною",
           "private": "Ця дошка є приватною"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

@@ -18,6 +18,13 @@ const logger = createLogger({ module: "calendarRouter" });
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get calendar events for upcoming and recent media releases. REQUIRED: integrationIds (array of integration IDs from integration_all, filter by kind sonarr/radarr/lidarr/readarr), year (number), month (number), releaseType (array of 'inCinemas'|'digitalRelease'|'physicalRelease'), showUnmonitored (boolean). Great for 'what's coming out this week/month?'",
+      },
+    })
     .input(
       z.object({
         year: z.number(),
@@ -32,7 +39,9 @@ export const calendarRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
 
           return {
             events: data,

@@ -14,6 +14,7 @@ import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 
 import "react-quill-new/dist/quill.snow.css";
@@ -144,13 +145,13 @@ interface AnchorNoteWidgetContentProps {
 
 const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
-  const [note, { refetch }] = clientApi.widget.anchorNotes.getNote.useSuspenseQuery(
+  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery(
     {
       integrationId,
       noteId,
     },
     {
-      refetchOnMount: false,
+      staleTime: 15 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -159,31 +160,32 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [draftTitle, setDraftTitle] = useState(note.title);
-  const [draftContent, setDraftContent] = useState(note.content ?? "");
+  const [draftTitle, setDraftTitle] = useState(note?.title ?? "");
+  const [draftContent, setDraftContent] = useState(note?.content ?? "");
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isEditing) return;
+    if (isEditing || !note) return;
 
     startTransition(() => {
       setDraftTitle(note.title);
       setDraftContent(note.content ?? "");
     });
-  }, [isEditing, note.content, note.title]);
+  }, [isEditing, note]);
 
-  const canEdit = canEditPermission(note.permission);
-  const isViewer = note.permission === "viewer";
-  const updatedAt = useMemo(() => new Date(note.updatedAt), [note.updatedAt]);
+  const canEdit = canEditPermission(note?.permission ?? "viewer");
+  const isViewer = !note || note.permission === "viewer";
+  const updatedAt = useMemo(() => (note ? new Date(note.updatedAt) : new Date()), [note]);
   const updatedAtRelative = useTimeAgo(updatedAt, 30000);
 
   const hasChanges = useMemo(() => {
+    if (!note) return false;
     const normalizedTitle = draftTitle.trim() || note.title;
     return normalizedTitle !== note.title || draftContent !== (note.content ?? "");
-  }, [draftContent, draftTitle, note.content, note.title]);
+  }, [draftContent, draftTitle, note]);
 
   const editorValue = useMemo(() => parseStoredContent(draftContent), [draftContent]);
-  const readOnlyValue = useMemo(() => parseStoredContent(note.content), [note.content]);
+  const readOnlyValue = useMemo(() => parseStoredContent(note?.content), [note?.content]);
   const handleEditorChange = useCallback<ReactQuillOnChange>(
     (_html, _delta, source, editor) => {
       if (!isEditing || source !== "user") return;
@@ -194,26 +196,27 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
   );
 
   const handleEdit = useCallback(() => {
-    if (!canEdit) return;
+    if (!canEdit || !note) return;
     startTransition(() => {
       setDraftTitle(note.title);
       setDraftContent(note.content ?? "");
       setSaveError(null);
       setIsEditing(true);
     });
-  }, [canEdit, note.content, note.title]);
+  }, [canEdit, note]);
 
   const handleCancel = useCallback(() => {
+    if (!note) return;
     startTransition(() => {
       setDraftTitle(note.title);
       setDraftContent(note.content ?? "");
       setSaveError(null);
       setIsEditing(false);
     });
-  }, [note.content, note.title]);
+  }, [note]);
 
   const handleSave = useCallback(async () => {
-    if (!canEdit) return;
+    if (!canEdit || !note) return;
 
     const normalizedTitle = draftTitle.trim() || note.title || t("untitled");
 
@@ -260,7 +263,9 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
         },
       },
     );
-  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note.title, noteId, refetch, t, updateNoteAsync]);
+  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, t, updateNoteAsync]);
+
+  if (!note) return <WidgetEmptyState />;
 
   return (
     <Stack h="100%" gap="xs" p="sm">

@@ -1,0 +1,77 @@
+{
+  "name": "@homarr/docs",
+  "version": "0.2.3",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "dev": "docusaurus start --no-open --port 3003",
+    "start": "docusaurus start --port 3003",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve",
+    "clear": "docusaurus clear",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "format": "oxfmt .",
+    "clean": "rm -rf build .docusaurus",
+    "swizzle": "docusaurus swizzle",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "api-dump-contributors": "node ./scripts/dump-contributors.mjs",
+    "verify:search": "node ./scripts/verify-algolia-search.mjs"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.10.1",
+    "@docusaurus/faster": "^3.10.1",
+    "@docusaurus/plugin-content-docs": "^3.10.1",
+    "@docusaurus/plugin-sitemap": "^3.10.1",
+    "@docusaurus/preset-classic": "^3.10.1",
+    "@homarr/definitions": "workspace:^",
+    "@mdx-js/react": "^3.1.1",
+    "@nivo/line": "^0.99.0",
+    "@scalar/api-reference-react": "catalog:",
+    "@signalwire/docusaurus-plugin-llms-txt": "^1.2.2",
+    "@tabler/icons-react": "catalog:",
+    "@tailwindcss/postcss": "^4.3.0",
+    "clsx": "catalog:",
+    "dayjs": "catalog:",
+    "docusaurus-plugin-image-zoom": "^3.0.1",
+    "leader-line-new": "^1.1.9",
+    "postcss": "^8.5.10",
+    "posthog-docusaurus": "^2.0.5",
+    "prism-react-renderer": "^2.4.1",
+    "random-word-slugs": "^0.1.7",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "swiper": "^12.2.0",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "^3.10.1",
+    "@docusaurus/tsconfig": "^3.10.1",
+    "@docusaurus/types": "^3.10.1",
+    "@fec/remark-a11y-emoji": "^4.0.2",
+    "@tsconfig/docusaurus": "^2.0.9",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "cheerio": "^1.2.0",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "@docusaurus/theme-common": "^3.10.1",
+    "@docusaurus/theme-mermaid": "^3.10.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+.light-mode {
+  --scalar-background-1: var(--mantine-color-body);
+  --scalar-background-2: var(--mantine-color-gray-0);
+  --scalar-background-3: var(--mantine-color-gray-1);
+  --scalar-background-card: var(--mantine-color-white);
+  --scalar-background-accent: rgba(0, 0, 0, 0.04);
+
+  --scalar-color-1: var(--mantine-color-text);
+  --scalar-color-2: var(--mantine-color-dimmed);
+  --scalar-color-3: var(--mantine-color-dimmed);
+  --scalar-color-accent: var(--mantine-color-red-6);
+
+  --scalar-border-color: var(--mantine-color-gray-3);
+
+  --scalar-button-1: var(--mantine-color-dark-7);
+  --scalar-button-1-hover: var(--mantine-color-dark-5);
+  --scalar-button-1-color: var(--mantine-color-white);
+
+  --scalar-scrollbar-color: rgba(0, 0, 0, 0.18);
+  --scalar-scrollbar-color-active: rgba(0, 0, 0, 0.36);
+}
+
+.dark-mode {
+  --scalar-background-1: var(--mantine-color-body);
+  --scalar-background-2: var(--mantine-color-dark-6);
+  --scalar-background-3: var(--mantine-color-dark-5);
+  --scalar-background-card: var(--mantine-color-dark-6);
+  --scalar-background-accent: rgba(255, 255, 255, 0.06);
+
+  --scalar-color-1: var(--mantine-color-text);
+  --scalar-color-2: var(--mantine-color-dimmed);
+  --scalar-color-3: var(--mantine-color-dimmed);
+  --scalar-color-accent: var(--mantine-color-red-6);
+
+  --scalar-border-color: var(--mantine-color-dark-4);
+
+  --scalar-button-1: rgba(255, 255, 255, 0.9);
+  --scalar-button-1-hover: rgba(255, 255, 255, 0.8);
+  --scalar-button-1-color: var(--mantine-color-dark-7);
+
+  --scalar-scrollbar-color: rgba(255, 255, 255, 0.18);
+  --scalar-scrollbar-color-active: rgba(255, 255, 255, 0.36);
+}
+
+.scalar-card,
+.scalar-api-client__item,
+.dark-mode .dark-mode.scalar-card {
+  --scalar-background-1: var(--scalar-background-card);
+  --scalar-background-2: var(--scalar-background-card);
+  --scalar-background-3: var(--scalar-background-card);
+}

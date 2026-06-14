@@ -28,6 +28,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
+import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
@@ -42,18 +43,26 @@ export default async function ManageBoardsPage() {
   return (
     <ManagePageLayout
       title={t("title")}
-      primaryAction={canCreateBoards ? <CreateBoardButton /> : undefined}
+      primaryAction={
+        canCreateBoards ? (
+          <TourTarget id="manage-boards-create">
+            <CreateBoardButton />
+          </TourTarget>
+        ) : undefined
+      }
       floatingPrimaryAction={canCreateBoards}
     >
       {boards.length === 0 && <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} />}
       {boards.length > 0 && (
-        <Grid>
-          {boards.map((board) => (
-            <GridCol span={{ base: 12, md: 6 }} key={board.id}>
-              <BoardCard board={board} />
-            </GridCol>
-          ))}
-        </Grid>
+        <TourTarget id="manage-boards-list">
+          <Grid>
+            {boards.map((board) => (
+              <GridCol span={{ base: 12, md: 6 }} key={board.id}>
+                <BoardCard board={board} />
+              </GridCol>
+            ))}
+          </Grid>
+        </TourTarget>
       )}
     </ManagePageLayout>
   );

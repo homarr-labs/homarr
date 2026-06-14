@@ -13,6 +13,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { createMetaTitle } from "~/metadata";
 import { ClientSideTerminalComponent } from "./client";
+import { LogFontSizeSlider } from "./font-size-slider";
 import { LogLevelSelection } from "./level-selection";
 import { LogContextProvider } from "./log-context";
 
@@ -38,7 +39,10 @@ export default async function LogsManagementPage() {
     <LogContextProvider defaultLevel={logsEnv.LEVEL}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <DynamicBreadcrumb />
-        <LogLevelSelection />
+        <Group gap="md" wrap="nowrap">
+          <LogFontSizeSlider />
+          <LogLevelSelection />
+        </Group>
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
         <ClientSideTerminalComponent />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Box, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
   IconDeviceTv,
@@ -9,6 +9,7 @@ import {
   IconMovie,
   IconPlayerPlay,
   IconReceipt,
+  IconSearch,
   IconThumbDown,
   IconThumbUp,
 } from "@tabler/icons-react";
@@ -17,11 +18,14 @@ import combineClasses from "clsx";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { RequestStats } from "@homarr/integrations/types";
+import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
+import searchClasses from "../search-button.module.css";
 
 const OVERSEERR_COLOR = "#ECB000";
 const JELLYSEERR_COLOR = "#6677CC";
@@ -32,12 +36,12 @@ export default function MediaServerWidget({
   width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
+  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery(
     {
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -45,6 +49,7 @@ export default function MediaServerWidget({
 
   const board = useRequiredBoard();
 
+  if (!requestStats) return <WidgetEmptyState />;
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
   const data = [
@@ -93,83 +98,104 @@ export default function MediaServerWidget({
   const isTiny = width < 256;
 
   return (
-    <Stack
-      className="mediaRequests-stats-layout"
-      h="100%"
-      gap="xs"
-      p="sm"
-      align="center"
-      justify="space-between"
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
-    >
-      <Stack gap={4} w="100%">
-        <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
-          {t("titles.stats.main")}
-        </Text>
-        <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
-          {data.map((stat) => (
-            <Grid.Col
-              className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
-              key={stat.name}
-              span={isTiny ? 6 : 3}
-            >
-              <Tooltip label={t(`titles.stats.${stat.name}`)}>
-                <Card p={0} radius={board.itemRadius} className={classes.card}>
-                  <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
-                    <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
-                    <Text className="mediaRequests-stats-stat-value" size="md">
-                      {stat.number}
+    <Box className={searchClasses.searchRoot}>
+      {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
+      <Stack
+        className="mediaRequests-stats-layout"
+        h="100%"
+        gap="xs"
+        p="sm"
+        align="center"
+        justify="space-between"
+        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      >
+        <Stack gap={4} w="100%">
+          <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+            {t("titles.stats.main")}
+          </Text>
+          <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
+            {data.map((stat) => (
+              <Grid.Col
+                className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
+                key={stat.name}
+                span={isTiny ? 6 : 3}
+              >
+                <Tooltip label={t(`titles.stats.${stat.name}`)}>
+                  <Card p={0} radius={board.itemRadius} className={classes.card}>
+                    <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
+                      <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
+                      <Text className="mediaRequests-stats-stat-value" size="md">
+                        {stat.number}
+                      </Text>
+                    </Group>
+                  </Card>
+                </Tooltip>
+              </Grid.Col>
+            ))}
+          </Grid>
+        </Stack>
+        <Stack gap={4} w="100%">
+          <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+            {t("titles.users.main")} ({t("titles.users.requests")})
+          </Text>
+          <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
+            {requestStats.users.slice(0, 10).map((user) => (
+              <Card
+                component="a"
+                href={user.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={combineClasses(
+                  "mediaRequests-stats-users-user-wrapper",
+                  `mediaRequests-stats-users-user-${user.id}`,
+                  classes.card,
+                )}
+                key={user.id}
+                p="xs"
+                radius={board.itemRadius}
+              >
+                <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
+                  <Group gap={4}>
+                    <Tooltip label={user.integration.name}>
+                      <Avatar
+                        className="mediaRequests-stats-users-user-avatar"
+                        size={20}
+                        src={user.avatar}
+                        bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
+                      />
+                    </Tooltip>
+                    <Text className="mediaRequests-stats-users-user-userName" size="sm">
+                      {user.displayName}
                     </Text>
                   </Group>
-                </Card>
-              </Tooltip>
-            </Grid.Col>
-          ))}
-        </Grid>
-      </Stack>
-      <Stack gap={4} w="100%">
-        <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
-          {t("titles.users.main")} ({t("titles.users.requests")})
-        </Text>
-        <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
-          {requestStats.users.slice(0, 10).map((user) => (
-            <Card
-              component="a"
-              href={user.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={combineClasses(
-                "mediaRequests-stats-users-user-wrapper",
-                `mediaRequests-stats-users-user-${user.id}`,
-                classes.card,
-              )}
-              key={user.id}
-              p="xs"
-              radius={board.itemRadius}
-            >
-              <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
-                <Group gap={4}>
-                  <Tooltip label={user.integration.name}>
-                    <Avatar
-                      className="mediaRequests-stats-users-user-avatar"
-                      size={20}
-                      src={user.avatar}
-                      bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
-                    />
-                  </Tooltip>
-                  <Text className="mediaRequests-stats-users-user-userName" size="sm">
-                    {user.displayName}
+
+                  <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
+                    {user.requestCount}
                   </Text>
                 </Group>
-
-                <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
-                  {user.requestCount}
-                </Text>
-              </Group>
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </Stack>
         </Stack>
       </Stack>
-    </Stack>
+    </Box>
   );
 }
+
+const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {
+  const t = useScopedI18n("search.mode.media");
+
+  return (
+    <Tooltip label={t("action.search.label")}>
+      <ActionIcon
+        className={searchClasses.searchButton}
+        variant="light"
+        size="sm"
+        aria-label={t("action.search.label")}
+        onClick={() => openMediaRequestSearch({ integrationIds })}
+      >
+        <IconSearch size={16} />
+      </ActionIcon>
+    </Tooltip>
+  );
+};

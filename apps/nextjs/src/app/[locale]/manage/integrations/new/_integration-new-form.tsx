@@ -1,9 +1,9 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Alert,
+  Anchor,
   Button,
   Checkbox,
   Collapse,
@@ -16,7 +16,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconCheck, IconExternalLink, IconInfoCircle, IconKey } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -27,6 +27,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
   getIconUrl,
+  getIntegrationApiKeyUrl,
   getIntegrationDefaultUrl,
   getIntegrationName,
   integrationDefs,
@@ -45,9 +46,13 @@ import { IntegrationTestConnectionError } from "../_components/test-connection/i
 import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
 interface NewIntegrationFormProps {
-  searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {
-    kind: IntegrationKind;
-  };
+  kind: IntegrationKind;
+  initialUrl?: string;
+  initialName?: string;
+  onSuccess: () => void;
+  onCancel?: () => void;
+  onSkip?: () => void;
+  isOnboarding?: boolean;
 }
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
@@ -58,45 +63,93 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({
+  kind,
+  initialUrl,
+  initialName,
+  onSuccess,
+  onCancel,
+  onSkip,
+  isOnboarding = false,
+}: NewIntegrationFormProps) => {
   const t = useI18n();
-  const secretKinds = getAllSecretKindOptions(searchParams.kind);
+  const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
-  const router = useRouter();
   const { data: session } = useSession();
-  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
+  const canCreateApps = !isOnboarding && (session?.user.permissions.includes("app-create") ?? false);
 
-  let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
+  let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
-    // Placeholder Url, replaced with origin of the secret Url on submit
     url = "http://localhost";
   }
   const form = useZodForm(formSchema, {
     initialValues: {
-      name: searchParams.name ?? getIntegrationName(searchParams.kind),
+      name: initialName ?? getIntegrationName(kind),
       url,
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
       })),
-      attemptSearchEngineCreation: true,
-      hasApp: false,
-      appHref: url,
+      attemptSearchEngineCreation: !isOnboarding,
+      hasApp: !isOnboarding,
+      appHref: isOnboarding ? null : url,
       appId: null,
     },
   });
 
-  const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation({
+  const utils = clientApi.useUtils();
+  const { mutateAsync: createIntegrationAsync, isPending: isCreatePending } = clientApi.integration.create.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/integrations");
+      await utils.integration.invalidate();
     },
   });
+  const { mutateAsync: createOnboardingIntegrationAsync, isPending: isOnboardingCreatePending } =
+    clientApi.onboard.createIntegration.useMutation({
+      async onSuccess() {
+        await utils.integration.invalidate();
+      },
+    });
+  const isPending = isCreatePending || isOnboardingCreatePending;
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
+
+    const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
+      if (data && "error" in data && data.error) {
+        setError(data.error);
+        showErrorNotification({
+          title: t("integration.page.create.notification.error.title"),
+          message: t("integration.page.create.notification.error.message"),
+        });
+        return;
+      }
+
+      showSuccessNotification({
+        title: t("integration.page.create.notification.success.title"),
+        message: t("integration.page.create.notification.success.message"),
+      });
+
+      onSuccess();
+    };
+
+    const onMutationError = () => {
+      showErrorNotification({
+        title: t("integration.page.create.notification.error.title"),
+        message: t("integration.page.create.notification.error.message"),
+      });
+    };
+
+    if (isOnboarding) {
+      await createOnboardingIntegrationAsync(
+        { kind, name: values.name, url, secrets: values.secrets },
+        { onSuccess: onMutationSuccess, onError: onMutationError },
+      );
+      return;
+    }
 
     const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
 
@@ -106,49 +159,21 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         : {
             name: values.name,
             href: hasCustomHref ? appHref : url,
-            iconUrl: getIconUrl(searchParams.kind),
+            iconUrl: getIconUrl(kind),
             description: null,
             pingUrl: url,
           }
       : undefined;
 
     await createIntegrationAsync(
-      {
-        kind: searchParams.kind,
-        ...values,
-        url,
-        app,
-      },
-      {
-        onSuccess(data) {
-          // We do it this way as we are unable to send a typesafe error through onError
-          if (data?.error) {
-            setError(data.error);
-            showErrorNotification({
-              title: t("integration.page.create.notification.error.title"),
-              message: t("integration.page.create.notification.error.message"),
-            });
-            return;
-          }
-
-          showSuccessNotification({
-            title: t("integration.page.create.notification.success.title"),
-            message: t("integration.page.create.notification.success.message"),
-          });
-
-          router.push("/manage/integrations");
-        },
-        onError: () => {
-          showErrorNotification({
-            title: t("integration.page.create.notification.error.title"),
-            message: t("integration.page.create.notification.error.message"),
-          });
-        },
-      },
+      { kind, ...values, url, app },
+      { onSuccess: onMutationSuccess, onError: onMutationError },
     );
   };
 
-  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
+  const integrationCategories = integrationDefs[kind].category.flat();
+  const supportsSearchEngine =
+    integrationCategories.includes("search") && !integrationCategories.includes("mediaSearch");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
@@ -175,27 +200,39 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
                 <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
               </Alert>
             )}
+            <ApiKeySettingsLink kind={kind} url={form.values.url} />
           </Stack>
         </Fieldset>
 
         {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
-        {supportsSearchEngine && (
+        {!isOnboarding && supportsSearchEngine && (
           <Checkbox
             label={t("integration.field.attemptSearchEngineCreation.label")}
             description={t("integration.field.attemptSearchEngineCreation.description", {
-              kind: getIntegrationName(searchParams.kind),
+              kind: getIntegrationName(kind),
             })}
             {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
           />
         )}
 
-        <AppForm form={form} canCreateApps={canCreateApps} />
+        {!isOnboarding && <AppForm form={form} canCreateApps={canCreateApps} />}
 
         <Group justify="end" align="center">
-          <Button variant="default" component={Link} href="/manage/integrations">
-            {t("common.action.backToOverview")}
-          </Button>
+          {onCancel ? (
+            <Button variant="default" onClick={onCancel}>
+              {t("common.action.backToOverview")}
+            </Button>
+          ) : (
+            <Button variant="default" component={Link} href="/manage/integrations">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
+          {onSkip && (
+            <Button variant="default" onClick={onSkip}>
+              {t("common.action.skip")}
+            </Button>
+          )}
           <Button type="submit" loading={isPending}>
             {t("integration.testConnection.action.create")}
           </Button>
@@ -263,6 +300,40 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
         </Fieldset>
       </Collapse>
     </>
+  );
+};
+
+const normalizeUrl = (raw: string): string | null => {
+  try {
+    return new URL(raw).href;
+  } catch {
+    // Bare IP / hostname — prepend http:// and retry
+  }
+  try {
+    return new URL(`http://${raw}`).href;
+  } catch {
+    return null;
+  }
+};
+
+const ApiKeySettingsLink = ({ kind, url }: { kind: IntegrationKind; url: string }) => {
+  const t = useI18n();
+  const apiKeyUrl = getIntegrationApiKeyUrl(url, kind);
+  if (!apiKeyUrl) return null;
+
+  const resolved = normalizeUrl(url);
+  if (!resolved) return null;
+
+  const fullApiKeyUrl = getIntegrationApiKeyUrl(resolved, kind);
+
+  return (
+    <Anchor href={fullApiKeyUrl ?? apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
+      <Group gap={4}>
+        <IconKey size={14} stroke={1.5} />
+        <Text size="sm">{t("integration.field.apiKeySettings.label")}</Text>
+        <IconExternalLink size={14} stroke={1.5} />
+      </Group>
+    </Anchor>
   );
 };
 

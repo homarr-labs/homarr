@@ -1,0 +1,39 @@
+name: "[Docs] Update Contributors"
+
+on:
+  schedule:
+    - cron: "0 12 * * FRI"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  HOMARR_CROWDIN_TOKEN: "${{ secrets.HOMARR_CROWDIN_TOKEN }}"
+  HOMARR_LABS_CROWDIN_TOKEN: "${{ secrets.HOMARR_LABS_CROWDIN_TOKEN }}"
+  SKIP_ENV_VALIDATION: true
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: dev
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Dump contributors
+        working-directory: apps/docs
+        run: pnpm api-dump-contributors
+
+      - name: Commit updated contributors
+        uses: EndBug/add-and-commit@v10
+        with:
+          add: "apps/docs/static"
+          default_author: github_actor
+          message: "chore(docs): update contributors"
+          push: true

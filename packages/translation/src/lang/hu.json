@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "Jelszó",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "Tartalmazzon legalább 8 karaktert",
           "lowercase": "Tartalmazzon kisbetűt",
           "uppercase": "Tartalmazzon nagybetűt",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "Média megnyitása"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "Tekintse meg a dokumentációt",
       "checkLogs": "További részletekért ellenőrizze a naplókat",
       "tryAgain": "Próbálja újra",
-      "loading": "Töltés"
+      "loading": "Töltés",
+      "show": "",
+      "hide": ""
     },
     "here": "itt",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "Új kategória",
-          "changePosition": "Pozíció módosítása"
+          "changePosition": "Pozíció módosítása",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "Megnyitás új lapon"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "Könyjelzők",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "",
           "private": ""
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

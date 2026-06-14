@@ -15,23 +15,29 @@ interface UmamiTopListProps {
 
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const [data] = clientApi.widget.umami.getTopPages.useSuspenseQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    limit,
-  });
+  const { data = [] } = clientApi.widget.umami.getTopPages.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      websiteId,
+      timeFrame,
+      limit,
+    },
+    { staleTime: 5 * 60 * 1000 },
+  );
   return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("topPages.direct")} />;
 }
 
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const [data] = clientApi.widget.umami.getTopReferrers.useSuspenseQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    limit,
-  });
+  const { data = [] } = clientApi.widget.umami.getTopReferrers.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      websiteId,
+      timeFrame,
+      limit,
+    },
+    { staleTime: 5 * 60 * 1000 },
+  );
   return (
     <UmamiTopList
       items={data}

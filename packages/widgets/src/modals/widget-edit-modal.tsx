@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Group, Stack } from "@mantine/core";
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
+import { Button, Group, Stack, Tabs } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
+import { useSession } from "@homarr/auth/client";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
@@ -20,6 +22,8 @@ import type { OptionsBuilderResult } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
 import { WidgetAdvancedOptionsModal } from "./widget-advanced-options-modal";
+import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
+import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
@@ -34,13 +38,16 @@ interface ModalProps<TSort extends WidgetKind> {
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
+  appId?: string;
 }
 
 export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
+  const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
+  const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Translate the error messages
   z.config({
     customError: zodErrorMap(t),
   });
@@ -77,55 +84,97 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   });
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
-  return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        innerProps.onSuccessfulEdit({
-          ...values,
-          advancedOptions,
-        });
-        actions.closeModal();
+  const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
+  const appId = innerProps.appId;
+  const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
+
+  const handleSubmit = form.onSubmit(async (values) => {
+    setIsSubmitting(true);
+    try {
+      const appSaved = showAppTab ? await (appEditRef.current?.submitIfDirty() ?? true) : true;
+
+      if (!appSaved) {
+        return;
+      }
+
+      innerProps.onSuccessfulEdit({
+        ...values,
+        advancedOptions,
+      });
+      actions.closeModal();
+    } finally {
+      setIsSubmitting(false);
+    }
+  });
+
+  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    handleSubmit(event);
+  };
+
+  const widgetFormContent = (
+    <Stack>
+      {innerProps.integrationSupport && (
+        <WidgetIntegrationSelect
+          label={t("item.edit.field.integrations.label")}
+          data={innerProps.integrationData}
+          canSelectMultiple={
+            ((widgetImports[innerProps.kind].definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) >
+            1
+          }
+          {...form.getInputProps("integrationIds")}
+        />
+      )}
+      {Object.entries(options).map(([key, value]) => {
+        const Input = getInputForType(value.type);
+
+        if (
+          !Input ||
+          value.shouldHide?.(
+            form.values.options as never,
+            innerProps.integrationData
+              .filter(({ id }) => form.values.integrationIds.includes(id))
+              .map(({ kind }) => kind),
+          )
+        ) {
+          return null;
+        }
+
+        return (
+          <Input
+            key={key}
+            kind={innerProps.kind}
+            property={key}
+            options={value as never}
+            initialOptions={innerProps.value.options}
+          />
+        );
       })}
-    >
-      <FormProvider form={form}>
-        <Stack>
-          {innerProps.integrationSupport && (
-            <WidgetIntegrationSelect
-              label={t("item.edit.field.integrations.label")}
-              data={innerProps.integrationData}
-              {...form.getInputProps("integrationIds")}
-            />
-          )}
-          {Object.entries(options).map(([key, value]) => {
-            const Input = getInputForType(value.type);
-
-            if (
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              !Input ||
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              value.shouldHide?.(
-                form.values.options as never,
-                innerProps.integrationData
-                  .filter(({ id }) => form.values.integrationIds.includes(id))
-                  .map(({ kind }) => kind),
-              )
-            ) {
-              return null;
-            }
-
-            return (
-              <Input
-                key={key}
-                kind={innerProps.kind}
-                property={key}
-                options={value as never}
-                initialOptions={innerProps.value.options}
-              />
-            );
-          })}
-          <Group justify="space-between">
+      {showAppTab ? (
+        <Button
+          variant="subtle"
+          type="button"
+          onClick={() =>
+            openModal({
+              advancedOptions,
+              onSuccess(options) {
+                setAdvancedOptions(options);
+                innerProps.onSuccessfulEdit({
+                  ...innerProps.value,
+                  advancedOptions: options,
+                });
+              },
+            })
+          }
+        >
+          {t("item.edit.advancedOptions.label")}
+        </Button>
+      ) : (
+        <ModalFormFooter
+          onCancel={actions.closeModal}
+          leftSection={
             <Button
               variant="subtle"
+              type="button"
               onClick={() =>
                 openModal({
                   advancedOptions,
@@ -141,14 +190,41 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             >
               {t("item.edit.advancedOptions.label")}
             </Button>
-            <Group justify="end" w={{ base: "100%", xs: "auto" }}>
+          }
+        />
+      )}
+    </Stack>
+  );
+
+  return (
+    <form onSubmit={onFormSubmit}>
+      <FormProvider form={form}>
+        {showAppTab ? (
+          <Stack>
+            <Tabs defaultValue="widget">
+              <Tabs.List grow>
+                <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
+                <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="widget" pt="md">
+                {widgetFormContent}
+              </Tabs.Panel>
+              <Tabs.Panel value="app" pt="md">
+                {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
+              </Tabs.Panel>
+            </Tabs>
+            <Group justify="end">
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
                 {t("common.action.cancel")}
               </Button>
-              <Button type="submit">{t("common.action.saveChanges")}</Button>
+              <Button type="submit" loading={isSubmitting}>
+                {t("common.action.saveChanges")}
+              </Button>
             </Group>
-          </Group>
-        </Stack>
+          </Stack>
+        ) : (
+          widgetFormContent
+        )}
       </FormProvider>
     </form>
   );
@@ -157,5 +233,5 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: "lg",
+  size: modalSizeForm,
 });

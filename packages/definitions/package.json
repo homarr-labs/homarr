@@ -12,11 +12,12 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./docs/*": "./src/docs/*.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "postinstall": "tsx ./src/docs/codegen.ts",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"

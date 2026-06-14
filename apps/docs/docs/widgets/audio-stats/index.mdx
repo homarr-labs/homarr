@@ -1,0 +1,43 @@
+---
+title: 'Audio Stats'
+description: 'Displays library statistics from Navidrome or Audiobookshelf, adapting its display based on the linked integration.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { audioStatsWidget } from '.';
+import { navidromeIntegration } from '@site/docs/integrations/navidrome';
+import { audiobookshelfIntegration } from '@site/docs/integrations/audiobookshelf';
+
+
+<WidgetHeader
+  widget={audioStatsWidget}
+  categories={['Media']}
+/>
+
+This widget adapts its display based on the linked integration:
+
+- **Navidrome**: Shows artist, album, and song counts, plus a now playing section with active streams
+- **Audiobookshelf**: Shows library count, audiobook/podcast totals, listening time, and active sessions
+
+Only options relevant to your linked integration are shown in the configuration panel.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: navidromeIntegration,
+  note: "Displays music library stats and now playing"
+}, {
+  integration: audiobookshelfIntegration,
+  note: "Displays audiobook/podcast library stats and listening time"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={audioStatsWidget.configuration} />

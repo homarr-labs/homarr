@@ -1,0 +1,39 @@
+---
+title: 'Navidrome'
+description: "Navidrome is a self-hosted music server and streamer compatible with the Subsonic API."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { navidromeIntegration } from '.';
+import { audioStatsWidget } from '@site/docs/widgets/audio-stats';
+
+
+<IntegrationHeader
+    integration={navidromeIntegration}
+    categories={['Media']}
+/>
+
+Navidrome provides music library statistics including artist, album, and song counts, as well as now playing information via the Subsonic API.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: audioStatsWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [
+        'Use the same credentials you use to log in to Navidrome',
+        'The user must have access to the Subsonic API (enabled by default)',
+    ]
+}]} />

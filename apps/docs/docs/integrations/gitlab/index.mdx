@@ -1,0 +1,37 @@
+---
+title: 'GitLab'
+description: "GitLab is a web-based DevOps lifecycle tool that provides a Git repository manager."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { gitlabIntegration } from '.';
+import { releasesWidget } from '@site/docs/widgets/releases';
+
+
+<IntegrationHeader
+    integration={gitlabIntegration}
+    categories={['Version Control', 'Software']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: releasesWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: [],
+    steps: []
+}, {
+    credentials: ['personalAccessToken'],
+    steps: []
+}]} />

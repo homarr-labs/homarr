@@ -5,18 +5,30 @@ import "@homarr/common/env";
 import "@homarr/core/infrastructure/logs/env";
 import "@homarr/docker/env";
 
+import { readFileSync } from "fs";
+
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+const homarrVersion = (() => {
+  for (const candidate of ["../../package.json", "./package.json"]) {
+    try {
+      const pkg = JSON.parse(readFileSync(candidate, "utf-8"));
+      if (pkg.name === "homarr") return pkg.version as string;
+    } catch {}
+  }
+  return "unknown";
+})();
+
 // Package path does not work... so we need to use relative path
 const withNextIntl = createNextIntlPlugin({
-  experimental: {
-    createMessagesDeclaration: "../../packages/translation/src/lang/en.json",
-  },
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
 const nextConfig: NextConfig = {
+  env: {
+    HOMARR_VERSION: homarrVersion,
+  },
   output: "standalone",
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now
@@ -27,7 +39,7 @@ const nextConfig: NextConfig = {
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
    * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,

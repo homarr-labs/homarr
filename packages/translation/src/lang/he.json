@@ -132,7 +132,8 @@
       },
       "password": {
         "label": "סיסמה",
-        "requirement": {
+        "suggestionsTitle": "",
+        "suggestion": {
           "length": "כולל לפחות 8 תווים",
           "lowercase": "אפשר אותיות קטנות",
           "uppercase": "אפשר אותיות גדולות",
@@ -1054,6 +1055,9 @@
       "open": {
         "label": "פתיחת מדיה"
       }
+    },
+    "noResults": {
+      "title": ""
     }
   },
   "common": {
@@ -1084,7 +1088,9 @@
       "checkoutDocs": "בדוק את התיעוד",
       "checkLogs": "בדוק לוגים לפרטים נוספים",
       "tryAgain": "נא לנסות שוב",
-      "loading": "טוען"
+      "loading": "טוען",
+      "show": "",
+      "hide": ""
     },
     "here": "כאן",
     "iconPicker": {
@@ -1249,7 +1255,8 @@
       "menu": {
         "label": {
           "create": "קטגוריה חדשה",
-          "changePosition": "שנה מיקום"
+          "changePosition": "שנה מיקום",
+          "settings": ""
         }
       },
       "openAllInNewTabs": {
@@ -1398,6 +1405,9 @@
         },
         "openNewTab": {
           "label": "פתיחה בכרטיסיה חדשה"
+        },
+        "withBorder": {
+          "label": ""
         },
         "items": {
           "label": "סימניות",
@@ -3451,6 +3461,9 @@
         "visibility": {
           "public": "הלוח הזה ציבורי",
           "private": "הלוח הזה פרטי"
+        },
+        "noResults": {
+          "title": ""
         },
         "modal": {
           "createBoard": {

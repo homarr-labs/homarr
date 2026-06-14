@@ -9,14 +9,17 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./query-cache": "./src/query-cache.ts",
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
-    "./open-api": "./src/open-api.ts"
+    "./open-api": "./src/open-api.ts",
+    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
+    "./mcp": "./src/mcp.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
@@ -45,11 +48,13 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
+    "jsonpath-plus": "catalog:",
     "lodash.clonedeep": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "superjson": "catalog:",
+    "trpc-to-mcp": "catalog:",
     "trpc-to-openapi": "catalog:",
     "zod": "catalog:"
   },

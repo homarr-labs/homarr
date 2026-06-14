@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { TRPCError } from "@trpc/server";
 
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
+import type { DehydratedState } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { parse } from "superjson";
 
 import { getQueryClient } from "@homarr/api/server";
 import { IntegrationProvider } from "@homarr/auth/client";
@@ -14,6 +17,7 @@ import { isNullOrWhitespace } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
+import { getAllQueryCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
@@ -38,6 +42,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
       getInitialBoardAsync: getInitialBoard,
+      withTour: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
@@ -71,9 +76,14 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         ),
       ]);
 
+      const userId = session?.user.id ?? "anonymous";
+
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
+            <Suspense>
+              <QueryCacheHydration userId={userId} boardId={board.id} />
+            </Suspense>
             <DynamicClientBoard />
           </IntegrationProvider>
         </HydrationBoundary>
@@ -107,3 +117,37 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     },
   };
 };
+
+interface PersistedEntry {
+  state: { data: unknown; dataUpdatedAt: number; status: string };
+  queryKey: unknown[];
+  queryHash: string;
+}
+
+async function QueryCacheHydration({ userId, boardId }: { userId: string; boardId: string }) {
+  try {
+    const entries = await getAllQueryCacheAsync(userId, boardId);
+    const queries: DehydratedState["queries"] = [];
+
+    for (const serialized of Object.values(entries)) {
+      try {
+        const persisted = parse<PersistedEntry>(serialized);
+        if (persisted.state.status !== "success") continue;
+
+        queries.push({
+          state: persisted.state as DehydratedState["queries"][number]["state"],
+          queryKey: persisted.queryKey,
+          queryHash: persisted.queryHash,
+        });
+      } catch {
+        // skip malformed entries
+      }
+    }
+
+    if (queries.length === 0) return null;
+
+    return <HydrationBoundary state={{ mutations: [], queries }} />;
+  } catch {
+    return null;
+  }
+}

@@ -274,6 +274,27 @@
       "when": 1775400000000,
       "tag": "0038_add_user_ddg_bangs",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1779199104477,
+      "tag": "0039_add_user_onboarding_tour_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1780764453945,
+      "tag": "0040_wealthy_thunderbolts",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1780764500000,
+      "tag": "0041_merge_custom_widget_url",
+      "breakpoints": true
     }
   ]
 }

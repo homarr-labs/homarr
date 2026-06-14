@@ -18,9 +18,14 @@ const MAX_QUEUE_SIZE = 15;
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemResources">) {
   const { ref, width } = useElementSize();
 
-  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery({
-    integrationIds,
-  });
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    {
+      integrationIds,
+    },
+    {
+      staleTime: 5 * 1000,
+    },
+  );
   const memoryCapacityInBytes =
     (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
 
