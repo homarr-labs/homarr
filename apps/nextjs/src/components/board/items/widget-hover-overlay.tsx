@@ -41,7 +41,7 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
   const hasIntegrations = connectedIntegrations.length > 0;
   const hasMetadata = metadataItems.length > 0;
 
-  if (isEditMode) {
+  if (!isEditMode) {
     return null;
   }
 
