@@ -102,11 +102,6 @@
 
 * (next branch) reduce idle memory on startup ([#5637](https://github.com/homarr-labs/homarr/issues/5637)) ([5ee84f8](https://github.com/homarr-labs/homarr/commit/5ee84f8cf464c308729281cb4db572950ba85a82))
 * **memory:** combine 3 node processes into one ([#5600](https://github.com/homarr-labs/homarr/issues/5600)) ([a1aa550](https://github.com/homarr-labs/homarr/commit/a1aa5505a365688b456090a882770e561479833e))
-## [1.61.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1) (2026-05-18)
-
-### Bug Fixes
-
-* **downloads-widget:** increase name column default width ratio ([e9142c0](https://github.com/homarr-labs/homarr/commit/e9142c0dbcaca6cd9215b5292a2d139d96919b51))
 
 ## [1.61.0](https://github.com/homarr-labs/homarr/compare/v1.60.0...v1.61.0) (2026-05-08)
 
