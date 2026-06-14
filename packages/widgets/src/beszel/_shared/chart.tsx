@@ -46,7 +46,8 @@ export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, style
     withDots={false}
     withXAxis
     withYAxis
-    style={{ minWidth: 0, ...style }}
+    w="100%"
+    style={{ minWidth: 0, minHeight: 0, ...style }}
     yAxisProps={{
       ...yAxisBase,
       ...(yAxisDomain ? { domain: yAxisDomain } : {}),
@@ -83,10 +84,12 @@ export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] |
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 
-// c = CPU (%), m = memory (bytes), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
+// c = CPU (%), m = memory (MB), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
+const MB = 1024 * 1024;
+
 const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
-  memory: (c) => c?.m ?? 0,
+  memory: (c) => (c?.m ?? 0) * MB,
   network: (c) => (c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0)),
 };
 
