@@ -64,7 +64,7 @@ const Item = ({ item, innerRef, integrations }: ItemProps) => {
       minWidth={minWidth}
       minHeight={minHeight}
     >
-      {item.type === "item" && item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
+      {item.type === "item" && item.kind !== "app" && <WidgetHoverOverlay item={item} />}
       {item.type === "item" ? <BoardItemContent item={item} /> : <BoardDynamicSection section={item} />}
     </GridStackItem>
   );
