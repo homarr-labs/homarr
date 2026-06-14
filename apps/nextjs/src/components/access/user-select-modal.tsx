@@ -5,6 +5,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import type { SupportedAuthProvider } from "@homarr/definitions";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
@@ -12,7 +13,7 @@ import { UserAvatar } from "@homarr/ui";
 
 interface InnerProps {
   presentUserIds: string[];
-  excludeExternalProviders?: boolean;
+  allowedProviders?: SupportedAuthProvider[];
   onSelect: (props: { id: string; name: string; image: string; email: string | null }) => void | Promise<void>;
   confirmLabel?: string;
 }
@@ -24,7 +25,7 @@ interface UserSelectFormType {
 export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const { data: users, isPending } = clientApi.user.selectable.useQuery({
-    excludeExternalProviders: innerProps.excludeExternalProviders,
+    providers: innerProps.allowedProviders,
   });
   const [loading, setLoading] = useState(false);
   const form = useForm<UserSelectFormType>();

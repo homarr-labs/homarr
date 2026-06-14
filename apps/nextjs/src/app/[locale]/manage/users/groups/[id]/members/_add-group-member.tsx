@@ -4,6 +4,7 @@ import { useCallback } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import type { SupportedAuthProvider } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -13,10 +14,10 @@ import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 interface AddGroupMemberProps {
   groupId: string;
   presentUserIds: string[];
-  includeExternalProviders?: boolean;
+  allowedProviders: SupportedAuthProvider[];
 }
 
-export const AddGroupMember = ({ groupId, presentUserIds, includeExternalProviders }: AddGroupMemberProps) => {
+export const AddGroupMember = ({ groupId, presentUserIds, allowedProviders }: AddGroupMemberProps) => {
   const tMembersAdd = useScopedI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
   const { openModal } = useModalAction(UserSelectModal);
@@ -33,13 +34,13 @@ export const AddGroupMember = ({ groupId, presentUserIds, includeExternalProvide
           await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
         },
         presentUserIds,
-        excludeExternalProviders: !includeExternalProviders,
+        allowedProviders,
       },
       {
         title: tMembersAdd("label"),
       },
     );
-  }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd, includeExternalProviders]);
+  }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd, allowedProviders]);
 
   return <MobileAffixButton onClick={handleAddMember}>{tMembersAdd("label")}</MobileAffixButton>;
 };

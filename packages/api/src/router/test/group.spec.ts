@@ -750,6 +750,44 @@ describe("addMember should add member to group", () => {
     // Assert
     await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
   });
+
+  test("with a user from an externally managed provider it should throw FORBIDDEN error", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials", "ldap"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    const userId = createId();
+    await db.insert(users).values([
+      {
+        id: userId,
+        name: "User",
+        provider: "ldap",
+      },
+      {
+        id: defaultOwnerId,
+        name: "Creator",
+      },
+    ]);
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      ownerId: defaultOwnerId,
+      position: 1,
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.addMember({
+        groupId,
+        userId,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("User's provider is not managed locally");
+  });
 });
 
 describe("removeMember should remove member from group", () => {

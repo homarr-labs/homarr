@@ -16,11 +16,11 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import {
-  canManageGroupMembersLocally,
-  isProviderEnabled,
+  getGroupMemberManagementType,
+  getLocallyManageableProviders,
+  isGroupMembershipManagedLocally,
 } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
@@ -62,20 +62,10 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       )
     : group.members;
 
-  const oidcGroupsManagedLocally =
-    isProviderEnabled("oidc") && env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT;
-  const canManageMembers = canManageGroupMembersLocally();
-  const hasUnmanageableProviders = env.AUTH_PROVIDERS.some(
-    (provider) =>
-      provider !== "credentials" &&
-      !(provider === "oidc" && oidcGroupsManagedLocally),
-  );
-
-  const providerTypes = !canManageMembers
-    ? "external"
-    : hasUnmanageableProviders
-      ? "mixed"
-      : "credentials";
+  // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
+  const managementType = getGroupMemberManagementType();
+  const canManageMembers = managementType !== "external";
+  const allowedProviders = getLocallyManageableProviders();
 
   return (
     <Stack>
@@ -84,13 +74,13 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       {isReserved ? (
         <ReservedGroupAlert />
       ) : (
-        providerTypes !== "credentials" && (
+        managementType !== "local" && (
           <Alert
             variant="light"
             color="yellow"
             icon={<IconExclamationCircle size="1rem" stroke={1.5} />}
           >
-            {t(`group.memberNotice.${providerTypes}`)}
+            {t(`group.memberNotice.${managementType}`)}
           </Alert>
         )
       )}
@@ -104,7 +94,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
           <AddGroupMember
             groupId={group.id}
             presentUserIds={group.members.map((member) => member.id)}
-            includeExternalProviders={Boolean(oidcGroupsManagedLocally)}
+            allowedProviders={allowedProviders}
           />
         )}
       </Group>
@@ -123,7 +113,6 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
               member={member}
               groupId={group.id}
               disabled={isReserved}
-              oidcGroupsManagedLocally={Boolean(oidcGroupsManagedLocally)}
             />
           ))}
         </TableTbody>
@@ -136,18 +125,10 @@ interface RowProps {
   member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
   disabled?: boolean;
-  oidcGroupsManagedLocally: boolean;
 }
 
-const Row = ({
-  member,
-  groupId,
-  disabled,
-  oidcGroupsManagedLocally,
-}: RowProps) => {
-  const canBeRemoved =
-    member.provider === "credentials" ||
-    (member.provider === "oidc" && oidcGroupsManagedLocally);
+const Row = ({ member, groupId, disabled }: RowProps) => {
+  const canBeRemoved = isGroupMembershipManagedLocally(member.provider);
 
   return (
     <TableTr>

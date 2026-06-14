@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { canManageGroupMembersLocally } from "@homarr/auth/server";
+import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
@@ -325,6 +325,13 @@ export const groupRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
+        });
+      }
+
+      if (!isGroupMembershipManagedLocally(user.provider)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User's provider is not managed locally",
         });
       }
 
