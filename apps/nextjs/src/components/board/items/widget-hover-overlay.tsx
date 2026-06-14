@@ -46,7 +46,12 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
           <Avatar.Group spacing="xs" className={classes.integrations}>
             {connectedIntegrations.map((integration) => (
               <Tooltip key={integration.id} label={integration.name} withArrow position="top">
-                <Avatar src={getIconUrl(integration.kind)} size={18} radius="sm" className={classes.integrationAvatar} />
+                <Avatar
+                  src={getIconUrl(integration.kind)}
+                  size={18}
+                  radius="sm"
+                  className={classes.integrationAvatar}
+                />
               </Tooltip>
             ))}
           </Avatar.Group>
