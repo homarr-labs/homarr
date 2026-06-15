@@ -200,6 +200,17 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
 
   const totalContainers = containers.length;
 
+  const totals = useMemo(() => {
+    return containers.reduce(
+      (acc, container) => {
+        acc.cpu += safeValue(container.cpuUsage);
+        acc.memory += safeValue(container.memoryUsage);
+        return acc;
+      },
+      { cpu: 0, memory: 0 }
+    );
+  }, [containers]);
+
   const columns = useMemo(() => createColumns(t), [t]);
 
   const table = useTranslatedMantineReactTable({
@@ -261,12 +272,26 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
           }}
           p={4}
         >
-          <Group gap={4}>
-            <IconBrandDocker size={20} />
-            <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+          <Group gap={4} wrap="nowrap">
+            <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
+            <Text size="sm" truncate="end">
+              {t("table.footer", { count: totalContainers.toString() })}
+            </Text>
           </Group>
 
-          <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
+          <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
+            <Text size="sm" c={cpuUsageColor(totals.cpu, "running")} style={{ whiteSpace: "nowrap" }}>
+              {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
+            </Text>
+            
+            <Text size="sm" c={memoryUsageColor(totals.memory, "running")} style={{ whiteSpace: "nowrap" }}>
+              {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
+            </Text>
+
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+              {t("table.updated", { when: relativeTime })}
+            </Text>
+          </Group>
         </Group>
       )}
     </Stack>
