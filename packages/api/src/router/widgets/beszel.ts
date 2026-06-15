@@ -175,7 +175,11 @@ export const beszelRouter = createTRPCRouter({
             await instance.subscribeRealtimeMetrics(input.systemId, (data) => emit.next(data), abortController.signal);
           } catch (error) {
             if (!abortController.signal.aborted) {
-              emit.error(error instanceof Error ? error : new Error(String(error)));
+              if (error instanceof Error) {
+                emit.error(error);
+              } else {
+                emit.error(new Error(String(error)));
+              }
             }
           }
         })();
