@@ -150,11 +150,7 @@ export default function BeszelSystemStatsWidget({
           <Text size="sm" c="dimmed" ta="center">
             {t("error.liveConnectionFailed")}
           </Text>
-          <Button
-            size="xs"
-            variant="light"
-            onClick={() => setOptions({ newOptions: { timePeriod: "1h" } })}
-          >
+          <Button size="xs" variant="light" onClick={() => setOptions({ newOptions: { timePeriod: "1h" } })}>
             {t("error.switchToHistorical")}
           </Button>
         </Stack>
