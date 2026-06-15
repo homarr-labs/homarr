@@ -35,6 +35,7 @@ export const widgetRouter = createTRPCRouter({
   uptimeKuma: lazy(() => import("./uptime-kuma").then((mod) => mod.uptimeKumaRouter)),
   audioStats: lazy(() => import("./audio-stats").then((mod) => mod.audioStatsRouter)),
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
+  gluetun: lazy(() => import("./gluetun").then((mod) => mod.gluetunRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
 });

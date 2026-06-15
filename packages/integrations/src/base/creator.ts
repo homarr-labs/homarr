@@ -20,6 +20,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
 import { ImmichIntegration } from "../immich/immich-integration";
@@ -134,6 +135,7 @@ export const integrationCreators = {
   audiobookshelf: AudiobookshelfIntegration,
   navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
+  gluetun: GluetunIntegration,
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,

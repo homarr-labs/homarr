@@ -482,6 +482,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
+  gluetun: {
+    name: "Gluetun",
+    secretKinds: [["username", "password"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
+    category: ["gluetun"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -589,6 +596,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "gluetun",
   "ups",
   "documents",
   "mediaLibrary",

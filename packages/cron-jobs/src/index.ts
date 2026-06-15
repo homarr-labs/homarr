@@ -9,6 +9,7 @@ import {
   firewallMemoryJob,
   firewallVersionJob,
 } from "./jobs/integrations/firewall";
+import { gluetunJob } from "./jobs/integrations/gluetun";
 import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
@@ -57,6 +58,7 @@ const getJobGroup = () => {
     timetable: timetableJob,
     tracearr: tracearrJob,
     umamiActiveVisitors: umamiActiveVisitorsJob,
+    gluetun: gluetunJob,
   });
 };
 

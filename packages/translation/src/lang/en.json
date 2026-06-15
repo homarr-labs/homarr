@@ -2389,6 +2389,11 @@
         "title": "Instances"
       }
     },
+    "gluetun": {
+      "name": "Gluetun",
+      "description": "Overview of your Gluetun vpn setup",
+      "serviceUnavailable": "VPN unavailable"
+    },
     "ups": {
       "name": "UPS",
       "description": "Monitor the status of your UPS devices through a NUT server",
@@ -4556,6 +4561,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
+            },
+            "gluetun": {
+              "label": "Gluetun VPN Status"
             }
           },
           "interval": {
