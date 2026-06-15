@@ -145,9 +145,24 @@ export default function BeszelSystemStatsWidget({
   const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, isLive);
 
   const containerNames = useContainerNames(statsWhenShown(showDocker, containerStatsRaw));
-  const dockerCpuData = useDockerChartData(statsWhenShown(options.showDockerCpu, containerStatsRaw), containerNames, "cpu", isLive);
-  const dockerMemData = useDockerChartData(statsWhenShown(options.showDockerMemory, containerStatsRaw), containerNames, "memory", isLive);
-  const dockerNetData = useDockerChartData(statsWhenShown(options.showDockerNetwork, containerStatsRaw), containerNames, "network", isLive);
+  const dockerCpuData = useDockerChartData(
+    statsWhenShown(options.showDockerCpu, containerStatsRaw),
+    containerNames,
+    "cpu",
+    isLive,
+  );
+  const dockerMemData = useDockerChartData(
+    statsWhenShown(options.showDockerMemory, containerStatsRaw),
+    containerNames,
+    "memory",
+    isLive,
+  );
+  const dockerNetData = useDockerChartData(
+    statsWhenShown(options.showDockerNetwork, containerStatsRaw),
+    containerNames,
+    "network",
+    isLive,
+  );
 
   const containerSeries = useMemo(
     () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
