@@ -1,0 +1,46 @@
+packages/request-handler/src/lib/cached-integration-request-handler.ts
+  s_30eb43d75f3695::t_058e153d2cefec 20,37-39
+packages/request-handler/src/beszel.ts
+  s_30eb43d75f3695::t_0045ca4062eb27 135,139
+  s_30eb43d75f3695::t_184124dca16919 101-107,137-138,140
+  s_30eb43d75f3695::t_d3e564920b8daf 27-30,56-77,92-94,123-127,129-131
+  s_30eb43d75f3695::t_ae57e3c64a2d2f 121
+packages/integrations/src/mock/mock-integration.ts
+  s_30eb43d75f3695::t_b0ab79be670c33 143
+packages/integrations/src/beszel/beszel-integration.ts
+  s_30eb43d75f3695::t_0a8160c6b0d6ac 2,16,22,29
+  s_b0ac32075bb65c::t_464a5a22ace66d 285-287
+  s_b0ac32075bb65c::t_985429a21645e5 337,345-347
+  s_30eb43d75f3695::t_d9cadbb079b0ba 253-284,288-336,338-344,348-349
+packages/integrations/src/mock/data/beszel.ts
+  s_30eb43d75f3695::t_17e4fcad13c5fe 333-361
+packages/api/src/router/widgets/beszel.ts
+  s_30eb43d75f3695::t_0ecb9e3b54f27c 4-5
+  s_b0ac32075bb65c::t_8d58f01ffbc75e 188-199
+  s_30eb43d75f3695::t_b8e607115516ab 168-187,200-206
+  s_30eb43d75f3695::t_d3e564920b8daf 11-14,25-32,48-52,54-57,83-93,123-127,134-138,152,164-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "c9769bf53083147a38c69603fd19933f69d8d06c",
+  "prompts": {},
+  "sessions": {
+    "s_30eb43d75f3695": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ef5cb8a1-a055-43cd-a77f-063538fd3a72",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b0ac32075bb65c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9ae9748d-024f-4cab-b681-b306b8f498ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
