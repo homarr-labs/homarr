@@ -50,24 +50,21 @@ export default function BeszelAlertsWidget({
   clientApi.widget.beszel.subscribeAlerts.useSubscription(alertsInput, {
     enabled: !isEditMode,
     onData(data) {
-      utils.widget.beszel.getAlerts.setData(alertsInput,
-          (prev) => {
-            if (!prev) return prev;
-            return prev.map((r) =>
-              r.integrationId === data.integrationId
-                ? {
-                    ...r,
-                    alerts: data.alerts.alerts,
-                    history: data.alerts.history,
-                    updatedAt: data.timestamp,
-                  }
-                : r,
-            );
-          },
+      utils.widget.beszel.getAlerts.setData(alertsInput, (prev) => {
+        if (!prev) return prev;
+        return prev.map((r) =>
+          r.integrationId === data.integrationId
+            ? {
+                ...r,
+                alerts: data.alerts.alerts,
+                history: data.alerts.history,
+                updatedAt: data.timestamp,
+              }
+            : r,
         );
-      },
+      });
     },
-  );
+  });
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};
