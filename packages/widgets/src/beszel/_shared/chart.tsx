@@ -6,9 +6,14 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
-import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
+import type {
+  BeszelContainerStatsRecord,
+  BeszelSystemStatsRecord,
+} from "@homarr/integrations/types";
 
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
+const formatTimeLive = (timestamp: string) =>
+  dayjs(timestamp).format("HH:mm:ss");
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
 
@@ -34,22 +39,41 @@ export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
   </Stack>
 );
 
-type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
+type BeszelAreaChartProps = Omit<
+  AreaChartProps,
+  "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"
+> & {
   yAxisFormatter: (value: number) => string;
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, style, ...props }: BeszelAreaChartProps) => (
+export const BeszelAreaChart = ({
+  yAxisFormatter,
+  yAxisDomain,
+  yAxisProps,
+  style,
+  type = "default",
+  ...props
+}: BeszelAreaChartProps) => (
   <AreaChart
     dataKey="time"
     curveType="monotone"
-    withDots={false}
+    withGradient={false}
+    connectNulls
+    withDots={true}
+    type={type}
+    strokeWidth={1}
+    fillOpacity={0.2}
+    activeDotProps={{ r: 1, strokeWidth: 3 }}
+    dotProps={{ r: 0, strokeWidth: 0 }}
     withXAxis
     withYAxis
     w="100%"
     style={{ minWidth: 0, minHeight: 0, ...style }}
     yAxisProps={{
       ...yAxisBase,
+      width: 32,
+      tickMargin: 2,
       ...(yAxisDomain ? { domain: yAxisDomain } : {}),
       tickFormatter: yAxisFormatter,
       ...yAxisProps,
@@ -61,16 +85,21 @@ export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, style
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
+  live = false,
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
+    const fmt = live ? formatTimeLive : formatTime;
     return [...systemStats].toReversed().map((r) => ({
-      time: formatTime(r.created),
+      time: fmt(r.created),
       ...mapFn(r.stats),
     }));
-  }, [systemStats, mapFn]);
+  }, [systemStats, mapFn, live]);
 
-export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) =>
+export const useContainerNames = (
+  containerStats: BeszelContainerStatsRecord[] | undefined,
+  max = 15,
+) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const names = new Set<string>();
@@ -82,7 +111,9 @@ export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] |
     return [...names].slice(0, max);
   }, [containerStats, max]);
 
-type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
+type ContainerExtractor = (
+  container: BeszelContainerStatsRecord["stats"][number] | undefined,
+) => number;
 
 // c = CPU (%), m = memory (MB), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
 const MB = 1024 * 1024;
@@ -97,16 +128,18 @@ export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
+  live = false,
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
+    const fmt = live ? formatTimeLive : formatTime;
     return [...containerStats].toReversed().map((record) => {
-      const point: Record<string, unknown> = { time: formatTime(record.created) };
+      const point: Record<string, unknown> = { time: fmt(record.created) };
       for (const name of containerNames) {
         point[name] = extract(record.stats.find((c) => c.n === name));
       }
       return point;
     });
-  }, [containerStats, containerNames, metric]);
+  }, [containerStats, containerNames, metric, live]);

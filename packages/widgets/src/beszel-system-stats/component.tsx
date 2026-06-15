@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { ScrollArea, Select, SimpleGrid, Stack } from "@mantine/core";
+import { useCallback, useMemo } from "react";
+import { ActionIcon, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconServer, IconServerQuestion } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
 import { containerColors } from "../beszel/_shared/colors";
@@ -37,6 +40,7 @@ export default function BeszelSystemStatsWidget({
   integrationIds,
   isEditMode,
   width,
+  setOptions,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
   const { data: systemsResult = [] } = clientApi.widget.beszel.getSystems.useQuery(
@@ -49,23 +53,26 @@ export default function BeszelSystemStatsWidget({
     [systemsResult],
   );
 
-  const [selectedSystem, setSelectedSystem] = useState<string | null>(systems[0]?.value ?? null);
+  const selectedSystem = options.systemId || systems[0]?.value || "";
+  const selectedLabel = systems.find((s) => s.value === selectedSystem)?.label;
+  const systemExists = systems.length === 0 || systems.some((s) => s.value === selectedSystem);
+
+  const handleSelectSystem = useCallback(
+    (value: string) => setOptions({ newOptions: { systemId: value } }),
+    [setOptions],
+  );
 
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
 
   const { data: statsResult } = clientApi.widget.beszel.getSystemStats.useQuery(
     {
       integrationIds,
-      systemId: selectedSystem ?? systems[0]?.value ?? "",
+      systemId: selectedSystem,
       timePeriod: options.timePeriod as "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000 },
+    { staleTime: 30 * 1000, enabled: systemExists && selectedSystem !== "" },
   );
-
-  // BeszelSystemStats fields: storage values (m, mu, mb, d, du, s, su) are already in GB.
-  // Disk I/O (dr, dw) is in MB/s — scale to bytes/s for display formatters.
-  // Network (ns, nr, b) is in bytes/s. Container memory (m) is in MB.
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
   const memoryMap = useCallback(
@@ -83,7 +90,6 @@ export default function BeszelSystemStatsWidget({
     }),
     [t],
   );
-  // b = public interface bandwidth (preferred), ns/nr = all-interface traffic (fallback)
   const networkMap = useCallback(
     (s: { ns: number; nr: number; b?: [number, number] }) => ({
       [t("chart.network.sent")]: s.b?.[0] ?? s.ns,
@@ -110,16 +116,68 @@ export default function BeszelSystemStatsWidget({
 
   const cols = width > 600 ? 2 : 1;
 
+  if (!systemExists && systems.length > 0) {
+    return (
+      <Center h="100%">
+        <Stack align="center" gap="sm" p="md">
+          <IconServerQuestion size={40} />
+          <Text size="sm" c="dimmed" ta="center">
+            {t("error.systemNotFound")}
+          </Text>
+          <Select
+            size="xs"
+            data={systems}
+            placeholder={t("selectSystem")}
+            onChange={(value) => value && handleSelectSystem(value)}
+          />
+        </Stack>
+      </Center>
+    );
+  }
+
   return (
-    <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
+    <ScrollArea
+      h="100%"
+      className={classes.beszelStatsWrapper}
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+    >
       <Stack gap="md" p="sm">
-        <Select
-          size="xs"
-          data={systems}
-          value={selectedSystem}
-          onChange={setSelectedSystem}
-          placeholder={t("selectSystem")}
-        />
+        {!isEditMode && systems.length > 1 && (
+          <Menu
+            trigger="click-hover"
+            openDelay={100}
+            closeDelay={300}
+            position="bottom-start"
+            withArrow
+            shadow="md"
+            withinPortal
+          >
+            <Menu.Target>
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                className={classes.beszelStatsSystemToggle}
+                style={{ position: "absolute", top: 6, left: 6, zIndex: 1 }}
+                title={selectedLabel}
+              >
+                <IconServer size={14} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {systems.map((s) => (
+                <Menu.Item
+                  key={s.value}
+                  fz="xs"
+                  fw={s.value === selectedSystem ? 600 : 400}
+                  c={s.value === selectedSystem ? undefined : "dimmed"}
+                  onClick={() => handleSelectSystem(s.value)}
+                >
+                  {s.label}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        )}
 
         {statsResult && (
           <SimpleGrid cols={cols} spacing="md">
@@ -129,7 +187,6 @@ export default function BeszelSystemStatsWidget({
                   h={CHART_HEIGHT}
                   data={cpuData}
                   series={[{ name: t("chart.cpu.series"), color: "teal.6" }]}
-                  fillOpacity={0.4}
                   yAxisFormatter={chartAxisFormatters.percent}
                   yAxisDomain={[0, "auto"]}
                   tooltipProps={tooltipPercent}
@@ -142,14 +199,13 @@ export default function BeszelSystemStatsWidget({
                 <BeszelAreaChart
                   h={CHART_HEIGHT}
                   data={memoryData}
+                  type="stacked"
                   series={[
                     { name: t("chart.memory.series"), color: "teal.5" },
                     { name: t("chart.memory.cache"), color: "teal.8" },
                   ]}
-                  fillOpacity={0.4}
                   yAxisFormatter={chartAxisFormatters.gb}
                   tooltipProps={tooltipGB}
-                  withLegend
                 />
               </ChartPanel>
             )}
@@ -160,7 +216,6 @@ export default function BeszelSystemStatsWidget({
                   h={CHART_HEIGHT}
                   data={diskData}
                   series={[{ name: t("chart.disk.series"), color: "grape.6" }]}
-                  fillOpacity={0.4}
                   yAxisFormatter={chartAxisFormatters.gb}
                   tooltipProps={tooltipGB}
                 />
@@ -176,10 +231,8 @@ export default function BeszelSystemStatsWidget({
                     { name: t("chart.diskIO.write"), color: "orange.6" },
                     { name: t("chart.diskIO.read"), color: "blue.6" },
                   ]}
-                  fillOpacity={0.3}
                   yAxisFormatter={chartAxisFormatters.rate}
                   tooltipProps={tooltipRate}
-                  withLegend
                 />
               </ChartPanel>
             )}
@@ -193,10 +246,8 @@ export default function BeszelSystemStatsWidget({
                     { name: t("chart.network.sent"), color: "blue.6" },
                     { name: t("chart.network.recv"), color: "teal.6" },
                   ]}
-                  fillOpacity={0.3}
                   yAxisFormatter={chartAxisFormatters.rate}
                   tooltipProps={tooltipRate}
-                  withLegend
                 />
               </ChartPanel>
             )}
@@ -210,7 +261,6 @@ export default function BeszelSystemStatsWidget({
                       data={dockerCpuData}
                       type="stacked"
                       series={containerSeries}
-                      fillOpacity={0.6}
                       yAxisFormatter={chartAxisFormatters.percent}
                       tooltipProps={tooltipPercentTotal}
                     />
@@ -224,7 +274,6 @@ export default function BeszelSystemStatsWidget({
                       data={dockerMemData}
                       type="stacked"
                       series={containerSeries}
-                      fillOpacity={0.6}
                       yAxisFormatter={chartAxisFormatters.bytes}
                       tooltipProps={tooltipBytesTotal}
                     />
@@ -236,9 +285,7 @@ export default function BeszelSystemStatsWidget({
                     <BeszelAreaChart
                       h={CHART_HEIGHT}
                       data={dockerNetData}
-                      type="stacked"
                       series={containerSeries}
-                      fillOpacity={0.6}
                       yAxisFormatter={chartAxisFormatters.rate}
                       tooltipProps={tooltipRate}
                     />
