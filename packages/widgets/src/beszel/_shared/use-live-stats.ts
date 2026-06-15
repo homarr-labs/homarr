@@ -12,12 +12,7 @@ interface LiveStatsData {
   containerStats: BeszelContainerStatsRecord[];
 }
 
-export const useLiveStats = (
-  integrationIds: string[],
-  systemId: string,
-  includeDocker: boolean,
-  enabled: boolean,
-) => {
+export const useLiveStats = (integrationIds: string[], systemId: string, includeDocker: boolean, enabled: boolean) => {
   const bufferRef = useRef<LiveStatsData>({ systemStats: [], containerStats: [] });
   const [data, setData] = useState<LiveStatsData | null>(null);
 
