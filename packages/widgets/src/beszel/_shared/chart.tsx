@@ -11,6 +11,13 @@ import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homar
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
 const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
 
+function prepareRecords<T>(records: T[], live: boolean) {
+  return {
+    fmt: live ? formatTimeLive : formatTime,
+    ordered: live ? records : [...records].toReversed(),
+  };
+}
+
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
 
 interface ChartPanelProps {
@@ -82,8 +89,7 @@ export const useSystemChartData = (
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    const fmt = live ? formatTimeLive : formatTime;
-    const ordered = live ? systemStats : [...systemStats].toReversed();
+    const { fmt, ordered } = prepareRecords(systemStats, live);
     return ordered.map((r) => ({
       time: fmt(r.created),
       ...mapFn(r.stats),
@@ -123,8 +129,7 @@ export const useDockerChartData = (
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
-    const fmt = live ? formatTimeLive : formatTime;
-    const ordered = live ? containerStats : [...containerStats].toReversed();
+    const { fmt, ordered } = prepareRecords(containerStats, live);
     return ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created) };
       for (const name of containerNames) {

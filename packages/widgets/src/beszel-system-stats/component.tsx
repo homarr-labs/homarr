@@ -44,7 +44,7 @@ export default function BeszelSystemStatsWidget({
   setOptions,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
-  const { data: systemsResult = [] } = clientApi.widget.beszel.getSystems.useQuery(
+  const { data: systemsResult = [], isPending: systemsPending } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 30 * 1000 },
   );
@@ -56,7 +56,8 @@ export default function BeszelSystemStatsWidget({
 
   const selectedSystem = options.systemId || systems[0]?.value || "";
   const selectedLabel = systems.find((s) => s.value === selectedSystem)?.label;
-  const systemExists = systems.length === 0 || systems.some((s) => s.value === selectedSystem);
+  const systemExists = systems.some((s) => s.value === selectedSystem);
+  const systemReady = !systemsPending && (selectedSystem === "" || systemExists);
 
   const handleSelectSystem = useCallback(
     (value: string) => setOptions({ newOptions: { systemId: value } }),
@@ -70,13 +71,13 @@ export default function BeszelSystemStatsWidget({
     {
       integrationIds,
       systemId: selectedSystem,
-      timePeriod: options.timePeriod as "1h" | "12h" | "24h" | "1w" | "30d",
+      timePeriod: options.timePeriod,
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000, enabled: !isLive && systemExists && selectedSystem !== "" },
+    { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "" },
   );
 
-  const liveData = useLiveStats(integrationIds, selectedSystem, showDocker, isLive && systemExists);
+  const liveData = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
   const activeStats = isLive ? liveData : statsResult;
 
@@ -122,7 +123,7 @@ export default function BeszelSystemStatsWidget({
 
   const cols = width > 600 ? 2 : 1;
 
-  if (!systemExists && systems.length > 0) {
+  if (!systemsPending && !systemExists && systems.length > 0) {
     return (
       <Center h="100%">
         <Stack align="center" gap="sm" p="md">

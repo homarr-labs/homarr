@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
@@ -12,29 +12,29 @@ interface LiveStatsData {
   containerStats: BeszelContainerStatsRecord[];
 }
 
-export const useLiveStats = (integrationIds: string[], systemId: string, includeDocker: boolean, enabled: boolean) => {
-  const bufferRef = useRef<LiveStatsData>({ systemStats: [], containerStats: [] });
+export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
   const [data, setData] = useState<LiveStatsData | null>(null);
 
+  const integrationKey = integrationIds.join(",");
   useEffect(() => {
-    bufferRef.current = { systemStats: [], containerStats: [] };
     setData(null);
-  }, [systemId, enabled, ...integrationIds]);
+  }, [systemId, enabled, integrationKey]);
 
   const onData = useCallback(
     (incoming: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => {
-      const buf = bufferRef.current;
-      buf.systemStats = [...buf.systemStats, incoming.stats].slice(-MAX_BUFFER);
-      if (incoming.containerStats) {
-        buf.containerStats = [...buf.containerStats, incoming.containerStats].slice(-MAX_BUFFER);
-      }
-      setData({ ...buf });
+      setData((prev) => {
+        const systemStats = [...(prev?.systemStats ?? []), incoming.stats].slice(-MAX_BUFFER);
+        const containerStats = incoming.containerStats
+          ? [...(prev?.containerStats ?? []), incoming.containerStats].slice(-MAX_BUFFER)
+          : prev?.containerStats ?? [];
+        return { systemStats, containerStats };
+      });
     },
     [],
   );
 
   clientApi.widget.beszel.subscribeSystemStats.useSubscription(
-    { integrationIds, systemId, includeDocker },
+    { integrationIds, systemId },
     { enabled: enabled && systemId !== "", onData },
   );
 
