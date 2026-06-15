@@ -725,7 +725,7 @@ importers:
         specifier: ^1.1.9
         version: 1.1.9
       postcss:
-        specifier: ^8.5.10
+        specifier: ^8.5.15
         version: 8.5.15
       posthog-docusaurus:
         specifier: ^2.0.5
