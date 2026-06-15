@@ -36,31 +36,21 @@ export default function BeszelAlertsWidget({
   isEditMode,
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useScopedI18n("widget.beszelAlerts");
-  const { data: results = [] } = clientApi.widget.beszel.getAlerts.useQuery(
-    {
-      integrationIds,
-      includeHistory: options.showHistory,
-      maxHistoryItems: options.maxHistoryItems,
-    },
-    { staleTime: 15_000, refetchInterval: 15_000, retry: false },
+  const alertsInput = useMemo(
+    () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
+    [integrationIds, options.showHistory, options.maxHistoryItems],
   );
+  const { data: results = [] } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
+    staleTime: 15_000,
+    refetchInterval: 15_000,
+    retry: false,
+  });
   const utils = clientApi.useUtils();
 
-  clientApi.widget.beszel.subscribeAlerts.useSubscription(
-    {
-      integrationIds,
-      includeHistory: options.showHistory,
-      maxHistoryItems: options.maxHistoryItems,
-    },
-    {
-      enabled: !isEditMode,
-      onData(data) {
-        utils.widget.beszel.getAlerts.setData(
-          {
-            integrationIds,
-            includeHistory: options.showHistory,
-            maxHistoryItems: options.maxHistoryItems,
-          },
+  clientApi.widget.beszel.subscribeAlerts.useSubscription(alertsInput, {
+    enabled: !isEditMode,
+    onData(data) {
+      utils.widget.beszel.getAlerts.setData(alertsInput,
           (prev) => {
             if (!prev) return prev;
             return prev.map((r) =>
