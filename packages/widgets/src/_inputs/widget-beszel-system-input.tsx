@@ -16,7 +16,11 @@ export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputPro
 
   const integrationIds = form.values.integrationIds;
 
-  const { data: systemsResult = [], isPending, isError } = clientApi.widget.beszel.getSystems.useQuery(
+  const {
+    data: systemsResult = [],
+    isPending,
+    isError,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { enabled: integrationIds.length > 0, staleTime: 30_000 },
   );
