@@ -1,0 +1,19 @@
+packages/api/src/router/widgets/beszel.ts
+  s_b0ac32075bb65c::t_0e830fc14fc85b 178-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "67142c2ab067496fbdb50324f9280f3c90ab7bf5",
+  "prompts": {},
+  "sessions": {
+    "s_b0ac32075bb65c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9ae9748d-024f-4cab-b681-b306b8f498ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
