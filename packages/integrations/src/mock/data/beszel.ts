@@ -353,10 +353,14 @@ export class BeszelMockService {
     if (signal.aborted) return;
     await new Promise<void>((resolve) => {
       const interval = setInterval(emit, 1000);
-      signal.addEventListener("abort", () => {
-        clearInterval(interval);
-        resolve();
-      }, { once: true });
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearInterval(interval);
+          resolve();
+        },
+        { once: true },
+      );
     });
   }
 
