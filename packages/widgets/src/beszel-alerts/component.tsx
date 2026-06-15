@@ -42,22 +42,35 @@ export default function BeszelAlertsWidget({
       includeHistory: options.showHistory,
       maxHistoryItems: options.maxHistoryItems,
     },
-    { staleTime: 30 * 1000 },
+    { staleTime: 15_000, refetchInterval: 15_000, retry: false },
   );
   const utils = clientApi.useUtils();
 
   clientApi.widget.beszel.subscribeAlerts.useSubscription(
-    { integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems },
+    {
+      integrationIds,
+      includeHistory: options.showHistory,
+      maxHistoryItems: options.maxHistoryItems,
+    },
     {
       enabled: !isEditMode,
       onData(data) {
         utils.widget.beszel.getAlerts.setData(
-          { integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems },
+          {
+            integrationIds,
+            includeHistory: options.showHistory,
+            maxHistoryItems: options.maxHistoryItems,
+          },
           (prev) => {
             if (!prev) return prev;
             return prev.map((r) =>
               r.integrationId === data.integrationId
-                ? { ...r, alerts: data.alerts.alerts, history: data.alerts.history, updatedAt: data.timestamp }
+                ? {
+                    ...r,
+                    alerts: data.alerts.alerts,
+                    history: data.alerts.history,
+                    updatedAt: data.timestamp,
+                  }
                 : r,
             );
           },

@@ -1,4 +1,4 @@
-import { IconTable } from "@tabler/icons-react";
+import { IconServerOff, IconTable } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { statusOptions } from "../beszel/_shared/options";
@@ -29,9 +29,15 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      statusFilter: factory.select({ defaultValue: "all", options: statusOptions }),
+      statusFilter: factory.select({
+        defaultValue: "all",
+        options: statusOptions,
+      }),
       sortBy: factory.select({ defaultValue: "name", options: sortOptions }),
-      sortDirection: factory.select({ defaultValue: "asc", options: sortDirectionOptions }),
+      sortDirection: factory.select({
+        defaultValue: "asc",
+        options: sortDirectionOptions,
+      }),
       showCpu: factory.switch({ defaultValue: true }),
       showMemory: factory.switch({ defaultValue: true }),
       showDisk: factory.switch({ defaultValue: true }),
@@ -44,5 +50,11 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showUptime: factory.switch({ defaultValue: true }),
       showAgent: factory.switch({ defaultValue: true }),
     }));
+  },
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconServerOff,
+      message: (t) => t("widget.beszelSystemTable.error.internalServerError"),
+    },
   },
 }).withDynamicImport(() => import("./component"));

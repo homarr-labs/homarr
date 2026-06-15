@@ -316,7 +316,11 @@ const SystemCard = ({ system, options, t, size, maxMetrics }: SystemCardProps) =
       radius="sm"
       withBorder
       h="100%"
-      style={{ overflow: "hidden", display: "flex", flexDirection: "column" as const }}
+      style={{
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column" as const,
+      }}
     >
       <Group gap="xs" mb={2}>
         <Badge
@@ -346,7 +350,7 @@ export default function BeszelSystemGridWidget({
   const t = useScopedI18n("widget.beszelSystemGrid");
   const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 30 * 1000 },
+    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
