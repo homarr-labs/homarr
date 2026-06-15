@@ -6,14 +6,10 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
-import type {
-  BeszelContainerStatsRecord,
-  BeszelSystemStatsRecord,
-} from "@homarr/integrations/types";
+import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
-const formatTimeLive = (timestamp: string) =>
-  dayjs(timestamp).format("HH:mm:ss");
+const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
 
@@ -39,10 +35,7 @@ export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
   </Stack>
 );
 
-type BeszelAreaChartProps = Omit<
-  AreaChartProps,
-  "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"
-> & {
+type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
   yAxisDomain?: [number, string];
 };
@@ -96,10 +89,7 @@ export const useSystemChartData = (
     }));
   }, [systemStats, mapFn, live]);
 
-export const useContainerNames = (
-  containerStats: BeszelContainerStatsRecord[] | undefined,
-  max = 15,
-) =>
+export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const names = new Set<string>();
@@ -111,9 +101,7 @@ export const useContainerNames = (
     return [...names].slice(0, max);
   }, [containerStats, max]);
 
-type ContainerExtractor = (
-  container: BeszelContainerStatsRecord["stats"][number] | undefined,
-) => number;
+type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 
 // c = CPU (%), m = memory (MB), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
 const MB = 1024 * 1024;

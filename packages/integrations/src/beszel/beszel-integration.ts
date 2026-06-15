@@ -298,7 +298,9 @@ export class BeszelIntegration extends Integration {
             updated: new Date().toISOString(),
           };
           const containerStats: BeszelContainerStatsRecord | null =
-            parsed.container && Array.isArray(parsed.container) && (parsed.container as BeszelContainerStats[]).length > 0
+            parsed.container &&
+            Array.isArray(parsed.container) &&
+            (parsed.container as BeszelContainerStats[]).length > 0
               ? {
                   id: "",
                   system: systemId,
