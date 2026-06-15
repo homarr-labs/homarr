@@ -7,7 +7,10 @@
         "description": "시작하기 전에, Homarr 인스턴스를 어떻게 설정할지 선택해주세요.",
         "action": {
           "scratch": "처음부터 시작하기",
-          "importOldmarr": "1.0 이전의 Homarr에서 불러오기"
+          "importOldmarr": "1.0 이전의 Homarr에서 불러오기",
+          "restoreSqlite": "SQLite 백업 복원",
+          "restoreSqliteDescription": "이전 Homarr 인스턴스로부터 전체 SQLite 데이터베이스 백업을 업로드합니다. 모든 보드, 사용자, 앱, 통합 및 설정이 복원됩니다.",
+          "backToOptions": "← 설정 옵션으로 돌아가기"
         }
       },
       "import": {
@@ -15,7 +18,7 @@
         "subtitle": "기존 Homarr 인스턴스에서 데이터를 불러올 수 있습니다.",
         "dropzone": {
           "title": "zip 파일 드롭 또는 클릭해서 찾아보기",
-          "description": ""
+          "description": "업로드된 zip이 처리되어 가져올 항목을 선택할 수 있습니다"
         },
         "fileInfo": {
           "action": {
@@ -24,11 +27,11 @@
         },
         "importSettings": {
           "title": "설정 불러오기",
-          "description": ""
+          "description": "가져오기 동작 설정"
         },
         "boardSelection": {
           "title": "{count}개의 보드 찾음",
-          "description": "",
+          "description": "가져올 보드의 크기를 모두 선택",
           "action": {
             "selectAll": "모두 선택",
             "unselectAll": "모두 선택 해제"
@@ -36,23 +39,23 @@
         },
         "summary": {
           "title": "불러오기 요약",
-          "description": "",
+          "description": "아래 요약에서 가져올 항목을 확인할 수 있습니다",
           "action": {
-            "import": ""
+            "import": "가져오기 확인 및 계속 진행"
           },
           "entities": {
             "apps": "앱",
             "boards": "보드",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "통합",
+            "credentialUsers": "자격 증명 사용자"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "가져오기 토큰 입력",
           "field": {
             "token": {
               "label": "토큰",
-              "description": ""
+              "description": "이전 Homarr 인스턴스에서 표시된 가져오기 토큰 입력"
             }
           },
           "notification": {
@@ -78,7 +81,7 @@
       },
       "group": {
         "title": "외부 그룹",
-        "subtitle": "",
+        "subtitle": "외부 사용자가 사용할 그룹을 지정합니다.",
         "form": {
           "name": {
             "label": "그룹 이름",
@@ -89,6 +92,48 @@
       "settings": {
         "title": "설정",
         "subtitle": "서버 설정하기."
+      },
+      "integrations": {
+        "title": "통합",
+        "subtitle": "사용할 서비스를 선택합니다.",
+        "description": "연결하려는 통합을 선택하십시오. 일치하는 위젯으로 대시보드를 자동 설정합니다.",
+        "action": {
+          "continue": "계속",
+          "skip": "지금은 건너뛰기"
+        },
+        "configure": {
+          "progress": "{total}개 중 {current}개",
+          "skip": "이 통합 건너뛰기",
+          "finishing": "대시보드 설정 중...",
+          "error": {
+            "title": "설치 실패",
+            "message": "대시보드를 설정하는 중 문제가 발생했습니다. 다시 시도해 주십시오."
+          },
+          "helpers": {
+            "tooltip": "URL 도우미",
+            "description": "서비스 URL을 추측합니다. 작동하지 않을 경우, 주소를 직접 입력해 주십시오."
+          }
+        },
+        "urlTemplate": {
+          "label": "기본 URL",
+          "placeholder": "homelab.local 또는 192.168.1.1",
+          "hint": "기본 도메인 또는 IP를 입력하여 통합 URL 자동 채우기",
+          "warning": "지금 기본 URL을 설정하면 모든 통합 URL이 자동으로 채워져 설정 시간을 아낄 수 있습니다",
+          "preview": "예) {example}",
+          "mode": {
+            "subdomain": "서브도메인",
+            "hostPort": "호스트:포트"
+          }
+        },
+        "docker": {
+          "detected": "{count}개 docker 서비스 감지",
+          "detectedBreakdown": "통합 {integrations}개, 앱 {apps}개",
+          "summary": "Homarr가 {apps}개 앱을 감지했으며, 그 중 {integrations}개는 통합 기능이 내장되어 있습니다",
+          "appBadge": "앱",
+          "appSectionLabel": "대시보드에 추가할 앱 ({count}개 선택)",
+          "scanning": "Docker 스캔 중...",
+          "scanningDescription": "시스템에서 실행 중인 컨테이너 찾기"
+        }
       },
       "finish": {
         "title": "설정 완료",
@@ -125,46 +170,46 @@
     "field": {
       "email": {
         "label": "이메일",
-        "verified": ""
+        "verified": "인증됨"
       },
       "username": {
         "label": "사용자 이름"
       },
       "password": {
         "label": "비밀번호",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "패스워드 제안",
         "suggestion": {
-          "length": "",
+          "length": "8자 이상",
           "lowercase": "소문자 포함",
           "uppercase": "대문자 포함",
           "number": "번호 포함",
-          "special": ""
+          "special": "특수문자 포함"
         }
       },
       "passwordConfirm": {
         "label": "비밀번호 확인"
       },
       "previousPassword": {
-        "label": ""
+        "label": "이전 패스워드"
       },
       "homeBoard": {
-        "label": ""
+        "label": "홈 보드"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "핑에 아이콘 사용"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "기본 검색 엔진"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "새 탭에서 검색 결과 열기"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "DuckDuckGo bangs 활성화"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "이미 사용 중인 사용자 이름"
     },
     "action": {
       "login": {
@@ -382,15 +427,15 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "통합",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "통합 생성",
+            "description": "통합 생성을 허용할 멤버"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 통합 사용",
+            "description": "멤버의 보드에 통합을 추가하는 것을 허용합니다"
           },
           "interact-all": {
             "label": "",
@@ -639,6 +684,211 @@
       "add": ""
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "",
+        "noResults": "",
+        "loading": ""
+      },
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "edit": {
+        "title": ""
+      }
+    },
+    "action": {
+      "create": "",
+      "import": "",
+      "save": "",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "addMapping": "",
+      "addColumn": "",
+      "edit": "",
+      "removeMapping": "",
+      "removeColumn": "",
+      "addItem": "",
+      "removeItem": "",
+      "addBar": "",
+      "duplicate": "",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": ""
+    },
+    "field": {
+      "name": "",
+      "description": "",
+      "iconUrl": "",
+      "url": "",
+      "authType": "",
+      "headerName": "",
+      "method": "",
+      "requestBody": "",
+      "displayType": "",
+      "jsonPath": "",
+      "jsonPathHint": "",
+      "label": "",
+      "unit": "",
+      "mappings": "",
+      "tablePath": "",
+      "tablePathHint": "",
+      "columns": "",
+      "header": "",
+      "items": "",
+      "gridColumns": "",
+      "cardStyle": "",
+      "bars": "",
+      "valuePath": "",
+      "maxPath": "",
+      "showPercentage": "",
+      "barSize": "",
+      "goodValues": "",
+      "dotSize": "",
+      "valueSize": "",
+      "labelPosition": "",
+      "kvLayout": "",
+      "striped": "",
+      "compact": "",
+      "maxHeight": "",
+      "color": "",
+      "buttonLabel": "",
+      "buttonColor": "",
+      "confirmText": "",
+      "confirmTextHint": "",
+      "successMessage": "",
+      "successMessageHint": "",
+      "enabled": "",
+      "template": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "",
+      "exampleLabelShort": "",
+      "exampleHeader": "",
+      "exampleUnit": "",
+      "iconUrl": "",
+      "url": "",
+      "headerName": "",
+      "jsonPath": "",
+      "tablePath": "",
+      "columnJsonPath": "",
+      "valuePath": "",
+      "maxPath": "",
+      "goodValues": "",
+      "color": ""
+    },
+    "cardStyleOption": {
+      "filled": "",
+      "outline": "",
+      "subtle": ""
+    },
+    "layoutOption": {
+      "list": "",
+      "grid": ""
+    },
+    "sizeOption": {
+      "sm": "",
+      "md": "",
+      "lg": "",
+      "xl": ""
+    },
+    "labelPositionOption": {
+      "above": "",
+      "below": ""
+    },
+    "fieldset": {
+      "general": "",
+      "connection": "",
+      "display": ""
+    },
+    "displayTypeDescription": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "method": {
+      "GET": "",
+      "POST": "",
+      "PUT": "",
+      "DELETE": "",
+      "PATCH": ""
+    },
+    "authType": {
+      "none": "",
+      "bearer": "",
+      "basic": "",
+      "apiKeyHeader": "",
+      "apiKeyQuery": ""
+    },
+    "displayType": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "secret": {
+      "apiKey": "",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    },
+    "preview": {
+      "title": "",
+      "test": "",
+      "hint": "",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "",
+      "url": "",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": ""
+      },
+      "apiKeySettings": {
+        "label": ""
       }
     },
     "action": {
       "create": ""
+    },
+    "grid": {
+      "widgetCount": "",
+      "noWidgets": "",
+      "detected": ""
+    },
+    "category": {
+      "dnsHole": "",
+      "mediaService": "",
+      "calendar": "",
+      "mediaSearch": "",
+      "mediaRelease": "",
+      "mediaRequest": "",
+      "downloadClient": "",
+      "usenet": "",
+      "torrent": "",
+      "miscellaneous": "",
+      "smartHomeServer": "",
+      "indexerManager": "",
+      "healthMonitoring": "",
+      "search": "",
+      "mediaTranscoding": "",
+      "networkController": "",
+      "releasesProvider": "",
+      "notifications": "",
+      "firewall": "",
+      "timetable": "",
+      "photoService": "",
+      "documents": "",
+      "notes": "",
+      "mediaMonitoring": "",
+      "speedtest": "",
+      "analytics": "",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "",
           "newLabel": ""
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "",
       "interact": "",
       "full": ""
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1068,6 +1384,7 @@
       "add": "추가",
       "apply": "",
       "backToOverview": "",
+      "skip": "",
       "change": "",
       "create": "만들기",
       "createAnother": "",
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "",
+      "tab": {
+        "widget": "",
+        "app": ""
+      },
+      "app": {
+        "propagationNotice": ""
+      },
       "advancedOptions": {
         "label": "",
         "title": ""
@@ -2065,6 +2389,37 @@
         "title": ""
       }
     },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "tracearr": {
       "name": "",
       "description": "",
@@ -2311,6 +2666,51 @@
             "target": ""
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "immich-serverStats": {
@@ -2921,6 +3321,113 @@
         "internalServerError": ""
       }
     },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "",
       "description": "",
@@ -2984,6 +3491,239 @@
       },
       "status": {
         "unhealthy": ""
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4104,7 @@
         "boards": "보드",
         "apps": "앱",
         "integrations": "",
+        "customWidgets": "",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -3382,7 +4123,8 @@
             "logs": "",
             "api": "",
             "certificates": "",
-            "tasks": ""
+            "tasks": "",
+            "backup": ""
           }
         },
         "settings": "설정",
@@ -3495,7 +4237,24 @@
               },
               "search": "",
               "firstDayOfWeek": "요일별 요일",
-              "accessibility": "접근성"
+              "accessibility": "접근성",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "",
+                  "notStarted": ""
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": ""
+                }
+              }
             }
           },
           "security": {
@@ -3903,7 +4662,215 @@
                   "actions": ""
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3990,6 +4957,12 @@
     },
     "action": {
       "title": "",
+      "logs": {
+        "label": "",
+        "page": {
+          "title": ""
+        }
+      },
       "start": {
         "label": "시작",
         "notification": {
@@ -4381,6 +5354,18 @@
           "label": "수정"
         }
       },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "사용자",
         "create": {
@@ -4402,7 +5387,10 @@
           "label": ""
         },
         "docker": {
-          "label": ""
+          "label": "",
+          "logs": {
+            "label": ""
+          }
         },
         "kubernetes": {
           "label": "",
@@ -4551,13 +5539,141 @@
                 "label": ""
               }
             }
+          },
+          "preferences": {
+            "title": "",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": ""
+              }
+            },
+            "notification": {
+              "error": {
+                "message": ""
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": ""
+              },
+              "boolean": {
+                "enabled": "",
+                "disabled": ""
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "locale": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "",
         "requestMovie": "",
         "requestSeries": "",
-        "openIn": ""
+        "openIn": "",
+        "group": {
+          "title": ""
+        },
+        "action": {
+          "search": {
+            "label": "",
+            "description": "",
+            "disabled": {
+              "noIntegration": "",
+              "scoped": ""
+            }
+          }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
+        }
       },
       "external": {
         "help": "",
@@ -4833,7 +5949,11 @@
             "table": {
               "header": {
                 "season": "",
-                "episodes": ""
+                "episodes": "",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
               }
             },
             "button": {
@@ -4942,6 +6062,73 @@
         "info": "",
         "warn": "",
         "error": ""
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "usersList": {
+        "title": "",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "editMode": {
+        "title": "",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": ""
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
       }
     }
   }

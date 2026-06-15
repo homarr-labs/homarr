@@ -63,23 +63,23 @@ export default function BeszelSystemStatsWidget({
     { staleTime: 30 * 1000 },
   );
 
-  // BeszelSystemStats fields are documented in beszel-types.ts.
-  // mu/du = bytes, dr/dw = bytes/s, b = public bandwidth [sent,recv] bytes/s, ns/nr = all-interface bytes/s
-  const BYTES_TO_GB = 1024 * 1024 * 1024;
+  // BeszelSystemStats fields: storage values (m, mu, mb, d, du, s, su) are already in GB.
+  // Disk I/O (dr, dw) is in MB/s — scale to bytes/s for display formatters.
+  // Network (ns, nr, b) is in bytes/s. Container memory (m) is in MB.
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
   const memoryMap = useCallback(
     (s: { mu: number; mb: number }) => ({
-      [t("chart.memory.series")]: s.mu / BYTES_TO_GB,
-      [t("chart.memory.cache")]: (s.mb ?? 0) / BYTES_TO_GB,
+      [t("chart.memory.series")]: s.mu,
+      [t("chart.memory.cache")]: s.mb ?? 0,
     }),
     [t],
   );
-  const diskMap = useCallback((s: { du: number }) => ({ [t("chart.disk.series")]: s.du / BYTES_TO_GB }), [t]);
+  const diskMap = useCallback((s: { du: number }) => ({ [t("chart.disk.series")]: s.du }), [t]);
   const diskIOMap = useCallback(
     (s: { dr?: number; dw?: number }) => ({
-      [t("chart.diskIO.read")]: s.dr ?? 0,
-      [t("chart.diskIO.write")]: s.dw ?? 0,
+      [t("chart.diskIO.read")]: (s.dr ?? 0) * (1024 * 1024),
+      [t("chart.diskIO.write")]: (s.dw ?? 0) * (1024 * 1024),
     }),
     [t],
   );

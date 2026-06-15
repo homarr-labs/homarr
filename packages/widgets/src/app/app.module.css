@@ -6,6 +6,8 @@
   object-fit: contain;
   scale: 0.8;
   transition: scale 0.2s ease-in-out;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .appWithUrl:hover > .appIcon {
