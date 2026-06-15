@@ -3697,7 +3697,7 @@
       "selectSystem": "Select system",
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
-        "systemNotFound": "The {name} system was not found. Choose a different system."
+        "systemNotFound": "Selected system was not found. Choose a different system."
       },
       "chart": {
         "cpu": {
