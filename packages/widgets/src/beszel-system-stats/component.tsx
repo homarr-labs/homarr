@@ -12,8 +12,8 @@ import classes from "./component.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { containerColors } from "../beszel/_shared/colors";
 import {
-  BeszelAreaChart,
-  ChartPanel,
+  BeszelChartPanel,
+  CPU_Y_AXIS_DOMAIN,
   useContainerNames,
   useDockerChartData,
   useSystemChartData,
@@ -229,105 +229,69 @@ export default function BeszelSystemStatsWidget({
         {activeStats && (
           <SimpleGrid cols={cols} spacing="md">
             {options.showCpu && cpuData.length > 0 && (
-              <ChartPanel title={t("chart.cpu.title")} subtitle={t("chart.cpu.subtitle")}>
-                <BeszelAreaChart
-                  h={CHART_HEIGHT}
-                  data={cpuData}
-                  series={cpuSeries}
-                  yAxisFormatter={chartAxisFormatters.percent}
-                  yAxisDomain={[0, "auto"]}
-                  tooltipProps={tooltipPercent}
-                />
-              </ChartPanel>
+              <BeszelChartPanel
+                title={t("chart.cpu.title")}
+                subtitle={t("chart.cpu.subtitle")}
+                chartProps={{ h: CHART_HEIGHT, data: cpuData, series: cpuSeries, yAxisFormatter: chartAxisFormatters.percent, yAxisDomain: CPU_Y_AXIS_DOMAIN, tooltipProps: tooltipPercent }}
+              />
             )}
 
             {options.showMemory && memoryData.length > 0 && (
-              <ChartPanel title={t("chart.memory.title")} subtitle={t("chart.memory.subtitle")}>
-                <BeszelAreaChart
-                  h={CHART_HEIGHT}
-                  data={memoryData}
-                  type="stacked"
-                  series={memorySeries}
-                  yAxisFormatter={chartAxisFormatters.gb}
-                  tooltipProps={tooltipGB}
-                />
-              </ChartPanel>
+              <BeszelChartPanel
+                title={t("chart.memory.title")}
+                subtitle={t("chart.memory.subtitle")}
+                chartProps={{ h: CHART_HEIGHT, data: memoryData, type: "stacked", series: memorySeries, yAxisFormatter: chartAxisFormatters.gb, tooltipProps: tooltipGB }}
+              />
             )}
 
             {options.showDisk && diskData.length > 0 && (
-              <ChartPanel title={t("chart.disk.title")} subtitle={t("chart.disk.subtitle")}>
-                <BeszelAreaChart
-                  h={CHART_HEIGHT}
-                  data={diskData}
-                  series={diskSeries}
-                  yAxisFormatter={chartAxisFormatters.gb}
-                  tooltipProps={tooltipGB}
-                />
-              </ChartPanel>
+              <BeszelChartPanel
+                title={t("chart.disk.title")}
+                subtitle={t("chart.disk.subtitle")}
+                chartProps={{ h: CHART_HEIGHT, data: diskData, series: diskSeries, yAxisFormatter: chartAxisFormatters.gb, tooltipProps: tooltipGB }}
+              />
             )}
 
             {options.showDiskIO && diskIOData.length > 0 && (
-              <ChartPanel title={t("chart.diskIO.title")} subtitle={t("chart.diskIO.subtitle")}>
-                <BeszelAreaChart
-                  h={CHART_HEIGHT}
-                  data={diskIOData}
-                  series={diskIOSeries}
-                  yAxisFormatter={chartAxisFormatters.rate}
-                  tooltipProps={tooltipRate}
-                />
-              </ChartPanel>
+              <BeszelChartPanel
+                title={t("chart.diskIO.title")}
+                subtitle={t("chart.diskIO.subtitle")}
+                chartProps={{ h: CHART_HEIGHT, data: diskIOData, series: diskIOSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+              />
             )}
 
             {options.showNetwork && networkData.length > 0 && (
-              <ChartPanel title={t("chart.network.title")} subtitle={t("chart.network.subtitle")}>
-                <BeszelAreaChart
-                  h={CHART_HEIGHT}
-                  data={networkData}
-                  series={networkSeries}
-                  yAxisFormatter={chartAxisFormatters.rate}
-                  tooltipProps={tooltipRate}
-                />
-              </ChartPanel>
+              <BeszelChartPanel
+                title={t("chart.network.title")}
+                subtitle={t("chart.network.subtitle")}
+                chartProps={{ h: CHART_HEIGHT, data: networkData, series: networkSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+              />
             )}
 
             {showDocker && containerSeries.length > 0 && (
               <>
                 {options.showDockerCpu && dockerCpuData.length > 0 && (
-                  <ChartPanel title={t("chart.dockerCpu.title")} subtitle={t("chart.dockerCpu.subtitle")}>
-                    <BeszelAreaChart
-                      h={CHART_HEIGHT}
-                      data={dockerCpuData}
-                      type="stacked"
-                      series={containerSeries}
-                      yAxisFormatter={chartAxisFormatters.percent}
-                      tooltipProps={tooltipPercentTotal}
-                    />
-                  </ChartPanel>
+                  <BeszelChartPanel
+                    title={t("chart.dockerCpu.title")}
+                    subtitle={t("chart.dockerCpu.subtitle")}
+                    chartProps={{ h: CHART_HEIGHT, data: dockerCpuData, type: "stacked", series: containerSeries, yAxisFormatter: chartAxisFormatters.percent, tooltipProps: tooltipPercentTotal }}
+                  />
                 )}
 
                 {options.showDockerMemory && dockerMemData.length > 0 && (
-                  <ChartPanel title={t("chart.dockerMemory.title")} subtitle={t("chart.dockerMemory.subtitle")}>
-                    <BeszelAreaChart
-                      h={CHART_HEIGHT}
-                      data={dockerMemData}
-                      type="stacked"
-                      series={containerSeries}
-                      yAxisFormatter={chartAxisFormatters.bytes}
-                      tooltipProps={tooltipBytesTotal}
-                    />
-                  </ChartPanel>
+                  <BeszelChartPanel
+                    title={t("chart.dockerMemory.title")}
+                    subtitle={t("chart.dockerMemory.subtitle")}
+                    chartProps={{ h: CHART_HEIGHT, data: dockerMemData, type: "stacked", series: containerSeries, yAxisFormatter: chartAxisFormatters.bytes, tooltipProps: tooltipBytesTotal }}
+                  />
                 )}
 
                 {options.showDockerNetwork && dockerNetData.length > 0 && (
-                  <ChartPanel title={t("chart.dockerNetwork.title")} subtitle={t("chart.dockerNetwork.subtitle")}>
-                    <BeszelAreaChart
-                      h={CHART_HEIGHT}
-                      data={dockerNetData}
-                      series={containerSeries}
-                      yAxisFormatter={chartAxisFormatters.rate}
-                      tooltipProps={tooltipRate}
-                    />
-                  </ChartPanel>
+                  <BeszelChartPanel
+                    title={t("chart.dockerNetwork.title")}
+                    subtitle={t("chart.dockerNetwork.subtitle")}
+                    chartProps={{ h: CHART_HEIGHT, data: dockerNetData, series: containerSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+                  />
                 )}
               </>
             )}

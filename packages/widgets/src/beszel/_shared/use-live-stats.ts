@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
@@ -41,10 +41,14 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
     setError(err instanceof Error ? err : new Error(String(err)));
   }, []);
 
-  clientApi.widget.beszel.subscribeSystemStats.useSubscription(
-    { integrationIds, systemId },
-    { enabled: enabled && systemId !== "", onData, onError },
-  );
+  const subscriptionInput = useMemo(() => ({ integrationIds, systemId }), [integrationKey, systemId]);
+  const subscriptionEnabled = enabled && systemId !== "";
+
+  clientApi.widget.beszel.subscribeSystemStats.useSubscription(subscriptionInput, {
+    enabled: subscriptionEnabled,
+    onData,
+    onError,
+  });
 
   return { data, error };
 };

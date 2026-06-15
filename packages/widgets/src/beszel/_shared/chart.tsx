@@ -19,17 +19,19 @@ function prepareRecords<T>(records: T[], live: boolean) {
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
-const activeDot = { r: 1, strokeWidth: 3 } as const;
-const hiddenDot = { r: 0, strokeWidth: 0 } as const;
+const chartStyle = { minWidth: 0, minHeight: 0 } as const;
+const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
+const noAnimation = { isAnimationActive: false } as const;
+export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
-interface ChartPanelProps {
+interface BeszelChartPanelProps {
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  chartProps: BeszelAreaChartProps;
 }
 
-export const ChartPanel = memo(({ title, subtitle, children }: ChartPanelProps) => (
-  <Stack gap={4} style={{ minWidth: 0, overflow: "hidden" }}>
+export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
+  <Stack gap={4} style={panelStyle}>
     <Group gap="xs">
       <Text size="sm" fw={600}>
         {title}
@@ -40,7 +42,7 @@ export const ChartPanel = memo(({ title, subtitle, children }: ChartPanelProps) 
         </Text>
       )}
     </Group>
-    {children}
+    <BeszelAreaChart {...chartProps} />
   </Stack>
 ));
 
@@ -49,35 +51,45 @@ type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "with
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = memo(
-  ({ yAxisFormatter, yAxisDomain, yAxisProps, style, type = "default", ...props }: BeszelAreaChartProps) => (
+const BeszelAreaChart = memo(({
+  yAxisFormatter,
+  yAxisDomain,
+  yAxisProps: yAxisPropsOverride,
+  type = "default",
+  ...props
+}: BeszelAreaChartProps) => {
+  const mergedYAxis = useMemo(
+    () => ({
+      ...yAxisBase,
+      width: 32,
+      tickMargin: 2,
+      ...(yAxisDomain ? { domain: yAxisDomain } : {}),
+      tickFormatter: yAxisFormatter,
+      ...yAxisPropsOverride,
+    }),
+    [yAxisFormatter, yAxisDomain, yAxisPropsOverride],
+  );
+
+  return (
     <AreaChart
       dataKey="time"
       curveType="monotone"
       withGradient={false}
       connectNulls
-      withDots={true}
+      withDots={false}
       type={type}
       strokeWidth={1}
       fillOpacity={0.2}
-      activeDotProps={activeDot}
-      dotProps={hiddenDot}
+      areaChartProps={noAnimation}
       withXAxis
       withYAxis
       w="100%"
-      style={{ minWidth: 0, minHeight: 0, ...style }}
-      yAxisProps={{
-        ...yAxisBase,
-        width: 32,
-        tickMargin: 2,
-        ...(yAxisDomain ? { domain: yAxisDomain } : {}),
-        tickFormatter: yAxisFormatter,
-        ...yAxisProps,
-      }}
+      style={chartStyle}
+      yAxisProps={mergedYAxis}
       {...props}
     />
-  ),
-);
+  );
+});
 
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
@@ -135,8 +147,9 @@ export const useDockerChartData = (
     const { fmt, ordered } = prepareRecords(containerStats, live);
     return ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created) };
+      const byName = new Map(record.stats.map((c) => [c.n, c]));
       for (const name of containerNames) {
-        point[name] = extract(record.stats.find((c) => c.n === name));
+        point[name] = extract(byName.get(name));
       }
       return point;
     });
