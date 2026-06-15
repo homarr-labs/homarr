@@ -26,7 +26,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
         const systemStats = [...(prev?.systemStats ?? []), incoming.stats].slice(-MAX_BUFFER);
         const containerStats = incoming.containerStats
           ? [...(prev?.containerStats ?? []), incoming.containerStats].slice(-MAX_BUFFER)
-          : prev?.containerStats ?? [];
+          : (prev?.containerStats ?? []);
         return { systemStats, containerStats };
       });
     },
