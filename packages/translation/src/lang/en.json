@@ -3703,6 +3703,8 @@
       "selectSystem": "Select system",
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
+        "switchToHistorical": "Switch to historical view",
         "systemNotFound": "Selected system was not found. Choose a different system."
       },
       "chart": {

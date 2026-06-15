@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { ActionIcon, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import { ActionIcon, Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -148,8 +148,15 @@ export default function BeszelSystemStatsWidget({
         <Stack align="center" gap="sm" p="md">
           <IconPlugConnectedX size={40} />
           <Text size="sm" c="dimmed" ta="center">
-            {t("error.internalServerError")}
+            {t("error.liveConnectionFailed")}
           </Text>
+          <Button
+            size="xs"
+            variant="light"
+            onClick={() => setOptions({ newOptions: { timePeriod: "1h" } })}
+          >
+            {t("error.switchToHistorical")}
+          </Button>
         </Stack>
       </Center>
     );
