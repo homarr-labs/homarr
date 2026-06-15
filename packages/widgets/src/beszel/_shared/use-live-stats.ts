@@ -14,14 +14,17 @@ interface LiveStatsData {
 
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
   const [data, setData] = useState<LiveStatsData | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const integrationKey = integrationIds.join(",");
   useEffect(() => {
     setData(null);
+    setError(null);
   }, [systemId, enabled, integrationKey]);
 
   const onData = useCallback(
     (incoming: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => {
+      setError(null);
       setData((prev) => {
         const systemStats = [...(prev?.systemStats ?? []), incoming.stats].slice(-MAX_BUFFER);
         const containerStats = incoming.containerStats
@@ -33,10 +36,14 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
     [],
   );
 
+  const onError = useCallback((err: unknown) => {
+    setError(err instanceof Error ? err : new Error(String(err)));
+  }, []);
+
   clientApi.widget.beszel.subscribeSystemStats.useSubscription(
     { integrationIds, systemId },
-    { enabled: enabled && systemId !== "", onData },
+    { enabled: enabled && systemId !== "", onData, onError },
   );
 
-  return data;
+  return { data, error };
 };

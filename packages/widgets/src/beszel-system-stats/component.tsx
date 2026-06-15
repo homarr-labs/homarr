@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { ActionIcon, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconServer, IconQuestionMark } from "@tabler/icons-react";
+import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -77,7 +77,7 @@ export default function BeszelSystemStatsWidget({
     { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "" },
   );
 
-  const liveData = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
+  const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
   const activeStats = isLive ? liveData : statsResult;
 
@@ -137,6 +137,19 @@ export default function BeszelSystemStatsWidget({
             placeholder={t("selectSystem")}
             onChange={(value) => value && handleSelectSystem(value)}
           />
+        </Stack>
+      </Center>
+    );
+  }
+
+  if (isLive && liveError && !liveData) {
+    return (
+      <Center h="100%">
+        <Stack align="center" gap="sm" p="md">
+          <IconPlugConnectedX size={40} />
+          <Text size="sm" c="dimmed" ta="center">
+            {t("error.internalServerError")}
+          </Text>
         </Stack>
       </Center>
     );

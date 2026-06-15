@@ -283,7 +283,8 @@ export class BeszelIntegration extends Integration {
         if (!clientId && typeof parsed.clientId === "string") {
           clientId = parsed.clientId;
           this.subscribeTopic(clientId, systemId, session.token).catch((err) => {
-            logger.warn("Failed to subscribe to rt_metrics topic", { error: err });
+            logger.warn("Failed to subscribe to rt_metrics topic, aborting SSE", { error: err });
+            reader.cancel().catch(() => {});
           });
           return;
         }

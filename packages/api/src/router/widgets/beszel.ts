@@ -154,7 +154,6 @@ export const beszelRouter = createTRPCRouter({
     .input(
       z.object({
         systemId: z.string(),
-        includeDocker: z.boolean().default(true),
       }),
     )
     .subscription(({ ctx, input }) => {

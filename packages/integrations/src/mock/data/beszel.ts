@@ -350,12 +350,13 @@ export class BeszelMockService {
       };
       onMessage({ stats: record, containerStats: null });
     };
+    if (signal.aborted) return;
     await new Promise<void>((resolve) => {
       const interval = setInterval(emit, 1000);
       signal.addEventListener("abort", () => {
         clearInterval(interval);
         resolve();
-      });
+      }, { once: true });
     });
   }
 
