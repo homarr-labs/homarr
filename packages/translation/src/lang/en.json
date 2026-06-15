@@ -3561,6 +3561,9 @@
         }
       },
       "noRecords": "No systems found",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "column": {
         "system": "System",
         "cpu": "CPU",
@@ -3617,6 +3620,9 @@
           "label": "Show agent version"
         }
       },
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3643,6 +3649,9 @@
         }
       },
       "empty": "No alerts configured",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "history": "History",
       "resolved": "Resolved",
       "status": {
@@ -3654,6 +3663,9 @@
       "name": "Beszel System Stats",
       "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
       "option": {
+        "systemId": {
+          "label": "System ID"
+        },
         "timePeriod": {
           "label": "Time period"
         },
@@ -3683,6 +3695,10 @@
         }
       },
       "selectSystem": "Select system",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "systemNotFound": "The {name} system was not found. Choose a different system."
+      },
       "chart": {
         "cpu": {
           "title": "CPU Usage",
