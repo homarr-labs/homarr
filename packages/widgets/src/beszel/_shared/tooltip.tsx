@@ -77,8 +77,8 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
   if (!isActive) return null;
 
   const deduped = new Map<string, TooltipPayloadItem>();
-  for (const p of (payload ?? []).filter((p) => p.value > 0)) {
-    if (!deduped.has(p.dataKey)) deduped.set(p.dataKey, p);
+  for (const item of (payload ?? []).filter((entry) => entry.value > 0)) {
+    if (!deduped.has(item.dataKey)) deduped.set(item.dataKey, item);
   }
   const sorted = [...deduped.values()].toSorted((a, b) => b.value - a.value);
 

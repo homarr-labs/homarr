@@ -298,19 +298,21 @@ export class BeszelIntegration extends Integration {
             created: new Date().toISOString(),
             updated: new Date().toISOString(),
           };
-          const containerStats: BeszelContainerStatsRecord | null =
+          let containerStats: BeszelContainerStatsRecord | null = null;
+          if (
             parsed.container &&
             Array.isArray(parsed.container) &&
             (parsed.container as BeszelContainerStats[]).length > 0
-              ? {
-                  id: "",
-                  system: systemId,
-                  stats: parsed.container as BeszelContainerStats[],
-                  type: "1m",
-                  created: new Date().toISOString(),
-                  updated: new Date().toISOString(),
-                }
-              : null;
+          ) {
+            containerStats = {
+              id: "",
+              system: systemId,
+              stats: parsed.container as BeszelContainerStats[],
+              type: "1m",
+              created: new Date().toISOString(),
+              updated: new Date().toISOString(),
+            };
+          }
           onMessage({ stats, containerStats });
         }
       } catch {

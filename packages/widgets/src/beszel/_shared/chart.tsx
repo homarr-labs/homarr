@@ -11,9 +11,15 @@ import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homar
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
 const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
 
+const timeFormatters: Record<string, (ts: string) => string> = {
+  live: formatTimeLive,
+  historical: formatTime,
+};
+
 function prepareRecords<T>(records: T[], live: boolean) {
+  const mode = live ? "live" : "historical";
   return {
-    fmt: live ? formatTimeLive : formatTime,
+    fmt: timeFormatters[mode] as (ts: string) => string,
     ordered: live ? records : [...records].toReversed(),
   };
 }
@@ -21,7 +27,6 @@ function prepareRecords<T>(records: T[], live: boolean) {
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
 const chartStyle = { minWidth: 0, minHeight: 0 } as const;
 const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
-const noAnimation = { isAnimationActive: false } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -59,17 +64,19 @@ const BeszelAreaChart = memo(
     type = "default",
     ...props
   }: BeszelAreaChartProps) => {
-    const mergedYAxis = useMemo(
-      () => ({
+    const mergedYAxis = useMemo(() => {
+      const base = {
         ...yAxisBase,
         width: 48,
         tickMargin: 2,
-        ...(yAxisDomain ? { domain: yAxisDomain } : {}),
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
-      }),
-      [yAxisFormatter, yAxisDomain, yAxisPropsOverride],
-    );
+      };
+      if (yAxisDomain) {
+        return { ...base, domain: yAxisDomain };
+      }
+      return base;
+    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
 
     return (
       <AreaChart
@@ -81,9 +88,7 @@ const BeszelAreaChart = memo(
         type={type}
         strokeWidth={1}
         fillOpacity={0.2}
-        areaChartProps={{
-          // margin: { top: 0, right: 0, bottom: 0, left: 10 },
-        }}
+        areaChartProps={{}}
         withXAxis
         withYAxis
         w="100%"
@@ -112,7 +117,11 @@ export const useSystemChartData = (
 export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
   const prevRef = useRef<string[]>([]);
   return useMemo(() => {
-    if (!containerStats?.length) return prevRef.current.length === 0 ? prevRef.current : (prevRef.current = []);
+    if (!containerStats?.length) {
+      if (prevRef.current.length === 0) return prevRef.current;
+      prevRef.current = [];
+      return prevRef.current;
+    }
     const names = new Set<string>();
     for (const record of containerStats) {
       for (const c of record.stats) {

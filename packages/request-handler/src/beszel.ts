@@ -122,6 +122,7 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
   queryKey: "beszelStats",
   cacheDurationForInput(input) {
     const config = timePeriodConfig[input.timePeriod];
-    return config ? dayjs.duration(config.cacheSeconds, "seconds") : undefined;
+    if (!config) return undefined;
+    return dayjs.duration(config.cacheSeconds, "seconds");
   },
 });

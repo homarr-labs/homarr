@@ -5,6 +5,7 @@ import { ActionIcon, Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack
 import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
@@ -79,7 +80,10 @@ export default function BeszelSystemStatsWidget({
 
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
-  const activeStats = isLive ? liveData : statsResult;
+  let activeStats: { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] } | null | undefined = statsResult;
+  if (isLive) {
+    activeStats = liveData;
+  }
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
   const memoryMap = useCallback(
@@ -204,7 +208,7 @@ export default function BeszelSystemStatsWidget({
     <ScrollArea
       h="100%"
       className={classes.beszelStatsWrapper}
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      style={{ pointerEvents: isEditMode && "none" || undefined }}
     >
       <Stack gap="md" p="sm">
         {!isEditMode && systems.length > 1 && (
@@ -233,8 +237,8 @@ export default function BeszelSystemStatsWidget({
                 <Menu.Item
                   key={s.value}
                   fz="xs"
-                  fw={s.value === selectedSystem ? 600 : 400}
-                  c={s.value === selectedSystem ? undefined : "dimmed"}
+                  fw={s.value === selectedSystem && 600 || 400}
+                  c={s.value !== selectedSystem && "dimmed" || undefined}
                   onClick={() => handleSelectSystem(s.value)}
                 >
                   {s.label}
