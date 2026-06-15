@@ -49,40 +49,35 @@ type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "with
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = memo(({
-  yAxisFormatter,
-  yAxisDomain,
-  yAxisProps,
-  style,
-  type = "default",
-  ...props
-}: BeszelAreaChartProps) => (
-  <AreaChart
-    dataKey="time"
-    curveType="monotone"
-    withGradient={false}
-    connectNulls
-    withDots={true}
-    type={type}
-    strokeWidth={1}
-    fillOpacity={0.2}
-    activeDotProps={activeDot}
-    dotProps={hiddenDot}
-    withXAxis
-    withYAxis
-    w="100%"
-    style={{ minWidth: 0, minHeight: 0, ...style }}
-    yAxisProps={{
-      ...yAxisBase,
-      width: 32,
-      tickMargin: 2,
-      ...(yAxisDomain ? { domain: yAxisDomain } : {}),
-      tickFormatter: yAxisFormatter,
-      ...yAxisProps,
-    }}
-    {...props}
-  />
-));
+export const BeszelAreaChart = memo(
+  ({ yAxisFormatter, yAxisDomain, yAxisProps, style, type = "default", ...props }: BeszelAreaChartProps) => (
+    <AreaChart
+      dataKey="time"
+      curveType="monotone"
+      withGradient={false}
+      connectNulls
+      withDots={true}
+      type={type}
+      strokeWidth={1}
+      fillOpacity={0.2}
+      activeDotProps={activeDot}
+      dotProps={hiddenDot}
+      withXAxis
+      withYAxis
+      w="100%"
+      style={{ minWidth: 0, minHeight: 0, ...style }}
+      yAxisProps={{
+        ...yAxisBase,
+        width: 32,
+        tickMargin: 2,
+        ...(yAxisDomain ? { domain: yAxisDomain } : {}),
+        tickFormatter: yAxisFormatter,
+        ...yAxisProps,
+      }}
+      {...props}
+    />
+  ),
+);
 
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
