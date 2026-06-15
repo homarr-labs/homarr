@@ -329,6 +329,9 @@ export class BeszelIntegration extends Integration {
           processLine(line);
         }
       }
+      if (!signal.aborted) {
+        throw new Error("Beszel SSE stream ended unexpectedly");
+      }
     } finally {
       reader.cancel().catch(() => {});
     }

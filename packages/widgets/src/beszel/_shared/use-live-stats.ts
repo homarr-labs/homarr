@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
@@ -12,9 +12,19 @@ interface LiveStatsData {
   containerStats: BeszelContainerStatsRecord[];
 }
 
-export const useLiveStats = (integrationIds: string[], systemId: string, includeDocker: boolean, enabled: boolean) => {
+export const useLiveStats = (
+  integrationIds: string[],
+  systemId: string,
+  includeDocker: boolean,
+  enabled: boolean,
+) => {
   const bufferRef = useRef<LiveStatsData>({ systemStats: [], containerStats: [] });
   const [data, setData] = useState<LiveStatsData | null>(null);
+
+  useEffect(() => {
+    bufferRef.current = { systemStats: [], containerStats: [] };
+    setData(null);
+  }, [systemId, enabled, ...integrationIds]);
 
   const onData = useCallback(
     (incoming: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => {

@@ -83,7 +83,8 @@ export const useSystemChartData = (
   useMemo(() => {
     if (!systemStats) return [];
     const fmt = live ? formatTimeLive : formatTime;
-    return [...systemStats].toReversed().map((r) => ({
+    const ordered = live ? systemStats : [...systemStats].toReversed();
+    return ordered.map((r) => ({
       time: fmt(r.created),
       ...mapFn(r.stats),
     }));
@@ -123,7 +124,8 @@ export const useDockerChartData = (
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
     const fmt = live ? formatTimeLive : formatTime;
-    return [...containerStats].toReversed().map((record) => {
+    const ordered = live ? containerStats : [...containerStats].toReversed();
+    return ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created) };
       for (const name of containerNames) {
         point[name] = extract(record.stats.find((c) => c.n === name));
