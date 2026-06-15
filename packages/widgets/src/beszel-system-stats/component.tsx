@@ -80,7 +80,10 @@ export default function BeszelSystemStatsWidget({
 
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
-  let activeStats: { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] } | null | undefined = statsResult;
+  let activeStats:
+    | { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] }
+    | null
+    | undefined = statsResult;
   if (isLive) {
     activeStats = liveData;
   }
@@ -208,7 +211,7 @@ export default function BeszelSystemStatsWidget({
     <ScrollArea
       h="100%"
       className={classes.beszelStatsWrapper}
-      style={{ pointerEvents: isEditMode && "none" || undefined }}
+      style={{ pointerEvents: (isEditMode && "none") || undefined }}
     >
       <Stack gap="md" p="sm">
         {!isEditMode && systems.length > 1 && (
@@ -237,8 +240,8 @@ export default function BeszelSystemStatsWidget({
                 <Menu.Item
                   key={s.value}
                   fz="xs"
-                  fw={s.value === selectedSystem && 600 || 400}
-                  c={s.value !== selectedSystem && "dimmed" || undefined}
+                  fw={(s.value === selectedSystem && 600) || 400}
+                  c={(s.value !== selectedSystem && "dimmed") || undefined}
                   onClick={() => handleSelectSystem(s.value)}
                 >
                   {s.label}

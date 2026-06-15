@@ -39,13 +39,13 @@ export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputPro
     <Select
       label={tInput("label")}
       description={tInput("description")}
-      placeholder={isPending && t("loading") || t("placeholder")}
+      placeholder={(isPending && t("loading")) || t("placeholder")}
       clearable
       searchable
       nothingFoundMessage={t("noSystems")}
       data={systems}
       disabled={isError}
-      error={isError && t("loadError") || undefined}
+      error={(isError && t("loadError")) || undefined}
       {...form.getInputProps(`options.${property}`)}
     />
   );
