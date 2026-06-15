@@ -18,7 +18,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      systemId: factory.text({ defaultValue: "" }),
+      systemId: factory.beszelSystem(),
       timePeriod: factory.select({
         defaultValue: "1h",
         options: timePeriodOptions,

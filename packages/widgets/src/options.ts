@@ -175,6 +175,11 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: true,
   }),
+  beszelSystem: () => ({
+    type: "beszelSystem" as const,
+    defaultValue: "",
+    withDescription: true,
+  }),
   customWidgetSelect: (input?: CommonInput<string>) => ({
     type: "customWidgetSelect" as const,
     defaultValue: input?.defaultValue ?? "",

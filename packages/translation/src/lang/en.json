@@ -3664,7 +3664,12 @@
       "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
       "option": {
         "systemId": {
-          "label": "System ID"
+          "label": "System",
+          "description": "Select a Beszel system to display stats for",
+          "configureIntegrationFirst": "Configure a Beszel integration first",
+          "loading": "Loading systems...",
+          "placeholder": "Select a system",
+          "noSystems": "No systems found"
         },
         "timePeriod": {
           "label": "Time period"
