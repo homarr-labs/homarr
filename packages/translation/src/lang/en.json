@@ -4919,7 +4919,7 @@
       "updated": "Updated {when}",
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
-      "footer": "Total {count} containers"
+      "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",
       "totalMemory": "Total Mem: {memory}"
     },
