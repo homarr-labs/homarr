@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 import { Group, Stack, Text } from "@mantine/core";
 import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
@@ -19,6 +19,8 @@ function prepareRecords<T>(records: T[], live: boolean) {
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
+const activeDot = { r: 1, strokeWidth: 3 } as const;
+const hiddenDot = { r: 0, strokeWidth: 0 } as const;
 
 interface ChartPanelProps {
   title: string;
@@ -26,7 +28,7 @@ interface ChartPanelProps {
   children: React.ReactNode;
 }
 
-export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
+export const ChartPanel = memo(({ title, subtitle, children }: ChartPanelProps) => (
   <Stack gap={4} style={{ minWidth: 0, overflow: "hidden" }}>
     <Group gap="xs">
       <Text size="sm" fw={600}>
@@ -40,14 +42,14 @@ export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
     </Group>
     {children}
   </Stack>
-);
+));
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = ({
+export const BeszelAreaChart = memo(({
   yAxisFormatter,
   yAxisDomain,
   yAxisProps,
@@ -64,8 +66,8 @@ export const BeszelAreaChart = ({
     type={type}
     strokeWidth={1}
     fillOpacity={0.2}
-    activeDotProps={{ r: 1, strokeWidth: 3 }}
-    dotProps={{ r: 0, strokeWidth: 0 }}
+    activeDotProps={activeDot}
+    dotProps={hiddenDot}
     withXAxis
     withYAxis
     w="100%"
@@ -80,7 +82,7 @@ export const BeszelAreaChart = ({
     }}
     {...props}
   />
-);
+));
 
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
@@ -96,17 +98,23 @@ export const useSystemChartData = (
     }));
   }, [systemStats, mapFn, live]);
 
-export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) =>
-  useMemo(() => {
-    if (!containerStats?.length) return [];
+export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
+  const prevRef = useRef<string[]>([]);
+  return useMemo(() => {
+    if (!containerStats?.length) return prevRef.current.length === 0 ? prevRef.current : (prevRef.current = []);
     const names = new Set<string>();
     for (const record of containerStats) {
       for (const c of record.stats) {
         names.add(c.n);
       }
     }
-    return [...names].slice(0, max);
+    const next = [...names].slice(0, max);
+    const prev = prevRef.current;
+    if (prev.length === next.length && prev.every((n, i) => n === next[i])) return prev;
+    prevRef.current = next;
+    return next;
   }, [containerStats, max]);
+};
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 

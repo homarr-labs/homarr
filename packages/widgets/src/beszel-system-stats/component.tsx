@@ -105,6 +105,30 @@ export default function BeszelSystemStatsWidget({
     [t],
   );
 
+  const cpuSeries = useMemo(() => [{ name: t("chart.cpu.series"), color: "teal.6" }], [t]);
+  const memorySeries = useMemo(
+    () => [
+      { name: t("chart.memory.series"), color: "teal.5" },
+      { name: t("chart.memory.cache"), color: "teal.8" },
+    ],
+    [t],
+  );
+  const diskSeries = useMemo(() => [{ name: t("chart.disk.series"), color: "grape.6" }], [t]);
+  const diskIOSeries = useMemo(
+    () => [
+      { name: t("chart.diskIO.write"), color: "orange.6" },
+      { name: t("chart.diskIO.read"), color: "blue.6" },
+    ],
+    [t],
+  );
+  const networkSeries = useMemo(
+    () => [
+      { name: t("chart.network.sent"), color: "blue.6" },
+      { name: t("chart.network.recv"), color: "teal.6" },
+    ],
+    [t],
+  );
+
   const cpuData = useSystemChartData(activeStats?.systemStats, cpuMap, isLive);
   const memoryData = useSystemChartData(activeStats?.systemStats, memoryMap, isLive);
   const diskData = useSystemChartData(activeStats?.systemStats, diskMap, isLive);
@@ -116,10 +140,10 @@ export default function BeszelSystemStatsWidget({
   const dockerMemData = useDockerChartData(activeStats?.containerStats, containerNames, "memory", isLive);
   const dockerNetData = useDockerChartData(activeStats?.containerStats, containerNames, "network", isLive);
 
-  const containerSeries = containerNames.map((name, i) => ({
-    name,
-    color: containerColors[i % containerColors.length] as string,
-  }));
+  const containerSeries = useMemo(
+    () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
+    [containerNames],
+  );
 
   const cols = width > 600 ? 2 : 1;
 
@@ -209,7 +233,7 @@ export default function BeszelSystemStatsWidget({
                 <BeszelAreaChart
                   h={CHART_HEIGHT}
                   data={cpuData}
-                  series={[{ name: t("chart.cpu.series"), color: "teal.6" }]}
+                  series={cpuSeries}
                   yAxisFormatter={chartAxisFormatters.percent}
                   yAxisDomain={[0, "auto"]}
                   tooltipProps={tooltipPercent}
@@ -223,10 +247,7 @@ export default function BeszelSystemStatsWidget({
                   h={CHART_HEIGHT}
                   data={memoryData}
                   type="stacked"
-                  series={[
-                    { name: t("chart.memory.series"), color: "teal.5" },
-                    { name: t("chart.memory.cache"), color: "teal.8" },
-                  ]}
+                  series={memorySeries}
                   yAxisFormatter={chartAxisFormatters.gb}
                   tooltipProps={tooltipGB}
                 />
@@ -238,7 +259,7 @@ export default function BeszelSystemStatsWidget({
                 <BeszelAreaChart
                   h={CHART_HEIGHT}
                   data={diskData}
-                  series={[{ name: t("chart.disk.series"), color: "grape.6" }]}
+                  series={diskSeries}
                   yAxisFormatter={chartAxisFormatters.gb}
                   tooltipProps={tooltipGB}
                 />
@@ -250,10 +271,7 @@ export default function BeszelSystemStatsWidget({
                 <BeszelAreaChart
                   h={CHART_HEIGHT}
                   data={diskIOData}
-                  series={[
-                    { name: t("chart.diskIO.write"), color: "orange.6" },
-                    { name: t("chart.diskIO.read"), color: "blue.6" },
-                  ]}
+                  series={diskIOSeries}
                   yAxisFormatter={chartAxisFormatters.rate}
                   tooltipProps={tooltipRate}
                 />
@@ -265,10 +283,7 @@ export default function BeszelSystemStatsWidget({
                 <BeszelAreaChart
                   h={CHART_HEIGHT}
                   data={networkData}
-                  series={[
-                    { name: t("chart.network.sent"), color: "blue.6" },
-                    { name: t("chart.network.recv"), color: "teal.6" },
-                  ]}
+                  series={networkSeries}
                   yAxisFormatter={chartAxisFormatters.rate}
                   tooltipProps={tooltipRate}
                 />
