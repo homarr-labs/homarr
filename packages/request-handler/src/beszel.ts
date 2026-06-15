@@ -24,7 +24,10 @@ export type { BeszelSystemRow } from "@homarr/integrations/types";
  * bb=bandwidth(bytes/s), b=bandwidth(Mbps legacy), dt=disk temp, bat=battery,
  * sv=[running,total] services, h=hostname, m=CPU model, c=cores, ct=threads
  */
-function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | null): BeszelSystemRow {
+function mapToSystemRow(
+  system: BeszelSystem,
+  details: BeszelSystemDetails | null,
+): BeszelSystemRow {
   const info = system.info;
   return {
     id: system.id,
@@ -50,25 +53,28 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
   };
 }
 
-export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler<
-  BeszelSystemRow[],
-  "beszel" | "mock",
-  Record<string, never>
->({
-  async requestAsync(integration) {
-    const instance = await createIntegrationAsync(integration);
-    const systems = await instance.getSystemsAsync();
-    const enriched = await Promise.all(
-      systems.map(async (system) => {
-        const details = await instance.getSystemDetailsAsync(system.id).catch(() => null);
-        return mapToSystemRow(system, details);
-      }),
-    );
-    return enriched;
-  },
-  cacheDuration: dayjs.duration(5, "seconds"),
-  queryKey: "beszelSystems",
-});
+export const beszelSystemsRequestHandler =
+  createCachedIntegrationRequestHandler<
+    BeszelSystemRow[],
+    "beszel" | "mock",
+    Record<string, never>
+  >({
+    async requestAsync(integration) {
+      const instance = await createIntegrationAsync(integration);
+      const systems = await instance.getSystemsAsync();
+      const enriched = await Promise.all(
+        systems.map(async (system) => {
+          const details = await instance
+            .getSystemDetailsAsync(system.id)
+            .catch(() => null);
+          return mapToSystemRow(system, details);
+        }),
+      );
+      return enriched;
+    },
+    cacheDuration: dayjs.duration(5, "seconds"),
+    queryKey: "beszelSystems",
+  });
 
 export interface BeszelAlertsData {
   alerts: BeszelAlert[];
@@ -83,19 +89,22 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
   async requestAsync(integration, input) {
     const instance = await createIntegrationAsync(integration);
     const alerts = await instance.getAlertsAsync();
-    const history = input.includeHistory ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems) : [];
+    const history = input.includeHistory
+      ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems)
+      : [];
     return { alerts, history };
   },
   cacheDuration: dayjs.duration(15, "seconds"),
   queryKey: "beszelAlerts",
 });
 
-const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
-  "1h": { type: "1m", perPage: 60 },
-  "12h": { type: "10m", perPage: 72 },
-  "24h": { type: "20m", perPage: 72 },
-  "1w": { type: "120m", perPage: 84 },
-  "30d": { type: "480m", perPage: 90 },
+const timePeriodConfig: Record<string, { type: string; perPage: number; cacheSeconds: number }> = {
+  "1m": { type: "1m", perPage: 60, cacheSeconds: 5 },
+  "1h": { type: "1m", perPage: 60, cacheSeconds: 60 },
+  "12h": { type: "10m", perPage: 72, cacheSeconds: 300 },
+  "24h": { type: "20m", perPage: 72, cacheSeconds: 600 },
+  "1w": { type: "120m", perPage: 84, cacheSeconds: 1800 },
+  "30d": { type: "480m", perPage: 90, cacheSeconds: 3600 },
 };
 
 export interface BeszelStatsData {
@@ -109,14 +118,24 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
   async requestAsync(integration, input) {
-    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
+    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60, cacheSeconds: 60 };
     const instance = await createIntegrationAsync(integration);
-    const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
+    const systemStats = await instance.getSystemStatsAsync(
+      input.systemId,
+      config.type,
+      config.perPage,
+    );
     const containerStats = input.includeDocker
-      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch(() => [])
+      ? await instance
+          .getContainerStatsAsync(input.systemId, config.type, config.perPage)
+          .catch(() => [])
       : [];
     return { systemStats, containerStats };
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(60, "seconds"),
   queryKey: "beszelStats",
+  cacheDurationForInput(input) {
+    const config = timePeriodConfig[input.timePeriod];
+    return config ? dayjs.duration(config.cacheSeconds, "seconds") : undefined;
+  },
 });

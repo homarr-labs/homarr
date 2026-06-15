@@ -330,6 +330,35 @@ export class BeszelMockService {
     ];
   }
 
+  public async subscribeRealtimeMetrics(
+    systemId: string,
+    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const sys = resolveSystem(systemId);
+    const emit = () => {
+      if (signal.aborted) return;
+      const [stats] = generateSystemStatsSeries(1, sys);
+      if (!stats) return;
+      const record: BeszelSystemStatsRecord = {
+        id: `mock-rt-${Date.now()}`,
+        system: systemId,
+        stats,
+        type: "1m",
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
+      };
+      onMessage({ stats: record, containerStats: null });
+    };
+    await new Promise<void>((resolve) => {
+      const interval = setInterval(emit, 1000);
+      signal.addEventListener("abort", () => {
+        clearInterval(interval);
+        resolve();
+      });
+    });
+  }
+
   public async getAlertHistoryAsync(_systemId?: string, perPage = 10): Promise<BeszelAlertHistory[]> {
     const now = Date.now();
     const names = ["CPU", "Memory", "Disk", "Temperature", "Bandwidth"];

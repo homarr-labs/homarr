@@ -1,12 +1,17 @@
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
+import { createIntegrationAsync } from "@homarr/integrations";
+import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import {
   beszelAlertsRequestHandler,
   beszelStatsRequestHandler,
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
-import type { BeszelAlertsData, BeszelSystemRow } from "@homarr/request-handler/beszel";
+import type {
+  BeszelAlertsData,
+  BeszelSystemRow,
+} from "@homarr/request-handler/beszel";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
@@ -17,8 +22,14 @@ export const beszelRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const innerHandler = beszelSystemsRequestHandler.handler(
+            integration,
+            {},
+          );
+          const { data, timestamp } =
+            await innerHandler.getCachedOrUpdatedDataAsync({
+              forceUpdate: false,
+            });
           return {
             integrationId: integration.id,
             integrationName: integration.name,
@@ -34,9 +45,16 @@ export const beszelRouter = createTRPCRouter({
   subscribeSystems: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; systems: BeszelSystemRow[]; timestamp: Date }>((emit) => {
+      return observable<{
+        integrationId: string;
+        systems: BeszelSystemRow[];
+        timestamp: Date;
+      }>((emit) => {
         const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
+          const innerHandler = beszelSystemsRequestHandler.handler(
+            integration,
+            {},
+          );
           return innerHandler.subscribe((systems) => {
             emit.next({
               integrationId: integration.id,
@@ -62,11 +80,17 @@ export const beszelRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const alertsHandler = beszelAlertsRequestHandler.handler(integration, {
-            includeHistory: input.includeHistory,
-            maxHistoryItems: input.maxHistoryItems,
-          });
-          const systemsHandler = beszelSystemsRequestHandler.handler(integration, {});
+          const alertsHandler = beszelAlertsRequestHandler.handler(
+            integration,
+            {
+              includeHistory: input.includeHistory,
+              maxHistoryItems: input.maxHistoryItems,
+            },
+          );
+          const systemsHandler = beszelSystemsRequestHandler.handler(
+            integration,
+            {},
+          );
           const [alertsResult, systemsResult] = await Promise.all([
             alertsHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
             systemsHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
@@ -96,14 +120,22 @@ export const beszelRouter = createTRPCRouter({
       }),
     )
     .subscription(({ ctx, input }) => {
-      return observable<{ integrationId: string; alerts: BeszelAlertsData; timestamp: Date }>((emit) => {
+      return observable<{
+        integrationId: string;
+        alerts: BeszelAlertsData;
+        timestamp: Date;
+      }>((emit) => {
         const unsubscribes = ctx.integrations.map((integration) => {
           const innerHandler = beszelAlertsRequestHandler.handler(integration, {
             includeHistory: input.includeHistory,
             maxHistoryItems: input.maxHistoryItems,
           });
           return innerHandler.subscribe((data) => {
-            emit.next({ integrationId: integration.id, alerts: data, timestamp: new Date() });
+            emit.next({
+              integrationId: integration.id,
+              alerts: data,
+              timestamp: new Date(),
+            });
           });
         });
         return () => {
@@ -117,7 +149,7 @@ export const beszelRouter = createTRPCRouter({
     .input(
       z.object({
         systemId: z.string(),
-        timePeriod: z.enum(["1h", "12h", "24h", "1w", "30d"]),
+        timePeriod: z.enum(["1m", "1h", "12h", "24h", "1w", "30d"]),
         includeDocker: z.boolean().default(true),
       }),
     )
@@ -129,7 +161,47 @@ export const beszelRouter = createTRPCRouter({
         timePeriod: input.timePeriod,
         includeDocker: input.includeDocker,
       });
-      const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data, timestamp } =
+        await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return { integrationId: integration.id, ...data, updatedAt: timestamp };
+    }),
+
+  subscribeSystemStats: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .input(
+      z.object({
+        systemId: z.string(),
+        includeDocker: z.boolean().default(true),
+      }),
+    )
+    .subscription(({ ctx, input }) => {
+      return observable<{
+        stats: BeszelSystemStatsRecord;
+        containerStats: BeszelContainerStatsRecord | null;
+      }>((emit) => {
+        const integration = ctx.integrations[0];
+        if (!integration) return () => {};
+
+        const abortController = new AbortController();
+
+        void (async () => {
+          try {
+            const instance = await createIntegrationAsync(integration);
+            await instance.subscribeRealtimeMetrics(
+              input.systemId,
+              (data) => emit.next(data),
+              abortController.signal,
+            );
+          } catch (error) {
+            if (!abortController.signal.aborted) {
+              emit.error(error instanceof Error ? error : new Error(String(error)));
+            }
+          }
+        })();
+
+        return () => {
+          abortController.abort();
+        };
+      });
     }),
 });

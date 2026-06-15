@@ -14,10 +14,10 @@ type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"
 };
 
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
-  // Unique key for this request handler
   queryKey: string;
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
   cacheDuration: Duration;
+  cacheDurationForInput?: (input: TInput) => Duration | undefined;
 }
 
 export const createCachedIntegrationRequestHandler = <
@@ -34,9 +34,9 @@ export const createCachedIntegrationRequestHandler = <
         requestAsync: async (input: { options: TInput; integration: IntegrationOfKind<TKind> }) => {
           return await options.requestAsync(input.integration, input.options);
         },
-        cacheDuration: options.cacheDuration,
-        createRedisChannel(input, options) {
-          return createIntegrationOptionsChannel<TData>(input.integration.id, options.queryKey, input.options);
+        cacheDuration: options.cacheDurationForInput?.(itemOptions) ?? options.cacheDuration,
+        createRedisChannel(input, handlerOptions) {
+          return createIntegrationOptionsChannel<TData>(input.integration.id, handlerOptions.queryKey, input.options);
         },
       }).handler({ options: itemOptions, integration }),
   };
