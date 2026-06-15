@@ -51,47 +51,47 @@ type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "with
   yAxisDomain?: [number, string];
 };
 
-const BeszelAreaChart = memo(
-  ({
-    yAxisFormatter,
-    yAxisDomain,
-    yAxisProps: yAxisPropsOverride,
-    type = "default",
-    ...props
-  }: BeszelAreaChartProps) => {
-    const mergedYAxis = useMemo(
-      () => ({
-        ...yAxisBase,
-        width: 32,
-        tickMargin: 2,
-        ...(yAxisDomain ? { domain: yAxisDomain } : {}),
-        tickFormatter: yAxisFormatter,
-        ...yAxisPropsOverride,
-      }),
-      [yAxisFormatter, yAxisDomain, yAxisPropsOverride],
-    );
+const BeszelAreaChart = memo(({
+  yAxisFormatter,
+  yAxisDomain,
+  yAxisProps: yAxisPropsOverride,
+  type = "default",
+  ...props
+}: BeszelAreaChartProps) => {
+  const mergedYAxis = useMemo(
+    () => ({
+      ...yAxisBase,
+      width: 48,
+      tickMargin: 2,
+      ...(yAxisDomain ? { domain: yAxisDomain } : {}),
+      tickFormatter: yAxisFormatter,
+      ...yAxisPropsOverride,
+    }),
+    [yAxisFormatter, yAxisDomain, yAxisPropsOverride],
+  );
 
-    return (
-      <AreaChart
-        dataKey="time"
-        curveType="monotone"
-        withGradient={false}
-        connectNulls
-        withDots={false}
-        type={type}
-        strokeWidth={1}
-        fillOpacity={0.2}
-        areaChartProps={noAnimation}
-        withXAxis
-        withYAxis
-        w="100%"
-        style={chartStyle}
-        yAxisProps={mergedYAxis}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <AreaChart
+      dataKey="time"
+      curveType="monotone"
+      withGradient={false}
+      connectNulls
+      withDots={false}
+      type={type}
+      strokeWidth={1}
+      fillOpacity={0.2}
+      areaChartProps={{
+        // margin: { top: 0, right: 0, bottom: 0, left: 10 },
+      }}
+      withXAxis
+      withYAxis
+      w="100%"
+      style={chartStyle}
+      yAxisProps={mergedYAxis}
+      {...props}
+    />
+  );
+});
 
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,

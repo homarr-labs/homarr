@@ -37,7 +37,6 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
   );
 
   const onError = useCallback((err: unknown) => {
-    setData(null);
     setError(err instanceof Error ? err : new Error(String(err)));
   }, []);
 
