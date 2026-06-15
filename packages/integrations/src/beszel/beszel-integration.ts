@@ -290,28 +290,17 @@ export class BeszelIntegration extends Integration {
         }
 
         if ("stats" in parsed) {
-          const stats: BeszelSystemStatsRecord = {
-            id: "",
-            system: systemId,
-            stats: parsed.stats as BeszelSystemStats,
-            type: "1m",
-            created: new Date().toISOString(),
-            updated: new Date().toISOString(),
-          };
+          const now = new Date().toISOString();
+          const envelope = { id: "", system: systemId, type: "1m" as const, created: now, updated: now };
+          const stats: BeszelSystemStatsRecord = { ...envelope, stats: parsed.stats as BeszelSystemStats };
+
           let containerStats: BeszelContainerStatsRecord | null = null;
-          if (
+          const hasContainers =
             parsed.container &&
             Array.isArray(parsed.container) &&
-            (parsed.container as BeszelContainerStats[]).length > 0
-          ) {
-            containerStats = {
-              id: "",
-              system: systemId,
-              stats: parsed.container as BeszelContainerStats[],
-              type: "1m",
-              created: new Date().toISOString(),
-              updated: new Date().toISOString(),
-            };
+            (parsed.container as BeszelContainerStats[]).length > 0;
+          if (hasContainers) {
+            containerStats = { ...envelope, stats: parsed.container as BeszelContainerStats[] };
           }
           onMessage({ stats, containerStats });
         }

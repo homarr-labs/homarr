@@ -36,6 +36,13 @@ const tooltipPercentTotal = makeTooltipProps(formatPercent, true);
 const tooltipBytesTotal = makeTooltipProps(formatStorageBytes, true);
 
 const CHART_HEIGHT = 180;
+const MB = 1024 * 1024;
+const gridColumns = [1, 2] as const;
+
+function statsWhenShown<T>(show: boolean | undefined, data: T | undefined): T | undefined {
+  if (!show || !data) return undefined;
+  return data;
+}
 
 export default function BeszelSystemStatsWidget({
   options,
@@ -88,89 +95,66 @@ export default function BeszelSystemStatsWidget({
     activeStats = liveData;
   }
 
-  const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
-  const memoryMap = useCallback(
-    (s: { mu: number; mb: number }) => ({
-      [t("chart.memory.series")]: s.mu,
-      [t("chart.memory.cache")]: s.mb ?? 0,
-    }),
-    [t],
-  );
-  const diskMap = useCallback((s: { du: number }) => ({ [t("chart.disk.series")]: s.du }), [t]);
-  const diskIOMap = useCallback(
-    (s: { dr?: number; dw?: number }) => ({
-      [t("chart.diskIO.read")]: (s.dr ?? 0) * (1024 * 1024),
-      [t("chart.diskIO.write")]: (s.dw ?? 0) * (1024 * 1024),
-    }),
-    [t],
-  );
-  const networkMap = useCallback(
-    (s: { ns: number; nr: number; b?: [number, number] }) => ({
-      [t("chart.network.sent")]: s.b?.[0] ?? s.ns,
-      [t("chart.network.recv")]: s.b?.[1] ?? s.nr,
+  const mappers = useMemo(
+    () => ({
+      cpu: (s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }),
+      memory: (s: { mu: number; mb: number }) => ({
+        [t("chart.memory.series")]: s.mu,
+        [t("chart.memory.cache")]: s.mb ?? 0,
+      }),
+      disk: (s: { du: number }) => ({ [t("chart.disk.series")]: s.du }),
+      diskIO: (s: { dr?: number; dw?: number }) => ({
+        [t("chart.diskIO.read")]: (s.dr ?? 0) * MB,
+        [t("chart.diskIO.write")]: (s.dw ?? 0) * MB,
+      }),
+      network: (s: { ns: number; nr: number; b?: [number, number] }) => ({
+        [t("chart.network.sent")]: s.b?.[0] ?? s.ns,
+        [t("chart.network.recv")]: s.b?.[1] ?? s.nr,
+      }),
     }),
     [t],
   );
 
-  const cpuSeries = useMemo(() => [{ name: t("chart.cpu.series"), color: "teal.6" }], [t]);
-  const memorySeries = useMemo(
-    () => [
-      { name: t("chart.memory.series"), color: "teal.5" },
-      { name: t("chart.memory.cache"), color: "teal.8" },
-    ],
-    [t],
-  );
-  const diskSeries = useMemo(() => [{ name: t("chart.disk.series"), color: "grape.6" }], [t]);
-  const diskIOSeries = useMemo(
-    () => [
-      { name: t("chart.diskIO.write"), color: "orange.6" },
-      { name: t("chart.diskIO.read"), color: "blue.6" },
-    ],
-    [t],
-  );
-  const networkSeries = useMemo(
-    () => [
-      { name: t("chart.network.sent"), color: "blue.6" },
-      { name: t("chart.network.recv"), color: "teal.6" },
-    ],
+  const series = useMemo(
+    () => ({
+      cpu: [{ name: t("chart.cpu.series"), color: "teal.6" }],
+      memory: [
+        { name: t("chart.memory.series"), color: "teal.5" },
+        { name: t("chart.memory.cache"), color: "teal.8" },
+      ],
+      disk: [{ name: t("chart.disk.series"), color: "grape.6" }],
+      diskIO: [
+        { name: t("chart.diskIO.write"), color: "orange.6" },
+        { name: t("chart.diskIO.read"), color: "blue.6" },
+      ],
+      network: [
+        { name: t("chart.network.sent"), color: "blue.6" },
+        { name: t("chart.network.recv"), color: "teal.6" },
+      ],
+    }),
     [t],
   );
 
   const systemStats = activeStats?.systemStats;
   const containerStatsRaw = activeStats?.containerStats;
 
-  const cpuData = useSystemChartData((options.showCpu && systemStats) || undefined, cpuMap, isLive);
-  const memoryData = useSystemChartData((options.showMemory && systemStats) || undefined, memoryMap, isLive);
-  const diskData = useSystemChartData((options.showDisk && systemStats) || undefined, diskMap, isLive);
-  const diskIOData = useSystemChartData((options.showDiskIO && systemStats) || undefined, diskIOMap, isLive);
-  const networkData = useSystemChartData((options.showNetwork && systemStats) || undefined, networkMap, isLive);
+  const cpuData = useSystemChartData(statsWhenShown(options.showCpu, systemStats), mappers.cpu, isLive);
+  const memoryData = useSystemChartData(statsWhenShown(options.showMemory, systemStats), mappers.memory, isLive);
+  const diskData = useSystemChartData(statsWhenShown(options.showDisk, systemStats), mappers.disk, isLive);
+  const diskIOData = useSystemChartData(statsWhenShown(options.showDiskIO, systemStats), mappers.diskIO, isLive);
+  const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, isLive);
 
-  const containerNames = useContainerNames((showDocker && containerStatsRaw) || undefined);
-  const dockerCpuData = useDockerChartData(
-    (options.showDockerCpu && containerStatsRaw) || undefined,
-    containerNames,
-    "cpu",
-    isLive,
-  );
-  const dockerMemData = useDockerChartData(
-    (options.showDockerMemory && containerStatsRaw) || undefined,
-    containerNames,
-    "memory",
-    isLive,
-  );
-  const dockerNetData = useDockerChartData(
-    (options.showDockerNetwork && containerStatsRaw) || undefined,
-    containerNames,
-    "network",
-    isLive,
-  );
+  const containerNames = useContainerNames(statsWhenShown(showDocker, containerStatsRaw));
+  const dockerCpuData = useDockerChartData(statsWhenShown(options.showDockerCpu, containerStatsRaw), containerNames, "cpu", isLive);
+  const dockerMemData = useDockerChartData(statsWhenShown(options.showDockerMemory, containerStatsRaw), containerNames, "memory", isLive);
+  const dockerNetData = useDockerChartData(statsWhenShown(options.showDockerNetwork, containerStatsRaw), containerNames, "network", isLive);
 
   const containerSeries = useMemo(
     () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
     [containerNames],
   );
 
-  const cols = width > 600 ? 2 : 1;
+  const cols = gridColumns[Number(width > 600)];
 
   if (!systemsPending && !systemExists && systems.length > 0) {
     return (
@@ -260,7 +244,7 @@ export default function BeszelSystemStatsWidget({
                 chartProps={{
                   h: CHART_HEIGHT,
                   data: cpuData,
-                  series: cpuSeries,
+                  series: series.cpu,
                   yAxisFormatter: chartAxisFormatters.percent,
                   yAxisDomain: CPU_Y_AXIS_DOMAIN,
                   tooltipProps: tooltipPercent,
@@ -276,7 +260,7 @@ export default function BeszelSystemStatsWidget({
                   h: CHART_HEIGHT,
                   data: memoryData,
                   type: "stacked",
-                  series: memorySeries,
+                  series: series.memory,
                   yAxisFormatter: chartAxisFormatters.gb,
                   tooltipProps: tooltipGB,
                 }}
@@ -290,7 +274,7 @@ export default function BeszelSystemStatsWidget({
                 chartProps={{
                   h: CHART_HEIGHT,
                   data: diskData,
-                  series: diskSeries,
+                  series: series.disk,
                   yAxisFormatter: chartAxisFormatters.gb,
                   tooltipProps: tooltipGB,
                 }}
@@ -304,7 +288,7 @@ export default function BeszelSystemStatsWidget({
                 chartProps={{
                   h: CHART_HEIGHT,
                   data: diskIOData,
-                  series: diskIOSeries,
+                  series: series.diskIO,
                   yAxisFormatter: chartAxisFormatters.rate,
                   tooltipProps: tooltipRate,
                 }}
@@ -318,7 +302,7 @@ export default function BeszelSystemStatsWidget({
                 chartProps={{
                   h: CHART_HEIGHT,
                   data: networkData,
-                  series: networkSeries,
+                  series: series.network,
                   yAxisFormatter: chartAxisFormatters.rate,
                   tooltipProps: tooltipRate,
                 }}

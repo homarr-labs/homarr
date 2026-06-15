@@ -11,17 +11,11 @@ import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homar
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
 const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
 
-const timeFormatters: Record<string, (ts: string) => string> = {
-  live: formatTimeLive,
-  historical: formatTime,
-};
-
 function prepareRecords<T>(records: T[], live: boolean) {
-  const mode = live ? "live" : "historical";
-  return {
-    fmt: timeFormatters[mode] as (ts: string) => string,
-    ordered: live ? records : [...records].toReversed(),
-  };
+  if (live) {
+    return { fmt: formatTimeLive, ordered: records };
+  }
+  return { fmt: formatTime, ordered: [...records].toReversed() };
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
@@ -88,7 +82,6 @@ const BeszelAreaChart = memo(
         type={type}
         strokeWidth={1}
         fillOpacity={0.2}
-        areaChartProps={{}}
         withXAxis
         withYAxis
         w="100%"
