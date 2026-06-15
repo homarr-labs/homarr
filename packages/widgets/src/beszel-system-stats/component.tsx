@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { ActionIcon, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconServer, IconServerQuestion } from "@tabler/icons-react";
+import { IconServer, IconQuestionMark } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -26,6 +26,7 @@ import {
   formatStorageBytes,
 } from "../beszel/_shared/format";
 import { makeTooltipProps } from "../beszel/_shared/tooltip";
+import { useLiveStats } from "../beszel/_shared/use-live-stats";
 
 const tooltipPercent = makeTooltipProps(formatPercent);
 const tooltipGB = makeTooltipProps(formatGB, true);
@@ -63,6 +64,7 @@ export default function BeszelSystemStatsWidget({
   );
 
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
+  const isLive = options.timePeriod === "1m";
 
   const { data: statsResult } = clientApi.widget.beszel.getSystemStats.useQuery(
     {
@@ -71,8 +73,12 @@ export default function BeszelSystemStatsWidget({
       timePeriod: options.timePeriod as "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000, enabled: systemExists && selectedSystem !== "" },
+    { staleTime: 30 * 1000, enabled: !isLive && systemExists && selectedSystem !== "" },
   );
+
+  const liveData = useLiveStats(integrationIds, selectedSystem, showDocker, isLive && systemExists);
+
+  const activeStats = isLive ? liveData : statsResult;
 
   const cpuMap = useCallback((s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }), [t]);
   const memoryMap = useCallback(
@@ -98,16 +104,16 @@ export default function BeszelSystemStatsWidget({
     [t],
   );
 
-  const cpuData = useSystemChartData(statsResult?.systemStats, cpuMap);
-  const memoryData = useSystemChartData(statsResult?.systemStats, memoryMap);
-  const diskData = useSystemChartData(statsResult?.systemStats, diskMap);
-  const diskIOData = useSystemChartData(statsResult?.systemStats, diskIOMap);
-  const networkData = useSystemChartData(statsResult?.systemStats, networkMap);
+  const cpuData = useSystemChartData(activeStats?.systemStats, cpuMap, isLive);
+  const memoryData = useSystemChartData(activeStats?.systemStats, memoryMap, isLive);
+  const diskData = useSystemChartData(activeStats?.systemStats, diskMap, isLive);
+  const diskIOData = useSystemChartData(activeStats?.systemStats, diskIOMap, isLive);
+  const networkData = useSystemChartData(activeStats?.systemStats, networkMap, isLive);
 
-  const containerNames = useContainerNames(statsResult?.containerStats);
-  const dockerCpuData = useDockerChartData(statsResult?.containerStats, containerNames, "cpu");
-  const dockerMemData = useDockerChartData(statsResult?.containerStats, containerNames, "memory");
-  const dockerNetData = useDockerChartData(statsResult?.containerStats, containerNames, "network");
+  const containerNames = useContainerNames(activeStats?.containerStats);
+  const dockerCpuData = useDockerChartData(activeStats?.containerStats, containerNames, "cpu", isLive);
+  const dockerMemData = useDockerChartData(activeStats?.containerStats, containerNames, "memory", isLive);
+  const dockerNetData = useDockerChartData(activeStats?.containerStats, containerNames, "network", isLive);
 
   const containerSeries = containerNames.map((name, i) => ({
     name,
@@ -120,7 +126,7 @@ export default function BeszelSystemStatsWidget({
     return (
       <Center h="100%">
         <Stack align="center" gap="sm" p="md">
-          <IconServerQuestion size={40} />
+          <IconQuestionMark size={40} />
           <Text size="sm" c="dimmed" ta="center">
             {t("error.systemNotFound")}
           </Text>
@@ -179,7 +185,7 @@ export default function BeszelSystemStatsWidget({
           </Menu>
         )}
 
-        {statsResult && (
+        {activeStats && (
           <SimpleGrid cols={cols} spacing="md">
             {options.showCpu && cpuData.length > 0 && (
               <ChartPanel title={t("chart.cpu.title")} subtitle={t("chart.cpu.subtitle")}>

@@ -4,6 +4,7 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 const timePeriodOptions = [
+  { value: "1m", label: "Live" },
   { value: "1h", label: "1 Hour" },
   { value: "12h", label: "12 Hours" },
   { value: "24h", label: "24 Hours" },
