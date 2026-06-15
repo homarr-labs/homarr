@@ -71,7 +71,7 @@ export default function BeszelSystemStatsWidget({
     {
       integrationIds,
       systemId: selectedSystem,
-      timePeriod: options.timePeriod,
+      timePeriod: options.timePeriod as "1m" | "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
     { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "" },

@@ -162,7 +162,10 @@ export const beszelRouter = createTRPCRouter({
         containerStats: BeszelContainerStatsRecord | null;
       }>((emit) => {
         const integration = ctx.integrations[0];
-        if (!integration) return () => {};
+        if (!integration) {
+          emit.error(new Error("No Beszel integration configured"));
+          return () => {};
+        }
 
         const abortController = new AbortController();
 

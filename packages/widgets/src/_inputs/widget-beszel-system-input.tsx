@@ -16,7 +16,7 @@ export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputPro
 
   const integrationIds = form.values.integrationIds;
 
-  const { data: systemsResult = [], isPending } = clientApi.widget.beszel.getSystems.useQuery(
+  const { data: systemsResult = [], isPending, isError } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { enabled: integrationIds.length > 0, staleTime: 30_000 },
   );
@@ -40,6 +40,8 @@ export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputPro
       searchable
       nothingFoundMessage={t("noSystems")}
       data={systems}
+      disabled={isError}
+      error={isError ? t("loadError") : undefined}
       {...form.getInputProps(`options.${property}`)}
     />
   );

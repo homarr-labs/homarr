@@ -3669,7 +3669,8 @@
           "configureIntegrationFirst": "Configure a Beszel integration first",
           "loading": "Loading systems...",
           "placeholder": "Select a system",
-          "noSystems": "No systems found"
+          "noSystems": "No systems found",
+          "loadError": "Failed to load systems"
         },
         "timePeriod": {
           "label": "Time period"
