@@ -129,16 +129,19 @@ export default function BeszelSystemStatsWidget({
     [t],
   );
 
-  const cpuData = useSystemChartData(activeStats?.systemStats, cpuMap, isLive);
-  const memoryData = useSystemChartData(activeStats?.systemStats, memoryMap, isLive);
-  const diskData = useSystemChartData(activeStats?.systemStats, diskMap, isLive);
-  const diskIOData = useSystemChartData(activeStats?.systemStats, diskIOMap, isLive);
-  const networkData = useSystemChartData(activeStats?.systemStats, networkMap, isLive);
+  const systemStats = activeStats?.systemStats;
+  const containerStatsRaw = activeStats?.containerStats;
 
-  const containerNames = useContainerNames(activeStats?.containerStats);
-  const dockerCpuData = useDockerChartData(activeStats?.containerStats, containerNames, "cpu", isLive);
-  const dockerMemData = useDockerChartData(activeStats?.containerStats, containerNames, "memory", isLive);
-  const dockerNetData = useDockerChartData(activeStats?.containerStats, containerNames, "network", isLive);
+  const cpuData = useSystemChartData(options.showCpu && systemStats || undefined, cpuMap, isLive);
+  const memoryData = useSystemChartData(options.showMemory && systemStats || undefined, memoryMap, isLive);
+  const diskData = useSystemChartData(options.showDisk && systemStats || undefined, diskMap, isLive);
+  const diskIOData = useSystemChartData(options.showDiskIO && systemStats || undefined, diskIOMap, isLive);
+  const networkData = useSystemChartData(options.showNetwork && systemStats || undefined, networkMap, isLive);
+
+  const containerNames = useContainerNames(showDocker && containerStatsRaw || undefined);
+  const dockerCpuData = useDockerChartData(options.showDockerCpu && containerStatsRaw || undefined, containerNames, "cpu", isLive);
+  const dockerMemData = useDockerChartData(options.showDockerMemory && containerStatsRaw || undefined, containerNames, "memory", isLive);
+  const dockerNetData = useDockerChartData(options.showDockerNetwork && containerStatsRaw || undefined, containerNames, "network", isLive);
 
   const containerSeries = useMemo(
     () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
