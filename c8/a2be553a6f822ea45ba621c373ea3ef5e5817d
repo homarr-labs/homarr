@@ -1,0 +1,29 @@
+packages/widgets/src/audio-stats/component.tsx
+  s_00731a1effef9c::t_a819db8ed75246 5,10-15
+packages/widgets/src/ups/component.tsx
+  s_00731a1effef9c::t_5bd727a2f55f12 11
+  s_00731a1effef9c::t_aaa614c6b7bb57 43-46
+  s_00731a1effef9c::t_7e6cff32d9fa3a 66-67
+packages/widgets/src/paperless-ngx/component.tsx
+  s_00731a1effef9c::t_12b8aba9c129ec 11
+  s_00731a1effef9c::t_1f288b0de981f9 75-80
+packages/widgets/src/uptime-kuma/component.tsx
+  s_00731a1effef9c::t_f025ced6811854 12
+  s_00731a1effef9c::t_5f514534fef9d5 110-113,134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "c8a2be553a6f822ea45ba621c373ea3ef5e5817d",
+  "prompts": {},
+  "sessions": {
+    "s_00731a1effef9c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a1f100df-4bb5-48a8-a3f0-88a4c011e509",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
