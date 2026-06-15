@@ -232,7 +232,14 @@ export default function BeszelSystemStatsWidget({
               <BeszelChartPanel
                 title={t("chart.cpu.title")}
                 subtitle={t("chart.cpu.subtitle")}
-                chartProps={{ h: CHART_HEIGHT, data: cpuData, series: cpuSeries, yAxisFormatter: chartAxisFormatters.percent, yAxisDomain: CPU_Y_AXIS_DOMAIN, tooltipProps: tooltipPercent }}
+                chartProps={{
+                  h: CHART_HEIGHT,
+                  data: cpuData,
+                  series: cpuSeries,
+                  yAxisFormatter: chartAxisFormatters.percent,
+                  yAxisDomain: CPU_Y_AXIS_DOMAIN,
+                  tooltipProps: tooltipPercent,
+                }}
               />
             )}
 
@@ -240,7 +247,14 @@ export default function BeszelSystemStatsWidget({
               <BeszelChartPanel
                 title={t("chart.memory.title")}
                 subtitle={t("chart.memory.subtitle")}
-                chartProps={{ h: CHART_HEIGHT, data: memoryData, type: "stacked", series: memorySeries, yAxisFormatter: chartAxisFormatters.gb, tooltipProps: tooltipGB }}
+                chartProps={{
+                  h: CHART_HEIGHT,
+                  data: memoryData,
+                  type: "stacked",
+                  series: memorySeries,
+                  yAxisFormatter: chartAxisFormatters.gb,
+                  tooltipProps: tooltipGB,
+                }}
               />
             )}
 
@@ -248,7 +262,13 @@ export default function BeszelSystemStatsWidget({
               <BeszelChartPanel
                 title={t("chart.disk.title")}
                 subtitle={t("chart.disk.subtitle")}
-                chartProps={{ h: CHART_HEIGHT, data: diskData, series: diskSeries, yAxisFormatter: chartAxisFormatters.gb, tooltipProps: tooltipGB }}
+                chartProps={{
+                  h: CHART_HEIGHT,
+                  data: diskData,
+                  series: diskSeries,
+                  yAxisFormatter: chartAxisFormatters.gb,
+                  tooltipProps: tooltipGB,
+                }}
               />
             )}
 
@@ -256,7 +276,13 @@ export default function BeszelSystemStatsWidget({
               <BeszelChartPanel
                 title={t("chart.diskIO.title")}
                 subtitle={t("chart.diskIO.subtitle")}
-                chartProps={{ h: CHART_HEIGHT, data: diskIOData, series: diskIOSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+                chartProps={{
+                  h: CHART_HEIGHT,
+                  data: diskIOData,
+                  series: diskIOSeries,
+                  yAxisFormatter: chartAxisFormatters.rate,
+                  tooltipProps: tooltipRate,
+                }}
               />
             )}
 
@@ -264,7 +290,13 @@ export default function BeszelSystemStatsWidget({
               <BeszelChartPanel
                 title={t("chart.network.title")}
                 subtitle={t("chart.network.subtitle")}
-                chartProps={{ h: CHART_HEIGHT, data: networkData, series: networkSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+                chartProps={{
+                  h: CHART_HEIGHT,
+                  data: networkData,
+                  series: networkSeries,
+                  yAxisFormatter: chartAxisFormatters.rate,
+                  tooltipProps: tooltipRate,
+                }}
               />
             )}
 
@@ -274,7 +306,14 @@ export default function BeszelSystemStatsWidget({
                   <BeszelChartPanel
                     title={t("chart.dockerCpu.title")}
                     subtitle={t("chart.dockerCpu.subtitle")}
-                    chartProps={{ h: CHART_HEIGHT, data: dockerCpuData, type: "stacked", series: containerSeries, yAxisFormatter: chartAxisFormatters.percent, tooltipProps: tooltipPercentTotal }}
+                    chartProps={{
+                      h: CHART_HEIGHT,
+                      data: dockerCpuData,
+                      type: "stacked",
+                      series: containerSeries,
+                      yAxisFormatter: chartAxisFormatters.percent,
+                      tooltipProps: tooltipPercentTotal,
+                    }}
                   />
                 )}
 
@@ -282,7 +321,14 @@ export default function BeszelSystemStatsWidget({
                   <BeszelChartPanel
                     title={t("chart.dockerMemory.title")}
                     subtitle={t("chart.dockerMemory.subtitle")}
-                    chartProps={{ h: CHART_HEIGHT, data: dockerMemData, type: "stacked", series: containerSeries, yAxisFormatter: chartAxisFormatters.bytes, tooltipProps: tooltipBytesTotal }}
+                    chartProps={{
+                      h: CHART_HEIGHT,
+                      data: dockerMemData,
+                      type: "stacked",
+                      series: containerSeries,
+                      yAxisFormatter: chartAxisFormatters.bytes,
+                      tooltipProps: tooltipBytesTotal,
+                    }}
                   />
                 )}
 
@@ -290,7 +336,13 @@ export default function BeszelSystemStatsWidget({
                   <BeszelChartPanel
                     title={t("chart.dockerNetwork.title")}
                     subtitle={t("chart.dockerNetwork.subtitle")}
-                    chartProps={{ h: CHART_HEIGHT, data: dockerNetData, series: containerSeries, yAxisFormatter: chartAxisFormatters.rate, tooltipProps: tooltipRate }}
+                    chartProps={{
+                      h: CHART_HEIGHT,
+                      data: dockerNetData,
+                      series: containerSeries,
+                      yAxisFormatter: chartAxisFormatters.rate,
+                      tooltipProps: tooltipRate,
+                    }}
                   />
                 )}
               </>
