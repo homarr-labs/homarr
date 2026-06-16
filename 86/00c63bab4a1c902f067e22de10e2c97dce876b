@@ -1,0 +1,28 @@
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_1f672ca9074713::t_83f4f1af4ecbbc 151-152
+apps/docs/docs/management/mcp.mdx
+  s_1f672ca9074713::t_66a523a2df0a73 133
+  s_1f672ca9074713::t_791cc187995479 166
+packages/api/src/router/widgets/beszel.ts
+  s_1f672ca9074713::t_b27f4fb471e13d 70-76
+  s_1f672ca9074713::t_d2ec50da093282 18-24
+  s_1f672ca9074713::t_2afbc1eff8d33f 146-152
+packages/api/src/mcp.ts
+  s_1f672ca9074713::t_de336fcf139b26 19,30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "8600c63bab4a1c902f067e22de10e2c97dce876b",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
