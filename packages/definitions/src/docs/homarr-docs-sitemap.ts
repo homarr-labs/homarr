@@ -233,6 +233,7 @@ export type HomarrDocumentationPath =
   | "/docs/management/search-engines"
   | "/docs/management/settings"
   | "/docs/management/tasks"
+  | "/docs/management/tools/backup"
   | "/docs/management/users"
   | "/docs/widgets/anchor-note"
   | "/docs/widgets/app"
