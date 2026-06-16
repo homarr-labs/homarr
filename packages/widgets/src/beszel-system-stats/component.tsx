@@ -182,6 +182,7 @@ export default function BeszelSystemStatsWidget({
           <Select
             size="xs"
             data={systems}
+            value={selectedSystem}
             placeholder={t("selectSystem")}
             onChange={(value) => value && handleSelectSystem(value)}
           />

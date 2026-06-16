@@ -23,10 +23,8 @@ export const WidgetIntegrationSelectInput = ({
 
   const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
   const currentValue = form.getInputProps(`options.${property}`).value as string;
-  const data =
-    currentValue && !selectData.some((opt) => opt.value === currentValue)
-      ? [...selectData, { value: currentValue, label: currentValue }]
-      : selectData;
+  const hasCurrentInData = !currentValue || selectData.some((opt) => opt.value === currentValue);
+  const data = hasCurrentInData ? selectData : [...selectData, { value: currentValue, label: currentValue }];
 
   if (integrationIds.length === 0) {
     return (
@@ -36,17 +34,21 @@ export const WidgetIntegrationSelectInput = ({
     );
   }
 
+  const description = options.withDescription ? tInput("description") : undefined;
+  const placeholder = isPending ? t("loading") : t("placeholder");
+  const error = isError ? t("loadError") : undefined;
+
   return (
     <Select
       label={tInput("label")}
-      description={options.withDescription ? tInput("description") : undefined}
-      placeholder={(isPending && t("loading")) || t("placeholder")}
+      description={description}
+      placeholder={placeholder}
       clearable={options.clearable}
       searchable={options.searchable}
       nothingFoundMessage={t("noResults")}
       data={data}
       disabled={isError}
-      error={(isError && t("loadError")) || undefined}
+      error={error}
       {...form.getInputProps(`options.${property}`)}
     />
   );

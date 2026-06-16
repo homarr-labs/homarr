@@ -42,9 +42,9 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
   const isReserved = group.name === everyoneGroup;
 
   const searchTerm = searchParams.search?.trim().toLowerCase();
-  const filteredMembers = searchTerm
-    ? group.members.filter((member) => member.name?.toLowerCase().includes(searchTerm))
-    : group.members;
+  const filteredMembers = group.members.filter(
+    (member) => !searchTerm || member.name?.toLowerCase().includes(searchTerm),
+  );
 
   // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
   const managementType = getGroupMemberManagementType();

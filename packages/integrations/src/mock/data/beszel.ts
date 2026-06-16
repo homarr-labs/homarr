@@ -375,7 +375,7 @@ export class BeszelMockService {
       name: names[i % names.length] ?? "CPU",
       val: rand(60, 95),
       created: new Date(now - (i + 1) * 3_600_000).toISOString(),
-      resolved: i % 2 === 0 ? new Date(now - i * 1_800_000).toISOString() : null,
+      resolved: i % 2 === 0 && new Date(now - i * 1_800_000).toISOString() || null,
     }));
   }
 }

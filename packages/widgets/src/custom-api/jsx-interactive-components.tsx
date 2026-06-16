@@ -70,7 +70,8 @@ export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
   const panels = Children.toArray(children).filter(isTabPanel);
   const firstPanel = panels[0];
   const panelValues = new Set(panels.map((p) => p.props.value));
-  const initialTab = (defaultTab && panelValues.has(defaultTab) ? defaultTab : firstPanel?.props.value) ?? null;
+  const resolvedDefault = defaultTab && panelValues.has(defaultTab) && defaultTab;
+  const initialTab = resolvedDefault || firstPanel?.props.value || null;
   const [activeTab, setActiveTab] = useState<string | null>(initialTab);
 
   return (
