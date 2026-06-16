@@ -16,7 +16,7 @@ import { WidgetTextInput } from "./widget-text-input";
 import { WidgetUmamiEventInput } from "./widget-umami-event-input";
 import { WidgetUmamiEventNamesInput } from "./widget-umami-event-names-input";
 import { WidgetUmamiWebsiteInput } from "./widget-umami-website-input";
-import { WidgetBeszelSystemInput } from "./widget-beszel-system-input";
+import { WidgetIntegrationSelectInput } from "./widget-integration-select-input";
 
 const mapping = {
   anchorNote: WidgetAnchorNoteInput,
@@ -36,7 +36,7 @@ const mapping = {
   umamiEventNames: WidgetUmamiEventNamesInput,
   umamiWebsite: WidgetUmamiWebsiteInput,
   customWidgetSelect: WidgetCustomWidgetSelectInput,
-  beszelSystem: WidgetBeszelSystemInput,
+  integrationSelect: WidgetIntegrationSelectInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

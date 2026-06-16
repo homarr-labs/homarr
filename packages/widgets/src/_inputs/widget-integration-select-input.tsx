@@ -2,28 +2,27 @@
 
 import { Select, Text } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputProps<"beszelSystem">) => {
-  const t = useScopedI18n("widget.beszelSystemStats.option.systemId");
+const useIntegrationSelectTranslation = () =>
+  useScopedI18n("widget.integrationSelect");
+
+export const WidgetIntegrationSelectInput = ({
+  property,
+  kind,
+  options,
+}: CommonWidgetInputProps<"integrationSelect">) => {
+  const t = useIntegrationSelectTranslation();
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
-  const integrationIds = form.values.integrationIds;
+  const integrationIds = form.values.integrationIds as string[];
 
-  const {
-    data: systemsResult = [],
-    isPending,
-    isError,
-  } = clientApi.widget.beszel.getSystems.useQuery(
-    { integrationIds },
-    { enabled: integrationIds.length > 0, staleTime: 30_000 },
-  );
+  const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
 
   if (integrationIds.length === 0) {
     return (
@@ -33,17 +32,15 @@ export const WidgetBeszelSystemInput = ({ property, kind }: CommonWidgetInputPro
     );
   }
 
-  const systems = systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
-
   return (
     <Select
       label={tInput("label")}
-      description={tInput("description")}
+      description={options.withDescription ? tInput("description") : undefined}
       placeholder={(isPending && t("loading")) || t("placeholder")}
-      clearable
-      searchable
-      nothingFoundMessage={t("noSystems")}
-      data={systems}
+      clearable={options.clearable}
+      searchable={options.searchable}
+      nothingFoundMessage={t("noResults")}
+      data={selectData}
       disabled={isError}
       error={(isError && t("loadError")) || undefined}
       {...form.getInputProps(`options.${property}`)}

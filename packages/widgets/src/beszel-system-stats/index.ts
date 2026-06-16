@@ -1,5 +1,7 @@
 import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -18,7 +20,20 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      systemId: factory.beszelSystem(),
+      systemId: factory.integrationSelect({
+        withDescription: true,
+        clearable: true,
+        useOptions: (integrationIds: string[]) => {
+          const { data = [], isPending, isError } = clientApi.widget.beszel.getSystems.useQuery(
+            { integrationIds },
+            { enabled: integrationIds.length > 0, staleTime: 30_000 },
+          );
+          const selectData = data.flatMap((r) =>
+            r.systems.map((s) => ({ value: s.id, label: s.name })),
+          );
+          return { data: selectData, isPending, isError };
+        },
+      }),
       timePeriod: factory.select({
         defaultValue: "1h",
         options: timePeriodOptions,

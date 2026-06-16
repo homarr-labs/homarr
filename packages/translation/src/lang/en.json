@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Connect an integration first",
+      "loading": "Loading...",
+      "placeholder": "Select an option",
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
     "app": {
       "name": "App",
       "description": "Embeds an app into the board.",
@@ -3665,12 +3672,7 @@
       "option": {
         "systemId": {
           "label": "System",
-          "description": "Select a Beszel system to display stats for",
-          "configureIntegrationFirst": "Configure a Beszel integration first",
-          "loading": "Loading systems...",
-          "placeholder": "Select a system",
-          "noSystems": "No systems found",
-          "loadError": "Failed to load systems"
+          "description": "Select a Beszel system to display stats for"
         },
         "timePeriod": {
           "label": "Time period"
