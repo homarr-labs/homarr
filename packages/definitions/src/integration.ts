@@ -355,6 +355,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
     defaultPort: 80,
   },
+  gotify: {
+    name: "Gotify",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
+    category: ["notifications"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+  },
   ical: {
     name: "iCal",
     secretKinds: [["url"]],

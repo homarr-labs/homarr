@@ -17,6 +17,7 @@ export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
+export { GotifyIntegration } from "./gotify/gotify-integration";
 export { NTFYIntegration } from "./ntfy/ntfy-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { GlancesIntegration } from "./glances/glances-integration";
