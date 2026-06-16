@@ -147,14 +147,14 @@ export const beszelRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get historical Beszel system metrics (CPU, memory, disk, network, temperature) and optional Docker container stats. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all), systemId (from beszel_getSystems). OPTIONAL: timePeriod (1h/12h/24h/1w/30d, default 1h), includeDocker (default true)",
+          "Get historical Beszel system metrics (CPU, memory, disk, network, temperature) and optional Docker container stats. REQUIRED: integrationIds (pass the single integrationId from the beszel_getSystems entry containing the target system — only the first ID is used), systemId (from beszel_getSystems). OPTIONAL: timePeriod (1m/1h/12h/24h/1w/30d, default 1h), includeDocker (default true)",
       },
     })
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
         systemId: z.string(),
-        timePeriod: z.enum(["1m", "1h", "12h", "24h", "1w", "30d"]),
+        timePeriod: z.enum(["1m", "1h", "12h", "24h", "1w", "30d"]).default("1h"),
         includeDocker: z.boolean().default(true),
       }),
     )

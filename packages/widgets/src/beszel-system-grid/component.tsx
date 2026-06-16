@@ -1,5 +1,6 @@
 "use client";
 
+import type { MantineSize } from "@mantine/core";
 import { Badge, Box, Card, Group, Progress, Text, Stack, useComputedColorScheme } from "@mantine/core";
 import {
   Activity,
@@ -153,7 +154,7 @@ interface SystemCardProps {
   size: SizeConfig;
   maxMetrics: number;
   backgroundColor: string;
-  itemRadius: string;
+  itemRadius: MantineSize;
 }
 
 const metricRenderers = [
