@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_1f672ca9074713::t_b4f0eacd8c4c7c 60,66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "39900090b3b83e112169ecbd2f319e4cf5b41a50",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
