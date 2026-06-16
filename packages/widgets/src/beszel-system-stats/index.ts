@@ -24,13 +24,15 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
         withDescription: true,
         clearable: true,
         useOptions: (integrationIds: string[]) => {
-          const { data = [], isPending, isError } = clientApi.widget.beszel.getSystems.useQuery(
+          const {
+            data = [],
+            isPending,
+            isError,
+          } = clientApi.widget.beszel.getSystems.useQuery(
             { integrationIds },
             { enabled: integrationIds.length > 0, staleTime: 30_000 },
           );
-          const selectData = data.flatMap((r) =>
-            r.systems.map((s) => ({ value: s.id, label: s.name })),
-          );
+          const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
           return { data: selectData, isPending, isError };
         },
       }),

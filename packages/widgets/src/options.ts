@@ -63,9 +63,7 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
 interface IntegrationSelectInput extends CommonInput<string> {
   clearable?: boolean;
   searchable?: boolean;
-  useOptions: (
-    integrationIds: string[],
-  ) => {
+  useOptions: (integrationIds: string[]) => {
     data: { value: string; label: string }[];
     isPending: boolean;
     isError: boolean;

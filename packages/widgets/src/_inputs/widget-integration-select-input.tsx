@@ -8,8 +8,7 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-const useIntegrationSelectTranslation = () =>
-  useScopedI18n("widget.integrationSelect");
+const useIntegrationSelectTranslation = () => useScopedI18n("widget.integrationSelect");
 
 export const WidgetIntegrationSelectInput = ({
   property,
