@@ -1,0 +1,21 @@
+packages/widgets/src/_inputs/widget-integration-select-input.tsx
+  s_1f672ca9074713::t_cb4c2d2269b2ad 25-29,47
+packages/widgets/src/beszel/_shared/use-live-stats.ts
+  s_1f672ca9074713::t_1fa9e627285331 33,35,38,47-57,75,77,83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "5078c300f824029450db9ad25418af770626d60e",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
