@@ -1,4 +1,12 @@
-import { getAlbumInfo, getAllAlbums, getMyUser, getServerStatistics, init, searchAssets, searchUsers } from "@immich/sdk";
+import {
+  getAlbumInfo,
+  getAllAlbums,
+  getMyUser,
+  getServerStatistics,
+  init,
+  searchAssets,
+  searchUsers,
+} from "@immich/sdk";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
