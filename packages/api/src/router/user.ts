@@ -7,12 +7,12 @@ import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, like } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { credentialsAdminGroup } from "@homarr/definitions";
+import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -257,7 +257,7 @@ export const userRouter = createTRPCRouter({
     }),
   // Is protected because also used in board access / integration access forms
   selectable: protectedProcedure
-    .input(z.object({ excludeExternalProviders: z.boolean().default(false) }).optional())
+    .input(z.object({ providers: z.array(z.enum(supportedAuthProviders)).optional() }).optional())
     .output(
       z.array(
         selectUserSchema.pick({
@@ -284,7 +284,7 @@ export const userRouter = createTRPCRouter({
           image: true,
           email: true,
         },
-        where: input?.excludeExternalProviders ? eq(users.provider, "credentials") : undefined,
+        where: input?.providers ? inArray(users.provider, input.providers) : undefined,
       });
     }),
   search: permissionRequiredProcedure

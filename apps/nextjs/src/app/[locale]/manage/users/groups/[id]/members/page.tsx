@@ -1,12 +1,27 @@
 import { notFound } from "next/navigation";
-import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import {
+  Alert,
+  Anchor,
+  Center,
+  Group,
+  Stack,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTr,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
+import {
+  getGroupMemberManagementType,
+  getLocallyManageableProviders,
+  isGroupMembershipManagedLocally,
+} from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
@@ -40,14 +55,17 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
 
   const filteredMembers = searchParams.search
     ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
+      group.members.filter((member) =>
+        member.name
+          ?.toLowerCase()
+          .includes(searchParams.search!.trim().toLowerCase()),
+      )
     : group.members;
 
-  const providerTypes = isProviderEnabled("credentials")
-    ? env.AUTH_PROVIDERS.length > 1
-      ? "mixed"
-      : "credentials"
-    : "external";
+  // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
+  const managementType = getGroupMemberManagementType();
+  const canManageMembers = managementType !== "external";
+  const allowedProviders = getLocallyManageableProviders();
 
   return (
     <Stack>
@@ -56,17 +74,28 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       {isReserved ? (
         <ReservedGroupAlert />
       ) : (
-        providerTypes !== "credentials" && (
-          <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-            {t(`group.memberNotice.${providerTypes}`)}
+        managementType !== "local" && (
+          <Alert
+            variant="light"
+            color="yellow"
+            icon={<IconExclamationCircle size="1rem" stroke={1.5} />}
+          >
+            {t(`group.memberNotice.${managementType}`)}
           </Alert>
         )
       )}
 
       <Group justify="space-between">
-        <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
-        {isProviderEnabled("credentials") && !isReserved && (
-          <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        <SearchInput
+          placeholder={`${tMembers("search")}...`}
+          defaultValue={searchParams.search}
+        />
+        {canManageMembers && !isReserved && (
+          <AddGroupMember
+            groupId={group.id}
+            presentUserIds={group.members.map((member) => member.id)}
+            allowedProviders={allowedProviders}
+          />
         )}
       </Group>
       {filteredMembers.length === 0 && (
@@ -79,7 +108,12 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
+            <Row
+              key={group.id}
+              member={member}
+              groupId={group.id}
+              disabled={isReserved}
+            />
           ))}
         </TableTbody>
       </Table>
@@ -94,6 +128,8 @@ interface RowProps {
 }
 
 const Row = ({ member, groupId, disabled }: RowProps) => {
+  const canBeRemoved = isGroupMembershipManagedLocally(member.provider);
+
   return (
     <TableTr>
       <TableTd>
@@ -105,7 +141,9 @@ const Row = ({ member, groupId, disabled }: RowProps) => {
         </Group>
       </TableTd>
       <TableTd w={100}>
-        {member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}
+        {canBeRemoved && !disabled && (
+          <RemoveGroupMember user={member} groupId={groupId} />
+        )}
       </TableTd>
     </TableTr>
   );

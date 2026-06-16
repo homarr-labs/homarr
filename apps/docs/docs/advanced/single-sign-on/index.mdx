@@ -124,6 +124,8 @@ Homarr supports multiple authentication options, from internal userbase (credent
 
     Roles are fetched from group claims. This can also be changed to roles for example added to a azure app registration by using the `AUTH_OIDC_GROUPS_ATTRIBUTE`.
 
+    If you'd rather manage group memberships for OIDC users locally (instead of via the IdP), set `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT=true`. While enabled, Homarr stops syncing OIDC users' group memberships from the groups claim, and admins can add/remove OIDC users on a group's members page. If you turn this back to `false`, the next login of each user resumes the regular sync and reconciles their groups with the IdP's claim again, which may remove memberships that were added manually while local management was enabled.
+
     <details>
       <summary>
         Example Setup
@@ -197,6 +199,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
     | ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
     | ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
     | ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim                  | groups        |
+    | ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
     | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
     | ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
     | ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
