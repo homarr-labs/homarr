@@ -165,6 +165,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/gotify" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg" alt="Gotify" width="90" height="90" />
+  <br/>  
+  <p align="center">Gotify</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/home-assistant" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg" alt="Home Assistant" width="90" height="90" />
   <br/>  
@@ -198,15 +205,15 @@
   <br/>  
   <p align="center">Jellyseerr</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/lidarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg" alt="Lidarr" width="90" height="90" />
   <br/>  
   <p align="center">Lidarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/linux-server-io" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg" alt="LinuxServer.io" width="90" height="90" />
   <br/>  
@@ -247,15 +254,15 @@
   <br/>  
   <p align="center">NZBGet</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/open-media-vault" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg" alt="OpenMediaVault" width="90" height="90" />
   <br/>  
   <p align="center">OpenMediaVault</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/opnsense" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg" alt="OPNsense" width="90" height="90" />
   <br/>  
@@ -296,15 +303,15 @@
   <br/>  
   <p align="center">Plex</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/prowlarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg" alt="Prowlarr" width="90" height="90" />
   <br/>  
   <p align="center">Prowlarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/proxmox" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg" alt="Proxmox" width="90" height="90" />
   <br/>  
@@ -345,15 +352,15 @@
   <br/>  
   <p align="center">SABnzbd</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/search-ch" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/search-ch.png" alt="Search.ch" width="90" height="90" />
   <br/>  
   <p align="center">Search.ch</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/seerr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg" alt="Seerr" width="90" height="90" />
   <br/>  
@@ -394,15 +401,15 @@
   <br/>  
   <p align="center">Technitium<br/>DNS</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/tracearr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg" alt="Tracearr" width="90" height="90" />
   <br/>  
   <p align="center">Tracearr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/transmission" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg" alt="Transmission" width="90" height="90" />
   <br/>  
