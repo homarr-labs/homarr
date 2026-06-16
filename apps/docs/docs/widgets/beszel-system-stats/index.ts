@@ -11,7 +11,7 @@ export const beszelSystemStatsWidget: WidgetDefinition = {
       {
         name: "System",
         description: "The Beszel system to display stats for. Searchable select populated from the integration.",
-        values: { type: "text" },
+        values: { type: "string" },
         defaultValue: "First available system",
       },
       {
