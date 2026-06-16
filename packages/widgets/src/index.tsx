@@ -10,6 +10,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import * as anchorNote from "./anchor-note";
 import * as audioStats from "./audio-stats";
 import * as app from "./app";
+import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
@@ -67,6 +68,7 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  archiveTeamWarrior,
   anchorNote,
   notebook,
   iframe,

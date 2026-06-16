@@ -61,38 +61,38 @@ catalogs:
       specifier: ^1.4.0
       version: 1.4.0
     '@mantine/charts':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/colors-generator':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/core':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/dates':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/dropzone':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/form':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/hooks':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/modals':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/notifications':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/spotlight':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@mantine/tiptap':
-      specifier: ^9.3.0
-      version: 9.3.0
+      specifier: ^9.3.1
+      version: 9.3.1
     '@modelcontextprotocol/sdk':
       specifier: 1.29.0
       version: 1.29.0
@@ -217,8 +217,8 @@ catalogs:
       specifier: ^11.17.0
       version: 11.17.0
     '@turbo/gen':
-      specifier: ^2.9.16
-      version: 2.9.16
+      specifier: ^2.9.18
+      version: 2.9.18
     '@types/adm-zip':
       specifier: 0.5.8
       version: 0.5.8
@@ -244,8 +244,8 @@ catalogs:
       specifier: ^4.0.1
       version: 4.0.1
     '@types/node':
-      specifier: ^24.13.1
-      version: 24.13.1
+      specifier: ^24.13.2
+      version: 24.13.2
     '@types/node-unifi':
       specifier: ^2.5.1
       version: 2.5.1
@@ -514,8 +514,8 @@ catalogs:
       specifier: 4.20.4
       version: 4.20.4
     turbo:
-      specifier: ^2.9.16
-      version: 2.9.16
+      specifier: ^2.9.18
+      version: 2.9.18
     typescript:
       specifier: ^6.0.3
       version: 6.0.3
@@ -566,7 +566,7 @@ overrides:
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.6'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.6'
   esbuild@<=0.24.2: '>=0.28.0'
-  form-data@>=4.0.0 <4.0.4: '>=4.0.5'
+  form-data@>=4.0.0 <4.0.4: '>=4.0.6'
   hono@<4.6.5: '>=4.12.25'
   linkifyjs@<4.3.2: '>=4.3.3'
   nanoid@>=4.0.0 <5.0.9: '>=5.1.11'
@@ -618,7 +618,7 @@ importers:
         version: 12.0.1
       '@turbo/gen':
         specifier: 'catalog:'
-        version: 2.9.16(@types/node@24.13.1)
+        version: 2.9.18(@types/node@24.13.1)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.2(babel-plugin-react-compiler@1.0.0)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
@@ -654,7 +654,7 @@ importers:
         version: 12.0.1
       turbo:
         specifier: 'catalog:'
-        version: 2.9.16
+        version: 2.9.18
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -666,7 +666,7 @@ importers:
         version: 6.1.1(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
       vitest:
         specifier: 'catalog:'
-        version: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+        version: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
 
   apps/docs:
     dependencies:
@@ -725,7 +725,7 @@ importers:
         specifier: ^1.1.9
         version: 1.1.9
       postcss:
-        specifier: ^8.5.10
+        specifier: ^8.5.15
         version: 8.5.15
       posthog-docusaurus:
         specifier: ^2.0.5
@@ -796,7 +796,7 @@ importers:
         version: 3.2.2(react@19.2.7)
       '@gfazioli/mantine-onboarding-tour':
         specifier: 'catalog:'
-        version: 4.0.4(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.0.4(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../../packages/analytics
@@ -892,22 +892,22 @@ importers:
         version: link:../../packages/widgets
       '@mantine/colors-generator':
         specifier: 'catalog:'
-        version: 9.3.0(chroma-js@3.2.0)
+        version: 9.3.1(chroma-js@3.2.0)
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/dropzone':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       '@mantine/modals':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/tiptap':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tiptap/extension-link@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@tiptap/react@3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tiptap/extension-link@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@tiptap/react@3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@modelcontextprotocol/sdk':
         specifier: 'catalog:'
         version: 1.29.0(zod@4.4.3)
@@ -973,7 +973,7 @@ importers:
         version: 17.4.2
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1)
       flag-icons:
         specifier: 'catalog:'
         version: 7.5.0
@@ -994,10 +994,10 @@ importers:
         version: 1.17.0(react@19.2.7)
       mantine-datatable:
         specifier: 'catalog:'
-        version: 9.2.2(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.2.2(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
-        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mcp-handler:
         specifier: 'catalog:'
         version: 1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))
@@ -1033,7 +1033,7 @@ importers:
         version: 2.2.6
       trpc-to-mcp:
         specifier: 'catalog:'
-        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3)
+        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3)
       use-deep-compare-effect:
         specifier: 'catalog:'
         version: 1.8.1(react@19.2.7)
@@ -1058,7 +1058,7 @@ importers:
         version: 3.1.2
       '@types/node':
         specifier: 'catalog:'
-        version: 24.13.1
+        version: 24.13.2
       '@types/prismjs':
         specifier: 'catalog:'
         version: 1.26.6
@@ -1152,7 +1152,7 @@ importers:
         version: link:../../tooling/typescript
       '@types/node':
         specifier: 'catalog:'
-        version: 24.13.1
+        version: 24.13.2
       dotenv-cli:
         specifier: 'catalog:'
         version: 11.0.0
@@ -1343,7 +1343,7 @@ importers:
         version: 2.2.6
       trpc-to-mcp:
         specifier: 'catalog:'
-        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3)
+        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3)
       trpc-to-openapi:
         specifier: 'catalog:'
         version: 3.3.0(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.17.0(typescript@6.0.3))(zod-openapi@5.3.0(zod@4.4.3))(zod@4.4.3)
@@ -1679,7 +1679,7 @@ importers:
         version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@paralleldrive/cuid2':
         specifier: 'catalog:'
         version: 3.3.0
@@ -1793,7 +1793,7 @@ importers:
         version: link:../validation
       '@mantine/form':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1833,7 +1833,7 @@ importers:
         version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -1999,10 +1999,10 @@ importers:
         version: link:../ui
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -2051,7 +2051,7 @@ importers:
         version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -2085,7 +2085,7 @@ importers:
         version: link:../ui
       '@mantine/notifications':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -2134,10 +2134,10 @@ importers:
         version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       adm-zip:
         specifier: 'catalog:'
         version: 0.5.17
@@ -2305,7 +2305,7 @@ importers:
         version: link:../server-settings
       '@mantine/dates':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)
@@ -2360,13 +2360,13 @@ importers:
         version: link:../ui
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       '@mantine/spotlight':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -2409,7 +2409,7 @@ importers:
         version: 4.3.1
       mantine-react-table:
         specifier: 'catalog:'
-        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)
@@ -2449,13 +2449,13 @@ importers:
         version: link:../validation
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/dates':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -2464,7 +2464,7 @@ importers:
         version: 4.2.0
       mantine-react-table:
         specifier: 'catalog:'
-        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)
@@ -2586,16 +2586,16 @@ importers:
         version: link:../validation
       '@mantine/charts':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
+        version: 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
       '@mantine/core':
         specifier: 'catalog:'
-        version: 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/form':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
-        version: 9.3.0(react@19.2.7)
+        version: 9.3.1(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -2661,10 +2661,10 @@ importers:
         version: 1.17.0(react@19.2.7)
       mantine-datatable:
         specifier: 'catalog:'
-        version: 9.2.2(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.2.2(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
-        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: mantine-react-table-open@9.0.3(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)
@@ -5460,88 +5460,88 @@ packages:
   '@libsql/core@0.14.0':
     resolution: {integrity: sha512-nhbuXf7GP3PSZgdCY2Ecj8vz187ptHlZQ0VRc751oB2C1W8jQUXKKklvt7t1LJiUTQBVJuadF628eUk+3cRi4Q==}
 
-  '@mantine/charts@9.3.0':
-    resolution: {integrity: sha512-ofqpHVEPbzebnLziFluWc0DF5QEPan3WdeAQxRyY0eZ5YZoulAwEq5nMhClQ+haEladVvfoovOuqS4jozWMFNw==}
+  '@mantine/charts@9.3.1':
+    resolution: {integrity: sha512-T09AnLs+yhjw97kqC2RHC58yj7YzaGRDRbANOONt7DPsRcSxHq8snQ9Qo4GrzxjcLUgXlN2eR1UfM4QHlY6y9A==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       react: ^19.2.0
       react-dom: ^19.2.0
       recharts: '>=3.2.1'
 
-  '@mantine/colors-generator@9.3.0':
-    resolution: {integrity: sha512-pm0jIqW4r0nq91pAZPf3ANNtPRY+V0Op0XZSqEwXGIv5FbNqQAb6Xqc6hJShXynanORlHTdtdwzveYZKDhFF9Q==}
+  '@mantine/colors-generator@9.3.1':
+    resolution: {integrity: sha512-BkY9JSAZq5J9yw/58WWqRHlt8pFJpu2MhN1bzILVTdu3sLVpYhJP0LnCvFb5InqYZQ6VLSui06B/Px4pObYRuw==}
     peerDependencies:
       chroma-js: '>=2.4.2'
 
-  '@mantine/core@9.3.0':
-    resolution: {integrity: sha512-mHVCm61YVW9ipy9eHiKMqsRUm3TkOErbdw7zHs0HRw5g403nf7tSTqNGvaYE+aX1Py874qMkrUzeQfj4bjiiBA==}
+  '@mantine/core@9.3.1':
+    resolution: {integrity: sha512-4rBoHpggSohayE+Os7lKdbsHTw7m/uZRKYjk9DN6cKBhQIjdiULdcG+b4b5CMVZSqZDHPgT70uWGI7yqkn8Ufw==}
     peerDependencies:
-      '@mantine/hooks': 9.3.0
+      '@mantine/hooks': 9.3.1
       react: ^19.2.0
       react-dom: ^19.2.0
 
-  '@mantine/dates@9.3.0':
-    resolution: {integrity: sha512-THGHMi32EqhyU46i6d5wRAWrWKJ21MnOO/eZ9u/SwkgZBDbkzduouLYSrBprAPhD68dflz15nGCfVZ0rYSgT0w==}
+  '@mantine/dates@9.3.1':
+    resolution: {integrity: sha512-Nh4XQyyV1AM0XRnUJugb1kNfCm++nkticsO8aroKmFPZ7cpGV7cjdL+4MJNPu1atS1EUePXl2VLLpKnrclpqOQ==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       dayjs: '>=1.0.0'
       react: ^19.2.0
       react-dom: ^19.2.0
 
-  '@mantine/dropzone@9.3.0':
-    resolution: {integrity: sha512-YnAO0+HGnHTSsQ44DJC5bWF4kcnuAiVUVottTjZJ1nsWnoagE+W5/XFWiFMtK0aep4btRFS8EHdoFai7YIFkvA==}
+  '@mantine/dropzone@9.3.1':
+    resolution: {integrity: sha512-WsjsMH9NUz5y9XAR/vOUbyb+y0X0Kud6KV1K/xURwrbxena2b1tl+WvjPO/6vRiJeTpFlMuoWF/8nwqnxoGUeg==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       react: ^19.2.0
       react-dom: ^19.2.0
 
-  '@mantine/form@9.3.0':
-    resolution: {integrity: sha512-1jFQgz1XURfNw0v+/h+T4d05+4gxrRk9C+EgrNNz+7/2Hg7y7WQRXrQxcYvxmp8/k0bv659i2ZyJYj3neA8qjg==}
+  '@mantine/form@9.3.1':
+    resolution: {integrity: sha512-dGJPcYGkfDnAPKHcnzgf2mSlnjwymaOyROiTEJNbbjE3OVoWbPaw8HwEKav1wATdxNYR9Bw1GHtbfbGTsm1Jww==}
     peerDependencies:
       react: ^19.2.0
 
-  '@mantine/hooks@9.3.0':
-    resolution: {integrity: sha512-QoSr9WI4WsKWrM3qFYYizHUn3+n+CVcFMYe4sdlnmFPStvs6BacPODKJSbFlYl73Z20t82JIy0eKqt4noHQI2g==}
+  '@mantine/hooks@9.3.1':
+    resolution: {integrity: sha512-zAOlxV59j5CDgAnExN+ypaR6dVW1vwMKDvKUxIlUVd/e52qxYnPyYRD+shJmyOLaZRuQmVF0R/7mJAjt2jw9cA==}
     peerDependencies:
       react: ^19.2.0
 
-  '@mantine/modals@9.3.0':
-    resolution: {integrity: sha512-Hnj7Mm89VW4kTnHrzaB3UARZg3qgaRr0jvSqSvwJMdgpY6WykyqLKeMyFE+7YQNq44gQ46yV3Q3VOyZsHchaew==}
+  '@mantine/modals@9.3.1':
+    resolution: {integrity: sha512-JqP1o6hrfQJ5UCq97HJsI7uIPDy+WwvWwkkfctWqcYkFJA2DU8dVoPqvEhnhDQUIXNci3sx6XDoQZAq1Qg57mw==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
-      react: ^19.2.0
-      react-dom: ^19.2.0
-
-  '@mantine/notifications@9.3.0':
-    resolution: {integrity: sha512-ikkgAVGccbyU/WLru6b2cZsVqky8iEvduCPAPBnSPd5UQBEjcZr11F0LFUGAHwBM94InDzdf4HQiSBMG2lXRRw==}
-    peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       react: ^19.2.0
       react-dom: ^19.2.0
 
-  '@mantine/spotlight@9.3.0':
-    resolution: {integrity: sha512-l8TRLjSLwilTQwzvZ8AS2L0Xwj1lTIjynXiegbZOKiUk0ga5yYhj5w77jsxGX9sy+LTYmkqYwRGhnSUujKB6Jg==}
+  '@mantine/notifications@9.3.1':
+    resolution: {integrity: sha512-irkD9uszgVftthbCLd+4lS7M1jkhL4sVrZASv8+43aIkncW+oQkCFpBuaOAf6uRcMjmQ7XnKs2O8bXYzl/DqgQ==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       react: ^19.2.0
       react-dom: ^19.2.0
 
-  '@mantine/store@9.3.0':
-    resolution: {integrity: sha512-hTSXBRCPiQeVcoYRTAOtlSPFHcD6Iexf1Sbhjk/Ne5k+LUdeYAaDOZHdyljepO0+8HVavR31ZvkNCQXuoV793w==}
+  '@mantine/spotlight@9.3.1':
+    resolution: {integrity: sha512-NsNXywYhKuHnESoMCX1+e2za0GQJYQ43zMUIkr8XwHiyIzdU/tmFJh+k+jfUeFKPfnS5uRy+vJvC6z320aNbTw==}
+    peerDependencies:
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
+      react: ^19.2.0
+      react-dom: ^19.2.0
+
+  '@mantine/store@9.3.1':
+    resolution: {integrity: sha512-UZ8wGKfF/NFMHCDl1Rd0M8XtHdt4W1w3V4ohNpFSaP3nSjJ+Cu1FT+iIWtXwC0Ogha8XnuVQ7vm/dw2BUfpw+g==}
     peerDependencies:
       react: ^19.2.0
 
-  '@mantine/tiptap@9.3.0':
-    resolution: {integrity: sha512-NO7fe901b0eF6UoxGy6qhMyZMdcV2d548HLnA4FM/UD0WY4VIThslo5FoxsUQc6JhUbNczAvgibPd4PGjaczbw==}
+  '@mantine/tiptap@9.3.1':
+    resolution: {integrity: sha512-trXZ6mN6p3ukxudOuC8r+PapA7UVQ/az4cSOmiE3m8n1s3IcoyaiwAB5l2iM/Df9lByhs1B6ka8SG1F6Wda2NQ==}
     peerDependencies:
-      '@mantine/core': 9.3.0
-      '@mantine/hooks': 9.3.0
+      '@mantine/core': 9.3.1
+      '@mantine/hooks': 9.3.1
       '@tiptap/extension-link': '>=3.3.0'
       '@tiptap/react': '>=3.3.0'
       react: ^19.2.0
@@ -7468,37 +7468,37 @@ packages:
   '@tsconfig/docusaurus@2.0.9':
     resolution: {integrity: sha512-0jVxZCgy2v7TnJrW9kVNikNwJHeiWb68Zhiiw2vHw4tzBFSP5vS2zn3O5EY2oPEVz5dXZRkK7MnWG3Ay5q0mIg==}
 
-  '@turbo/darwin-64@2.9.16':
-    resolution: {integrity: sha512-jLjApWTSNd7JZ5JaLYfelW1ytnGQOvB7ivl+2RD1xQvJTbi8I9gBjzcga7tDZVPyaxpl10YTfJt3BrYXR18KDw==}
+  '@turbo/darwin-64@2.9.18':
+    resolution: {integrity: sha512-9f27peFu16ur8c0v9nUFUEyBnbKuuFsUTjHFWfmwGfzySBXbHwzU44QhZon6Mznz0cHsIr3984NQj/bVrnGSRw==}
     cpu: [x64]
     os: [darwin]
 
-  '@turbo/darwin-arm64@2.9.16':
-    resolution: {integrity: sha512-YPgrn+5HIGzrx0O2a631SV4MBQUe4W/DafMFUuBVgaU32PW9/OTT0ehviF0QSxTXuRJlHvW2eUTemddF5/spmw==}
+  '@turbo/darwin-arm64@2.9.18':
+    resolution: {integrity: sha512-9A6TMRq/Ib+QnbhLlgkhOm+624wO4pzSQ/yQviQfWHOlFvaYxdnIAYmu2H6TS6y7kSVL0DvzNe04NbESTOzFVQ==}
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/gen@2.9.16':
-    resolution: {integrity: sha512-nvEBt1FUqA7zO821Yw/GuggAG8JeT0J2en+vwvuSNqHa0df+a2zhzHF2vx/oguWQm1HCjgx87VIJWzMOr2grYA==}
+  '@turbo/gen@2.9.18':
+    resolution: {integrity: sha512-9Ry3V2eqFANYI7A5dyjehq2EOuLTY30XQSg4aDR7F3cJOuiP/Ad2KXwrxD3AnwNDkuSDVbJjlbES7yfJ0y7dhw==}
     hasBin: true
 
-  '@turbo/linux-64@2.9.16':
-    resolution: {integrity: sha512-vAEf1H6l26lTpl9FJ/peQo1NUB8RC0sbEJJz5mPcUhHA2bPDup2x3CZPgo/bH8S4cUcBLm4FN3UHd5iUO2RAew==}
+  '@turbo/linux-64@2.9.18':
+    resolution: {integrity: sha512-zCdIDtz69AnbYh913elJRRoF3QY5aa2HNnf+4rAkc7bQ+tWujiDkCNV7stazOUPggaDvhKIf2Z87qHftTeXSkw==}
     cpu: [x64]
     os: [linux]
 
-  '@turbo/linux-arm64@2.9.16':
-    resolution: {integrity: sha512-xDBLR2PZg4BrQOchfG6svgpv5FCNJ2TOtT2psLdEJcdKo1BH+pnPs9Xj6pvUjgfkHbuvBOfeE4R6tvxMoQKDHQ==}
+  '@turbo/linux-arm64@2.9.18':
+    resolution: {integrity: sha512-Va1kXI04naMgYwqv/5Dfa36dTDx8015U7oaQAjrXa45ua9OoFjSV4OmvkML4EmXvUclQHCiBRbY8bvd0jV7eAg==}
     cpu: [arm64]
     os: [linux]
 
-  '@turbo/windows-64@2.9.16':
-    resolution: {integrity: sha512-NBAJnaUiGdgkSzQwUIdOvkCkcpTSu58G/sBGa0mvBtzfvFOOgrQwepKOOQ8cp6sWM6OcKDNFj2p1dsZA1OWjPg==}
+  '@turbo/windows-64@2.9.18':
+    resolution: {integrity: sha512-m0kDhZANxSNz9ck1ybogFscHabriAsp4eDFNrN/1H5WrgTF7b3VlcPZnhuO3v2+E2KnCbeAc+UUT10BZZHdDKw==}
     cpu: [x64]
     os: [win32]
 
-  '@turbo/windows-arm64@2.9.16':
-    resolution: {integrity: sha512-Y7SJppD0Z8wjO3Ec0ZGd9KQ4Yv0BMnA8CIowj5Vp+OEVsosXDG2weK6/t1RRLfJmc2Ozrnd6y4DOgQys+mn3WQ==}
+  '@turbo/windows-arm64@2.9.18':
+    resolution: {integrity: sha512-nUdR8WqoomUys9iIQmG45TMiizJ+5BV8egSeLLZba/AWblyp3fVBcIH1kSE58OtK4g2YzbMJEth6Ttv9w5rqMA==}
     cpu: [arm64]
     os: [win32]
 
@@ -7745,11 +7745,11 @@ packages:
   '@types/node@18.19.50':
     resolution: {integrity: sha512-xonK+NRrMBRtkL1hVCc3G+uXtjh1Al4opBLjqVmipe5ZAaBYWW6cNAiBVZ1BvmkBhep698rP3UM3aRAdSALuhg==}
 
-  '@types/node@24.12.4':
-    resolution: {integrity: sha512-GUUEShf+PBCGW2KaXwcIt3Yk+e3pkKwWKb9GSyM9WQVE+ep2jzmHdGsHzu4wgcZy5fN9FBdVzjpBQsYlpfpgLA==}
-
   '@types/node@24.13.1':
     resolution: {integrity: sha512-RSpUJGmvsJ1ZeBehQZFhIdpsz+bIpES0nIQXko4Ybq+N+kX6XvOq3Jo+iJ82FWLdblFq85AsMikd3m35jgezYg==}
+
+  '@types/node@24.13.2':
+    resolution: {integrity: sha512-fRa09kZTgu8o71KFcDjUFuc7F+dEbZYZmkI0mg5YBTRs0yMKjYHsq/c0urDKeDb+D5qVgXOdFcuu+DZPKOITwA==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -10191,6 +10191,10 @@ packages:
     resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
     engines: {node: '>= 6'}
 
+  form-data@4.0.6:
+    resolution: {integrity: sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==}
+    engines: {node: '>= 6'}
+
   format@0.2.2:
     resolution: {integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==}
     engines: {node: '>=0.4.x'}
@@ -10422,10 +10426,6 @@ packages:
   has-yarn@3.0.0:
     resolution: {integrity: sha512-IrsVwUHhEULx3R8f/aA8AHuEzAorplsab/v8HBzEiIukwq5i/EC+xmOW+HfP1OaDP+2JkgT1yILHN2O3UFIbcA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  hasown@2.0.2:
-    resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
-    engines: {node: '>= 0.4'}
 
   hasown@2.0.4:
     resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
@@ -14183,9 +14183,6 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  tabbable@6.2.0:
-    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
-
   tabbable@6.4.0:
     resolution: {integrity: sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg==}
 
@@ -14447,6 +14444,7 @@ packages:
   tsconfck@3.1.3:
     resolution: {integrity: sha512-ulNZP1SVpRDesxeMLON/LtWM8HIgAJEIVpVVhBM6gsmvQ8+Rh+ZG7FWGvHh7Ah3pRABwVJWklWCr/BTZSv0xnQ==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -14489,8 +14487,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  turbo@2.9.16:
-    resolution: {integrity: sha512-NqgRQy6j6dPYcdSdv0q1g9QsZg7SWg87RERM8otw/1AtKU2yTFVClOM7cbwKzOonZr/Ek1blTBucw64L9H0Bwg==}
+  turbo@2.9.18:
+    resolution: {integrity: sha512-bwabv6PupzeavybzEoArBAkwq5fnzwf8OFnRtpHwnviFWuwJPFxtyH+aVp36TmIqK3aYYgtTJ3J0m2ysxxSzQg==}
     hasBin: true
 
   tweetnacl@0.14.5:
@@ -14545,9 +14543,6 @@ packages:
 
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
-
-  undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
@@ -16295,12 +16290,12 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@better-auth/drizzle-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))':
+  '@better-auth/drizzle-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))':
     dependencies:
       '@better-auth/core': 1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
       '@better-auth/utils': 0.4.1
     optionalDependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1)
 
   '@better-auth/kysely-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(kysely@0.29.2)':
     dependencies:
@@ -18320,7 +18315,7 @@ snapshots:
       '@floating-ui/utils': 0.2.11
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      tabbable: 6.2.0
+      tabbable: 6.4.0
 
   '@floating-ui/utils@0.2.10': {}
 
@@ -18376,10 +18371,10 @@ snapshots:
       '@formatjs/fast-memoize': 3.1.0
       tslib: 2.8.1
 
-  '@gfazioli/mantine-onboarding-tour@4.0.4(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@gfazioli/mantine-onboarding-tour@4.0.4(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       '@tabler/icons-react': 3.44.0(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
@@ -18581,12 +18576,12 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.13.1
 
-  '@inquirer/confirm@6.0.13(@types/node@24.13.1)':
+  '@inquirer/confirm@6.0.13(@types/node@24.13.2)':
     dependencies:
-      '@inquirer/core': 11.1.10(@types/node@24.13.1)
-      '@inquirer/type': 4.0.5(@types/node@24.13.1)
+      '@inquirer/core': 11.1.10(@types/node@24.13.2)
+      '@inquirer/type': 4.0.5(@types/node@24.13.2)
     optionalDependencies:
-      '@types/node': 24.13.1
+      '@types/node': 24.13.2
     optional: true
 
   '@inquirer/core@10.3.2(@types/node@24.13.1)':
@@ -18602,17 +18597,17 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.13.1
 
-  '@inquirer/core@11.1.10(@types/node@24.13.1)':
+  '@inquirer/core@11.1.10(@types/node@24.13.2)':
     dependencies:
       '@inquirer/ansi': 2.0.5
       '@inquirer/figures': 2.0.5
-      '@inquirer/type': 4.0.5(@types/node@24.13.1)
+      '@inquirer/type': 4.0.5(@types/node@24.13.2)
       cli-width: 4.1.0
       fast-wrap-ansi: 0.2.2
       mute-stream: 3.0.0
       signal-exit: 4.1.0
     optionalDependencies:
-      '@types/node': 24.13.1
+      '@types/node': 24.13.2
     optional: true
 
   '@inquirer/editor@4.2.23(@types/node@24.13.1)':
@@ -18711,9 +18706,9 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.13.1
 
-  '@inquirer/type@4.0.5(@types/node@24.13.1)':
+  '@inquirer/type@4.0.5(@types/node@24.13.2)':
     optionalDependencies:
-      '@types/node': 24.13.1
+      '@types/node': 24.13.2
     optional: true
 
   '@internationalized/date@3.12.2':
@@ -18918,10 +18913,10 @@ snapshots:
   '@kubernetes/client-node@1.4.0':
     dependencies:
       '@types/js-yaml': 4.0.9
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       '@types/node-fetch': 2.6.13
       '@types/stream-buffers': 3.0.7
-      form-data: 4.0.5
+      form-data: 4.0.6
       hpagent: 1.2.0
       isomorphic-ws: 5.0.0(ws@8.20.1)
       js-yaml: 4.1.1
@@ -19005,22 +19000,22 @@ snapshots:
       js-base64: 3.7.8
     optional: true
 
-  '@mantine/charts@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))':
+  '@mantine/charts@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       recharts: 3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
 
-  '@mantine/colors-generator@9.3.0(chroma-js@3.2.0)':
+  '@mantine/colors-generator@9.3.1(chroma-js@3.2.0)':
     dependencies:
       chroma-js: 3.2.0
 
-  '@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@floating-ui/react': 0.27.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       clsx: 2.1.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
@@ -19030,66 +19025,66 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       clsx: 2.1.1
       dayjs: 1.11.21
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@mantine/dropzone@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/dropzone@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       react-dropzone: 15.0.0(react@19.2.7)
 
-  '@mantine/form@9.3.0(react@19.2.7)':
+  '@mantine/form@9.3.1(react@19.2.7)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       fast-deep-equal: 3.1.3
       klona: 2.0.6
       react: 19.2.7
 
-  '@mantine/hooks@9.3.0(react@19.2.7)':
+  '@mantine/hooks@9.3.1(react@19.2.7)':
     dependencies:
       react: 19.2.7
 
-  '@mantine/modals@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/modals@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@mantine/notifications@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/notifications@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
-      '@mantine/store': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
+      '@mantine/store': 9.3.1(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
-  '@mantine/spotlight@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/spotlight@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
-      '@mantine/store': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
+      '@mantine/store': 9.3.1(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@mantine/store@9.3.0(react@19.2.7)':
+  '@mantine/store@9.3.1(react@19.2.7)':
     dependencies:
       react: 19.2.7
 
-  '@mantine/tiptap@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tiptap/extension-link@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@tiptap/react@3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@mantine/tiptap@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tiptap/extension-link@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@tiptap/react@3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       '@tiptap/extension-link': 3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)
       '@tiptap/react': 3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
@@ -21213,29 +21208,29 @@ snapshots:
 
   '@tsconfig/docusaurus@2.0.9': {}
 
-  '@turbo/darwin-64@2.9.16':
+  '@turbo/darwin-64@2.9.18':
     optional: true
 
-  '@turbo/darwin-arm64@2.9.16':
+  '@turbo/darwin-arm64@2.9.18':
     optional: true
 
-  '@turbo/gen@2.9.16(@types/node@24.13.1)':
+  '@turbo/gen@2.9.18(@types/node@24.13.1)':
     dependencies:
       '@inquirer/prompts': 7.10.1(@types/node@24.13.1)
       esbuild: 0.25.12
     transitivePeerDependencies:
       - '@types/node'
 
-  '@turbo/linux-64@2.9.16':
+  '@turbo/linux-64@2.9.18':
     optional: true
 
-  '@turbo/linux-arm64@2.9.16':
+  '@turbo/linux-arm64@2.9.18':
     optional: true
 
-  '@turbo/windows-64@2.9.16':
+  '@turbo/windows-64@2.9.18':
     optional: true
 
-  '@turbo/windows-arm64@2.9.16':
+  '@turbo/windows-arm64@2.9.18':
     optional: true
 
   '@tybys/wasm-util@0.10.2':
@@ -21251,7 +21246,7 @@ snapshots:
 
   '@types/bcrypt@6.0.0':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/better-sqlite3@7.6.13':
     dependencies:
@@ -21279,14 +21274,14 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/cookies@0.9.2':
     dependencies:
       '@types/connect': 3.4.38
       '@types/express': 4.17.21
       '@types/keygrip': 1.0.6
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/crypto-js@4.2.2': {}
 
@@ -21425,13 +21420,13 @@ snapshots:
 
   '@types/docker-modem@3.0.6':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       '@types/ssh2': 1.15.1
 
   '@types/dockerode@4.0.1':
     dependencies:
       '@types/docker-modem': 3.0.6
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       '@types/ssh2': 1.15.1
 
   '@types/estree-jsx@1.0.5':
@@ -21511,7 +21506,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       form-data: 4.0.5
 
   '@types/node-unifi@2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)':
@@ -21524,11 +21519,11 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@24.12.4':
-    dependencies:
-      undici-types: 7.16.0
-
   '@types/node@24.13.1':
+    dependencies:
+      undici-types: 7.18.2
+
+  '@types/node@24.13.2':
     dependencies:
       undici-types: 7.18.2
 
@@ -21536,7 +21531,7 @@ snapshots:
 
   '@types/pg@8.20.0':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       pg-protocol: 1.13.0
       pg-types: 2.2.0
 
@@ -21635,7 +21630,7 @@ snapshots:
 
   '@types/stream-buffers@3.0.7':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/triple-beam@1.3.5': {}
 
@@ -21656,11 +21651,11 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/xml2js@0.4.14':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -21732,7 +21727,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
 
   '@vitest/expect@4.1.8':
     dependencies:
@@ -21743,14 +21738,24 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.8(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.8(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      msw: 2.14.6(@types/node@24.13.1)(typescript@6.0.3)
+      msw: 2.14.6(@types/node@24.13.2)(typescript@6.0.3)
       vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)
+
+  '@vitest/mocker@4.1.8(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))':
+    dependencies:
+      '@vitest/spy': 4.1.8
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      msw: 2.14.6(@types/node@24.13.2)(typescript@6.0.3)
+      vite: 8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)
+    optional: true
 
   '@vitest/pretty-format@4.1.8':
     dependencies:
@@ -21779,7 +21784,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
 
   '@vitest/utils@4.1.8':
     dependencies:
@@ -22223,7 +22228,7 @@ snapshots:
   axios@1.9.0:
     dependencies:
       follow-redirects: 1.16.0
-      form-data: 4.0.5
+      form-data: 4.0.6
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -22329,10 +22334,10 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)):
+  better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)):
     dependencies:
       '@better-auth/core': 1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
-      '@better-auth/drizzle-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))
+      '@better-auth/drizzle-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))
       '@better-auth/kysely-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(kysely@0.29.2)
       '@better-auth/memory-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)
       '@better-auth/mongo-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)
@@ -22351,13 +22356,13 @@ snapshots:
     optionalDependencies:
       better-sqlite3: 12.10.0
       drizzle-kit: 0.31.10
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1)
-      mysql2: 3.22.5(@types/node@24.13.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1)
+      mysql2: 3.22.5(@types/node@24.13.2)
       next: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)
       pg: 8.21.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
       vue: 3.5.35(typescript@6.0.3)
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
@@ -23567,6 +23572,19 @@ snapshots:
       pg: 8.21.0
       sql.js: 1.14.1
 
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1):
+    optionalDependencies:
+      '@libsql/client-wasm': 0.14.0
+      '@opentelemetry/api': 1.9.0
+      '@types/better-sqlite3': 7.6.13
+      '@types/pg': 8.20.0
+      better-sqlite3: 12.10.0
+      gel: 2.0.0
+      kysely: 0.29.2
+      mysql2: 3.22.5(@types/node@24.13.2)
+      pg: 8.21.0
+      sql.js: 1.14.1
+
   drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(zod@4.4.3):
     dependencies:
       drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1)
@@ -23663,7 +23681,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
       has-tostringtag: 1.0.2
-      hasown: 2.0.2
+      hasown: 2.0.4
 
   es-toolkit@1.46.1: {}
 
@@ -23842,7 +23860,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       require-like: 0.1.2
 
   event-target-shim@5.0.1: {}
@@ -24191,7 +24209,15 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
-      hasown: 2.0.2
+      hasown: 2.0.4
+      mime-types: 2.1.35
+
+  form-data@4.0.6:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      hasown: 2.0.4
       mime-types: 2.1.35
 
   format@0.2.2: {}
@@ -24260,7 +24286,7 @@ snapshots:
       get-proto: 1.0.1
       gopd: 1.2.0
       has-symbols: 1.1.0
-      hasown: 2.0.2
+      hasown: 2.0.4
       math-intrinsics: 1.1.0
 
   get-nonce@1.0.1: {}
@@ -24435,10 +24461,6 @@ snapshots:
       has-symbols: 1.1.0
 
   has-yarn@3.0.0: {}
-
-  hasown@2.0.2:
-    dependencies:
-      function-bind: 1.1.2
 
   hasown@2.0.4:
     dependencies:
@@ -25514,19 +25536,19 @@ snapshots:
     dependencies:
       semver: 7.7.4
 
-  mantine-datatable@9.2.2(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  mantine-datatable@9.2.2(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       clsx: 2.1.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  mantine-react-table-open@9.0.3(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  mantine-react-table-open@9.0.3(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      '@mantine/core': 9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/dates': 9.3.0(@mantine/core@9.3.0(@mantine/hooks@9.3.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.0(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@mantine/hooks': 9.3.0(react@19.2.7)
+      '@mantine/core': 9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates': 9.3.1(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks': 9.3.1(react@19.2.7)
       '@tabler/icons-react': 3.44.0(react@19.2.7)
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.20.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -26217,9 +26239,9 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3):
+  msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3):
     dependencies:
-      '@inquirer/confirm': 6.0.13(@types/node@24.13.1)
+      '@inquirer/confirm': 6.0.13(@types/node@24.13.2)
       '@mswjs/interceptors': 0.41.9
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
@@ -26269,6 +26291,19 @@ snapshots:
       lru.min: 1.1.4
       named-placeholders: 1.1.6
       sql-escaper: 1.3.3
+
+  mysql2@3.22.5(@types/node@24.13.2):
+    dependencies:
+      '@types/node': 24.13.2
+      aws-ssl-profiles: 1.1.2
+      denque: 2.1.0
+      generate-function: 2.3.1
+      iconv-lite: 0.7.2
+      long: 5.3.2
+      lru.min: 1.1.4
+      named-placeholders: 1.1.6
+      sql-escaper: 1.3.3
+    optional: true
 
   mz@2.7.0:
     dependencies:
@@ -27531,7 +27566,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.12.4
+      '@types/node': 24.13.1
       long: 5.3.2
 
   proxmox-api@1.1.1:
@@ -28870,8 +28905,6 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  tabbable@6.2.0: {}
-
   tabbable@6.4.0: {}
 
   tagged-tag@1.0.0: {}
@@ -29104,22 +29137,22 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3):
+  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3):
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@trpc/server': 11.17.0(typescript@6.0.3)
-      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3))
+      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3))
       mcp-handler: 1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))
       zod: 4.4.3
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - supports-color
 
-  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3):
+  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0)))(zod@4.4.3):
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@trpc/server': 11.17.0(typescript@6.0.3)
-      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.1))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.1))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3))
+      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.21.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))(pg@8.21.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.8)(vue@3.5.35(typescript@6.0.3))
       mcp-handler: 1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.100.0))
       zod: 4.4.3
     transitivePeerDependencies:
@@ -29187,14 +29220,14 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  turbo@2.9.16:
+  turbo@2.9.18:
     optionalDependencies:
-      '@turbo/darwin-64': 2.9.16
-      '@turbo/darwin-arm64': 2.9.16
-      '@turbo/linux-64': 2.9.16
-      '@turbo/linux-arm64': 2.9.16
-      '@turbo/windows-64': 2.9.16
-      '@turbo/windows-arm64': 2.9.16
+      '@turbo/darwin-64': 2.9.18
+      '@turbo/darwin-arm64': 2.9.18
+      '@turbo/linux-64': 2.9.18
+      '@turbo/linux-arm64': 2.9.18
+      '@turbo/windows-64': 2.9.18
+      '@turbo/windows-arm64': 2.9.18
 
   tweetnacl@0.14.5: {}
 
@@ -29235,8 +29268,6 @@ snapshots:
   uncrypto@0.1.3: {}
 
   undici-types@5.26.5: {}
-
-  undici-types@7.16.0: {}
 
   undici-types@7.18.2: {}
 
@@ -29538,10 +29569,29 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.9.0
 
-  vitest@4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)):
+  vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0):
+    dependencies:
+      lightningcss: 1.32.0
+      picomatch: 4.0.4
+      postcss: 8.5.15
+      rolldown: 1.0.3
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 24.13.2
+      esbuild: 0.28.0
+      fsevents: 2.3.3
+      jiti: 2.7.0
+      sass: 1.100.0
+      sugarss: 5.0.0(postcss@8.5.15)
+      terser: 5.46.1
+      tsx: 4.21.0
+      yaml: 2.9.0
+    optional: true
+
+  vitest@4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.1)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.8
-      '@vitest/mocker': 4.1.8(msw@2.14.6(@types/node@24.13.1)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.8(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.8
       '@vitest/runner': 4.1.8
       '@vitest/snapshot': 4.1.8
@@ -29568,6 +29618,38 @@ snapshots:
       jsdom: 29.1.1(@noble/hashes@2.0.1)
     transitivePeerDependencies:
       - msw
+
+  vitest@4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.8
+      '@vitest/mocker': 4.1.8(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.8
+      '@vitest/runner': 4.1.8
+      '@vitest/snapshot': 4.1.8
+      '@vitest/spy': 4.1.8
+      '@vitest/utils': 4.1.8
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.4
+      std-env: 4.0.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.15
+      tinyrainbow: 3.1.0
+      vite: 8.0.16(@types/node@24.13.2)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.100.0)(sugarss@5.0.0(postcss@8.5.15))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.0
+      '@types/node': 24.13.2
+      '@vitest/coverage-v8': 4.1.8(vitest@4.1.8)
+      '@vitest/ui': 4.1.8(vitest@4.1.8)
+      jsdom: 29.1.1(@noble/hashes@2.0.1)
+    transitivePeerDependencies:
+      - msw
+    optional: true
 
   vue-component-type-helpers@3.3.4: {}
 
