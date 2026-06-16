@@ -3,6 +3,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { BeszelIntegration } from "../beszel/beszel-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
@@ -136,6 +137,7 @@ export const integrationCreators = {
   audiobookshelf: AudiobookshelfIntegration,
   navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
+  archiveTeamWarrior: ArchiveTeamWarriorIntegration,
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,

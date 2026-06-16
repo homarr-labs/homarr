@@ -489,6 +489,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
+  archiveTeamWarrior: {
+    name: "ArchiveTeam Warrior",
+    secretKinds: [[], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
+    category: ["archiving"],
+    defaultUrl: "http://localhost:8001",
+    documentationUrl: null,
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -596,6 +604,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "archiving",
   "ups",
   "documents",
   "mediaLibrary",
