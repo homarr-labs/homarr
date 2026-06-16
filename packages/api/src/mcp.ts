@@ -16,6 +16,7 @@ import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
 import { mediaRequestsRouter } from "./router/widgets/media-requests";
 import { mediaServerRouter } from "./router/widgets/media-server";
 import { smartHomeRouter } from "./router/widgets/smart-home";
+import { beszelRouter } from "./router/widgets/beszel";
 
 export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
@@ -26,6 +27,7 @@ export const mcpRouter = createTRPCRouter({
   info: infoRouter,
   integration: integrationRouter,
   invite: inviteRouter,
+  beszel: beszelRouter,
   calendar: calendarRouter,
   dnsHole: dnsHoleRouter,
   downloads: downloadsRouter,
