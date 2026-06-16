@@ -64,6 +64,36 @@ type MediaRequestChildrenProps = {
     kind: IntegrationKind;
     url: string;
     id: string;
+    permissions?: {
+      hasInteractAccess: boolean;
+    };
+  };
+};
+
+export const useMediaRequestSearchInteraction = (
+  integration: MediaRequestChildrenProps["integration"],
+  searchResult: FromIntegrationSearchResult,
+): inferSearchInteractionDefinition<"link" | "children"> => {
+  const { openSearchInNewTab } = useSettings();
+
+  const type = searchResult.type;
+  if (type === "person") {
+    return {
+      type: "link",
+      href: searchResult.link,
+      newTab: openSearchInNewTab,
+    };
+  }
+
+  return {
+    type: "children",
+    ...mediaRequestsChildrenOptions({
+      result: {
+        ...searchResult,
+        type,
+      },
+      integration,
+    }),
   };
 };
 
@@ -71,8 +101,6 @@ export const useFromIntegrationSearchInteraction = (
   searchEngine: SearchEngine,
   searchResult: FromIntegrationSearchResult,
 ): inferSearchInteractionDefinition<"link" | "javaScript" | "children"> => {
-  const { openSearchInNewTab } = useSettings();
-
   if (searchEngine.type !== "fromIntegration") {
     throw new Error("Invalid search engine type");
   }
@@ -87,25 +115,7 @@ export const useFromIntegrationSearchInteraction = (
     ) &&
     "type" in searchResult
   ) {
-    const type = searchResult.type;
-    if (type === "person") {
-      return {
-        type: "link",
-        href: searchResult.link,
-        newTab: openSearchInNewTab,
-      };
-    }
-
-    return {
-      type: "children",
-      ...mediaRequestsChildrenOptions({
-        result: {
-          ...searchResult,
-          type,
-        },
-        integration: searchEngine.integration,
-      }),
-    };
+    return useMediaRequestSearchInteraction(searchEngine.integration, searchResult);
   }
 
   return {
@@ -115,13 +125,15 @@ export const useFromIntegrationSearchInteraction = (
   };
 };
 
-const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenProps>({
+export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenProps>({
   useActions() {
     const { openModal } = useModalAction(RequestMediaModal);
     return [
       {
         key: "request",
-        hide: (option) => option.result.inLibrary,
+        hide: (option) =>
+          (option.result.type === "movie" && option.result.inLibrary) ||
+          option.integration.permissions?.hasInteractAccess === false,
         Component(option) {
           const t = useScopedI18n("search.mode.media");
           return (

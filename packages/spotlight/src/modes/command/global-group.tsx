@@ -1,14 +1,10 @@
-import { Group, Text, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
-  IconDeviceDesktop,
   IconFileImport,
-  IconLanguage,
   IconMailForward,
-  IconMoon,
   IconPlug,
-  IconSun,
   IconUserPlus,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -22,7 +18,6 @@ import type { TablerIcon } from "@homarr/ui";
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
-import { languageChildrenOptions } from "./children/language";
 import { newIntegrationChildrenOptions } from "./children/new-integration";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
@@ -52,33 +47,9 @@ export const globalCommandGroup = createGroup<Command>({
   },
   useOptions() {
     const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
-    const { colorScheme } = useMantineColorScheme();
-    const computedColorScheme = useComputedColorScheme("light");
     const { data: session } = useSession();
 
     const commands: (Command & { hidden?: boolean })[] = [
-      {
-        commandKey: "colorScheme",
-        icon: colorScheme === "auto" ? IconDeviceDesktop : computedColorScheme === "dark" ? IconSun : IconMoon,
-        name:
-          colorScheme === "auto"
-            ? tOption("colorScheme.auto")
-            : tOption(`colorScheme.${computedColorScheme === "dark" ? "light" : "dark"}`),
-        useInteraction: () => {
-          const { toggleColorScheme } = useMantineColorScheme();
-
-          return {
-            type: "javaScript",
-            onSelect: toggleColorScheme,
-          };
-        },
-      },
-      {
-        commandKey: "language",
-        icon: IconLanguage,
-        name: tOption("language.label"),
-        useInteraction: interaction.children(languageChildrenOptions),
-      },
       {
         commandKey: "newBoard",
         icon: IconCategoryPlus,

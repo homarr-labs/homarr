@@ -1,0 +1,66 @@
+name: "[Docs] Update OpenAPI Spec"
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  SKIP_ENV_VALIDATION: true
+
+jobs:
+  update-spec:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: dev
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy env
+        run: cp .env.example .env
+
+      - name: Start dev server
+        run: pnpm --filter @homarr/nextjs dev &
+        env:
+          TURBO_TELEMETRY_DISABLED: 1
+          DISABLE_TELEMETRY: 1
+
+      - name: Wait for server and fetch spec
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:3000/api/openapi -o /tmp/openapi.json 2>/dev/null; then
+              echo "Server is up, spec fetched"
+              break
+            fi
+            echo "Waiting for server... ($i/30)"
+            sleep 3
+          done
+
+          if [ ! -f /tmp/openapi.json ]; then
+            echo "::error::Server failed to start within timeout"
+            exit 1
+          fi
+
+          jq -e '.openapi and .paths' /tmp/openapi.json > /dev/null || {
+            echo "::error::Fetched file is not a valid OpenAPI spec"
+            exit 1
+          }
+
+          cp /tmp/openapi.json apps/docs/static/api/open-api-schema.json
+          echo "OpenAPI spec updated ($(jq '.paths | length' /tmp/openapi.json) paths)"
+
+      - name: Commit updated spec
+        uses: EndBug/add-and-commit@v10
+        with:
+          add: "apps/docs/static/api/"
+          default_author: github_actor
+          message: "chore(docs): update OpenAPI spec"
+          push: true

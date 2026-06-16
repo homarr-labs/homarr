@@ -35,7 +35,10 @@ interface TracearrContentProps {
 
 function TracearrContent({ integrationIds, options, width, isEditMode }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const [dashboardData] = clientApi.widget.tracearr.getDashboard.useSuspenseQuery({ integrationIds });
+  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery(
+    { integrationIds },
+    { staleTime: 5 * 1000 },
+  );
 
   const utils = clientApi.useUtils();
   clientApi.widget.tracearr.subscribeToDashboard.useSubscription(

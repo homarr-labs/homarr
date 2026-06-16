@@ -11,6 +11,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
+import { BoardTourProvider } from "~/components/onboarding/board-tour";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
 import type { Params } from "./(content)/_creator";
@@ -20,14 +21,21 @@ import { BoardMantineProvider } from "./(content)/_theme";
 
 const logger = createLogger({ module: "createBoardLayout" });
 
+const BoardTourWrapper = ({ hasSession, children }: PropsWithChildren<{ hasSession: boolean }>) => {
+  if (!hasSession) return <>{children}</>;
+  return <BoardTourProvider>{children}</BoardTourProvider>;
+};
+
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  withTour?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
   getInitialBoardAsync: getInitialBoard,
+  withTour = false,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -61,14 +69,16 @@ export const createBoardLayout = <TParams extends Params>({
           <EditModeProvider>
             <BoardMantineProvider defaultColorScheme={colorScheme}>
               <CustomCss />
-              <ClientShell hasNavigation={false}>
-                <MainHeader
-                  logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                  actions={headerActions}
-                  hasNavigation={false}
-                />
-                <AppShellMain>{children}</AppShellMain>
-              </ClientShell>
+              <BoardTourWrapper hasSession={withTour && !!session}>
+                <ClientShell hasNavigation={false}>
+                  <MainHeader
+                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                    actions={headerActions}
+                    hasNavigation={false}
+                  />
+                  <AppShellMain>{children}</AppShellMain>
+                </ClientShell>
+              </BoardTourWrapper>
             </BoardMantineProvider>
           </EditModeProvider>
         </BoardReadyProvider>

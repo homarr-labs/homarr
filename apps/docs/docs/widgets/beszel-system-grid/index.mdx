@@ -1,0 +1,39 @@
+---
+title: 'Beszel Systems (Grid)'
+description: 'Card grid view of all Beszel-monitored systems with real-time metrics.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { beszelSystemGridWidget } from '.';
+import { beszelIntegration } from '@site/docs/integrations/beszel';
+
+import beszelSystemGrid from './img/beszel-system-grid.png';
+
+<WidgetHeader
+  widget={beszelSystemGridWidget}
+  categories={['System Monitoring']}
+/>
+
+This widget displays all your Beszel-monitored systems as a responsive card grid. Each card shows real-time metrics like CPU, memory, disk, network, temperature, and more. Cards adapt their layout based on available space.
+
+### Screenshots
+
+<img src={beszelSystemGrid} alt="Beszel System Grid widget showing system cards with metrics" />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: beszelIntegration,
+  note: "Displays all monitored systems as a card grid"
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={beszelSystemGridWidget.configuration} />

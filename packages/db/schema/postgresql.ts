@@ -38,6 +38,12 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import type {
+  CustomWidgetAuthType,
+  CustomWidgetDisplayType,
+  CustomWidgetMethod,
+  CustomWidgetSecretKind,
+} from "@homarr/validation/custom-widget";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -79,6 +85,8 @@ export const users = pgTable("user", {
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: smallint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
+  completedManageTour: boolean().default(false).notNull(),
+  completedBoardTour: boolean().default(false).notNull(),
 });
 
 export const accounts = pgTable(
@@ -495,6 +503,43 @@ export const onboarding = pgTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
+export const customWidgetDefinitions = pgTable("custom_widget_definition", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  name: varchar({ length: 256 }).notNull(),
+  description: text(),
+  iconUrl: text(),
+  url: text().notNull(),
+  authType: varchar({ length: 32 }).$type<CustomWidgetAuthType>().notNull().default("none"),
+  headerName: varchar({ length: 256 }),
+  method: varchar({ length: 16 }).$type<CustomWidgetMethod>().notNull().default("GET"),
+  requestBody: text(),
+  displayType: varchar({ length: 32 }).$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
+  displayConfig: text().default(emptySuperJSON).notNull(),
+  enabled: boolean().notNull().default(true),
+  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+  creatorId: varchar({ length: 64 }).references(() => users.id, { onDelete: "set null" }),
+});
+
+export const customWidgetSecrets = pgTable(
+  "custom_widget_secret",
+  {
+    kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
+    value: text().$type<`${string}.${string}`>().notNull(),
+    updatedAt: timestamp()
+      .$onUpdateFn(() => new Date())
+      .notNull(),
+    definitionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.definitionId, table.kind],
+    }),
+  }),
+);
+
 export const cronJobConfigurations = pgTable("cron_job_configuration", {
   name: varchar({ length: 256 }).notNull().primaryKey(),
   cronExpression: varchar({ length: 32 }).notNull(),
@@ -763,5 +808,20 @@ export const layoutRelations = relations(layouts, ({ one, many }) => ({
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const customWidgetDefinitionRelations = relations(customWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(customWidgetSecrets),
+  creator: one(users, {
+    fields: [customWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one }) => ({
+  definition: one(customWidgetDefinitions, {
+    fields: [customWidgetSecrets.definitionId],
+    references: [customWidgetDefinitions.id],
   }),
 }));

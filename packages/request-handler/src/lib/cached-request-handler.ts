@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
 
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 
@@ -15,6 +16,7 @@ interface Options<TData, TInput extends Record<string, unknown>> {
     options: Options<TData, TInput>,
   ) => ReturnType<typeof createChannelWithLatestAndEvents<TData>>;
   cacheDuration: Duration;
+  fallbackToStaleOnError?: boolean;
 }
 
 export const createCachedRequestHandler = <TData, TInput extends Record<string, unknown>>(
@@ -26,13 +28,33 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
 
       return {
         async getCachedOrUpdatedDataAsync({ forceUpdate = false }) {
+          const channelData = await channel.getAsync();
+
           const requestNewDataAsync = async () => {
-            const data = await options.requestAsync(input);
-            await channel.publishAndUpdateLastStateAsync(data);
-            return {
-              data,
-              timestamp: new Date(),
-            };
+            try {
+              const data = await options.requestAsync(input);
+              await channel.publishAndUpdateLastStateAsync(data);
+              return {
+                data,
+                timestamp: new Date(),
+              };
+            } catch (error) {
+              if (options.fallbackToStaleOnError && channelData) {
+                logger.warn(
+                  new ErrorWithMetadata(
+                    "Cached request handler using stale cache after fetch failure",
+                    {
+                      channel: channel.name,
+                      queryKey: options.queryKey,
+                    },
+                    { cause: error },
+                  ),
+                );
+                return channelData;
+              }
+
+              throw error;
+            }
           };
 
           if (forceUpdate) {
@@ -42,8 +64,6 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
             });
             return await requestNewDataAsync();
           }
-
-          const channelData = await channel.getAsync();
 
           const shouldRequestNewData =
             !channelData ||

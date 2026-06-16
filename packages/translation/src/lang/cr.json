@@ -7,7 +7,10 @@
         "description": "crwdns2268:0crwdne2268:0",
         "action": {
           "scratch": "crwdns2270:0crwdne2270:0",
-          "importOldmarr": "crwdns2272:0crwdne2272:0"
+          "importOldmarr": "crwdns2272:0crwdne2272:0",
+          "restoreSqlite": "crwdns4601:0crwdne4601:0",
+          "restoreSqliteDescription": "crwdns4603:0crwdne4603:0",
+          "backToOptions": "crwdns4605:0crwdne4605:0"
         }
       },
       "import": {
@@ -90,6 +93,48 @@
         "title": "crwdns2338:0crwdne2338:0",
         "subtitle": "crwdns2340:0crwdne2340:0"
       },
+      "integrations": {
+        "title": "crwdns4369:0crwdne4369:0",
+        "subtitle": "crwdns4371:0crwdne4371:0",
+        "description": "crwdns4373:0crwdne4373:0",
+        "action": {
+          "continue": "crwdns4375:0crwdne4375:0",
+          "skip": "crwdns4377:0crwdne4377:0"
+        },
+        "configure": {
+          "progress": "crwdns4379:0{current}crwdnd4379:0{total}crwdne4379:0",
+          "skip": "crwdns4381:0crwdne4381:0",
+          "finishing": "crwdns4383:0crwdne4383:0",
+          "error": {
+            "title": "crwdns4385:0crwdne4385:0",
+            "message": "crwdns4387:0crwdne4387:0"
+          },
+          "helpers": {
+            "tooltip": "crwdns4389:0crwdne4389:0",
+            "description": "crwdns4391:0crwdne4391:0"
+          }
+        },
+        "urlTemplate": {
+          "label": "crwdns4393:0crwdne4393:0",
+          "placeholder": "crwdns4395:0crwdne4395:0",
+          "hint": "crwdns4397:0crwdne4397:0",
+          "warning": "crwdns4399:0crwdne4399:0",
+          "preview": "crwdns4401:0{example}crwdne4401:0",
+          "mode": {
+            "subdomain": "crwdns4403:0crwdne4403:0",
+            "hostPort": "crwdns4405:0crwdne4405:0"
+          }
+        },
+        "docker": {
+          "detected": "crwdns4407:0{count}crwdne4407:0",
+          "detectedBreakdown": "crwdns4409:0{integrations}crwdnd4409:0{apps}crwdne4409:0",
+          "summary": "crwdns4411:0{apps}crwdnd4411:0{integrations}crwdne4411:0",
+          "appBadge": "crwdns4413:0crwdne4413:0",
+          "appSectionLabel": "crwdns4415:0{count}crwdne4415:0",
+          "scanning": "crwdns4417:0crwdne4417:0",
+          "scanningDescription": "crwdns4419:0crwdne4419:0"
+        }
+      },
       "finish": {
         "title": "crwdns2342:0crwdne2342:0",
         "subtitle": "crwdns2344:0crwdne2344:0",
@@ -132,12 +177,13 @@
       },
       "password": {
         "label": "crwdns26:0crwdne26:0",
-        "requirement": {
-          "length": "crwdns28:0crwdne28:0",
-          "lowercase": "crwdns30:0crwdne30:0",
-          "uppercase": "crwdns32:0crwdne32:0",
-          "number": "crwdns34:0crwdne34:0",
-          "special": "crwdns36:0crwdne36:0"
+        "suggestionsTitle": "crwdns4261:0crwdne4261:0",
+        "suggestion": {
+          "length": "crwdns4263:0crwdne4263:0",
+          "lowercase": "crwdns4265:0crwdne4265:0",
+          "uppercase": "crwdns4267:0crwdne4267:0",
+          "number": "crwdns4269:0crwdne4269:0",
+          "special": "crwdns4271:0crwdne4271:0"
         }
       },
       "passwordConfirm": {
@@ -638,6 +684,211 @@
       "add": "crwdns3170:0crwdne3170:0"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "crwdns5283:0crwdne5283:0",
+        "noResults": "crwdns5285:0crwdne5285:0",
+        "loading": "crwdns5287:0crwdne5287:0"
+      },
+      "create": {
+        "title": "crwdns5289:0crwdne5289:0",
+        "subtitle": "crwdns5291:0crwdne5291:0"
+      },
+      "edit": {
+        "title": "crwdns5293:0crwdne5293:0"
+      }
+    },
+    "action": {
+      "create": "crwdns5295:0crwdne5295:0",
+      "import": "crwdns5297:0crwdne5297:0",
+      "save": "crwdns5299:0crwdne5299:0",
+      "delete": "crwdns5301:0crwdne5301:0",
+      "deleteConfirm": "crwdns5303:0{name}crwdne5303:0",
+      "export": "crwdns5305:0crwdne5305:0",
+      "addMapping": "crwdns5307:0crwdne5307:0",
+      "addColumn": "crwdns5309:0crwdne5309:0",
+      "edit": "crwdns5311:0crwdne5311:0",
+      "removeMapping": "crwdns5313:0crwdne5313:0",
+      "removeColumn": "crwdns5315:0crwdne5315:0",
+      "addItem": "crwdns5317:0crwdne5317:0",
+      "removeItem": "crwdns5319:0crwdne5319:0",
+      "addBar": "crwdns5321:0crwdne5321:0",
+      "duplicate": "crwdns5323:0crwdne5323:0",
+      "copyAiPrompt": "crwdns5325:0crwdne5325:0",
+      "enable": "crwdns5327:0crwdne5327:0",
+      "disable": "crwdns5329:0crwdne5329:0",
+      "menu": "crwdns5331:0crwdne5331:0"
+    },
+    "field": {
+      "name": "crwdns5333:0crwdne5333:0",
+      "description": "crwdns5335:0crwdne5335:0",
+      "iconUrl": "crwdns5337:0crwdne5337:0",
+      "url": "crwdns5339:0crwdne5339:0",
+      "authType": "crwdns5341:0crwdne5341:0",
+      "headerName": "crwdns5343:0crwdne5343:0",
+      "method": "crwdns5345:0crwdne5345:0",
+      "requestBody": "crwdns5347:0crwdne5347:0",
+      "displayType": "crwdns5349:0crwdne5349:0",
+      "jsonPath": "crwdns5351:0crwdne5351:0",
+      "jsonPathHint": "crwdns5353:0crwdne5353:0",
+      "label": "crwdns5355:0crwdne5355:0",
+      "unit": "crwdns5357:0crwdne5357:0",
+      "mappings": "crwdns5359:0crwdne5359:0",
+      "tablePath": "crwdns5361:0crwdne5361:0",
+      "tablePathHint": "crwdns5363:0crwdne5363:0",
+      "columns": "crwdns5365:0crwdne5365:0",
+      "header": "crwdns5367:0crwdne5367:0",
+      "items": "crwdns5369:0crwdne5369:0",
+      "gridColumns": "crwdns5371:0crwdne5371:0",
+      "cardStyle": "crwdns5373:0crwdne5373:0",
+      "bars": "crwdns5375:0crwdne5375:0",
+      "valuePath": "crwdns5377:0crwdne5377:0",
+      "maxPath": "crwdns5379:0crwdne5379:0",
+      "showPercentage": "crwdns5381:0crwdne5381:0",
+      "barSize": "crwdns5383:0crwdne5383:0",
+      "goodValues": "crwdns5385:0crwdne5385:0",
+      "dotSize": "crwdns5387:0crwdne5387:0",
+      "valueSize": "crwdns5389:0crwdne5389:0",
+      "labelPosition": "crwdns5391:0crwdne5391:0",
+      "kvLayout": "crwdns5393:0crwdne5393:0",
+      "striped": "crwdns5395:0crwdne5395:0",
+      "compact": "crwdns5397:0crwdne5397:0",
+      "maxHeight": "crwdns5399:0crwdne5399:0",
+      "color": "crwdns5401:0crwdne5401:0",
+      "buttonLabel": "crwdns5403:0crwdne5403:0",
+      "buttonColor": "crwdns5405:0crwdne5405:0",
+      "confirmText": "crwdns5407:0crwdne5407:0",
+      "confirmTextHint": "crwdns5409:0crwdne5409:0",
+      "successMessage": "crwdns5411:0crwdne5411:0",
+      "successMessageHint": "crwdns5413:0crwdne5413:0",
+      "enabled": "crwdns5415:0crwdne5415:0",
+      "template": {
+        "label": "crwdns5417:0crwdne5417:0",
+        "description": "crwdns5419:0__proto__crwdne5419:0"
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "crwdns5421:0crwdne5421:0",
+      "exampleLabelShort": "crwdns5423:0crwdne5423:0",
+      "exampleHeader": "crwdns5425:0crwdne5425:0",
+      "exampleUnit": "crwdns5427:0crwdne5427:0",
+      "iconUrl": "crwdns5429:0crwdne5429:0",
+      "url": "crwdns5431:0crwdne5431:0",
+      "headerName": "crwdns5433:0crwdne5433:0",
+      "jsonPath": "crwdns5435:0crwdne5435:0",
+      "tablePath": "crwdns5437:0crwdne5437:0",
+      "columnJsonPath": "crwdns5439:0crwdne5439:0",
+      "valuePath": "crwdns5441:0crwdne5441:0",
+      "maxPath": "crwdns5443:0crwdne5443:0",
+      "goodValues": "crwdns5445:0crwdne5445:0",
+      "color": "crwdns5447:0crwdne5447:0"
+    },
+    "cardStyleOption": {
+      "filled": "crwdns5449:0crwdne5449:0",
+      "outline": "crwdns5451:0crwdne5451:0",
+      "subtle": "crwdns5453:0crwdne5453:0"
+    },
+    "layoutOption": {
+      "list": "crwdns5455:0crwdne5455:0",
+      "grid": "crwdns5457:0crwdne5457:0"
+    },
+    "sizeOption": {
+      "sm": "crwdns5459:0crwdne5459:0",
+      "md": "crwdns5461:0crwdne5461:0",
+      "lg": "crwdns5463:0crwdne5463:0",
+      "xl": "crwdns5465:0crwdne5465:0"
+    },
+    "labelPositionOption": {
+      "above": "crwdns5467:0crwdne5467:0",
+      "below": "crwdns5469:0crwdne5469:0"
+    },
+    "fieldset": {
+      "general": "crwdns5471:0crwdne5471:0",
+      "connection": "crwdns5473:0crwdne5473:0",
+      "display": "crwdns5475:0crwdne5475:0"
+    },
+    "displayTypeDescription": {
+      "singleValue": "crwdns5477:0crwdne5477:0",
+      "keyValue": "crwdns5479:0crwdne5479:0",
+      "table": "crwdns5481:0crwdne5481:0",
+      "statGrid": "crwdns5483:0crwdne5483:0",
+      "progressBars": "crwdns5485:0crwdne5485:0",
+      "statusIndicator": "crwdns5487:0crwdne5487:0",
+      "countGrid": "crwdns5489:0crwdne5489:0",
+      "raw": "crwdns5491:0crwdne5491:0",
+      "actionButton": "crwdns5493:0crwdne5493:0",
+      "customJsx": "crwdns5495:0crwdne5495:0"
+    },
+    "method": {
+      "GET": "crwdns5497:0crwdne5497:0",
+      "POST": "crwdns5499:0crwdne5499:0",
+      "PUT": "crwdns5501:0crwdne5501:0",
+      "DELETE": "crwdns5503:0crwdne5503:0",
+      "PATCH": "crwdns5505:0crwdne5505:0"
+    },
+    "authType": {
+      "none": "crwdns5507:0crwdne5507:0",
+      "bearer": "crwdns5509:0crwdne5509:0",
+      "basic": "crwdns5511:0crwdne5511:0",
+      "apiKeyHeader": "crwdns5513:0crwdne5513:0",
+      "apiKeyQuery": "crwdns5515:0crwdne5515:0"
+    },
+    "displayType": {
+      "singleValue": "crwdns5517:0crwdne5517:0",
+      "keyValue": "crwdns5519:0crwdne5519:0",
+      "table": "crwdns5521:0crwdne5521:0",
+      "statGrid": "crwdns5523:0crwdne5523:0",
+      "progressBars": "crwdns5525:0crwdne5525:0",
+      "statusIndicator": "crwdns5527:0crwdne5527:0",
+      "countGrid": "crwdns5529:0crwdne5529:0",
+      "raw": "crwdns5531:0crwdne5531:0",
+      "actionButton": "crwdns5533:0crwdne5533:0",
+      "customJsx": "crwdns5535:0crwdne5535:0"
+    },
+    "secret": {
+      "apiKey": "crwdns5537:0crwdne5537:0",
+      "username": "crwdns5539:0crwdne5539:0",
+      "password": "crwdns5541:0crwdne5541:0",
+      "savedPlaceholder": "crwdns5543:0crwdne5543:0"
+    },
+    "preview": {
+      "title": "crwdns5545:0crwdne5545:0",
+      "test": "crwdns5547:0crwdne5547:0",
+      "hint": "crwdns5549:0crwdne5549:0",
+      "rawResponse": "crwdns5551:0crwdne5551:0"
+    },
+    "notification": {
+      "created": "crwdns5553:0{name}crwdne5553:0",
+      "updated": "crwdns5555:0{name}crwdne5555:0",
+      "deleted": "crwdns5557:0{name}crwdne5557:0",
+      "imported": "crwdns5559:0crwdne5559:0",
+      "aiPromptCopied": "crwdns5561:0crwdne5561:0",
+      "aiPromptDescription": "crwdns5563:0crwdne5563:0",
+      "aiPromptCopy": "crwdns5565:0crwdne5565:0",
+      "aiPromptNoResponse": "crwdns5567:0crwdne5567:0",
+      "aiPromptCopyError": "crwdns5569:0crwdne5569:0",
+      "createError": "crwdns5571:0crwdne5571:0",
+      "updateError": "crwdns5573:0crwdne5573:0",
+      "importError": "crwdns5575:0crwdne5575:0",
+      "exportError": "crwdns5577:0crwdne5577:0",
+      "duplicated": "crwdns5579:0{name}crwdne5579:0",
+      "duplicateError": "crwdns5581:0crwdne5581:0",
+      "toggleError": "crwdns5583:0crwdne5583:0",
+      "deleteError": "crwdns5585:0crwdne5585:0",
+      "previewError": "crwdns5587:0crwdne5587:0",
+      "executed": "crwdns5589:0crwdne5589:0",
+      "executeError": "crwdns5591:0{error}crwdne5591:0"
+    },
+    "table": {
+      "name": "crwdns5593:0crwdne5593:0",
+      "url": "crwdns5595:0crwdne5595:0",
+      "display": "crwdns5597:0crwdne5597:0"
+    },
+    "widget": {
+      "disabled": "crwdns5599:0crwdne5599:0"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -730,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "crwdns3054:0crwdne3054:0"
+      },
+      "apiKeySettings": {
+        "label": "crwdns4421:0crwdne4421:0"
       }
     },
     "action": {
       "create": "crwdns376:0crwdne376:0"
+    },
+    "grid": {
+      "widgetCount": "crwdns4423:0{count}crwdne4423:0",
+      "noWidgets": "crwdns4425:0crwdne4425:0",
+      "detected": "crwdns4427:0crwdne4427:0"
+    },
+    "category": {
+      "dnsHole": "crwdns4429:0crwdne4429:0",
+      "mediaService": "crwdns4431:0crwdne4431:0",
+      "calendar": "crwdns4433:0crwdne4433:0",
+      "mediaSearch": "crwdns4435:0crwdne4435:0",
+      "mediaRelease": "crwdns4437:0crwdne4437:0",
+      "mediaRequest": "crwdns4439:0crwdne4439:0",
+      "downloadClient": "crwdns4441:0crwdne4441:0",
+      "usenet": "crwdns4443:0crwdne4443:0",
+      "torrent": "crwdns4445:0crwdne4445:0",
+      "miscellaneous": "crwdns4447:0crwdne4447:0",
+      "smartHomeServer": "crwdns4449:0crwdne4449:0",
+      "indexerManager": "crwdns4451:0crwdne4451:0",
+      "healthMonitoring": "crwdns4453:0crwdne4453:0",
+      "search": "crwdns4455:0crwdne4455:0",
+      "mediaTranscoding": "crwdns4457:0crwdne4457:0",
+      "networkController": "crwdns4459:0crwdne4459:0",
+      "releasesProvider": "crwdns4461:0crwdne4461:0",
+      "notifications": "crwdns4463:0crwdne4463:0",
+      "firewall": "crwdns4465:0crwdne4465:0",
+      "timetable": "crwdns4467:0crwdne4467:0",
+      "photoService": "crwdns4469:0crwdne4469:0",
+      "documents": "crwdns4977:0crwdne4977:0",
+      "notes": "crwdns4471:0crwdne4471:0",
+      "mediaMonitoring": "crwdns4473:0crwdne4473:0",
+      "speedtest": "crwdns4475:0crwdne4475:0",
+      "analytics": "crwdns4477:0crwdne4477:0",
+      "mediaLibrary": "crwdns4979:0crwdne4979:0",
+      "uptimeMonitoring": "crwdns4981:0crwdne4981:0"
     },
     "testConnection": {
       "action": {
@@ -1006,6 +1295,10 @@
         "privateKey": {
           "label": "crwdns3684:0crwdne3684:0",
           "newLabel": "crwdns3686:0crwdne3686:0"
+        },
+        "slug": {
+          "label": "crwdns4983:0crwdne4983:0",
+          "newLabel": "crwdns4985:0crwdne4985:0"
         }
       }
     },
@@ -1013,6 +1306,30 @@
       "use": "crwdns474:0crwdne474:0",
       "interact": "crwdns476:0crwdne476:0",
       "full": "crwdns478:0crwdne478:0"
+    },
+    "audiobookshelf": {
+      "name": "crwdns4987:0crwdne4987:0",
+      "description": "crwdns4989:0crwdne4989:0"
+    },
+    "navidrome": {
+      "name": "crwdns4991:0crwdne4991:0",
+      "description": "crwdns4993:0crwdne4993:0"
+    },
+    "uptimeKuma": {
+      "name": "crwdns4995:0crwdne4995:0",
+      "description": "crwdns4997:0crwdne4997:0",
+      "secret": {
+        "slug": {
+          "description": "crwdns4999:0crwdne4999:0"
+        },
+        "apiKey": {
+          "description": "crwdns5001:0crwdne5001:0"
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "crwdns5003:0crwdne5003:0",
+      "description": "crwdns5005:0crwdne5005:0"
     }
   },
   "media": {
@@ -1054,6 +1371,9 @@
       "open": {
         "label": "crwdns2680:0crwdne2680:0"
       }
+    },
+    "noResults": {
+      "title": "crwdns4251:0crwdne4251:0"
     }
   },
   "common": {
@@ -1064,6 +1384,7 @@
       "add": "crwdns512:0crwdne512:0",
       "apply": "crwdns514:0crwdne514:0",
       "backToOverview": "crwdns516:0crwdne516:0",
+      "skip": "crwdns4479:0crwdne4479:0",
       "change": "crwdns3804:0crwdne3804:0",
       "create": "crwdns518:0crwdne518:0",
       "createAnother": "crwdns2720:0crwdne2720:0",
@@ -1084,7 +1405,9 @@
       "checkoutDocs": "crwdns546:0crwdne546:0",
       "checkLogs": "crwdns2260:0crwdne2260:0",
       "tryAgain": "crwdns548:0crwdne548:0",
-      "loading": "crwdns550:0crwdne550:0"
+      "loading": "crwdns550:0crwdne550:0",
+      "show": "crwdns4255:0crwdne4255:0",
+      "hide": "crwdns4257:0crwdne4257:0"
     },
     "here": "crwdns552:0crwdne552:0",
     "iconPicker": {
@@ -1249,7 +1572,8 @@
       "menu": {
         "label": {
           "create": "crwdns686:0crwdne686:0",
-          "changePosition": "crwdns688:0crwdne688:0"
+          "changePosition": "crwdns688:0crwdne688:0",
+          "settings": "crwdns4259:0crwdne4259:0"
         }
       },
       "openAllInNewTabs": {
@@ -1296,6 +1620,13 @@
     },
     "edit": {
       "title": "crwdns718:0crwdne718:0",
+      "tab": {
+        "widget": "crwdns4275:0crwdne4275:0",
+        "app": "crwdns4277:0crwdne4277:0"
+      },
+      "app": {
+        "propagationNotice": "crwdns4279:0crwdne4279:0"
+      },
       "advancedOptions": {
         "label": "crwdns720:0crwdne720:0",
         "title": "crwdns722:0crwdne722:0"
@@ -1398,6 +1729,9 @@
         },
         "openNewTab": {
           "label": "crwdns2686:0crwdne2686:0"
+        },
+        "withBorder": {
+          "label": "crwdns4273:0crwdne4273:0"
         },
         "items": {
           "label": "crwdns764:0crwdne764:0",
@@ -2055,6 +2389,37 @@
         "title": "crwdns3876:0crwdne3876:0"
       }
     },
+    "ups": {
+      "name": "crwdns4481:0crwdne4481:0",
+      "description": "crwdns4483:0crwdne4483:0",
+      "option": {
+        "showBattery": {
+          "label": "crwdns4485:0crwdne4485:0"
+        },
+        "showLoad": {
+          "label": "crwdns4487:0crwdne4487:0"
+        },
+        "showVoltage": {
+          "label": "crwdns4489:0crwdne4489:0"
+        }
+      },
+      "status": {
+        "online": "crwdns4491:0crwdne4491:0",
+        "onBattery": "crwdns4493:0crwdne4493:0",
+        "lowBattery": "crwdns4495:0crwdne4495:0",
+        "charging": "crwdns4497:0crwdne4497:0",
+        "unknown": "crwdns4499:0crwdne4499:0"
+      },
+      "field": {
+        "runtime": "crwdns4501:0crwdne4501:0",
+        "load": "crwdns4503:0crwdne4503:0",
+        "input": "crwdns4505:0crwdne4505:0",
+        "output": "crwdns4507:0crwdne4507:0"
+      },
+      "error": {
+        "internalServerError": "crwdns4509:0crwdne4509:0"
+      }
+    },
     "tracearr": {
       "name": "crwdns3928:0crwdne3928:0",
       "description": "crwdns3930:0crwdne3930:0",
@@ -2301,6 +2666,51 @@
             "target": "crwdns3762:0crwdne3762:0"
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "crwdns5007:0crwdne5007:0",
+      "description": "crwdns5009:0crwdne5009:0",
+      "documentsTotal": "crwdns5011:0crwdne5011:0",
+      "documentsInbox": "crwdns5013:0crwdne5013:0",
+      "correspondents": "crwdns5015:0crwdne5015:0",
+      "tags": "crwdns5017:0crwdne5017:0",
+      "documentTypes": "crwdns5019:0crwdne5019:0",
+      "inboxRatio": "crwdns5021:0crwdne5021:0",
+      "inbox": "crwdns5023:0crwdne5023:0",
+      "total": "crwdns5025:0crwdne5025:0",
+      "option": {
+        "showInboxRatio": {
+          "label": "crwdns5027:0crwdne5027:0",
+          "description": "crwdns5029:0crwdne5029:0"
+        },
+        "showInboxRing": {
+          "label": "crwdns5031:0crwdne5031:0",
+          "description": "crwdns5033:0crwdne5033:0"
+        },
+        "showDocumentsTotal": {
+          "label": "crwdns5035:0crwdne5035:0",
+          "description": "crwdns5037:0crwdne5037:0"
+        },
+        "showDocumentsInbox": {
+          "label": "crwdns5039:0crwdne5039:0",
+          "description": "crwdns5041:0crwdne5041:0"
+        },
+        "showCorrespondents": {
+          "label": "crwdns5043:0crwdne5043:0",
+          "description": "crwdns5045:0crwdne5045:0"
+        },
+        "showTags": {
+          "label": "crwdns5047:0crwdne5047:0",
+          "description": "crwdns5049:0crwdne5049:0"
+        },
+        "showDocumentTypes": {
+          "label": "crwdns5051:0crwdne5051:0",
+          "description": "crwdns5053:0crwdne5053:0"
+        }
+      },
+      "error": {
+        "internalServerError": "crwdns5055:0crwdne5055:0"
       }
     },
     "immich-serverStats": {
@@ -2911,6 +3321,113 @@
         "internalServerError": "crwdns4062:0crwdne4062:0"
       }
     },
+    "uptimeKuma": {
+      "name": "crwdns5057:0crwdne5057:0",
+      "description": "crwdns5059:0crwdne5059:0",
+      "option": {
+        "showAverageUptime": {
+          "label": "crwdns5061:0crwdne5061:0",
+          "description": "crwdns5063:0crwdne5063:0"
+        },
+        "showUptimeRing": {
+          "label": "crwdns5065:0crwdne5065:0",
+          "description": "crwdns5067:0crwdne5067:0"
+        },
+        "showTotalMonitors": {
+          "label": "crwdns5069:0crwdne5069:0",
+          "description": "crwdns5071:0crwdne5071:0"
+        },
+        "showUpCount": {
+          "label": "crwdns5073:0crwdne5073:0",
+          "description": "crwdns5075:0crwdne5075:0"
+        },
+        "showDownCount": {
+          "label": "crwdns5077:0crwdne5077:0",
+          "description": "crwdns5079:0crwdne5079:0"
+        },
+        "showPausedCount": {
+          "label": "crwdns5081:0crwdne5081:0",
+          "description": "crwdns5083:0crwdne5083:0"
+        }
+      },
+      "averageUptime": "crwdns5085:0crwdne5085:0",
+      "stats": {
+        "totalMonitors": "crwdns5087:0crwdne5087:0",
+        "upCount": "crwdns5089:0crwdne5089:0",
+        "downCount": "crwdns5091:0crwdne5091:0",
+        "pausedCount": "crwdns5093:0crwdne5093:0"
+      },
+      "error": {
+        "internalServerError": "crwdns5095:0crwdne5095:0"
+      }
+    },
+    "audioStats": {
+      "name": "crwdns5097:0crwdne5097:0",
+      "description": "crwdns5099:0crwdne5099:0",
+      "option": {
+        "showArtists": {
+          "label": "crwdns5101:0crwdne5101:0",
+          "description": "crwdns5103:0crwdne5103:0"
+        },
+        "showAlbums": {
+          "label": "crwdns5105:0crwdne5105:0",
+          "description": "crwdns5107:0crwdne5107:0"
+        },
+        "showSongs": {
+          "label": "crwdns5109:0crwdne5109:0",
+          "description": "crwdns5111:0crwdne5111:0"
+        },
+        "showNowPlaying": {
+          "label": "crwdns5113:0crwdne5113:0",
+          "description": "crwdns5115:0crwdne5115:0"
+        },
+        "showNowPlayingList": {
+          "label": "crwdns5117:0crwdne5117:0",
+          "description": "crwdns5119:0crwdne5119:0"
+        },
+        "maxNowPlayingItems": {
+          "label": "crwdns5121:0crwdne5121:0",
+          "description": "crwdns5123:0crwdne5123:0"
+        },
+        "showLibraryCount": {
+          "label": "crwdns5125:0crwdne5125:0",
+          "description": "crwdns5127:0crwdne5127:0"
+        },
+        "showAudiobooks": {
+          "label": "crwdns5129:0crwdne5129:0",
+          "description": "crwdns5131:0crwdne5131:0"
+        },
+        "showPodcasts": {
+          "label": "crwdns5133:0crwdne5133:0",
+          "description": "crwdns5135:0crwdne5135:0"
+        },
+        "showListeningTime": {
+          "label": "crwdns5137:0crwdne5137:0",
+          "description": "crwdns5139:0crwdne5139:0"
+        },
+        "showActiveSessions": {
+          "label": "crwdns5141:0crwdne5141:0",
+          "description": "crwdns5143:0crwdne5143:0"
+        },
+        "compactMode": {
+          "label": "crwdns5145:0crwdne5145:0",
+          "description": "crwdns5147:0crwdne5147:0"
+        }
+      },
+      "artists": "crwdns5149:0crwdne5149:0",
+      "albums": "crwdns5151:0crwdne5151:0",
+      "songs": "crwdns5153:0crwdne5153:0",
+      "libraryCount": "crwdns5155:0crwdne5155:0",
+      "audiobooks": "crwdns5157:0crwdne5157:0",
+      "podcasts": "crwdns5159:0crwdne5159:0",
+      "listeningTime": "crwdns5161:0crwdne5161:0",
+      "activeSessions": "crwdns5163:0crwdne5163:0",
+      "nowPlaying": "crwdns5165:0crwdne5165:0",
+      "nowPlayingCount": "crwdns5167:0count={count}crwdne5167:0",
+      "error": {
+        "internalServerError": "crwdns5169:0crwdne5169:0"
+      }
+    },
     "systemResources": {
       "name": "crwdns3600:0crwdne3600:0",
       "description": "crwdns3602:0crwdne3602:0",
@@ -2974,6 +3491,239 @@
       },
       "status": {
         "unhealthy": "crwdns3844:0crwdne3844:0"
+      }
+    },
+    "customApi": {
+      "name": "crwdns5601:0crwdne5601:0",
+      "description": "crwdns5603:0crwdne5603:0",
+      "option": {
+        "definitionId": {
+          "label": "crwdns5605:0crwdne5605:0"
+        },
+        "refreshInterval": {
+          "label": "crwdns5607:0crwdne5607:0",
+          "description": "crwdns5609:0crwdne5609:0"
+        }
+      },
+      "noDefinition": "crwdns5611:0crwdne5611:0",
+      "definitionNotFound": "crwdns5613:0crwdne5613:0",
+      "noDisplayOutput": "crwdns5615:0crwdne5615:0",
+      "executeConfirm": "crwdns5617:0crwdne5617:0",
+      "executing": "crwdns5619:0crwdne5619:0",
+      "executeSuccess": "crwdns5621:0crwdne5621:0",
+      "executeFailed": "crwdns5623:0crwdne5623:0"
+    },
+    "beszelSystemTable": {
+      "name": "crwdns4779:0crwdne4779:0",
+      "description": "crwdns4781:0crwdne4781:0",
+      "option": {
+        "statusFilter": {
+          "label": "crwdns4783:0crwdne4783:0"
+        },
+        "sortBy": {
+          "label": "crwdns4785:0crwdne4785:0"
+        },
+        "sortDirection": {
+          "label": "crwdns4787:0crwdne4787:0"
+        },
+        "showCpu": {
+          "label": "crwdns4789:0crwdne4789:0"
+        },
+        "showMemory": {
+          "label": "crwdns4791:0crwdne4791:0"
+        },
+        "showDisk": {
+          "label": "crwdns4793:0crwdne4793:0"
+        },
+        "showGpu": {
+          "label": "crwdns4795:0crwdne4795:0"
+        },
+        "showLoadAvg": {
+          "label": "crwdns4797:0crwdne4797:0"
+        },
+        "showNet": {
+          "label": "crwdns4799:0crwdne4799:0"
+        },
+        "showTemp": {
+          "label": "crwdns4801:0crwdne4801:0"
+        },
+        "showBattery": {
+          "label": "crwdns4803:0crwdne4803:0"
+        },
+        "showServices": {
+          "label": "crwdns4805:0crwdne4805:0"
+        },
+        "showUptime": {
+          "label": "crwdns4807:0crwdne4807:0"
+        },
+        "showAgent": {
+          "label": "crwdns4809:0crwdne4809:0"
+        }
+      },
+      "noRecords": "crwdns4811:0crwdne4811:0",
+      "column": {
+        "system": "crwdns4813:0crwdne4813:0",
+        "cpu": "crwdns4815:0crwdne4815:0",
+        "memory": "crwdns4817:0crwdne4817:0",
+        "disk": "crwdns4819:0crwdne4819:0",
+        "gpu": "crwdns4821:0crwdne4821:0",
+        "loadAvg": "crwdns4823:0crwdne4823:0",
+        "net": "crwdns4825:0crwdne4825:0",
+        "temp": "crwdns4827:0crwdne4827:0",
+        "battery": "crwdns4829:0crwdne4829:0",
+        "services": "crwdns4831:0crwdne4831:0",
+        "uptime": "crwdns4833:0crwdne4833:0",
+        "agent": "crwdns4835:0crwdne4835:0"
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "crwdns4837:0crwdne4837:0",
+      "description": "crwdns4839:0crwdne4839:0",
+      "option": {
+        "statusFilter": {
+          "label": "crwdns4841:0crwdne4841:0"
+        },
+        "showCpu": {
+          "label": "crwdns4843:0crwdne4843:0"
+        },
+        "showMemory": {
+          "label": "crwdns4845:0crwdne4845:0"
+        },
+        "showDisk": {
+          "label": "crwdns4847:0crwdne4847:0"
+        },
+        "showGpu": {
+          "label": "crwdns4849:0crwdne4849:0"
+        },
+        "showLoadAvg": {
+          "label": "crwdns4851:0crwdne4851:0"
+        },
+        "showNet": {
+          "label": "crwdns4853:0crwdne4853:0"
+        },
+        "showTemp": {
+          "label": "crwdns4855:0crwdne4855:0"
+        },
+        "showBattery": {
+          "label": "crwdns4857:0crwdne4857:0"
+        },
+        "showServices": {
+          "label": "crwdns4859:0crwdne4859:0"
+        },
+        "showUptime": {
+          "label": "crwdns4861:0crwdne4861:0"
+        },
+        "showAgent": {
+          "label": "crwdns4863:0crwdne4863:0"
+        }
+      },
+      "metric": {
+        "cpu": "crwdns4865:0crwdne4865:0",
+        "memory": "crwdns4867:0crwdne4867:0",
+        "disk": "crwdns4869:0crwdne4869:0",
+        "gpu": "crwdns4871:0crwdne4871:0",
+        "loadAvg": "crwdns4873:0crwdne4873:0",
+        "net": "crwdns4875:0crwdne4875:0",
+        "temp": "crwdns4877:0crwdne4877:0",
+        "battery": "crwdns4879:0crwdne4879:0",
+        "services": "crwdns4881:0crwdne4881:0",
+        "uptime": "crwdns4883:0crwdne4883:0",
+        "agent": "crwdns4885:0crwdne4885:0"
+      }
+    },
+    "beszelAlerts": {
+      "name": "crwdns4887:0crwdne4887:0",
+      "description": "crwdns4889:0crwdne4889:0",
+      "option": {
+        "showHistory": {
+          "label": "crwdns4891:0crwdne4891:0"
+        },
+        "maxHistoryItems": {
+          "label": "crwdns4893:0crwdne4893:0"
+        }
+      },
+      "empty": "crwdns4895:0crwdne4895:0",
+      "history": "crwdns4897:0crwdne4897:0",
+      "resolved": "crwdns4899:0crwdne4899:0",
+      "status": {
+        "triggered": "crwdns4901:0crwdne4901:0",
+        "ok": "crwdns4903:0crwdne4903:0"
+      }
+    },
+    "beszelSystemStats": {
+      "name": "crwdns4905:0crwdne4905:0",
+      "description": "crwdns4907:0crwdne4907:0",
+      "option": {
+        "timePeriod": {
+          "label": "crwdns4909:0crwdne4909:0"
+        },
+        "showCpu": {
+          "label": "crwdns4911:0crwdne4911:0"
+        },
+        "showMemory": {
+          "label": "crwdns4913:0crwdne4913:0"
+        },
+        "showDisk": {
+          "label": "crwdns4915:0crwdne4915:0"
+        },
+        "showDiskIO": {
+          "label": "crwdns4917:0crwdne4917:0"
+        },
+        "showNetwork": {
+          "label": "crwdns4919:0crwdne4919:0"
+        },
+        "showDockerCpu": {
+          "label": "crwdns4921:0crwdne4921:0"
+        },
+        "showDockerMemory": {
+          "label": "crwdns4923:0crwdne4923:0"
+        },
+        "showDockerNetwork": {
+          "label": "crwdns4925:0crwdne4925:0"
+        }
+      },
+      "selectSystem": "crwdns4927:0crwdne4927:0",
+      "chart": {
+        "cpu": {
+          "title": "crwdns4929:0crwdne4929:0",
+          "subtitle": "crwdns4931:0crwdne4931:0",
+          "series": "crwdns4933:0crwdne4933:0"
+        },
+        "memory": {
+          "title": "crwdns4935:0crwdne4935:0",
+          "subtitle": "crwdns4937:0crwdne4937:0",
+          "series": "crwdns4939:0crwdne4939:0",
+          "cache": "crwdns4941:0crwdne4941:0"
+        },
+        "disk": {
+          "title": "crwdns4943:0crwdne4943:0",
+          "subtitle": "crwdns4945:0crwdne4945:0",
+          "series": "crwdns4947:0crwdne4947:0"
+        },
+        "diskIO": {
+          "title": "crwdns4949:0crwdne4949:0",
+          "subtitle": "crwdns4951:0crwdne4951:0",
+          "read": "crwdns4953:0crwdne4953:0",
+          "write": "crwdns4955:0crwdne4955:0"
+        },
+        "network": {
+          "title": "crwdns4957:0crwdne4957:0",
+          "subtitle": "crwdns4959:0crwdne4959:0",
+          "sent": "crwdns4961:0crwdne4961:0",
+          "recv": "crwdns4963:0crwdne4963:0"
+        },
+        "dockerCpu": {
+          "title": "crwdns4965:0crwdne4965:0",
+          "subtitle": "crwdns4967:0crwdne4967:0"
+        },
+        "dockerMemory": {
+          "title": "crwdns4969:0crwdne4969:0",
+          "subtitle": "crwdns4971:0crwdne4971:0"
+        },
+        "dockerNetwork": {
+          "title": "crwdns4973:0crwdne4973:0",
+          "subtitle": "crwdns4975:0crwdne4975:0"
+        }
       }
     }
   },
@@ -3354,6 +4104,7 @@
         "boards": "crwdns1574:0crwdne1574:0",
         "apps": "crwdns1576:0crwdne1576:0",
         "integrations": "crwdns1578:0crwdne1578:0",
+        "customWidgets": "crwdns5625:0crwdne5625:0",
         "searchEngies": "crwdns1580:0crwdne1580:0",
         "medias": "crwdns1582:0crwdne1582:0",
         "users": {
@@ -3370,9 +4121,10 @@
             "docker": "crwdns1594:0crwdne1594:0",
             "kubernetes": "crwdns2859:0crwdne2859:0",
             "logs": "crwdns1596:0crwdne1596:0",
-            "api": "crwdns1598:0crwdne1598:0",
+            "api": "crwdns5171:0crwdne5171:0",
             "certificates": "crwdns2594:0crwdne2594:0",
-            "tasks": "crwdns1600:0crwdne1600:0"
+            "tasks": "crwdns1600:0crwdne1600:0",
+            "backup": "crwdns4607:0crwdne4607:0"
           }
         },
         "settings": "crwdns1602:0crwdne1602:0",
@@ -3452,6 +4204,9 @@
           "public": "crwdns1656:0crwdne1656:0",
           "private": "crwdns1658:0crwdne1658:0"
         },
+        "noResults": {
+          "title": "crwdns4253:0crwdne4253:0"
+        },
         "modal": {
           "createBoard": {
             "field": {
@@ -3482,7 +4237,24 @@
               },
               "search": "crwdns2702:0crwdne2702:0",
               "firstDayOfWeek": "crwdns1674:0crwdne1674:0",
-              "accessibility": "crwdns1676:0crwdne1676:0"
+              "accessibility": "crwdns1676:0crwdne1676:0",
+              "onboardingTours": {
+                "title": "crwdns4511:0crwdne4511:0",
+                "description": "crwdns4513:0crwdne4513:0",
+                "reset": "crwdns4515:0crwdne4515:0",
+                "resetSuccess": {
+                  "title": "crwdns4517:0crwdne4517:0",
+                  "message": "crwdns4519:0crwdne4519:0"
+                },
+                "status": {
+                  "completed": "crwdns4521:0crwdne4521:0",
+                  "notStarted": "crwdns4523:0crwdne4523:0"
+                },
+                "name": {
+                  "management": "crwdns4525:0crwdne4525:0",
+                  "dashboard": "crwdns4527:0crwdne4527:0"
+                }
+              }
             }
           },
           "security": {
@@ -3890,7 +4662,215 @@
                   "actions": "crwdns2740:0crwdne2740:0"
                 }
               }
+            },
+            "mcp": {
+              "label": "crwdns5173:0crwdne5173:0",
+              "title": "crwdns5175:0crwdne5175:0",
+              "subtitle": "crwdns5177:0crwdne5177:0",
+              "description": "crwdns5179:0crwdne5179:0",
+              "noApiKey": "crwdns5181:0crwdne5181:0",
+              "createApiKeyButton": "crwdns5183:0crwdne5183:0",
+              "endpoint": {
+                "title": "crwdns5185:0crwdne5185:0"
+              },
+              "authentication": {
+                "title": "crwdns5187:0crwdne5187:0",
+                "intro": "crwdns5189:0crwdne5189:0",
+                "apiKey": {
+                  "title": "crwdns5191:0crwdne5191:0",
+                  "description": "crwdns5193:0crwdne5193:0"
+                },
+                "oauth": {
+                  "title": "crwdns5195:0crwdne5195:0",
+                  "description": "crwdns5197:0crwdne5197:0",
+                  "hint": "crwdns5199:0crwdne5199:0"
+                },
+                "permissions": "crwdns5201:0crwdne5201:0"
+              },
+              "clientConfig": {
+                "title": "crwdns5203:0crwdne5203:0",
+                "streamableHttp": {
+                  "recommended": "crwdns5205:0crwdne5205:0",
+                  "title": "crwdns5207:0crwdne5207:0",
+                  "worksWith": "crwdns5209:0crwdne5209:0",
+                  "addToConfig": "crwdns5211:0crwdne5211:0",
+                  "cursor": "crwdns5213:0{name}crwdnd5213:0{file}crwdne5213:0",
+                  "claudeDesktop": "crwdns5215:0{name}crwdnd5215:0{file}crwdne5215:0",
+                  "claudeCode": "crwdns5217:0{name}crwdnd5217:0{file}crwdnd5217:0{command}crwdne5217:0",
+                  "vsCodeCopilot": "crwdns5219:0{name}crwdnd5219:0{file}crwdne5219:0",
+                  "replaceHint": "crwdns5221:0crwdne5221:0"
+                },
+                "stdio": {
+                  "title": "crwdns5223:0crwdne5223:0",
+                  "description": "crwdns5225:0{dependency}crwdne5225:0"
+                }
+              },
+              "testConnection": {
+                "title": "crwdns5227:0crwdne5227:0",
+                "description": "crwdns5229:0crwdne5229:0",
+                "hint": "crwdns5231:0crwdne5231:0"
+              },
+              "availableTools": {
+                "title": "crwdns5233:0crwdne5233:0",
+                "description": "crwdns5235:0{count}crwdne5235:0",
+                "columnType": "crwdns5237:0crwdne5237:0",
+                "columnName": "crwdns5239:0crwdne5239:0",
+                "columnDescription": "crwdns5241:0crwdne5241:0"
+              },
+              "troubleshooting": {
+                "title": "crwdns5243:0crwdne5243:0",
+                "missingHeader": {
+                  "title": "crwdns5245:0crwdne5245:0",
+                  "description": "crwdns5247:0{header}crwdnd5247:0{section}crwdne5247:0"
+                },
+                "invalidFormat": {
+                  "title": "crwdns5249:0crwdne5249:0",
+                  "description": "crwdns5251:0crwdne5251:0"
+                },
+                "invalidKey": {
+                  "title": "crwdns5253:0crwdne5253:0",
+                  "description": "crwdns5255:0crwdne5255:0"
+                },
+                "connectionRefused": {
+                  "title": "crwdns5257:0crwdne5257:0",
+                  "description": "crwdns5259:0{localhost}crwdne5259:0"
+                },
+                "toolsNotAppearing": {
+                  "title": "crwdns5261:0crwdne5261:0",
+                  "description": "crwdns5263:0crwdne5263:0"
+                }
+              },
+              "copy": "crwdns5265:0crwdne5265:0",
+              "oneClick": {
+                "title": "crwdns5267:0crwdne5267:0",
+                "subtitle": "crwdns5269:0crwdne5269:0",
+                "vsCode": "crwdns5271:0crwdne5271:0",
+                "cursor": "crwdns5273:0crwdne5273:0",
+                "copyUrl": "crwdns5275:0crwdne5275:0",
+                "copied": "crwdns5277:0crwdne5277:0",
+                "copyHint": "crwdns5279:0crwdne5279:0",
+                "manualConfig": "crwdns5281:0crwdne5281:0"
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "crwdns4609:0crwdne4609:0",
+          "metaTitle": "crwdns4611:0crwdne4611:0",
+          "export": {
+            "title": "crwdns4613:0crwdne4613:0",
+            "description": "crwdns4615:0crwdne4615:0",
+            "button": "crwdns4617:0crwdne4617:0",
+            "error": "crwdns4619:0crwdne4619:0",
+            "confirm": {
+              "title": "crwdns4621:0crwdne4621:0",
+              "warningTitle": "crwdns4623:0crwdne4623:0",
+              "warningBody": "crwdns4625:0crwdne4625:0",
+              "typePrompt": "crwdns4627:0{phrase}crwdne4627:0",
+              "submit": "crwdns4629:0crwdne4629:0",
+              "cancel": "crwdns4631:0crwdne4631:0"
+            }
+          },
+          "import": {
+            "title": "crwdns4633:0crwdne4633:0",
+            "description": "crwdns4635:0crwdne4635:0",
+            "warning": "crwdns4637:0crwdne4637:0",
+            "dropzone": {
+              "title": "crwdns4639:0crwdne4639:0",
+              "description": "crwdns4641:0crwdne4641:0"
+            },
+            "changeFile": "crwdns4643:0crwdne4643:0",
+            "button": "crwdns4645:0crwdne4645:0",
+            "success": {
+              "title": "crwdns4647:0crwdne4647:0",
+              "message": "crwdns4649:0crwdne4649:0"
+            },
+            "error": "crwdns4651:0crwdne4651:0"
+          },
+          "preview": {
+            "title": "crwdns4653:0crwdne4653:0",
+            "exported": "crwdns4655:0{date}crwdne4655:0",
+            "loading": "crwdns4657:0crwdne4657:0",
+            "errorTitle": "crwdns4659:0crwdne4659:0",
+            "entity": "crwdns4661:0crwdne4661:0",
+            "count": "crwdns4663:0crwdne4663:0",
+            "boards": "crwdns4665:0crwdne4665:0",
+            "entities": {
+              "board": "crwdns4667:0crwdne4667:0",
+              "user": "crwdns4669:0crwdne4669:0",
+              "app": "crwdns4671:0crwdne4671:0",
+              "integration": "crwdns4673:0crwdne4673:0",
+              "item": "crwdns4675:0crwdne4675:0",
+              "media": "crwdns4677:0crwdne4677:0",
+              "search_engine": "crwdns4679:0crwdne4679:0"
+            },
+            "analyzeError": "crwdns4681:0crwdne4681:0",
+            "invalidMissingMetadata": "crwdns4683:0crwdne4683:0",
+            "invalidMissingDb": "crwdns4685:0crwdne4685:0"
+          },
+          "restore": {
+            "dropzone": {
+              "title": "crwdns4687:0crwdne4687:0",
+              "description": "crwdns4689:0crwdne4689:0"
+            },
+            "analyzing": "crwdns4691:0crwdne4691:0",
+            "changeFile": "crwdns4693:0crwdne4693:0",
+            "continueToRestore": "crwdns4695:0crwdne4695:0",
+            "tryAgain": "crwdns4697:0crwdne4697:0",
+            "analysisError": "crwdns4699:0crwdne4699:0",
+            "preview": {
+              "title": "crwdns4701:0crwdne4701:0",
+              "exported": "crwdns4703:0{date}crwdne4703:0",
+              "entity": "crwdns4705:0crwdne4705:0",
+              "count": "crwdns4707:0crwdne4707:0",
+              "boards": "crwdns4709:0crwdne4709:0",
+              "entities": {
+                "board": "crwdns4711:0crwdne4711:0",
+                "user": "crwdns4713:0crwdne4713:0",
+                "app": "crwdns4715:0crwdne4715:0",
+                "integration": "crwdns4717:0crwdne4717:0",
+                "item": "crwdns4719:0crwdne4719:0",
+                "media": "crwdns4721:0crwdne4721:0",
+                "search_engine": "crwdns4723:0crwdne4723:0"
+              },
+              "migrationsApplied": "crwdns4725:0{count}crwdne4725:0",
+              "migrationsAppliedPlural": "crwdns4727:0{count}crwdne4727:0",
+              "migrationsOlderVersion": "crwdns4729:0{count}crwdne4729:0",
+              "migrationsOlderVersionPlural": "crwdns4731:0{count}crwdne4731:0",
+              "migrationsUpToDate": "crwdns4733:0{count}crwdne4733:0",
+              "upToDate": "crwdns4735:0crwdne4735:0",
+              "migrationsPending": "crwdns4737:0{count}crwdne4737:0"
+            },
+            "migration": {
+              "title": "crwdns4739:0{current}crwdnd4739:0{total}crwdne4739:0",
+              "migrationLabel": "crwdns4741:0{index}crwdne4741:0"
+            },
+            "confirm": {
+              "title": "crwdns4743:0crwdne4743:0",
+              "warningTitle": "crwdns4745:0crwdne4745:0",
+              "warningBody": "crwdns4747:0crwdne4747:0",
+              "typePrompt": "crwdns4749:0{phrase}crwdne4749:0",
+              "cancel": "crwdns4751:0crwdne4751:0",
+              "submit": "crwdns4753:0crwdne4753:0"
+            },
+            "progress": {
+              "title": "crwdns4755:0crwdne4755:0",
+              "extracting": "crwdns4757:0crwdne4757:0",
+              "migrating": "crwdns4759:0crwdne4759:0",
+              "encrypting": "crwdns4761:0crwdne4761:0",
+              "swapping": "crwdns4763:0crwdne4763:0",
+              "restarting": "crwdns4765:0crwdne4765:0"
+            },
+            "complete": {
+              "title": "crwdns4767:0crwdne4767:0",
+              "message": "crwdns4769:0crwdne4769:0"
+            },
+            "failed": {
+              "title": "crwdns4771:0crwdne4771:0"
+            },
+            "invalidMissingMetadata": "crwdns4773:0crwdne4773:0",
+            "invalidMissingDb": "crwdns4775:0crwdne4775:0",
+            "analyzeError": "crwdns4777:0crwdne4777:0"
           }
         }
       },
@@ -3977,6 +4957,12 @@
     },
     "action": {
       "title": "crwdns3440:0crwdne3440:0",
+      "logs": {
+        "label": "crwdns4595:0crwdne4595:0",
+        "page": {
+          "title": "crwdns4597:0{name}crwdne4597:0"
+        }
+      },
       "start": {
         "label": "crwdns1922:0crwdne1922:0",
         "notification": {
@@ -4368,6 +5354,18 @@
           "label": "crwdns2016:0crwdne2016:0"
         }
       },
+      "custom-widgets": {
+        "label": "crwdns5627:0crwdne5627:0",
+        "new": {
+          "label": "crwdns5629:0crwdne5629:0"
+        },
+        "edit": {
+          "label": "crwdns5631:0crwdne5631:0",
+          "flow": {
+            "label": "crwdns5633:0crwdne5633:0"
+          }
+        }
+      },
       "users": {
         "label": "crwdns2018:0crwdne2018:0",
         "create": {
@@ -4389,7 +5387,10 @@
           "label": "crwdns3652:0crwdne3652:0"
         },
         "docker": {
-          "label": "crwdns2034:0crwdne2034:0"
+          "label": "crwdns2034:0crwdne2034:0",
+          "logs": {
+            "label": "crwdns4599:0crwdne4599:0"
+          }
         },
         "kubernetes": {
           "label": "crwdns3031:0crwdne3031:0",
@@ -4538,13 +5539,141 @@
                 "label": "crwdns2096:0crwdne2096:0"
               }
             }
+          },
+          "preferences": {
+            "title": "crwdns4307:0crwdne4307:0",
+            "children": {
+              "detail": {
+                "title": "crwdns4309:0crwdne4309:0",
+                "backHint": "crwdns4311:0crwdne4311:0",
+                "backAction": "crwdns4313:0crwdne4313:0"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "crwdns4315:0crwdne4315:0"
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": "crwdns4317:0crwdne4317:0"
+              },
+              "boolean": {
+                "enabled": "crwdns4319:0crwdne4319:0",
+                "disabled": "crwdns4321:0crwdne4321:0"
+              },
+              "board": {
+                "none": "crwdns4323:0crwdne4323:0",
+                "unavailable": "crwdns4325:0crwdne4325:0"
+              },
+              "searchEngine": {
+                "none": "crwdns4327:0crwdne4327:0",
+                "unavailable": "crwdns4329:0crwdne4329:0"
+              },
+              "colorScheme": {
+                "label": "crwdns4331:0crwdne4331:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4333:0crwdne4333:0"
+                  }
+                }
+              },
+              "locale": {
+                "label": "crwdns4335:0crwdne4335:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4337:0crwdne4337:0"
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "crwdns4339:0crwdne4339:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4341:0crwdne4341:0"
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "crwdns4343:0crwdne4343:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4345:0crwdne4345:0"
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "crwdns4347:0crwdne4347:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4349:0crwdne4349:0"
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "crwdns4351:0crwdne4351:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4353:0crwdne4353:0"
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "crwdns4355:0crwdne4355:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4357:0crwdne4357:0"
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "crwdns4359:0crwdne4359:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4361:0crwdne4361:0"
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "crwdns4363:0crwdne4363:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns4365:0crwdne4365:0"
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": "crwdns4367:0crwdne4367:0"
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "crwdns4281:0crwdne4281:0",
         "requestMovie": "crwdns2498:0crwdne2498:0",
         "requestSeries": "crwdns2500:0crwdne2500:0",
-        "openIn": "crwdns2502:0{kind}crwdne2502:0"
+        "openIn": "crwdns2502:0{kind}crwdne2502:0",
+        "group": {
+          "title": "crwdns4283:0crwdne4283:0"
+        },
+        "action": {
+          "search": {
+            "label": "crwdns4285:0crwdne4285:0",
+            "description": "crwdns4287:0crwdne4287:0",
+            "disabled": {
+              "noIntegration": "crwdns4289:0crwdne4289:0",
+              "scoped": "crwdns4291:0crwdne4291:0"
+            }
+          }
+        },
+        "availability": {
+          "available": "crwdns4293:0crwdne4293:0",
+          "partiallyAvailable": "crwdns4295:0crwdne4295:0",
+          "processing": "crwdns4297:0crwdne4297:0",
+          "requested": "crwdns4299:0crwdne4299:0",
+          "pending": "crwdns4301:0crwdne4301:0"
+        }
       },
       "external": {
         "help": "crwdns2098:0crwdne2098:0",
@@ -4820,7 +5949,11 @@
             "table": {
               "header": {
                 "season": "crwdns2506:0crwdne2506:0",
-                "episodes": "crwdns2508:0crwdne2508:0"
+                "episodes": "crwdns2508:0crwdne2508:0",
+                "status": "crwdns4303:0crwdne4303:0"
+              },
+              "status": {
+                "requested": "crwdns4305:0crwdne4305:0"
               }
             },
             "button": {
@@ -4929,6 +6062,73 @@
         "info": "crwdns3526:0crwdne3526:0",
         "warn": "crwdns3528:0crwdne3528:0",
         "error": "crwdns3530:0crwdne3530:0"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "crwdns4529:0crwdne4529:0",
+    "next": "crwdns4531:0crwdne4531:0",
+    "prev": "crwdns4533:0crwdne4533:0",
+    "done": "crwdns4535:0crwdne4535:0",
+    "skip": "crwdns4537:0crwdne4537:0",
+    "manage": {
+      "welcome": {
+        "title": "crwdns4539:0crwdne4539:0",
+        "description": "crwdns4541:0crwdne4541:0"
+      },
+      "boardsList": {
+        "title": "crwdns4543:0crwdne4543:0",
+        "description": "crwdns4545:0crwdne4545:0"
+      },
+      "boardsCreate": {
+        "title": "crwdns4547:0crwdne4547:0",
+        "description": "crwdns4549:0crwdne4549:0"
+      },
+      "appsList": {
+        "title": "crwdns4551:0crwdne4551:0",
+        "description": "crwdns4553:0crwdne4553:0"
+      },
+      "appsCreate": {
+        "title": "crwdns4555:0crwdne4555:0",
+        "description": "crwdns4557:0crwdne4557:0"
+      },
+      "integrationsList": {
+        "title": "crwdns4559:0crwdne4559:0",
+        "description": "crwdns4561:0crwdne4561:0"
+      },
+      "integrationsCreate": {
+        "title": "crwdns4563:0crwdne4563:0",
+        "description": "crwdns4565:0crwdne4565:0"
+      },
+      "usersList": {
+        "title": "crwdns4567:0crwdne4567:0",
+        "description": "crwdns4569:0crwdne4569:0"
+      },
+      "usersCreate": {
+        "title": "crwdns4571:0crwdne4571:0",
+        "description": "crwdns4573:0crwdne4573:0"
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "crwdns4575:0crwdne4575:0",
+        "description": "crwdns4577:0crwdne4577:0"
+      },
+      "editMode": {
+        "title": "crwdns4579:0crwdne4579:0",
+        "description": "crwdns4581:0crwdne4581:0"
+      },
+      "settings": {
+        "title": "crwdns4583:0crwdne4583:0",
+        "description": "crwdns4585:0crwdne4585:0"
+      },
+      "switcher": {
+        "title": "crwdns4587:0crwdne4587:0",
+        "description": "crwdns4589:0crwdne4589:0"
+      },
+      "userMenu": {
+        "title": "crwdns4591:0crwdne4591:0",
+        "description": "crwdns4593:0crwdne4593:0"
       }
     }
   }

@@ -2,7 +2,7 @@ import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
-import { NoIntegrationSelectedError } from "node_modules/@homarr/widgets/src/errors";
+import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -42,7 +42,6 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           item.advancedOptions.customCssClasses.join(" "),
         )}
         radius={board.itemRadius}
-        withBorder
         styles={{
           root: {
             "--opacity": board.opacity / 100,

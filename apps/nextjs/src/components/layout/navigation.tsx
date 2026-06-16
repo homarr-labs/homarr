@@ -27,7 +27,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
             return null;
           }
 
-          const { icon: TablerIcon, iconProps, ...props } = link;
+          const { icon: TablerIcon, iconProps, "data-onboarding-tour-id": tourId, ...props } = link;
           const Icon =
             typeof TablerIcon === "string" ? (
               <Image src={TablerIcon} w={20} h={20} />
@@ -38,17 +38,20 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
           if ("items" in props) {
             clientLink = {
               ...props,
+              "data-onboarding-tour-id": tourId,
               items: props.items
                 .filter((item) => !item.hidden)
                 .map((item) => {
+                  const { "data-onboarding-tour-id": itemTourId, ...rest } = item;
                   return {
-                    ...item,
+                    ...rest,
+                    "data-onboarding-tour-id": itemTourId,
                     icon: <item.icon size={20} stroke={1.5} {...iconProps} />,
                   };
                 }),
             } as ClientNavigationLink;
           } else {
-            clientLink = props as ClientNavigationLink;
+            clientLink = { ...props, "data-onboarding-tour-id": tourId } as ClientNavigationLink;
           }
           return <CommonNavLink key={index} {...clientLink} icon={Icon} />;
         })}
@@ -63,6 +66,7 @@ interface CommonNavigationLinkProps {
   icon: TablerIcon | string;
   iconProps?: TablerIconProps;
   hidden?: boolean;
+  "data-onboarding-tour-id"?: string;
 }
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {

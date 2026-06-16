@@ -1,0 +1,45 @@
+---
+title: 'Home Assistant'
+description: "Home Assistant is an open-source home automation platform that focuses on privacy and local control, allowing you to automate and control your smart home devices."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconBinaryTree } from "@tabler/icons-react";
+import { homeAssistantIntegration } from '.';
+import { smartHomeEntityStateWidget } from '@site/docs/widgets/smart-home-entity-state';
+import { smartHomeExecuteAutomationWidget } from '@site/docs/widgets/smart-home-execute-automation';
+
+
+<IntegrationHeader
+    integration={homeAssistantIntegration}
+    categories={['Smart Home', 'Automation']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: smartHomeEntityStateWidget
+    }, {
+        widget: smartHomeExecuteAutomationWidget,
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+        "Click on your profile in the bottom left corner of Home Assistant.",
+        "Switch to the Security tab.",
+        "Scroll down to the Long-lived access tokens section.",
+        "Click on the Create Token button.",
+        "Enter a name for the token (e.g., 'Homarr Integration') and click Create.",
+        "Copy the generated token and paste it into the Homarr integration settings.",
+    ]
+}]} />

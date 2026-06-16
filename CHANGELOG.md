@@ -1,3 +1,95 @@
+## [1.65.0](https://github.com/homarr-labs/homarr/compare/v1.64.0...v1.65.0) (2026-06-12)
+
+### Features
+
+* add MCP server for AI assistant integration ([#5882](https://github.com/homarr-labs/homarr/issues/5882)) ([6baff7b](https://github.com/homarr-labs/homarr/commit/6baff7be3dc8f2473d93d17862b6d0b2df5c4d15))
+* add Technitium DNS integration, usable with DNS Hole widgets ([#5832](https://github.com/homarr-labs/homarr/issues/5832)) ([cd1a82a](https://github.com/homarr-labs/homarr/commit/cd1a82a640101cdca88d1e825edb11bd51f5ce66))
+* add Uptime Kuma, Audiobookshelf, Paperless-ngx, and Navidrome integrations ([#5910](https://github.com/homarr-labs/homarr/issues/5910)) ([d77c6f8](https://github.com/homarr-labs/homarr/commit/d77c6f8d4e50108f50831ee365e382a535acb254))
+* **beszel:** add Beszel integration with system monitoring widgets ([#5900](https://github.com/homarr-labs/homarr/issues/5900)) ([a4db9cf](https://github.com/homarr-labs/homarr/commit/a4db9cf0dcd8034015064f9d23f2d351b1d0c50a))
+* **board:** add widget hover overlay on dashboard ([#5888](https://github.com/homarr-labs/homarr/issues/5888)) ([29bd710](https://github.com/homarr-labs/homarr/commit/29bd7101b180acfb750c7d4414c30bd6450065e2))
+* custom widgets ([#5889](https://github.com/homarr-labs/homarr/issues/5889)) ([aecbca2](https://github.com/homarr-labs/homarr/commit/aecbca2b81ad1693c599e3168fd0c0723311b3b4))
+* **docs:** migrate documentation site into monorepo ([#5912](https://github.com/homarr-labs/homarr/issues/5912)) ([9e421c6](https://github.com/homarr-labs/homarr/commit/9e421c67bd87b5b7065118afedd08e7eb2140773))
+* **lang:** add Finnish language support ([#5892](https://github.com/homarr-labs/homarr/issues/5892)) ([2fb7bde](https://github.com/homarr-labs/homarr/commit/2fb7bde9002c2670aa49db804e352c3821fa8097))
+* search widgets by integration type when adding items ([#5909](https://github.com/homarr-labs/homarr/issues/5909)) ([48e1844](https://github.com/homarr-labs/homarr/commit/48e1844b5b9dc6d322bc22a972fdd29b6e03d3d2))
+* SQLite backup & restore with WASM preview ([#5887](https://github.com/homarr-labs/homarr/issues/5887)) ([5d1f268](https://github.com/homarr-labs/homarr/commit/5d1f268438b84bd19f5a79658a43931dd874cd41))
+* **ui:** add global query cache leveraging Redis ([#5811](https://github.com/homarr-labs/homarr/issues/5811)) ([74443a4](https://github.com/homarr-labs/homarr/commit/74443a49b2330b7d71c5ccdb873c61b270d1c72a))
+
+### Bug Fixes
+
+* **boards:** add permissions to board summary schema to fix manage page crash ([#5917](https://github.com/homarr-labs/homarr/issues/5917)) ([a42af0e](https://github.com/homarr-labs/homarr/commit/a42af0e678b58b6c63a8bac4978fb2951c6ddef8))
+* **ci:** rename baseBranches to baseBranchPatterns in renovate config ([15e061c](https://github.com/homarr-labs/homarr/commit/15e061cf03f2301996aaf11a25095194e5759fb5))
+* **db:** inline custom widget seed data to fix CJS migration crash ([f26007a](https://github.com/homarr-labs/homarr/commit/f26007a29a0b04765baba72122d38a9e5c639a0b))
+* **definitions:** gracefully handle sitemap fetch failure in codegen ([7f8b012](https://github.com/homarr-labs/homarr/commit/7f8b0121b303fa09a213c73e6a690463e9fc6b44))
+* **docs:** add trailingSlash for GitHub Pages compatibility ([28ceb37](https://github.com/homarr-labs/homarr/commit/28ceb37cbfe45f8ce45fd88e6a8c87ffe4c9b5c2))
+* **docs:** disable swcHtmlMinimizer and fix broken links ([905f795](https://github.com/homarr-labs/homarr/commit/905f795b5607744d0aeec4bb65d84aabd1505047))
+* gracefully skip widgets with unknown kind instead of crashing ([#5915](https://github.com/homarr-labs/homarr/issues/5915)) ([484b8cf](https://github.com/homarr-labs/homarr/commit/484b8cf9f18122a298dc7fae1027653cd287c09c))
+* **image-proxy:** use ArrayBuffer instead of Blob to prevent OOM on Node v24 ([#5926](https://github.com/homarr-labs/homarr/issues/5926)) ([3e464a7](https://github.com/homarr-labs/homarr/commit/3e464a76f2d1e5985f259270a4258f3db4f17c18))
+* **integrations:** support truenas json-rpc api, certificate trust, and api key auth ([#5861](https://github.com/homarr-labs/homarr/issues/5861)) ([f6d5f97](https://github.com/homarr-labs/homarr/commit/f6d5f97933cd257ee8851f2d6a27f56e2942076d))
+
+## [1.64.0](https://github.com/homarr-labs/homarr/compare/v1.63.0...v1.64.0) (2026-06-05)
+
+### Features
+
+* add comprehensive demo mode with mock integrations ([#5870](https://github.com/homarr-labs/homarr/issues/5870)) ([0a64679](https://github.com/homarr-labs/homarr/commit/0a6467979a5e3b3e3eae6252c31fca1d9af54dc1))
+* add PeaNUT integration and UPS monitoring widget ([#5862](https://github.com/homarr-labs/homarr/issues/5862)) ([0dc2558](https://github.com/homarr-labs/homarr/commit/0dc2558fafedcbba246c2e968d00cc541ab9f84e))
+* **docker:** add container logs modal and stats columns ([#4807](https://github.com/homarr-labs/homarr/issues/4807)) ([dbf021e](https://github.com/homarr-labs/homarr/commit/dbf021e04a785b44ad0e2ce45634de371d76de6d))
+* media request search as first-class spotlight mode ([#5823](https://github.com/homarr-labs/homarr/issues/5823)) ([3d3e305](https://github.com/homarr-labs/homarr/commit/3d3e3059a98b36b6e64e3aad90f715e334baff3e))
+* **onboarding:** enhance integration setup with Docker discovery and URL templating ([#5607](https://github.com/homarr-labs/homarr/issues/5607)) ([dd7a490](https://github.com/homarr-labs/homarr/commit/dd7a4908a36a71c1d0d1e41524eb8fd9bf53ca4d))
+* **onboarding:** guided management and board tours ([#5756](https://github.com/homarr-labs/homarr/issues/5756)) ([0b663a7](https://github.com/homarr-labs/homarr/commit/0b663a7fc6c017b9fbe78c019f06d46ee95f165f))
+* **widgets:** add in-place app editing in widget edit modal ([#5809](https://github.com/homarr-labs/homarr/issues/5809)) ([99346f2](https://github.com/homarr-labs/homarr/commit/99346f288bcfc701c41fecaab6f7bc0438d80563))
+
+### Bug Fixes
+
+* add bookmark widget option to toggle card borders ([#5854](https://github.com/homarr-labs/homarr/issues/5854)) ([41fe592](https://github.com/homarr-labs/homarr/commit/41fe5928f19207d02b04e64c2caac49d896f72ce))
+* **auth:** relax password complexity requirements to suggestions-only ([#5764](https://github.com/homarr-labs/homarr/issues/5764)) ([fd10788](https://github.com/homarr-labs/homarr/commit/fd107888385557ededcf51576c6320a1960690f2))
+* **db:** log when UNSAFE_ENABLE_MOCK_INTEGRATION is enabled during seeding ([efd37dc](https://github.com/homarr-labs/homarr/commit/efd37dca93be7f5f362331e9b5c2a95a87e24379))
+* disable onboarding tours when demo mode is enabled ([68f24e3](https://github.com/homarr-labs/homarr/commit/68f24e34d580e3a155c37ca37c3ffd61f296bd0c))
+* **docker:** restore container selection toolbar broken by Mantine v9 ([#5855](https://github.com/homarr-labs/homarr/issues/5855)) ([fe4598f](https://github.com/homarr-labs/homarr/commit/fe4598f7221a2861b8c5ae0cfd267e8c4fbf48df))
+* **immich:** respect app color scheme in server-stats widget ([#5859](https://github.com/homarr-labs/homarr/issues/5859)) ([2c6b7a8](https://github.com/homarr-labs/homarr/commit/2c6b7a818e9d32b414b024d711a3b64533e61cb9))
+* redirect to login after credentials logout instead of crashing on current page ([#5819](https://github.com/homarr-labs/homarr/issues/5819)) ([cc24f07](https://github.com/homarr-labs/homarr/commit/cc24f070db26337a4a2d87d68c7f142ed1118584))
+* sync docs sitemap and remove stale coolify ts-expect-error ([4f5f3e1](https://github.com/homarr-labs/homarr/commit/4f5f3e14a129a94295d4b8ffb7d3702fdb4f6a74))
+* **ui:** restore pre-v9 light variant colors ([#5856](https://github.com/homarr-labs/homarr/issues/5856)) ([a755692](https://github.com/homarr-labs/homarr/commit/a755692d81b80b5ff83051a3b7261c01ac10321b))
+
+## [1.63.0](https://github.com/homarr-labs/homarr/compare/v1.62.0...v1.63.0) (2026-05-29)
+
+### Features
+
+* **auth:** support custom token endpoint auth methods ([#5806](https://github.com/homarr-labs/homarr/issues/5806)) ([be61602](https://github.com/homarr-labs/homarr/commit/be61602576a8bec4bb7e4928d36e0854e926264d))
+* auto-open widget settings on add with all integrations pre-selected ([#5767](https://github.com/homarr-labs/homarr/issues/5767)) ([f10bb3a](https://github.com/homarr-labs/homarr/commit/f10bb3ae23fefc9779332733706aa567cc40ba48))
+* **board:** persist category collapse state in localStorage for guests ([#5714](https://github.com/homarr-labs/homarr/issues/5714)) ([66212b4](https://github.com/homarr-labs/homarr/commit/66212b4e475738e61d2ea78f3a7e72d7a610bf12)), closes [#3355](https://github.com/homarr-labs/homarr/issues/3355)
+* **manage:** unified management page layout ([#5758](https://github.com/homarr-labs/homarr/issues/5758)) ([c252b4f](https://github.com/homarr-labs/homarr/commit/c252b4f9accc4523f222354c73f687714640701f))
+* **users:** rework general settings ([#4915](https://github.com/homarr-labs/homarr/issues/4915)) ([2991777](https://github.com/homarr-labs/homarr/commit/2991777b0a0ae72522d0769a86a91250d618dbe6))
+
+### Bug Fixes
+
+* matine ui fixes for concistency ([#5733](https://github.com/homarr-labs/homarr/issues/5733)) ([4454e3f](https://github.com/homarr-labs/homarr/commit/4454e3fb7afa624ee2f1eaec015f2725e664ac46))
+* parse Speedtest Tracker created_at as local time ([#5751](https://github.com/homarr-labs/homarr/issues/5751)) ([b19549b](https://github.com/homarr-labs/homarr/commit/b19549b601636bcbc2fadaa270a77a9fdb48b77a))
+* prevent GitHub releases check from blocking app on API failure ([#5807](https://github.com/homarr-labs/homarr/issues/5807)) ([6cc2ac5](https://github.com/homarr-labs/homarr/commit/6cc2ac56a920563c47aaaab1b33b19a9b6d5ecee))
+* **ui:** use imported theme instead of undefined createTheme ([4a67bf0](https://github.com/homarr-labs/homarr/commit/4a67bf0ef30ff8d10b06d2d3719ccab792395669))
+
+### Performance Improvements
+
+* **boards:** parallelize board page data fetching ([#5736](https://github.com/homarr-labs/homarr/issues/5736)) ([8f03a38](https://github.com/homarr-labs/homarr/commit/8f03a38de5b9b385da7ffcc9a963be00710acb5e))
+
+## [1.62.0](https://github.com/homarr-labs/homarr/compare/v1.61.1...v1.62.0) (2026-05-22)
+
+### Features
+
+* **seed:** add demo mode with pre-seeded user ([#5739](https://github.com/homarr-labs/homarr/issues/5739)) ([dade477](https://github.com/homarr-labs/homarr/commit/dade477b3226765eb614e66588ebee84c45cb688))
+
+### Bug Fixes
+
+* **deps:** update dependency better-sqlite3 to ^12.10.0 ([#5727](https://github.com/homarr-labs/homarr/issues/5727)) ([044ad9e](https://github.com/homarr-labs/homarr/commit/044ad9edf9c1dc9b50b9591dea0b5f0cce4be01a))
+* **docker:** improve icon matching ([#5693](https://github.com/homarr-labs/homarr/issues/5693)) ([7cd30b6](https://github.com/homarr-labs/homarr/commit/7cd30b640cbf47e4678abda18f83c0924f039b1b))
+* exclude .env files from Docker build context ([#5738](https://github.com/homarr-labs/homarr/issues/5738)) ([fa73763](https://github.com/homarr-labs/homarr/commit/fa737638a812372d904207fe7af5bd7c6f53d159))
+* **tracearr:** support absolute image urls ([#5654](https://github.com/homarr-labs/homarr/issues/5654)) ([7a12721](https://github.com/homarr-labs/homarr/commit/7a1272146c597c1f9df89d74b8389f70e7cdd61a))
+
+### Performance Improvements
+
+* (next branch) reduce idle memory on startup ([#5637](https://github.com/homarr-labs/homarr/issues/5637)) ([5ee84f8](https://github.com/homarr-labs/homarr/commit/5ee84f8cf464c308729281cb4db572950ba85a82))
+* **boards:** remove loading overlay and show board immediately ([#5735](https://github.com/homarr-labs/homarr/issues/5735)) ([df4b57b](https://github.com/homarr-labs/homarr/commit/df4b57bd414d4402522f9210b1470d0561c37274))
+* **memory:** combine 3 node processes into one ([#5600](https://github.com/homarr-labs/homarr/issues/5600)) ([a1aa550](https://github.com/homarr-labs/homarr/commit/a1aa5505a365688b456090a882770e561479833e))
+
 ## [1.61.1](https://github.com/homarr-labs/homarr/compare/v1.61.0...v1.61.1) (2026-05-18)
 
 ### Bug Fixes

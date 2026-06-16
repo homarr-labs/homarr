@@ -1,0 +1,17 @@
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Random Dog Fact",
+  "description": "Displays a random fun fact about dogs",
+  "url": "https://dogapi.dog/api/v2/facts",
+  "authType": "none",
+  "method": "GET",
+  "displayType": "singleValue",
+  "displayConfig": {
+    "type": "singleValue",
+    "jsonPath": "$.data[0].attributes.body",
+    "label": "Dog Fact",
+    "unit": "",
+    "valueSize": "sm",
+    "labelPosition": "above"
+  }
+}

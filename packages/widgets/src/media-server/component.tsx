@@ -23,13 +23,13 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
+  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
     {
       integrationIds,
       showOnlyPlaying: options.showOnlyPlaying,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },

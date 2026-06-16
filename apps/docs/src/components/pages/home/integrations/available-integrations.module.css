@@ -1,0 +1,20 @@
+@keyframes scrolling {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-50.8%);
+    }
+}
+
+.scrollAnimationContainer {
+    animation: scrolling;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scrollAnimationContainer {
+        animation: none !important;
+    }
+}

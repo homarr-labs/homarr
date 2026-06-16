@@ -28,12 +28,15 @@ export function UmamiEventsContent({
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const [series] = clientApi.widget.umami.getMultiEventTimeSeries.useSuspenseQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    eventNames: [...eventNames].sort(),
-  });
+  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      websiteId,
+      timeFrame,
+      eventNames: [...eventNames].toSorted(),
+    },
+    { staleTime: 5 * 60 * 1000 },
+  );
 
   if (eventNames.length === 0) {
     return (
@@ -48,7 +51,7 @@ export function UmamiEventsContent({
   // Collect all unique timestamps across all series
   const allTimestamps = Array.from(
     new Set(series.flatMap(({ dataPoints }) => dataPoints.map(({ x: xPoint }) => xPoint))),
-  ).sort();
+  ).toSorted();
 
   // Build per-event lookup by timestamp string
   const byEvent = new Map(

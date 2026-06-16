@@ -1,0 +1,41 @@
+---
+title: 'Audiobookshelf'
+description: "Audiobookshelf is a self-hosted audiobook and podcast server that lets you manage and stream your audio library."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { audiobookshelfIntegration } from '.';
+import { audioStatsWidget } from '@site/docs/widgets/audio-stats';
+
+
+<IntegrationHeader
+    integration={audiobookshelfIntegration}
+    categories={['Media']}
+/>
+
+Audiobookshelf provides library statistics including audiobook and podcast counts, listening time, and active sessions.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: audioStatsWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+        'Open your Audiobookshelf instance',
+        'Go to Settings → Users',
+        'Click on your user account',
+        'Copy the API token from the user details',
+    ]
+}]} />

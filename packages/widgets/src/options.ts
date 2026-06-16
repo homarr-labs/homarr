@@ -175,6 +175,11 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: true,
   }),
+  customWidgetSelect: (input?: CommonInput<string>) => ({
+    type: "customWidgetSelect" as const,
+    defaultValue: input?.defaultValue ?? "",
+    withDescription: input?.withDescription ?? false,
+  }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,
   ) => ({

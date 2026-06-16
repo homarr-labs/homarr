@@ -1,9 +1,9 @@
 "use client";
 
-import { Button, CloseButton, ColorInput, Group, Input, Stack, TextInput, useMantineTheme } from "@mantine/core";
+import { CloseButton, ColorInput, Input, Stack, TextInput, useMantineTheme } from "@mantine/core";
 
 import { useForm } from "@homarr/form";
-import { createModal } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
@@ -34,6 +34,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
       <Stack>
         <TextInput
           label={t("item.edit.field.title.label")}
+          data-autofocus
           {...form.getInputProps("title")}
           rightSection={<Input.ClearButton onClick={() => form.setFieldValue("title", "")} />}
         />
@@ -53,12 +54,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
           }
           {...form.getInputProps("borderColor")}
         />
-        <Group justify="end">
-          <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {t("common.action.cancel")}
-          </Button>
-          <Button type="submit">{t("common.action.saveChanges")}</Button>
-        </Group>
+        <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>
     </form>
   );
@@ -66,7 +62,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
   defaultTitle(t) {
     return t("item.edit.advancedOptions.title");
   },
-  size: "lg",
+  size: modalSizeForm,
   transitionProps: {
     duration: 0,
   },

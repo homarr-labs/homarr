@@ -1,0 +1,51 @@
+---
+title: 'Immich'
+description: "Self-hosted photo and video management solution"
+hide_title: true
+---
+
+import { immichAlbumCarouselWidget } from '../../widgets/immich-album-carousel';import {
+  IntegrationHeader
+} from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { immichIntegration } from '.';
+import { immichServerStatsWidget } from '../../widgets/immich-server-stats';
+
+
+<IntegrationHeader
+  integration={immichIntegration}
+  categories={['Photo server']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+  items={[
+    { widget: immichAlbumCarouselWidget },
+    { widget: immichServerStatsWidget }
+  ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+  credentials: ['apiKey'],
+  steps: [
+    'Navigate to your Immich instance', 
+    'Open your account settings or navigate to https://YOUR_IMMICH/user-settings', 
+    'Scroll down to "API Keys"', 
+    'Click "New API Key"', 
+    'Enter a name, e.g. "Homarr"', 
+    (<span>
+      Select the following permissions:{" "}
+      <code>album.read</code>,{" "}
+      <code>user.read</code>,{" "}
+      <code>server.statistics</code>,{" "}
+      <code>asset.download</code>
+    </span>), 
+    'Create the integration in Homarr and copy the API key to there'
+    ]
+}]} />

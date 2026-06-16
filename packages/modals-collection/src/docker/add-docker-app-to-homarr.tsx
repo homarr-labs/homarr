@@ -58,7 +58,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
   };
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+      <LoadingOverlay visible={isPending} />
       <Stack>
         <List spacing={"xs"}>
           {innerProps.selectedContainers.map((container, index) => (

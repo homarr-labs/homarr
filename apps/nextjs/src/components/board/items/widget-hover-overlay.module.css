@@ -1,0 +1,120 @@
+.wrapper {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: calc(100% - 10px);
+  margin-bottom: 1px;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):hover)
+  .wrapper,
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):focus-within)
+  .wrapper {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel {
+  @mixin dark {
+    --background-color: rgb(from var(--mantine-color-dark-7) r g b / 0.96);
+    --border-color: rgb(from var(--mantine-color-dark-4) r g b / 0.9);
+  }
+  @mixin light {
+    --background-color: rgb(from var(--mantine-color-white) r g b / 0.96);
+    --border-color: rgb(from var(--mantine-color-gray-3) r g b / 0.9);
+  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--background-color);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.nameSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.widgetIcon {
+  flex-shrink: 0;
+  color: var(--mantine-color-dimmed);
+}
+
+.name {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.integrations {
+  flex-shrink: 0;
+}
+
+.integrationAvatar {
+  border: none;
+}
+
+.metadata {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  margin-left: auto;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.metadataItem {
+  @mixin dark {
+    --chip-background: rgb(from var(--mantine-color-dark-5) r g b / 0.9);
+  }
+  @mixin light {
+    --chip-background: rgb(from var(--mantine-color-gray-1) r g b / 0.95);
+  }
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 140px;
+  padding: 2px 6px;
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--chip-background);
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.metadataLabel {
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+}
+
+.metadataValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    display: none;
+  }
+}

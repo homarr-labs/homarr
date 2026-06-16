@@ -6,6 +6,7 @@ import { Link } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
+import { TourTarget } from "./header/tour-target";
 import { UserButton } from "./header/user";
 import { HomarrLogoWithTitle } from "./logo/homarr-logo";
 
@@ -25,11 +26,15 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
             {logo ?? <HomarrLogoWithTitle size="md" />}
           </UnstyledButton>
         </Group>
-        <DesktopSearchInput />
+        <TourTarget id="board-search">
+          <DesktopSearchInput />
+        </TourTarget>
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
           {actions}
           <MobileSearchButton />
-          <UserButton />
+          <TourTarget id="board-user-menu">
+            <UserButton />
+          </TourTarget>
         </Group>
       </Group>
       <Spotlight />

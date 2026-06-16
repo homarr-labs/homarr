@@ -15,13 +15,15 @@ Homarr is an open-source, self-hosted dashboard for managing homelab services. I
 - **ORM**: Drizzle (supports SQLite via better-sqlite3, MySQL, PostgreSQL)
 - **API**: tRPC (HTTP + WebSocket subscriptions) with superjson + OpenAPI bridge via `trpc-to-openapi`
 - **Auth**: NextAuth v5 (database sessions, Credentials/LDAP/OIDC providers)
-- **UI**: Mantine v7 (not Tailwind) + Tabler icons
+- **UI**: Mantine v9 (not Tailwind) + Tabler icons
 - **State**: Jotai (atoms), TanStack Query (server state via tRPC)
 - **Realtime**: WebSocket server (`ws`) for tRPC subscriptions, backed by Redis pub/sub
 - **Cron**: `node-cron` in a standalone Fastify service (`apps/tasks`)
 - **i18n**: next-intl with `[locale]` dynamic segment (prefix mode: `"never"`, locale from cookie)
 - **Testing**: Vitest + jsdom, Playwright for E2E
-- **Package manager**: pnpm 10.33.2, Node >= 24.15.0
+- **Lint/Format**: oxlint + oxfmt (not ESLint/Prettier)
+- **Docs**: Docusaurus 3 in `apps/docs/` (`@homarr/docs`)
+- **Package manager**: pnpm 10.34.1, Node >= 24.16.0
 
 ## Repository Structure
 
@@ -29,6 +31,7 @@ Homarr is an open-source, self-hosted dashboard for managing homelab services. I
 homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
+│   ├── docs/            # Docusaurus 3 documentation site (@homarr/docs)
 │   ├── tasks/           # Cron job runner + Fastify tRPC API (port 3002)
 │   └── websocket/       # Standalone tRPC WebSocket server (port 3001)
 ├── packages/
@@ -67,8 +70,6 @@ homarr/
 │   ├── old-schema/      # Legacy Homarr zod schemas
 │   └── cli/             # Node CLI for ops (brocli)
 ├── tooling/
-│   ├── eslint/          # Shared ESLint configs
-│   ├── prettier/        # Shared Prettier config
 │   ├── typescript/      # Base tsconfig
 │   └── github/          # CI setup action
 ├── development/         # Dev docker-compose (Redis, MySQL, PostgreSQL)
@@ -176,7 +177,8 @@ Key env vars (from `.env.example`):
 - `pnpm db:studio` — Drizzle Studio
 - `pnpm test` — Vitest unit tests
 - `pnpm test:e2e` — Playwright E2E
-- `pnpm lint` / `pnpm format` — ESLint + Prettier
+- `pnpm lint` / `pnpm format` — oxlint + oxfmt
+- `pnpm dev:docs` — Docusaurus docs site (port 3003)
 - `pnpm typecheck` — tsc --noEmit across all packages
 
 ## Conventions
@@ -189,3 +191,16 @@ Key env vars (from `.env.example`):
 - Drag-and-drop via `@dnd-kit/*`
 - `typescript.ignoreBuildErrors: true` in next.config (types checked separately via `typecheck`)
 - `serverExternalPackages`: `dockerode`, `isomorphic-dompurify`, `jsdom`
+
+## Documentation (`apps/docs`)
+
+Docusaurus 3 site at `apps/docs/`, package name `@homarr/docs`.
+
+- Run with `pnpm dev:docs` from root
+- Build with `pnpm turbo build --filter=@homarr/docs`
+- Uses Tailwind CSS 3 for custom pages (not Mantine)
+- Imports `@homarr/definitions` for type-safe integration/widget metadata
+- When adding or modifying widgets, integrations, cron jobs, API routes, env vars, or user-facing features, you MUST also update corresponding docs in `apps/docs/docs/`
+- Integration docs: `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
+- Widget docs: `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
+- Strict link checking: broken links/anchors cause build failure

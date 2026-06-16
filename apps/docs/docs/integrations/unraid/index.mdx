@@ -1,0 +1,59 @@
+---
+title: 'Unraid'
+description: "Versatile operating system that lets you run applications, virtual machines, and storage devices on your server"
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { unraidIntegration } from '.';
+import { systemResourcesWidget } from '@site/docs/widgets/system-resources';
+import { healthMonitoringWidget } from '@site/docs/widgets/health-monitoring';
+
+import imgManagement from "./imgs/unraid-management.png";
+import imgCreateApiKey from "./imgs/unraid-create-api-key.png";
+import imgCopyApiKey from "./imgs/copy-api-key.png";
+import imgSelectApikeyPreset from "./imgs/unraid-select-api-key-preset.png";
+
+
+<IntegrationHeader
+  integration={unraidIntegration}
+  categories={['NAS', 'Hardware']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+      { widget: healthMonitoringWidget },
+      { widget: systemResourcesWidget },
+      ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+      <span>Are you using Unraid pre-7.2? If yes, please first <a href={"https://docs.unraid.net/API/#plugin-installation-pre-72-and-advanced-users"} target={"_blank"}>follow the steps here to install the Unraid API</a>.</span>,
+      <>
+        <span>Open the settings and open the management access</span><br/>
+        <img src={imgManagement} alt="Unraid management" style={{ height: 160 }} />
+      </>,
+      <>
+        <span>Click on the "API Keys" tab at the top and click on the "create API key" button. Choose "Create new"</span><br/>
+        <img src={imgCreateApiKey} alt="Unraid management" style={{ height: 120 }} />
+      </>,
+      <>
+        <span>Enter a suitable name for your API key (e.g. Homarr), select the "Viewer" preset and submit the modal.</span><br/>
+        <img src={imgSelectApikeyPreset} alt="Unraid management" style={{ height: 350 }} />
+      </>,
+      <>
+        <span>Last, copy the API key after your API key has been created</span><br/>
+        <img src={imgCopyApiKey} alt="Unraid management" style={{ height: 200 }} />
+      </>
+    ],
+}]} />

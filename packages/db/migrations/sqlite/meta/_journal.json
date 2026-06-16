@@ -260,6 +260,27 @@
       "when": 1775400000000,
       "tag": "0036_add_user_ddg_bangs",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "6",
+      "when": 1779199046805,
+      "tag": "0037_add_user_onboarding_tour_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "6",
+      "when": 1780764406810,
+      "tag": "0038_crazy_hobgoblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "6",
+      "when": 1780764500000,
+      "tag": "0039_merge_custom_widget_url",
+      "breakpoints": true
     }
   ]
 }

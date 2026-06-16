@@ -4,12 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": {
-    ".": "./index.ts",
-    "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts",
-    "./prefetch": "./src/prefetch.ts"
-  },
   "typesVersions": {
     "*": {
       "*": [
@@ -17,13 +11,23 @@
       ]
     }
   },
+  "exports": {
+    ".": "./index.ts",
+    "./_inputs/json-path-tree-picker": "./src/_inputs/json-path-tree-picker.tsx",
+    "./custom-api/component": "./src/custom-api/component.tsx",
+    "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",
+    "./errors": "./src/errors/component.tsx",
+    "./errors/classes": "./src/errors/index.ts",
+    "./widget-integration-select": "./src/widget-integration-select.tsx",
+    "./modals": "./src/modals/index.ts",
+    "./prefetch": "./src/prefetch.ts"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt .",
+    "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
@@ -50,6 +54,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/charts": "catalog:",
     "@mantine/core": "catalog:",
+    "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
     "@tabler/icons-react": "catalog:",
     "@tiptap/extension-color": "catalog:",
@@ -70,11 +75,14 @@
     "@tiptap/starter-kit": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
-    "mantine-form-zod-resolver": "catalog:",
+    "jsonpath-plus": "catalog:",
+    "lucide-react": "catalog:",
+    "mantine-datatable": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-jsx-parser": "catalog:",
     "react-markdown": "catalog:",
     "react-quill-new": "catalog:",
     "recharts": "catalog:",
@@ -82,11 +90,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "catalog:",
-    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }

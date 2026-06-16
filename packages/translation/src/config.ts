@@ -140,6 +140,17 @@ export const localeConfigurations = {
       return import("dayjs/locale/et").then((module) => module.default);
     },
   },
+  fi: {
+    name: "Suomi",
+    translatedName: "Finnish",
+    icon: flagIcon("fi"),
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/fi/index.esm.mjs").then((module) => module.MRT_Localization_FI);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/fi").then((module) => module.default);
+    },
+  },
   fr: {
     name: "Français",
     translatedName: "French",

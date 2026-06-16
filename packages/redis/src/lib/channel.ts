@@ -112,9 +112,13 @@ export const createGetSetChannel = <TData>(name: string) => {
     /**
      * Set data in the channel
      * @param data data to be stored in the channel
+     * @param options optional TTL in seconds
      */
-    setAsync: async (data: TData) => {
+    setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
       await getSetClient.set(name, superjson.stringify(data));
+      if (options?.ttlSeconds) {
+        await getSetClient.expire(name, options.ttlSeconds);
+      }
     },
     /**
      * Remove data from the channel
@@ -123,6 +127,49 @@ export const createGetSetChannel = <TData>(name: string) => {
       await getSetClient.del(name);
     },
   };
+};
+
+interface QueryCacheChannelOptions {
+  userId: string;
+  boardId: string;
+  key: string;
+  ttlMs: number;
+  maxValueBytes: number;
+}
+
+const queryCacheHashKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
+
+export const createQueryCacheChannel = ({ userId, boardId, key, ttlMs, maxValueBytes }: QueryCacheChannelOptions) => {
+  const hkey = queryCacheHashKey(userId, boardId);
+
+  return {
+    name: `${hkey}:${key}`,
+    getAsync: async () => {
+      return await getSetClient.hget(hkey, key);
+    },
+    setAsync: async (value: string) => {
+      if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
+        logger.warn("Query cache value exceeded maximum size", {
+          channel: hkey,
+          valueBytes: Buffer.byteLength(value, "utf8"),
+          maxValueBytes,
+        });
+        return false;
+      }
+
+      await getSetClient.hset(hkey, key, value);
+      await getSetClient.pexpire(hkey, ttlMs);
+      return true;
+    },
+    removeAsync: async () => {
+      await getSetClient.hdel(hkey, key);
+    },
+  };
+};
+
+export const getAllQueryCacheAsync = async (userId: string, boardId: string): Promise<Record<string, string>> => {
+  const hkey = queryCacheHashKey(userId, boardId);
+  return await getSetClient.hgetall(hkey);
 };
 
 /**

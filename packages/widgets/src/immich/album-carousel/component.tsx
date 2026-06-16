@@ -8,6 +8,7 @@ import { IconAlertCircle, IconCalendar } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
 
@@ -17,14 +18,19 @@ export default function ImmichAlbumCarouselWidget({
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
+  const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      albumId: options.albumId ?? "",
+    },
+    { enabled: Boolean(options.albumId), staleTime: 15 * 60 * 1000 },
+  );
+
   if (!options.albumId) {
     return <NoAlbumSelected />;
   }
 
-  const [album] = clientApi.widget.immich.getAlbum.useSuspenseQuery({
-    integrationId: integrationIds[0] ?? "",
-    albumId: options.albumId,
-  });
+  if (!album) return <WidgetEmptyState />;
 
   if (album.assets.length === 0) {
     return <NoPhotosInAlbum />;

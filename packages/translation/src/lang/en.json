@@ -7,7 +7,10 @@
         "description": "To get started, please select how you want to set up your Homarr instance.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0"
+          "importOldmarr": "Import from Homarr before 1.0",
+          "restoreSqlite": "Restore from SQLite backup",
+          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
+          "backToOptions": "← Back to setup options"
         }
       },
       "import": {
@@ -90,6 +93,48 @@
         "title": "Settings",
         "subtitle": "Configure server settings."
       },
+      "integrations": {
+        "title": "Integrations",
+        "subtitle": "Select the services you use.",
+        "description": "Choose the integrations you'd like to connect. We'll set up your dashboard with matching widgets automatically.",
+        "action": {
+          "continue": "Continue",
+          "skip": "Skip for now"
+        },
+        "configure": {
+          "progress": "{current} of {total}",
+          "skip": "Skip this integration",
+          "finishing": "Setting up your dashboard...",
+          "error": {
+            "title": "Setup failed",
+            "message": "Something went wrong while setting up your dashboard. Please try again."
+          },
+          "helpers": {
+            "tooltip": "URL helpers",
+            "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
+          "preview": "e.g. {example}",
+          "mode": {
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
+          "appBadge": "App",
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
+        }
+      },
       "finish": {
         "title": "Finish setup",
         "subtitle": "You are ready to go!",
@@ -132,8 +177,9 @@
       },
       "password": {
         "label": "Password",
-        "requirement": {
-          "length": "Includes at least 8 characters",
+        "suggestionsTitle": "Password suggestions",
+        "suggestion": {
+          "length": "At least 8 characters",
           "lowercase": "Includes lowercase letter",
           "uppercase": "Includes uppercase letter",
           "number": "Includes number",
@@ -638,6 +684,211 @@
       "add": "Add an app"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "Custom Widgets",
+        "noResults": "No custom widgets yet. Create your first one!",
+        "loading": "Loading..."
+      },
+      "create": {
+        "title": "Create Custom Widget",
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
+      },
+      "edit": {
+        "title": "Edit Custom Widget"
+      }
+    },
+    "action": {
+      "create": "Create",
+      "import": "Import",
+      "save": "Save",
+      "delete": "Delete Custom Widget",
+      "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "export": "Export",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "edit": "Edit",
+      "removeMapping": "Remove mapping",
+      "removeColumn": "Remove column",
+      "addItem": "Add Item",
+      "removeItem": "Remove item",
+      "addBar": "Add Bar",
+      "duplicate": "Duplicate",
+      "copyAiPrompt": "Copy AI prompt",
+      "enable": "Enable",
+      "disable": "Disable",
+      "menu": "Actions"
+    },
+    "field": {
+      "name": "Name",
+      "description": "Description",
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Auth Type",
+      "headerName": "Header/Query Parameter Name",
+      "method": "Method",
+      "requestBody": "Request Body",
+      "displayType": "Display Type",
+      "jsonPath": "JSON Path",
+      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
+      "label": "Label",
+      "unit": "Unit",
+      "mappings": "Mappings",
+      "tablePath": "Array JSON Path",
+      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
+      "columns": "Columns",
+      "header": "Header",
+      "items": "Items",
+      "gridColumns": "Grid Columns",
+      "cardStyle": "Card Style",
+      "bars": "Bars",
+      "valuePath": "Value JSON Path",
+      "maxPath": "Max Value JSON Path",
+      "showPercentage": "Show Percentage",
+      "barSize": "Bar Size",
+      "goodValues": "Good Values (comma-separated)",
+      "dotSize": "Dot Size",
+      "valueSize": "Value Size",
+      "labelPosition": "Label Position",
+      "kvLayout": "Layout",
+      "striped": "Striped Rows",
+      "compact": "Compact Mode",
+      "maxHeight": "Max Height (px)",
+      "color": "Color",
+      "buttonLabel": "Button Label",
+      "buttonColor": "Button Color",
+      "confirmText": "Confirmation Text",
+      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
+      "successMessage": "Success Message",
+      "successMessageHint": "Message shown after successful execution",
+      "enabled": "Enabled",
+      "template": {
+        "label": "JSX Template",
+        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperature",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blue"
+    },
+    "cardStyleOption": {
+      "filled": "Filled",
+      "outline": "Outline",
+      "subtle": "Subtle"
+    },
+    "layoutOption": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "sizeOption": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large",
+      "xl": "Extra Large"
+    },
+    "labelPositionOption": {
+      "above": "Above",
+      "below": "Below"
+    },
+    "fieldset": {
+      "general": "General",
+      "connection": "API Connection",
+      "display": "Display Configuration"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Show one extracted value with a label and unit",
+      "keyValue": "Show multiple labeled values side by side",
+      "table": "Show rows of data in a table format",
+      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
+      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
+      "statusIndicator": "Colored status dots showing online/offline or health states",
+      "countGrid": "Compact number + label counters in a tight grid",
+      "raw": "Pretty-printed JSON output for debugging",
+      "actionButton": "A button that triggers a request when clicked",
+      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "None",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Key (Header)",
+      "apiKeyQuery": "API Key (Query)"
+    },
+    "displayType": {
+      "singleValue": "Single Value",
+      "keyValue": "Key-Value",
+      "table": "Table",
+      "statGrid": "Stat Grid",
+      "progressBars": "Progress Bars",
+      "statusIndicator": "Status Indicator",
+      "countGrid": "Count Grid",
+      "raw": "Raw JSON",
+      "actionButton": "Action Button",
+      "customJsx": "Custom JSX"
+    },
+    "secret": {
+      "apiKey": "API Key / Token",
+      "username": "Username",
+      "password": "Password",
+      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "preview": {
+      "title": "Preview",
+      "test": "Test",
+      "hint": "Click Test to preview the API response with your current configuration.",
+      "rawResponse": "Raw JSON response"
+    },
+    "notification": {
+      "created": "Widget \"{name}\" created successfully.",
+      "updated": "Widget \"{name}\" updated successfully.",
+      "deleted": "Widget \"{name}\" deleted.",
+      "imported": "Widget imported successfully.",
+      "aiPromptCopied": "AI prompt copied to clipboard",
+      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
+      "aiPromptCopy": "Copy to clipboard",
+      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
+      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
+      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "updateError": "Failed to update widget. Your changes were not saved.",
+      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "exportError": "Failed to export widget.",
+      "duplicated": "Widget \"{name}\" duplicated.",
+      "duplicateError": "Failed to duplicate widget.",
+      "toggleError": "Failed to toggle widget status.",
+      "deleteError": "Failed to delete widget.",
+      "previewError": "Failed to fetch preview. Check the URL and try again.",
+      "executed": "Action executed successfully.",
+      "executeError": "Action failed: {error}"
+    },
+    "table": {
+      "name": "Name",
+      "url": "URL",
+      "display": "Display"
+    },
+    "widget": {
+      "disabled": "This widget is disabled"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -730,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Custom app URL"
+      },
+      "apiKeySettings": {
+        "label": "Get API key"
       }
     },
     "action": {
       "create": "New integration"
+    },
+    "grid": {
+      "widgetCount": "{count} widgets",
+      "noWidgets": "No widgets",
+      "detected": "Detected via Docker"
+    },
+    "category": {
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Calendar",
+      "mediaSearch": "Search",
+      "mediaRelease": "Releases",
+      "mediaRequest": "Requests",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Misc",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexer",
+      "healthMonitoring": "Health",
+      "search": "Search",
+      "mediaTranscoding": "Transcoding",
+      "networkController": "Network",
+      "releasesProvider": "Releases",
+      "notifications": "Notifications",
+      "firewall": "Firewall",
+      "timetable": "Timetable",
+      "photoService": "Photos",
+      "documents": "Documents",
+      "notes": "Notes",
+      "mediaMonitoring": "Monitoring",
+      "speedtest": "Speed Test",
+      "analytics": "Analytics",
+      "mediaLibrary": "Media Library",
+      "uptimeMonitoring": "Uptime Monitoring"
     },
     "testConnection": {
       "action": {
@@ -1006,6 +1295,10 @@
         "privateKey": {
           "label": "Private key",
           "newLabel": "New private key"
+        },
+        "slug": {
+          "label": "Status page slug",
+          "newLabel": "New status page slug"
         }
       }
     },
@@ -1013,6 +1306,30 @@
       "use": "Select integrations in items",
       "interact": "Interact with integrations",
       "full": "Full integration access"
+    },
+    "audiobookshelf": {
+      "name": "Audiobookshelf",
+      "description": "Self-hosted audiobook and podcast server"
+    },
+    "navidrome": {
+      "name": "Navidrome",
+      "description": "Self-hosted music streaming server with Subsonic API compatibility"
+    },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Self-hosted uptime monitoring with public status pages",
+      "secret": {
+        "slug": {
+          "description": "The slug of your public status page. Defaults to \"default\" if not set."
+        },
+        "apiKey": {
+          "description": "Optional API key for authenticated /metrics access"
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Document management system for archiving and organizing scanned documents"
     }
   },
   "media": {
@@ -1054,6 +1371,9 @@
       "open": {
         "label": "Open media"
       }
+    },
+    "noResults": {
+      "title": "No media uploaded"
     }
   },
   "common": {
@@ -1064,6 +1384,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "skip": "Skip",
       "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
@@ -1084,7 +1405,9 @@
       "checkoutDocs": "Check out the documentation",
       "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
-      "loading": "Loading"
+      "loading": "Loading",
+      "show": "Show",
+      "hide": "Hide"
     },
     "here": "here",
     "iconPicker": {
@@ -1249,7 +1572,8 @@
       "menu": {
         "label": {
           "create": "New category",
-          "changePosition": "Change position"
+          "changePosition": "Change position",
+          "settings": "Settings"
         }
       },
       "openAllInNewTabs": {
@@ -1296,6 +1620,13 @@
     },
     "edit": {
       "title": "Edit item",
+      "tab": {
+        "widget": "Edit widget",
+        "app": "Edit app"
+      },
+      "app": {
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"
@@ -1398,6 +1729,9 @@
         },
         "openNewTab": {
           "label": "Open in new tab"
+        },
+        "withBorder": {
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
@@ -2064,6 +2398,37 @@
         "title": "Instances"
       }
     },
+    "ups": {
+      "name": "UPS",
+      "description": "Monitor the status of your UPS devices through a NUT server",
+      "option": {
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showLoad": {
+          "label": "Show load"
+        },
+        "showVoltage": {
+          "label": "Show voltage"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "onBattery": "On battery",
+        "lowBattery": "Low battery",
+        "charging": "Charging",
+        "unknown": "Unknown"
+      },
+      "field": {
+        "runtime": "Runtime",
+        "load": "Load",
+        "input": "Input",
+        "output": "Output"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch UPS data"
+      }
+    },
     "tracearr": {
       "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",
@@ -2310,6 +2675,51 @@
             "target": "Target codec"
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Overview of your Paperless-ngx document archive",
+      "documentsTotal": "Total Documents",
+      "documentsInbox": "Inbox",
+      "correspondents": "Correspondents",
+      "tags": "Tags",
+      "documentTypes": "Document Types",
+      "inboxRatio": "Inbox Ratio",
+      "inbox": "inbox",
+      "total": "total",
+      "option": {
+        "showInboxRatio": {
+          "label": "Show inbox ratio",
+          "description": "Display the inbox-to-total document ratio in the hero section"
+        },
+        "showInboxRing": {
+          "label": "Show inbox ring",
+          "description": "Display a progress ring alongside the inbox ratio"
+        },
+        "showDocumentsTotal": {
+          "label": "Show total documents",
+          "description": "Show the total number of documents in your archive"
+        },
+        "showDocumentsInbox": {
+          "label": "Show inbox count",
+          "description": "Show the number of unprocessed documents in the inbox"
+        },
+        "showCorrespondents": {
+          "label": "Show correspondents",
+          "description": "Show the total number of correspondents"
+        },
+        "showTags": {
+          "label": "Show tags",
+          "description": "Show the total number of tags"
+        },
+        "showDocumentTypes": {
+          "label": "Show document types",
+          "description": "Show the total number of document types"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Paperless-ngx data"
       }
     },
     "immich-serverStats": {
@@ -2920,6 +3330,113 @@
         "internalServerError": "Failed to fetch speedtest data"
       }
     },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Monitor uptime statistics from your Uptime Kuma status page",
+      "option": {
+        "showAverageUptime": {
+          "label": "Show average uptime",
+          "description": "Display the combined 24-hour average uptime percentage"
+        },
+        "showUptimeRing": {
+          "label": "Show uptime ring",
+          "description": "Display a progress ring alongside the average uptime value"
+        },
+        "showTotalMonitors": {
+          "label": "Show total monitors",
+          "description": "Display the total number of configured monitors"
+        },
+        "showUpCount": {
+          "label": "Show up count",
+          "description": "Display how many monitors are currently up"
+        },
+        "showDownCount": {
+          "label": "Show down count",
+          "description": "Display how many monitors are currently down"
+        },
+        "showPausedCount": {
+          "label": "Show paused count",
+          "description": "Display how many monitors are currently paused"
+        }
+      },
+      "averageUptime": "Average uptime (24h)",
+      "stats": {
+        "totalMonitors": "Total monitors",
+        "upCount": "Up",
+        "downCount": "Down",
+        "pausedCount": "Paused"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch uptime data"
+      }
+    },
+    "audioStats": {
+      "name": "Audio stats",
+      "description": "Library and playback statistics from Navidrome or Audiobookshelf",
+      "option": {
+        "showArtists": {
+          "label": "Show artists",
+          "description": "Show the total number of artists in your music library (Navidrome)"
+        },
+        "showAlbums": {
+          "label": "Show albums",
+          "description": "Show the total number of albums in your music library (Navidrome)"
+        },
+        "showSongs": {
+          "label": "Show songs",
+          "description": "Show the total number of songs in your music library (Navidrome)"
+        },
+        "showNowPlaying": {
+          "label": "Show now playing",
+          "description": "Show tracks currently being played (Navidrome)"
+        },
+        "showNowPlayingList": {
+          "label": "Show now playing list",
+          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
+        },
+        "maxNowPlayingItems": {
+          "label": "Max now playing items",
+          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
+        },
+        "showLibraryCount": {
+          "label": "Show library count",
+          "description": "Show the number of libraries on your instance (Audiobookshelf)"
+        },
+        "showAudiobooks": {
+          "label": "Show audiobooks",
+          "description": "Show the total number of audiobooks across all libraries (Audiobookshelf)"
+        },
+        "showPodcasts": {
+          "label": "Show podcasts",
+          "description": "Show the total number of podcasts across all libraries (Audiobookshelf)"
+        },
+        "showListeningTime": {
+          "label": "Show listening time",
+          "description": "Show your total listening time (Audiobookshelf)"
+        },
+        "showActiveSessions": {
+          "label": "Show active sessions",
+          "description": "Show the number of currently active playback sessions (Audiobookshelf)"
+        },
+        "compactMode": {
+          "label": "Compact mode",
+          "description": "Use a denser layout with smaller tiles, ideal for small widget sizes"
+        }
+      },
+      "artists": "Artists",
+      "albums": "Albums",
+      "songs": "Songs",
+      "libraryCount": "Libraries",
+      "audiobooks": "Audiobooks",
+      "podcasts": "Podcasts",
+      "listeningTime": "Listening Time",
+      "activeSessions": "Active Sessions",
+      "nowPlaying": "Now Playing",
+      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
+      "error": {
+        "internalServerError": "Failed to fetch audio stats data"
+      }
+    },
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
@@ -2983,6 +3500,239 @@
       },
       "status": {
         "unhealthy": "Unhealthy"
+      }
+    },
+    "customApi": {
+      "name": "Custom API",
+      "description": "Display data from any external API with custom configuration.",
+      "option": {
+        "definitionId": {
+          "label": "Definition ID"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from the API (in seconds)"
+        }
+      },
+      "noDefinition": "No definition selected",
+      "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "noDisplayOutput": "No display output",
+      "executeConfirm": "Are you sure you want to execute this action?",
+      "executing": "Executing...",
+      "executeSuccess": "Action executed successfully",
+      "executeFailed": "Action failed. Check the widget configuration."
+    },
+    "beszelSystemTable": {
+      "name": "Beszel Systems (Table)",
+      "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
+      "option": {
+        "statusFilter": {
+          "label": "Status filter"
+        },
+        "sortBy": {
+          "label": "Sort by"
+        },
+        "sortDirection": {
+          "label": "Sort direction"
+        },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showGpu": {
+          "label": "Show GPU"
+        },
+        "showLoadAvg": {
+          "label": "Show load average"
+        },
+        "showNet": {
+          "label": "Show network"
+        },
+        "showTemp": {
+          "label": "Show temperature"
+        },
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showServices": {
+          "label": "Show services"
+        },
+        "showUptime": {
+          "label": "Show uptime"
+        },
+        "showAgent": {
+          "label": "Show agent version"
+        }
+      },
+      "noRecords": "No systems found",
+      "column": {
+        "system": "System",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "Beszel Systems (Grid)",
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "statusFilter": {
+          "label": "Status filter"
+        },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showGpu": {
+          "label": "Show GPU"
+        },
+        "showLoadAvg": {
+          "label": "Show load average"
+        },
+        "showNet": {
+          "label": "Show network"
+        },
+        "showTemp": {
+          "label": "Show temperature"
+        },
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showServices": {
+          "label": "Show services"
+        },
+        "showUptime": {
+          "label": "Show uptime"
+        },
+        "showAgent": {
+          "label": "Show agent version"
+        }
+      },
+      "metric": {
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
+      }
+    },
+    "beszelAlerts": {
+      "name": "Beszel Alerts",
+      "description": "View Beszel alert configurations and history",
+      "option": {
+        "showHistory": {
+          "label": "Show alert history"
+        },
+        "maxHistoryItems": {
+          "label": "Max history items"
+        }
+      },
+      "empty": "No alerts configured",
+      "history": "History",
+      "resolved": "Resolved",
+      "status": {
+        "triggered": "Triggered",
+        "ok": "OK"
+      }
+    },
+    "beszelSystemStats": {
+      "name": "Beszel System Stats",
+      "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
+      "option": {
+        "timePeriod": {
+          "label": "Time period"
+        },
+        "showCpu": {
+          "label": "Show CPU chart"
+        },
+        "showMemory": {
+          "label": "Show memory chart"
+        },
+        "showDisk": {
+          "label": "Show disk chart"
+        },
+        "showDiskIO": {
+          "label": "Show disk I/O chart"
+        },
+        "showNetwork": {
+          "label": "Show network chart"
+        },
+        "showDockerCpu": {
+          "label": "Show Docker CPU chart"
+        },
+        "showDockerMemory": {
+          "label": "Show Docker memory chart"
+        },
+        "showDockerNetwork": {
+          "label": "Show Docker network chart"
+        }
+      },
+      "selectSystem": "Select system",
+      "chart": {
+        "cpu": {
+          "title": "CPU Usage",
+          "subtitle": "Average system-wide CPU utilization",
+          "series": "CPU"
+        },
+        "memory": {
+          "title": "Memory Usage",
+          "subtitle": "Precise utilization at the recorded time",
+          "series": "Used",
+          "cache": "Cache/Buffers"
+        },
+        "disk": {
+          "title": "Disk Usage",
+          "subtitle": "Usage of root partition",
+          "series": "Used"
+        },
+        "diskIO": {
+          "title": "Disk I/O",
+          "subtitle": "Throughput of root filesystem",
+          "read": "Read",
+          "write": "Write"
+        },
+        "network": {
+          "title": "Bandwidth",
+          "subtitle": "Network traffic of public interfaces",
+          "sent": "Sent",
+          "recv": "Received"
+        },
+        "dockerCpu": {
+          "title": "Docker CPU Usage",
+          "subtitle": "Average CPU utilization of containers"
+        },
+        "dockerMemory": {
+          "title": "Docker Memory Usage",
+          "subtitle": "Memory usage of docker containers"
+        },
+        "dockerNetwork": {
+          "title": "Docker Network I/O",
+          "subtitle": "Network traffic of docker containers"
+        }
       }
     }
   },
@@ -3363,6 +4113,7 @@
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrations",
+        "customWidgets": "Custom Widgets",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -3379,9 +4130,10 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
-            "api": "API",
+            "api": "API & MCP",
             "certificates": "Certificates",
-            "tasks": "Tasks"
+            "tasks": "Tasks",
+            "backup": "Backup"
           }
         },
         "settings": "Settings",
@@ -3461,6 +4213,9 @@
           "public": "This board is public",
           "private": "This board is private"
         },
+        "noResults": {
+          "title": "No boards yet"
+        },
         "modal": {
           "createBoard": {
             "field": {
@@ -3491,7 +4246,24 @@
               },
               "search": "Search",
               "firstDayOfWeek": "First day of the week",
-              "accessibility": "Accessibility"
+              "accessibility": "Accessibility",
+              "onboardingTours": {
+                "title": "Onboarding Tours",
+                "description": "Reset the onboarding tours to see them again on your next visit to the management area or dashboard.",
+                "reset": "Reset onboarding tours",
+                "resetSuccess": {
+                  "title": "Tours reset",
+                  "message": "Onboarding tours will show again on your next visit"
+                },
+                "status": {
+                  "completed": "Completed",
+                  "notStarted": "Not started"
+                },
+                "name": {
+                  "management": "Management",
+                  "dashboard": "Dashboard"
+                }
+              }
             }
           },
           "security": {
@@ -3899,7 +4671,215 @@
                   "actions": "Actions"
                 }
               }
+            },
+            "mcp": {
+              "label": "AI / MCP",
+              "title": "AI Integration",
+              "subtitle": "Model Context Protocol (MCP) Server",
+              "description": "Connect AI assistants to your Homarr instance and control your entire homelab through natural language. Search and request media on Overseerr, manage Docker containers, toggle Pi-hole, check server health, control Home Assistant devices, and more — all from your AI assistant.",
+              "noApiKey": "You need an API key to authenticate with the MCP server.",
+              "createApiKeyButton": "Create API Key",
+              "endpoint": {
+                "title": "MCP Endpoint"
+              },
+              "authentication": {
+                "title": "Authentication",
+                "intro": "You can authenticate with your MCP server using either an API key or OAuth. Both methods grant the same level of access.",
+                "apiKey": {
+                  "title": "API Key (manual)",
+                  "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
+                },
+                "oauth": {
+                  "title": "OAuth (browser login)",
+                  "description": "Clients that support OAuth (such as Claude Code, opencode, or Cursor) can authenticate by opening a browser window. Run the auth command in your client, log in to Homarr in the browser, and you're connected — an API key is created automatically.",
+                  "hint": "OAuth tokens appear as regular API keys in the Authentication tab. You can revoke them at any time."
+                },
+                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
+              },
+              "clientConfig": {
+                "title": "Client Configuration",
+                "streamableHttp": {
+                  "recommended": "Recommended",
+                  "title": "Streamable HTTP",
+                  "worksWith": "Works with: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Add to your MCP client configuration file:",
+                  "cursor": "{name}: {file} in your project or global settings",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} or use {command}",
+                  "vsCodeCopilot": "{name}: {file} in workspace settings",
+                  "replaceHint": "Replace the placeholder with the API key you received when creating it."
+                },
+                "stdio": {
+                  "title": "stdio (legacy clients via mcp-remote bridge)",
+                  "description": "For clients that only support stdio transport. Requires {dependency} (Node.js) installed locally:"
+                }
+              },
+              "testConnection": {
+                "title": "Test Your Connection",
+                "description": "Run this in your terminal to verify the endpoint is reachable and your API key works:",
+                "hint": "A successful response returns the MCP server capabilities. If you see an error, check the JSON response for hints."
+              },
+              "availableTools": {
+                "title": "Available Tools",
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
+                "columnType": "Type",
+                "columnName": "Tool",
+                "columnDescription": "Description"
+              },
+              "troubleshooting": {
+                "title": "Troubleshooting",
+                "missingHeader": {
+                  "title": "\"Missing ApiKey header\"",
+                  "description": "Your client is not sending the {header} header. Verify the {section} section in your MCP config is correct. Some clients require restarting after config changes."
+                },
+                "invalidFormat": {
+                  "title": "\"Invalid ApiKey format\"",
+                  "description": "Make sure you copied the full API key, not just part of it."
+                },
+                "invalidKey": {
+                  "title": "\"Invalid API key\"",
+                  "description": "The key ID was not found or the token is wrong. API keys can only be viewed once when created. If you lost it, delete the old key and create a new one."
+                },
+                "connectionRefused": {
+                  "title": "Connection refused / timeout",
+                  "description": "Make sure the URL is reachable from your AI client. If Homarr runs behind a reverse proxy or in Docker, use the external URL (not {localhost}). Verify the port is correct (default: 7575 for Docker)."
+                },
+                "toolsNotAppearing": {
+                  "title": "Tools not appearing",
+                  "description": "Some tools require specific integrations to be configured (e.g. Docker, Overseerr). The tool list depends on what's available in your Homarr instance."
+                }
+              },
+              "copy": "Copy",
+              "oneClick": {
+                "title": "Install in One Click",
+                "subtitle": "Uses OAuth — authenticate in your browser on first use",
+                "vsCode": "Install in VS Code",
+                "cursor": "Install in Cursor",
+                "copyUrl": "Copy MCP URL",
+                "copied": "Copied!",
+                "copyHint": "For ChatGPT, Claude Code, or any MCP client",
+                "manualConfig": "Manual Configuration"
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "Full Database Backup",
+          "metaTitle": "Backup & Restore",
+          "export": {
+            "title": "Export Database",
+            "description": "Download a full backup of your SQLite database including all settings, users, boards, and encrypted integration secrets. The backup is bundled as a ZIP file with the encryption key and metadata.",
+            "button": "Download Backup",
+            "error": "Export failed",
+            "confirm": {
+              "title": "Sensitive data export",
+              "warningTitle": "This export contains your entire database.",
+              "warningBody": "The backup includes all users, integration secrets (encrypted), API keys, board configurations, and app data. Store the exported file securely and do not share it.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "submit": "Export Database",
+              "cancel": "Cancel"
+            }
+          },
+          "import": {
+            "title": "Restore Database",
+            "description": "Upload a previously exported backup ZIP to restore your database. This will replace your entire database. If the backup was created with a different encryption key, secrets will be automatically re-encrypted.",
+            "warning": "Restoring a backup will completely replace your current database and restart the application. This action cannot be undone.",
+            "dropzone": {
+              "title": "Drop your backup ZIP here or click to browse",
+              "description": "Only .zip files from a Homarr SQLite backup are accepted"
+            },
+            "changeFile": "Change file",
+            "button": "Restore Database",
+            "success": {
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The application is restarting..."
+            },
+            "error": "Import failed"
+          },
+          "preview": {
+            "title": "Backup Contents",
+            "exported": "Exported {date}",
+            "loading": "Analyzing backup file...",
+            "errorTitle": "Preview Error",
+            "entity": "Entity",
+            "count": "Count",
+            "boards": "Boards",
+            "entities": {
+              "board": "Boards",
+              "user": "Users",
+              "app": "Apps",
+              "integration": "Integrations",
+              "item": "Widgets",
+              "media": "Media",
+              "search_engine": "Search Engines"
+            },
+            "analyzeError": "Failed to analyze backup file",
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite"
+          },
+          "restore": {
+            "dropzone": {
+              "title": "Drop your backup ZIP here",
+              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
+            },
+            "analyzing": "Analyzing backup...",
+            "changeFile": "Change file",
+            "continueToRestore": "Continue to restore",
+            "tryAgain": "Try again",
+            "analysisError": "Analysis Error",
+            "preview": {
+              "title": "Backup Contents",
+              "exported": "Exported {date}",
+              "entity": "Entity",
+              "count": "Count",
+              "boards": "Boards",
+              "entities": {
+                "board": "Boards",
+                "user": "Users",
+                "app": "Apps",
+                "integration": "Integrations",
+                "item": "Widgets",
+                "media": "Media",
+                "search_engine": "Search Engines"
+              },
+              "migrationsApplied": "{count} migration applied",
+              "migrationsAppliedPlural": "{count} migrations applied",
+              "migrationsOlderVersion": "This backup was from an older Homarr version. {count} schema migration was applied to bring it up to date.",
+              "migrationsOlderVersionPlural": "This backup was from an older Homarr version. {count} schema migrations were applied to bring it up to date.",
+              "migrationsUpToDate": "Database schema is up to date ({count} migrations applied)",
+              "upToDate": "Up to date",
+              "migrationsPending": "{count} pending"
+            },
+            "migration": {
+              "title": "Applying migrations ({current}/{total})",
+              "migrationLabel": "Migration {index}"
+            },
+            "confirm": {
+              "title": "Destructive action",
+              "warningTitle": "This will permanently replace your entire database.",
+              "warningBody": "All current boards, users, apps, integrations, settings, and sessions will be lost. This action cannot be undone. The application will restart after the restore.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "cancel": "Cancel",
+              "submit": "Restore Database"
+            },
+            "progress": {
+              "title": "Restoring database...",
+              "extracting": "Extracting backup archive",
+              "migrating": "Applying database migrations",
+              "encrypting": "Re-encrypting integration secrets",
+              "swapping": "Replacing database file",
+              "restarting": "Restarting server"
+            },
+            "complete": {
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
+            },
+            "failed": {
+              "title": "Restore Failed"
+            },
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite",
+            "analyzeError": "Failed to analyze backup"
           }
         }
       },
@@ -3986,6 +4966,12 @@
     },
     "action": {
       "title": "Actions",
+      "logs": {
+        "label": "View logs",
+        "page": {
+          "title": "{name} logs"
+        }
+      },
       "start": {
         "label": "Start",
         "notification": {
@@ -4377,6 +5363,18 @@
           "label": "Edit"
         }
       },
+      "custom-widgets": {
+        "label": "Custom widgets",
+        "new": {
+          "label": "New"
+        },
+        "edit": {
+          "label": "Edit",
+          "flow": {
+            "label": "Flow"
+          }
+        }
+      },
       "users": {
         "label": "Users",
         "create": {
@@ -4398,7 +5396,10 @@
           "label": "Tasks"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": "Logs"
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
@@ -4547,13 +5548,141 @@
                 "label": "Create a new group"
               }
             }
+          },
+          "preferences": {
+            "title": "Preferences",
+            "children": {
+              "detail": {
+                "title": "Select a preference to change",
+                "backHint": "Press Backspace or use the back button to go back",
+                "backAction": "Go back"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "Unable to update preference"
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": "Open preferences"
+              },
+              "boolean": {
+                "enabled": "Enabled",
+                "disabled": "Disabled"
+              },
+              "board": {
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
+              },
+              "searchEngine": {
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
+              },
+              "colorScheme": {
+                "label": "Color scheme",
+                "children": {
+                  "detail": {
+                    "title": "Select your color scheme"
+                  }
+                }
+              },
+              "locale": {
+                "label": "Language",
+                "children": {
+                  "detail": {
+                    "title": "Select your preferred language"
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "Default search engine",
+                "children": {
+                  "detail": {
+                    "title": "Select your default search engine"
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "Open search results in new tab",
+                "children": {
+                  "detail": {
+                    "title": "Open search results in new tab"
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "Enable DuckDuckGo bangs",
+                "children": {
+                  "detail": {
+                    "title": "Enable DuckDuckGo bangs"
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "First day of the week",
+                "children": {
+                  "detail": {
+                    "title": "Select the first day of the week"
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "Home board",
+                "children": {
+                  "detail": {
+                    "title": "Select your home board"
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "Mobile home board",
+                "children": {
+                  "detail": {
+                    "title": "Select your mobile home board"
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "Use icons for pings",
+                "children": {
+                  "detail": {
+                    "title": "Use icons for pings"
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": "Open full preferences page"
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "Search for movies or shows to request",
         "requestMovie": "Request movie",
         "requestSeries": "Request series",
-        "openIn": "Open in {kind}"
+        "openIn": "Open in {kind}",
+        "group": {
+          "title": "Movies and shows"
+        },
+        "action": {
+          "search": {
+            "label": "Search for movies or shows",
+            "description": "Start typing to search your media request integrations",
+            "disabled": {
+              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "scoped": "This widget does not have an accessible media request integration."
+            }
+          }
+        },
+        "availability": {
+          "available": "Available",
+          "partiallyAvailable": "Partial",
+          "processing": "Processing",
+          "requested": "Requested",
+          "pending": "Requested"
+        }
       },
       "external": {
         "help": "Use an external search engine",
@@ -4829,7 +5958,11 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes"
+                "episodes": "Episodes",
+                "status": "Status"
+              },
+              "status": {
+                "requested": "Requested"
               }
             },
             "button": {
@@ -4938,6 +6071,73 @@
         "info": "Info",
         "warn": "Warn",
         "error": "Error"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "Read the docs",
+    "next": "Next",
+    "prev": "Back",
+    "done": "Done",
+    "skip": "Skip tour",
+    "manage": {
+      "welcome": {
+        "title": "Welcome to Homarr!",
+        "description": "This is your control center. From here you manage boards, apps, integrations, users, and server settings. Let's take a tour of each section."
+      },
+      "boardsList": {
+        "title": "Your Boards",
+        "description": "Here are all your dashboards. Each board has its own layout, background, and access settings. You can see who created each one and whether it's public or private."
+      },
+      "boardsCreate": {
+        "title": "Create a Board",
+        "description": "Click here to create a new dashboard or import one from a previous Homarr installation. Each board gets its own URL you can share."
+      },
+      "appsList": {
+        "title": "Your Apps",
+        "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
+      },
+      "appsCreate": {
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
+      },
+      "integrationsList": {
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
+      },
+      "integrationsCreate": {
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
+      },
+      "usersList": {
+        "title": "Your Users",
+        "description": "See everyone who has access. Organize users into groups and control who can view or edit each board."
+      },
+      "usersCreate": {
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
+      },
+      "editMode": {
+        "title": "Edit Mode",
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
+      },
+      "settings": {
+        "title": "Board Settings",
+        "description": "Change this board's name, columns, background, colors, and who can access it. Each board can be public or private."
+      },
+      "switcher": {
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
+      },
+      "userMenu": {
+        "title": "Your Profile",
+        "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }

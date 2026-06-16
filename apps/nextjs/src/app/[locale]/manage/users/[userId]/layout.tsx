@@ -10,7 +10,7 @@ import { UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
+import { catchTrpcNotFound, catchTrpcUnauthorized } from "~/errors/trpc-catch-error";
 import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
 
@@ -26,7 +26,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
   const session = await auth();
   const t = await getI18n();
   const tUser = await getScopedI18n("management.page.user");
-  const user = await api.user.getById({ userId: params.userId }).catch(catchTrpcNotFound);
+  const user = await api.user.getById({ userId: params.userId }).catch(catchTrpcNotFound).catch(catchTrpcUnauthorized);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();

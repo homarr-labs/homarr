@@ -8,6 +8,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as anchorNote from "./anchor-note";
+import * as audioStats from "./audio-stats";
 import * as app from "./app";
 import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
@@ -35,6 +36,7 @@ import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
+import * as paperlessNgx from "./paperless-ngx";
 import * as notifications from "./notifications";
 import type { WidgetOptionDefinition } from "./options";
 import * as releases from "./releases";
@@ -42,17 +44,25 @@ import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as speedtestTracker from "./speedtest-tracker";
+import * as uptimeKuma from "./uptime-kuma";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
+import * as ups from "./ups";
+import * as beszelSystemTable from "./beszel-system-table";
+import * as beszelSystemGrid from "./beszel-system-grid";
+import * as beszelAlerts from "./beszel-alerts";
+import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as customApi from "./custom-api";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
+export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 
 export const widgetImports = {
   clock,
@@ -92,9 +102,18 @@ export const widgetImports = {
   timetable,
   "immich-serverStats": immichServerStats,
   "immich-albumCarousel": immichAlbumCarousel,
+  paperlessNgx,
   tracearr,
   speedtestTracker,
+  uptimeKuma,
+  audioStats,
   umami,
+  ups,
+  beszelSystemTable,
+  beszelSystemGrid,
+  beszelAlerts,
+  beszelSystemStats,
+  customApi,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

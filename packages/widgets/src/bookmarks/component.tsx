@@ -14,9 +14,9 @@ import classes from "./bookmark.module.css";
 
 export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
-  const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
+  const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
     select(data) {
-      return data.sort((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+      return data.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
     },
   });
 
@@ -56,6 +56,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
+          withBorder={options.withBorder}
           hasIconColor={board.iconColor !== null}
         />
       )}
@@ -67,6 +68,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
+          withBorder={options.withBorder}
           hasIconColor={board.iconColor !== null}
         />
       )}
@@ -81,6 +83,7 @@ interface FlexLayoutProps {
   hideIcon: boolean;
   hideHostname: boolean;
   openNewTab: boolean;
+  withBorder: boolean;
   hasIconColor: boolean;
 }
 
@@ -91,6 +94,7 @@ const FlexLayout = ({
   hideIcon,
   hideHostname,
   openNewTab,
+  withBorder,
   hasIconColor,
 }: FlexLayoutProps) => {
   const board = useRequiredBoard();
@@ -106,7 +110,15 @@ const FlexLayout = ({
             key={app.id}
             w="100%"
           >
-            <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={4} h="100%">
+            <Card
+              radius={board.itemRadius}
+              className={classes.card}
+              w="100%"
+              display="flex"
+              p={4}
+              h="100%"
+              withBorder={withBorder}
+            >
               {direction === "row" ? (
                 <VerticalItem
                   app={app}
@@ -138,6 +150,7 @@ interface GridLayoutProps {
   hideIcon: boolean;
   hideHostname: boolean;
   openNewTab: boolean;
+  withBorder: boolean;
   itemDirection: "horizontal" | "vertical";
   hasIconColor: boolean;
 }
@@ -148,6 +161,7 @@ const GridLayout = ({
   hideIcon,
   hideHostname,
   openNewTab,
+  withBorder,
   itemDirection,
   hasIconColor,
 }: GridLayoutProps) => {
@@ -168,6 +182,7 @@ const GridLayout = ({
             h="100%"
             className={combineClasses(classes.card, classes["card-grid"])}
             radius={board.itemRadius}
+            withBorder={withBorder}
             p="xs"
           >
             {itemDirection === "horizontal" ? (

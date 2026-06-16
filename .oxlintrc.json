@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "import", "jsx-a11y"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "perf": "off",
+    "style": "off",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "rules": {
+    "eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/consistent-type-imports": ["warn", { "prefer": "type-imports", "fixStyle": "separate-type-imports" }],
+    "typescript/no-non-null-assertion": "error",
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "unicorn/no-new-array": "warn",
+    "unicorn/no-useless-spread": "warn",
+    "unicorn/no-useless-length-check": "warn",
+    "unicorn/no-useless-fallback-in-spread": "warn",
+    "jsx-a11y/prefer-tag-over-role": "warn",
+    "oxc/const-comparisons": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-children-prop": "warn",
+    "jsx-a11y/no-autofocus": "warn",
+    "jsx-a11y/img-redundant-alt": "warn",
+    "react/react-in-jsx-scope": "off"
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "off"
+  },
+  "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", "**/lang/*.d.json.ts", ".next/**", "apps/docs/.docusaurus/**", "apps/docs/build/**"],
+  "settings": {
+    "react": { "version": "19" }
+  }
+}

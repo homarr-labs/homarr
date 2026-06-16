@@ -1,0 +1,137 @@
+.root {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(6px, 3cqi, 14px);
+  gap: clamp(4px, 2cqi, 10px);
+  overflow: hidden;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(8px, 3cqi, 18px);
+  flex-shrink: 0;
+  padding-bottom: clamp(4px, 2cqi, 10px);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.heroExpanded {
+  flex: 1;
+  border-bottom: none;
+  justify-content: center;
+  padding-bottom: 0;
+}
+
+.heroTextOnly {
+  justify-content: center;
+}
+
+.heroTextOnly .heroText {
+  align-items: center;
+  text-align: center;
+}
+
+.heroTextOnly .heroInbox {
+  font-size: clamp(18px, 8cqi, 32px);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 1cqi, 4px);
+  min-width: 0;
+  flex: 1;
+}
+
+.heroLabel {
+  font-size: clamp(9px, 2.8cqi, 13px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+}
+
+.heroCounts {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(4px, 1.5cqi, 6px);
+}
+
+.heroInbox {
+  font-size: clamp(16px, 6cqi, 24px);
+  font-weight: 700;
+  color: var(--mantine-color-orange-6);
+  line-height: 1.1;
+}
+
+.heroTotal {
+  font-size: clamp(11px, 3.5cqi, 15px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+}
+
+.ring {
+  flex-shrink: 0;
+}
+
+.grid {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 10px);
+  grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+}
+
+.statTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+  gap: clamp(2px, 1.5cqi, 5px);
+  padding: clamp(4px, 2.5cqi, 10px);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  overflow: hidden;
+}
+
+.statIcon {
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+}
+
+.statLabel {
+  font-size: clamp(8px, 2.5cqi, 12px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statValue {
+  font-size: clamp(14px, 5.5cqi, 24px);
+  font-weight: 700;
+  color: var(--mantine-primary-color-filled);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.emptyState {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: clamp(11px, 3cqi, 14px);
+  text-align: center;
+}

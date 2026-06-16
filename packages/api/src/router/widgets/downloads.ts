@@ -18,6 +18,13 @@ const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50)",
+      },
+    })
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
@@ -25,7 +32,9 @@ export const downloadsRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
 
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
 
           return {
             integration: {
@@ -68,14 +77,23 @@ export const downloadsRouter = createTRPCRouter({
         };
       });
     }),
-  pause: protectedProcedure.concat(createDownloadClientIntegrationMiddleware("interact")).mutation(async ({ ctx }) => {
-    await Promise.all(
-      ctx.integrations.map(async (integration) => {
-        const integrationInstance = await createIntegrationAsync(integration);
-        await integrationInstance.pauseQueueAsync();
-      }),
-    );
-  }),
+  pause: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Pause all download queues across connected download clients. REQUIRED: integrationIds (array of download client integration IDs from integration_all)",
+      },
+    })
+    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .mutation(async ({ ctx }) => {
+      await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const integrationInstance = await createIntegrationAsync(integration);
+          await integrationInstance.pauseQueueAsync();
+        }),
+      );
+    }),
   pauseItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
@@ -87,14 +105,23 @@ export const downloadsRouter = createTRPCRouter({
         }),
       );
     }),
-  resume: protectedProcedure.concat(createDownloadClientIntegrationMiddleware("interact")).mutation(async ({ ctx }) => {
-    await Promise.all(
-      ctx.integrations.map(async (integration) => {
-        const integrationInstance = await createIntegrationAsync(integration);
-        await integrationInstance.resumeQueueAsync();
-      }),
-    );
-  }),
+  resume: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Resume all download queues across connected download clients. REQUIRED: integrationIds (array of download client integration IDs from integration_all)",
+      },
+    })
+    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .mutation(async ({ ctx }) => {
+      await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const integrationInstance = await createIntegrationAsync(integration);
+          await integrationInstance.resumeQueueAsync();
+        }),
+      );
+    }),
   resumeItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))

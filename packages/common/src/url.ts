@@ -1,7 +1,11 @@
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 
 export const removeTrailingSlash = (path: string) => {
-  return path.at(-1) === "/" ? path.substring(0, path.length - 1) : path;
+  let end = path.length;
+  while (end > 0 && path.charAt(end - 1) === "/") {
+    end--;
+  }
+  return path.slice(0, end);
 };
 
 export const extractBaseUrlFromHeaders = (

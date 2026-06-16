@@ -42,6 +42,7 @@ export interface WidgetDefinition {
   icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
+  maxIntegrations?: number;
   createOptions: (
     settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
   ) => WidgetOptionsRecord;

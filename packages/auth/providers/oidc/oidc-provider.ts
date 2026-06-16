@@ -14,6 +14,9 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
   type: "oidc",
   clientId: env.AUTH_OIDC_CLIENT_ID,
   clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+  client: {
+    token_endpoint_auth_method: env.AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD,
+  },
   issuer: env.AUTH_OIDC_ISSUER,
   allowDangerousEmailAccountLinking: env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING,
   authorization: {

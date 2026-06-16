@@ -12,13 +12,13 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 export default function NotificationsWidget({ options, integrationIds }: WidgetComponentProps<"notifications">) {
-  const [notificationIntegrations] = clientApi.widget.notifications.getNotifications.useSuspenseQuery(
+  const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery(
     {
       ...options,
       integrationIds,
     },
     {
-      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -67,7 +67,7 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
       <Stack w={"100%"} gap="sm">
         {sortedNotifications.length > 0 ? (
           sortedNotifications.map((notification) => (
-            <Card key={notification.id} withBorder radius={board.itemRadius} w="100%" p="sm">
+            <Card key={notification.id} radius={board.itemRadius} w="100%" p="sm">
               <Flex gap="sm" direction="column" w="100%">
                 {notification.title && (
                   <Text fz="sm" lh="sm" lineClamp={2}>

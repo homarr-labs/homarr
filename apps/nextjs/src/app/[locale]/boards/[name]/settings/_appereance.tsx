@@ -83,7 +83,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
             <Anchor onClick={toggle}>{showPreview ? t("common.preview.hide") : t("common.preview.show")}</Anchor>
           </Grid.Col>
           <Grid.Col span={12}>
-            <Collapse in={showPreview}>
+            <Collapse expanded={showPreview}>
               <Stack>
                 <ColorsPreview previewColor={form.values.primaryColor} />
                 <ColorsPreview previewColor={form.values.secondaryColor} />

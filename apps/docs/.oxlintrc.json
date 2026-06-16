@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "import", "jsx-a11y"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "perf": "off",
+    "style": "off",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "rules": {
+    "eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/consistent-type-imports": "off",
+    "typescript/no-non-null-assertion": "warn",
+    "import/consistent-type-specifier-style": "off",
+    "jsx-a11y/alt-text": "warn",
+    "jsx-a11y/control-has-associated-label": "warn",
+    "jsx-a11y/prefer-tag-over-role": "warn",
+    "react/jsx-key": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "eslint/no-unused-expressions": "warn"
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "off"
+  },
+  "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", ".docusaurus/**", "build/**"],
+  "settings": {
+    "react": { "version": "19" }
+  }
+}

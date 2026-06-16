@@ -1,24 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
+import { Anchor, Group, Text, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
-  credentialsProviderEnabled: boolean;
 }
 
-export const UserListComponent = ({ initialUserList, credentialsProviderEnabled }: UserListComponentProps) => {
-  const tUserList = useScopedI18n("management.page.user.list");
+export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
   const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
     initialData: initialUserList,
@@ -69,21 +67,10 @@ export const UserListComponent = ({ initialUserList, credentialsProviderEnabled 
     enableFullScreenToggle: false,
     layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
-    renderTopToolbarCustomActions: () =>
-      credentialsProviderEnabled ? (
-        <Button component={Link} href="/manage/users/create">
-          {t("management.page.user.create.title")}
-        </Button>
-      ) : null,
     state: {
       isLoading,
     },
   });
 
-  return (
-    <>
-      <Title mb="md">{tUserList("title")}</Title>
-      <MantineReactTable table={table} />
-    </>
-  );
+  return <MantineReactTable table={table} />;
 };
