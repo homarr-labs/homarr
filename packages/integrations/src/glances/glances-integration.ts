@@ -55,7 +55,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       })),
       uptime: stats.uptime.as("seconds"),
       rebootRequired: false,
-      cpuModelName: stats.quicklook.cpu_name,
+      cpuModelName: stats.quicklook?.cpu_name ?? "Unknown",
       loadAverage: null,
       smart: [],
       cpuTemp: undefined,
@@ -155,9 +155,11 @@ const allSchema = z.object({
 
       return dayjs.duration({ days, hours, minutes, seconds });
     }),
-  quicklook: z.object({
-    cpu_name: z.string(),
-  }),
+  quicklook: z
+    .object({
+      cpu_name: z.string(),
+    })
+    .optional(),
   gpu: z
     .array(
       z.object({

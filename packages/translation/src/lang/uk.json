@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Почати з нуля",
           "importOldmarr": "Імпорт з Homarr пре-1.0",
-          "restoreSqlite": "",
+          "restoreSqlite": "Відновлення з резервної копії SQLite",
           "restoreSqliteDescription": "Завантажте повну резервну копію бази даних SQLite з попереднього екземпляра Homarr. Це відновить усі дошки, користувачів, програми, інтеграції та налаштування.",
-          "backToOptions": ""
+          "backToOptions": "Назад до параметрів налаштування"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Налаштування сервера."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Інтеграції",
+        "subtitle": "Виберіть сервіси, якими ви користуєтеся.",
+        "description": "Виберіть інтеграції, які ви хочете під'єднати. Ми автоматично налаштуємо вашу інформаційну панель з відповідними віджетами.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Продовжити",
+          "skip": "Пропустити поки що"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{поточний} з {загальний}",
+          "skip": "Пропустити цю інтеграцію",
+          "finishing": "Налаштування панелі інструментів..",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося налаштувати",
+            "message": "Під час налаштування вашої інформаційної панелі сталася помилка. Спробуйте ще раз."
           },
           "helpers": {
             "tooltip": "Помічники URL-адрес",
-            "description": ""
+            "description": "Ці помічники намагаються вгадати URL-адресу ваших послуг. Якщо це не працює, просто введіть адресу вручну."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Базовий URL",
+          "placeholder": "homelab.local чи 192.168.1.1",
+          "hint": "Введіть свій базовий домен або IP-адресу для автоматичного заповнення URL-адрес інтеграції",
+          "warning": "Якщо встановити базову URL-адресу зараз, усі URL-адреси інтеграції будуть автоматично заповнені, що заощадить ваш час під час налаштування",
+          "preview": "напр. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Субдомен",
+            "hostPort": "Хост:Порт"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker виявив {count} служб",
+          "detectedBreakdown": "{integrations} інтеграцій - {apps} програм",
+          "summary": "Homarr виявив {apps} програми, {integrations} з яких мають вбудовану інтеграцію",
+          "appBadge": "Додаток",
+          "appSectionLabel": "Додатки для додавання на інформаційну панель (вибрано {count})",
+          "scanning": "Сканування Docker...",
+          "scanningDescription": "Пошук запущених контейнерів у вашій системі"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Пароль",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Пропозиції паролів",
         "suggestion": {
           "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
@@ -205,7 +205,7 @@
         "label": "Відкрити результати пошуку в новій вкладці"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Увімкніть чубчик DuckDuckGo"
       }
     },
     "error": {
@@ -298,10 +298,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Чубчик DuckDuckGo успішно змінено"
           },
           "error": {
-            "message": ""
+            "message": "Неможливо перемкнути чубчик DuckDuckGo"
           }
         }
       },
@@ -367,11 +367,11 @@
       "members": "Учасники",
       "homeBoard": {
         "label": "Домашня дошка",
-        "description": ""
+        "description": "Можна вибрати лише дошки, доступні групі"
       },
       "mobileBoard": {
         "label": "Мобільна дошка",
-        "description": ""
+        "description": "Можна вибрати лише дошки, доступні групі"
       }
     },
     "permission": {
@@ -492,8 +492,8 @@
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Деякі учасники належать до зовнішніх постачальників, і ними не можна керувати тут",
+      "external": "Усі учасники належать до зовнішніх постачальників, і ними не можна керувати тут"
     },
     "reservedNotice": {
       "message": "Ця група зарезервована для використання системою та обмежує деякі дії. <checkoutDocs></checkoutDocs>"
@@ -573,8 +573,8 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Налаштування збережено",
+              "message": "Налаштування дошки успішно збережено"
             },
             "error": {
               "title": "Не вдалося зберегти налаштування",
@@ -586,17 +586,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Позицію успішно змінено"
           },
           "error": {
-            "message": ""
+            "message": "Неможливо змінити позицію"
           }
         }
       }
     },
     "defaultGroup": {
       "name": "Група за замовчуванням",
-      "description": ""
+      "description": "{name} – усі авторизовані користувачі"
     }
   },
   "app": {
@@ -662,8 +662,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Використовуйте іншу URL-адресу для ping",
+          "description": "Корисно, якщо Homarr може отримати прямий доступ за допомогою внутрішньої назви хоста або мережі, щоб уникнути використання пропускної здатності провайдера"
         }
       }
     },
@@ -671,17 +671,17 @@
       "select": {
         "label": "Оберіть додаток",
         "notFound": "Додатків не знайдено",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Пошук програми",
+        "noResults": "Результатів немає",
+        "action": "Оберіть {app}",
+        "title": "Оберіть додаток, щоб додати на цю дошку"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Створити новий додаток",
+        "description": "Створити новий додаток",
+        "action": "Відкрийте створення додатку"
       },
-      "add": ""
+      "add": "Додати додаток"
     }
   },
   "customWidget": {
