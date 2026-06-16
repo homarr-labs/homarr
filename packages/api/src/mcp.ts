@@ -9,6 +9,7 @@ import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { beszelRouter } from "./router/widgets/beszel";
 import { calendarRouter } from "./router/widgets/calendar";
 import { dnsHoleRouter } from "./router/widgets/dns-hole";
 import { downloadsRouter } from "./router/widgets/downloads";
@@ -16,7 +17,6 @@ import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
 import { mediaRequestsRouter } from "./router/widgets/media-requests";
 import { mediaServerRouter } from "./router/widgets/media-server";
 import { smartHomeRouter } from "./router/widgets/smart-home";
-import { beszelRouter } from "./router/widgets/beszel";
 
 export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,

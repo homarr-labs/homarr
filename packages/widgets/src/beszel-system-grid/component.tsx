@@ -356,7 +356,8 @@ export default function BeszelSystemGridWidget({
   const board = useRequiredBoard();
   const colorScheme = useComputedColorScheme("light");
   const opacity = board.opacity / 100;
-  const backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  const bgBase: Record<string, string> = { dark: "57, 57, 57", light: "246, 247, 248" };
+  const backgroundColor = `rgba(${bgBase[colorScheme]}, ${opacity})`;
 
   const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },

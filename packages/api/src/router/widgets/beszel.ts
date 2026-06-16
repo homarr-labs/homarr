@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
@@ -160,7 +161,9 @@ export const beszelRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const integration = ctx.integrations[0];
-      if (!integration) return null;
+      if (!integration) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
+      }
       const innerHandler = beszelStatsRequestHandler.handler(integration, {
         systemId: input.systemId,
         timePeriod: input.timePeriod,
