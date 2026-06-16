@@ -1,0 +1,21 @@
+apps/docs/docs/integrations/gotify/index.ts
+  s_1f672ca9074713::t_873755107e8d4e 1-8
+apps/docs/docs/integrations/gotify/index.mdx
+  s_1f672ca9074713::t_d2e6ac968521f2 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "d0450b515395cf1521e3456ef4a851c797c9990f",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
