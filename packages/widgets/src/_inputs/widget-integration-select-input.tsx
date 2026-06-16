@@ -22,6 +22,11 @@ export const WidgetIntegrationSelectInput = ({
   const integrationIds = form.values.integrationIds as string[];
 
   const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
+  const currentValue = form.getInputProps(`options.${property}`).value as string;
+  const data =
+    currentValue && !selectData.some((opt) => opt.value === currentValue)
+      ? [...selectData, { value: currentValue, label: currentValue }]
+      : selectData;
 
   if (integrationIds.length === 0) {
     return (
@@ -39,7 +44,7 @@ export const WidgetIntegrationSelectInput = ({
       clearable={options.clearable}
       searchable={options.searchable}
       nothingFoundMessage={t("noResults")}
-      data={selectData}
+      data={data}
       disabled={isError}
       error={(isError && t("loadError")) || undefined}
       {...form.getInputProps(`options.${property}`)}

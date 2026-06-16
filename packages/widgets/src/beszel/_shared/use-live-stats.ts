@@ -30,10 +30,12 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
   const [error, setError] = useState<Error | null>(null);
   const bufferRef = useRef<LiveStatsData | null>(null);
   const dirtyRef = useRef(false);
+  const generationRef = useRef(0);
 
-  const integrationKey = integrationIds.join(",");
+  const integrationKey = [...integrationIds].sort().join(",");
 
   useEffect(() => {
+    generationRef.current += 1;
     setData(null);
     setError(null);
     bufferRef.current = null;
@@ -42,13 +44,17 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
 
   const onData = useCallback(
     (incoming: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => {
-      setError(null);
-      const isFirst = !bufferRef.current;
-      bufferRef.current = appendToBuffer(bufferRef.current, incoming);
-      dirtyRef.current = true;
-      if (isFirst) {
-        setData(bufferRef.current);
-      }
+      const gen = generationRef.current;
+      queueMicrotask(() => {
+        if (generationRef.current !== gen) return;
+        setError(null);
+        const isFirst = !bufferRef.current;
+        bufferRef.current = appendToBuffer(bufferRef.current, incoming);
+        dirtyRef.current = true;
+        if (isFirst) {
+          setData(bufferRef.current);
+        }
+      });
     },
     [],
   );
@@ -66,13 +72,15 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
 
   useEffect(() => {
     if (!subscriptionEnabled) return;
+    const gen = generationRef.current;
     const id = setInterval(() => {
+      if (generationRef.current !== gen) return;
       if (!dirtyRef.current || !bufferRef.current) return;
       dirtyRef.current = false;
       setData(bufferRef.current);
     }, FLUSH_INTERVAL_MS);
     return () => clearInterval(id);
-  }, [subscriptionEnabled]);
+  }, [subscriptionEnabled, integrationKey, systemId]);
 
   clientApi.widget.beszel.subscribeSystemStats.useSubscription(subscriptionInput, {
     enabled: subscriptionEnabled,
