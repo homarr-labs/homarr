@@ -69,9 +69,12 @@ function isTabPanel(child: ReactNode): child is React.ReactElement<TabPanelProps
 export function TabsContainer({ children, defaultTab }: TabsContainerProps) {
   const panels = Children.toArray(children).filter(isTabPanel);
   const firstPanel = panels[0];
+  const panelValues = new Set(panels.map((p) => p.props.value));
+  const initialTab = (defaultTab && panelValues.has(defaultTab) ? defaultTab : firstPanel?.props.value) ?? null;
+  const [activeTab, setActiveTab] = useState<string | null>(initialTab);
 
   return (
-    <Tabs defaultValue={defaultTab ?? firstPanel?.props.value}>
+    <Tabs value={activeTab} onChange={setActiveTab}>
       <Tabs.List>
         {panels.map((panel) => (
           <Tabs.Tab key={panel.props.value} value={panel.props.value}>
