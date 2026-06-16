@@ -56,7 +56,6 @@ export default function ImmichAlbumCarouselWidget({
 interface CarouselProps {
   assets: {
     id: string;
-    deviceAssetId: string;
     originalPath: string;
     fileModifiedAt: string;
     publicLink: string;

@@ -1,4 +1,4 @@
-import { getAlbumInfo, getAllAlbums, getMyUser, getServerStatistics, init, searchUsers } from "@immich/sdk";
+import { getAlbumInfo, getAllAlbums, getMyUser, getServerStatistics, init, searchAssets, searchUsers } from "@immich/sdk";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -23,7 +23,6 @@ export interface ImmichAlbum {
 
 export interface ImmichAsset {
   id: string;
-  deviceAssetId: string;
   originalPath: string;
   thumbhash: string | null;
   fileModifiedAt: string;
@@ -56,12 +55,15 @@ export class ImmichIntegration extends Integration {
 
   public async getAlbumAsync(albumId: string): Promise<ImmichAlbum> {
     this.initClient();
-    const album = await getAlbumInfo({ id: albumId }, this.getRequestOptions());
+    const [album, searchResult] = await Promise.all([
+      getAlbumInfo({ id: albumId }, this.getRequestOptions()),
+      searchAssets({ metadataSearchDto: { albumIds: [albumId] } }, this.getRequestOptions()),
+    ]);
     const imageProxy = new ImageProxy();
     return {
       albumName: album.albumName,
       assets: await Promise.all(
-        album.assets.map(async (asset) => {
+        searchResult.assets.items.map(async (asset) => {
           const publicLink = await imageProxy.createImageAsync(
             this.url(`/api/assets/${asset.id}/original`).toString(),
             {
@@ -71,7 +73,6 @@ export class ImmichIntegration extends Integration {
           return {
             id: asset.id,
             type: asset.type,
-            deviceAssetId: asset.deviceAssetId,
             thumbhash: asset.thumbhash,
             fileCreatedAt: asset.fileCreatedAt,
             fileModifiedAt: asset.fileModifiedAt,
