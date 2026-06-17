@@ -1,0 +1,23 @@
+AUDIT.md
+  s_7a80e026b7f124::t_a358b42ccab076 216-231
+apps/nextjs/src/components/board/sections/board-grid/board-grid.tsx
+  s_7a80e026b7f124::t_af5e4c6350c55c 236
+  s_7a80e026b7f124::t_a6fd3622fc1a39 149-155
+  s_7a80e026b7f124::t_4a2838f3865ad3 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "be8704efe415ca9924edac92518263288e689f0e",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
