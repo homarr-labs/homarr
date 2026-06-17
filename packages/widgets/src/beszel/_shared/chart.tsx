@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 import { Group, Stack, Text } from "@mantine/core";
 import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
@@ -9,17 +9,28 @@ import dayjs from "dayjs";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
+const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
 
-const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
-
-interface ChartPanelProps {
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
+function prepareRecords<T>(records: T[], live: boolean) {
+  if (live) {
+    return { fmt: formatTimeLive, ordered: records };
+  }
+  return { fmt: formatTime, ordered: [...records].toReversed() };
 }
 
-export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
-  <Stack gap={4} style={{ minWidth: 0, overflow: "hidden" }}>
+const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
+const chartStyle = { minWidth: 0, minHeight: 0 } as const;
+const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
+export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
+
+interface BeszelChartPanelProps {
+  title: string;
+  subtitle?: string;
+  chartProps: BeszelAreaChartProps;
+}
+
+export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
+  <Stack gap={4} style={panelStyle}>
     <Group gap="xs">
       <Text size="sm" fw={600}>
         {title}
@@ -30,57 +41,93 @@ export const ChartPanel = ({ title, subtitle, children }: ChartPanelProps) => (
         </Text>
       )}
     </Group>
-    {children}
+    <BeszelAreaChart {...chartProps} />
   </Stack>
-);
+));
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
   yAxisDomain?: [number, string];
 };
 
-export const BeszelAreaChart = ({ yAxisFormatter, yAxisDomain, yAxisProps, style, ...props }: BeszelAreaChartProps) => (
-  <AreaChart
-    dataKey="time"
-    curveType="monotone"
-    withDots={false}
-    withXAxis
-    withYAxis
-    w="100%"
-    style={{ minWidth: 0, minHeight: 0, ...style }}
-    yAxisProps={{
-      ...yAxisBase,
-      ...(yAxisDomain ? { domain: yAxisDomain } : {}),
-      tickFormatter: yAxisFormatter,
-      ...yAxisProps,
-    }}
-    {...props}
-  />
+const BeszelAreaChart = memo(
+  ({
+    yAxisFormatter,
+    yAxisDomain,
+    yAxisProps: yAxisPropsOverride,
+    type = "default",
+    ...props
+  }: BeszelAreaChartProps) => {
+    const mergedYAxis = useMemo(() => {
+      const base = {
+        ...yAxisBase,
+        width: 48,
+        tickMargin: 2,
+        tickFormatter: yAxisFormatter,
+        ...yAxisPropsOverride,
+      };
+      if (yAxisDomain) {
+        return { ...base, domain: yAxisDomain };
+      }
+      return base;
+    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
+
+    return (
+      <AreaChart
+        dataKey="time"
+        curveType="monotone"
+        withGradient={false}
+        connectNulls
+        withDots={false}
+        type={type}
+        strokeWidth={1}
+        fillOpacity={0.2}
+        withXAxis
+        withYAxis
+        w="100%"
+        style={chartStyle}
+        yAxisProps={mergedYAxis}
+        {...props}
+      />
+    );
+  },
 );
 
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
+  live = false,
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    return [...systemStats].toReversed().map((r) => ({
-      time: formatTime(r.created),
+    const { fmt, ordered } = prepareRecords(systemStats, live);
+    return ordered.map((r) => ({
+      time: fmt(r.created),
       ...mapFn(r.stats),
     }));
-  }, [systemStats, mapFn]);
+  }, [systemStats, mapFn, live]);
 
-export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) =>
-  useMemo(() => {
-    if (!containerStats?.length) return [];
+export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
+  const prevRef = useRef<string[]>([]);
+  return useMemo(() => {
+    if (!containerStats?.length) {
+      if (prevRef.current.length === 0) return prevRef.current;
+      prevRef.current = [];
+      return prevRef.current;
+    }
     const names = new Set<string>();
     for (const record of containerStats) {
       for (const c of record.stats) {
         names.add(c.n);
       }
     }
-    return [...names].slice(0, max);
+    const next = [...names].slice(0, max);
+    const prev = prevRef.current;
+    if (prev.length === next.length && prev.every((n, i) => n === next[i])) return prev;
+    prevRef.current = next;
+    return next;
   }, [containerStats, max]);
+};
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 
@@ -97,16 +144,19 @@ export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
+  live = false,
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
-    return [...containerStats].toReversed().map((record) => {
-      const point: Record<string, unknown> = { time: formatTime(record.created) };
+    const { fmt, ordered } = prepareRecords(containerStats, live);
+    return ordered.map((record) => {
+      const point: Record<string, unknown> = { time: fmt(record.created) };
+      const byName = new Map(record.stats.map((c) => [c.n, c]));
       for (const name of containerNames) {
-        point[name] = extract(record.stats.find((c) => c.n === name));
+        point[name] = extract(byName.get(name));
       }
       return point;
     });
-  }, [containerStats, containerNames, metric]);
+  }, [containerStats, containerNames, metric, live]);

@@ -13,13 +13,11 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 12,
     lineHeight: 1.5,
     pointerEvents: "none",
-    maxHeight: 320,
-    overflowY: "auto",
     overflowX: "hidden",
   },
-  header: { marginBottom: 4, fontWeight: 500, color: "var(--mantine-color-gray-2)" },
+  header: { marginBottom: 4, fontWeight: 550, color: "var(--mantine-color-gray-2)" },
   row: { display: "flex", alignItems: "center", gap: 6, padding: "1px 0" },
-  indicator: { width: 3, height: 14, borderRadius: 1, flexShrink: 0 },
+  indicator: { width: 5, height: 14, borderRadius: 5, flexShrink: 0 },
   name: {
     flex: 1,
     color: "var(--mantine-color-gray-3)",
@@ -78,7 +76,11 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
 
   if (!isActive) return null;
 
-  const sorted = [...(payload ?? [])].filter((p) => p.value > 0).toSorted((a, b) => b.value - a.value);
+  const deduped = new Map<string, TooltipPayloadItem>();
+  for (const item of (payload ?? []).filter((entry) => entry.value > 0)) {
+    if (!deduped.has(item.dataKey)) deduped.set(item.dataKey, item);
+  }
+  const sorted = [...deduped.values()].toSorted((a, b) => b.value - a.value);
 
   if (!sorted.length) return null;
 
