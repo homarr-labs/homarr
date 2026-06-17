@@ -1,0 +1,33 @@
+---
+title: 'Gotify'
+description: "Gotify is a simple, self-hosted server for sending and receiving messages in real time."
+hide_title: true
+---
+
+import { notificationsWidget } from '@site/docs/widgets/notifications';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { gotifyIntegration } from '.';
+
+<IntegrationHeader
+    integration={gotifyIntegration}
+    categories={['Notifications', 'Messaging']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: notificationsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: []
+}]} />

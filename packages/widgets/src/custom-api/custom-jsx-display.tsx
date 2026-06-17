@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import JsxParser from "react-jsx-parser";
 import { Alert, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
@@ -19,6 +19,11 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   const template = String(data.template ?? "");
   const apiData = data.data;
   const [parseErrors, setParseErrors] = useState<string[]>([]);
+  const bindings = useMemo(() => SAFE_BINDINGS(apiData), [apiData]);
+
+  useEffect(() => {
+    setParseErrors([]);
+  }, [template, bindings]);
 
   const handleError = useCallback((error: Error) => {
     setParseErrors((prev) => appendParseError(prev, error.message));
@@ -39,7 +44,8 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       <JsxParser
         jsx={template}
         components={WHITELISTED_COMPONENTS as never}
-        bindings={SAFE_BINDINGS(apiData)}
+        bindings={bindings}
+        disableKeyGeneration
         componentsOnly
         allowUnknownElements={false}
         blacklistedAttrs={[/^on.+/i, /^dangerously/i]}

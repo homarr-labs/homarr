@@ -1,0 +1,8 @@
+.beszelStatsSystemToggle {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.beszelStatsWrapper:hover .beszelStatsSystemToggle {
+  opacity: 1;
+}

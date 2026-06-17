@@ -40,7 +40,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   gitHubContainerRegistry: "github-containerregistry",
   quay: "quay",
   ntfy: "ntfy",
-  gotify: null,
+  gotify: "gotify",
   ical: "ical",
   anchor: "anchor",
   truenas: "truenas",

@@ -1,4 +1,4 @@
-import { IconLayoutGrid } from "@tabler/icons-react";
+import { IconLayoutGrid, IconServerOff } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { statusOptions } from "../beszel/_shared/options";
@@ -10,7 +10,10 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      statusFilter: factory.select({ defaultValue: "all", options: statusOptions }),
+      statusFilter: factory.select({
+        defaultValue: "all",
+        options: statusOptions,
+      }),
       showCpu: factory.switch({ defaultValue: true }),
       showMemory: factory.switch({ defaultValue: true }),
       showDisk: factory.switch({ defaultValue: true }),
@@ -23,5 +26,11 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showUptime: factory.switch({ defaultValue: true }),
       showAgent: factory.switch({ defaultValue: true }),
     }));
+  },
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconServerOff,
+      message: (t) => t("widget.beszelSystemGrid.error.internalServerError"),
+    },
   },
 }).withDynamicImport(() => import("./component"));
