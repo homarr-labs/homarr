@@ -1,0 +1,23 @@
+pnpm-lock.yaml
+  s_7a80e026b7f124::t_32ac60e7527c37 462-464,1019-1021,10026-10028,13221-13226,13241-13246,13321-13326,13577-13579,21627,22242,24034-24035,27714-27720,27734-27744,27826-27832,28216
+apps/nextjs/package.json
+  s_7a80e026b7f124::t_fa86c6df4995a2 34
+pnpm-workspace.yaml
+  s_7a80e026b7f124::t_9e8dd73cabeb26 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "3a471ef314ce480cae68e92943e2c6005b354c98",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
