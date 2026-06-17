@@ -50,8 +50,7 @@ const getOrCreateInstanceId = async (
   return verified.instanceId ?? instanceId;
 };
 
-const sumGroupedCounts = (rows: { count: number }[]): number =>
-  rows.reduce((sum, row) => sum + row.count, 0);
+const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum, row) => sum + row.count, 0);
 
 export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
   const stopWatch = new Stopwatch();
@@ -87,24 +86,32 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     const userOffset = queries.length;
     if (analyticsSettings.enableUserData) {
       queries.push(
-        db.$count(users), db.$count(apiKeys), db.$count(invites),
-        db.$count(medias), db.$count(sessions), db.$count(accounts),
+        db.$count(users),
+        db.$count(apiKeys),
+        db.$count(invites),
+        db.$count(medias),
+        db.$count(sessions),
+        db.$count(accounts),
       );
     }
 
     const integrationOffset = queries.length;
     if (analyticsSettings.enableIntegrationData) {
       queries.push(
-        db.select({ kind: integrations.kind, count: count(integrations.id) })
-          .from(integrations).groupBy(integrations.kind),
+        db
+          .select({ kind: integrations.kind, count: count(integrations.id) })
+          .from(integrations)
+          .groupBy(integrations.kind),
       );
     }
 
     const widgetOffset = queries.length;
     if (analyticsSettings.enableWidgetData) {
       queries.push(
-        db.select({ kind: items.kind, count: count(items.id) })
-          .from(items).groupBy(items.kind),
+        db
+          .select({ kind: items.kind, count: count(items.id) })
+          .from(items)
+          .groupBy(items.kind),
       );
     }
 
@@ -112,10 +119,19 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
 
     const cultureSettings = results[0] as Awaited<ReturnType<typeof getServerSettingByKeyAsync<"culture">>>;
     const [
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
     ] = results.slice(1, 14) as number[];
 
     const enabledAuthProviders = (["credentials", "oidc", "ldap"] as const).filter(isProviderEnabled);
@@ -132,15 +148,26 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       uptimeSeconds: Math.floor(process.uptime()),
       defaultLocale: cultureSettings.defaultLocale,
 
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
     };
 
     if (analyticsSettings.enableUserData) {
-      const [countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts] =
-        results.slice(userOffset, userOffset + 6) as number[];
+      const [countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts] = results.slice(
+        userOffset,
+        userOffset + 6,
+      ) as number[];
       Object.assign(properties, { countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts });
     }
 
