@@ -222,10 +222,7 @@ export default function BeszelSystemStatsWidget({
   }
 
   return (
-    <ScrollArea
-      h="100%"
-      style={{ pointerEvents: (isEditMode && "none") || undefined }}
-    >
+    <ScrollArea h="100%" style={{ pointerEvents: (isEditMode && "none") || undefined }}>
       <Stack gap="md" p="sm">
         {!isEditMode && systems.length > 1 && (
           <Menu position="bottom-start" withArrow shadow="md" withinPortal>
