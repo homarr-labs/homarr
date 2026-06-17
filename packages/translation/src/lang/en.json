@@ -4414,19 +4414,7 @@
             "title": "Analytics",
             "general": {
               "title": "Help us improve Homarr",
-              "text": "We collect anonymous usage statistics to understand which features people love and which ones need more work so we can focus on making Homarr better for everyone. We only see counts and types — things like how many widgets, integrations, or boards you use, your Homarr version, and your database type. We never collect personal information, URLs, names, passwords, or anything that could identify you."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Share which types of widgets you use and how many. No URLs, names, or personal data is included."
-            },
-            "integrationData": {
-              "title": "Integration data",
-              "text": "Share which types of integrations you use and how many. No URLs, names, or personal data is included."
-            },
-            "usersData": {
-              "title": "Users data",
-              "text": "Share the number of users and whether SSO is enabled."
+              "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
           "crawlingAndIndexing": {
