@@ -1,0 +1,44 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_7a80e026b7f124::t_b4b4f8d6e89c97 4,23-33
+pnpm-workspace.yaml
+  s_7a80e026b7f124::t_9284aa41cd500e 227
+apps/nextjs/src/components/board/sections/board-grid/board-grid.tsx
+  s_7a80e026b7f124::t_ceb7c66e1feda0 17
+  s_7a80e026b7f124::t_06f6fd7e9bc70d 78,80,135,264
+  s_7a80e026b7f124::t_d2e00b18cec1b3 173-182
+  s_7a80e026b7f124::t_bfa00ee4c50c91 238,243-244,246-247
+  s_7a80e026b7f124::t_1d133dec90534b 41
+  s_7a80e026b7f124::t_23f1cdb375e395 133-134,136-157,164
+  s_7a80e026b7f124::t_78930740154ba0 9,89,93,97,101,109,116,123,161-162,166,207-234,277
+  s_7a80e026b7f124::t_3264125b5ded4c 260
+  s_7a80e026b7f124::t_1ec866408d71ee 24-25,82
+  s_7a80e026b7f124::t_7d6727580cf5b0 6
+  s_7a80e026b7f124::t_dafc751b974d1c 59-69,90,186-187,189-195,197-200,202-205,239-242,245,248-253,257,297,303
+  s_7a80e026b7f124::t_d14d5e812bbad3 108,110-111
+  s_7a80e026b7f124::t_ef0bc511b62b8b 58
+  s_7a80e026b7f124::t_a84a704b89ea92 302
+  s_7a80e026b7f124::t_8df08f8b40e15e 71-74
+  s_7a80e026b7f124::t_eca368c698c5cc 104-105
+  s_7a80e026b7f124::t_f776e3a8140a54 46-54
+  s_7a80e026b7f124::t_8d696f6e9cff60 70
+patches/react-grid-layout.patch
+  s_7a80e026b7f124::t_9284aa41cd500e 1-2113
+pnpm-lock.yaml
+  s_7a80e026b7f124::t_3a285dfa2f0b91 585,1022,27735
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "c9d3b61699ab4126062ff3497d0049cfc82256e3",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
