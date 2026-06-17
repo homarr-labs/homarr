@@ -106,7 +106,7 @@ catalogs:
       specifier: ^1.60.0
       version: 1.60.0
     '@scalar/api-reference-react':
-      specifier: ^0.9.45
+      specifier: ^0.9.46
       version: 0.9.46
     '@semantic-release/changelog':
       specifier: ^6.0.3
@@ -20246,7 +20246,7 @@ snapshots:
   '@scalar/icons@0.7.3(typescript@6.0.3)':
     dependencies:
       '@phosphor-icons/core': 2.1.1
-      '@types/node': 24.13.1
+      '@types/node': 24.13.2
       chalk: 5.6.2
       vue: 3.5.35(typescript@6.0.3)
     transitivePeerDependencies:
