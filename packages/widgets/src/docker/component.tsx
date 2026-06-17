@@ -280,11 +280,11 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
           </Group>
 
           <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
-            <Text size="sm" c={cpuUsageColor(totals.cpu, "running")} style={{ whiteSpace: "nowrap" }}>
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
             </Text>
             
-            <Text size="sm" c={memoryUsageColor(totals.memory, "running")} style={{ whiteSpace: "nowrap" }}>
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
             </Text>
 
