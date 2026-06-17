@@ -127,7 +127,7 @@ const createColumns = (
     Footer: () =>
       !isTiny ? (
         <Text size="xs" style={{ whiteSpace: "nowrap" }}>
-          {humanFileSize(bytesUsage)}
+          {humanFileSize(totals.memory)}
         </Text>
       ) : null,
     Cell({ row }) {
