@@ -360,7 +360,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
     category: ["notifications"],
-    documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+    documentationUrl: null,
   },
   ical: {
     name: "iCal",
