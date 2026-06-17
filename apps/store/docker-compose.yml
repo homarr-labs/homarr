@@ -1,0 +1,30 @@
+services:
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:latest
+    container_name: homarr-store
+    restart: unless-stopped
+    environment:
+      PB_HOST: 0.0.0.0
+      PB_PORT: 8090
+      PB_ADMIN_EMAIL: ${PB_ADMIN_EMAIL:-}
+      PB_ADMIN_PASSWORD: ${PB_ADMIN_PASSWORD:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    ports:
+      - "${PB_EXPOSE_PORT:-8090}:8090"
+    command:
+      - --migrationsDir
+      - /pb_migrations
+    volumes:
+      - pb_data:/pb_data
+      - ./pb_migrations:/pb_migrations
+      - ./pb_hooks:/pb_hooks
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  pb_data:

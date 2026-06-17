@@ -1,0 +1,56 @@
+---
+tags:
+  - Store
+  - Custom Widgets
+  - Custom CSS
+---
+
+# Community Store
+
+The [Community Store](pathname:///store) is where Homarr users share and discover
+**custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
+you like, report abuse, and install entries directly into your own Homarr instance.
+
+:::info
+
+The store is community-contributed content. Always review CSS and widget JSON before
+installing it on your dashboard.
+
+:::
+
+## Browsing and voting
+
+- Filter by **Widgets** or **CSS**, and sort by **Top rated** or **Newest**.
+- Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
+- Each submission shows its title, description, author, version, an optional screenshot, and the full content.
+
+## Submitting
+
+1. Sign in with GitHub.
+2. Click **Submit** and choose the type:
+   - **Custom widget** — paste the JSON exported from **Manage → Custom Widgets → Export**.
+     It must match the `homarr-custom-widget-v2` schema (validated before submission).
+   - **Custom CSS** — paste your stylesheet (max 16384 characters).
+3. Add a title, description, optional screenshot, and changelog, then submit.
+
+Submissions are published immediately. Reported entries are reviewed and may be removed.
+
+## Installing into Homarr
+
+You can install store entries without leaving Homarr:
+
+- **Custom widgets** — go to **Manage → Custom Widgets**, click **Install from store**, pick an
+  entry, and it is imported (secrets such as API keys must be re-entered afterwards).
+- **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from store**, and
+  pick a theme to load it into the editor before saving.
+
+Alternatively, use **Copy** (or **Download** for widgets) on any submission and import it
+manually.
+
+## Self-hosting the store backend
+
+The store is powered by a [PocketBase](https://pocketbase.io) instance (GitHub OAuth, database,
+file uploads, and an admin moderation dashboard). The deployment lives in `apps/store/` with a
+`docker-compose.yml`, version-controlled collection migrations, and vote-counter hooks. See the
+app's `README.md` for GitHub OAuth setup and the `STORE_URL` / `NEXT_PUBLIC_WIDGET_STORE_URL`
+configuration.

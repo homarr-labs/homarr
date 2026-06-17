@@ -20,6 +20,10 @@ const config: Config = {
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
 
+  customFields: {
+    storeUrl: process.env.STORE_URL ?? "http://localhost:8090",
+  },
+
   future: {
     v4: {
       removeLegacyPostBuildHeadAttribute: true,
@@ -104,6 +108,11 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
+        },
+        {
+          label: "Marketplace",
+          position: "left",
+          to: "/marketplace",
         },
         {
           label: "About us",
@@ -259,7 +268,12 @@ const config: Config = {
       return {
         name: "resolve-homarr-packages",
         configureWebpack() {
-          return { resolve: { symlinks: false } };
+          return {
+            resolve: {
+              symlinks: false,
+              alias: { "@": require("path").resolve(__dirname, "src") },
+            },
+          };
         },
       };
     },
@@ -287,6 +301,18 @@ const config: Config = {
               concatenateModules: process.env.CI != null && process.env.CI !== "false" ? !isServer : false,
             },
           };
+        },
+      };
+    },
+    function marketplaceDetailRoutePlugin() {
+      return {
+        name: "marketplace-detail-route",
+        async contentLoaded({ actions }) {
+          actions.addRoute({
+            path: "/marketplace/:id",
+            component: "@site/src/components/store/DetailPage",
+            exact: true,
+          });
         },
       };
     },
