@@ -24,17 +24,19 @@ export const serverSettingsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       await updateServerSettingByKeyAsync(
         ctx.db,
         input.settingsKey,
-        input.value as ServerSettings[keyof ServerSettings],
+        { ...current, ...input.value } as ServerSettings[keyof ServerSettings],
       );
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")
     .input(settingsInitSchema)
     .mutation(async ({ ctx, input }) => {
-      await updateServerSettingByKeyAsync(ctx.db, "analytics", input.analytics);
+      const currentAnalytics = await getServerSettingByKeyAsync(ctx.db, "analytics");
+      await updateServerSettingByKeyAsync(ctx.db, "analytics", { ...currentAnalytics, ...input.analytics });
       await updateServerSettingByKeyAsync(ctx.db, "crawlingAndIndexing", input.crawlingAndIndexing);
       await nextOnboardingStepAsync(ctx.db, undefined);
     }),

@@ -19,6 +19,7 @@ export const defaultServerSettings = {
     enableWidgetData: false,
     enableIntegrationData: false,
     enableUserData: false,
+    instanceId: null as string | null,
   },
   crawlingAndIndexing: {
     noIndex: true,

@@ -90,6 +90,7 @@ describe("saveSettings", () => {
           enableWidgetData: true,
           enableIntegrationData: true,
           enableUserData: true,
+          instanceId: null,
         }),
       },
     ]);
