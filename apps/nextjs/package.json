@@ -89,6 +89,7 @@
     "mcp-handler": "catalog:",
     "next": "catalog:",
     "postcss-preset-mantine": "catalog:",
+    "posthog-js": "catalog:",
     "prismjs": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

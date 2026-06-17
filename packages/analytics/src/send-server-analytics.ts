@@ -36,20 +36,6 @@ const logger = createLogger({ module: "analytics" });
 
 type AnalyticsResult = "sent" | "disabled" | "failed";
 
-const getDatabaseType = (): "mysql" | "postgresql" | "sqlite" => {
-  if (isMysql()) return "mysql";
-  if (isPostgresql()) return "postgresql";
-  return "sqlite";
-};
-
-const getEnabledAuthProviders = (): string[] => {
-  const providers: string[] = [];
-  if (isProviderEnabled("credentials")) providers.push("credentials");
-  if (isProviderEnabled("oidc")) providers.push("oidc");
-  if (isProviderEnabled("ldap")) providers.push("ldap");
-  return providers;
-};
-
 // ponytail: no DB-level lock; concurrent calls may both generate an ID, but the last write wins
 // and the ID stabilizes after the first successful run. Upgrade path: use DB upsert with WHERE instanceId IS NULL.
 const getOrCreateInstanceId = async (
@@ -64,6 +50,9 @@ const getOrCreateInstanceId = async (
   return verified.instanceId ?? instanceId;
 };
 
+const sumGroupedCounts = (rows: { count: number }[]): number =>
+  rows.reduce((sum, row) => sum + row.count, 0);
+
 export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
   const stopWatch = new Stopwatch();
   const analyticsSettings = await getServerSettingByKeyAsync(db, "analytics");
@@ -77,9 +66,8 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
 
   try {
     const instanceId = await getOrCreateInstanceId(analyticsSettings);
-    const enabledAuthProviders = getEnabledAuthProviders();
 
-    const [cultureSettings, ...baseCounts] = await Promise.all([
+    const queries: Promise<unknown>[] = [
       getServerSettingByKeyAsync(db, "culture"),
       db.$count(boards),
       db.$count(groups),
@@ -94,32 +82,49 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       db.$count(cronJobConfigurations),
       db.$count(customWidgetDefinitions),
       db.$count(trustedCertificateHostnames),
-    ]);
+    ];
 
+    const userOffset = queries.length;
+    if (analyticsSettings.enableUserData) {
+      queries.push(
+        db.$count(users), db.$count(apiKeys), db.$count(invites),
+        db.$count(medias), db.$count(sessions), db.$count(accounts),
+      );
+    }
+
+    const integrationOffset = queries.length;
+    if (analyticsSettings.enableIntegrationData) {
+      queries.push(
+        db.select({ kind: integrations.kind, count: count(integrations.id) })
+          .from(integrations).groupBy(integrations.kind),
+      );
+    }
+
+    const widgetOffset = queries.length;
+    if (analyticsSettings.enableWidgetData) {
+      queries.push(
+        db.select({ kind: items.kind, count: count(items.id) })
+          .from(items).groupBy(items.kind),
+      );
+    }
+
+    const results = await Promise.all(queries);
+
+    const cultureSettings = results[0] as Awaited<ReturnType<typeof getServerSettingByKeyAsync<"culture">>>;
     const [
-      countBoards,
-      countGroups,
-      countApps,
-      countSections,
-      countSearchEngines,
-      countIconRepositories,
-      countIcons,
-      countLayouts,
-      countItemLayouts,
-      countSectionLayouts,
-      countCronJobConfigs,
-      countCustomWidgets,
-      countTrustedCertificates,
-    ] = baseCounts;
+      countBoards, countGroups, countApps, countSections,
+      countSearchEngines, countIconRepositories, countIcons,
+      countLayouts, countItemLayouts, countSectionLayouts,
+      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+    ] = results.slice(1, 14) as number[];
+
+    const enabledAuthProviders = (["credentials", "oidc", "ldap"] as const).filter(isProviderEnabled);
 
     const properties: Record<string, unknown> = {
       homarrVersion: packageJson.version,
-      databaseType: getDatabaseType(),
+      databaseType: isMysql() ? "mysql" : isPostgresql() ? "postgresql" : "sqlite",
       dockerEnabled: Boolean(dockerEnv.ENABLE_DOCKER),
       kubernetesEnabled: Boolean(dockerEnv.ENABLE_KUBERNETES),
-      authCredentials: enabledAuthProviders.includes("credentials"),
-      authOidc: enabledAuthProviders.includes("oidc"),
-      authLdap: enabledAuthProviders.includes("ldap"),
       authProviders: enabledAuthProviders,
 
       osPlatform: process.platform,
@@ -127,56 +132,29 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       uptimeSeconds: Math.floor(process.uptime()),
       defaultLocale: cultureSettings.defaultLocale,
 
-      countBoards,
-      countGroups,
-      countApps,
-      countSections,
-      countSearchEngines,
-      countIconRepositories,
-      countIcons,
-      countLayouts,
-      countItemLayouts,
-      countSectionLayouts,
-      countCronJobConfigs,
-      countCustomWidgets,
-      countTrustedCertificates,
+      countBoards, countGroups, countApps, countSections,
+      countSearchEngines, countIconRepositories, countIcons,
+      countLayouts, countItemLayouts, countSectionLayouts,
+      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
     };
 
     if (analyticsSettings.enableUserData) {
-      const [countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts] = await Promise.all([
-        db.$count(users),
-        db.$count(apiKeys),
-        db.$count(invites),
-        db.$count(medias),
-        db.$count(sessions),
-        db.$count(accounts),
-      ]);
+      const [countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts] =
+        results.slice(userOffset, userOffset + 6) as number[];
       Object.assign(properties, { countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts });
     }
 
     if (analyticsSettings.enableIntegrationData) {
-      const [countIntegrations, integrationKinds] = await Promise.all([
-        db.$count(integrations),
-        db
-          .select({ kind: integrations.kind, count: count(integrations.id) })
-          .from(integrations)
-          .groupBy(integrations.kind),
-      ]);
-      properties.countIntegrations = countIntegrations;
+      const integrationKinds = results[integrationOffset] as { kind: string; count: number }[];
+      properties.countIntegrations = sumGroupedCounts(integrationKinds);
       for (const row of integrationKinds) {
         properties[`integration_${row.kind}`] = row.count;
       }
     }
 
     if (analyticsSettings.enableWidgetData) {
-      const [countWidgets, widgetKinds] = await Promise.all([
-        db.$count(items),
-        db
-          .select({ kind: items.kind, count: count(items.id) })
-          .from(items)
-          .groupBy(items.kind),
-      ]);
-      properties.countWidgets = countWidgets;
+      const widgetKinds = results[widgetOffset] as { kind: string; count: number }[];
+      properties.countWidgets = sumGroupedCounts(widgetKinds);
       for (const row of widgetKinds) {
         properties[`widget_${row.kind}`] = row.count;
       }
