@@ -1,0 +1,34 @@
+pnpm-lock.yaml
+  s_32c69770219762::t_c190662ccc55cc 447-449,1013-1015,6292-6297,10106-10108,13015-13017,13030-13032,13179-13181,14953-14955,19918-19923,24127-24128,27403-27413,27426-27427,27631-27632,29663
+packages/analytics/src/client.ts
+  s_32c69770219762::t_fed9b3b24c5635 3-4,17-22
+apps/nextjs/src/components/layout/analytics.tsx
+  s_32c69770219762::t_2753d4b1e83699 1-7,9,20,22-24
+  s_32c69770219762::t_597999195086cc 8,10-19,21
+pnpm-workspace.yaml
+  s_32c69770219762::t_cf93a20f5cf31d 95
+apps/nextjs/package.json
+  s_32c69770219762::t_35cfb4319c6ef0 92
+packages/analytics/src/index.ts
+  s_32c69770219762::t_a126cff5301301 1
+packages/analytics/src/send-server-analytics.ts
+  s_32c69770219762::t_ba51e6e0f19df3 53-55,70,85-111,113,119-121,125,142-143,148-149,156-157
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_32c69770219762::t_37ed7e6255a7e0 146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "81cd13e0d4634aef67003e1e6e1a92d580fe35d1",
+  "prompts": {},
+  "sessions": {
+    "s_32c69770219762": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "586ce994-362d-456d-8003-2cee54793542",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
