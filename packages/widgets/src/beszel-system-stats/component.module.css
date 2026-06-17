@@ -1,0 +1,6 @@
+.beszelStatsSystemToggle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+}

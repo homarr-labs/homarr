@@ -1654,6 +1654,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Connect an integration first",
+      "loading": "Loading...",
+      "placeholder": "Select an option",
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
     "app": {
       "name": "App",
       "description": "Embeds an app into the board.",
@@ -3572,6 +3579,9 @@
         }
       },
       "noRecords": "No systems found",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "column": {
         "system": "System",
         "cpu": "CPU",
@@ -3628,6 +3638,9 @@
           "label": "Show agent version"
         }
       },
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3654,6 +3667,9 @@
         }
       },
       "empty": "No alerts configured",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "history": "History",
       "resolved": "Resolved",
       "status": {
@@ -3665,6 +3681,10 @@
       "name": "Beszel System Stats",
       "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
       "option": {
+        "systemId": {
+          "label": "System",
+          "description": "Select a Beszel system to display stats for"
+        },
         "timePeriod": {
           "label": "Time period"
         },
@@ -3694,6 +3714,12 @@
         }
       },
       "selectSystem": "Select system",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
+        "switchToHistorical": "Switch to historical view",
+        "systemNotFound": "Selected system was not found. Choose a different system."
+      },
       "chart": {
         "cpu": {
           "title": "CPU Usage",

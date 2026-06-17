@@ -1,17 +1,5 @@
 import { notFound } from "next/navigation";
-import {
-  Alert,
-  Anchor,
-  Center,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTr,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -53,14 +41,10 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
   const group = await api.group.getById({ id: params.id });
   const isReserved = group.name === everyoneGroup;
 
-  const filteredMembers = searchParams.search
-    ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      group.members.filter((member) =>
-        member.name
-          ?.toLowerCase()
-          .includes(searchParams.search!.trim().toLowerCase()),
-      )
-    : group.members;
+  const searchTerm = searchParams.search?.trim().toLowerCase();
+  const filteredMembers = group.members.filter(
+    (member) => !searchTerm || member.name?.toLowerCase().includes(searchTerm),
+  );
 
   // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
   const managementType = getGroupMemberManagementType();
@@ -75,21 +59,14 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
         <ReservedGroupAlert />
       ) : (
         managementType !== "local" && (
-          <Alert
-            variant="light"
-            color="yellow"
-            icon={<IconExclamationCircle size="1rem" stroke={1.5} />}
-          >
+          <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
             {t(`group.memberNotice.${managementType}`)}
           </Alert>
         )
       )}
 
       <Group justify="space-between">
-        <SearchInput
-          placeholder={`${tMembers("search")}...`}
-          defaultValue={searchParams.search}
-        />
+        <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
         {canManageMembers && !isReserved && (
           <AddGroupMember
             groupId={group.id}
@@ -108,12 +85,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row
-              key={group.id}
-              member={member}
-              groupId={group.id}
-              disabled={isReserved}
-            />
+            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
           ))}
         </TableTbody>
       </Table>
@@ -140,11 +112,7 @@ const Row = ({ member, groupId, disabled }: RowProps) => {
           </Anchor>
         </Group>
       </TableTd>
-      <TableTd w={100}>
-        {canBeRemoved && !disabled && (
-          <RemoveGroupMember user={member} groupId={groupId} />
-        )}
-      </TableTd>
+      <TableTd w={100}>{canBeRemoved && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}</TableTd>
     </TableTr>
   );
 };

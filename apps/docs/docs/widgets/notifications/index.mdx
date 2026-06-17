@@ -13,7 +13,8 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { notificationsWidget } from '.';
 import { ntfyIntegration } from '@site/docs/integrations/ntfy';
-import { nextcloudIntegration } from '@site/docs/integrations/nextcloud'
+import { nextcloudIntegration } from '@site/docs/integrations/nextcloud';
+import { gotifyIntegration } from '@site/docs/integrations/gotify';
 
 <WidgetHeader
   widget={notificationsWidget}
@@ -33,7 +34,8 @@ import notificationsScreenshot from './img/notifications.png';
 <WidgetIntegrations
   items={[
     { integration: ntfyIntegration },
-    { integration: nextcloudIntegration }
+    { integration: nextcloudIntegration },
+    { integration: gotifyIntegration }
   ]}
 />
 
