@@ -66,7 +66,7 @@ export abstract class Integration {
     }
     if (isPath(this.integration.externalUrl)) {
       const result = buildUrl(new URL(`http://placeholder${this.integration.externalUrl}`), path, queryParams);
-      return `${result.pathname}${result.search}` as Path;
+      return `${result.pathname}${result.search}${result.hash}` as Path;
     }
 
     return buildUrl(this.integration.externalUrl, path, queryParams);

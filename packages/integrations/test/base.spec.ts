@@ -63,6 +63,11 @@ describe("Base integration", () => {
       const result = integration.buildExternalUrl("/items/42?width=100", { quality: "90" });
       expect(result).toBe("/signalk-server/items/42?width=100&quality=90");
     });
+    test("with path-only externalUrl preserves hash-bang fragment", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/jellyfin/" });
+      const result = integration.buildExternalUrl("/web/index.html#!/details?id=42&serverId=abc");
+      expect(result).toBe("/jellyfin/web/index.html#!/details?id=42&serverId=abc");
+    });
     test("with null externalUrl should fallback to integration url", () => {
       const integration = new FakeIntegration(undefined, undefined, {
         externalUrl: null,
