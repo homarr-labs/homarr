@@ -53,7 +53,7 @@ export const downloadsRouter = createTRPCRouter({
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .subscription(({ ctx, input }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient">; url: URL }>;
         data: DownloadClientJobsAndStatus;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

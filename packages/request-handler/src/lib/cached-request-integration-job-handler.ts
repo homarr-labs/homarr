@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { hashObjectBase64, Stopwatch } from "@homarr/common";
+import { hashObjectBase64, parseExternalUrl, Stopwatch } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -94,7 +94,8 @@ export const createRequestIntegrationJobHandler = <
             ...integration,
             kind: integration.kind as TIntegrationKind,
             decryptedSecrets,
-            externalUrl: integration.app?.href ?? null,
+            url: new URL(integration.url),
+            externalUrl: parseExternalUrl(integration.app?.href),
           },
           input,
         );

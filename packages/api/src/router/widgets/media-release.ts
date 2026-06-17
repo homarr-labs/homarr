@@ -42,7 +42,7 @@ export const mediaReleaseRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRelease")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"mediaRelease"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"mediaRelease">; url: URL }>;
         releases: MediaRelease[];
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

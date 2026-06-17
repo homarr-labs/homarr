@@ -84,7 +84,7 @@ export const calendarRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .subscription(({ ctx, input }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"calendar"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"calendar">; url: URL }>;
         events: CalendarEvent[];
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

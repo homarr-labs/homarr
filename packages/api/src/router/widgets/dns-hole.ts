@@ -48,7 +48,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole">; url: URL }>;
         summary: DnsHoleSummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

@@ -37,7 +37,7 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const baseUrl = instance.integrationUrl.toString().replace(/\/+$/, "");
   const displayUrl = baseUrl.replace(/^https?:\/\//, "");
   const relativeTime = useTimeAgo(instance.updatedAt);
 

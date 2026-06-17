@@ -37,7 +37,7 @@ export const networkControllerRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"networkController"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"networkController">; url: URL }>;
         summary: NetworkControllerSummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

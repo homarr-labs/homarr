@@ -1,3 +1,4 @@
+import type { QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -83,7 +84,7 @@ export class SpeedtestTrackerIntegration extends Integration {
     };
   }
 
-  private async getAsync(path: `/api/v1/${string}`, queryParams?: Record<string, string>) {
+  private async getAsync(path: `/api/v1/${string}`, queryParams?: QueryParams) {
     return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
       headers: this.getAuthHeaders(),
     });

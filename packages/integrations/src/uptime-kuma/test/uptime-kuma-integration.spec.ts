@@ -20,7 +20,7 @@ const createIntegration = (secrets: IntegrationSecret[] = []) =>
   new UptimeKumaIntegration({
     id: "test-uptime-kuma",
     name: "Test Uptime Kuma",
-    url: TEST_URL,
+    url: new URL(TEST_URL),
     externalUrl: null,
     decryptedSecrets: secrets,
   });

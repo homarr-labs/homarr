@@ -80,7 +80,7 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     return this.Authorization(statusCode).toResult();
   }
 
-  private static Status(input: { status: number; url: string }) {
+  private static Status(input: { status: number; url: string | URL }) {
     if (input.status === 401 || input.status === 403) return this.Authorization(input.status);
 
     // We don't want to leak the query parameters in the error message
@@ -94,7 +94,7 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     });
   }
 
-  public static StatusResult(input: { status: number; url: string }) {
+  public static StatusResult(input: { status: number; url: string | URL }) {
     return this.Status(input).toResult();
   }
 

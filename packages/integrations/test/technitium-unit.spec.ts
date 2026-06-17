@@ -82,7 +82,7 @@ function makeInput(
   return {
     id: "test-technitium",
     name: "Technitium DNS",
-    url: BASE_URL,
+    url: new URL(BASE_URL),
     externalUrl: null,
     decryptedSecrets:
       auth.kind === "apiKey"
@@ -391,7 +391,7 @@ describe("token acquisition", () => {
     const input: IntegrationInput = {
       id: "test-technitium",
       name: "Technitium DNS",
-      url: BASE_URL,
+      url: new URL(BASE_URL),
       externalUrl: null,
       decryptedSecrets: [
         { kind: "apiKey", value: "" },

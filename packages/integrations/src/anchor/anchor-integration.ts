@@ -1,5 +1,6 @@
 import type { fetch as undiciFetch } from "undici";
 
+import type { Path, QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -54,9 +55,9 @@ export class AnchorIntegration extends Integration {
 
   private async requestAsync(
     fetchAsync: typeof undiciFetch,
-    path: `/${string}`,
+    path: Path,
     options?: {
-      queryParams?: Record<string, string>;
+      queryParams?: QueryParams;
       method?: string;
       body?: unknown;
     },

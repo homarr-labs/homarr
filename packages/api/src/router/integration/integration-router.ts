@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
-import { createId, objectEntries } from "@homarr/common";
+import { createId, objectEntries, parseExternalUrl } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
@@ -718,9 +718,9 @@ export const integrationRouter = createTRPCRouter({
           const integrationInstance = await createIntegrationAsync({
             id: integration.id,
             name: integration.name,
-            url: integration.url,
+            url: new URL(integration.url),
             kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
-            externalUrl: integration.app?.href ?? null,
+            externalUrl: parseExternalUrl(integration.app?.href ?? null),
             decryptedSecrets: integration.secrets.map((secret) => ({
               ...secret,
               value: decryptSecret(secret.value),

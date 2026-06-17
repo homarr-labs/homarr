@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { RequestInit } from "undici";
 
+import type { Path } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -142,10 +143,7 @@ export class SlskdIntegration extends Integration implements IDownloadClientInte
     return response as SlskdUserAndDownloads[];
   }
 
-  private async makeRequestAsync(
-    path: `/${string}`,
-    options: RequestInit & { timeout?: number } = {},
-  ): Promise<unknown> {
+  private async makeRequestAsync(path: Path, options: RequestInit & { timeout?: number } = {}): Promise<unknown> {
     const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
       ...options,
       headers: {

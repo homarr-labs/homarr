@@ -8,7 +8,7 @@ export const COOLIFY_BRAND_COLOR = "#8B5CF6";
 export interface InstanceData {
   integrationId: string;
   integrationName: string;
-  integrationUrl: string;
+  integrationUrl: URL;
   instanceInfo: CoolifyInstanceInfo;
   updatedAt: Date;
 }

@@ -17,7 +17,7 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
 }));
 
 const TEST_API_KEY = "test-api-key-12345";
-const TEST_URL = "https://coolify.example.com";
+const TEST_URL = new URL("https://coolify.example.com");
 
 type MockResponseData = string | Record<string, unknown> | unknown[];
 
