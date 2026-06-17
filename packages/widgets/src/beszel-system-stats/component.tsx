@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { ActionIcon, Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -49,9 +52,15 @@ export default function BeszelSystemStatsWidget({
   integrationIds,
   isEditMode,
   width,
+  boardId,
+  itemId,
   setOptions,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
   const { data: systemsResult = [], isPending: systemsPending } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 30 * 1000 },
@@ -68,8 +77,13 @@ export default function BeszelSystemStatsWidget({
   const systemReady = !systemsPending && (selectedSystem === "" || systemExists);
 
   const handleSelectSystem = useCallback(
-    (value: string) => setOptions({ newOptions: { systemId: value } }),
-    [setOptions],
+    (value: string) => {
+      setOptions({ newOptions: { systemId: value } });
+      if (hasChangeAccess && boardId && itemId) {
+        saveItemOptions({ boardId, itemId, newOptions: { systemId: value } });
+      }
+    },
+    [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
   );
 
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
@@ -210,38 +224,28 @@ export default function BeszelSystemStatsWidget({
   return (
     <ScrollArea
       h="100%"
-      className={classes.beszelStatsWrapper}
       style={{ pointerEvents: (isEditMode && "none") || undefined }}
     >
       <Stack gap="md" p="sm">
         {!isEditMode && systems.length > 1 && (
-          <Menu
-            trigger="click-hover"
-            openDelay={100}
-            closeDelay={300}
-            position="bottom-start"
-            withArrow
-            shadow="md"
-            withinPortal
-          >
+          <Menu position="bottom-start" withArrow shadow="md" withinPortal>
             <Menu.Target>
-              <ActionIcon
-                variant="subtle"
-                size="sm"
+              <Button
+                variant="default"
+                size="compact-xs"
+                leftSection={<IconServer size={14} />}
                 className={classes.beszelStatsSystemToggle}
-                style={{ position: "absolute", top: 6, left: 6, zIndex: 1 }}
-                title={selectedLabel}
               >
-                <IconServer size={14} />
-              </ActionIcon>
+                {selectedLabel}
+              </Button>
             </Menu.Target>
             <Menu.Dropdown>
               {systems.map((s) => (
                 <Menu.Item
                   key={s.value}
                   fz="xs"
-                  fw={(s.value === selectedSystem && 600) || 400}
-                  c={(s.value !== selectedSystem && "dimmed") || undefined}
+                  fw={s.value === selectedSystem ? 600 : 400}
+                  c={s.value !== selectedSystem ? "dimmed" : undefined}
                   onClick={() => handleSelectSystem(s.value)}
                 >
                   {s.label}
