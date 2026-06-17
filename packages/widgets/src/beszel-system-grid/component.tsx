@@ -1,6 +1,7 @@
 "use client";
 
-import { Badge, Box, Card, Group, Progress, Text, Stack } from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
+import { Badge, Box, Card, Group, Progress, Text, Stack, useComputedColorScheme } from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -151,6 +153,8 @@ interface SystemCardProps {
   t: ReturnType<typeof useScopedI18n<"widget.beszelSystemGrid">>;
   size: SizeConfig;
   maxMetrics: number;
+  backgroundColor: string;
+  itemRadius: MantineSize;
 }
 
 const metricRenderers = [
@@ -307,16 +311,21 @@ const metricRenderers = [
   },
 ] as const;
 
-const SystemCard = ({ system, options, t, size, maxMetrics }: SystemCardProps) => {
+const SystemCard = ({ system, options, t, size, maxMetrics, backgroundColor, itemRadius }: SystemCardProps) => {
   const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
 
   return (
     <Card
       padding={size.cardPadding}
-      radius="sm"
-      withBorder
+      radius={itemRadius}
+      bg={backgroundColor}
       h="100%"
-      style={{ overflow: "hidden", display: "flex", flexDirection: "column" as const }}
+      style={{
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column" as const,
+        border: "0.0625rem solid var(--border-color)",
+      }}
     >
       <Group gap="xs" mb={2}>
         <Badge
@@ -344,9 +353,15 @@ export default function BeszelSystemGridWidget({
   height,
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
+  const board = useRequiredBoard();
+  const colorScheme = useComputedColorScheme("light");
+  const opacity = board.opacity / 100;
+  const bgBase: Record<"light" | "dark", string> = { dark: "57, 57, 57", light: "246, 247, 248" };
+  const backgroundColor = `rgba(${bgBase[colorScheme]}, ${opacity})`;
+
   const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 30 * 1000 },
+    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
@@ -374,7 +389,16 @@ export default function BeszelSystemGridWidget({
       }}
     >
       {filteredSystems.map((system) => (
-        <SystemCard key={system._key} system={system} options={options} t={t} size={size} maxMetrics={maxMetrics} />
+        <SystemCard
+          key={system._key}
+          system={system}
+          options={options}
+          t={t}
+          size={size}
+          maxMetrics={maxMetrics}
+          backgroundColor={backgroundColor}
+          itemRadius={board.itemRadius}
+        />
       ))}
     </Box>
   );

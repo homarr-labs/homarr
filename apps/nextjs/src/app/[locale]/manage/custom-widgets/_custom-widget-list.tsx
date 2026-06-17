@@ -57,13 +57,13 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
           {definitions.map((def) => (
             <Table.Tr key={def.id} style={{ opacity: def.enabled ? undefined : 0.5 }}>
               <Table.Td>
-                <Group gap="xs">
+                <Group gap="xs" wrap="nowrap">
                   {def.iconUrl ? (
                     <Avatar size={20} radius="sm" src={def.iconUrl} styles={{ image: { objectFit: "contain" } }} />
                   ) : (
                     <IconApi size={16} />
                   )}
-                  <Text size="sm" fw={500} lineClamp={1} c={def.enabled ? undefined : "dimmed"}>
+                  <Text size="sm" fw={500} lineClamp={1} c={def.enabled ? undefined : "dimmed"} style={{ minWidth: 0 }}>
                     {def.name}
                   </Text>
                 </Group>

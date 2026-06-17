@@ -4,9 +4,12 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
+import {
+  getGroupMemberManagementType,
+  getLocallyManageableProviders,
+  isGroupMembershipManagedLocally,
+} from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
@@ -38,16 +41,15 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
   const group = await api.group.getById({ id: params.id });
   const isReserved = group.name === everyoneGroup;
 
-  const filteredMembers = searchParams.search
-    ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
-    : group.members;
+  const searchTerm = searchParams.search?.trim().toLowerCase();
+  const filteredMembers = group.members.filter(
+    (member) => !searchTerm || member.name?.toLowerCase().includes(searchTerm),
+  );
 
-  const providerTypes = isProviderEnabled("credentials")
-    ? env.AUTH_PROVIDERS.length > 1
-      ? "mixed"
-      : "credentials"
-    : "external";
+  // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
+  const managementType = getGroupMemberManagementType();
+  const canManageMembers = managementType !== "external";
+  const allowedProviders = getLocallyManageableProviders();
 
   return (
     <Stack>
@@ -56,17 +58,21 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       {isReserved ? (
         <ReservedGroupAlert />
       ) : (
-        providerTypes !== "credentials" && (
+        managementType !== "local" && (
           <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-            {t(`group.memberNotice.${providerTypes}`)}
+            {t(`group.memberNotice.${managementType}`)}
           </Alert>
         )
       )}
 
       <Group justify="space-between">
         <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
-        {isProviderEnabled("credentials") && !isReserved && (
-          <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        {canManageMembers && !isReserved && (
+          <AddGroupMember
+            groupId={group.id}
+            presentUserIds={group.members.map((member) => member.id)}
+            allowedProviders={allowedProviders}
+          />
         )}
       </Group>
       {filteredMembers.length === 0 && (
@@ -94,6 +100,8 @@ interface RowProps {
 }
 
 const Row = ({ member, groupId, disabled }: RowProps) => {
+  const canBeRemoved = isGroupMembershipManagedLocally(member.provider);
+
   return (
     <TableTr>
       <TableTd>
@@ -104,9 +112,7 @@ const Row = ({ member, groupId, disabled }: RowProps) => {
           </Anchor>
         </Group>
       </TableTd>
-      <TableTd w={100}>
-        {member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}
-      </TableTd>
+      <TableTd w={100}>{canBeRemoved && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}</TableTd>
     </TableTr>
   );
 };
