@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/items/actions/empty-position.ts
+  s_7a80e026b7f124::t_0755c423581ea1 39-40,48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "ede68250ebb6203d9ecfdf152ef404107f41e60c",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
