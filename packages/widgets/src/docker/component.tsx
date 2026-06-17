@@ -35,11 +35,24 @@ const actionIconIconStyle: IconProps["style"] = {
 
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
+  totals: { cpu: number; memory: number },
+  totalContainers: number,
+  relativeTime: string,
+  isTiny: boolean,
 ): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     id: "name",
     accessorKey: "name",
     header: t("field.name.label"),
+    Footer: () =>
+      !isTiny ? (
+        <Group gap={4} wrap="nowrap">
+          <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
+          <Text size="sm" truncate="end">
+            {t("table.footer", { count: totalContainers.toString() })}
+          </Text>
+        </Group>
+      ) : null,
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs" wrap="nowrap">
@@ -84,6 +97,12 @@ const createColumns = (
     accessorKey: "cpuUsage",
     size: 80,
     header: t("field.stats.cpu.label"),
+    Footer: () =>
+      !isTiny ? (
+        <Text size="xs" style={{ whiteSpace: "nowrap" }}>
+          {totals.cpu.toFixed(2)}%
+        </Text>
+      ) : null,
     Cell({ row }) {
       const cpuUsage = safeValue(row.original.cpuUsage);
 
@@ -105,6 +124,12 @@ const createColumns = (
     accessorKey: "memoryUsage",
     size: 80,
     header: t("field.stats.memory.label"),
+    Footer: () =>
+      !isTiny ? (
+        <Text size="xs" style={{ whiteSpace: "nowrap" }}>
+          {humanFileSize(bytesUsage)}
+        </Text>
+      ) : null,
     Cell({ row }) {
       const bytesUsage = safeValue(row.original.memoryUsage);
 
@@ -121,6 +146,12 @@ const createColumns = (
     size: 80,
     header: t("action.title"),
     enableSorting: false,
+    Footer: () =>
+      !isTiny ? (
+        <Text size="xs" style={{ whiteSpace: "nowrap", textAlign: "right" }}>
+          {t("table.updated", { when: relativeTime })}
+        </Text>
+      ) : null,
     Cell({ row }) {
       const utils = clientApi.useUtils();
       // eslint-disable-next-line no-restricted-syntax
@@ -211,14 +242,14 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     );
   }, [containers]);
 
-  const columns = useMemo(() => createColumns(t), [t]);
+  const columns = useMemo(() => createColumns(t, totals, totalContainers, relativeTime, isTiny), [t, totals, totalContainers, relativeTime, isTiny]);
 
   const table = useTranslatedMantineReactTable({
     columns,
     data: containers,
     enablePagination: false,
     enableTopToolbar: false,
-    enableBottomToolbar: false,
+    enableBottomToolbar: !isTiny,
     enableColumnActions: false,
     enableSorting: options.enableRowSorting && !isEditMode,
     enableStickyHeader: false,
@@ -263,37 +294,6 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   return (
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
-
-      {!isTiny && (
-        <Group
-          justify="space-between"
-          style={{
-            borderTop: "0.0625rem solid var(--border-color)",
-          }}
-          p={4}
-        >
-          <Group gap={4} wrap="nowrap">
-            <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
-            <Text size="sm" truncate="end">
-              {t("table.footer", { count: totalContainers.toString() })}
-            </Text>
-          </Group>
-
-          <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
-            </Text>
-            
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
-            </Text>
-
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.updated", { when: relativeTime })}
-            </Text>
-          </Group>
-        </Group>
-      )}
     </Stack>
   );
 }
