@@ -19,7 +19,7 @@ function prepareRecords<T>(records: T[], live: boolean) {
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
-const chartStyle = { minWidth: 0, minHeight: 0 } as const;
+const chartStyle = { minWidth: 0, minHeight: 1 } as const;
 const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
