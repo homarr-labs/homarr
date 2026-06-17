@@ -252,7 +252,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     enableBottomToolbar: !isTiny,
     enableColumnActions: false,
     enableSorting: options.enableRowSorting && !isEditMode,
-    enableStickyHeader: false,
+    enableStickyHeader: true,
     enableColumnOrdering: false,
     enableRowSelection: false,
     enableFullScreenToggle: false,
@@ -273,6 +273,14 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
       className: "docker-widget-table",
       style: {
         tableLayout: "fixed",
+      },
+    },
+    mantineTableFooterRowProps: {
+      style: {
+        position: "sticky",
+        bottom: 0,
+        backgroundColor: "var(--mantine-color-body)",
+        zIndex: 1,
       },
     },
     mantineTableHeadProps: {
