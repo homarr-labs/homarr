@@ -50,8 +50,7 @@ const getOrCreateInstanceId = async (
   return verified.instanceId ?? instanceId;
 };
 
-const sumGroupedCounts = (rows: { count: number }[]): number =>
-  rows.reduce((sum, row) => sum + row.count, 0);
+const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum, row) => sum + row.count, 0);
 
 export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
   const stopWatch = new Stopwatch();
@@ -69,12 +68,25 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
 
     const [
       cultureSettings,
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
-      countUsers, countApiKeys, countInvites,
-      countMedias, countSessions, countAccounts,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
+      countUsers,
+      countApiKeys,
+      countInvites,
+      countMedias,
+      countSessions,
+      countAccounts,
       integrationKinds,
       widgetKinds,
     ] = await Promise.all([
@@ -98,10 +110,14 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       db.$count(medias),
       db.$count(sessions),
       db.$count(accounts),
-      db.select({ kind: integrations.kind, count: count(integrations.id) })
-        .from(integrations).groupBy(integrations.kind),
-      db.select({ kind: items.kind, count: count(items.id) })
-        .from(items).groupBy(items.kind),
+      db
+        .select({ kind: integrations.kind, count: count(integrations.id) })
+        .from(integrations)
+        .groupBy(integrations.kind),
+      db
+        .select({ kind: items.kind, count: count(items.id) })
+        .from(items)
+        .groupBy(items.kind),
     ]);
 
     const enabledAuthProviders = (["credentials", "oidc", "ldap"] as const).filter(isProviderEnabled);
@@ -118,12 +134,26 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       uptimeSeconds: Math.floor(process.uptime()),
       defaultLocale: cultureSettings.defaultLocale,
 
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
 
-      countUsers, countApiKeys, countInvites, countMedias, countSessions, countAccounts,
+      countUsers,
+      countApiKeys,
+      countInvites,
+      countMedias,
+      countSessions,
+      countAccounts,
 
       countIntegrations: sumGroupedCounts(integrationKinds),
       countWidgets: sumGroupedCounts(widgetKinds),
