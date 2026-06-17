@@ -148,6 +148,8 @@ If \`hasUseAccess\` is false, the API key owner lacks permission for that integr
 
 **"Check server health"** → Use \`healthMonitoring_getSystemHealthStatus\` for NAS/server metrics or \`healthMonitoring_getClusterHealthStatus\` for Proxmox clusters.
 
+**"Check Beszel systems"** → Call \`integration_all\` to get Beszel integrationIds, then use \`beszel_getSystems\` to list all monitored systems with CPU/memory/disk/network status. Use \`beszel_getAlerts\` for active alerts and history. Use \`beszel_getSystemStats\` for historical metrics of a specific system (requires systemId from \`beszel_getSystems\`).
+
 **"Manage Docker containers"** → Use \`docker_getContainers\` to list containers with status/CPU/memory, then \`docker_startAll\`/\`docker_stopAll\`/\`docker_restartAll\` with container IDs.
 
 **"Control smart home"** → Use \`smartHome_entityState\` to check a Home Assistant entity, \`smartHome_switchEntity\` to toggle it, or \`smartHome_executeAutomation\` to trigger an automation.

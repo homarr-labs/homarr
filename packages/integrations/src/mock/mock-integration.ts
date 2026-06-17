@@ -140,4 +140,5 @@ export class MockIntegration
   getContainerStatsAsync = MockIntegration.beszel.getContainerStatsAsync.bind(MockIntegration.beszel);
   getAlertsAsync = MockIntegration.beszel.getAlertsAsync.bind(MockIntegration.beszel);
   getAlertHistoryAsync = MockIntegration.beszel.getAlertHistoryAsync.bind(MockIntegration.beszel);
+  subscribeRealtimeMetrics = MockIntegration.beszel.subscribeRealtimeMetrics.bind(MockIntegration.beszel);
 }

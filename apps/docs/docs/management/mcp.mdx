@@ -130,6 +130,7 @@ Homarr exposes 50+ tools organized by namespace. Each tool is either a **query**
 | ------------------ | -------------------------------------------------------- | ---------- |
 | `app`              | List all apps, get app by ID, create/update/delete app   | GET + POST |
 | `apiKeys`          | List API keys                                            | GET        |
+| `beszel`           | Systems status, alerts, historical system metrics        | GET        |
 | `board`            | List boards, get board by ID, create/update/delete board | GET + POST |
 | `docker`           | List containers, inspect container, start/stop/restart   | GET + POST |
 | `icon`             | Search icons                                             | GET        |
@@ -162,3 +163,4 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - **"Create a new app pointing to my Grafana instance"** - AI creates an app with the correct icon and URL
 - **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
 - **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
+- **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
