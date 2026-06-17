@@ -1,0 +1,66 @@
+packages/server-settings/src/index.ts
+  s_32c69770219762::t_202e64b6be20c1 22
+packages/analytics/package.json
+  s_32c69770219762::t_f965fc09d021cc 29
+packages/analytics/src/track.ts
+  s_32c69770219762::t_129da00696c702 1-9
+packages/api/src/router/test/serverSettings.spec.ts
+  s_32c69770219762::t_821aac55af2227 93
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_32c69770219762::t_3607da48b4f9a8 20,22-23
+packages/api/src/root.ts
+  s_32c69770219762::t_5bb680cd6c3eaa 31
+pnpm-workspace.yaml
+  s_32c69770219762::t_ead8834852d601 95
+packages/api/src/router/analytics.ts
+  s_32c69770219762::t_3640381401edb1 2,4,6-7,9,11,13-17,26-50
+  s_32c69770219762::t_22b50287e596ba 25
+  s_32c69770219762::t_da9b7e3b1d5221 1,3,5,22-24
+  s_32c69770219762::t_8817407fa83cf2 8,10,18-21,51-52
+  s_32c69770219762::t_1b8f2ae1056f9d 12
+packages/api/src/router/serverSettings.ts
+  s_32c69770219762::t_f1ea240566bf4d 27,31
+  s_32c69770219762::t_793019324b9fe3 38-39
+packages/api/package.json
+  s_32c69770219762::t_f87ddca9a72693 27
+apps/nextjs/src/components/layout/analytics.tsx
+  s_32c69770219762::t_c36a89915c8bd8 1-3
+packages/analytics/src/index.ts
+  s_32c69770219762::t_08f0c2e88929be 2
+  s_32c69770219762::t_5e9a81bb2e52d1 1,3
+packages/analytics/src/client.ts
+  s_32c69770219762::t_2b436f81deef2d 1-20
+packages/translation/src/lang/en.json
+  s_32c69770219762::t_269cdeccc156ee 4381-4382,4386,4390,4394
+packages/analytics/src/constants.ts
+  s_32c69770219762::t_3c6fb46c753cea 1-2
+packages/analytics/src/send-server-analytics.ts
+  s_32c69770219762::t_f6ced25bffd95c 33,74,169
+  s_32c69770219762::t_15fbdcd142f37f 94,101
+  s_32c69770219762::t_31032dd9b788f0 122
+  s_32c69770219762::t_43bacc38302eee 53-54,60-62,76,78,104,123-125,135-137,145-150,158-168,170,172-173,175
+  s_32c69770219762::t_cfa2262e1b17cd 55-56,59
+  s_32c69770219762::t_f699526df914be 37-38,65,71,79-93,95,97-100,102,119-121,127-130,133,138-144,151-157,171,174
+  s_32c69770219762::t_c76860efebabd2 126,131-132,134
+  s_32c69770219762::t_04f55022e73d61 8,26-27
+  s_32c69770219762::t_03c4a072a90d28 2,6,13,57-58,63-64,103,105-118
+  s_32c69770219762::t_94f80e2917d2d0 77
+pnpm-lock.yaml
+  s_32c69770219762::t_7463d5e39a0b20 447-449,1235,1237,1248-1250,13000-13003,14451,27368-27372
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "0148421c8ad7d2c1bec7ba23354f03d1870496d9",
+  "prompts": {},
+  "sessions": {
+    "s_32c69770219762": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "586ce994-362d-456d-8003-2cee54793542",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
