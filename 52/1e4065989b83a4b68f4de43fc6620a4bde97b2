@@ -1,0 +1,42 @@
+apps/nextjs/src/styles/board-grid.scss
+  s_7a80e026b7f124::t_109485ed23ed3f 11
+  s_7a80e026b7f124::t_d0f5cb843c2280 22,25
+  s_7a80e026b7f124::t_8969133aff9aa5 21,23-24,28-53
+apps/nextjs/src/components/board/sections/section-context.ts
+  s_7a80e026b7f124::t_f15abf168bd61b 9
+apps/nextjs/src/components/board/sections/board-grid/board-grid.tsx
+  s_7a80e026b7f124::t_f15aa29cc9d96c 31-36
+  s_7a80e026b7f124::t_c212a32ba7db45 68-88,90
+  s_7a80e026b7f124::t_84dbbdc88ad45c 176,182,188-190
+  s_7a80e026b7f124::t_a750187ec4482d 225
+  s_7a80e026b7f124::t_f067f2cce32b02 89
+  s_7a80e026b7f124::t_7d78749e20be74 224,226-227
+  s_7a80e026b7f124::t_76a820355d54a6 149-150,153
+  s_7a80e026b7f124::t_f45b8961747092 158-162
+  s_7a80e026b7f124::t_cfabdba2ecdb73 185
+  s_7a80e026b7f124::t_3a78d2a8a2dc10 46-52
+  s_7a80e026b7f124::t_735c37ad18245f 228-229
+  s_7a80e026b7f124::t_3b810593d44bea 28-30
+  s_7a80e026b7f124::t_546138a9723ece 178-179
+  s_7a80e026b7f124::t_93fdedd43043ef 3-9
+  s_7a80e026b7f124::t_c8fc43ee0ab3ea 205
+  s_7a80e026b7f124::t_c88763eb9a3629 95-133,151-152,155
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_7a80e026b7f124::t_08c43d8e2a40c3 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "521e4065989b83a4b68f4de43fc6620a4bde97b2",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
