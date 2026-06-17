@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Começar do zero",
           "importOldmarr": "Importe de uma instância do Homarr anterior a 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restaurar do backup SQLite",
+          "restoreSqliteDescription": "Fazer o upload de um backup completo do banco de dados SQLite de uma instância anterior da Homarr. Isso restaurará todos os painéis, usuários, apps, integrações e configurações.",
+          "backToOptions": "← Retorna às opções de instalação"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Definir as configurações do servidor."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integrações",
+        "subtitle": "Selecione os serviços que você usa.",
+        "description": "Escolha as integrações que deseja conectar. Vamos configurar seu painel com os widgets correspondentes automaticamente.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Continuar",
+          "skip": "Pular por enquanto"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} de {total}",
+          "skip": "Pular esta integração",
+          "finishing": "Configurando seu painel...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha na configuração",
+            "message": "Algo deu errado ao configurar seu painel. Por favor, tente novamente."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Auxiliares de URL",
+            "description": "Esses auxiliares tentam adivinhar a URL dos seus serviços. Se não funcionar, digite o endereço manualmente."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "URL base",
+          "placeholder": "homelab.local ou 192.168.1.1",
+          "hint": "Digite seu domínio base ou IP para preencher automaticamente as URLs das integrações",
+          "warning": "Definir sua URL base agora preencherá automaticamente todas as URLs das integrações, economizando tempo durante a configuração",
+          "preview": "ex.: {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomínio",
+            "hostPort": "Host:Porta"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker detectou {count} serviços",
+          "detectedBreakdown": "{integrations} integrações · {apps} apps",
+          "summary": "O Homarr detectou {apps} apps, dos quais {integrations} possuem integrações nativas",
+          "appBadge": "App",
+          "appSectionLabel": "Apps para adicionar ao painel ({count} selecionados)",
+          "scanning": "Verificando Docker...",
+          "scanningDescription": "Procurando contêineres em execução no seu sistema"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Senha",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Sugestões de senha",
         "suggestion": {
           "length": "Inclua pelo menos 8 caracteres",
           "lowercase": "Inclui letras minúsculas",
@@ -687,94 +687,94 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Widgets Personalizados",
+        "noResults": "Nenhum widget personalizado ainda. Crie o seu primeiro!",
+        "loading": "Carregando..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Criar widget personalizado",
+        "subtitle": "Defina uma URL de API, autenticação e como exibir os dados de resposta."
       },
       "edit": {
-        "title": ""
+        "title": "Editar widget personalizado"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
+      "create": "Criar",
+      "import": "Importar",
+      "save": "Salvar",
+      "delete": "Excluir widget personalizado",
+      "deleteConfirm": "Tem certeza de que deseja excluir \"{name}\"? Esta ação não pode ser desfeita.",
+      "export": "Exportar",
+      "addMapping": "Adicionar Mapeamento",
+      "addColumn": "Adicionar Coluna",
+      "edit": "Editar",
+      "removeMapping": "Remover Mapeamento",
+      "removeColumn": "Remover coluna",
+      "addItem": "Adicionar Item",
+      "removeItem": "Remover item",
+      "addBar": "Adicionar barra",
+      "duplicate": "Duplicar",
       "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "enable": "Habilitado",
+      "disable": "Desabilitado",
+      "menu": "Ações"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
+      "name": "Nome",
+      "description": "Descrição",
+      "iconUrl": "URL do ícone",
+      "url": "URL",
+      "authType": "Tipo de Autenticação",
       "headerName": "",
-      "method": "",
-      "requestBody": "",
+      "method": "Método",
+      "requestBody": "Corpo da requisição",
       "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
+      "jsonPath": "Caminho JSON",
+      "jsonPathHint": "Usar sintaxe JSONPath para extrair valores, por exemplo, $.data.temperature ou $.items[0].name",
       "label": "",
       "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
+      "mappings": "Mapeamentos",
+      "tablePath": "Caminho Array JSON",
+      "tablePathHint": "Caminho para o array na resposta, por exemplo, $.data.items",
+      "columns": "Colunas",
+      "header": "Header (cabeçalho)",
+      "items": "Itens",
+      "gridColumns": "Colunas da grade",
+      "cardStyle": "Estilo de cartão",
+      "bars": "Barras",
+      "valuePath": "Caminho do valor JSON",
+      "maxPath": "Caminho do Max Valor JSON",
+      "showPercentage": "Mostrar porcentagem",
+      "barSize": "Tamanho da barra",
+      "goodValues": "Valores bons (separados por vírgula)",
       "dotSize": "",
-      "valueSize": "",
+      "valueSize": "Tamanho do valor",
       "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
+      "kvLayout": "Layout",
+      "striped": "Linhas Listradas",
+      "compact": "Modo Compacto",
+      "maxHeight": "Altura máxima (px)",
+      "color": "Cor",
       "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "buttonColor": "Cor do botão",
+      "confirmText": "Texto de confirmação",
+      "confirmTextHint": "Se definido, um diálogo de confirmação irá aparecer antes de executar a solicitação",
+      "successMessage": "Mensagem de Sucesso",
+      "successMessageHint": "Mensagem mostrada após execução com sucesso",
+      "enabled": "Habilitado",
       "template": {
-        "label": "",
+        "label": "Template JSX",
         "description": ""
       }
     },
     "placeholder": {
-      "exampleLabel": "",
+      "exampleLabel": "Temperatura da CPU",
       "exampleLabelShort": "",
-      "exampleHeader": "",
+      "exampleHeader": "Nome",
       "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
+      "iconUrl": "https://...",
+      "url": "https://api.exemplo.com/br/api/v1/status",
       "headerName": "",
       "jsonPath": "",
       "tablePath": "",
@@ -790,35 +790,35 @@
       "subtle": ""
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Lista",
+      "grid": "Grade"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "Pequeno",
+      "md": "Médio",
+      "lg": "Grande",
+      "xl": "Extra grande"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "Acima",
+      "below": "Abaixo"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "Geral",
+      "connection": "Conexão com API",
+      "display": "Configurações de tela"
     },
     "displayTypeDescription": {
       "singleValue": "",
       "keyValue": "",
       "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
+      "statGrid": "Estatísticas coloridas em uma grade — como Pi-Hole ou Widgets Rápidos",
+      "progressBars": "Barras de progresso mostrando uso ou conclusão — para disco, memória, quotas",
+      "statusIndicator": "Pontos de status coloridos mostrando estados online/offline ou de saúde",
       "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "raw": "Saída JSON impressa para depuração",
+      "actionButton": "Um botão que aciona uma solicitação quando clicado",
+      "customJsx": "Layout JSX personalizado usando componentes Mantine na lista branca com ligação completa de dados de API"
     },
     "method": {
       "GET": "",
@@ -848,42 +848,42 @@
     },
     "secret": {
       "apiKey": "",
-      "username": "",
-      "password": "",
+      "username": "Usuário",
+      "password": "Senha",
       "savedPlaceholder": ""
     },
     "preview": {
-      "title": "",
+      "title": "Pré-visualizar",
       "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "hint": "Clique em Testar para visualizar a resposta da API com sua configuração atual.",
+      "rawResponse": "Resposta JSON Bruta"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
+      "created": "Widget \"{name}\" criado com sucesso.",
+      "updated": "Widget \"{name}atualizado com sucesso.",
+      "deleted": "Widget \"{name}excluído.",
+      "imported": "Widget importado com sucesso.",
       "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "aiPromptDescription": "Copie um prompt pré-construído para colar qualquer chatbot de AI (ChatGPT, Claude, Gemini...). Ele inclui o esquema completo de widget e a sua resposta de API para que a AI possa gerar uma configuração JSON pronta para importar para você.",
+      "aiPromptCopy": "Copiar para área de transferência",
+      "aiPromptNoResponse": "Dica: Execute um teste primeiro para incluir a sua API de resposta no prompt para melhores resultados.",
+      "aiPromptCopyError": "Falha ao copiar prompt para área de transferência. O seu navegador pode não suportar este recurso.",
+      "createError": "Falha ao criar widget. Verifique se o endpoint API está acessível.",
+      "updateError": "Falha ao atualizar o widget. Suas alterações não foram salvas.",
+      "importError": "Falha ao importar o widget. Certifique-se de que o arquivo seja um widget personalizado válido exportado em JSON.",
+      "exportError": "Falha ao exportar o widget.",
+      "duplicated": "Widget \"{name}duplicado.",
+      "duplicateError": "Falha ao duplicar o widget.",
+      "toggleError": "Falha ao alternar o status do widget.",
+      "deleteError": "Falha ao excluir o widget.",
+      "previewError": "Falha ao buscar a pré-visualização. Verifique a URL e tente novamente.",
+      "executed": "Ação executada com sucesso.",
+      "executeError": "A ação falhou: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Nome",
+      "url": "URL",
+      "display": "Exibição"
     },
     "widget": {
       "disabled": ""
@@ -983,46 +983,46 @@
         "placeholder": "URL de aplicativo personalizada"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Obter chave de API"
       }
     },
     "action": {
       "create": "Nova integração"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widgets",
+      "noWidgets": "Sem widgets",
+      "detected": "Detectado via Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
+      "dnsHole": "DNS",
+      "mediaService": "Mídia",
+      "calendar": "Calendário",
+      "mediaSearch": "Busca",
+      "mediaRelease": "Lançamentos",
+      "mediaRequest": "Solicitações",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Diversos",
+      "smartHomeServer": "Casa Inteligente",
+      "indexerManager": "Indexador",
       "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
+      "search": "Busca",
+      "mediaTranscoding": "Transcodificação",
+      "networkController": "Rede",
+      "releasesProvider": "Lançamentos",
+      "notifications": "Notificações",
       "firewall": "Firewall",
       "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "photoService": "Fotos",
+      "documents": "Documentos",
+      "notes": "Anotações",
+      "mediaMonitoring": "Monitoramento",
+      "speedtest": "Teste de Velocidade",
+      "analytics": "Análises",
+      "mediaLibrary": "Biblioteca de mídia",
+      "uptimeMonitoring": "Monitoramento do Uptime"
     },
     "testConnection": {
       "action": {
@@ -1297,7 +1297,7 @@
           "newLabel": "Nova chave privada"
         },
         "slug": {
-          "label": "",
+          "label": "Slug página de status",
           "newLabel": ""
         }
       }
@@ -1329,7 +1329,7 @@
     },
     "paperlessNgx": {
       "name": "",
-      "description": ""
+      "description": "Sistema de gerenciamento de documentos para arquivamento e organização de documentos digitalizados"
     }
   },
   "media": {
@@ -1384,7 +1384,7 @@
       "add": "Adicionar",
       "apply": "Aplicar",
       "backToOverview": "Voltar à visão geral",
-      "skip": "",
+      "skip": "Pular",
       "change": "Alterar",
       "create": "Criar",
       "createAnother": "Criar e recomeçar",
@@ -1621,11 +1621,11 @@
     "edit": {
       "title": "Editar item",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Editar widget",
+        "app": "Editar aplicativo"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "As alterações deste aplicativo serão aplicadas em todos os lugares em que for usado em todos os painéis."
       },
       "advancedOptions": {
         "label": "Opções avançadas",
@@ -1731,11 +1731,20 @@
           "label": "Abrir em nova guia"
         },
         "withBorder": {
-          "label": ""
+          "label": "Mostrar bordas"
         },
         "items": {
           "label": "Marcadores",
           "add": "Adicionar marcador"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "Monitore o status do ArchiveTeam Warrior, projetos e trabalhos de arquivamento ativos.",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "Mostrar mensagens de transmissão"
         }
       }
     },
@@ -2390,31 +2399,31 @@
       }
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Monitore o status de seus dispositivos UPS através de um servidor NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Exibir bateria"
         },
         "showLoad": {
-          "label": ""
+          "label": "Mostrar carga"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Mostrar tensão"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Online",
+        "onBattery": "Na bateria",
+        "lowBattery": "Bateria fraca",
+        "charging": "Carregando",
+        "unknown": "Desconhecido"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Tempo de execução",
+        "load": "Carga",
+        "input": "Entrada",
+        "output": "Saída"
       },
       "error": {
         "internalServerError": ""
@@ -2669,8 +2678,8 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
+      "name": "Paperless-ngx",
+      "description": "Visão geral do seu arquivo de documentos Paperless-ngx",
       "documentsTotal": "",
       "documentsInbox": "",
       "correspondents": "",
@@ -4133,7 +4142,7 @@
           "items": {
             "documentation": "Documentação",
             "submitIssue": "Enviar um problema",
-            "discord": "Discórdia da comunidade",
+            "discord": "Discord da comunidade",
             "sourceCode": "Código-fonte"
           }
         },
@@ -5741,7 +5750,7 @@
                 "label": "Reportar um problema"
               },
               "discord": {
-                "label": "Discórdia da comunidade"
+                "label": "Discord da comunidade"
               }
             }
           }
