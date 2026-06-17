@@ -49,9 +49,9 @@ catalog:
   "@tanstack/react-query": ^5.101.0
   "@tanstack/react-query-devtools": ^5.101.0
   "@tanstack/react-query-next-experimental": ^5.101.0
-  "@testcontainers/mysql": ^12.0.1
-  "@testcontainers/postgresql": ^12.0.1
-  "@testcontainers/redis": ^12.0.1
+  "@testcontainers/mysql": ^12.0.2
+  "@testcontainers/postgresql": ^12.0.2
+  "@testcontainers/redis": ^12.0.2
   "@tiptap/extension-color": 3.26.0
   "@tiptap/extension-highlight": 3.26.0
   "@tiptap/extension-image": 3.26.0
@@ -168,7 +168,7 @@ catalog:
   semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
-  testcontainers: ^12.0.1
+  testcontainers: ^12.0.2
   timezones-ical-library: ^2.2.0
   trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
