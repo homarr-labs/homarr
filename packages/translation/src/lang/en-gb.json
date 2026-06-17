@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Start from scratch",
           "importOldmarr": "Import from a Homarr version before v1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restore from SQLite backup",
+          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
+          "backToOptions": "← Back to setup options"
         }
       },
       "import": {
@@ -115,24 +115,24 @@
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
+          "preview": "e.g. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
+          "appBadge": "App",
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
         }
       },
       "finish": {
@@ -1736,6 +1736,15 @@
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -5704,10 +5713,10 @@
             "option": {
               "google": {
                 "name": "",
-                "description": ""
+                "description": "Search the web with Google"
               },
               "bing": {
-                "name": "",
+                "name": "Bing",
                 "description": "Search the web with Bing"
               },
               "duckduckgo": {
@@ -6089,46 +6098,46 @@
         "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Your Users",
+        "description": "See everyone who has access. Organise users into groups and control who can view or edit each board."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Edit Mode",
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Board Settings",
+        "description": "Change this board's name, columns, background, colours, and who can access it. Each board can be public or private."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Your Profile",
+        "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }
