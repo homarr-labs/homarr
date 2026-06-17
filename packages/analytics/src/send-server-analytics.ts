@@ -52,7 +52,9 @@ const getEnabledAuthProviders = (): string[] => {
 
 // ponytail: no DB-level lock; concurrent calls may both generate an ID, but the last write wins
 // and the ID stabilizes after the first successful run. Upgrade path: use DB upsert with WHERE instanceId IS NULL.
-const getOrCreateInstanceId = async (analyticsSettings: Awaited<ReturnType<typeof getServerSettingByKeyAsync<"analytics">>>): Promise<string> => {
+const getOrCreateInstanceId = async (
+  analyticsSettings: Awaited<ReturnType<typeof getServerSettingByKeyAsync<"analytics">>>,
+): Promise<string> => {
   if (analyticsSettings.instanceId) return analyticsSettings.instanceId;
 
   const instanceId = createId();
@@ -95,10 +97,19 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     ]);
 
     const [
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
     ] = baseCounts;
 
     const properties: Record<string, unknown> = {
@@ -116,10 +127,19 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       uptimeSeconds: Math.floor(process.uptime()),
       defaultLocale: cultureSettings.defaultLocale,
 
-      countBoards, countGroups, countApps, countSections,
-      countSearchEngines, countIconRepositories, countIcons,
-      countLayouts, countItemLayouts, countSectionLayouts,
-      countCronJobConfigs, countCustomWidgets, countTrustedCertificates,
+      countBoards,
+      countGroups,
+      countApps,
+      countSections,
+      countSearchEngines,
+      countIconRepositories,
+      countIcons,
+      countLayouts,
+      countItemLayouts,
+      countSectionLayouts,
+      countCronJobConfigs,
+      countCustomWidgets,
+      countTrustedCertificates,
     };
 
     if (analyticsSettings.enableUserData) {
@@ -137,7 +157,8 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     if (analyticsSettings.enableIntegrationData) {
       const [countIntegrations, integrationKinds] = await Promise.all([
         db.$count(integrations),
-        db.select({ kind: integrations.kind, count: count(integrations.id) })
+        db
+          .select({ kind: integrations.kind, count: count(integrations.id) })
           .from(integrations)
           .groupBy(integrations.kind),
       ]);
@@ -150,7 +171,8 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     if (analyticsSettings.enableWidgetData) {
       const [countWidgets, widgetKinds] = await Promise.all([
         db.$count(items),
-        db.select({ kind: items.kind, count: count(items.id) })
+        db
+          .select({ kind: items.kind, count: count(items.id) })
           .from(items)
           .groupBy(items.kind),
       ]);

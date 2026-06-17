@@ -16,20 +16,20 @@ const getInstanceId = async (): Promise<string | null> => {
 };
 
 export const analyticsRouter = createTRPCRouter({
-  sendAnalytics: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .mutation(async () => {
-      if (env.NO_EXTERNAL_CONNECTION) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "External connections are disabled" });
-      }
-      return { status: await sendServerAnalyticsAsync() };
-    }),
+  sendAnalytics: permissionRequiredProcedure.requiresPermission("admin").mutation(async () => {
+    if (env.NO_EXTERNAL_CONNECTION) {
+      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "External connections are disabled" });
+    }
+    return { status: await sendServerAnalyticsAsync() };
+  }),
 
   trackFeature: protectedProcedure
-    .input(z.object({
-      feature: z.string().max(128),
-      properties: z.record(z.string(), z.unknown()).optional(),
-    }))
+    .input(
+      z.object({
+        feature: z.string().max(128),
+        properties: z.record(z.string(), z.unknown()).optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const instanceId = await getInstanceId();
       if (!instanceId) return;
@@ -40,13 +40,12 @@ export const analyticsRouter = createTRPCRouter({
       });
     }),
 
-  heartbeat: protectedProcedure
-    .mutation(async ({ ctx }) => {
-      const instanceId = await getInstanceId();
-      if (!instanceId) return;
+  heartbeat: protectedProcedure.mutation(async ({ ctx }) => {
+    const instanceId = await getInstanceId();
+    if (!instanceId) return;
 
-      trackEvent(instanceId, "user-active", {
-        userId: ctx.session.user.id,
-      });
-    }),
+    trackEvent(instanceId, "user-active", {
+      userId: ctx.session.user.id,
+    });
+  }),
 });

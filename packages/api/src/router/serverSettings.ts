@@ -25,11 +25,10 @@ export const serverSettingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
-      await updateServerSettingByKeyAsync(
-        ctx.db,
-        input.settingsKey,
-        { ...current, ...input.value } as ServerSettings[keyof ServerSettings],
-      );
+      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
+        ...current,
+        ...input.value,
+      } as ServerSettings[keyof ServerSettings]);
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")
