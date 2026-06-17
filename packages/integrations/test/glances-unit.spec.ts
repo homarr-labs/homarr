@@ -67,7 +67,7 @@ function makeResponse(body: unknown) {
 const integrationInput = {
   id: "test-glances",
   name: "Glances",
-  url: "http://localhost:61208",
+  url: new URL("http://localhost:61208"),
   decryptedSecrets: [],
   externalUrl: null,
 };
