@@ -1,0 +1,31 @@
+packages/widgets/src/beszel-system-stats/component.module.css
+  s_0d2fa45547cc8e::t_a8a2273d496c32 2-5
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_0d2fa45547cc8e::t_be212470c32ad2 82,86
+  s_0d2fa45547cc8e::t_d667a66c4a7538 55-56,63,80-81,83-85
+  s_0d2fa45547cc8e::t_b11febac81914c 4
+  s_0d2fa45547cc8e::t_d36f9de38174a3 60,62
+  s_0d2fa45547cc8e::t_fc2d1acf83fded 231,233-236,239-240,247-248
+  s_0d2fa45547cc8e::t_982e398de6c21c 10
+  s_0d2fa45547cc8e::t_9b86d955dee267 8-9
+  s_0d2fa45547cc8e::t_efce9044e90319 61
+packages/api/src/router/widgets/options.ts
+  s_0d2fa45547cc8e::t_893fda927b2546 1
+  s_0d2fa45547cc8e::t_3f0966430e322a 2-5,7,10-11,26-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "dc1e1891fb763b460d9a1ea081b56dc8b7e3072a",
+  "prompts": {},
+  "sessions": {
+    "s_0d2fa45547cc8e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fe85771d-b26d-4bb2-81e2-093e743e1c6d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
