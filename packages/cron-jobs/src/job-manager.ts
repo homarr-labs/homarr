@@ -122,15 +122,17 @@ export class JobManager {
   > {
     const configurations = await this.db.query.cronJobConfigurations.findMany();
 
-    return [...this.jobGroup.getJobRegistry().entries()].map(([name, job]) => {
-      const config = configurations.find((config) => config.name === name);
-      return {
-        name,
-        cron: config?.cronExpression ?? job.cronExpression,
-        preventManualExecution: job.preventManualExecution,
-        preventCustomInterval: job.preventCustomInterval,
-        isEnabled: config?.isEnabled ?? true,
-      };
-    });
+    return [...this.jobGroup.getJobRegistry().entries()]
+      .filter(([_, job]) => !job.hidden)
+      .map(([name, job]) => {
+        const config = configurations.find((config) => config.name === name);
+        return {
+          name,
+          cron: config?.cronExpression ?? job.cronExpression,
+          preventManualExecution: job.preventManualExecution,
+          preventCustomInterval: job.preventCustomInterval,
+          isEnabled: config?.isEnabled ?? true,
+        };
+      });
   }
 }
