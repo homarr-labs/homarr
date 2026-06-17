@@ -1,0 +1,22 @@
+apps/nextjs/src/components/board/items/actions/test/dnd-integration.spec.ts
+  s_7a80e026b7f124::t_084a60765cbc1e 11
+  s_7a80e026b7f124::t_e5c0425ca797bf 408
+  s_7a80e026b7f124::t_1157de446f158c 1-10,12-407,409,411-535
+  s_7a80e026b7f124::t_49c677da425dc0 410
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "0be813cb3710983cfc6528e57e0fadacf43beeb7",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
