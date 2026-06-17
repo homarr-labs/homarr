@@ -249,10 +249,11 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     data: containers,
     enablePagination: false,
     enableTopToolbar: false,
-    enableBottomToolbar: !isTiny,
+    enableBottomToolbar: false, 
     enableColumnActions: false,
     enableSorting: options.enableRowSorting && !isEditMode,
-    enableStickyHeader: true,
+    enableStickyHeader: true, 
+    enableStickyFooter: true, 
     enableColumnOrdering: false,
     enableRowSelection: false,
     enableFullScreenToggle: false,
@@ -265,7 +266,11 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
       density: "xs",
     },
     mantinePaperProps: {
-      flex: 1,
+      style: {
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      },
       withBorder: false,
       shadow: undefined,
     },
@@ -273,14 +278,6 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
       className: "docker-widget-table",
       style: {
         tableLayout: "fixed",
-      },
-    },
-    mantineTableFooterRowProps: {
-      style: {
-        position: "sticky",
-        bottom: 0,
-        backgroundColor: "var(--mantine-color-body)",
-        zIndex: 1,
       },
     },
     mantineTableHeadProps: {
@@ -294,13 +291,14 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     },
     mantineTableContainerProps: {
       style: {
-        height: "100%",
+        flex: 1,
+        overflowY: "auto", 
       },
     },
   });
 
   return (
-    <Stack gap={0} h="100%" display="flex">
+    <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       <MantineReactTable table={table} />
     </Stack>
   );
