@@ -38,7 +38,7 @@ const itemSchema = z.object({
   ServerId: z.string(),
   Name: z.string(),
   Taglines: z.array(z.string()),
-  Studios: z.array(z.object({ Name: z.string() })),
+  Studios: z.array(z.object({ Name: z.string() })).optional(),
   Overview: z.string().optional(),
   PremiereDate: z
     .string()
@@ -172,7 +172,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
         poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
         backdrop: super.externalUrl(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
       },
-      producer: item.Studios.at(0)?.Name,
+      producer: item.Studios?.at(0)?.Name,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres,
       href: super.externalUrl(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
