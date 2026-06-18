@@ -131,7 +131,7 @@ catalog:
   ical.js: ^2.2.1
   ioredis: 5.11.1
   isomorphic-dompurify: ^3.16.0
-  jotai: ^2.20.0
+  jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
   jsonpath-plus: ^10.4.0
