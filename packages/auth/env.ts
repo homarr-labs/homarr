@@ -28,6 +28,11 @@ export const env = createEnv({
     AUTH_LOGOUT_REDIRECT_URL: z.string().url().optional(),
     AUTH_SESSION_EXPIRY_TIME: createDurationSchema("30d"),
     AUTH_PROVIDERS: authProvidersSchema,
+    AUTH_COOKIE_PREFIX: z
+      .string()
+      .min(1)
+      .regex(/^[a-zA-Z0-9-_]+$/, "AUTH_COOKIE_PREFIX must only contain letters, numbers, hyphens and underscores")
+      .default("homarr"),
     ...(authProviders.includes("oidc")
       ? {
           AUTH_OIDC_ISSUER: z.string().url(),
