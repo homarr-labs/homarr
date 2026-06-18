@@ -647,9 +647,13 @@ const seedDemoUserAsync = async (db: Database) => {
 
 const seedDefaultCustomWidgetsAsync = async (db: Database) => {
   const seedIds = CUSTOM_WIDGET_SEEDS.map((s) => s.id);
-  const beforeCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
+  const existing = await db.query.customWidgetDefinitions.findMany({
+    columns: { id: true },
+    where: inArray(customWidgetDefinitions.id, seedIds),
+  });
+  const existingIds = new Set(existing.map((row) => row.id));
 
-  const seedValues = CUSTOM_WIDGET_SEEDS.map((seed) => {
+  const seedValues = CUSTOM_WIDGET_SEEDS.filter((seed) => !existingIds.has(seed.id)).map((seed) => {
     const parsed = customWidgetImportSchema.parse(seed.data);
     return {
       id: seed.id,
@@ -668,22 +672,14 @@ const seedDefaultCustomWidgetsAsync = async (db: Database) => {
     };
   });
 
-  if (seedValues.length === 0) return;
-
-  await db
-    .insert(customWidgetDefinitions)
-    .values(seedValues)
-    .onConflictDoNothing({ target: customWidgetDefinitions.id });
-
-  const afterCount = await db.$count(customWidgetDefinitions, inArray(customWidgetDefinitions.id, seedIds));
-  const createdCount = afterCount - beforeCount;
-
-  if (createdCount === 0) {
+  if (seedValues.length === 0) {
     console.log("Skipping seeding of default custom widgets as they already exist");
     return;
   }
 
-  console.log(`Created ${createdCount} default custom widgets through seeding process`);
+  await db.insert(customWidgetDefinitions).values(seedValues);
+
+  console.log(`Created ${seedValues.length} default custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {
