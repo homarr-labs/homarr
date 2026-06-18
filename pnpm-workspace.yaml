@@ -49,25 +49,25 @@ catalog:
   "@tanstack/react-query": ^5.101.0
   "@tanstack/react-query-devtools": ^5.101.0
   "@tanstack/react-query-next-experimental": ^5.101.0
-  "@testcontainers/mysql": ^12.0.1
-  "@testcontainers/postgresql": ^12.0.1
-  "@testcontainers/redis": ^12.0.1
-  "@tiptap/extension-color": 3.26.0
-  "@tiptap/extension-highlight": 3.26.0
-  "@tiptap/extension-image": 3.26.0
-  "@tiptap/extension-link": ^3.26.0
-  "@tiptap/extension-placeholder": ^3.26.0
-  "@tiptap/extension-table": 3.26.0
-  "@tiptap/extension-table-cell": 3.26.0
-  "@tiptap/extension-table-header": 3.26.0
-  "@tiptap/extension-table-row": 3.26.0
-  "@tiptap/extension-task-item": 3.26.0
-  "@tiptap/extension-task-list": 3.26.0
-  "@tiptap/extension-text-align": 3.26.0
-  "@tiptap/extension-text-style": 3.26.0
-  "@tiptap/extension-underline": 3.26.0
-  "@tiptap/react": ^3.26.0
-  "@tiptap/starter-kit": ^3.26.0
+  "@testcontainers/mysql": ^12.0.2
+  "@testcontainers/postgresql": ^12.0.2
+  "@testcontainers/redis": ^12.0.2
+  "@tiptap/extension-color": 3.26.1
+  "@tiptap/extension-highlight": 3.26.1
+  "@tiptap/extension-image": 3.26.1
+  "@tiptap/extension-link": ^3.26.1
+  "@tiptap/extension-placeholder": ^3.26.1
+  "@tiptap/extension-table": 3.26.1
+  "@tiptap/extension-table-cell": 3.26.1
+  "@tiptap/extension-table-header": 3.26.1
+  "@tiptap/extension-table-row": 3.26.1
+  "@tiptap/extension-task-item": 3.26.1
+  "@tiptap/extension-task-list": 3.26.1
+  "@tiptap/extension-text-align": 3.26.1
+  "@tiptap/extension-text-style": 3.26.1
+  "@tiptap/extension-underline": 3.26.1
+  "@tiptap/react": ^3.26.1
+  "@tiptap/starter-kit": ^3.26.1
   "@trpc/client": ^11.17.0
   "@trpc/next": ^11.17.0
   "@trpc/react-query": ^11.17.0
@@ -88,7 +88,7 @@ catalog:
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
-  "@scalar/api-reference-react": ^0.9.45
+  "@scalar/api-reference-react": ^0.9.46
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
@@ -131,7 +131,7 @@ catalog:
   ical.js: ^2.2.1
   ioredis: 5.11.1
   isomorphic-dompurify: ^3.16.0
-  jotai: ^2.20.0
+  jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
   jsonpath-plus: ^10.4.0
@@ -168,7 +168,7 @@ catalog:
   semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
-  testcontainers: ^12.0.1
+  testcontainers: ^12.0.2
   timezones-ical-library: ^2.2.0
   trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
