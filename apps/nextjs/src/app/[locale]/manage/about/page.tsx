@@ -161,7 +161,7 @@ export default async function AboutPage() {
             <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
               {Object.entries(dependencies)
                 .filter(([, value]) => !value.includes("workspace:"))
-                .sort(([key1], [key2]) => key1.localeCompare(key2))
+                .toSorted(([key1], [key2]) => key1.localeCompare(key2))
                 .map(([name, version]) => (
                   <UnstyledButton
                     key={name}
