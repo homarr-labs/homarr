@@ -28,6 +28,7 @@ export const appRouter = createTRPCRouter({
   updateChecker: lazy(() => import("./router/update-checker").then((mod) => mod.updateCheckerRouter)),
   certificates: lazy(() => import("./router/certificates/certificate-router").then((mod) => mod.certificateRouter)),
   bangs: lazy(() => import("./router/bangs/bangs-router").then((mod) => mod.bangsRouter)),
+  analytics: lazy(() => import("./router/analytics").then((mod) => mod.analyticsRouter)),
   info: lazy(() => import("./router/info").then((mod) => mod.infoRouter)),
   customWidget: lazy(() => import("./router/custom-widget/custom-widget-router").then((mod) => mod.customWidgetRouter)),
 });

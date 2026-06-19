@@ -20,6 +20,7 @@ interface CreateCronJobOptions {
   runOnStart?: boolean;
   preventManualExecution?: boolean;
   preventCustomInterval?: boolean;
+  hidden?: boolean;
   expectedMaximumDurationInMillis?: number;
   beforeStart?: () => MaybePromise<void>;
 }
@@ -121,6 +122,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
       },
       preventManualExecution: options.preventManualExecution ?? false,
       preventCustomInterval: options.preventCustomInterval ?? false,
+      hidden: options.hidden ?? false,
       timezone: creatorOptions.timezone,
     };
   };

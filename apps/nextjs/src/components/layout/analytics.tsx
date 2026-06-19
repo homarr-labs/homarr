@@ -1,16 +1,24 @@
-import Script from "next/script";
+"use client";
 
-import { UMAMI_WEBSITE_ID } from "@homarr/analytics";
-import { db } from "@homarr/db";
-import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import { useEffect } from "react";
 
-export const Analytics = async () => {
-  // For static pages it will not find any analytics data so we do not include the script on them
-  const analytics = await getServerSettingByKeyAsync(db, "analytics").catch(() => null);
+const POSTHOG_KEY = "phc_vYBmGWNbRshvfeC7EHfeSmUm2pD2Neg5nGqzJuGvS8Hs";
+const POSTHOG_HOST = "https://hog.homarr.dev";
 
-  if (analytics?.enableGeneral) {
-    return <Script src="https://umami.homarr.dev/script.js" data-website-id={UMAMI_WEBSITE_ID} defer />;
-  }
+export const Analytics = ({ enabled }: { enabled: boolean }) => {
+  useEffect(() => {
+    if (!enabled) return;
 
-  return <></>;
+    void import("posthog-js").then(({ default: posthog }) => {
+      posthog.init(POSTHOG_KEY, {
+        api_host: POSTHOG_HOST,
+        capture_pageview: false,
+        capture_pageleave: false,
+        autocapture: false,
+        persistence: "memory",
+      });
+    });
+  }, [enabled]);
+
+  return null;
 };
