@@ -20,6 +20,24 @@ import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from ".
 
 const logger = createLogger({ module: "authConfiguration" });
 
+// All Auth.js cookies are prefixed with AUTH_COOKIE_PREFIX (default "homarr") so
+// Homarr's cookie jar is isolated from any other Auth.js/NextAuth app on the
+// same hostname (browsers scope cookies by host, not by port).
+// See https://github.com/homarr-labs/homarr/issues/5773
+const createCookies = (useSecureCookies: boolean) => {
+  const prefix = env.AUTH_COOKIE_PREFIX;
+  const securePrefix = useSecureCookies ? "__Secure-" : "";
+  const hostPrefix = useSecureCookies ? "__Host-" : "";
+  return {
+    sessionToken: { name: sessionTokenCookieName },
+    csrfToken: { name: `${hostPrefix}${prefix}.csrf-token` },
+    callbackUrl: { name: `${securePrefix}${prefix}.callback-url` },
+    pkceCodeVerifier: { name: `${securePrefix}${prefix}.pkce.cooldown` },
+    state: { name: `${securePrefix}${prefix}.state` },
+    nonce: { name: `${securePrefix}${prefix}.nonce` },
+  };
+};
+
 // See why it's unknown in the [...nextauth]/route.ts file
 export const createConfiguration = (
   provider: SupportedAuthProvider | "unknown",
@@ -41,11 +59,7 @@ export const createConfiguration = (
       },
     },
     trustHost: true,
-    cookies: {
-      sessionToken: {
-        name: sessionTokenCookieName,
-      },
-    },
+    cookies: createCookies(useSecureCookies),
     adapter,
     providers: filterProviders([
       Credentials(createCredentialsConfiguration(db)),
