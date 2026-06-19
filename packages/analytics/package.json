@@ -26,9 +26,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
-    "@homarr/server-settings": "workspace:^0.1.0",
-    "@umami/node": "catalog:",
-    "superjson": "catalog:"
+    "posthog-node": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

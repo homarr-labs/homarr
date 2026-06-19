@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "crwdns5641:0crwdne5641:0",
+      "loading": "crwdns5643:0crwdne5643:0",
+      "placeholder": "crwdns5645:0crwdne5645:0",
+      "noResults": "crwdns5647:0crwdne5647:0",
+      "loadError": "crwdns5649:0crwdne5649:0"
+    },
     "app": {
       "name": "crwdns732:0crwdne732:0",
       "description": "crwdns734:0crwdne734:0",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "crwdns4811:0crwdne4811:0",
+      "error": {
+        "internalServerError": "crwdns5651:0crwdne5651:0"
+      },
       "column": {
         "system": "crwdns4813:0crwdne4813:0",
         "cpu": "crwdns4815:0crwdne4815:0",
@@ -3626,6 +3636,9 @@
           "label": "crwdns4863:0crwdne4863:0"
         }
       },
+      "error": {
+        "internalServerError": "crwdns5653:0crwdne5653:0"
+      },
       "metric": {
         "cpu": "crwdns4865:0crwdne4865:0",
         "memory": "crwdns4867:0crwdne4867:0",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "crwdns4895:0crwdne4895:0",
+      "error": {
+        "internalServerError": "crwdns5655:0crwdne5655:0"
+      },
       "history": "crwdns4897:0crwdne4897:0",
       "resolved": "crwdns4899:0crwdne4899:0",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "crwdns4905:0crwdne4905:0",
       "description": "crwdns4907:0crwdne4907:0",
       "option": {
+        "systemId": {
+          "label": "crwdns5657:0crwdne5657:0",
+          "description": "crwdns5659:0crwdne5659:0"
+        },
         "timePeriod": {
           "label": "crwdns4909:0crwdne4909:0"
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "crwdns4927:0crwdne4927:0",
+      "error": {
+        "internalServerError": "crwdns5661:0crwdne5661:0",
+        "liveConnectionFailed": "crwdns5663:0crwdne5663:0",
+        "switchToHistorical": "crwdns5665:0crwdne5665:0",
+        "systemNotFound": "crwdns5667:0crwdne5667:0"
+      },
       "chart": {
         "cpu": {
           "title": "crwdns4929:0crwdne4929:0",

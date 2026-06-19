@@ -92,7 +92,8 @@ catalog:
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
-  "@umami/node": ^0.4.0
+  posthog-js: ^1.255.0
+  posthog-node: ^4.17.0
   "@vitejs/plugin-react": ^6.0.2
   "@vitest/coverage-v8": ^4.1.8
   "@vitest/ui": ^4.1.8
@@ -130,16 +131,16 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.11.1
-  isomorphic-dompurify: ^3.16.0
+  isomorphic-dompurify: ^3.17.0
   jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
-  lucide-react: ^1.17.0
-  "mantine-contextmenu": ^9.2.1
-  mantine-datatable: ^9.2.2
+  lucide-react: ^1.18.0
+  "mantine-contextmenu": ^9.3.0
+  mantine-datatable: ^9.3.0
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
@@ -163,7 +164,7 @@ catalog:
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
   recharts: ^3.8.1
-  sass: ^1.100.0
+  sass: ^1.101.0
   semantic-release: ^25.0.5
   semver-parser: ^4.2.1
   superjson: 2.2.6
@@ -216,7 +217,7 @@ overrides:
   "prismjs@<1.30.0": ">=1.30.0"
   "proxmox-api>undici": "7.27.1"
   "react-is": "^19.2.7"
-  "rollup@>=4.0.0 <4.22.4": ">=4.61.1"
+  "rollup@>=4.0.0 <4.22.4": ">=4.62.0"
   "sha.js@<=2.4.11": ">=2.4.12"
   "tar-fs@>=3.0.0 <3.0.9": ">=3.1.2"
   "tar-fs@>=2.0.0 <2.1.3": ">=3.1.2"

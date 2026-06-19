@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "",
       "description": "Bettet eine App in das Board ein.",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",

@@ -4413,20 +4413,8 @@
           "analytics": {
             "title": "Analytics",
             "general": {
-              "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "integrationData": {
-              "title": "Integration data",
-              "text": "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "usersData": {
-              "title": "Users data",
-              "text": "Send the amount of users and whether you've activated SSO"
+              "title": "Help us improve Homarr",
+              "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Updated {when}",
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
-      "footer": "Total {count} containers"
+      "footer": "Total {count} containers",
+      "totalCpu": "Total CPU: {cpu}%",
+      "totalMemory": "Total Mem: {memory}"
     },
     "field": {
       "name": {

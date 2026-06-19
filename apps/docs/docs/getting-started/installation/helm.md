@@ -395,6 +395,7 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG | string | `nil` | Extra arguments for user search filter (& based) |
 | env.AUTH_LDAP_USER_MAIL_ATTRIBUTE | string | `"mail"` | Attribute used for mail field |
 | env.AUTH_LOGOUT_REDIRECT_URL | string | `nil` | URL to redirect to after clicking logging out. |
+| env.AUTH_COOKIE_PREFIX | string | `"homarr"` | Prefix used for all authentication cookies. Change if you run another Auth.js/NextAuth app on the same hostname to avoid cookie name collisions. Only letters, numbers, hyphens and underscores. |
 | env.AUTH_OIDC_AUTO_LOGIN | string | `"false"` | Automatically redirect to OIDC login |
 | env.AUTH_OIDC_CLIENT_NAME | string | `"OIDC"` | Display name of provider (in login screen) |
 | env.AUTH_OIDC_GROUPS_ATTRIBUTE | string | `"groups"` | Attribute used for groups (roles) claim |
