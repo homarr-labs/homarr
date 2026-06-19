@@ -28,11 +28,11 @@ export default function ManageErrorPage({
         <Text size="sm" c="dimmed" maw={480} ta="center">
           {tError("text")}
         </Text>
-        {error.digest ? (
+        {error.digest && (
           <Text size="xs" c="dimmed">
             {tError("digest", { digest: error.digest })}
           </Text>
-        ) : null}
+        )}
         <Button variant="light" onClick={unstable_retry}>
           {t("common.action.tryAgain")}
         </Button>

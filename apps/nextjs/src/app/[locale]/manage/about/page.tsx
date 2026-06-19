@@ -41,9 +41,9 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";
-import githubContributors from "../../../../../../../static-data/contributors.json";
-import openCollectiveContributors from "../../../../../../../static-data/opencollective-contributors.json";
-import crowdinContributors from "../../../../../../../static-data/translators.json";
+import githubContributors from "@static-data/contributors.json";
+import openCollectiveContributors from "@static-data/opencollective-contributors.json";
+import crowdinContributors from "@static-data/translators.json";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
