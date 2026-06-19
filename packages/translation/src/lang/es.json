@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "Resumen del agujero DNS",
       "description": "Muestra el resumen de tu agujero DNS",

@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "Podsumowanie Hole DNS",
       "description": "Wyświetla podsumowanie Twojego hosta DNS",
