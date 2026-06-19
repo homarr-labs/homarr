@@ -17,9 +17,10 @@ interface AnalyticsSettingsProps {
 
 export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
   const t = useScopedI18n("management.page.settings.section.analytics");
+  const { instanceId: _, ...formDefaults } = initialData;
   const form = useForm({
-    initialValues: initialData,
-    onValuesChange: (updatedValues, _) => {
+    initialValues: formDefaults,
+    onValuesChange: (updatedValues, _prev) => {
       if (!form.isValid()) {
         return;
       }
