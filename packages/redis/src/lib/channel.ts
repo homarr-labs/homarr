@@ -268,15 +268,20 @@ export const createIntegrationOptionsChannel = <TData>(
  * updated integration is never served from cache.
  */
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
+  const client = getSetClient as typeof getSetClient | null;
+  if (!client) {
+    return;
+  }
+
   const patterns = [`integration:${integrationId}:*`, `session-store:${integrationId}`];
   let deletedCount = 0;
   for (const pattern of patterns) {
     let cursor = "0";
     do {
-      const [nextCursor, keys] = await getSetClient.scan(cursor, "MATCH", pattern, "COUNT", 200);
+      const [nextCursor, keys] = await client.scan(cursor, "MATCH", pattern, "COUNT", 200);
       cursor = nextCursor;
       if (keys.length > 0) {
-        await getSetClient.del(...keys);
+        await client.del(...keys);
         deletedCount += keys.length;
       }
     } while (cursor !== "0");
