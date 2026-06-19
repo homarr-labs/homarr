@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Connetti prima un'integrazione",
+      "loading": "Caricamento...",
+      "placeholder": "Seleziona un'opzione",
+      "noResults": "Nessun risultato trovato",
+      "loadError": "Impossibile caricare le opzioni"
+    },
     "app": {
       "name": "App",
       "description": "Incorpora un'app nella board.",
@@ -1740,11 +1747,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Monitora lo stato di ArchiveTeam Warrior e i lavori di archiviazione attivi.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Mostra messaggi broadcast"
         }
       }
     },
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "Nessun sistema trovato",
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
       "column": {
         "system": "Sistema",
         "cpu": "CPU",
@@ -3626,6 +3636,9 @@
           "label": "Mostra versione agente"
         }
       },
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memoria",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "Nessun avviso configurato",
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
       "history": "Cronologia",
       "resolved": "Risolto",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "Statistiche Sistema Beszel",
       "description": "Grafici a serie temporali per CPU, memoria, disco, rete e metriche dei container Docker",
       "option": {
+        "systemId": {
+          "label": "Sistema",
+          "description": "Seleziona un sistema Beszel per visualizzare le statistiche per"
+        },
         "timePeriod": {
           "label": "Periodo di tempo"
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "Seleziona sistema",
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione.",
+        "liveConnectionFailed": "Connessione Live non riuscita. L'istanza di Beszel potrebbe non supportare lo streaming in tempo reale.",
+        "switchToHistorical": "Passa alla visualizzazione storica",
+        "systemNotFound": "Il sistema selezionato non è stato trovato. Scegli un sistema diverso."
+      },
       "chart": {
         "cpu": {
           "title": "Utilizzo CPU",
