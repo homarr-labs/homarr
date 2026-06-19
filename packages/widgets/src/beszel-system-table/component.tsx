@@ -34,7 +34,7 @@ type SystemRowWithKey = BeszelSystemRow & { _key: string };
 
 interface SizeConfig {
   iconSize: number;
-  fontSize: "xs" | "10px";
+  fontSize: "xs" | "sm";
   progressSize: "xs" | "sm";
   cellPadding: number;
   valueMiw: number;
@@ -42,9 +42,21 @@ interface SizeConfig {
 
 const getSizeConfig = (width: number): SizeConfig => {
   if (width < 400) {
-    return { iconSize: 10, fontSize: "10px", progressSize: "xs", cellPadding: 2, valueMiw: 30 };
+    return {
+      iconSize: 10,
+      fontSize: "xs",
+      progressSize: "xs",
+      cellPadding: 2,
+      valueMiw: 30,
+    };
   }
-  return { iconSize: 14, fontSize: "xs", progressSize: "sm", cellPadding: 4, valueMiw: 38 };
+  return {
+    iconSize: 14,
+    fontSize: "sm",
+    progressSize: "sm",
+    cellPadding: 4,
+    valueMiw: 38,
+  };
 };
 
 export default function BeszelSystemTableWidget({
@@ -56,7 +68,7 @@ export default function BeszelSystemTableWidget({
   const t = useScopedI18n("widget.beszelSystemTable");
   const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 30 * 1000 },
+    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
   const size = getSizeConfig(width);
 

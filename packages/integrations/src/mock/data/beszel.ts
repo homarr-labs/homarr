@@ -330,6 +330,40 @@ export class BeszelMockService {
     ];
   }
 
+  public async subscribeRealtimeMetrics(
+    systemId: string,
+    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const sys = resolveSystem(systemId);
+    const emit = () => {
+      if (signal.aborted) return;
+      const [stats] = generateSystemStatsSeries(1, sys);
+      if (!stats) return;
+      const record: BeszelSystemStatsRecord = {
+        id: `mock-rt-${Date.now()}`,
+        system: systemId,
+        stats,
+        type: "1m",
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
+      };
+      onMessage({ stats: record, containerStats: null });
+    };
+    if (signal.aborted) return;
+    await new Promise<void>((resolve) => {
+      const interval = setInterval(emit, 1000);
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearInterval(interval);
+          resolve();
+        },
+        { once: true },
+      );
+    });
+  }
+
   public async getAlertHistoryAsync(_systemId?: string, perPage = 10): Promise<BeszelAlertHistory[]> {
     const now = Date.now();
     const names = ["CPU", "Memory", "Disk", "Temperature", "Bandwidth"];
@@ -341,7 +375,7 @@ export class BeszelMockService {
       name: names[i % names.length] ?? "CPU",
       val: rand(60, 95),
       created: new Date(now - (i + 1) * 3_600_000).toISOString(),
-      resolved: i % 2 === 0 ? new Date(now - i * 1_800_000).toISOString() : null,
+      resolved: (i % 2 === 0 && new Date(now - i * 1_800_000).toISOString()) || null,
     }));
   }
 }

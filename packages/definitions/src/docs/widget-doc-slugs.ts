@@ -44,6 +44,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   audioStats: "audio-stats",
   umami: "umami",
   ups: "ups",
+  archiveTeamWarrior: null,
   beszelSystemTable: "beszel-system-table",
   beszelSystemGrid: "beszel-system-grid",
   beszelAlerts: "beszel-alerts",

@@ -12,11 +12,13 @@ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import { createSignInEventHandler } from "../events";
 
 vi.mock("next-auth", () => ({}));
+const mockEnv = vi.hoisted(() => ({
+  AUTH_OIDC_GROUPS_ATTRIBUTE: "someRandomGroupsKey",
+  AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT: false,
+}));
 vi.mock("../env", () => {
   return {
-    env: {
-      AUTH_OIDC_GROUPS_ATTRIBUTE: "someRandomGroupsKey",
-    },
+    env: mockEnv,
   };
 });
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -197,6 +199,30 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
         where: eq(groupMembers.userId, "1"),
       });
       expect(dbGroupMembers?.groupId).toBe("1");
+    });
+    test("should not synchronize groups when AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT is enabled", async () => {
+      // Arrange
+      mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
+      const db = createDb();
+      await createUserAsync(db);
+      await createGroupAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+
+      // Act
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: { preferred_username: "test", someRandomGroupsKey: ["test"] },
+        account: null,
+      });
+
+      // Assert
+      const dbGroupMembers = await db.query.groupMembers.findFirst({
+        where: eq(groupMembers.userId, "1"),
+      });
+      expect(dbGroupMembers).toBeUndefined();
+
+      // Cleanup
+      mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = false;
     });
   });
   test.each([

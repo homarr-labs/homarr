@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "DNS Hole Sammendrag",
       "description": "Viser sammendrag av DNS Hole",

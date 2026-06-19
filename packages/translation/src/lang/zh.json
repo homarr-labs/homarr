@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "DNS Hole 概況",
       "description": "顯示 DNS Hole 的概況",

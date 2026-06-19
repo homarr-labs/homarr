@@ -856,37 +856,37 @@
       "title": "Vorschau",
       "test": "Test",
       "hint": "Klicken Sie auf Test, um eine Vorschau der API Antwort mit Ihrer aktuellen Konfiguration zu erhalten.",
-      "rawResponse": ""
+      "rawResponse": "Rohe JSON-Antwort"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "Widget \"{name}\" erfolgreich erstellt.",
+      "updated": "Widget \"{name}\" erfolgreich aktualisiert.",
+      "deleted": "Widget \"{name}\" gelöscht.",
+      "imported": "Widget erfolgreich importiert.",
+      "aiPromptCopied": "KI-Prompt in Zwischenablage kopiert",
+      "aiPromptDescription": "Kopieren Sie eine vorgefertigte Eingabeaufforderung, um sie in jeden AI-Chatbot einzufügen (ChatGPT, Claude, Gemini...). Es enthält das komplette Widget-Schema und Ihre API-Antwort, so dass die KI eine fertige JSON-Konfiguration für Sie generieren kann.",
+      "aiPromptCopy": "In die Zwischenablage kopieren",
+      "aiPromptNoResponse": "Tipp: Führen Sie zuerst einen Test aus, um Ihre API Antwort in die Eingabeaufforderung einzubinden, um bessere Ergebnisse zu erzielen.",
+      "aiPromptCopyError": "Fehler beim Kopieren der Eingabeaufforderung. Möglicherweise unterstützt Ihr Browser diese Funktion nicht.",
+      "createError": "Fehler beim Erstellen des Widgets. Überprüfen Sie, ob Ihr API Endpunkt erreichbar ist.",
+      "updateError": "Fehler beim Aktualisieren des Widgets. Ihre Änderungen wurden nicht gespeichert.",
+      "importError": "Fehler beim Importieren des Widgets. Stellen Sie sicher, dass die Datei ein gültiger JSON Export ist.",
+      "exportError": "Fehler beim Exportieren des Widgets.",
+      "duplicated": "Widget \"{name}\" dupliziert.",
+      "duplicateError": "Fehler beim Duplizieren des Widgets.",
+      "toggleError": "Fehler beim Umschalten des Widgets Status.",
+      "deleteError": "Fehler beim Löschen des Widgets.",
+      "previewError": "Fehler beim Abrufen der Vorschau. Überprüfen Sie die URL und versuchen Sie es erneut.",
+      "executed": "Aktion erfolgreich ausgeführt.",
+      "executeError": "Aktion fehlgeschlagen: {error}"
     },
     "table": {
       "name": "Name",
       "url": "URL",
-      "display": ""
+      "display": "Anzeige"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Dieses Widget ist deaktiviert"
     }
   },
   "integration": {
@@ -983,20 +983,20 @@
         "placeholder": "Benutzerdefinierte App URL"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "API-Schlüssel holen"
       }
     },
     "action": {
       "create": "Neue Integration"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} Widgets",
+      "noWidgets": "Keine Widgets",
+      "detected": "Über Docker erkannt"
     },
     "category": {
       "dnsHole": "DNS",
-      "mediaService": "",
+      "mediaService": "Medien",
       "calendar": "Kalender",
       "mediaSearch": "Suche",
       "mediaRelease": "Veröffentlichungen",
@@ -1014,15 +1014,15 @@
       "releasesProvider": "Veröffentlichungen",
       "notifications": "Benachrichtigungen",
       "firewall": "Firewall",
-      "timetable": "",
+      "timetable": "Zeitplan",
       "photoService": "Fotos",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "documents": "Dokumente",
+      "notes": "Notizen",
+      "mediaMonitoring": "Überwachung",
+      "speedtest": "Geschwindigkeitstest",
+      "analytics": "Nutzungsdaten",
+      "mediaLibrary": "Medienbibliothek",
+      "uptimeMonitoring": "Überwachung der Betriebszeit"
     },
     "testConnection": {
       "action": {
@@ -1297,8 +1297,8 @@
           "newLabel": "Neuer privater Schlüssel"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Status Page Slug",
+          "newLabel": "Neuer Status Page Slug"
         }
       }
     },
@@ -1308,28 +1308,28 @@
       "full": "Voller Zugriff auf Integrationen"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Hörbuchregal",
+      "description": "Selbstgehosteter Audio- und Podcast-Server"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Selbstgehosteter Musik-Streaming-Server mit Subsonic API Kompatibilität"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Selbstgehostete Uptime Überwachung mit öffentlichen Statusseiten",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Der Slug der öffentlichen Statusseite. Standardwert ist \"Standard\", wenn nicht anderswertig gesetzt."
         },
         "apiKey": {
-          "description": ""
+          "description": "Optionaler API Schlüssel für Authentifizeriungs /Metriken Zugriff"
         }
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
     }
   },
   "media": {
@@ -1373,7 +1373,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Keine Medien hochgeladen"
     }
   },
   "common": {
@@ -1384,7 +1384,7 @@
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
-      "skip": "",
+      "skip": "Überspringen",
       "change": "Verändern",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
@@ -1625,7 +1625,7 @@
         "app": "App bearbeiten"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Änderungen an dieser App werden überall dort übernommen, wo sie über alle Dashboards hinweg verwendet wird."
       },
       "advancedOptions": {
         "label": "Erweiterte Einstellungen",
@@ -1731,11 +1731,20 @@
           "label": "In neuem Tab öffnen"
         },
         "withBorder": {
-          "label": ""
+          "label": "Rahmen anzeigen"
         },
         "items": {
           "label": "Lesezeichen",
           "add": "Lesezeichen hinzufügen"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -1874,13 +1883,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Zeitplan",
+      "description": "Zeigt Abfahrtszeiten für eine Station an",
+      "title": "{station} Abfahrt",
+      "noStation": "Keine Station ausgewählt",
       "option": {
         "station": {
-          "label": ""
+          "label": "Station"
         }
       }
     },
@@ -1955,32 +1964,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor Notiz",
+      "description": "Zeigt eine ausgewählte Notiz von Anchor an",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Notiz"
         },
         "showTitle": {
-          "label": ""
+          "label": "Titel anzeigen"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Letzte Aktualisierungen anzeigen"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Notiz zum Anzeigen auswählen",
+      "emptyContent": "Diese Notiz hat keinen Inhalt",
+      "notFound": "Notiz wurde nicht gefunden",
+      "noNotes": "Keine Notizen gefunden",
+      "integrationRequired": "Wählen Sie zuerst eine Anchor Integration aus",
+      "updatedAt": "Aktualisiert {date}",
+      "untitled": "Unbenannt",
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "readOnlyViewer": "Sie haben Leserechte auf diese Notiz. Die Bearbeitung ist deaktiviert.",
+      "saveForbidden": "Du hast keine Berechtigung diese Notiz zu bearbeiten.",
+      "saveFailed": "Fehler beim Speichern dieser Notiz. Bitte versuchen Sie es erneut."
     },
     "iframe": {
       "name": "iFrame",
@@ -2014,7 +2023,7 @@
           "label": "Geolokalisierung zulassen"
         },
         "allowModals": {
-          "label": ""
+          "label": "Modale erlauben"
         }
       },
       "error": {
@@ -2249,7 +2258,7 @@
           "label": "Speicher-Info anzeigen"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU Info anzeigen"
         },
         "showUptime": {
           "label": "Laufzeit anzeigen"
@@ -2390,187 +2399,187 @@
       }
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Überwachen Sie den Status Ihrer UPS Geräte über einen NUT Server",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Batterie anzeigen"
         },
         "showLoad": {
-          "label": ""
+          "label": "Laden anzeigen"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Spannung anzeigen"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Online",
+        "onBattery": "Im Akkubetrieb",
+        "lowBattery": "Niedriger Akkustand",
+        "charging": "Lade",
+        "unknown": "Unbekannt"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Laufzeit",
+        "load": "Laden",
+        "input": "Eingabe",
+        "output": "Ausgabe"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der UPS Daten"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Verbesserte Überwachung von Medienservern mit detaillierten Stream- und Transcodierungsdaten",
       "option": {
         "showStreams": {
           "label": "Aktive Streams anzeigen"
         },
         "showStats": {
-          "label": ""
+          "label": "Statistikübersicht anzeigen"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Letzte Aktivitäten anzeigen"
         },
         "showViolations": {
-          "label": ""
+          "label": "Verstöße anzeigen"
         }
       },
       "stats": {
         "activeStreams": "Aktive Streams",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "totalUsers": "Anzahl der Benutzer",
+        "transcodes": "Transkodierungen",
+        "bandwidth": "Bandbreite"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Keine aktiven Streams",
+        "user": "Benutzer",
+        "media": "Medien",
+        "state": "Status",
+        "quality": "Qualität",
+        "device": "Gerät",
+        "progress": "Fortschritt",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direkte Wiedergabe",
+          "transcode": "Transkodieren",
+          "directStream": "Direkter Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Kürzliche Aktivitäten",
+        "empty": "Keine kürzliche Aktivitäten",
+        "watched": "Gesehen",
+        "partial": "Teilweise"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Verstöße",
+        "empty": "Keine kürzlichen Verstöße",
+        "rule": "Regel",
+        "user": "Benutzer"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Keine Abschnitte aktiviert",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Keine Tracearr Integration konfiguriert",
+        "internalServerError": "Fehler beim Abrufen der Tracearr Daten"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Ergebnisse",
+      "description": "Besucherstatistiken aus Ihrer Umami Ergebnisinstanz anzeigen",
+      "visitors": "Besucher",
+      "active": "Aktiv",
+      "pageviews": "Seitenaufrufe",
+      "visits": "Besuche",
+      "bounceRate": "abprallen",
+      "avgDuration": "Durchschnitt",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Webseite",
+          "description": "Wählen Sie eine Website, die von Ihrer Umami Instanz verfolgt wird",
+          "placeholder": "Wähle eine Website",
+          "loading": "Website wird geladen...",
+          "noWebsites": "Keine Webseiten gefunden",
+          "configureIntegrationFirst": "Verbinde zuerst eine Umami Integration"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Zeitfenster",
+          "description": "Der Zeitraum, in dem Besucherdaten angezeigt werden sollen",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Heute",
+            "24h": "Letzte 24 Stunden",
+            "7d": "Letzte 7 Tage",
+            "30d": "Letzte 30 Tage",
+            "month": "Dieser Monat",
+            "lastMonth": "Letzter Monat"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Veranstaltung",
+          "description": "Gesamte Vorkommnisse eines bestimmten Ereignisses anzeigen",
+          "placeholder": "Wählen Sie ein Ereignis aus",
+          "loading": "Ereignisse werden geladen...",
+          "noEvents": "Keine Ereignisse gefunden",
+          "none": "Kein Ereignis",
+          "configureWebsiteFirst": "Wählen Sie zuerst eine Webseite aus, um Ereignisse zu laden"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammtyp",
+          "description": "Stil für das Diagramm anzeigen",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Balkendiagramm",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammstil",
+          "description": "Wie die Ereignisserie im Diagramm angezeigt wird",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Seite an Seite",
+            "overlay": "Overlay (subset)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Ansicht",
+          "description": "Was im Widget Körper angezeigt werden soll",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Diagramm",
+            "events": "Ereignis Diagramm",
+            "topPages": "Top Seiten",
+            "topReferrers": "Top Referrer"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Ereignisse",
+          "description": "Wählen Sie eine oder mehrere Ereignisse zum Diagramm",
+          "placeholder": "Ereignisse auswählen...",
+          "loading": "Ereignisse werden geladen...",
+          "noEvents": "Keine Ereignisse gefunden",
+          "configureWebsiteFirst": "Wählen Sie zuerst eine Webseite aus, um Ereignisse zu laden"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Elemente anzeigen",
+          "description": "Anzahl der anzuzeigenden Top Elemente (max. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "Ereignisse",
+        "label": "Ereignisse"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direkt"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direkt"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Wählen Sie Ereignisse zum Diagramm"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Keine Umami Integration konfiguriert",
+        "noWebsite": "Keine Webseite konfiguriert",
+        "noData": "Keine Daten verfügbar",
+        "internalServerError": "Fehler beim Abrufen der Umami-Daten"
       }
     },
     "common": {
@@ -2669,95 +2678,95 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Übersicht des Paperless-ngx Dokumentenarchivs",
+      "documentsTotal": "Dokumente insgesamt",
+      "documentsInbox": "Posteingang",
+      "correspondents": "Beteiligte",
+      "tags": "Tags",
+      "documentTypes": "Dokumententypen",
+      "inboxRatio": "Eingangs-Verhältnis",
+      "inbox": "Eingang",
+      "total": "insgesamt",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Zeige Eingangs Verhältnis",
+          "description": "Zeigt das Dokumentenverhältnis zwischen Eingang und Gesamtsumme im Heldenbereich an"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Inbox Ring anzeigen",
+          "description": "Fortschrittsring neben dem Eingangs-Verhältnis anzeigen"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Gesamte Dokumente anzeigen",
+          "description": "Zeigt die Gesamtzahl der Dokumente im Archiv an"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Eingangszähler anzeigen",
+          "description": "Zeige die Anzahl der nicht verarbeiteten Dokumente im Posteingang"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Korrespondenten anzeigen",
+          "description": "Gesamtzahl der Korrespondenten anzeigen"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Tags anzeigen",
+          "description": "Gesamtzahl der Tags anzeigen"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Dokumententypen anzeigen",
+          "description": "Gesamtzahl der Dokumenttypen anzeigen"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Paperless-ngx-Daten"
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich Serverstatistik einblenden",
+      "description": "Informationen über Ihre Immich Instanz",
       "option": {
         "showUsers": {
           "label": "Benutzer anzeigen",
-          "description": ""
+          "description": "Anzahl der Benutzer Ihrer Instanz anzeigen"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Fotos anzeigen",
+          "description": "Anzahl der Fotos in deiner Instanz anzeigen"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Videos anzeigen",
+          "description": "Anzahl der Videos in deiner Instanz anzeigen"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Speicher anzeigen",
+          "description": "Gesamtanzahl des verwendeten Speichers anzeigen"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Benutzer",
+      "photos": "Fotos",
+      "videos": "Videos",
+      "storage": "Verwendeter Speicher"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album ID",
+          "description": "Dies ist eine eindeutige ID, die sich auf Ihr Immich Album bezieht. Sie können diese ID finden, indem Sie ein Album öffnen und die einzigartige Zeichenkette von der URL kopieren, zum Beispiel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Intervall in Sekunden",
+          "description": "Rotieren Sie alle X Sekunden zwischen den Bildern im Album. Muss mindestens 1 sein und unter 3600 liegen."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Foto Infos anzeigen",
+          "description": "Datum des Bildes und des aktuellen Indexes am unteren Rand der Diashow anzeigen"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Diashow der Bilder in Ihrem Immich Album",
+      "noAlbumSelected": "Kein Album ausgewählt, Widget bearbeiten und Album auswählen",
+      "noPhotos": "Keine Fotos in diesem Album"
     },
     "downloads": {
       "name": "Download Client",
@@ -3068,7 +3077,7 @@
           "label": "Beschreibung ausblenden"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Poster Bild anzeigen"
         }
       }
     },
@@ -3283,46 +3292,46 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Zeigt die Ergebnisse des Speedtest Trackers an.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Letztes Ergebnis anzeigen"
         },
         "showStats": {
-          "label": ""
+          "label": "Durchschnitt anzeigen"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Letzte Ergebnisse anzeigen"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Ping Grafik anzeigen"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Letztes Ergebnis",
+      "averages": "Durchschnitt",
+      "tests": "{count} Versuche",
+      "recentResults": "Neueste Ergebnisse",
+      "recentResultsSpeed": "Geschwindigkeit",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Durchschnittlicher Download",
+      "avgUpload": "Durchschnittlicher Upload",
+      "avgPing": "Durchschnittlicher Ping",
+      "healthy": "Gesund",
+      "unhealthy": "Fehlerhaft",
+      "ok": "Ok",
+      "fail": "Fehlgeschlagen",
+      "noSectionsEnabled": "Aktivieren Sie mindestens einen Abschnitt in den Widget Optionen.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Speedtest Daten"
       }
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "option": {
         "showAverageUptime": {

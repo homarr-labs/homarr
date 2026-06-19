@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "crwdns5635:0crwdne5635:0",
+      "description": "crwdns5637:0crwdne5637:0",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "crwdns5639:0crwdne5639:0"
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "crwdns768:0crwdne768:0",
       "description": "crwdns770:0crwdne770:0",

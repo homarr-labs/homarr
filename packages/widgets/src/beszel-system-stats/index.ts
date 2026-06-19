@@ -1,9 +1,12 @@
-import { IconChartAreaLine } from "@tabler/icons-react";
+import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 const timePeriodOptions = [
+  { value: "1m", label: "Live" },
   { value: "1h", label: "1 Hour" },
   { value: "12h", label: "12 Hours" },
   { value: "24h", label: "24 Hours" },
@@ -17,7 +20,26 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      timePeriod: factory.select({ defaultValue: "1h", options: timePeriodOptions }),
+      systemId: factory.integrationSelect({
+        withDescription: true,
+        clearable: true,
+        useOptions: (integrationIds: string[]) => {
+          const {
+            data = [],
+            isPending,
+            isError,
+          } = clientApi.widget.beszel.getSystems.useQuery(
+            { integrationIds },
+            { enabled: integrationIds.length > 0, staleTime: 30_000 },
+          );
+          const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
+          return { data: selectData, isPending, isError };
+        },
+      }),
+      timePeriod: factory.select({
+        defaultValue: "1h",
+        options: timePeriodOptions,
+      }),
       showCpu: factory.switch({ defaultValue: true }),
       showMemory: factory.switch({ defaultValue: true }),
       showDisk: factory.switch({ defaultValue: true }),
@@ -27,5 +49,11 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showDockerMemory: factory.switch({ defaultValue: true }),
       showDockerNetwork: factory.switch({ defaultValue: true }),
     }));
+  },
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconServerOff,
+      message: (t) => t("widget.beszelSystemStats.error.internalServerError"),
+    },
   },
 }).withDynamicImport(() => import("./component"));

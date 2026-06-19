@@ -1739,6 +1739,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "DNS Hole Oversigt",
       "description": "Viser oversigten over dit DNS-hul",
