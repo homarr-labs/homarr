@@ -55,7 +55,7 @@ export abstract class Integration {
     return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }
 
-  private createUrl(
+  protected createUrl(
     inputUrl: string,
     path: `/${string}`,
     queryParams?: Record<string, string | Date | number | boolean | null | undefined>,

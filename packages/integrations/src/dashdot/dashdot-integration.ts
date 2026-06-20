@@ -16,6 +16,16 @@ import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-mo
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 
 export class DashDotIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  /**
+   * Dashdot v5 had endpoints at /api/info, /api/load/* etc.
+   * Dashdot v6 removed the /api prefix. Users who previously configured
+   * their integration URL as http://host:port/api need it normalized.
+   */
+  protected override url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean | null | undefined>) {
+    const normalizedUrl = this.integration.url.replace(/\/api\/?$/, "");
+    return this.createUrl(normalizedUrl, path, queryParams);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/info"));
     if (!response.ok) return TestConnectionError.StatusResult(response);
