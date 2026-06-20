@@ -40,7 +40,7 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const { data: results = [] } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
+  const { data: results = [], error: alertsError } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
     staleTime: 15_000,
     refetchInterval: 15_000,
     retry: false,
@@ -90,6 +90,8 @@ export default function BeszelAlertsWidget({
 
   const triggeredAlerts = alerts.filter((a) => a.triggered);
   const okAlerts = alerts.filter((a) => !a.triggered);
+
+  if (alertsError) throw alertsError;
 
   return (
     <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>

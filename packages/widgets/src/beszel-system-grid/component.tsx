@@ -1,7 +1,7 @@
 "use client";
 
 import type { MantineSize } from "@mantine/core";
-import { Badge, Box, Card, Group, Progress, Text, Stack, useComputedColorScheme } from "@mantine/core";
+import { Badge, Box, Card, Group, Progress, Text, Stack } from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -153,7 +153,6 @@ interface SystemCardProps {
   t: ReturnType<typeof useScopedI18n<"widget.beszelSystemGrid">>;
   size: SizeConfig;
   maxMetrics: number;
-  backgroundColor: string;
   itemRadius: MantineSize;
 }
 
@@ -311,14 +310,14 @@ const metricRenderers = [
   },
 ] as const;
 
-const SystemCard = ({ system, options, t, size, maxMetrics, backgroundColor, itemRadius }: SystemCardProps) => {
+const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius }: SystemCardProps) => {
   const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
 
   return (
     <Card
       padding={size.cardPadding}
       radius={itemRadius}
-      bg={backgroundColor}
+      bg="transparent"
       h="100%"
       style={{
         overflow: "hidden",
@@ -354,18 +353,16 @@ export default function BeszelSystemGridWidget({
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
   const board = useRequiredBoard();
-  const colorScheme = useComputedColorScheme("light");
-  const opacity = board.opacity / 100;
-  const bgBase: Record<"light" | "dark", string> = { dark: "57, 57, 57", light: "246, 247, 248" };
-  const backgroundColor = `rgba(${bgBase[colorScheme]}, ${opacity})`;
 
-  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+  const { data: results = [], error: systemsError } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
+
+  if (systemsError) throw systemsError;
 
   const cols = getColCount(width, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
@@ -396,7 +393,6 @@ export default function BeszelSystemGridWidget({
           t={t}
           size={size}
           maxMetrics={maxMetrics}
-          backgroundColor={backgroundColor}
           itemRadius={board.itemRadius}
         />
       ))}
