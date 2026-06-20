@@ -37,14 +37,19 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     const upload = this.extractNetworkTrafficData(netdata, 2); // Index 2 is "sent"
     const download = this.extractNetworkTrafficData(netdata, 1); // Index 1 is "received"
 
+    // The "memory" reporting graph reports available (free) memory, its legend is ["time", "available"].
+    // Used memory is therefore the physical total minus what is still available (clamped against timing skew).
+    const memAvailableInBytes = memoryData[1] ?? 0; // Index 0 is the UNIX timestamp, Index 1 is available bytes
+    const memUsedInBytes = Math.max(systemInformation.physmem - memAvailableInBytes, 0);
+
     return {
       cpuUtilization: cpuData.reduce((acc, item) => acc + (item > 100 ? 0 : item), 0) / cpuData.length,
       cpuTemp: Math.max(...cpuTempData.filter((_item, index) => index > 0)),
-      memAvailableInBytes: systemInformation.physmem,
-      memUsedInBytes: memoryData[1] ?? 0, // Index 0 is UNIX timestamp, Index 1 is free space in bytes
+      memAvailableInBytes,
+      memUsedInBytes,
       fileSystem: datasets.map((dataset) => ({
         deviceName: dataset.name,
-        available: `${dataset.size}`, // TODO: can we use number instead of string here?
+        available: `${dataset.free}`, // free space left on the pool
         used: `${dataset.allocated}`,
         percentage: (dataset.allocated / dataset.size) * 100,
       })),
