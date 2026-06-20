@@ -8,14 +8,46 @@ import dayjs from "dayjs";
 
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-const formatTime = (timestamp: string) => dayjs(timestamp).format("HH:mm");
-const formatTimeLive = (timestamp: string) => dayjs(timestamp).format("HH:mm:ss");
+export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
-function prepareRecords<T>(records: T[], live: boolean) {
-  if (live) {
-    return { fmt: formatTimeLive, ordered: records };
+const timeFormats: Record<BeszelTimePeriod, string> = {
+  "1m": "HH:mm:ss",
+  "1h": "HH:mm",
+  "12h": "HH:mm",
+  "24h": "HH:mm",
+  "1w": "MMM D",
+  "30d": "MMM D",
+};
+
+const periodDays: Partial<Record<BeszelTimePeriod, number>> = { "1w": 7, "30d": 30 };
+
+function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod) {
+  const fmt = (timestamp: string) => dayjs(timestamp).format(timeFormats[timePeriod]);
+  if (timePeriod === "1m") {
+    return { fmt, ordered: records };
   }
-  return { fmt: formatTime, ordered: [...records].toReversed() };
+  return { fmt, ordered: [...records].toReversed() };
+}
+
+function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod) {
+  const days = periodDays[timePeriod];
+  if (!days) return data;
+
+  const fmt = (ts: string) => dayjs(ts).format(timeFormats[timePeriod]);
+  const now = dayjs();
+  const existingDays = new Set(data.map((d) => dayjs(d.rawTime as string).format("YYYY-MM-DD")));
+  const result = [...data];
+
+  for (let i = days; i >= 0; i--) {
+    const d = now.subtract(i, "day").startOf("day");
+    const key = d.format("YYYY-MM-DD");
+    if (!existingDays.has(key)) {
+      const iso = d.toISOString();
+      result.push({ time: fmt(iso), rawTime: iso });
+    }
+  }
+
+  return result.toSorted((a, b) => new Date(a.rawTime as string).getTime() - new Date(b.rawTime as string).getTime());
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
@@ -77,7 +109,7 @@ const BeszelAreaChart = memo(
         dataKey="time"
         curveType="monotone"
         withGradient={false}
-        connectNulls
+        connectNulls={false}
         withDots={false}
         type={type}
         strokeWidth={1}
@@ -96,16 +128,18 @@ const BeszelAreaChart = memo(
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
-  live = false,
+  timePeriod: BeszelTimePeriod = "1h",
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    const { fmt, ordered } = prepareRecords(systemStats, live);
-    return ordered.map((r) => ({
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+    const mapped = ordered.map((r) => ({
       time: fmt(r.created),
+      rawTime: r.created,
       ...mapFn(r.stats),
     }));
-  }, [systemStats, mapFn, live]);
+    return padTimeGrid(mapped, timePeriod);
+  }, [systemStats, mapFn, timePeriod]);
 
 export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
   const prevRef = useRef<string[]>([]);
@@ -144,19 +178,20 @@ export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
-  live = false,
+  timePeriod: BeszelTimePeriod = "1h",
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
-    const { fmt, ordered } = prepareRecords(containerStats, live);
-    return ordered.map((record) => {
-      const point: Record<string, unknown> = { time: fmt(record.created) };
+    const { fmt, ordered } = prepareRecords(containerStats, timePeriod);
+    const mapped = ordered.map((record) => {
+      const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
       const byName = new Map(record.stats.map((c) => [c.n, c]));
       for (const name of containerNames) {
         point[name] = extract(byName.get(name));
       }
       return point;
     });
-  }, [containerStats, containerNames, metric, live]);
+    return padTimeGrid(mapped, timePeriod);
+  }, [containerStats, containerNames, metric, timePeriod]);

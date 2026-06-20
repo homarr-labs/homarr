@@ -15,6 +15,7 @@ import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
 import { containerColors } from "../beszel/_shared/colors";
+import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import {
   BeszelChartPanel,
   CPU_Y_AXIS_DOMAIN,
@@ -153,30 +154,31 @@ export default function BeszelSystemStatsWidget({
   const systemStats = activeStats?.systemStats;
   const containerStatsRaw = activeStats?.containerStats;
 
-  const cpuData = useSystemChartData(statsWhenShown(options.showCpu, systemStats), mappers.cpu, isLive);
-  const memoryData = useSystemChartData(statsWhenShown(options.showMemory, systemStats), mappers.memory, isLive);
-  const diskData = useSystemChartData(statsWhenShown(options.showDisk, systemStats), mappers.disk, isLive);
-  const diskIOData = useSystemChartData(statsWhenShown(options.showDiskIO, systemStats), mappers.diskIO, isLive);
-  const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, isLive);
+  const timePeriod = options.timePeriod as BeszelTimePeriod;
+  const cpuData = useSystemChartData(statsWhenShown(options.showCpu, systemStats), mappers.cpu, timePeriod);
+  const memoryData = useSystemChartData(statsWhenShown(options.showMemory, systemStats), mappers.memory, timePeriod);
+  const diskData = useSystemChartData(statsWhenShown(options.showDisk, systemStats), mappers.disk, timePeriod);
+  const diskIOData = useSystemChartData(statsWhenShown(options.showDiskIO, systemStats), mappers.diskIO, timePeriod);
+  const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, timePeriod);
 
   const containerNames = useContainerNames(statsWhenShown(showDocker, containerStatsRaw));
   const dockerCpuData = useDockerChartData(
     statsWhenShown(options.showDockerCpu, containerStatsRaw),
     containerNames,
     "cpu",
-    isLive,
+    timePeriod,
   );
   const dockerMemData = useDockerChartData(
     statsWhenShown(options.showDockerMemory, containerStatsRaw),
     containerNames,
     "memory",
-    isLive,
+    timePeriod,
   );
   const dockerNetData = useDockerChartData(
     statsWhenShown(options.showDockerNetwork, containerStatsRaw),
     containerNames,
     "network",
-    isLive,
+    timePeriod,
   );
 
   const containerSeries = useMemo(
