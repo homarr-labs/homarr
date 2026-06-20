@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Wysyłaj anonimowe dane analityczne",
               "text": "Homarr będzie wysyłał anonimowe dane analityczne przy użyciu oprogramowania open source Umami. Nigdy nie zbiera żadnych danych osobowych, dlatego jest w pełni zgodny z RODO i CCPA. Zachęcamy do włączenia analityki, ponieważ pomaga to naszemu zespołowi open source w identyfikowaniu problemów i ustalaniu priorytetów w backlogu."
-            },
-            "widgetData": {
-              "title": "Dane widżetu",
-              "text": "Wyślij informacje o tym, które widżety (i w jakiej ilości) masz skonfigurowane. Nie obejmuje to adresów URL, nazw ani żadnych innych danych."
-            },
-            "integrationData": {
-              "title": "Informacje o integracjach",
-              "text": "Wyślij informacje o tym, które integracje (i w jakiej ilości) masz skonfigurowane. Nie obejmuje to adresów URL, nazw ani żadnych innych danych."
-            },
-            "usersData": {
-              "title": "Dane użytkowników",
-              "text": "Wyślij liczbę użytkowników oraz informację, czy SSO jest aktywne."
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Zaktualizowano {when}",
       "search": "Szukaj wśród {count} kontenerów",
       "selected": "Wybrano {selectCount} z {totalCount} kontenerów",
-      "footer": "Łącznie {count} kontenerów"
+      "footer": "Łącznie {count} kontenerów",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

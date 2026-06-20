@@ -4415,18 +4415,6 @@
             "general": {
               "title": "",
               "text": ""
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "",
-              "text": ""
-            },
-            "usersData": {
-              "title": "",
-              "text": ""
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Uppdaterad {when}",
       "search": "",
       "selected": "",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

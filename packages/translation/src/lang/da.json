@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Indsend anonyme analysedata",
               "text": "Homarr vil sende anonymiserede analyser ved hjælp af open source-softwaren Umami. Den indsamler aldrig personlige oplysninger og er derfor fuldt ud GDPR & CCPA kompatibel. Vi opfordrer dig til at aktivere analyser, fordi det hjælper vores open source-team til at identificere problemer og prioritere vores backlog."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send hvilke widgets (og deres antal) du har konfigureret. Indeholder ikke URL'er, navne eller andre data."
-            },
-            "integrationData": {
-              "title": "Integrationsdata",
-              "text": "Send hvilke integrationer (og deres antal) du har konfigureret. Indeholder ikke URL'er, navne eller andre data."
-            },
-            "usersData": {
-              "title": "Brugerdata",
-              "text": "Send mængden af brugere, og om du har aktiveret SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Opdateret {when}",
       "search": "Søg {count} containere",
       "selected": "{selectCount} af {totalCount} containere valgt",
-      "footer": "Total {count} containere"
+      "footer": "Total {count} containere",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

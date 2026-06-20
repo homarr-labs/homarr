@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Enviar estadísticas anónimas",
               "text": "Homarr enviará estadísticas anónimas usando el software de código abierto Umami. Nunca recopila información personal y por lo tanto cumple plenamente con GDPR y CCPA. Te animamos a habilitar esta característica ya que ayuda a nuestro equipo de código abierto a identificar problemas y priorizar su resolución."
-            },
-            "widgetData": {
-              "title": "Datos del widget",
-              "text": "Enviar qué widgets (y su cantidad) has configurado. No incluye URLs, nombres ni ningún otro dato."
-            },
-            "integrationData": {
-              "title": "Datos de integración",
-              "text": "Enviar qué integraciones (y su cantidad) has configurado. No incluye URLs, nombres ni ningún otro dato."
-            },
-            "usersData": {
-              "title": "Datos de usuarios",
-              "text": "Enviar la cantidad de usuarios y si has activado SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Actualizado {when}",
       "search": "Buscar {count} contenedores",
       "selected": "{selectCount} de {totalCount} contenedores seleccionados",
-      "footer": "{count} contenedores en total"
+      "footer": "{count} contenedores en total",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
