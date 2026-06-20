@@ -18,13 +18,17 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 
 interface SizeConfig {
   iconSize: number;
@@ -154,6 +158,7 @@ interface SystemCardProps {
   size: SizeConfig;
   maxMetrics: number;
   itemRadius: MantineSize;
+  onClick?: () => void;
 }
 
 const metricRenderers = [
@@ -310,7 +315,7 @@ const metricRenderers = [
   },
 ] as const;
 
-const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius }: SystemCardProps) => {
+const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick }: SystemCardProps) => {
   const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
 
   return (
@@ -319,11 +324,14 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius }: System
       radius={itemRadius}
       bg="transparent"
       h="100%"
+      onClick={onClick}
+      className={onClick ? classes.clickableCard : undefined}
       style={{
         overflow: "hidden",
         display: "flex",
         flexDirection: "column" as const,
         border: "0.0625rem solid var(--border-color)",
+        cursor: onClick ? "pointer" : undefined,
       }}
     >
       <Group gap="xs" mb={2}>
@@ -353,6 +361,7 @@ export default function BeszelSystemGridWidget({
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
   const board = useRequiredBoard();
+  const { openModal } = useModalAction(BeszelSystemStatsModal);
 
   const { data: results = [], error: systemsError } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
@@ -385,17 +394,24 @@ export default function BeszelSystemGridWidget({
         overflow: scrollEnabled ? "auto" : "hidden",
       }}
     >
-      {filteredSystems.map((system) => (
-        <SystemCard
-          key={system._key}
-          system={system}
-          options={options}
-          t={t}
-          size={size}
-          maxMetrics={maxMetrics}
-          itemRadius={board.itemRadius}
-        />
-      ))}
+      {filteredSystems.map((system) => {
+        const integrationId = system._key.split(":")[0] ?? "";
+        const handleClick = isEditMode
+          ? undefined
+          : () => openModal({ integrationId, systemId: system.id }, { title: system.name });
+        return (
+          <SystemCard
+            key={system._key}
+            system={system}
+            options={options}
+            t={t}
+            size={size}
+            maxMetrics={maxMetrics}
+            itemRadius={board.itemRadius}
+            onClick={handleClick}
+          />
+        );
+      })}
     </Box>
   );
 }

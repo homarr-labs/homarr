@@ -1,0 +1,7 @@
+.clickableCard {
+  transition: background-color 150ms;
+}
+
+.clickableCard:hover {
+  background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
+}
