@@ -21,7 +21,10 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
    * Dashdot v6 removed the /api prefix. Users who previously configured
    * their integration URL as http://host:port/api need it normalized.
    */
-  protected override url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean | null | undefined>) {
+  protected override url(
+    path: `/${string}`,
+    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
+  ) {
     const normalizedUrl = this.integration.url.replace(/\/api\/?$/, "");
     return this.createUrl(normalizedUrl, path, queryParams);
   }
