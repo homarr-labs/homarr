@@ -132,8 +132,9 @@ const happyResponder = (method: string) => {
           aggregations: emptyAggregations(),
           start: 0,
           end: 1,
-          legend: [],
-          data: [[1000, 8_000_000_000]],
+          // The "memory" graph reports available (free) memory: legend is ["time", "available"].
+          legend: ["time", "available"],
+          data: [[1000, 6_000_000_000]],
         },
         {
           name: "cputemp",
@@ -194,15 +195,17 @@ describe("TrueNasIntegration", () => {
       version: "TrueNAS-SCALE-24.10",
       cpuModelName: "Intel Xeon",
       cpuTemp: 45,
-      memAvailableInBytes: 16_000_000_000,
-      memUsedInBytes: 8_000_000_000,
+      // physmem (16 GB) minus the reported available 6 GB leaves 10 GB used.
+      memAvailableInBytes: 6_000_000_000,
+      memUsedInBytes: 10_000_000_000,
       uptime: 3600,
       rebootRequired: false,
       availablePkgUpdates: 0,
       loadAverage: null,
       gpu: [],
       network: { up: 20_000, down: 10_000 },
-      fileSystem: [{ deviceName: "tank", available: "1000", used: "500", percentage: 50 }],
+      // `available` is the free space left on the pool (free = 500), not its total size.
+      fileSystem: [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
     });
   });
