@@ -1,3 +1,17 @@
+/* Make the DataTable transparent so the board card's opacity-controlled
+   background shows through. The mantine-datatable defaults to
+   var(--mantine-color-body) which is opaque. */
+.beszel-table,
+.beszel-table .mantine-datatable-table,
+.beszel-table .mantine-datatable-table thead,
+.beszel-table .mantine-datatable-table tbody,
+.beszel-table .mantine-datatable-table tfoot,
+.beszel-table .mantine-datatable-table tr,
+.beszel-table th,
+.beszel-table td {
+  background-color: transparent !important;
+}
+
 .beszel-table th {
   white-space: nowrap;
 }

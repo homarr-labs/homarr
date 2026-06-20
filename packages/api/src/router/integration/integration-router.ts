@@ -27,6 +27,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
+import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -469,6 +470,10 @@ export const integrationRouter = createTRPCRouter({
       kind: integration.kind,
       url: input.url,
     });
+
+    // Invalidate all cached data for this integration so that widgets pick up the
+    // new configuration immediately instead of serving stale (or errored) data.
+    await invalidateIntegrationCacheAsync(input.id);
   }),
   delete: protectedProcedure
     .meta({
@@ -490,6 +495,9 @@ export const integrationRouter = createTRPCRouter({
       }
 
       await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
+
+      // Clean up any cached data left behind by the deleted integration.
+      await invalidateIntegrationCacheAsync(input.id);
     }),
   getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");

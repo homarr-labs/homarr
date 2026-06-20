@@ -75,9 +75,6 @@ describe("saveSettings", () => {
       settingsKey: "analytics",
       value: {
         enableGeneral: true,
-        enableWidgetData: true,
-        enableIntegrationData: true,
-        enableUserData: true,
       },
     });
 
@@ -87,9 +84,7 @@ describe("saveSettings", () => {
         settingKey: "analytics",
         value: SuperJSON.stringify({
           enableGeneral: true,
-          enableWidgetData: true,
-          enableIntegrationData: true,
-          enableUserData: true,
+          instanceId: null,
         }),
       },
     ]);

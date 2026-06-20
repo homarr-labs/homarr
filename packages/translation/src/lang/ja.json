@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "アプリ",
       "description": "アプリをボードに埋め込みます。",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "匿名の解析を送信",
               "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(MySQL/PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
-            },
-            "widgetData": {
-              "title": "ウィジェットのデータ",
-              "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
-            },
-            "integrationData": {
-              "title": "連携情報",
-              "text": "あなたが設定した連携機能（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
-            },
-            "usersData": {
-              "title": "ユーザー情報",
-              "text": "SSOをアクティベートしたユーザーの数を送信します"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "{when} に更新しました",
       "search": "{count} 個のコンテナを検索",
       "selected": "{totalCount} 個のうち、{selectCount} 個のコンテナが選択されています",
-      "footer": "合計 {count} 個のコンテナ"
+      "footer": "合計 {count} 個のコンテナ",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

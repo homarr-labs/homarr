@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Verbinde zuerst eine Integration",
+      "loading": "Wird geladen...",
+      "placeholder": "Wählen Sie eine Option",
+      "noResults": "Keine Ergebnisse gefunden",
+      "loadError": "Fehler beim Laden der Optionen"
+    },
     "app": {
       "name": "App",
       "description": "Bettet eine App in das Board ein.",
@@ -1740,11 +1747,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "ArchiveTeam Warrior Status, Projekte und aktive Archivaufträge überwachen.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Broadcast Nachrichten anzeigen"
         }
       }
     },
@@ -3332,58 +3339,58 @@
     },
     "uptimeKuma": {
       "name": "Uptime Kuma",
-      "description": "",
+      "description": "Laufzeit Statistiken von der Uptime Kuma Statusseite überwachen",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Durchschnittliche Laufzeit anzeigen",
+          "description": "Zeige den durchschnittlichen Prozentsatz der 24 Stunden Laufzeit an"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Uptime Ring anzeigen",
+          "description": "Einen Fortschrittsring neben dem durchschnittlichen Laufzeit Wert anzeigen"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Alle Monitore anzeigen",
+          "description": "Zeigt die Gesamtzahl der konfigurierten Monitore an"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Aktive anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit aktiv sind"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Inaktive anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit nicht verfügbar sind"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Pausierte anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit pausiert sind"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Durchschnittliche Laufzeit (24h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Alle Monitore",
+        "upCount": "Aktiv",
+        "downCount": "Inaktiv",
+        "pausedCount": "Pausiert"
       },
       "error": {
         "internalServerError": ""
       }
     },
     "audioStats": {
-      "name": "",
+      "name": "Audiostatistiken",
       "description": "",
       "option": {
         "showArtists": {
-          "label": "",
+          "label": "Künstler anzeigen",
           "description": ""
         },
         "showAlbums": {
           "label": "",
-          "description": ""
+          "description": "Zeigt die Gesamtzahl der Alben in deiner Musikbibliothek an (Navidrome)"
         },
         "showSongs": {
-          "label": "",
+          "label": "Songs anzeigen",
           "description": ""
         },
         "showNowPlaying": {
@@ -3412,10 +3419,10 @@
         },
         "showListeningTime": {
           "label": "",
-          "description": ""
+          "description": "Zeigt deine gesamte Hörzeit (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
+          "label": "Aktive Streams anzeigen",
           "description": ""
         },
         "compactMode": {
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3596,13 +3606,13 @@
           "label": ""
         },
         "showMemory": {
-          "label": ""
+          "label": "Arbeitsspeicher anzeigen"
         },
         "showDisk": {
           "label": ""
         },
         "showGpu": {
-          "label": ""
+          "label": "GPU anzeigen"
         },
         "showLoadAvg": {
           "label": ""
@@ -3611,13 +3621,13 @@
           "label": ""
         },
         "showTemp": {
-          "label": ""
+          "label": "Temperatur anzeigen"
         },
         "showBattery": {
           "label": ""
         },
         "showServices": {
-          "label": ""
+          "label": "Dienste anzeigen"
         },
         "showUptime": {
           "label": ""
@@ -3626,18 +3636,21 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
-        "cpu": "",
-        "memory": "",
+        "cpu": "CPU",
+        "memory": "Arbeitsspeicher",
         "disk": "",
-        "gpu": "",
+        "gpu": "GPU",
         "loadAvg": "",
         "net": "",
         "temp": "",
         "battery": "",
-        "services": "",
+        "services": "Dienste",
         "uptime": "",
-        "agent": ""
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
@@ -3652,17 +3665,24 @@
         }
       },
       "empty": "",
-      "history": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "Verlauf",
       "resolved": "",
       "status": {
         "triggered": "",
-        "ok": ""
+        "ok": "Ok"
       }
     },
     "beszelSystemStats": {
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3691,21 +3711,27 @@
           "label": ""
         }
       },
-      "selectSystem": "",
+      "selectSystem": "System auswählen",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
-          "title": "",
+          "title": "CPU-Auslastung",
           "subtitle": "",
-          "series": ""
+          "series": "CPU"
         },
         "memory": {
           "title": "",
           "subtitle": "",
-          "series": "",
+          "series": "Belegt",
           "cache": ""
         },
         "disk": {
-          "title": "",
+          "title": "Festplattenbelegung",
           "subtitle": "",
           "series": ""
         },
@@ -4256,12 +4282,12 @@
                   "message": ""
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Abgeschlossen",
+                  "notStarted": "Nicht gestartet"
                 },
                 "name": {
                   "management": "",
-                  "dashboard": ""
+                  "dashboard": "Dashboard"
                 }
               }
             }
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
               "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
-            },
-            "widgetData": {
-              "title": "Widget Daten",
-              "text": "Senden Sie die Widgets (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "integrationData": {
-              "title": "Integrationsdaten",
-              "text": "Senden Sie die Intregrationen (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "usersData": {
-              "title": "Benutzerdaten",
-              "text": "Senden Sie die Anzahl der Benutzer und ob Sie SSO aktiviert haben"
             }
           },
           "crawlingAndIndexing": {
@@ -4678,15 +4692,15 @@
               "subtitle": "",
               "description": "",
               "noApiKey": "",
-              "createApiKeyButton": "",
+              "createApiKeyButton": "API Key erstellen",
               "endpoint": {
                 "title": ""
               },
               "authentication": {
-                "title": "",
+                "title": "Authentifizierung",
                 "intro": "",
                 "apiKey": {
-                  "title": "",
+                  "title": "API Key (manuell)",
                   "description": ""
                 },
                 "oauth": {
@@ -4699,12 +4713,12 @@
               "clientConfig": {
                 "title": "",
                 "streamableHttp": {
-                  "recommended": "",
+                  "recommended": "Empfohlen",
                   "title": "",
                   "worksWith": "",
                   "addToConfig": "",
                   "cursor": "",
-                  "claudeDesktop": "",
+                  "claudeDesktop": "{name}: {file}",
                   "claudeCode": "",
                   "vsCodeCopilot": "",
                   "replaceHint": ""
@@ -4715,16 +4729,16 @@
                 }
               },
               "testConnection": {
-                "title": "",
+                "title": "Verbindung testen",
                 "description": "",
                 "hint": ""
               },
               "availableTools": {
-                "title": "",
+                "title": "Verfügbare Tools",
                 "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "columnType": "Typ",
+                "columnName": "Tool",
+                "columnDescription": "Beschreibung"
               },
               "troubleshooting": {
                 "title": "",
@@ -4753,65 +4767,65 @@
               "oneClick": {
                 "title": "",
                 "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "vsCode": "In VS Code installieren",
+                "cursor": "In Cursor installieren",
+                "copyUrl": "MCP URL kopieren",
+                "copied": "Kopiert!",
+                "copyHint": "Für ChatGPT, Claude Code oder weitere MCP-Client",
+                "manualConfig": "Manuelle Konfiguration"
               }
             }
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Komplette Datenbanksicherung",
+          "metaTitle": "Sichern & Wiederherstellen",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Datenbank exportieren",
+            "description": "Laden Sie eine vollständige Sicherung Ihrer SQLite-Datenbank herunter, inklusive aller Einstellungen, Benutzer, Boards und verschlüsselten Integrationsgeheimnissen. Das Backup wird als ZIP-Datei mit dem Verschlüsselungsschlüssel und den Metadaten gebündelt.",
+            "button": "Sicherung herunterladen",
+            "error": "Export fehlgeschlagen",
             "confirm": {
               "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "warningTitle": "Dieser Export enthält Ihre gesamte Datenbank.",
+              "warningBody": "Das Backup umfasst alle Benutzer, Integrationsgeheimnisse (verschlüsselt), API-Keys, Board-Konfigurationen und App-Daten. Speichern Sie die exportierte Datei sicher ab und teilen Sie diese nicht.",
+              "typePrompt": "Geben Sie \"{phrase}\" ein, um fortzufahren",
+              "submit": "Datenbank exportieren",
+              "cancel": "Abbrechen"
             }
           },
           "import": {
-            "title": "",
+            "title": "Datenbank wiederherstellen",
             "description": "",
             "warning": "",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Ziehen Sie Ihre Backup-ZIP hierher oder klicken Sie zum Durchsuchen",
+              "description": "Nur .zip Dateien aus einer Homarr SQLite-Sicherung werden akzeptiert"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Datei ändern",
+            "button": "Datenbank wiederherstellen",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Wiederherstellung abgeschlossen",
+              "message": "Datenbank wurde erfolgreich wiederhergestellt. Die Anwendung wird neu gestartet..."
             },
-            "error": ""
+            "error": "Importieren fehlgeschlagen"
           },
           "preview": {
             "title": "",
             "exported": "",
-            "loading": "",
+            "loading": "Analysiere Backup-Datei...",
             "errorTitle": "",
             "entity": "",
             "count": "",
-            "boards": "",
+            "boards": "Boards",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Boards",
+              "user": "Benutzer",
+              "app": "Apps",
+              "integration": "Integrationen",
+              "item": "Widgets",
+              "media": "Medien",
+              "search_engine": "Suchmaschinen"
             },
             "analyzeError": "",
             "invalidMissingMetadata": "",
@@ -4819,11 +4833,11 @@
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Backup-ZIP hierher ziehen",
+              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
+            "analyzing": "Analysiere Backup-Datei...",
+            "changeFile": "Datei ändern",
             "continueToRestore": "",
             "tryAgain": "",
             "analysisError": "",
@@ -4875,7 +4889,7 @@
               "message": ""
             },
             "failed": {
-              "title": ""
+              "title": "Wiederherstellung fehlgeschlagen"
             },
             "invalidMissingMetadata": "",
             "invalidMissingDb": "",
@@ -4928,7 +4942,9 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": "Insgesamt {count} Container"
+      "footer": "Insgesamt {count} Container",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -4961,15 +4977,15 @@
         "label": "Ports"
       },
       "host": {
-        "label": ""
+        "label": "Host"
       }
     },
     "action": {
       "title": "Aktionen",
       "logs": {
-        "label": "",
+        "label": "Logs anzeigen",
         "page": {
-          "title": ""
+          "title": "{name} Logs"
         }
       },
       "start": {
@@ -5364,12 +5380,12 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Benutzerdefinierte Widgets",
         "new": {
-          "label": ""
+          "label": "Neu"
         },
         "edit": {
-          "label": "",
+          "label": "Bearbeiten",
           "flow": {
             "label": ""
           }
@@ -5398,7 +5414,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Logs"
           }
         },
         "kubernetes": {
@@ -5550,26 +5566,26 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Einstellungen",
             "children": {
               "detail": {
                 "title": "",
                 "backHint": "",
-                "backAction": ""
+                "backAction": "Zurück"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Einstellung konnte nicht aktualisiert werden"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Einstellungen öffnen"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Aktiviert",
+                "disabled": "Deaktiviert"
               },
               "board": {
                 "none": "",
@@ -5580,34 +5596,34 @@
                 "unavailable": ""
               },
               "colorScheme": {
-                "label": "",
+                "label": "Farbschema",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Farbschema auswählen"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Sprache",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Bevorzugte Sprache auswählen"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Standard Suchmaschine",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Standard Suchmaschine auswählen"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Suchergebnisse in neuem Tab öffnen",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Suchergebnisse in neuem Tab öffnen"
                   }
                 }
               },
@@ -5620,10 +5636,10 @@
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Erster Tag der Woche",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Ersten Tag der Woche auswählen"
                   }
                 }
               },
@@ -5652,23 +5668,23 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Alle Einstellungen öffnen"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Suche nach Filmen oder Serien zum Abfragen",
         "requestMovie": "Einen Film anfordern",
         "requestSeries": "Eine Serie anfordern",
         "openIn": "In {kind} öffnen",
         "group": {
-          "title": ""
+          "title": "Filme und Serien"
         },
         "action": {
           "search": {
-            "label": "",
+            "label": "Suche nach Filmen oder Serien",
             "description": "",
             "disabled": {
               "noIntegration": "",
@@ -6098,23 +6114,23 @@
         "description": ""
       },
       "appsCreate": {
-        "title": "",
+        "title": "App hinzufügen",
         "description": ""
       },
       "integrationsList": {
-        "title": "",
+        "title": "Ihre Integrationen",
         "description": ""
       },
       "integrationsCreate": {
-        "title": "",
+        "title": "Integration hinzufügen",
         "description": ""
       },
       "usersList": {
-        "title": "",
+        "title": "Ihre Benutzer",
         "description": ""
       },
       "usersCreate": {
-        "title": "",
+        "title": "Benutzer erstellen",
         "description": ""
       }
     },
@@ -6124,7 +6140,7 @@
         "description": ""
       },
       "editMode": {
-        "title": "",
+        "title": "Bearbeitungsmodus",
         "description": ""
       },
       "settings": {

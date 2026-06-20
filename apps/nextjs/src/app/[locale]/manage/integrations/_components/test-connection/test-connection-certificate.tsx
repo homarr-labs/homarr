@@ -131,6 +131,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
       {(error.data.reason === "untrusted" && rootCertificate.isSelfSigned) ||
       error.data.reason === "hostnameMismatch" ? (
         <Button
+          type="button"
           variant="default"
           fullWidth
           onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
@@ -140,6 +141,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
       ) : null}
       {error.data.reason === "untrusted" && !rootCertificate.isSelfSigned ? (
         <Button
+          type="button"
           variant="default"
           fullWidth
           onClick={() =>

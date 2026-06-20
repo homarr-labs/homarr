@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "אפליקציה",
       "description": "הטמעת אפליקציה בלוח.",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "שליחת ניתוח נתונים אנונימי",
               "text": "Homarr ישלח ניתוחים אנונימיים באמצעות התוכנה בקוד פתוח Umami. הוא לעולם אינו אוסף מידע אישי ולכן תואם לחלוטין לדרישות ה-GDPR וה-CCPA. אנו מעודדים אותך להפעיל ניתוחים, כיוון שזה מסייע לצוות הקוד הפתוח שלנו לזהות בעיות ולהעניק עדיפות למשימות שברשימת העדיפויות שלנו."
-            },
-            "widgetData": {
-              "title": "נתוני ווידג׳ט",
-              "text": "שלח אילו ווידג'טים (וכמותם) הוגדרו. אינו כולל כתובות רשת, שמות או כל מידע נוסף אחר."
-            },
-            "integrationData": {
-              "title": "נתוני אינטגרציה",
-              "text": "שלח אילו אינטגרציות (וכמותם) הוגדרו. לא כולל כתובות רשת, שמות או כל מידע נוסף אחר."
-            },
-            "usersData": {
-              "title": "נתוני משתמשים",
-              "text": "שלח את כמות המשתמשים והאם הופעל SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "עודכן ב- {when}",
       "search": "חפש {count} קונטיינרים",
       "selected": "{selectCount} מ- {totalCount} קונטיינרים נבחרו",
-      "footer": "סה״כ {count} קונטיינרים"
+      "footer": "סה״כ {count} קונטיינרים",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

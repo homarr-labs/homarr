@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Een app insluiten op het bord.",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "Anonieme analyses sturen",
               "text": "Homarr verstuurt geanonimiseerde analyses met behulp van de open source software Umami. Het verzamelt nooit persoonlijke informatie en is daarom volledig GDPR & CCPA compliant. We moedigen je aan om analytics in te schakelen omdat het ons open source team helpt bij het identificeren van problemen en het prioriteren van onze backlog."
-            },
-            "widgetData": {
-              "title": "Widgetgegevens",
-              "text": "Stuur welke widgets (en hun aantal) je hebt geconfigureerd. Bevat geen URL's, namen of andere gegevens."
-            },
-            "integrationData": {
-              "title": "Integratiegegevens",
-              "text": "Stuur welke integraties (en het aantal) je hebt geconfigureerd. Bevat geen URL's, namen of andere gegevens."
-            },
-            "usersData": {
-              "title": "Gebruikersgegevens",
-              "text": "Stuur het aantal gebruikers en of je SSO hebt geactiveerd"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "{when} bijgewerkt",
       "search": "{count} containers zoeken",
       "selected": "{selectCount} van {totalCount} containers geselecteerd",
-      "footer": "Totaal {count} containers"
+      "footer": "Totaal {count} containers",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

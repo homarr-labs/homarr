@@ -1,3 +1,16 @@
+## [1.67.0](https://github.com/homarr-labs/homarr/compare/v1.66.1...v1.67.0) (2026-06-19)
+
+### Features
+
+* **analytics:** migrate from Umami to PostHog server-side analytics ([#5983](https://github.com/homarr-labs/homarr/issues/5983)) ([d059023](https://github.com/homarr-labs/homarr/commit/d059023b51a323df027c1cf033454440bd0d7e57))
+* Calculate and display total CPU and memory usage ([#5911](https://github.com/homarr-labs/homarr/issues/5911)) ([d9cbd54](https://github.com/homarr-labs/homarr/commit/d9cbd5427d0e5be3e5dbecca8d6069dc8074d810))
+
+### Bug Fixes
+
+* **auth:** isolate session cookies from other Auth.js apps on same host ([#5996](https://github.com/homarr-labs/homarr/issues/5996)) ([e1a245f](https://github.com/homarr-labs/homarr/commit/e1a245ff2d8520d08957c4a7dbe01d039607a973))
+* **deps:** update tailwindcss monorepo to ^4.3.1 ([#5988](https://github.com/homarr-labs/homarr/issues/5988)) ([78b6e52](https://github.com/homarr-labs/homarr/commit/78b6e520ac095129398d3da8f2441df408e93e9f))
+* **downloads:** sort stalled torrents last when sorting by finish time ([#6011](https://github.com/homarr-labs/homarr/issues/6011)) ([c56d9d6](https://github.com/homarr-labs/homarr/commit/c56d9d6894c717b5c70ab75d6a100d4d1071c2d3)), closes [#5416](https://github.com/homarr-labs/homarr/issues/5416)
+
 ## [1.65.0](https://github.com/homarr-labs/homarr/compare/v1.64.0...v1.65.0) (2026-06-12)
 
 ### Features

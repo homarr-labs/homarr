@@ -66,7 +66,7 @@ export default function BeszelSystemTableWidget({
   width,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
-  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+  const { data: results = [], error: systemsError } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
@@ -254,6 +254,8 @@ export default function BeszelSystemTableWidget({
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
   }, [options, t, size]);
+
+  if (systemsError) throw systemsError;
 
   return (
     <DataTable

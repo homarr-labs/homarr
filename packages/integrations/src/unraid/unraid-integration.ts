@@ -59,8 +59,8 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       cpuTemp: undefined, // Not implemented, see https://github.com/unraid/api/issues/1597
       fileSystem: systemInfo.array.disks.map((disk) => ({
         deviceName: disk.name,
-        used: humanFileSize(disk.fsUsed * 1024), // API is in KiB (kibibytes), covert to bytes
-        available: `${disk.size * 1024}`, // API is in KiB (kibibytes), covert to bytes
+        used: humanFileSize(disk.fsUsed * 1024), // API is in KiB (kibibytes), convert to bytes
+        available: `${(disk.size - disk.fsUsed) * 1024}`, // free space left on the disk, API is in KiB (kibibytes)
         percentage: (disk.fsUsed / disk.size) * 100, // The units are the same, therefore the actual unit is irrelevant
       })),
       smart: systemInfo.array.disks.map((disk) => ({

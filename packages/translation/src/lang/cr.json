@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "crwdns5641:0crwdne5641:0",
+      "loading": "crwdns5643:0crwdne5643:0",
+      "placeholder": "crwdns5645:0crwdne5645:0",
+      "noResults": "crwdns5647:0crwdne5647:0",
+      "loadError": "crwdns5649:0crwdne5649:0"
+    },
     "app": {
       "name": "crwdns732:0crwdne732:0",
       "description": "crwdns734:0crwdne734:0",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "crwdns4811:0crwdne4811:0",
+      "error": {
+        "internalServerError": "crwdns5651:0crwdne5651:0"
+      },
       "column": {
         "system": "crwdns4813:0crwdne4813:0",
         "cpu": "crwdns4815:0crwdne4815:0",
@@ -3626,6 +3636,9 @@
           "label": "crwdns4863:0crwdne4863:0"
         }
       },
+      "error": {
+        "internalServerError": "crwdns5653:0crwdne5653:0"
+      },
       "metric": {
         "cpu": "crwdns4865:0crwdne4865:0",
         "memory": "crwdns4867:0crwdne4867:0",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "crwdns4895:0crwdne4895:0",
+      "error": {
+        "internalServerError": "crwdns5655:0crwdne5655:0"
+      },
       "history": "crwdns4897:0crwdne4897:0",
       "resolved": "crwdns4899:0crwdne4899:0",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "crwdns4905:0crwdne4905:0",
       "description": "crwdns4907:0crwdne4907:0",
       "option": {
+        "systemId": {
+          "label": "crwdns5657:0crwdne5657:0",
+          "description": "crwdns5659:0crwdne5659:0"
+        },
         "timePeriod": {
           "label": "crwdns4909:0crwdne4909:0"
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "crwdns4927:0crwdne4927:0",
+      "error": {
+        "internalServerError": "crwdns5661:0crwdne5661:0",
+        "liveConnectionFailed": "crwdns5663:0crwdne5663:0",
+        "switchToHistorical": "crwdns5665:0crwdne5665:0",
+        "systemNotFound": "crwdns5667:0crwdne5667:0"
+      },
       "chart": {
         "cpu": {
           "title": "crwdns4929:0crwdne4929:0",
@@ -4387,20 +4413,8 @@
           "analytics": {
             "title": "crwdns1764:0crwdne1764:0",
             "general": {
-              "title": "crwdns1766:0crwdne1766:0",
-              "text": "crwdns3878:0crwdne3878:0"
-            },
-            "widgetData": {
-              "title": "crwdns1770:0crwdne1770:0",
-              "text": "crwdns1772:0crwdne1772:0"
-            },
-            "integrationData": {
-              "title": "crwdns1774:0crwdne1774:0",
-              "text": "crwdns1776:0crwdne1776:0"
-            },
-            "usersData": {
-              "title": "crwdns1778:0crwdne1778:0",
-              "text": "crwdns1780:0crwdne1780:0"
+              "title": "crwdns5673:0crwdne5673:0",
+              "text": "crwdns5675:0crwdne5675:0"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "crwdns1894:0{when}crwdne1894:0",
       "search": "crwdns3432:0{count}crwdne3432:0",
       "selected": "crwdns1898:0{selectCount}crwdnd1898:0{totalCount}crwdne1898:0",
-      "footer": "crwdns3434:0{count}crwdne3434:0"
+      "footer": "crwdns3434:0{count}crwdne3434:0",
+      "totalCpu": "crwdns5669:0{cpu}crwdne5669:0",
+      "totalMemory": "crwdns5671:0{memory}crwdne5671:0"
     },
     "field": {
       "name": {

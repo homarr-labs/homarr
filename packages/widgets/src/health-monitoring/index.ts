@@ -95,6 +95,12 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
             return !integrationKinds.includes("proxmox");
           },
         },
+        defaultTab: {
+          shouldHide(_, integrationKinds) {
+            // The system/cluster tabs only render for Proxmox, so the default tab choice does nothing otherwise
+            return !integrationKinds.includes("proxmox");
+          },
+        },
       },
     );
   },

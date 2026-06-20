@@ -61,10 +61,11 @@ export default function BeszelSystemStatsWidget({
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
-  const { data: systemsResult = [], isPending: systemsPending } = clientApi.widget.beszel.getSystems.useQuery(
-    { integrationIds },
-    { staleTime: 30 * 1000 },
-  );
+  const {
+    data: systemsResult = [],
+    isPending: systemsPending,
+    error: systemsError,
+  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { staleTime: 30 * 1000, retry: false });
 
   const systems = useMemo(
     () => systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name }))),
@@ -89,14 +90,14 @@ export default function BeszelSystemStatsWidget({
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
   const isLive = options.timePeriod === "1m";
 
-  const { data: statsResult } = clientApi.widget.beszel.getSystemStats.useQuery(
+  const { data: statsResult, error: statsError } = clientApi.widget.beszel.getSystemStats.useQuery(
     {
       integrationIds,
       systemId: selectedSystem,
       timePeriod: options.timePeriod as "1m" | "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "" },
+    { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "", retry: false },
   );
 
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
@@ -185,6 +186,9 @@ export default function BeszelSystemStatsWidget({
 
   const cols = gridColumns[Number(width > 600)];
 
+  if (systemsError) throw systemsError;
+  if (!isLive && statsError) throw statsError;
+
   if (!systemsPending && !systemExists && systems.length > 0) {
     return (
       <Center h="100%">
@@ -222,7 +226,11 @@ export default function BeszelSystemStatsWidget({
   }
 
   return (
-    <ScrollArea h="100%" style={{ pointerEvents: (isEditMode && "none") || undefined }}>
+    <ScrollArea
+      h="100%"
+      className={classes.beszelStatsContainer}
+      style={{ pointerEvents: (isEditMode && "none") || undefined }}
+    >
       <Stack gap="md" p="sm">
         {!isEditMode && systems.length > 1 && (
           <Menu position="bottom-start" withArrow shadow="md" withinPortal>

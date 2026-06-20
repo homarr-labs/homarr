@@ -139,11 +139,11 @@ export default async function Layout(props: {
       suppressHydrationWarning
     >
       <head>
-        <Analytics />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
+        <Analytics enabled={serverSettings.analytics.enableGeneral} />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />

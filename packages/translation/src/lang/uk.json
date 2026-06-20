@@ -812,7 +812,7 @@
       "singleValue": "",
       "keyValue": "",
       "table": "",
-      "statGrid": "",
+      "statGrid": "Кольорові картки статистики в сітці — як-от віджети Pi-Hole або Speedtest",
       "progressBars": "",
       "statusIndicator": "",
       "countGrid": "",
@@ -874,7 +874,7 @@
       "exportError": "",
       "duplicated": "",
       "duplicateError": "",
-      "toggleError": "",
+      "toggleError": "Не вдалося змінити стан віджету.",
       "deleteError": "",
       "previewError": "",
       "executed": "",
@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Додаток",
       "description": "Вбудовує додаток до дошки.",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "Надсилати анонімну аналітику",
               "text": "Homarr буде відправляти анонімну аналітику з використанням програмного забезпечення з відкритим вихідним кодом Umami. Він ніколи не збирає жодної особистої інформації і, таким чином, сумісний з GDPR та CCPA. Ми заохочуємо вас увімкнути аналітику, тому що це допомагає нашій команді визначати проблеми та пріоритетні задачі."
-            },
-            "widgetData": {
-              "title": "Дані віджетів",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "integrationData": {
-              "title": "Дані інтеграції",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "usersData": {
-              "title": "Дані користувачів",
-              "text": "Надсилати кількість користувачів і чи активували ви SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "Оновлено {when}",
       "search": "",
       "selected": "Вибрано {selectCount} із {totalCount} контейнерів",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
