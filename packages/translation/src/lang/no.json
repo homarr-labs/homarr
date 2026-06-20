@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Send anonym brukerdata",
               "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send hvilke widgeter (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
-            },
-            "integrationData": {
-              "title": "Integrasjonsdata",
-              "text": "Send hvilke integrasjoner (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
-            },
-            "usersData": {
-              "title": "Brukeres data",
-              "text": "Send antall brukere og om du har aktivert SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Oppdatert {when}",
       "search": "Søk {count} containere",
       "selected": "{selectCount} av {totalCount} containere valgt",
-      "footer": "Totalt {count} containere"
+      "footer": "Totalt {count} containere",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
