@@ -180,7 +180,7 @@ catalog:
   vite: ^8.0.16
   undici: 7.27.2
   use-deep-compare-effect: ^1.8.1
-  video.js: ^8.23.7
+  video.js: ^8.23.8
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.1.8
   winston: 3.19.0
