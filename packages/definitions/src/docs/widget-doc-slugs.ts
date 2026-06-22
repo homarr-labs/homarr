@@ -45,6 +45,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   umami: "umami",
   vpn: "vpn",
   ups: "ups",
+  archiveTeamWarrior: null,
   beszelSystemTable: "beszel-system-table",
   beszelSystemGrid: "beszel-system-grid",
   beszelAlerts: "beszel-alerts",

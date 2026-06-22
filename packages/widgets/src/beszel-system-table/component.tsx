@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -27,6 +28,7 @@ import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -34,7 +36,7 @@ type SystemRowWithKey = BeszelSystemRow & { _key: string };
 
 interface SizeConfig {
   iconSize: number;
-  fontSize: "xs" | "10px";
+  fontSize: "xs" | "sm";
   progressSize: "xs" | "sm";
   cellPadding: number;
   valueMiw: number;
@@ -42,9 +44,21 @@ interface SizeConfig {
 
 const getSizeConfig = (width: number): SizeConfig => {
   if (width < 400) {
-    return { iconSize: 10, fontSize: "10px", progressSize: "xs", cellPadding: 2, valueMiw: 30 };
+    return {
+      iconSize: 10,
+      fontSize: "xs",
+      progressSize: "xs",
+      cellPadding: 2,
+      valueMiw: 30,
+    };
   }
-  return { iconSize: 14, fontSize: "xs", progressSize: "sm", cellPadding: 4, valueMiw: 38 };
+  return {
+    iconSize: 14,
+    fontSize: "sm",
+    progressSize: "sm",
+    cellPadding: 4,
+    valueMiw: 38,
+  };
 };
 
 export default function BeszelSystemTableWidget({
@@ -54,9 +68,10 @@ export default function BeszelSystemTableWidget({
   width,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
-  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+  const { openModal } = useModalAction(BeszelSystemStatsModal);
+  const { data: results = [], error: systemsError } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 30 * 1000 },
+    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
   const size = getSizeConfig(width);
 
@@ -243,6 +258,13 @@ export default function BeszelSystemTableWidget({
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
   }, [options, t, size]);
 
+  const handleRowClick = ({ record }: { record: SystemRowWithKey }) => {
+    const integrationId = record._key.split(":")[0] ?? "";
+    openModal({ integrationId, systemId: record.id }, { title: record.name });
+  };
+
+  if (systemsError) throw systemsError;
+
   return (
     <DataTable
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
@@ -258,6 +280,7 @@ export default function BeszelSystemTableWidget({
       idAccessor="_key"
       height="100%"
       className="beszel-table"
+      onRowClick={isEditMode ? undefined : handleRowClick}
     />
   );
 }

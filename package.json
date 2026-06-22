@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.65.0",
+  "version": "1.67.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -62,9 +62,9 @@
   },
   "engines": {
     "node": ">=24.16.0",
-    "pnpm": ">=11.0.0"
+    "pnpm": ">=11.6.0"
   },
-  "packageManager": "pnpm@11.5.3",
+  "packageManager": "pnpm@11.7.0",
   "dependencies": {
     "jsonpath-plus": "catalog:"
   }

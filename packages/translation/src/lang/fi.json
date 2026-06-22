@@ -1,0 +1,6160 @@
+{
+  "init": {
+    "step": {
+      "start": {
+        "title": "Tervetuloa Homarriin",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": "",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "Valitse kaikki",
+            "unselectAll": "Tyhjennä valinnat"
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "",
+            "boards": "",
+            "integrations": "Integraatiot",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Pääkäyttäjä",
+        "subtitle": "Määritä pääkäyttäjäsi kirjautumistiedot.",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "Käyttäjän luonti epäonnistui"
+          }
+        }
+      },
+      "group": {
+        "title": "Ulkoinen ryhmä",
+        "subtitle": "Määritä ulkoisille käyttäjille käytettävä ryhmä.",
+        "form": {
+          "name": {
+            "label": "Ryhmän nimi",
+            "description": "Nimen tulee vastata ulkoisen palveluntarjoajan pääkäyttäjäryhmää"
+          }
+        }
+      },
+      "settings": {
+        "title": "Asetukset",
+        "subtitle": "Määritä palvelinasetukset."
+      },
+      "integrations": {
+        "title": "Integraatiot",
+        "subtitle": "Valitse käyttämäsi palvelut.",
+        "description": "Valitse integraatiot, jotka haluat yhdistää. Kojelaudallaesi lisätään automaattisesti yhteensopivia widgettejä.",
+        "action": {
+          "continue": "Jatka",
+          "skip": "Ohita toistaiseksi"
+        },
+        "configure": {
+          "progress": "{current}/{total}",
+          "skip": "Ohita tämä integraatio",
+          "finishing": "Kojelautaasi määritetään...",
+          "error": {
+            "title": "Määritys epäonnistui",
+            "message": "Jotain meni pieleen kojelautaasi määritettäessä. Yritä uudelleen."
+          },
+          "helpers": {
+            "tooltip": "URL-apurit",
+            "description": "Nämä apurit pyrkivät arvaamaan palveluidesi URL-osoitteet. Jos tämä ei toimi, kirjoita osoite manuaalisesti."
+          }
+        },
+        "urlTemplate": {
+          "label": "Perus-URL",
+          "placeholder": "homelab.local tai 192.168.1.1",
+          "hint": "Syötä perusverkkotunnuksesi tai IP-osoite täyttääksesi integraation URL-osoitteet automaattisesti",
+          "warning": "Asettamalla perusosoitteen nyt, voidaan integraatioiden URL-osoitteet täyttää automaattisesti, joka nopeuttaa käyttöönottoa",
+          "preview": "esim. {example}",
+          "mode": {
+            "subdomain": "Aliverkkotunnus",
+            "hostPort": "Isäntä:Portti"
+          }
+        },
+        "docker": {
+          "detected": "Docker löysi {count} palvelua",
+          "detectedBreakdown": "{integrations} integraatiota · {apps} sovellusta",
+          "summary": "Homarr havaitse {apps} sovellusta, joista {integrations} löytyy sisäänrakennettu integraatio",
+          "appBadge": "Sovellus",
+          "appSectionLabel": "Ohjauspaneeliin lisättävät sovellukset ({count} valittu)",
+          "scanning": "Dockeria tutkitaan...",
+          "scanningDescription": "Tunnistetaan järjestelmässäsi suoritettavia kontteja"
+        }
+      },
+      "finish": {
+        "title": "Viimeistele määritys",
+        "subtitle": "Olet valmis aloittamaan!",
+        "description": "Olet suorittanut käyttöönoton onnistuneesti ja voit nyt aloittaa Homarrin käytön. Valitse seuraava toimenpiteesi:",
+        "action": {
+          "goToBoard": "Avaa paneeli {name}",
+          "createBoard": "Luo ensimmäinen paneelisi",
+          "inviteUser": "Kutsu muita käyttäjiä",
+          "docs": "Lue ohjeita"
+        }
+      }
+    },
+    "backToStart": "Palaa alkuun"
+  },
+  "user": {
+    "title": "Käyttäjät",
+    "name": "Käyttäjä",
+    "page": {
+      "login": {
+        "title": "Kirjaudu tilillesi",
+        "subtitle": "Tervetuloa takaisin! Syötä kirjautumistietosi"
+      },
+      "invite": {
+        "title": "Liity Homarriin",
+        "subtitle": "Tervetuloa Homarriin! Luo itsellesi käyttäjätunnus",
+        "description": "Sinut kutsui {username}"
+      },
+      "init": {
+        "title": "Uusi Homarr-asennus",
+        "subtitle": "Luo ensimmäinen pääkäyttäjä"
+      }
+    },
+    "field": {
+      "email": {
+        "label": "Sähköpostiosoite",
+        "verified": "Vahvistettu"
+      },
+      "username": {
+        "label": "Käyttäjätunnus"
+      },
+      "password": {
+        "label": "Salasana",
+        "suggestionsTitle": "Salasanavihjeitä",
+        "suggestion": {
+          "length": "Vähintään 8 merkkiä",
+          "lowercase": "Sisältää pieni kirjain",
+          "uppercase": "Sisältää iso kirjain",
+          "number": "Sisältää numero",
+          "special": "Sisältää erikoismerkki"
+        }
+      },
+      "passwordConfirm": {
+        "label": "Vahvista salasana"
+      },
+      "previousPassword": {
+        "label": "Edellinen salasana"
+      },
+      "homeBoard": {
+        "label": "Kotipaneeli"
+      },
+      "pingIconsEnabled": {
+        "label": "Käytä ping-kuvakkeita"
+      },
+      "defaultSearchEngine": {
+        "label": "Oletushakukone"
+      },
+      "openSearchInNewTab": {
+        "label": "Avaa tulokset uudessa välilehdessä"
+      },
+      "ddgBangs": {
+        "label": "Käytä DuckDuckGon Bangs-komentoja"
+      }
+    },
+    "error": {
+      "usernameTaken": "Käyttäjätunnus on jo käytössä"
+    },
+    "action": {
+      "login": {
+        "label": "Kirjaudu",
+        "labelWith": "Kirjaudu {{provider}}-tunnuksella",
+        "notification": {
+          "success": {
+            "title": "Kirjautuminen onnistui",
+            "message": "Olet nyt kirjautunut"
+          },
+          "error": {
+            "title": "Kirjautuminen epäonnistui",
+            "message": "Kirjautumisesi epäonnistui"
+          }
+        },
+        "forgotPassword": {
+          "label": "Unohditko salasanasi?",
+          "description": "Pääkäyttäjät voivat käyttää seuraavaa komentoa salasanasi nollaukseen:"
+        }
+      },
+      "register": {
+        "label": "Luo tili",
+        "notification": {
+          "success": {
+            "title": "Tili luotiin",
+            "message": "Jatka kirjautumalla"
+          },
+          "error": {
+            "title": "Tilin luonti epäonnistui",
+            "message": "Tiliäsi ei voitu luoda"
+          }
+        }
+      },
+      "create": "Luo käyttäjä",
+      "changePassword": {
+        "label": "Vaihda salasana",
+        "notification": {
+          "success": {
+            "message": "Salasana vaihdettiin"
+          },
+          "error": {
+            "message": "Salasanaa ei voitu vaihtaa"
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Kotipaneelia ei voitu vaihtaa"
+          }
+        }
+      },
+      "changeSearchPreferences": {
+        "notification": {
+          "success": {
+            "message": "Hakuasetukset muutettiin"
+          },
+          "error": {
+            "message": "Hakuasetuksia ei voitu muuttaa"
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Viikon ensimmäistä päivää ei voitu vaihtaa"
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": "Ping-kuvakkeet otettiin käyttöön"
+          },
+          "error": {
+            "message": "Ping-kuvakkeita ei voitu kytkeä"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo Bangs -komentojen tila vaihdettiin"
+          },
+          "error": {
+            "message": "DuckDuckGo Bangs -komentojen tilaa ei voitu vaihtaa"
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "Vaihda kuva",
+          "notification": {
+            "success": {
+              "message": "Kuva vaihdettiin"
+            },
+            "error": {
+              "message": "Kuvaa ei voitu vaihtaa"
+            },
+            "toLarge": {
+              "title": "Kuva on liian suuri",
+              "message": "Kuvan enimmäiskoko on {size}"
+            }
+          }
+        },
+        "removeImage": {
+          "label": "Poista kuva",
+          "confirm": "Haluatko varmasti poistaa kuvan?",
+          "notification": {
+            "success": {
+              "message": "Kuva poistettiin"
+            },
+            "error": {
+              "message": "Kuvaa ei voitu poistaa"
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Profiilia ei voitu päivittää"
+          }
+        }
+      },
+      "delete": {
+        "label": "Poista käyttäjä pysyvästi",
+        "description": "Poistaa käyttäjän sekä kaikki heidän asetuksensa. Paneeleita ei poisteta. Käyttäjälle ei ilmoiteta.",
+        "confirm": "Haluatko varmasti poistaa käyttäjän {username} asetuksineen?"
+      },
+      "select": {
+        "label": "Valitse käyttäjä",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": "Valitse uusi omistaja"
+      }
+    }
+  },
+  "group": {
+    "title": "Ryhmät",
+    "name": "Ryhmä",
+    "search": "Suodata ryhmiä",
+    "field": {
+      "name": "Nimi",
+      "members": "Jäsenet",
+      "homeBoard": {
+        "label": "Kotipaneeli",
+        "description": "Vain ryhmän käytettävissä olevat paneelit ovat valittavissa"
+      },
+      "mobileBoard": {
+        "label": "Mobiilipaneeli",
+        "description": "Vain ryhmän käytettävissä olevat paneelit ovat valittavissa"
+      }
+    },
+    "permission": {
+      "admin": {
+        "title": "Ylläpito",
+        "item": {
+          "admin": {
+            "label": "Pääkäyttäjä",
+            "description": "Tämän tason jäsenillä on kaikkien ominaisuuksien ja asetusten täydet oikeudet."
+          }
+        }
+      },
+      "app": {
+        "title": "Sovellukset",
+        "item": {
+          "create": {
+            "label": "Sovellusten luonti",
+            "description": "Sallii jäsenten luoda sovelluksia."
+          },
+          "use-all": {
+            "label": "Sovellusten käyttö",
+            "description": "Sallii jäsenten lisätä kaikkia sovelluksia paneeleihinsa."
+          },
+          "modify-all": {
+            "label": "Sovellusten muokkaus",
+            "description": "Sallii jäsenten muokata kaikkia sovelluksia."
+          },
+          "full-all": {
+            "label": "Sovellusten hallinta",
+            "description": "Sallii jäsenten hallinnoida, käyttää ja poistaa kaikkia sovelluksia."
+          }
+        }
+      },
+      "board": {
+        "title": "Paneelit",
+        "item": {
+          "create": {
+            "label": "Paneelien luonti",
+            "description": "Sallii jäsenten luoda paneeleita."
+          },
+          "view-all": {
+            "label": "Paneelien tarkastelu",
+            "description": "Sallii jäsenten tarkastella kaikkia paneeleita."
+          },
+          "modify-all": {
+            "label": "Paneelien muokkaus",
+            "description": "Sallii jäsenten muokata kaikkia paneeleita (pois lukien käyttöoikeudet ja vaaravyöhyke)."
+          },
+          "full-all": {
+            "label": "Paneelien hallinta",
+            "description": "Sallii jäsenten tarkastella, muokata ja poistaa kaikkia paneeleita (mukaan lukien käyttöoikeudet ja vaaravyöhyke)."
+          }
+        }
+      },
+      "integration": {
+        "title": "Integraatiot",
+        "item": {
+          "create": {
+            "label": "Integraatioiden luonti",
+            "description": "Sallii jäsenten luoda integraatioita."
+          },
+          "use-all": {
+            "label": "Integraatioiden käyttö",
+            "description": "Sallii jäsenten lisätä kaikkia integraatioita paneeleihinsa."
+          },
+          "interact-all": {
+            "label": "Integraatioiden ohjaus",
+            "description": "Sallii jäsenten ohjata kaikkien integraatioiden toimintoja."
+          },
+          "full-all": {
+            "label": "Integraatioiden hallinta",
+            "description": "Salli jäsenten hallinnoida, käyttää ja ohjata kaikkia integraatiota."
+          }
+        }
+      },
+      "media": {
+        "title": "Mediatiedostot",
+        "item": {
+          "upload": {
+            "label": "Mediatiedostojen lisäys",
+            "description": "Sallii jäsenten lisätä mediatiedostoja."
+          },
+          "view-all": {
+            "label": "Mediatiedostojen käyttö",
+            "description": "Sallii jäsenten käyttää kaikkia mediatiedostoja."
+          },
+          "full-all": {
+            "label": "Mediatiedostojen hallinta",
+            "description": "Sallii jäsenten hallita ja poistaa kaikkia mediatiedostoja."
+          }
+        }
+      },
+      "other": {
+        "title": "Muut",
+        "item": {
+          "view-logs": {
+            "label": "Lokien tarkastelu",
+            "description": "Sallii jäsenten tarkastella lokitietoja."
+          }
+        }
+      },
+      "search-engine": {
+        "title": "Hakukoneet",
+        "item": {
+          "create": {
+            "label": "Hakukoneiden luonti",
+            "description": "Sallii jäsenten luoda hakukoneita."
+          },
+          "modify-all": {
+            "label": "Hakukoneiden muokkaus",
+            "description": "Sallii jäsenten muokata kaikkia hakukoneita."
+          },
+          "full-all": {
+            "label": "Hakukoneiden hallinta",
+            "description": "Sallii jäsenten hallita ja poistaa kaikkia hakukoneita."
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "Uusi ryhmä",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "Siirrä omistajuus",
+        "description": "Siirrä tämän ryhmän omistajuus toiselle käyttäjälle.",
+        "confirm": "Haluatko varmasti siirtää ryhmän {name} omistuksen käyttäjälle {username}?",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Omistajuutta ei voitu siirtää"
+          }
+        }
+      },
+      "addMember": {
+        "label": "Lisää jäsen"
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": "Haluatko varmasti poistaa ryhmästä käyttäjän {user}?"
+      },
+      "delete": {
+        "label": "Poista ryhmä",
+        "description": "Ryhmän poistosta ei ole paluuta. Ole varma, ennen kuin teet sen.",
+        "confirm": "Haluatko varmasti poistaa ryhmän {name}?",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Ryhmää {name} ei voitu poistaa"
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "Oikeudet tallennettiin",
+            "message": "Käyttöoikeuksien tallennus onnistui"
+          },
+          "error": {
+            "title": "Oikeuksia ei tallennettu",
+            "message": "Käyttöoikeuksia ei tallennettu"
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Ryhmää {name} ei voitu tallentaa"
+          }
+        }
+      },
+      "select": {
+        "label": "Valitse ryhmä",
+        "notFound": ""
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": "Paneelin asetuksia ei voitu tallentaa"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": "Sijaintia ei voitu vaihtaa"
+          }
+        }
+      }
+    },
+    "defaultGroup": {
+      "name": "Oletusryhmä",
+      "description": "{name} - Kaikki kirjautuneet käyttäjät"
+    }
+  },
+  "app": {
+    "search": "Suodata sovelluksia",
+    "page": {
+      "list": {
+        "title": "Sovellukset",
+        "noResults": {
+          "title": "Sovelluksia ei vielä ole",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "Uusi sovellus",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "Muokkaa sovellusta",
+        "notification": {
+          "success": {
+            "title": "Muutokset onnistuivat",
+            "message": "Sovelluksen tallennus onnistui"
+          },
+          "error": {
+            "title": "Muutoksia ei voitu ottaa käyttöön",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "Poista sovellus",
+        "message": "Haluatko varmasti poistaa sovelluksen {name}?",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": "Sovellusta ei voitu poistaa"
+          }
+        }
+      }
+    },
+    "field": {
+      "name": {
+        "label": "Nimi"
+      },
+      "description": {
+        "label": "Kuvaus"
+      },
+      "url": {
+        "label": "URL-osoite"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Käytä erillistä ping-osoitetta",
+          "description": "Vähentää Internet-yhteyden kuormitusta, jos Homarr voi käyttää paikallista isäntänimeä tai lähiverkkoa"
+        }
+      }
+    },
+    "action": {
+      "select": {
+        "label": "Valitse sovellus",
+        "notFound": "",
+        "search": "Suodata sovelluksia",
+        "noResults": "",
+        "action": "Valitse {app}",
+        "title": "Valitse paneeliin lisättävä sovellus"
+      },
+      "create": {
+        "title": "Luo uusi sovellus",
+        "description": "Luo uusi sovellus ",
+        "action": "Avaa sovelluksen luonti"
+      },
+      "add": "Lisää sovellus"
+    }
+  },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "",
+        "noResults": "",
+        "loading": ""
+      },
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "edit": {
+        "title": ""
+      }
+    },
+    "action": {
+      "create": "",
+      "import": "",
+      "save": "",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "addMapping": "",
+      "addColumn": "",
+      "edit": "",
+      "removeMapping": "",
+      "removeColumn": "",
+      "addItem": "",
+      "removeItem": "",
+      "addBar": "",
+      "duplicate": "",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": ""
+    },
+    "field": {
+      "name": "",
+      "description": "",
+      "iconUrl": "",
+      "url": "",
+      "authType": "",
+      "headerName": "",
+      "method": "",
+      "requestBody": "",
+      "displayType": "",
+      "jsonPath": "",
+      "jsonPathHint": "",
+      "label": "",
+      "unit": "",
+      "mappings": "",
+      "tablePath": "",
+      "tablePathHint": "",
+      "columns": "",
+      "header": "",
+      "items": "",
+      "gridColumns": "",
+      "cardStyle": "",
+      "bars": "",
+      "valuePath": "",
+      "maxPath": "",
+      "showPercentage": "",
+      "barSize": "",
+      "goodValues": "",
+      "dotSize": "",
+      "valueSize": "",
+      "labelPosition": "",
+      "kvLayout": "",
+      "striped": "",
+      "compact": "",
+      "maxHeight": "",
+      "color": "",
+      "buttonLabel": "",
+      "buttonColor": "",
+      "confirmText": "",
+      "confirmTextHint": "",
+      "successMessage": "",
+      "successMessageHint": "",
+      "enabled": "",
+      "template": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "",
+      "exampleLabelShort": "",
+      "exampleHeader": "",
+      "exampleUnit": "",
+      "iconUrl": "",
+      "url": "",
+      "headerName": "",
+      "jsonPath": "",
+      "tablePath": "",
+      "columnJsonPath": "",
+      "valuePath": "",
+      "maxPath": "",
+      "goodValues": "",
+      "color": ""
+    },
+    "cardStyleOption": {
+      "filled": "",
+      "outline": "",
+      "subtle": ""
+    },
+    "layoutOption": {
+      "list": "",
+      "grid": ""
+    },
+    "sizeOption": {
+      "sm": "",
+      "md": "",
+      "lg": "",
+      "xl": ""
+    },
+    "labelPositionOption": {
+      "above": "",
+      "below": ""
+    },
+    "fieldset": {
+      "general": "",
+      "connection": "",
+      "display": ""
+    },
+    "displayTypeDescription": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "method": {
+      "GET": "",
+      "POST": "",
+      "PUT": "",
+      "DELETE": "",
+      "PATCH": ""
+    },
+    "authType": {
+      "none": "",
+      "bearer": "",
+      "basic": "",
+      "apiKeyHeader": "",
+      "apiKeyQuery": ""
+    },
+    "displayType": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "secret": {
+      "apiKey": "",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    },
+    "preview": {
+      "title": "",
+      "test": "",
+      "hint": "",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "",
+      "url": "",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
+  "integration": {
+    "page": {
+      "list": {
+        "title": "Integraatiot",
+        "search": "Suodata integraatioita",
+        "noResults": {
+          "title": "Integraatioita ei vielä ole"
+        }
+      },
+      "create": {
+        "title": "Uusi {name} integraatio",
+        "notification": {
+          "success": {
+            "title": "Luonti onnistui",
+            "message": "Integraatio luotiin"
+          },
+          "error": {
+            "title": "Luonti epäonnistui",
+            "message": "Integraatiota ei voitu luoda"
+          }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Olemassa oleva",
+              "label": "Valitse olemassa oleva sovellus"
+            },
+            "new": {
+              "title": "Uusi",
+              "url": {
+                "label": "Sovelluksen URL-osoite",
+                "description": "Sovelluksen URL-osoite avautuu, kun se avataan hallintapaneelista"
+              }
+            }
+          }
+        }
+      },
+      "edit": {
+        "title": "Muokkaa integraatiota {name}",
+        "notification": {
+          "success": {
+            "title": "Muutokset onnistuivat",
+            "message": "Integraation tallennus onnistui"
+          },
+          "error": {
+            "title": "Muutoksia ei voitu ottaa käyttöön",
+            "message": "Integraatiota ei voitu tallentaa"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Liitä sovellus",
+            "remove": "Poista liitos",
+            "select": "Valitse liitettävä sovellus"
+          }
+        }
+      },
+      "delete": {
+        "title": "Poista integraatio",
+        "message": "Haluatko varmasti poistaa integraation {name}?",
+        "notification": {
+          "success": {
+            "title": "Poisto onnistui",
+            "message": "Integraatio poistettiin"
+          },
+          "error": {
+            "title": "Poisto epäonnistui",
+            "message": "Integraatiota ei voitu poistaa"
+          }
+        }
+      }
+    },
+    "field": {
+      "name": {
+        "label": "Nimi"
+      },
+      "url": {
+        "label": "URL-osoite"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Luo hakukone",
+        "description": "Integraatiota \"{kind}\" voidaan käyttää hakukoneiden kanssa. Merkitse tämä määrittääksesi hakukoneen automaattisesti."
+      },
+      "app": {
+        "sectionTitle": "Yhdistetty sovellus"
+      },
+      "createApp": {
+        "label": "Luo sovellus",
+        "description": "Luo sovellus, jolla on sama nimi ja kuvake kuin integraatiolla. Jätä syötekenttä tyhjäksi luodaksesi sovelluksen integraation URL-osoitteella."
+      },
+      "appHref": {
+        "placeholder": "Mukautettu sovelluksen URL-osoite"
+      },
+      "apiKeySettings": {
+        "label": "Nouda rajapinnan avain"
+      }
+    },
+    "action": {
+      "create": "Uusi integraatio"
+    },
+    "grid": {
+      "widgetCount": "{count} widgettiä",
+      "noWidgets": "Widgettejä ei ole",
+      "detected": "Havaittu Dockerin kautta"
+    },
+    "category": {
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Kalenteri",
+      "mediaSearch": "Haku",
+      "mediaRelease": "Julkaisut",
+      "mediaRequest": "Pyynnöt",
+      "downloadClient": "Lataukset",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Sekalaiset",
+      "smartHomeServer": "Älykoti",
+      "indexerManager": "Indeksoija",
+      "healthMonitoring": "Terveys",
+      "search": "Haku",
+      "mediaTranscoding": "Transkoodaus",
+      "networkController": "Verkko",
+      "releasesProvider": "Julkaisut",
+      "notifications": "Ilmoitukset",
+      "firewall": "Palomuuri",
+      "timetable": "Aikataulu",
+      "photoService": "Valokuvat",
+      "documents": "",
+      "notes": "Muistiinpanot",
+      "mediaMonitoring": "Valvonta",
+      "speedtest": "Nopeustestaus",
+      "analytics": "Analytiikka",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
+    },
+    "testConnection": {
+      "action": {
+        "create": "Koesta yhteys ja luo",
+        "edit": "Koesta yhteys ja tallenna"
+      },
+      "error": {
+        "common": {
+          "cause": {
+            "title": "Syy lisätietojen kera"
+          }
+        },
+        "unknown": {
+          "title": "Tuntematon virhe",
+          "description": "Tapahtui tuntematon virhe, avaa syy alta nähdäksesi lisätietoja"
+        },
+        "parse": {
+          "title": "Jäsennysvirhe",
+          "description": "Vastausta ei voitu jäsentää. Tarkista, että URL-osoite osoittaa palvelun perusosoitteeseen."
+        },
+        "authorization": {
+          "title": "Tuonnistautumisvirhe",
+          "description": "Pyyntöä ei hyväksytty. Varmista, että kirjautumistiedot ovat oikein ja että niille on määritetty riittävät käyttöoikeudet."
+        },
+        "statusCode": {
+          "title": "Vastausvirhe",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "Liikaa pyyntöjä",
+            "internalServerError": "Sisäinen palvelinvirhe",
+            "serviceUnavailable": "Palvelua ei tavoiteta",
+            "gatewayTimeout": "Yhdyskäytävä aikakatkaistiin"
+          }
+        },
+        "certificate": {
+          "title": "Varmennevirhe",
+          "description": {
+            "expired": "Varmenne on vanhentunut.",
+            "notYetValid": "Varmenne ei ole vielä voimassa.",
+            "untrusted": "Varmenteeseen ei luoteta.",
+            "hostnameMismatch": "Varmenteen isäntänimi ei täsmää URL-osoitteeseen."
+          },
+          "alert": {
+            "permission": {
+              "title": "Oikeudet eivät riitä",
+              "message": "Sinulla ei ole oikeutta luottaa tai lisätä varmenteita. Ole yhteydessä ylläpitoosi lisätäksesi tarvittavan juurivarmenteen."
+            },
+            "hostnameMismatch": {
+              "title": "Isäntänimi ei täsmää",
+              "message": "Varmenteen isäntänimi ei vastaa isäntänimeä, johon olet yhdistämässä. Tämä voi olla turvallisuusriski, mutta voit silti määrittää varmenteen luotettavaksi."
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": "Haluatko varmasti luottaa varmenteeseen, jonka isäntänimi ei täsmää?"
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": "Haluatko varmasti luottaa itse allekirjoittuun varmenteeseen?"
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "Näytä sisältö",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "Pyyntövirhe",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
+      "alertNotice": "",
+      "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
+        "invalidUrl": {
+          "title": "Virheellinen URL-osoite",
+          "message": "URL-osoite on virheellinen"
+        },
+        "secretNotDefined": {
+          "title": "Kirjautumistietoja puuttuu",
+          "message": "Kaikkia kirjautumistietoja ei ole annettu"
+        },
+        "invalidCredentials": {
+          "title": "Virheelliset kirjautumistiedot",
+          "message": "Kirjautumistiedot eivät ole oikein"
+        },
+        "commonError": {
+          "title": "Yhteys epäonnistui",
+          "message": "Yhteyttä ei voitu muodostaa"
+        },
+        "badRequest": {
+          "title": "Virheellinen pyyntö",
+          "message": "Pyyntö oli väärin muotoiltu"
+        },
+        "unauthorized": {
+          "title": "Ei sallittu",
+          "message": "Kirjautumistiedot ovat todennäköisesti väärin"
+        },
+        "forbidden": {
+          "title": "Estetty",
+          "message": "Todennäköisesti käyttöoikeudet puuttuvat"
+        },
+        "notFound": {
+          "title": "Ei löytynyt",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "Sisäinen palvelinvirhe",
+          "message": "Palvelin kohtasi virheen"
+        },
+        "serviceUnavailable": {
+          "title": "Palvelua ei tavoiteta",
+          "message": "Palvelin ei ole tällä hetkellä käytettävissä"
+        },
+        "connectionAborted": {
+          "title": "Yhteys keskeytyi",
+          "message": "Yhteys keskeytettiin"
+        },
+        "domainNotFound": {
+          "title": "Verkkotunnusta ei löytynyt",
+          "message": "Verkkotunnusta ei löytynyt"
+        },
+        "connectionRefused": {
+          "title": "Yhteys hylättiin",
+          "message": "Yhteys hylättiin"
+        },
+        "invalidJson": {
+          "title": "Virheellinen JSON",
+          "message": "Vastaus ei ollut kelvollinen JSON"
+        },
+        "wrongPath": {
+          "title": "Virheellinen polku",
+          "message": "Polku ei todennäköisesti ole oikein"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": "Pyyntöjä oli liikaa. Pyyntöjäsi todennäköisesti rajoitetaan tai sinut estetään kohdejärjestelmässä."
+        }
+      }
+    },
+    "secrets": {
+      "title": "Salaisuudet",
+      "lastUpdated": "Päivitetty viimeksi {date}",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
+      "secureNotice": "Salaisuutta ei ole mahdollista nähdä tallennuksen jälkeen",
+      "reset": {
+        "title": "Poista salaisuus",
+        "message": "Haluatko varmasti poistaa salaisuuden?"
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "Ei salaisuuksia",
+        "text": "Tämä integraatio ei tarvitse salaisuuksia"
+      },
+      "kind": {
+        "username": {
+          "label": "Käyttäjätunnus",
+          "newLabel": "Uusi käyttäjätunnus"
+        },
+        "apiKey": {
+          "label": "Rajapinnan avain",
+          "newLabel": "Uusi rajapinnan avain"
+        },
+        "password": {
+          "label": "Salasana",
+          "newLabel": "Uusi salasana"
+        },
+        "tokenId": {
+          "label": "Käyttöavaimen tunniste",
+          "newLabel": "Uusi käyttöavaimen tunniste"
+        },
+        "realm": {
+          "label": "",
+          "newLabel": ""
+        },
+        "personalAccessToken": {
+          "label": "Henkilökohtainen käyttöavain",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "Aihe",
+          "newLabel": "Uusi aihe"
+        },
+        "url": {
+          "label": "URL-osoite",
+          "newLabel": "Uusi URL-osoite"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "Sovellustunniste",
+          "newLabel": "Uusi sovellustunniste"
+        },
+        "githubInstallationId": {
+          "label": "Asennustunniste",
+          "newLabel": "Uusi asennustunniste"
+        },
+        "privateKey": {
+          "label": "Yksityinen avain",
+          "newLabel": "Uusi yksityinen avain"
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
+        }
+      }
+    },
+    "permission": {
+      "use": "Valitse käyttöoikeustaso",
+      "interact": "Integraatioiden ohjaus",
+      "full": "Integraatioiden hallinta"
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
+    }
+  },
+  "media": {
+    "plural": "Mediatiedostot",
+    "search": "Suodata mediatiedostoja",
+    "field": {
+      "name": "Nimi",
+      "size": "Koko",
+      "creator": "Lisääjä"
+    },
+    "action": {
+      "upload": {
+        "label": "Lisää mediatiedostoja",
+        "file": "Valitse tiedosto",
+        "notification": {
+          "success": {
+            "message": "Mediatiedostot tallennettiin"
+          },
+          "error": {
+            "message": "Mediatiedostojen tallennus ei onnistunut"
+          }
+        }
+      },
+      "delete": {
+        "label": "Poista mediatiedosto",
+        "description": "Haluatko varmasti poistaa mediatiedoston <bName></bName>?",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      },
+      "open": {
+        "label": "Avaa mediatiedosto"
+      }
+    },
+    "noResults": {
+      "title": "Mediatiedostoja ei ole lisätty"
+    }
+  },
+  "common": {
+    "success": "",
+    "beta": "",
+    "error": "",
+    "action": {
+      "add": "Lisää",
+      "apply": "",
+      "backToOverview": "Palaa yleisnäkymään",
+      "skip": "",
+      "change": "Vaihda",
+      "create": "Luo",
+      "createAnother": "Luo ja aloita uudelleen",
+      "edit": "Muokkaa",
+      "import": "",
+      "insert": "",
+      "remove": "Poista",
+      "save": "Tallenna",
+      "saveChanges": "Tallenna muutokset",
+      "cancel": "Peru",
+      "delete": "Poista",
+      "discard": "Hylkää",
+      "close": "",
+      "confirm": "Vahvista",
+      "continue": "",
+      "previous": "Edellinen",
+      "next": "Seuraava",
+      "checkoutDocs": "",
+      "checkLogs": "",
+      "tryAgain": "",
+      "loading": "",
+      "show": "",
+      "hide": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "Kuvakkeen URL-osoite",
+      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta."
+    },
+    "colorScheme": {
+      "options": {
+        "auto": "Automaattinen",
+        "light": "Vaalea",
+        "dark": "Tumma"
+      }
+    },
+    "information": {
+      "min": "Alin",
+      "max": "Ylin",
+      "days": "",
+      "hours": "",
+      "minutes": ""
+    },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": "Muutoksia ei voitu ottaa käyttöön"
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": "Valitse yksi tai useampi arvo"
+    },
+    "multiText": {
+      "placeholder": "Lisää arvoja",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": "Suositus"
+      }
+    },
+    "userAvatar": {
+      "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "Hallinta",
+        "preferences": "Asetuksesi",
+        "logout": "Kirjaudu ulos",
+        "login": "",
+        "homeBoard": "Kotipaneelisi",
+        "loggedOut": "",
+        "updateAvailable": ""
+      }
+    },
+    "dangerZone": "Vaaravyöhyke",
+    "noResults": "",
+    "unsavedChanges": "Muutoksia ei ole tallennettu!",
+    "servers": "",
+    "applications": "",
+    "services": "Palvelut",
+    "preview": {
+      "show": "Näytä esikatselu",
+      "hide": "Piilota esikatselu"
+    },
+    "zod": {
+      "errors": {
+        "default": "Kentän arvo on virheellinen",
+        "required": "Tämä kenttä on pakollinen",
+        "string": {
+          "startsWith": "",
+          "endsWith": "",
+          "includes": "",
+          "invalidEmail": ""
+        },
+        "tooSmall": {
+          "string": "Kentän arvon tulee sisältää ainakin {minimum} merkkiä",
+          "number": "Kentän arvon on oltava vähintään {minimum}."
+        },
+        "tooBig": {
+          "string": "Kentän arvon tulee sisältää ainakin {maximum} merkkiä",
+          "number": "Kentän arvon on oltava enintään {maximum}."
+        },
+        "custom": {
+          "passwordsDoNotMatch": "Salasanat eivät täsmää",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "Tämän niminen paneeli on jo olemassa",
+          "invalidFileType": "",
+          "invalidFileName": "",
+          "fileTooLarge": "Tiedosto on liian suuri, enimmäiskoko on {maxSize}",
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
+        }
+      }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/t",
+        "milesPerHour": ""
+      }
+    }
+  },
+  "section": {
+    "dynamic": {
+      "action": {
+        "create": "Uusi dynaaminen osio",
+        "remove": ""
+      },
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        },
+        "borderColor": {
+          "label": ""
+        }
+      },
+      "remove": {
+        "title": "",
+        "message": "Haluatko varmasti poistaa tämän dynaamisen osion? Kohteet siirretään samaan paikkaan yläosiossa."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": ""
+        }
+      },
+      "action": {
+        "create": "Uusi kategoria",
+        "edit": "",
+        "remove": "",
+        "moveUp": "",
+        "moveDown": "",
+        "createAbove": "",
+        "createBelow": "",
+        "openAllInNewTabs": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": "Haluatko varmasti poistaa kategorian {name}?"
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
+      },
+      "menu": {
+        "label": {
+          "create": "",
+          "changePosition": "",
+          "settings": ""
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": "Jotkin selaimet voivat turvallisuussyistä estää välilehtien massa-avaamisen. Homarr ei voinut avata kaikkia ikkunoita, koska selaimesi esti toimenpiteen. Salli ponnahdusikkunoiden avaaminen ja yritä uudelleen."
+      }
+    }
+  },
+  "item": {
+    "action": {
+      "create": "Uusi kohde",
+      "import": "",
+      "edit": "Muokkaa kohdetta",
+      "moveResize": "Siirrä/muuta kohteen kokoa",
+      "duplicate": "Monista kohde",
+      "remove": "Poista kohde"
+    },
+    "menu": {
+      "label": {
+        "settings": "Asetukset"
+      }
+    },
+    "create": {
+      "title": "",
+      "search": "",
+      "addToBoard": ""
+    },
+    "moveResize": {
+      "title": "",
+      "field": {
+        "width": {
+          "label": ""
+        },
+        "height": {
+          "label": ""
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
+        }
+      }
+    },
+    "edit": {
+      "title": "Muokkaa kohdetta",
+      "tab": {
+        "widget": "Muokkaa widgettiä",
+        "app": "Muokkaa sovellusta"
+      },
+      "app": {
+        "propagationNotice": "Sovellukseen tehtävät muutokset koskevat kaikkia paneeleita, joissa sitä käytetään kaikissa kojelautaissa."
+      },
+      "advancedOptions": {
+        "label": "Lisäasetukset",
+        "title": "Kohteen lisäasetukset"
+      },
+      "field": {
+        "integrations": {
+          "label": "Integraatiot"
+        },
+        "title": {
+          "label": "Otsikko"
+        },
+        "customCssClasses": {
+          "label": "Omat CSS-luokat"
+        },
+        "borderColor": {
+          "label": "Reunuksen väri"
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": "Haluatko varmasti poistaa kohteen?"
+    }
+  },
+  "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
+    "app": {
+      "name": "Sovellus",
+      "description": "",
+      "option": {
+        "appId": {
+          "label": "Valitse sovellus"
+        },
+        "openInNewTab": {
+          "label": "Avaa uudessa välilehdessä"
+        },
+        "showTitle": {
+          "label": "Näytä sovelluksen nimi"
+        },
+        "pingEnabled": {
+          "label": "Käytä tilatarkistusta"
+        },
+        "layout": {
+          "label": "Asettelu",
+          "option": {
+            "row": "Vaaka",
+            "row-reverse": "Vaaka (käänteinen)",
+            "column": "Pysty",
+            "column-reverse": "Pysty (käänteinen)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Kuvauksen esitystapa",
+          "description": "Valitse miten sovelluksen kuvaus näytetään.",
+          "option": {
+            "normal": "Widgetin sisällä",
+            "tooltip": "Työkaluvihjeenä",
+            "hidden": "Piilotettu"
+          }
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": "Sopivaa sovellusta ei ole valittu"
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": "Pysty"
+            },
+            "grid": {
+              "label": ""
+            },
+            "gridHorizontal": {
+              "label": ""
+            }
+          }
+        },
+        "hideTitle": {
+          "label": ""
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": "Avaa uudessa välilehdessä"
+        },
+        "withBorder": {
+          "label": ""
+        },
+        "items": {
+          "label": "",
+          "add": ""
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
+    "dnsHoleSummary": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": "Pysty"
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "usePiHoleColors": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
+      },
+      "data": {
+        "adsBlockedToday": "",
+        "adsBlockedTodayPercentage": "",
+        "dnsQueriesToday": "",
+        "domainsBeingBlocked": ""
+      },
+      "domainsTooltip": ""
+    },
+    "dnsHoleControls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": "Pysty"
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "showToggleAllButtons": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
+        "set": "",
+        "enabled": "",
+        "disabled": "",
+        "processing": "",
+        "disconnected": "",
+        "hours": "",
+        "minutes": "",
+        "unlimited": ""
+      }
+    },
+    "clock": {
+      "name": "Päiväys ja aika",
+      "description": "",
+      "option": {
+        "customTitleToggle": {
+          "label": "Näytä oma otsikko/kaupunki",
+          "description": "Näytä kellon yläpuolella oma otsikkoteksti, kuten vaikka maan/kaupungin nimi."
+        },
+        "customTitle": {
+          "label": "Otsikko"
+        },
+        "is24HourFormat": {
+          "label": "24-tunnin muoto",
+          "description": "Käytä 24-tuntista muotoa 12-tuntisen sijaan."
+        },
+        "showSeconds": {
+          "label": "Näytä sekunnit"
+        },
+        "useCustomTimezone": {
+          "label": "Määritä pysyvä aikavyöhyke"
+        },
+        "timezone": {
+          "label": "Aikavyöhyke",
+          "description": "Määritä IANA-standardin mukainen aikavyöhyke."
+        },
+        "showDate": {
+          "label": "Näytä päiväys"
+        },
+        "dateFormat": {
+          "label": "Päiväyksen esitystapa",
+          "description": "Miten päivämäärän näytetään."
+        },
+        "customTimeFormat": {
+          "label": "Oma ajan esitystapa",
+          "description": "Määritä ISO 8601 -standardin mukainen kellonajan muoto (korvaa muut valinnat)."
+        },
+        "customDateFormat": {
+          "label": "Oma päiväyksen esitystapa",
+          "description": "Määritä ISO 8601 -standardin mukainen päiväyksen muoto (korvaa muut valinnat)."
+        }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
+    "timetable": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "noStation": "",
+      "option": {
+        "station": {
+          "label": ""
+        }
+      }
+    },
+    "notebook": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showToolbar": {
+          "label": ""
+        },
+        "allowReadOnlyCheck": {
+          "label": ""
+        },
+        "content": {
+          "label": ""
+        }
+      },
+      "controls": {
+        "bold": "",
+        "italic": "",
+        "strikethrough": "",
+        "underline": "",
+        "colorText": "",
+        "colorHighlight": "",
+        "code": "",
+        "clear": "",
+        "heading": "",
+        "align": "",
+        "blockquote": "",
+        "horizontalLine": "",
+        "bulletList": "",
+        "orderedList": "",
+        "checkList": "",
+        "increaseIndent": "",
+        "decreaseIndent": "",
+        "link": "",
+        "unlink": "",
+        "image": "",
+        "addTable": "",
+        "deleteTable": "",
+        "colorCell": "",
+        "mergeCell": "",
+        "addColumnLeft": "Lisää sarake ennen",
+        "addColumnRight": "Lisää sarake jälkeen",
+        "deleteColumn": "Poista sarake",
+        "addRowTop": "",
+        "addRowBelow": "",
+        "deleteRow": ""
+      },
+      "align": {
+        "left": "",
+        "center": "",
+        "right": ""
+      },
+      "popover": {
+        "clearColor": "",
+        "source": "",
+        "widthPlaceholder": "",
+        "columns": "Sarakkeet",
+        "rows": "",
+        "width": "",
+        "height": ""
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "Muistikirjan muutoksia ei ole tallennettu. Haluatko varmasti hylätä ne?",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
+      }
+    },
+    "anchorNote": {
+      "name": "",
+      "description": "",
+      "option": {
+        "noteId": {
+          "label": ""
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showUpdatedAt": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "emptyContent": "",
+      "notFound": "",
+      "noNotes": "",
+      "integrationRequired": "",
+      "updatedAt": "",
+      "untitled": "",
+      "edit": "",
+      "save": "",
+      "cancel": "",
+      "readOnlyViewer": "",
+      "saveForbidden": "Sinulla ei ole oikeutta muokata tätä muistiinpanoa.",
+      "saveFailed": ""
+    },
+    "iframe": {
+      "name": "",
+      "description": "",
+      "option": {
+        "embedUrl": {
+          "label": ""
+        },
+        "allowFullScreen": {
+          "label": ""
+        },
+        "allowTransparency": {
+          "label": ""
+        },
+        "allowScrolling": {
+          "label": ""
+        },
+        "allowPayment": {
+          "label": ""
+        },
+        "allowAutoPlay": {
+          "label": ""
+        },
+        "allowMicrophone": {
+          "label": ""
+        },
+        "allowCamera": {
+          "label": ""
+        },
+        "allowGeolocation": {
+          "label": ""
+        },
+        "allowModals": {
+          "label": ""
+        }
+      },
+      "error": {
+        "noUrl": "",
+        "unsupportedProtocol": "",
+        "noBrowerSupport": ""
+      }
+    },
+    "smartHome-entityState": {
+      "name": "",
+      "description": "",
+      "option": {
+        "entityId": {
+          "label": ""
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
+        }
+      }
+    },
+    "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
+      "option": {
+        "displayName": {
+          "label": ""
+        },
+        "automationId": {
+          "label": ""
+        }
+      },
+      "spotlightAction": {
+        "run": ""
+      }
+    },
+    "stockPrice": {
+      "name": "Osakkeen hinta",
+      "description": "Näyttää yrityksen nykyisen osakearvon",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": "Ylin"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Aikaväli",
+          "option": {
+            "5m": {
+              "label": "5 minuuttia"
+            },
+            "15m": {
+              "label": "15 minuuttia"
+            },
+            "30m": {
+              "label": "30 minuuttia"
+            },
+            "1h": {
+              "label": "Tunti"
+            },
+            "1d": {
+              "label": "Vuorokausi"
+            },
+            "5d": {
+              "label": "Viisi päivää"
+            },
+            "1wk": {
+              "label": "Viikko"
+            },
+            "1mo": {
+              "label": "Kuukausi"
+            }
+          }
+        }
+      }
+    },
+    "calendar": {
+      "name": "Kalenteri",
+      "description": "Näytä integraatioidesi tapahtumat tietyn suhteellisen aikajakson kattavassa kalenterinäkymässä",
+      "duration": {
+        "allDay": ""
+      },
+      "option": {
+        "releaseType": {
+          "label": "Radarr-julkaisujen tyyppi",
+          "options": {
+            "inCinemas": "Teattereissa",
+            "digitalRelease": "Digitaalinen julkaisu",
+            "physicalRelease": "Fyysinen julkaisu"
+          }
+        },
+        "filterPastMonths": {
+          "label": "Edelliset kuukaudet"
+        },
+        "filterFutureMonths": {
+          "label": "Tulevat kuukaudet"
+        },
+        "showUnmonitored": {
+          "label": "Näytä valvomattomat"
+        }
+      }
+    },
+    "weather": {
+      "name": "Sää",
+      "description": "",
+      "option": {
+        "isFormatFahrenheit": {
+          "label": "Käytä lämpötilalle Fahrenheit-yksikköä"
+        },
+        "disableTemperatureDecimals": {
+          "label": "Älä näytä lämpötilojen desimaaleja"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Näytä nykyinen tuulen nopeus",
+          "description": "Vain nykyiselle säälle."
+        },
+        "useImperialSpeed": {
+          "label": "Käytä tuulen nopeudelle mph-yksikköä"
+        },
+        "location": {
+          "label": "Sään sijainti"
+        },
+        "showCity": {
+          "label": "Näytä kaupunki"
+        },
+        "hasForecast": {
+          "label": "Näytä ennuste"
+        },
+        "forecastDayCount": {
+          "label": "Ennusteen päivien määrä",
+          "description": "Kun widgetin leveys ei riitä, näytetään päiviä vähemmän."
+        },
+        "dateFormat": {
+          "label": "Päiväyksen esitystapa",
+          "description": "Miten päivämäärän näytetään."
+        }
+      },
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
+      "dailyForecast": {
+        "sunrise": "Auringonnousu",
+        "sunset": "Auringonlasku",
+        "maxWindSpeed": "Tuulen nopeus: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Puuskien nopeus: {maxWindSpeed} {unit}"
+      },
+      "kind": {
+        "clear": "",
+        "mainlyClear": "Enimmäkseen selkeää",
+        "fog": "",
+        "drizzle": "Tihkusadetta",
+        "freezingDrizzle": "",
+        "rain": "Sadetta",
+        "freezingRain": "",
+        "snowFall": "Lumisadetta",
+        "snowGrains": "Rakeita",
+        "rainShowers": "",
+        "snowShowers": "Lumikuuroja",
+        "thunderstorm": "",
+        "thunderstormWithHail": "",
+        "unknown": ""
+      }
+    },
+    "indexerManager": {
+      "name": "",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "testAll": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "healthMonitoring": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        },
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        },
+        "gpu": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "fileSystem": {
+          "label": ""
+        },
+        "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
+          "label": ""
+        },
+        "sectionIndicatorRequirement": {
+          "label": ""
+        }
+      },
+      "popover": {
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "",
+          "memory": ""
+        },
+        "resource": {
+          "node": {
+            "name": ""
+          },
+          "qemu": {
+            "name": ""
+          },
+          "lxc": {
+            "name": ""
+          },
+          "storage": {
+            "name": ""
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "",
+            "vmId": "",
+            "plugin": ""
+          },
+          "detail": {
+            "cpu": "",
+            "memory": "",
+            "storage": "",
+            "uptime": "",
+            "haState": "",
+            "storageType": {
+              "local": "",
+              "shared": ""
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
+          }
+        }
+      }
+    },
+    "dockerContainers": {
+      "name": "Docker-tilastot",
+      "description": "Konttiesi tilastot (tämä widget voidaan lisätä vain ylläpito-oikeuksilla)",
+      "option": {
+        "enableRowSorting": {
+          "label": "Salli kohteiden järjestys"
+        },
+        "defaultSort": {
+          "label": "Lajitteluun oletusarvoisesti käytettävä sarake",
+          "option": {
+            "name": "Nimi",
+            "state": "Tila",
+            "cpuUsage": "Suorittimen kuormitus",
+            "memoryUsage": "Muistin varaus"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Käänteinen järjestys"
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": "Näytä sovellukset"
+        },
+        "showServices": {
+          "label": "Näytä palvelut"
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": "Palveluita ei löytynyt"
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "Coolify-integraatiota ei ole määritetty",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "tracearr": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showStreams": {
+          "label": "Näytä aktiiviset striimit"
+        },
+        "showStats": {
+          "label": ""
+        },
+        "showRecentActivity": {
+          "label": ""
+        },
+        "showViolations": {
+          "label": ""
+        }
+      },
+      "stats": {
+        "activeStreams": "Aktiiviset striimit",
+        "totalUsers": "Käyttäjämäärä",
+        "transcodes": "Transkoodaukset",
+        "bandwidth": "Kaistanleveys"
+      },
+      "streams": {
+        "empty": "Ei aktiivisia striimiejä",
+        "user": "",
+        "media": "",
+        "state": "",
+        "quality": "",
+        "device": "Device",
+        "progress": "",
+        "videoDecision": {
+          "directPlay": "Muuntamaton toisto",
+          "transcode": "",
+          "directStream": ""
+        }
+      },
+      "recentActivity": {
+        "title": "Viimeaikaiset tapahtumat",
+        "empty": "",
+        "watched": "Katseltiin",
+        "partial": "Osittain"
+      },
+      "violations": {
+        "title": "Rikkomukset",
+        "empty": "Ei viimeaikaisia rikkomuksia",
+        "rule": "",
+        "user": ""
+      },
+      "noSectionsEnabled": "",
+      "error": {
+        "noIntegration": "Tracearr-integraatiota ei ole määritetty",
+        "internalServerError": ""
+      }
+    },
+    "umami": {
+      "name": "",
+      "description": "",
+      "visitors": "",
+      "active": "",
+      "pageviews": "",
+      "visits": "",
+      "bounceRate": "",
+      "avgDuration": "",
+      "option": {
+        "websiteId": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noWebsites": "",
+          "configureIntegrationFirst": "Yhdistä Umami-integraatio ensin"
+        },
+        "timeFrame": {
+          "label": "",
+          "description": "",
+          "option": {
+            "today": "",
+            "24h": "",
+            "7d": "",
+            "30d": "",
+            "month": "",
+            "lastMonth": ""
+          }
+        },
+        "eventName": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "none": "",
+          "configureWebsiteFirst": ""
+        },
+        "chartType": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bar": "",
+            "sparkline": ""
+          }
+        },
+        "chartStyle": {
+          "label": "",
+          "description": "",
+          "option": {
+            "grouped": "",
+            "overlay": ""
+          }
+        },
+        "viewMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "chart": "",
+            "events": "",
+            "topPages": "",
+            "topReferrers": ""
+          }
+        },
+        "eventNames": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "loading": "",
+          "noEvents": "",
+          "configureWebsiteFirst": ""
+        },
+        "topCount": {
+          "label": "",
+          "description": "Näytettävien huippukohteiden määrä (enintään 500)"
+        }
+      },
+      "event": {
+        "occurrences": "",
+        "label": ""
+      },
+      "topPages": {
+        "direct": ""
+      },
+      "topReferrers": {
+        "direct": ""
+      },
+      "events": {
+        "selectPrompt": ""
+      },
+      "error": {
+        "noIntegration": "Umami-integraatiota ei ole määritetty",
+        "noWebsite": "",
+        "noData": "",
+        "internalServerError": ""
+      }
+    },
+    "common": {
+      "location": {
+        "query": "Kaupunki/postinumero",
+        "latitude": "Leveysaste",
+        "longitude": "Pituusaste",
+        "disabledTooltip": "",
+        "unknownLocation": "",
+        "search": "Haku",
+        "table": {
+          "header": {
+            "city": "Kaupunki",
+            "country": "Maa",
+            "coordinates": "Koordinaatit",
+            "population": "Asukasluku"
+          },
+          "action": {
+            "select": "Valitse {city}, {countryCode}"
+          },
+          "population": {
+            "fallback": ""
+          }
+        }
+      },
+      "integration": {
+        "noData": "Integraatiota ei löytynyt",
+        "description": "Luo uusi integraatio painamalla <here></here>"
+      },
+      "app": {
+        "noData": "",
+        "description": "Luo uusi sovellus painamalla <here></here>",
+        "quickCreate": "Luo sovellus lennossa"
+      },
+      "error": {
+        "noIntegration": "Integraatiota ei ole valittu",
+        "noData": "Integraatiotietoja ei ole käytettävissä"
+      },
+      "option": {}
+    },
+    "video": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrl": {
+          "label": ""
+        },
+        "hasAutoPlay": {
+          "label": "",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
+          "label": ""
+        }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
+      }
+    },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "items": {
+        "currentlyPlaying": "",
+        "user": "",
+        "name": "",
+        "id": "",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "Aikaväli sekunteina",
+          "description": "Vaihda albumin kuva X sekunnin välein. Oltava alle 3600 ja vähintään 1."
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
+    },
+    "downloads": {
+      "name": "Latauspääte",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": "Näytettävät sarakkeet"
+        },
+        "enableRowSorting": {
+          "label": "Salli kohteiden järjestys"
+        },
+        "defaultSort": {
+          "label": "Järjestykseen oletusarvoisesti käytettävä sarake"
+        },
+        "descendingDefaultSort": {
+          "label": "Käänteinen järjestys"
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": "Näytä valmiiksi merkityt torrentit"
+        },
+        "showCompletedHttp": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": "Piilota tämän kynnysarvon alle jäävät valmistuneet torrentit (kiB/s)"
+        },
+        "categoryFilter": {
+          "label": "Kategorioiden/tunnisteiden suodatus"
+        },
+        "filterIsWhitelist": {
+          "label": "Suodata valkolistana"
+        },
+        "applyFilterToRatio": {
+          "label": "Huomioi suodatus jakosuhteessa"
+        },
+        "limitPerIntegration": {
+          "label": "Integraation elementtien määrärajoitus",
+          "description": "Tämä rajoittaa näytettävien elementtien määrää integraatiokohtaisesti, ei kokonaisvaltaisesti."
+        }
+      },
+      "errors": {
+        "noColumns": "Valitse kohteiden sarakkeet",
+        "noCommunications": "Integraatiolta ei voida noutaa tietoja"
+      },
+      "items": {
+        "actions": {
+          "columnTitle": "Toiminnot"
+        },
+        "added": {
+          "columnTitle": "Lisätty",
+          "detailsTitle": ""
+        },
+        "category": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "downSpeed": {
+          "columnTitle": "Lataus",
+          "detailsTitle": ""
+        },
+        "index": {
+          "columnTitle": "#",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": "Tunniste"
+        },
+        "integration": {
+          "columnTitle": "Integraatio"
+        },
+        "name": {
+          "columnTitle": "Työn nimi"
+        },
+        "progress": {
+          "columnTitle": "Edistyminen",
+          "detailsTitle": ""
+        },
+        "ratio": {
+          "columnTitle": "Suhde",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "Ladattu kaikkiaan",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "Lähetty kaikkiaan",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "Tiedostokoko",
+          "detailsTitle": ""
+        },
+        "state": {
+          "columnTitle": "Tila",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "Valmistumisaika",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "Tyyppi",
+          "detailsTitle": ""
+        },
+        "upSpeed": {
+          "columnTitle": "Lähetys",
+          "detailsTitle": ""
+        }
+      },
+      "states": {
+        "downloading": "",
+        "queued": "",
+        "paused": "",
+        "completed": "",
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "Haluatko varmasti poistaa työn?",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": "Kokonaissuhde"
+    },
+    "mediaReleases": {
+      "name": "",
+      "description": "Näytä eri integraatioiden uudet mediat tai tulevat julkaisut",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": "Näytä lähdeintegraatio"
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
+    "mediaRequests-requestList": {
+      "name": "",
+      "description": "",
+      "option": {
+        "linksTargetNewTab": {
+          "label": "Avaa linkit uudessa välilehdessä"
+        }
+      },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
+      "availability": {
+        "unknown": "",
+        "pending": "",
+        "processing": "",
+        "requested": "",
+        "partiallyAvailable": "",
+        "available": "",
+        "blacklisted": "",
+        "deleted": ""
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": "",
+        "completed": ""
+      },
+      "toBeDetermined": ""
+    },
+    "mediaRequests-requestStats": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "titles": {
+        "stats": {
+          "main": "",
+          "approved": "",
+          "pending": "",
+          "processing": "",
+          "declined": "",
+          "available": "",
+          "tv": "",
+          "movie": "",
+          "total": ""
+        },
+        "users": {
+          "main": "",
+          "requests": ""
+        }
+      }
+    },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": ""
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "Työt",
+        "queue": "Jono",
+        "statistics": "Tilastot"
+      },
+      "currentIndex": "{start}-{end}/{total}",
+      "healthCheck": {
+        "title": "Terveystarkastus",
+        "queued": "Jonossa",
+        "status": {
+          "healthy": "Tervettä",
+          "unhealthy": "Epäterveellistä"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "",
+          "transcodes": "Transkoodaukset",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "Terveystarkastukset",
+          "videoCodecs": "Koodekit",
+          "videoContainers": "Kontit",
+          "videoResolutions": "Resoluutiot"
+        },
+        "workers": {
+          "empty": "Tyhjä",
+          "table": {
+            "file": "",
+            "eta": "",
+            "progress": "",
+            "transcode": "",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "Tyhjä",
+          "table": {
+            "file": "",
+            "size": "",
+            "transcode": "",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
+        },
+        "hideDescription": {
+          "label": ""
+        },
+        "showPosterImage": {
+          "label": ""
+        }
+      }
+    },
+    "releases": {
+      "name": "Julkaisut",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "showOnlyIcon": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": "Viimeisimpien näytettävien julkaisujen enimmäismäärä. Arvo nolla poistaa rajoituksen."
+        },
+        "repositories": {
+          "label": "",
+          "addRepository": {
+            "label": ""
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": "Vain pääkäyttäjät voivat tuoda Dockerista",
+            "selectAll": "Valitse kaikki",
+            "deselectAll": "Tyhjennä valinnat"
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "importForm": {
+            "title": ""
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "markViewed": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "projectDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "Toimittajaa ei ole valittu",
+          "noProviderResponse": ""
+        }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Tietoja ei ole saatavilla, kaikki integraatiot on irrotettu",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Tietoja ei ole saatavilla, kaikki integraatiot on irrotettu",
+        "unknownContentOption": ""
+      },
+      "name": "Verkon tila",
+      "description": "Näytä liitetyt laitteet verkossa"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": "Palomuurin tietoja ei voitu noutaa"
+      },
+      "option": {
+        "interfaces": "Näytettävät verkkosovittimet"
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": "Verkkosovittimet"
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "Näytä integraation ilmoitushistoria",
+      "noItems": "",
+      "option": {}
+    },
+    "speedtestTracker": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showLatestResult": {
+          "label": ""
+        },
+        "showStats": {
+          "label": "Näytä keskiarvot"
+        },
+        "showRecentResults": {
+          "label": ""
+        },
+        "showPingGraph": {
+          "label": "Näytä ping-grafiikka"
+        }
+      },
+      "latestResult": "Viimeisin tulos",
+      "averages": "Keskiarvot",
+      "tests": "{count} testiä",
+      "recentResults": "Viimeisimmät tulokset",
+      "recentResultsSpeed": "Nopeus",
+      "recentResultsPing": "Viive",
+      "download": "Lataus",
+      "upload": "Lähetys",
+      "ping": "Viive",
+      "status": "",
+      "avgDownload": "Latauskeskiarvo",
+      "avgUpload": "Lähetyskeskiarvo",
+      "avgPing": "Viivekeskiarvo",
+      "healthy": "",
+      "unhealthy": "",
+      "ok": "",
+      "fail": "",
+      "noSectionsEnabled": "Aktivoi ainakin yksi osio widgetin asetuksista.",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "Valitse näytettävät kartat.",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "gpu": "",
+            "network": "Verkko"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "gpu": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    }
+  },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
+  "board": {
+    "action": {
+      "duplicate": {
+        "title": "Monista paneeli",
+        "message": "Tämä luo uuden kopion paneelista {name} kaikkine sisältöineen. Widgetit, joissa viitataan integraatiohin, joiden käyttöoikeutta sinulla ei ole, poistetaan.",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "Paneelia ei voitu monistaa",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "Muutokset tallennettiin",
+            "message": "Paneelin tallennus onnistui"
+          },
+          "error": {
+            "title": "Muutoksia ei voitu ottaa käyttöön",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "Tallentamattomia muutoksia",
+          "message": "Muutoksia ei ole tallennettu. Haluatko varmasti poistua?"
+        }
+      },
+      "oldImport": {
+        "label": "Tuo Homarr-versiota 1.0.0 vanhemmasta",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "",
+              "md": "",
+              "lg": ""
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Luo sovellus lennossa",
+          "createAndUse": "Luo ja käytä"
+        }
+      }
+    },
+    "field": {
+      "pageTitle": {
+        "label": "Sivun otsikko"
+      },
+      "metaTitle": {
+        "label": "Meta-osion otsikko"
+      },
+      "logoImageUrl": {
+        "label": "Logokuvan URL-osoite:"
+      },
+      "faviconImageUrl": {
+        "label": "Favicon-kuvakkeen URL-osoite"
+      },
+      "backgroundImageUrl": {
+        "label": "Taustakuvan URL-osoite",
+        "placeholder": "Aloita paikallisten kuvien haku kirjoittamalla",
+        "group": {
+          "your": "",
+          "other": ""
+        }
+      },
+      "backgroundImageAttachment": {
+        "label": "Taustan kuvaliite",
+        "option": {
+          "fixed": {
+            "label": "Kiinteä",
+            "description": "Tausta pysyy samassa kohdassa."
+          },
+          "scroll": {
+            "label": "Vieritä",
+            "description": "Tausta siirtyy vierityksen mukana."
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "Taustakuvan toisto",
+        "option": {
+          "repeat": {
+            "label": "Toista",
+            "description": "Kuva toistuu riittävästi, jotta se täyttää alueensa."
+          },
+          "no-repeat": {
+            "label": "Ei toistoa",
+            "description": "Kuva ei toistu, eikä se välttämättä täytä koko aluetta."
+          },
+          "repeat-x": {
+            "label": "Toista X",
+            "description": "Sama kuin \"Toista\", mutta vain vaaka-akselilla."
+          },
+          "repeat-y": {
+            "label": "Toista Y",
+            "description": "Sama kuin \"Toista\", mutta vain pystyakselilla."
+          }
+        }
+      },
+      "backgroundImageSize": {
+        "label": "Taustakuvan koko",
+        "option": {
+          "cover": {
+            "label": "Kansi",
+            "description": "Skaalaa kuvan mahdollisimman pieneksi koko ikkunan täyttämiseksi leikkaamalla ylimääräisen tilan."
+          },
+          "contain": {
+            "label": "Kata",
+            "description": "Skaalaa kuvan mahdollisimman suureksi sen säiliön sisällä leikkaamatta tai venyttämättä sitä."
+          }
+        }
+      },
+      "primaryColor": {
+        "label": "Ensisijainen väri"
+      },
+      "secondaryColor": {
+        "label": "Toissijainen väri"
+      },
+      "opacity": {
+        "label": "Läpinäkyvyys"
+      },
+      "iconColor": {
+        "label": "Kuvakkeen väri"
+      },
+      "clearColor": {
+        "label": "Tyhjennä väri"
+      },
+      "customCss": {
+        "label": "Paneelin mukautetut CSS-tyylit",
+        "description": "Mukauta kojelautaasi CSS-tyyleillä. Suositellaan vain kokeneille käyttäjille.",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "disableStatus": {
+        "label": "Älä näytä sovellusten tilatietoja",
+        "description": "Poistaa paneelin sovellusten tilatarkistukset käytöstä."
+      },
+      "columnCount": {
+        "label": "Sarakemäärä"
+      },
+      "itemRadius": {
+        "label": "Kohteen säde",
+        "description": "Muuttaa paneelin korttien kulmien pyöristystä.",
+        "option": {
+          "xs": "Erittäin pieni",
+          "sm": "Pieni",
+          "md": "Keskikokoinen",
+          "lg": "Suuri",
+          "xl": "Erittäin suuri"
+        }
+      },
+      "name": {
+        "label": "Nimi"
+      },
+      "isPublic": {
+        "label": "Julkinen",
+        "description": "Julkiset paneelit ovat kenen tahansa avattavissa, myös ilman käyttäjätiliä."
+      }
+    },
+    "content": {
+      "metaTitle": "\"{boardName}\"-paneeli"
+    },
+    "setting": {
+      "title": "Paneelin {boardName} asetukset",
+      "section": {
+        "general": {
+          "title": "Yleiset",
+          "unrecognizedLink": ""
+        },
+        "layout": {
+          "title": "Asettelu",
+          "responsive": {
+            "title": "Responsiiviset asettelut",
+            "action": {
+              "add": "Lisää asettelu"
+            }
+          }
+        },
+        "background": {
+          "title": "Tausta"
+        },
+        "appearance": {
+          "title": "Ulkoasu"
+        },
+        "customCss": {
+          "title": "Oma CSS"
+        },
+        "behavior": {
+          "title": "Käyttäytyminen"
+        },
+        "access": {
+          "title": "Käyttöoikeudet",
+          "permission": {
+            "item": {
+              "view": {
+                "label": "Paneelin tarkastelu"
+              },
+              "modify": {
+                "label": "Paneelin muokkaus"
+              },
+              "full": {
+                "label": "Kaikki oikeudet"
+              }
+            }
+          }
+        },
+        "dangerZone": {
+          "title": "Vaaravyöhyke",
+          "action": {
+            "rename": {
+              "label": "Nimeä paneeli uudelleen",
+              "description": "Uudelleennimeäminen rikkoo paneelin osittavat linkit.",
+              "button": "Vaihda nimi",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "Muuta paneelin näkyvyyttä",
+              "description": {
+                "public": "",
+                "private": "Paneeli on tällä hetkellä yksityinen."
+              },
+              "button": {
+                "public": "Vaihda yksityiseksi",
+                "private": "Vaihda julkiseksi"
+              },
+              "confirm": {
+                "public": {
+                  "title": "",
+                  "description": "Haluatko varmasti tehdä paneelista yksityisen? Tämä piilottaa sen julkisesti ja vierailijoiden linkit lakkaavat toimimasta."
+                },
+                "private": {
+                  "title": "",
+                  "description": "Haluatko varmasti tehdä paneelista julkisen? Tällöin sen voi avata kuka tahansa."
+                }
+              }
+            },
+            "delete": {
+              "label": "Poista paneeli",
+              "description": "Paneelin poistosta ei ole paluuta. Ole varma, ennen kuin teet sen.",
+              "button": "Poista paneeli",
+              "confirm": {
+                "title": "",
+                "description": "Haluatko varmasti poistaa paneelin? Paneeli ja sen kaikki sisältö poistetaan pysyvästi."
+              }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "noBoard": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": "Tarkista linkki tai ota yhteyttä ylläpitoon, jos sen pitäisi mielestäsi toimia"
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "Et ole vielä määrittänyt palvelimelle kotipaneelia.",
+          "link": "Määritä koko palvelimen kotipaneeli",
+          "notice": "Määritä palvelimelle kotipaneeli piilottaaksesi tämän sivun kaikilta käyttäjiltä"
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "Palvelimen ylläpito ei ole vielä määrittänyt kotipaneelia.",
+          "link": "",
+          "notice": "Pyydä ylläpitoa määrittämään palvelimelle kotipaneeli piilottaaksesi tämän sivun"
+        }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Nimi"
+      },
+      "columnCount": {
+        "label": "Sarakemäärä"
+      },
+      "breakpoint": {
+        "label": "Katkaisupiste",
+        "description": "Asettelua käytetään kaikilla tätä arvoa suuremmilla näytöillä, kunnes kohdataan seuraavaksi suurempi katkaisupiste."
+      }
+    }
+  },
+  "management": {
+    "metaTitle": "Hallinta",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
+    "navbar": {
+      "items": {
+        "home": "Aloitus",
+        "boards": "Paneelit",
+        "apps": "Sovellukset",
+        "integrations": "Integraatiot",
+        "customWidgets": "",
+        "searchEngies": "Hakukoneet",
+        "medias": "Mediatiedostot",
+        "users": {
+          "label": "Käyttäjät",
+          "items": {
+            "manage": "Hallinnoi",
+            "invites": "Kutsut",
+            "groups": "Ryhmät"
+          }
+        },
+        "tools": {
+          "label": "Työkalut",
+          "items": {
+            "docker": "Docker",
+            "kubernetes": "Kubernetes",
+            "logs": "Lokitiedot",
+            "api": "",
+            "certificates": "Varmenteet",
+            "tasks": "Tehtävät",
+            "backup": ""
+          }
+        },
+        "settings": "Asetukset",
+        "help": {
+          "label": "Tuki",
+          "items": {
+            "documentation": "Käyttöohjeet",
+            "submitIssue": "Ilmoita ongelmasta",
+            "discord": "Discord-yhteisö",
+            "sourceCode": "Lähdekoodi"
+          }
+        },
+        "about": "Tietoja"
+      }
+    },
+    "page": {
+      "home": {
+        "statistic": {
+          "board": "Paneelit",
+          "user": "Käyttäjät",
+          "invite": "Kutsut",
+          "integration": "Integraatiot",
+          "app": "Sovellukset",
+          "group": "Ryhmät",
+          "searchEngine": "Hakukoneet",
+          "media": "Media"
+        },
+        "statisticLabel": {
+          "boards": "Paneelit",
+          "resources": "Resurssit",
+          "authentication": "Tunnistautuminen",
+          "authorization": "Oikeudet"
+        },
+        "heroBanner": {
+          "title": "Tervetuloa takaisin",
+          "subtitle": "{app} Paneeliisi"
+        }
+      },
+      "board": {
+        "title": "Omat paneelisi",
+        "action": {
+          "new": {
+            "label": "Uusi paneeli"
+          },
+          "open": {
+            "label": "Avaa paneeli"
+          },
+          "settings": {
+            "label": "Asetukset"
+          },
+          "setHomeBoard": {
+            "label": "Määritä kotipaneeliksesi",
+            "badge": {
+              "label": "Koti",
+              "tooltip": "Tämä paneeli näytetään kotipaneelina"
+            }
+          },
+          "setMobileHomeBoard": {
+            "label": "Määritä mobiilipaneeliksesi",
+            "badge": {
+              "label": "",
+              "tooltip": "Tämä paneeli näytetään mobiilipaneelina"
+            }
+          },
+          "duplicate": {
+            "label": "Monista paneeli"
+          },
+          "delete": {
+            "label": "Poista pysyvästi",
+            "confirm": {
+              "title": "Poista paneeli",
+              "description": "Haluatko varmasti poistaa paneelin {name}?"
+            }
+          }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
+        },
+        "noResults": {
+          "title": ""
+        },
+        "modal": {
+          "createBoard": {
+            "field": {
+              "name": {
+                "label": ""
+              }
+            }
+          }
+        }
+      },
+      "media": {
+        "includeFromAllUsers": "Sisällytä kaikkien käyttäjien media"
+      },
+      "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
+        "setting": {
+          "general": {
+            "title": "Yleiset",
+            "item": {
+              "language": "Kieli ja alue",
+              "board": {
+                "title": "Kotipaneeli",
+                "type": {
+                  "general": "Yleinen",
+                  "mobile": "Mobiili"
+                }
+              },
+              "search": "Haku",
+              "firstDayOfWeek": "Viikon ensimmäinen päivä",
+              "accessibility": "Esteettömyys",
+              "onboardingTours": {
+                "title": "Perehdytysilmoitukset",
+                "description": "Tyhjennä perehdytysvalinnat nähdäksesi ne uudelleen, kun seuraavan kerran avaat hallinnan tai kojelaudan alueita.",
+                "reset": "Tyhjennä perehdytysvalinnat",
+                "resetSuccess": {
+                  "title": "Perehdytysvalinnat tyhjennettiin",
+                  "message": "Perehdytysilmoitukset näytetään uudestaan, kun seuraavalla käyntikerralla"
+                },
+                "status": {
+                  "completed": "Suoritettu",
+                  "notStarted": "Ei aloitettu"
+                },
+                "name": {
+                  "management": "Hallinta",
+                  "dashboard": "Hallintapaneeli"
+                }
+              }
+            }
+          },
+          "security": {
+            "title": "Suojaus"
+          },
+          "board": {
+            "title": ""
+          }
+        },
+        "list": {
+          "metaTitle": "",
+          "title": "Käyttäjät"
+        },
+        "edit": {
+          "metaTitle": "Muokkaa käyttäjää {username}"
+        },
+        "create": {
+          "metaTitle": "",
+          "title": "Luo uusi käyttäjä",
+          "step": {
+            "personalInformation": {
+              "label": "Henkilökohtaiset tiedot"
+            },
+            "security": {
+              "label": "Suojaus"
+            },
+            "groups": {
+              "label": "Ryhmät",
+              "title": "Valitse kaikki ryhmät, joiden jäsen käyttäjän tulee olla",
+              "description": "Kaikki käyttäjät kuuluvat {everyoneGroup}-ryhmään, eikä sitä ole mahdollista poistaa."
+            },
+            "review": {
+              "label": "Yhteenveto"
+            },
+            "completed": {
+              "title": "Käyttäjä luotiin"
+            },
+            "error": {
+              "title": ""
+            }
+          },
+          "action": {
+            "createAnother": "Luo toinen käyttäjä",
+            "back": "Palaa käyttäjälistaan"
+          }
+        },
+        "invite": {
+          "title": "Hallinnoi käyttäjäkutsuja",
+          "action": {
+            "new": {
+              "title": "Uusi kutsu",
+              "description": "Erääntymisen jälkeen kutsu ei ole enää kelvollinen, eikä sen vastaanottaja voi enää luoda tiliä."
+            },
+            "copy": {
+              "title": "Kopioi kutsu",
+              "description": "Kutsu on luotu. Kun tämä ruutu on suljettu, <b>et voi enää kopioida linkkiä</b>. Mikäli et enää halua kutsua kutsun vastaanottajaa, voit poistaa sen milloin tahansa.",
+              "link": "Kutsulinkki",
+              "button": "Kopioi ja sulje"
+            },
+            "delete": {
+              "title": "Poista kutsu",
+              "description": "Haluatko varmasti poistaa kutsun? Linkin vastaanottajat eivät voi enää luoda tiliä sen välityksellä."
+            }
+          },
+          "field": {
+            "id": {
+              "label": "Tunniste"
+            },
+            "creator": {
+              "label": "Luoja"
+            },
+            "expirationDate": {
+              "label": "Erääntyy"
+            },
+            "token": {
+              "label": "Käyttöavain"
+            }
+          }
+        }
+      },
+      "group": {
+        "back": "Palaa ryhmiin",
+        "setting": {
+          "general": {
+            "title": "Yleiset",
+            "owner": "Omistaja",
+            "ownerOfGroup": "Ryhmän omistaja",
+            "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "Asetukset",
+            "alert": "",
+            "board": {
+              "title": "Paneelit"
+            }
+          },
+          "members": {
+            "title": "Jäsenet",
+            "search": "Suoata jäseniä",
+            "notFound": "Jäseniä ei löytynyt"
+          },
+          "permissions": {
+            "title": "Käyttöoikeudet",
+            "form": {
+              "unsavedChanges": "Muutoksia ei ole tallennettu!"
+            }
+          }
+        }
+      },
+      "settings": {
+        "title": "Asetukset",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "Analytiikka",
+            "general": {
+              "title": "Lähetä anonyymejä käyttötietoja",
+              "text": "Homarr lähettää anonymisoitua analytiikkaa avoimen lähdekoodin Umami‑järjestelmän avulla. Kun analytiikka on käytössä, keräämme seuraavat tiedot: Homarrin version, tietokannan tyypin (MySQL/PostgreSQL/SQLite), Docker‑/Kubernetes‑tilan, käytössä olevat tunnistautumismenetelmät sekä eri ominaisuuksien lukumäärät. Kaikki tiedot on anonymisoitu ja koottu tilastomuotoon – mitään henkilötietoja, URL‑osoitteita, nimiä tai muita tunnistettavia tietoja ei koskaan kerätä. Tämä auttaa avoimen lähdekoodin tiimiämme ymmärtämään käyttötapoja ja priorisoimaan kehitystä."
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "Indeksointi ja tutkinta",
+            "warning": "Näiden asetusten käyttöönotto tai käytöstäpoisto vaikuttaa merkittävästi siihen, miten hakukoneet indeksoivat ja tutkivat sivustoasi. Jokainen asetus on pyyntö hakuroboteille, mutta niiden noudattaminen riippuu hakukoneista. Muutosten voimaantulo voi kestää useita päiviä tai jopa viikkoja. Osa asetuksista voi koskea vain tiettyjä hakukoneita.",
+            "noIndex": {
+              "title": "No index",
+              "text": "Älä indeksoi sivustoa hakukoneisiin äläkä näytä sitä missään hakutuloksissa."
+            },
+            "noFollow": {
+              "title": "No follow",
+              "text": "Älä seuraa linkkejä indeksoinnin aikana. Jos tämä ei ole käytössä, pyrkivät hakurobotit seuraamaan kaikkia Homarrissa havaitsemiaan linkkejä."
+            },
+            "noTranslate": {
+              "title": "No translate",
+              "text": "Kun sivuston kieli ei vastaa sitä mitä käyttäjä todennäköisesti haluaa lukea, Google näyttää hakutuloksissa käännöslinkin."
+            },
+            "noSiteLinksSearchBox": {
+              "title": "No site links search box",
+              "text": "Google luo sivustoilta löydetyt ja muut suorat linkit sisätävän hakukortin. Kun tämä asetus on käytössä, pyydetään Googlea poistamaan kortti käytöstä."
+            }
+          },
+          "board": {
+            "title": "Paneelit",
+            "homeBoard": {
+              "label": "Globaali kotipaneeli",
+              "mobileLabel": "Globaali mobiilipaneeli",
+              "description": "Vain julkiset paneelit ovat valittavissa"
+            },
+            "status": {
+              "title": "Sovellustila",
+              "enableStatusByDefault": {
+                "label": "Näytä tila oletusarvoisesti",
+                "description": "Kun sovelluskohde lisätään, näytetään sen tila oletusarvoisesti"
+              },
+              "forceDisableStatus": {
+                "label": "Pakota tilatiedon käytöstäpoisto",
+                "description": "Sovellusten tilatiedot poistetaan käytöstä kaikilta käyttäjiltä ja niiden käyttöönotto estetään"
+              }
+            }
+          },
+          "user": {
+            "title": "Käyttäjät",
+            "enableGravatar": {
+              "label": "Käytä Gravataria",
+              "description": "Varmistaa käyttäjäkuvat Libravatar-/Gravatar-palveluilla, kun mukautettua profiilikuvaa ei ole ja sähköpostiosoite on"
+            }
+          },
+          "search": {
+            "title": "Haku",
+            "defaultSearchEngine": {
+              "label": "Globaali oletushakukone",
+              "description": "Integraatioiden hakukoneita ei voida valita tästä"
+            }
+          },
+          "appearance": {
+            "title": "Ulkoasu",
+            "defaultColorScheme": {
+              "label": "Oletusarvoinen väriteema",
+              "options": {
+                "auto": "Automaattinen",
+                "light": "Vaalea",
+                "dark": "Tumma"
+              }
+            }
+          },
+          "culture": {
+            "title": "Kulttuuri",
+            "defaultLocale": {
+              "label": "Oletuskieli"
+            }
+          }
+        }
+      },
+      "tool": {
+        "tasks": {
+          "title": "Tehtävät",
+          "status": {
+            "idle": "Toimeton",
+            "running": "Käynnissä",
+            "error": "",
+            "disabled": "Ei käytössä"
+          },
+          "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft-palvelimen tila"
+            },
+            "timetable": {
+              "label": "Aikataulu"
+            },
+            "iconsUpdater": {
+              "label": "Kuvakepäivitykset"
+            },
+            "analytics": {
+              "label": "Analytiikka"
+            },
+            "smartHomeEntityState": {
+              "label": "Älykodin entiteettitila"
+            },
+            "ping": {
+              "label": "Ping-koestukset"
+            },
+            "mediaServer": {
+              "label": "Mediapalvelimet"
+            },
+            "mediaOrganizer": {
+              "label": "Median hallintatyökalut"
+            },
+            "downloads": {
+              "label": "Lataukset"
+            },
+            "mediaRequestStats": {
+              "label": "Mediapyyntöjen tilastot"
+            },
+            "mediaRequestList": {
+              "label": "Mediapyyntöjen listaus"
+            },
+            "rssFeeds": {
+              "label": "RSS-syötteet"
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": "Terveydentilan valvonta"
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": "Päivitystarkistus"
+            },
+            "mediaTranscoding": {
+              "label": "Median transkoodaus"
+            },
+            "networkController": {
+              "label": ""
+            },
+            "refreshNotifications": {
+              "label": "Ilmoituspäivitykset"
+            },
+            "dockerContainers": {
+              "label": "Docker-kontit"
+            },
+            "firewallCpu": {
+              "label": "Palomuurin suoritin"
+            },
+            "firewallMemory": {
+              "label": "Palomuurin muisti"
+            },
+            "firewallVersion": {
+              "label": "Palomuurin versio"
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": "Sää"
+            },
+            "tracearr": {
+              "label": "Tracearr"
+            },
+            "umamiActiveVisitors": {
+              "label": "Umamin aktiiviset käyttäjät"
+            }
+          },
+          "interval": {
+            "seconds": "{interval, plural, =1 {sekunnin} other {# sekunnin}} välein",
+            "minutes": "{interval, plural, =1 {minuutin} other {# minuutin}} välein",
+            "hours": "{interval, plural, =1 {tunnin} other {# tunnin}} välein",
+            "midnight": "päivittäin keskiyöllä",
+            "weeklyMonday": "viikottain maanantaisin",
+            "update": {
+              "success": {
+                "message": "Aikajakso vaihdettiin"
+              },
+              "error": {
+                "message": "Aikajaksoa ei voitu vaihtaa"
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": "Nimi"
+            },
+            "interval": {
+              "label": "Ajoituksen aikajakso"
+            },
+            "lastExecution": {
+              "label": "Viimeksi suoritettu"
+            },
+            "actions": {
+              "label": "Toiminnot"
+            }
+          },
+          "table": {
+            "search": "Suodata {count} tehtävää..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Päivitä"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
+            }
+          }
+        },
+        "api": {
+          "title": "",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
+          "tab": {
+            "documentation": {
+              "label": "Dokumentaatio"
+            },
+            "apiKey": {
+              "label": "Tunnistautuminen",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
+              "table": {
+                "header": {
+                  "id": "",
+                  "createdBy": "",
+                  "actions": ""
+                }
+              }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
+            }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
+          }
+        }
+      },
+      "about": {
+        "version": "Versio {version}",
+        "text": "Homarr on yhteisövetoinen avoimen lähdekoodin projekti, jota vapaaehtoiset ylläpitävät. Heidän ansiostaan Homarr on ollut kasvava projekti vuodesta 2021. Tiimimme työstää Homarria täysin etänä, omalla vapaa-ajallaan ilman korvausta.",
+        "accordion": {
+          "contributors": {
+            "title": "Osallistujat",
+            "subtitle": "{count} koodin ja Homarrin ylläpitäjää"
+          },
+          "translators": {
+            "title": "Kääntäjät",
+            "subtitle": "{count} osallistuu useiden kielten käännöksiin"
+          },
+          "sponsors": {
+            "title": "Sponsorit",
+            "subtitle": "{count} tukee projektia taloudellisesti"
+          },
+          "libraries": {
+            "title": "Kirjastot",
+            "subtitle": "{count} kirjastoa käytetään Homarrin koodissa"
+          },
+          "hotkeys": {
+            "title": "Näppäinyhdistelmät",
+            "subtitle": "Käyttöä tehostavat näppäimistön pikavalinnat",
+            "field": {
+              "shortcut": "Näppäinyhdistelmä",
+              "action": "Toiminto"
+            },
+            "action": {
+              "toggleBoardEdit": "Vaihda paneelin muokkaustilaa",
+              "toggleColorScheme": "Kytke vaalean/tumman tila",
+              "saveNotebook": "Tallenna muistikirja (vain muistikirjawidgetin sisällä)",
+              "openSpotlight": "Avaa haku"
+            },
+            "note": "Vinkki: \"Mod\" viittaa Ctrl-painikkeeseeen ja Macin ⌘-painikkeeseen"
+          }
+        }
+      }
+    }
+  },
+  "docker": {
+    "title": "Kontit",
+    "table": {
+      "updated": "Päivitetty {when}",
+      "search": "Suodata {count} konttia...",
+      "selected": "{selectCount}/{totalCount} kontista valittu",
+      "footer": "Yhteensä {count} konttia",
+      "totalCpu": "",
+      "totalMemory": ""
+    },
+    "field": {
+      "name": {
+        "label": "Nimi"
+      },
+      "state": {
+        "label": "Tila",
+        "option": {
+          "created": "Luotu",
+          "running": "Käynnissä",
+          "paused": "",
+          "restarting": "",
+          "exited": "Suljettu",
+          "removing": "",
+          "dead": ""
+        }
+      },
+      "stats": {
+        "cpu": {
+          "label": "Suoritin"
+        },
+        "memory": {
+          "label": "Muisti"
+        }
+      },
+      "containerImage": {
+        "label": "Image"
+      },
+      "ports": {
+        "label": "Portit"
+      },
+      "host": {
+        "label": "Isäntä"
+      }
+    },
+    "action": {
+      "title": "Toiminnot",
+      "logs": {
+        "label": "Tarkastele lokeja",
+        "page": {
+          "title": ""
+        }
+      },
+      "start": {
+        "label": "Käynnistä",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "stop": {
+        "label": "Pysäytä",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "restart": {
+        "label": "Uudelleenkäynnistä",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "Poista",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "Päivitä",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "addToHomarr": {
+        "label": "Lisää Homarriin",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": "Valitut sovellukset lisättiin Homarriin"
+          },
+          "error": {
+            "title": "",
+            "message": "Valittuja sovelluksia ei voitu lisätä Homarriin"
+          }
+        },
+        "modal": {
+          "title": ""
+        }
+      }
+    },
+    "error": {
+      "internalServerError": ""
+    }
+  },
+  "kubernetes": {
+    "cluster": {
+      "title": "",
+      "label": "",
+      "providers": "",
+      "version": "",
+      "architecture": "",
+      "capacity": {
+        "title": "",
+        "resource": {
+          "reserved": "",
+          "used": ""
+        }
+      },
+      "resources": {
+        "title": "",
+        "nodes": "",
+        "namespaces": "",
+        "ingresses": "",
+        "services": "Palvelut",
+        "pods": "",
+        "configmaps": "",
+        "secrets": "",
+        "volumes": ""
+      }
+    },
+    "nodes": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "state": {
+          "label": "",
+          "option": {
+            "ready": "",
+            "NotReady": ""
+          }
+        },
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        },
+        "pods": {
+          "label": ""
+        },
+        "operatingSystem": {
+          "label": ""
+        },
+        "architecture": {
+          "label": ""
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes-versio"
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "namespaces": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "state": {
+          "label": "",
+          "option": {
+            "active": "",
+            "terminating": ""
+          }
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "ingresses": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "className": {
+          "label": ""
+        },
+        "rulesAndPaths": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "services": {
+      "label": "Palvelut",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "type": {
+          "label": ""
+        },
+        "ports": {
+          "label": ""
+        },
+        "targetPorts": {
+          "label": ""
+        },
+        "clusterIP": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": "Suodata {count} palvelua"
+      }
+    },
+    "pods": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "image": {
+          "label": ""
+        },
+        "applicationType": {
+          "label": ""
+        },
+        "status": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "secrets": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "type": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "configmaps": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "volumes": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "accessModes": {
+          "label": ""
+        },
+        "storage": {
+          "label": ""
+        },
+        "storageClassName": {
+          "label": ""
+        },
+        "volumeMode": {
+          "label": ""
+        },
+        "volumeName": {
+          "label": ""
+        },
+        "status": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "error": {
+      "internalServerError": "Kubernetesin tietojen nouto epäonnistui"
+    }
+  },
+  "permission": {
+    "title": "Käyttöoikeudet",
+    "userSelect": {
+      "title": "Lisää käyttäjälle käyttöoikeus"
+    },
+    "groupSelect": {
+      "title": "Lisää ryhmälle käyttöoikeus"
+    },
+    "tab": {
+      "user": "Käyttäjät",
+      "group": "Ryhmät",
+      "inherited": "Perityt ryhmät"
+    },
+    "field": {
+      "user": {
+        "label": "Käyttäjä"
+      },
+      "group": {
+        "label": "Ryhmä"
+      },
+      "permission": {
+        "label": "Käyttöoikeus"
+      }
+    },
+    "action": {
+      "saveUser": "Tallenna käyttöoikeudet",
+      "saveGroup": "Tallenna ryhmän käyttöoikeus"
+    }
+  },
+  "navigationStructure": {
+    "manage": {
+      "label": "",
+      "boards": {
+        "label": "Paneelit"
+      },
+      "integrations": {
+        "label": "Integraatiot",
+        "edit": {
+          "label": "Muokkaa"
+        },
+        "new": {
+          "label": "Uusi"
+        }
+      },
+      "search-engines": {
+        "label": "Hakukoneet",
+        "new": {
+          "label": "Uusi"
+        },
+        "edit": {
+          "label": "Muokkaa"
+        }
+      },
+      "medias": {
+        "label": "Mediatiedostot"
+      },
+      "apps": {
+        "label": "Sovellukset",
+        "new": {
+          "label": "Uusi"
+        },
+        "edit": {
+          "label": "Muokkaa"
+        }
+      },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
+      "users": {
+        "label": "Käyttäjät",
+        "create": {
+          "label": "Luo"
+        },
+        "general": "Yleiset",
+        "security": "Suojaus",
+        "board": "",
+        "groups": {
+          "label": "Ryhmät"
+        },
+        "invites": {
+          "label": "Kutsut"
+        }
+      },
+      "tools": {
+        "label": "Työkalut",
+        "tasks": {
+          "label": "Tehtävät"
+        },
+        "docker": {
+          "label": "Docker",
+          "logs": {
+            "label": ""
+          }
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": ""
+          },
+          "namespaces": {
+            "label": ""
+          },
+          "ingresses": {
+            "label": ""
+          },
+          "services": {
+            "label": "Palvelut"
+          },
+          "pods": {
+            "label": ""
+          },
+          "configmaps": {
+            "label": ""
+          },
+          "secrets": {
+            "label": ""
+          },
+          "volumes": {
+            "label": ""
+          }
+        },
+        "logs": {
+          "label": "Lokitiedot"
+        },
+        "certificates": {
+          "label": "Varmenteet",
+          "hostnames": {
+            "label": "Isäntänimet"
+          }
+        }
+      },
+      "settings": {
+        "label": "Asetukset"
+      },
+      "about": {
+        "label": "Tietoja"
+      }
+    }
+  },
+  "search": {
+    "placeholder": "Etsi mitä tahansa",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
+    "mode": {
+      "appIntegrationBoard": {
+        "help": "Etsi sovelluksia, integraatioita tai paneeleita",
+        "group": {
+          "app": {
+            "title": "Sovellukset",
+            "children": {
+              "action": {
+                "open": {
+                  "label": "Avaa sovelluksen URL-osoite"
+                },
+                "edit": {
+                  "label": "Muokkaa sovellusta"
+                }
+              },
+              "detail": {
+                "title": "Valitse sovellukselle toiminto"
+              }
+            }
+          },
+          "board": {
+            "title": "Paneelit",
+            "children": {
+              "action": {
+                "open": {
+                  "label": "Avaa paneeli"
+                },
+                "homeBoard": {
+                  "label": "Määritä kotipaneeliksi"
+                },
+                "mobileBoard": {
+                  "label": "Määritä mobiilipaneeliksi"
+                },
+                "settings": {
+                  "label": "Avaa asetukset"
+                }
+              },
+              "detail": {
+                "title": "Valitse paneelille toiminto"
+              }
+            }
+          },
+          "integration": {
+            "title": "Integraatiot"
+          }
+        }
+      },
+      "command": {
+        "help": "Aktivoi komentotila",
+        "group": {
+          "localCommand": {
+            "title": "Paikalliset komennot"
+          },
+          "globalCommand": {
+            "title": "Globaalit komennot",
+            "option": {
+              "colorScheme": {
+                "auto": "Vaihda ulkoasu",
+                "light": "Vaihda vaaleaan tilaan",
+                "dark": "Vaihda tummaan tilaan"
+              },
+              "language": {
+                "label": "Vaihda kieli",
+                "children": {
+                  "detail": {
+                    "title": "Valitse ensisijainen kielesi"
+                  }
+                }
+              },
+              "newBoard": {
+                "label": "Luo uusi paneeli"
+              },
+              "importBoard": {
+                "label": "Tuo paneeli"
+              },
+              "newApp": {
+                "label": "Luo uusi sovellus"
+              },
+              "newIntegration": {
+                "label": "Luotu uusi integraatio",
+                "children": {
+                  "detail": {
+                    "title": "Valitse luotava integraatiotyyppi"
+                  }
+                }
+              },
+              "newUser": {
+                "label": "Luo uusi käyttäjä"
+              },
+              "newInvite": {
+                "label": "Luo uusi kutsu"
+              },
+              "newGroup": {
+                "label": "Luo uusi ryhmä"
+              }
+            }
+          },
+          "preferences": {
+            "title": "Asetukset",
+            "children": {
+              "detail": {
+                "title": "Valitse muutettava asetus.",
+                "backHint": "Palaa takaisin askelpalauttimella tai painamalla Takaisin-painiketta",
+                "backAction": "Palaa takaisin"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "Asetusta ei voitu päivittää."
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": "Avaa asetukset"
+              },
+              "boolean": {
+                "enabled": "Käytössä",
+                "disabled": "Ei käytössä"
+              },
+              "board": {
+                "none": "Ei mitään",
+                "unavailable": "Parhaillaan valittu (ei käytettävissä)"
+              },
+              "searchEngine": {
+                "none": "Ei mitään",
+                "unavailable": "Parhaillaan valittu (ei käytettävissä)"
+              },
+              "colorScheme": {
+                "label": "Väriteema",
+                "children": {
+                  "detail": {
+                    "title": "Valitse väriteemasi"
+                  }
+                }
+              },
+              "locale": {
+                "label": "Kieli",
+                "children": {
+                  "detail": {
+                    "title": "Valitse ensisijainen kielesi"
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "Oletushakukone",
+                "children": {
+                  "detail": {
+                    "title": "Valitse oletuarvoinen hakukoneesi"
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "Avaa tulokset uudessa välilehdessä",
+                "children": {
+                  "detail": {
+                    "title": "Avaa hakutulokset uudessa välilehdessä"
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "Käytä DuckDuckGon Bangs-komentoja",
+                "children": {
+                  "detail": {
+                    "title": "Käytä DuckDuckGon Bangs-komentoja"
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "Viikon ensimmäinen päivä",
+                "children": {
+                  "detail": {
+                    "title": "Valitse viikon ensimmäinen päivä"
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "Kotipaneeli",
+                "children": {
+                  "detail": {
+                    "title": "Valitse kotipaneelisi"
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "Mobiili kotipaneeli",
+                "children": {
+                  "detail": {
+                    "title": "Valitse mobiili kotipaneelisi"
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "Käytä ping-kuvakkeita",
+                "children": {
+                  "detail": {
+                    "title": "Käytä ping-kuvakkeita"
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": "Avaa täysi asetussivu"
+              }
+            }
+          }
+        }
+      },
+      "media": {
+        "help": "Etsi pyydettäviä elokuvia tai sarjoja",
+        "requestMovie": "Pyydä elokuvaa",
+        "requestSeries": "Pyydä sarjaa",
+        "openIn": "Avaa palvelussa {kind}",
+        "group": {
+          "title": "Elokuvat ja sarjat"
+        },
+        "action": {
+          "search": {
+            "label": "Etsi elokuvia tai sarjoja",
+            "description": "Aloita mediapyyntöintegraatioden haku kirjoittamalla",
+            "disabled": {
+              "noIntegration": "Ota mediahaku käyttöön lisäämällä Overseerr-, Jellyseerr- tai Seerr-integraatio.",
+              "scoped": "Widgetille ei ole käytettävissä olevaa mediapyyntöintegrointia."
+            }
+          }
+        },
+        "availability": {
+          "available": "Saatavilla",
+          "partiallyAvailable": "Osittainen",
+          "processing": "Käsittelyssä",
+          "requested": "Pyydetty",
+          "pending": "Odottaa"
+        }
+      },
+      "external": {
+        "help": "Käytä ulkoista hakukonetta",
+        "group": {
+          "searchEngine": {
+            "title": "Hakukoneet",
+            "tipDdgBangs": "Vinkki: Voit käyttää myös tässä mitä tahansa DuckDuckGo Bangs -komentoja, esim. !jotain",
+            "bang": {
+              "searchWithQuery": "Etsitään \"{query}\" tunnisteella {label}",
+              "pressEnterToOpen": "Avaa painamalla Enter",
+              "engineSelected": "{label} valittu (!{bang})",
+              "typeQueryToContinue": "Jatka syöttämällä hakusanat",
+              "emptyBangHint": "Syötä Bang-komento, esim. !yt, ja valitse painamalla välilyöntiä"
+            },
+            "children": {
+              "action": {
+                "search": {
+                  "label": "Etsi nimellä {name}"
+                }
+              },
+              "detail": {
+                "title": "Valitse toiminto valitulle hakukoneelle"
+              },
+              "searchResults": {
+                "title": "Valitse hakutulos toiminnoille"
+              }
+            },
+            "option": {
+              "google": {
+                "name": "Google",
+                "description": "Etsi verkosta Googlella"
+              },
+              "bing": {
+                "name": "Bing",
+                "description": "Etsi verkosta Bingillä"
+              },
+              "duckduckgo": {
+                "name": "DuckDuckGo",
+                "description": "Etsi verkosta DuckDuckGolla"
+              },
+              "torrent": {
+                "name": "Torrentit",
+                "description": "Etsi torrenteja torrentdownloads.prosta"
+              },
+              "youTube": {
+                "name": "YouTube",
+                "description": "Etsi YouTube-videoita"
+              }
+            }
+          }
+        }
+      },
+      "help": {
+        "group": {
+          "mode": {
+            "title": "Tilat"
+          },
+          "help": {
+            "title": "Tuki",
+            "option": {
+              "documentation": {
+                "label": "Käyttöohjeet"
+              },
+              "submitIssue": {
+                "label": "Ilmoita ongelmasta"
+              },
+              "discord": {
+                "label": "Discord-yhteisö"
+              }
+            }
+          }
+        }
+      },
+      "home": {
+        "group": {
+          "search": {
+            "title": "Haku",
+            "option": {
+              "other": {
+                "label": "Etsi eri hakukoneella"
+              },
+              "no-default": {
+                "label": "Oletushakukonetta ei ole määritetty",
+                "description": "Määritä oletushakukone asetuksista"
+              },
+              "search": {
+                "label": "Etsi hakua \"{query}\" tunnisteella {name}"
+              },
+              "from-integration": {
+                "description": "Aloita haku kirjoittamalla"
+              }
+            }
+          },
+          "local": {
+            "title": "Paikalliset tulokset"
+          }
+        }
+      },
+      "page": {
+        "help": "Etsi sivuja",
+        "group": {
+          "page": {
+            "title": "Sivut",
+            "option": {
+              "manageHome": {
+                "label": "Hallinnoi aloitussivua"
+              },
+              "manageBoard": {
+                "label": "Hallinnoi paneeleita"
+              },
+              "manageApp": {
+                "label": "Hallinnoi sovelluksia"
+              },
+              "manageIntegration": {
+                "label": "Hallinnoi integraatioita"
+              },
+              "manageSearchEngine": {
+                "label": "Hallinnoi hakukoneita"
+              },
+              "manageMedia": {
+                "label": "Hallinnoi mediaa"
+              },
+              "manageUser": {
+                "label": "Hallinnoi käyttäjiä"
+              },
+              "manageInvite": {
+                "label": "Hallinnoi kutsuja"
+              },
+              "manageGroup": {
+                "label": "Hallinnoi ryhmiä"
+              },
+              "manageDocker": {
+                "label": "Hallinnoi Dockeria"
+              },
+              "manageApi": {
+                "label": "Swagger-rajapinta"
+              },
+              "manageLog": {
+                "label": "Tarkastele lokeja"
+              },
+              "manageTask": {
+                "label": "Hallinnoi tehtäviä"
+              },
+              "manageSettings": {
+                "label": "Yleiset asetukset"
+              },
+              "about": {
+                "label": "Tietoja"
+              },
+              "homeBoard": {
+                "label": "Kotipaneeli"
+              },
+              "preferences": {
+                "label": "Asetuksesi"
+              }
+            }
+          }
+        }
+      },
+      "userGroup": {
+        "help": "Etsi käyttäjiä tai ryhmiä",
+        "group": {
+          "user": {
+            "title": "Käyttäjät",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": "Näytä käyttäjän tiedot"
+                }
+              },
+              "detail": {
+                "title": "Valitse käyttäjälle toiminto"
+              }
+            }
+          },
+          "group": {
+            "title": "Ryhmät",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": "Näytä ryhmän tiedot"
+                },
+                "manageMember": {
+                  "label": "Hallinnoi jäseniä"
+                },
+                "managePermission": {
+                  "label": "Hallinnoi käyttöoikeuksia"
+                }
+              },
+              "detail": {
+                "title": "Valitse ryhmälle toiminto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "engine": {
+      "search": "Suodata hakukoneita",
+      "field": {
+        "name": {
+          "label": "Nimi"
+        },
+        "short": {
+          "label": "Lyhyesti"
+        },
+        "urlTemplate": {
+          "label": "URL-hakujen pohja"
+        },
+        "description": {
+          "label": "Kuvaus"
+        }
+      },
+      "page": {
+        "list": {
+          "title": "Hakukoneet",
+          "noResults": {
+            "title": "Hakukoneita ei vielä ole",
+            "action": "Luo ensimmäinen hakukoneesi"
+          },
+          "interactive": "Vuorovaikutteinen, käyttää integraatiota"
+        },
+        "create": {
+          "title": "Uusi hakukone",
+          "notification": {
+            "success": {
+              "title": "Hakukone luotiin",
+              "message": "Hakukoneen luonti onnistui"
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "Muokkaa hakukonetta",
+          "notification": {
+            "success": {
+              "title": "Muutokset onnistuivat",
+              "message": "Hakukone tallennettiin"
+            },
+            "error": {
+              "title": "Muutoksia ei voitu ottaa käyttöön",
+              "message": ""
+            }
+          },
+          "configControl": "Asetukset",
+          "searchEngineType": {
+            "generic": "Yleinen",
+            "fromIntegration": "Integraatiosta"
+          }
+        },
+        "delete": {
+          "title": "Poista hakukone",
+          "message": "Haluatko varmasti poistaa hakukoneen {name}?",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": "",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
+    "page": {
+      "list": {
+        "title": "Luotetut varmenteet",
+        "description": "Homarr käyttää näitä integraatioyhteyksiin.",
+        "noResults": {
+          "title": "Varmenteita ei vielä ole"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "",
+        "toHostnames": "Luotetut isäntänimet"
+      },
+      "hostnames": {
+        "title": "Luotettavien varmenteiden isäntänimet",
+        "description": "Jotkin varmenteet eivät hyväksy pyyntöjä Homarrin käyttämästä verkkotunnuksesta ja tämän vuoksi nämä rajoitukset ohitetaan luotettuihin isäntänimiin sidottujen varmennesormenjälkien avulla.",
+        "noResults": {
+          "title": "Isäntänimiä ei vielä ole"
+        },
+        "toCertificates": "Varmenteet"
+      }
+    },
+    "action": {
+      "create": {
+        "label": "Lisää varmenne",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "Haluatko varmasti poistaa varmenteen?",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "Haluatko varmasti poistaa luotetun isäntänimen? Tämän seurauksena jotkin integraatiot saattavat lakata toimimasta.",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Vianselvitys",
+        "info": "Informatiivinen",
+        "warn": "Varoitus",
+        "error": "Virhe"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "Tervetuloa Homarriin!",
+        "description": "Tämä on ohjauskeskuksesi. Täällä hallitset paneeleita, sovelluksia, integraatioita, käyttäjiä ja palvelinasetuksia. Tutustutaan jokaiseen osioon."
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "Integraatiosi",
+        "description": "Nämä palvelut ovat yhdistettävissä Homarriin - Sonarr, Radarr, Plex, Jellyfin ja yli 50 muuta. Kaikki kirjautumistiedot salataan tallennettaessa."
+      },
+      "integrationsCreate": {
+        "title": "Lisää integraatio",
+        "description": "Yhdistä uusi palvelu tästä. Valitse tyyppi, syötä URL-osoite ja rajapinnan avain — Homarr todentaa yhteyden ennen tallennusta."
+      },
+      "usersList": {
+        "title": "",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": "Kojelauta, jolla järjestelet sovelluksia ja widgettejä raahamaalla. Etsi sovelluksia, paneeleita ja toimintoja milloin tahansa painamalla Ctrl + K."
+      },
+      "editMode": {
+        "title": "",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": "Siirry paneelien välillä. Luo erilliset kojelaudat eri tarkoituksiin — media, verkko, käyttäjäkohtaiset tai mitä vain haluat."
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
+      }
+    }
+  }
+}

@@ -94,8 +94,8 @@ export interface BeszelSystemDetails {
  *
  * Units:
  * - CPU/GPU/memory/disk percentages: 0–100
- * - Memory/disk absolute values (mu, du, etc.): bytes
- * - Disk I/O (dr, dw): bytes/s
+ * - Memory/disk absolute values (mu, du, m, d, etc.): GB
+ * - Disk I/O (dr, dw): MB/s
  * - Network (ns, nr): bytes/s — all interfaces (including loopback, docker bridges)
  * - Bandwidth (b): bytes/s [sent, recv] — public interfaces only. Prefer b over ns/nr for user-facing charts
  */
@@ -110,35 +110,35 @@ export interface BeszelSystemStats {
   cpus?: number[];
   /** load average [1m, 5m, 15m] */
   la?: [number, number, number];
-  /** total memory (bytes) */
+  /** total memory (GB) */
   m: number;
-  /** memory used (bytes) */
+  /** memory used (GB) */
   mu: number;
   /** memory usage (%) */
   mp: number;
-  /** memory buffer/cache (bytes) */
+  /** memory buffer/cache (GB) */
   mb: number;
-  /** memory max used (bytes) */
+  /** memory max used (GB) */
   mm?: number;
-  /** memory zfs arc (bytes) */
+  /** memory zfs arc (GB) */
   mz?: number;
-  /** total swap (bytes) */
+  /** total swap (GB) */
   s: number;
-  /** swap used (bytes) */
+  /** swap used (GB) */
   su: number;
-  /** total disk (bytes) */
+  /** total disk (GB) */
   d: number;
-  /** disk used (bytes) */
+  /** disk used (GB) */
   du: number;
   /** disk usage (%) */
   dp: number;
-  /** disk read (bytes/s) */
+  /** disk read (MB/s) */
   dr: number;
-  /** disk write (bytes/s) */
+  /** disk write (MB/s) */
   dw: number;
-  /** disk read max (bytes/s) */
+  /** disk read max (MB/s) */
   drm?: number;
-  /** disk write max (bytes/s) */
+  /** disk write max (MB/s) */
   dwm?: number;
   /** disk IOPS [read, write] */
   dio?: [number, number];
@@ -236,13 +236,14 @@ export interface BeszelContainer {
  * One entry per container in a BeszelContainerStatsRecord.
  *
  * Network fields: b (bandwidth) is preferred when available; fall back to ns/nr.
+ * Units: m = MB, c = %, b/ns/nr = bytes/s
  */
 export interface BeszelContainerStats {
   /** container name */
   n: string;
   /** CPU usage (%) */
   c: number;
-  /** memory usage (bytes) */
+  /** memory usage (MB) */
   m: number;
   /** network sent (bytes/s) — legacy, use b when available */
   ns?: number;

@@ -7,7 +7,10 @@
         "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
-          "importOldmarr": "Import z Homarr pred 1.0"
+          "importOldmarr": "Import z Homarr pred 1.0",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
         }
       },
       "import": {
@@ -89,6 +92,48 @@
       "settings": {
         "title": "Nastavenia",
         "subtitle": "Nakonfigurujte nastavenia servera."
+      },
+      "integrations": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "continue": "",
+          "skip": ""
+        },
+        "configure": {
+          "progress": "",
+          "skip": "",
+          "finishing": "",
+          "error": {
+            "title": "",
+            "message": ""
+          },
+          "helpers": {
+            "tooltip": "",
+            "description": ""
+          }
+        },
+        "urlTemplate": {
+          "label": "",
+          "placeholder": "",
+          "hint": "",
+          "warning": "",
+          "preview": "",
+          "mode": {
+            "subdomain": "",
+            "hostPort": ""
+          }
+        },
+        "docker": {
+          "detected": "",
+          "detectedBreakdown": "",
+          "summary": "",
+          "appBadge": "",
+          "appSectionLabel": "",
+          "scanning": "",
+          "scanningDescription": ""
+        }
       },
       "finish": {
         "title": "Dokončiť nastavenie",
@@ -639,6 +684,211 @@
       "add": "Pridajte aplikáciu"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "",
+        "noResults": "",
+        "loading": ""
+      },
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "edit": {
+        "title": ""
+      }
+    },
+    "action": {
+      "create": "",
+      "import": "",
+      "save": "",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "addMapping": "",
+      "addColumn": "",
+      "edit": "",
+      "removeMapping": "",
+      "removeColumn": "",
+      "addItem": "",
+      "removeItem": "",
+      "addBar": "",
+      "duplicate": "",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": ""
+    },
+    "field": {
+      "name": "",
+      "description": "",
+      "iconUrl": "",
+      "url": "",
+      "authType": "",
+      "headerName": "",
+      "method": "",
+      "requestBody": "",
+      "displayType": "",
+      "jsonPath": "",
+      "jsonPathHint": "",
+      "label": "",
+      "unit": "",
+      "mappings": "",
+      "tablePath": "",
+      "tablePathHint": "",
+      "columns": "",
+      "header": "",
+      "items": "",
+      "gridColumns": "",
+      "cardStyle": "",
+      "bars": "",
+      "valuePath": "",
+      "maxPath": "",
+      "showPercentage": "",
+      "barSize": "",
+      "goodValues": "",
+      "dotSize": "",
+      "valueSize": "",
+      "labelPosition": "",
+      "kvLayout": "",
+      "striped": "",
+      "compact": "",
+      "maxHeight": "",
+      "color": "",
+      "buttonLabel": "",
+      "buttonColor": "",
+      "confirmText": "",
+      "confirmTextHint": "",
+      "successMessage": "",
+      "successMessageHint": "",
+      "enabled": "",
+      "template": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "",
+      "exampleLabelShort": "",
+      "exampleHeader": "",
+      "exampleUnit": "",
+      "iconUrl": "",
+      "url": "",
+      "headerName": "",
+      "jsonPath": "",
+      "tablePath": "",
+      "columnJsonPath": "",
+      "valuePath": "",
+      "maxPath": "",
+      "goodValues": "",
+      "color": ""
+    },
+    "cardStyleOption": {
+      "filled": "",
+      "outline": "",
+      "subtle": ""
+    },
+    "layoutOption": {
+      "list": "",
+      "grid": ""
+    },
+    "sizeOption": {
+      "sm": "",
+      "md": "",
+      "lg": "",
+      "xl": ""
+    },
+    "labelPositionOption": {
+      "above": "",
+      "below": ""
+    },
+    "fieldset": {
+      "general": "",
+      "connection": "",
+      "display": ""
+    },
+    "displayTypeDescription": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "method": {
+      "GET": "",
+      "POST": "",
+      "PUT": "",
+      "DELETE": "",
+      "PATCH": ""
+    },
+    "authType": {
+      "none": "",
+      "bearer": "",
+      "basic": "",
+      "apiKeyHeader": "",
+      "apiKeyQuery": ""
+    },
+    "displayType": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "secret": {
+      "apiKey": "",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    },
+    "preview": {
+      "title": "",
+      "test": "",
+      "hint": "",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "",
+      "url": "",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Adresa URL vlastnej aplikácie"
+      },
+      "apiKeySettings": {
+        "label": ""
       }
     },
     "action": {
       "create": "Nová integrácia"
+    },
+    "grid": {
+      "widgetCount": "",
+      "noWidgets": "",
+      "detected": ""
+    },
+    "category": {
+      "dnsHole": "",
+      "mediaService": "",
+      "calendar": "",
+      "mediaSearch": "",
+      "mediaRelease": "",
+      "mediaRequest": "",
+      "downloadClient": "",
+      "usenet": "",
+      "torrent": "",
+      "miscellaneous": "",
+      "smartHomeServer": "",
+      "indexerManager": "",
+      "healthMonitoring": "",
+      "search": "",
+      "mediaTranscoding": "",
+      "networkController": "",
+      "releasesProvider": "",
+      "notifications": "",
+      "firewall": "",
+      "timetable": "",
+      "photoService": "",
+      "documents": "",
+      "notes": "",
+      "mediaMonitoring": "",
+      "speedtest": "",
+      "analytics": "",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "",
           "newLabel": ""
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "Vyberte integrácie v položkách",
       "interact": "Interakcia s integráciami",
       "full": "Úplný prístup k integrácii"
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1068,6 +1384,7 @@
       "add": "Pridať",
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
+      "skip": "",
       "change": "",
       "create": "Vytvoriť",
       "createAnother": "Vytvorte a začnite odznova",
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "Upraviť položku",
+      "tab": {
+        "widget": "",
+        "app": ""
+      },
+      "app": {
+        "propagationNotice": ""
+      },
       "advancedOptions": {
         "label": "Pokročilé možnosti",
         "title": "Rozšírené možnosti položiek"
@@ -1328,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Aplikácia",
       "description": "Vloží aplikáciu do tabule.",
@@ -1412,6 +1743,15 @@
         "items": {
           "label": "Záložky",
           "add": "Pridať záložku"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2065,6 +2405,37 @@
         "title": ""
       }
     },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "tracearr": {
       "name": "",
       "description": "",
@@ -2311,6 +2682,51 @@
             "target": ""
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "immich-serverStats": {
@@ -2921,6 +3337,113 @@
         "internalServerError": ""
       }
     },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "",
       "description": "",
@@ -2984,6 +3507,258 @@
       },
       "status": {
         "unhealthy": ""
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4139,7 @@
         "boards": "Dosky",
         "apps": "Aplikácie",
         "integrations": "Integrácie",
+        "customWidgets": "",
         "searchEngies": "Vyhľadávače",
         "medias": "Médiá",
         "users": {
@@ -3382,7 +4158,8 @@
             "logs": "Záznamy",
             "api": "API",
             "certificates": "Certifikáty",
-            "tasks": "Úlohy"
+            "tasks": "Úlohy",
+            "backup": ""
           }
         },
         "settings": "Nastavenia",
@@ -3495,7 +4272,24 @@
               },
               "search": "Hladať",
               "firstDayOfWeek": "Prvý deň v týždni",
-              "accessibility": "Prístupnosť"
+              "accessibility": "Prístupnosť",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "",
+                  "notStarted": ""
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": ""
+                }
+              }
             }
           },
           "security": {
@@ -3621,18 +4415,6 @@
             "general": {
               "title": "Odoslať anonymné analýzy",
               "text": "Homarr bude posielať anonymizované analýzy pomocou open source softvéru Umami. Nikdy nezhromažďuje žiadne osobné údaje, a preto je plne v súlade s GDPR a CCPA. Odporúčame vám povoliť analýzu, pretože pomáha nášmu tímu s otvoreným zdrojom identifikovať problémy a uprednostňovať naše nevybavené veci."
-            },
-            "widgetData": {
-              "title": "Údaje widgetu",
-              "text": "Pošlite, ktoré widgety (a ich množstvo) ste nakonfigurovali. Nezahŕňa adresy URL, mená ani iné údaje."
-            },
-            "integrationData": {
-              "title": "Integračné údaje",
-              "text": "Pošlite, ktoré integrácie (a ich množstvo) ste nakonfigurovali. Nezahŕňa adresy URL, mená ani iné údaje."
-            },
-            "usersData": {
-              "title": "Údaje o používateľoch",
-              "text": "Pošlite počet používateľov a či ste aktivovali jednotné prihlásenie"
             }
           },
           "crawlingAndIndexing": {
@@ -3903,7 +4685,215 @@
                   "actions": "Úkony"
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3952,7 +4942,9 @@
       "updated": "Aktualizované {when}",
       "search": "Vyhľadajte {count} kontajnery",
       "selected": "{selectCount} z {totalCount} vybratých kontajnerov",
-      "footer": "Celkový počet kontajnerov: {count}"
+      "footer": "Celkový počet kontajnerov: {count}",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -3990,6 +4982,12 @@
     },
     "action": {
       "title": "Úkony",
+      "logs": {
+        "label": "",
+        "page": {
+          "title": ""
+        }
+      },
       "start": {
         "label": "Spustiť",
         "notification": {
@@ -4381,6 +5379,18 @@
           "label": "Upraviť"
         }
       },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "Používatelia",
         "create": {
@@ -4402,7 +5412,10 @@
           "label": ""
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": ""
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
@@ -4551,13 +5564,141 @@
                 "label": "Vytvoriť novú skupinu"
               }
             }
+          },
+          "preferences": {
+            "title": "",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": ""
+              }
+            },
+            "notification": {
+              "error": {
+                "message": ""
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": ""
+              },
+              "boolean": {
+                "enabled": "",
+                "disabled": ""
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "locale": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "",
         "requestMovie": "Vyžiadať film",
         "requestSeries": "Vyžiadať seriál",
-        "openIn": "Otvoriť v {kind}"
+        "openIn": "Otvoriť v {kind}",
+        "group": {
+          "title": ""
+        },
+        "action": {
+          "search": {
+            "label": "",
+            "description": "",
+            "disabled": {
+              "noIntegration": "",
+              "scoped": ""
+            }
+          }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
+        }
       },
       "external": {
         "help": "Používanie externého vyhľadávača",
@@ -4833,7 +5974,11 @@
             "table": {
               "header": {
                 "season": "Séria",
-                "episodes": "Epizódy"
+                "episodes": "Epizódy",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
               }
             },
             "button": {
@@ -4942,6 +6087,73 @@
         "info": "",
         "warn": "",
         "error": ""
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "usersList": {
+        "title": "",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "editMode": {
+        "title": "",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": ""
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
       }
     }
   }

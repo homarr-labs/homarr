@@ -10,7 +10,6 @@ import type {
 } from "../../beszel/beszel-types";
 
 const GB = 1024 * 1024 * 1024;
-const MB = 1024 * 1024;
 const KB = 1024;
 
 interface MockSystemDef {
@@ -144,26 +143,27 @@ function generateSystemStatsSeries(count: number, sys: MockSystemDef): BeszelSys
   const netSendWalk = smoothWalk(500, 200, count, 10, 8000);
   const netRecvWalk = smoothWalk(800, 300, count, 10, 12000);
 
-  const memTotal = sys.mem;
   const diskTotal = rand(200, 2000) * GB;
 
   return cpuWalk.map((cpu, i) => {
     const memPct = memPctWalk[i] ?? sys.baseMem;
     const diskPct = diskPctWalk[i] ?? sys.baseDisk;
+    const memTotalGB = sys.mem / GB;
+    const diskTotalGB = diskTotal / GB;
     return {
       cpu,
       la: [cpu / 20 + rand(0, 0.5), cpu / 25 + rand(0, 0.3), cpu / 30 + rand(0, 0.2)] as [number, number, number],
-      m: memTotal,
-      mu: (memTotal * memPct) / 100,
+      m: memTotalGB,
+      mu: (memTotalGB * memPct) / 100,
       mp: memPct,
-      mb: rand(0.5, 4) * GB,
-      s: 4 * GB,
-      su: rand(0, 2) * GB,
-      d: diskTotal,
-      du: (diskTotal * diskPct) / 100,
+      mb: rand(0.5, 4),
+      s: 4,
+      su: rand(0, 2),
+      d: diskTotalGB,
+      du: (diskTotalGB * diskPct) / 100,
       dp: diskPct,
-      dr: (diskReadWalk[i] ?? 5) * MB,
-      dw: (diskWriteWalk[i] ?? 3) * MB,
+      dr: diskReadWalk[i] ?? 5,
+      dw: diskWriteWalk[i] ?? 3,
       ns: (netSendWalk[i] ?? 500) * KB,
       nr: (netRecvWalk[i] ?? 800) * KB,
       b: [(netSendWalk[i] ?? 500) * KB * 0.7, (netRecvWalk[i] ?? 800) * KB * 0.7] as [number, number],
@@ -183,7 +183,7 @@ function generateContainerStatsSeries(count: number, profiles: typeof containerP
     walks.map(({ profile, cpuWalk, memWalk, netWalk }) => ({
       n: profile.name,
       c: cpuWalk[i] ?? profile.cpuBase,
-      m: (memWalk[i] ?? profile.memMB) * MB,
+      m: memWalk[i] ?? profile.memMB,
       b: [(netWalk[i] ?? profile.netKB) * KB * 0.4, (netWalk[i] ?? profile.netKB) * KB * 0.6] as [number, number],
     })),
   );
@@ -264,13 +264,15 @@ export class BeszelMockService {
     const sys = resolveSystem(systemId);
     const intervalMinutes = typeToMinutes[type] ?? 1;
     const statsSeries = generateSystemStatsSeries(perPage, sys);
-    return buildTimeSeries(
+    const result = buildTimeSeries(
       systemId,
       perPage,
       intervalMinutes,
       type,
       statsSeries.map((stats) => ({ stats })),
     );
+
+    return result;
   }
 
   public async getContainerStatsAsync(
@@ -284,13 +286,15 @@ export class BeszelMockService {
       .map((i) => containerProfiles[i])
       .filter(Boolean) as typeof containerProfiles;
     const series = generateContainerStatsSeries(perPage, selectedProfiles);
-    return buildTimeSeries(
+    const result = buildTimeSeries(
       systemId,
       perPage,
       intervalMinutes,
       type,
       series.map((stats) => ({ stats })),
     );
+
+    return result;
   }
 
   public async getAlertsAsync(): Promise<BeszelAlert[]> {
@@ -326,6 +330,40 @@ export class BeszelMockService {
     ];
   }
 
+  public async subscribeRealtimeMetrics(
+    systemId: string,
+    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const sys = resolveSystem(systemId);
+    const emit = () => {
+      if (signal.aborted) return;
+      const [stats] = generateSystemStatsSeries(1, sys);
+      if (!stats) return;
+      const record: BeszelSystemStatsRecord = {
+        id: `mock-rt-${Date.now()}`,
+        system: systemId,
+        stats,
+        type: "1m",
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
+      };
+      onMessage({ stats: record, containerStats: null });
+    };
+    if (signal.aborted) return;
+    await new Promise<void>((resolve) => {
+      const interval = setInterval(emit, 1000);
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearInterval(interval);
+          resolve();
+        },
+        { once: true },
+      );
+    });
+  }
+
   public async getAlertHistoryAsync(_systemId?: string, perPage = 10): Promise<BeszelAlertHistory[]> {
     const now = Date.now();
     const names = ["CPU", "Memory", "Disk", "Temperature", "Bandwidth"];
@@ -337,7 +375,7 @@ export class BeszelMockService {
       name: names[i % names.length] ?? "CPU",
       val: rand(60, 95),
       created: new Date(now - (i + 1) * 3_600_000).toISOString(),
-      resolved: i % 2 === 0 ? new Date(now - i * 1_800_000).toISOString() : null,
+      resolved: (i % 2 === 0 && new Date(now - i * 1_800_000).toISOString()) || null,
     }));
   }
 }

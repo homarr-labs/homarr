@@ -23,6 +23,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
 | AUTH_PROVIDERS             | Select Which provider to use between *credentials*, *ldap* and *oidc*. <br /> Multiple providers can be enabled with by separating them with `,`, (ex. `AUTH_PROVIDERS=credentials,oidc`, it is highly recommended to just enable one provider).  |  credentials  |
 | AUTH_LOGOUT_REDIRECT_URL  | URL to redirect to after clicking logging out.  | --- |
 | AUTH_SESSION_EXPIRY_TIME  | Time for the session to time out. Can be set as pure number, which will automatically be used in seconds, or followed by s, m, h or d for seconds, minutes, hours or days. (ex: "30m") | "30d"  |
+| AUTH_COOKIE_PREFIX  | Prefix used for all authentication cookies (session, csrf, callback, pkce, state, nonce). Change this if you run another Auth.js/NextAuth app on the same hostname as Homarr (browsers scope cookies by host, not by port) to avoid cookie name collisions. Only letters, numbers, hyphens and underscores are allowed. | `homarr`  |
 
 <Tabs>
   <TabItem value="credentials" label="Credentials Provider" default>
@@ -124,6 +125,8 @@ Homarr supports multiple authentication options, from internal userbase (credent
 
     Roles are fetched from group claims. This can also be changed to roles for example added to a azure app registration by using the `AUTH_OIDC_GROUPS_ATTRIBUTE`.
 
+    If you'd rather manage group memberships for OIDC users locally (instead of via the IdP), set `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT=true`. While enabled, Homarr stops syncing OIDC users' group memberships from the groups claim, and admins can add/remove OIDC users on a group's members page. If you turn this back to `false`, the next login of each user resumes the regular sync and reconciles their groups with the IdP's claim again, which may remove memberships that were added manually while local management was enabled.
+
     <details>
       <summary>
         Example Setup
@@ -197,6 +200,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
     | ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
     | ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
     | ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim                  | groups        |
+    | ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
     | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
     | ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
     | ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |

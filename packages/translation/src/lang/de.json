@@ -7,7 +7,10 @@
         "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
         "action": {
           "scratch": "Von vorne beginnen",
-          "importOldmarr": "Import von Homarr vor 1.0"
+          "importOldmarr": "Import von Homarr vor 1.0",
+          "restoreSqlite": "Aus SQLite-Backup wiederherstellen",
+          "restoreSqliteDescription": "Laden Sie eine vollständige SQLite-Datenbanksicherung von einer vorherigen Homarr-Instanz hoch. Dies wird alle Boards, Benutzer, Apps, Integrationen und Einstellungen wiederherstellen.",
+          "backToOptions": "← Zurück zu Setup Optionen"
         }
       },
       "import": {
@@ -90,6 +93,48 @@
         "title": "Einstellungen",
         "subtitle": "Server-Einstellungen konfigurieren."
       },
+      "integrations": {
+        "title": "Integrationen",
+        "subtitle": "Wählen Sie die von Ihnen verwendeten Dienste aus.",
+        "description": "Wählen Sie die Integrationen, die Sie verbinden möchten. Ihr Dashboard wird automatisch mit passenden Widgets eingerichtet.",
+        "action": {
+          "continue": "Weiter",
+          "skip": "Vorerst überspringen"
+        },
+        "configure": {
+          "progress": "{current} von {total}",
+          "skip": "Diese Integration überspringen",
+          "finishing": "Dashboard wird eingerichtet...",
+          "error": {
+            "title": "Einrichtung fehlgeschlagen",
+            "message": "Beim Einrichten des Dashboards ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+          },
+          "helpers": {
+            "tooltip": "URL Helfer",
+            "description": "Diese Helfer versuchen die URL für deine Dienste zu erraten. Wenn dies nicht funktioniert, gib einfach die Adresse manuell ein."
+          }
+        },
+        "urlTemplate": {
+          "label": "Basis URL",
+          "placeholder": "homelab.local oder 192.168.1.1",
+          "hint": "Geben Sie Ihre Basis-Domain oder IP ein, um die Integrations-URLs automatisch auszufüllen",
+          "warning": "Wenn Sie jetzt Ihre Basis-URL einstellen, werden alle Integration-URLs automatisch ausgefüllt, was Ihnen Zeit während des Setups spart",
+          "preview": "z.B. {example}",
+          "mode": {
+            "subdomain": "Sub-Domain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker erkannte {count} Dienste",
+          "detectedBreakdown": "{integrations} Integrationen · {apps} Anwendungen",
+          "summary": "Homarr erkannte {apps} Anwendungen, {integrations} von denen Integrationen integriert sind",
+          "appBadge": "Anwendung",
+          "appSectionLabel": "Zum Dashboard hinzuzufügende Apps ({count} gewählt)",
+          "scanning": "Durchsuche Docker...",
+          "scanningDescription": "Suche nach laufenden Containern auf Ihrem System"
+        }
+      },
       "finish": {
         "title": "Einrichtung abschließen",
         "subtitle": "Es kann losgehen!",
@@ -132,7 +177,7 @@
       },
       "password": {
         "label": "Passwort",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Passwort Empfehlungen",
         "suggestion": {
           "length": "Enthält mindestens 8 Zeichen",
           "lowercase": "Enthält Kleinbuchstaben",
@@ -160,7 +205,7 @@
         "label": "Suchergebnisse in neuem Tab öffnen"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "DuckDuckGo Bangs aktivieren"
       }
     },
     "error": {
@@ -253,10 +298,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo Bangs erfolgreich umgeschaltet"
           },
           "error": {
-            "message": ""
+            "message": "DuckDuckGo Bangs können nicht umgeschaltet werden"
           }
         }
       },
@@ -639,6 +684,211 @@
       "add": "App hinzufügen"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "Benutzerdefinierte Widgets",
+        "noResults": "Noch keine benutzerdefinierten Widgets gefunden. Erstellen Sie Ihr erstes Widget!",
+        "loading": "Wird geladen..."
+      },
+      "create": {
+        "title": "Benutzerdefiniertes Widget erstellen",
+        "subtitle": "Definieren sie die API URL, Authentifizierung und wie die Daten angezeigt werden sollen."
+      },
+      "edit": {
+        "title": "Benutzerdefiniertes Widget bearbeiten"
+      }
+    },
+    "action": {
+      "create": "Erstellen",
+      "import": "Importieren",
+      "save": "Speichern",
+      "delete": "Benutzerdefiniertes Widget löschen",
+      "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "export": "Exportieren",
+      "addMapping": "Zuordnung hinzufügen",
+      "addColumn": "Spalte hinzufügen",
+      "edit": "Bearbeiten",
+      "removeMapping": "Zuordnung entfernen",
+      "removeColumn": "Spalte entfernen",
+      "addItem": "Element hinzufügen",
+      "removeItem": "Element entfernen",
+      "addBar": "Leiste hinzufügen",
+      "duplicate": "Duplizieren",
+      "copyAiPrompt": "KI Prompt kopieren",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "menu": "Aktionen"
+    },
+    "field": {
+      "name": "Name",
+      "description": "Beschreibung",
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Authentifizierungstyp",
+      "headerName": "Name des Kopf-/Abfrage-Parameters",
+      "method": "Methode",
+      "requestBody": "Body anfordern",
+      "displayType": "Anzeigetyp",
+      "jsonPath": "JSON Pfad",
+      "jsonPathHint": "Verwenden Sie JSONPath Syntax um Werte zu extrahieren, z.B. $.data.temperature oder $.items[0].name",
+      "label": "Kategorie",
+      "unit": "Einheit",
+      "mappings": "Zuordnungen",
+      "tablePath": "JSON Pfad anordnen",
+      "tablePathHint": "Pfad zum Array in der Antwort, z.B. $.data.items",
+      "columns": "Spalten",
+      "header": "Kopfzeile",
+      "items": "Elemente",
+      "gridColumns": "Rasterspalten",
+      "cardStyle": "Kartenstil",
+      "bars": "Balken",
+      "valuePath": "JSON Wert Pfad",
+      "maxPath": "Maximaler Wert des JSON Pfades",
+      "showPercentage": "Prozentwert anzeigen",
+      "barSize": "Balkengröße",
+      "goodValues": "Gute Werte (durch Komma getrennt)",
+      "dotSize": "Punkt Größe",
+      "valueSize": "Größe des Wertes",
+      "labelPosition": "Labelposition",
+      "kvLayout": "Darstellung",
+      "striped": "Gestreifte Reihen",
+      "compact": "Kompakte Darstellung",
+      "maxHeight": "Maximale Höhe (px)",
+      "color": "Farbe",
+      "buttonLabel": "Bezeichnung des Knopfes",
+      "buttonColor": "Farbe des Knopfes",
+      "confirmText": "Text zur Bestätigung",
+      "confirmTextHint": "Wenn gesetzt, erscheint vor der Ausführung der Anfrage ein Bestätigungsdialog",
+      "successMessage": "Erfolgsmeldung",
+      "successMessageHint": "Nachricht, die nach erfolgreicher Ausführung angezeigt wird",
+      "enabled": "Aktiviert",
+      "template": {
+        "label": "JSX Vorlage",
+        "description": "Mantine JSX-Vorlage. Zugriff auf API-Antwortfelder über Datenbindungen (z.B. data.name). Verwenden Sie nur Inhalte der Whitelist. Verboten: Konstruktor, __proto__, eval, Funktion, Fenster, Dokument."
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperatur",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API Schlüssel",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, wahr, oben",
+      "color": "blau"
+    },
+    "cardStyleOption": {
+      "filled": "Gefüllt",
+      "outline": "Umrandung",
+      "subtle": "Dezent"
+    },
+    "layoutOption": {
+      "list": "Liste",
+      "grid": "Raster"
+    },
+    "sizeOption": {
+      "sm": "Klein",
+      "md": "Mittel",
+      "lg": "Groß",
+      "xl": "Extragroß"
+    },
+    "labelPositionOption": {
+      "above": "Oberhalb",
+      "below": "Unterhalb"
+    },
+    "fieldset": {
+      "general": "Allgemein",
+      "connection": "API Anbindung",
+      "display": "Anzeigeeinstellungen"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Einen extrahierten Wert mit Label und Einheit anzeigen",
+      "keyValue": "Mehrere markierte Werte nebeneinander anzeigen",
+      "table": "Datenzeilen im Tabellenformat anzeigen",
+      "statGrid": "Farbige Statistikkarten im Raster — wie Pi-Hole oder Speedtest Widgets",
+      "progressBars": "Fortschrittsbalken mit Nutzung oder Fertigstellung — für Festplatte, Speicher, Quoten",
+      "statusIndicator": "Farbige Statuspunkte, die den Online/Offline Status oder Gesundheitszustand anzeigen",
+      "countGrid": "Kompakter Nummern + Label Zähler in einem engen Raster",
+      "raw": "Ansehrlich gedruckte JSON-Ausgabe zum Debuggen",
+      "actionButton": "Eine Schaltfläche welche eine Anfrage auslöst wenn sie angeklickt wird",
+      "customJsx": "Benutzerdefiniertes JSX-Layout mit Whitelist Mantine Komponenten und vollständiger API-Datenbindung"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "Keine",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Schlüssel (Kopfzeile)",
+      "apiKeyQuery": "API-Schlüssel (Abfrage)"
+    },
+    "displayType": {
+      "singleValue": "Einzelwert",
+      "keyValue": "Schlüsselwert",
+      "table": "Tabelle",
+      "statGrid": "Statistikraster",
+      "progressBars": "Fortschrittsbalken",
+      "statusIndicator": "Statusanzeige",
+      "countGrid": "Raster zählen",
+      "raw": "Rohes JSON",
+      "actionButton": "Aktionstaste",
+      "customJsx": "Benutzerdefiniertes JSX"
+    },
+    "secret": {
+      "apiKey": "API Schlüssel / Token",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "savedPlaceholder": "••••••• (gespeichert, leer lassen zum Behalten)"
+    },
+    "preview": {
+      "title": "Vorschau",
+      "test": "Test",
+      "hint": "Klicken Sie auf Test, um eine Vorschau der API Antwort mit Ihrer aktuellen Konfiguration zu erhalten.",
+      "rawResponse": "Rohe JSON-Antwort"
+    },
+    "notification": {
+      "created": "Widget \"{name}\" erfolgreich erstellt.",
+      "updated": "Widget \"{name}\" erfolgreich aktualisiert.",
+      "deleted": "Widget \"{name}\" gelöscht.",
+      "imported": "Widget erfolgreich importiert.",
+      "aiPromptCopied": "KI-Prompt in Zwischenablage kopiert",
+      "aiPromptDescription": "Kopieren Sie eine vorgefertigte Eingabeaufforderung, um sie in jeden AI-Chatbot einzufügen (ChatGPT, Claude, Gemini...). Es enthält das komplette Widget-Schema und Ihre API-Antwort, so dass die KI eine fertige JSON-Konfiguration für Sie generieren kann.",
+      "aiPromptCopy": "In die Zwischenablage kopieren",
+      "aiPromptNoResponse": "Tipp: Führen Sie zuerst einen Test aus, um Ihre API Antwort in die Eingabeaufforderung einzubinden, um bessere Ergebnisse zu erzielen.",
+      "aiPromptCopyError": "Fehler beim Kopieren der Eingabeaufforderung. Möglicherweise unterstützt Ihr Browser diese Funktion nicht.",
+      "createError": "Fehler beim Erstellen des Widgets. Überprüfen Sie, ob Ihr API Endpunkt erreichbar ist.",
+      "updateError": "Fehler beim Aktualisieren des Widgets. Ihre Änderungen wurden nicht gespeichert.",
+      "importError": "Fehler beim Importieren des Widgets. Stellen Sie sicher, dass die Datei ein gültiger JSON Export ist.",
+      "exportError": "Fehler beim Exportieren des Widgets.",
+      "duplicated": "Widget \"{name}\" dupliziert.",
+      "duplicateError": "Fehler beim Duplizieren des Widgets.",
+      "toggleError": "Fehler beim Umschalten des Widgets Status.",
+      "deleteError": "Fehler beim Löschen des Widgets.",
+      "previewError": "Fehler beim Abrufen der Vorschau. Überprüfen Sie die URL und versuchen Sie es erneut.",
+      "executed": "Aktion erfolgreich ausgeführt.",
+      "executeError": "Aktion fehlgeschlagen: {error}"
+    },
+    "table": {
+      "name": "Name",
+      "url": "URL",
+      "display": "Anzeige"
+    },
+    "widget": {
+      "disabled": "Dieses Widget ist deaktiviert"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Benutzerdefinierte App URL"
+      },
+      "apiKeySettings": {
+        "label": "API-Schlüssel holen"
       }
     },
     "action": {
       "create": "Neue Integration"
+    },
+    "grid": {
+      "widgetCount": "{count} Widgets",
+      "noWidgets": "Keine Widgets",
+      "detected": "Über Docker erkannt"
+    },
+    "category": {
+      "dnsHole": "DNS",
+      "mediaService": "Medien",
+      "calendar": "Kalender",
+      "mediaSearch": "Suche",
+      "mediaRelease": "Veröffentlichungen",
+      "mediaRequest": "Anfragen",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Verschiedenes",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexer",
+      "healthMonitoring": "Gesundheit",
+      "search": "Suche",
+      "mediaTranscoding": "Transkodierung",
+      "networkController": "Netzwerk",
+      "releasesProvider": "Veröffentlichungen",
+      "notifications": "Benachrichtigungen",
+      "firewall": "Firewall",
+      "timetable": "Zeitplan",
+      "photoService": "Fotos",
+      "documents": "Dokumente",
+      "notes": "Notizen",
+      "mediaMonitoring": "Überwachung",
+      "speedtest": "Geschwindigkeitstest",
+      "analytics": "Nutzungsdaten",
+      "mediaLibrary": "Medienbibliothek",
+      "uptimeMonitoring": "Überwachung der Betriebszeit"
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "Privater Schlüssel",
           "newLabel": "Neuer privater Schlüssel"
+        },
+        "slug": {
+          "label": "Status Page Slug",
+          "newLabel": "Neuer Status Page Slug"
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "Integrationen in Elementen auswählen",
       "interact": "Mit Integrationen interagieren",
       "full": "Voller Zugriff auf Integrationen"
+    },
+    "audiobookshelf": {
+      "name": "Hörbuchregal",
+      "description": "Selbstgehosteter Audio- und Podcast-Server"
+    },
+    "navidrome": {
+      "name": "Navidrome",
+      "description": "Selbstgehosteter Musik-Streaming-Server mit Subsonic API Kompatibilität"
+    },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Selbstgehostete Uptime Überwachung mit öffentlichen Statusseiten",
+      "secret": {
+        "slug": {
+          "description": "Der Slug der öffentlichen Statusseite. Standardwert ist \"Standard\", wenn nicht anderswertig gesetzt."
+        },
+        "apiKey": {
+          "description": "Optionaler API Schlüssel für Authentifizeriungs /Metriken Zugriff"
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
     }
   },
   "media": {
@@ -1057,7 +1373,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Keine Medien hochgeladen"
     }
   },
   "common": {
@@ -1068,6 +1384,7 @@
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
+      "skip": "Überspringen",
       "change": "Verändern",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
@@ -1089,8 +1406,8 @@
       "checkLogs": "Logs für weitere Details prüfen",
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen",
-      "show": "",
-      "hide": ""
+      "show": "Anzeigen",
+      "hide": "Ausblenden"
     },
     "here": "Hier",
     "iconPicker": {
@@ -1099,7 +1416,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "Hell",
         "dark": "Dunkel"
       }
@@ -1256,7 +1573,7 @@
         "label": {
           "create": "Neue Kategorie",
           "changePosition": "Position wechseln",
-          "settings": ""
+          "settings": "Einstellungen"
         }
       },
       "openAllInNewTabs": {
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "Element bearbeiten",
+      "tab": {
+        "widget": "Widget bearbeiten",
+        "app": "App bearbeiten"
+      },
+      "app": {
+        "propagationNotice": "Änderungen an dieser App werden überall dort übernommen, wo sie über alle Dashboards hinweg verwendet wird."
+      },
       "advancedOptions": {
         "label": "Erweiterte Einstellungen",
         "title": "Erweiterte Einstellungen Optionen"
@@ -1328,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Verbinde zuerst eine Integration",
+      "loading": "Wird geladen...",
+      "placeholder": "Wählen Sie eine Option",
+      "noResults": "Keine Ergebnisse gefunden",
+      "loadError": "Fehler beim Laden der Optionen"
+    },
     "app": {
       "name": "App",
       "description": "Bettet eine App in das Board ein.",
@@ -1407,11 +1738,20 @@
           "label": "In neuem Tab öffnen"
         },
         "withBorder": {
-          "label": ""
+          "label": "Rahmen anzeigen"
         },
         "items": {
           "label": "Lesezeichen",
           "add": "Lesezeichen hinzufügen"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "ArchiveTeam Warrior",
+      "description": "ArchiveTeam Warrior Status, Projekte und aktive Archivaufträge überwachen.",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "Broadcast Nachrichten anzeigen"
         }
       }
     },
@@ -1550,13 +1890,13 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Zeitplan",
+      "description": "Zeigt Abfahrtszeiten für eine Station an",
+      "title": "{station} Abfahrt",
+      "noStation": "Keine Station ausgewählt",
       "option": {
         "station": {
-          "label": ""
+          "label": "Station"
         }
       }
     },
@@ -1631,32 +1971,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor Notiz",
+      "description": "Zeigt eine ausgewählte Notiz von Anchor an",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Notiz"
         },
         "showTitle": {
-          "label": ""
+          "label": "Titel anzeigen"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Letzte Aktualisierungen anzeigen"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Notiz zum Anzeigen auswählen",
+      "emptyContent": "Diese Notiz hat keinen Inhalt",
+      "notFound": "Notiz wurde nicht gefunden",
+      "noNotes": "Keine Notizen gefunden",
+      "integrationRequired": "Wählen Sie zuerst eine Anchor Integration aus",
+      "updatedAt": "Aktualisiert {date}",
+      "untitled": "Unbenannt",
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "readOnlyViewer": "Sie haben Leserechte auf diese Notiz. Die Bearbeitung ist deaktiviert.",
+      "saveForbidden": "Du hast keine Berechtigung diese Notiz zu bearbeiten.",
+      "saveFailed": "Fehler beim Speichern dieser Notiz. Bitte versuchen Sie es erneut."
     },
     "iframe": {
       "name": "iFrame",
@@ -1690,7 +2030,7 @@
           "label": "Geolokalisierung zulassen"
         },
         "allowModals": {
-          "label": ""
+          "label": "Modale erlauben"
         }
       },
       "error": {
@@ -1925,7 +2265,7 @@
           "label": "Speicher-Info anzeigen"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU Info anzeigen"
         },
         "showUptime": {
           "label": "Laufzeit anzeigen"
@@ -2065,157 +2405,188 @@
         "title": "Instanzen"
       }
     },
+    "ups": {
+      "name": "UPS",
+      "description": "Überwachen Sie den Status Ihrer UPS Geräte über einen NUT Server",
+      "option": {
+        "showBattery": {
+          "label": "Batterie anzeigen"
+        },
+        "showLoad": {
+          "label": "Laden anzeigen"
+        },
+        "showVoltage": {
+          "label": "Spannung anzeigen"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "onBattery": "Im Akkubetrieb",
+        "lowBattery": "Niedriger Akkustand",
+        "charging": "Lade",
+        "unknown": "Unbekannt"
+      },
+      "field": {
+        "runtime": "Laufzeit",
+        "load": "Laden",
+        "input": "Eingabe",
+        "output": "Ausgabe"
+      },
+      "error": {
+        "internalServerError": "Fehler beim Abrufen der UPS Daten"
+      }
+    },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Verbesserte Überwachung von Medienservern mit detaillierten Stream- und Transcodierungsdaten",
       "option": {
         "showStreams": {
           "label": "Aktive Streams anzeigen"
         },
         "showStats": {
-          "label": ""
+          "label": "Statistikübersicht anzeigen"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Letzte Aktivitäten anzeigen"
         },
         "showViolations": {
-          "label": ""
+          "label": "Verstöße anzeigen"
         }
       },
       "stats": {
         "activeStreams": "Aktive Streams",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "totalUsers": "Anzahl der Benutzer",
+        "transcodes": "Transkodierungen",
+        "bandwidth": "Bandbreite"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Keine aktiven Streams",
+        "user": "Benutzer",
+        "media": "Medien",
+        "state": "Status",
+        "quality": "Qualität",
+        "device": "Gerät",
+        "progress": "Fortschritt",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direkte Wiedergabe",
+          "transcode": "Transkodieren",
+          "directStream": "Direkter Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Kürzliche Aktivitäten",
+        "empty": "Keine kürzliche Aktivitäten",
+        "watched": "Gesehen",
+        "partial": "Teilweise"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Verstöße",
+        "empty": "Keine kürzlichen Verstöße",
+        "rule": "Regel",
+        "user": "Benutzer"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Keine Abschnitte aktiviert",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Keine Tracearr Integration konfiguriert",
+        "internalServerError": "Fehler beim Abrufen der Tracearr Daten"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Ergebnisse",
+      "description": "Besucherstatistiken aus Ihrer Umami Ergebnisinstanz anzeigen",
+      "visitors": "Besucher",
+      "active": "Aktiv",
+      "pageviews": "Seitenaufrufe",
+      "visits": "Besuche",
+      "bounceRate": "abprallen",
+      "avgDuration": "Durchschnitt",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Webseite",
+          "description": "Wählen Sie eine Website, die von Ihrer Umami Instanz verfolgt wird",
+          "placeholder": "Wähle eine Website",
+          "loading": "Website wird geladen...",
+          "noWebsites": "Keine Webseiten gefunden",
+          "configureIntegrationFirst": "Verbinde zuerst eine Umami Integration"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Zeitfenster",
+          "description": "Der Zeitraum, in dem Besucherdaten angezeigt werden sollen",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Heute",
+            "24h": "Letzte 24 Stunden",
+            "7d": "Letzte 7 Tage",
+            "30d": "Letzte 30 Tage",
+            "month": "Dieser Monat",
+            "lastMonth": "Letzter Monat"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Veranstaltung",
+          "description": "Gesamte Vorkommnisse eines bestimmten Ereignisses anzeigen",
+          "placeholder": "Wählen Sie ein Ereignis aus",
+          "loading": "Ereignisse werden geladen...",
+          "noEvents": "Keine Ereignisse gefunden",
+          "none": "Kein Ereignis",
+          "configureWebsiteFirst": "Wählen Sie zuerst eine Webseite aus, um Ereignisse zu laden"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammtyp",
+          "description": "Stil für das Diagramm anzeigen",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Balkendiagramm",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammstil",
+          "description": "Wie die Ereignisserie im Diagramm angezeigt wird",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Seite an Seite",
+            "overlay": "Overlay (subset)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Ansicht",
+          "description": "Was im Widget Körper angezeigt werden soll",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Diagramm",
+            "events": "Ereignis Diagramm",
+            "topPages": "Top Seiten",
+            "topReferrers": "Top Referrer"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Ereignisse",
+          "description": "Wählen Sie eine oder mehrere Ereignisse zum Diagramm",
+          "placeholder": "Ereignisse auswählen...",
+          "loading": "Ereignisse werden geladen...",
+          "noEvents": "Keine Ereignisse gefunden",
+          "configureWebsiteFirst": "Wählen Sie zuerst eine Webseite aus, um Ereignisse zu laden"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Elemente anzeigen",
+          "description": "Anzahl der anzuzeigenden Top Elemente (max. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "Ereignisse",
+        "label": "Ereignisse"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direkt"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direkt"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Wählen Sie Ereignisse zum Diagramm"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Keine Umami Integration konfiguriert",
+        "noWebsite": "Keine Webseite konfiguriert",
+        "noData": "Keine Daten verfügbar",
+        "internalServerError": "Fehler beim Abrufen der Umami-Daten"
       }
     },
     "common": {
@@ -2313,51 +2684,96 @@
         }
       }
     },
+    "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Übersicht des Paperless-ngx Dokumentenarchivs",
+      "documentsTotal": "Dokumente insgesamt",
+      "documentsInbox": "Posteingang",
+      "correspondents": "Beteiligte",
+      "tags": "Tags",
+      "documentTypes": "Dokumententypen",
+      "inboxRatio": "Eingangs-Verhältnis",
+      "inbox": "Eingang",
+      "total": "insgesamt",
+      "option": {
+        "showInboxRatio": {
+          "label": "Zeige Eingangs Verhältnis",
+          "description": "Zeigt das Dokumentenverhältnis zwischen Eingang und Gesamtsumme im Heldenbereich an"
+        },
+        "showInboxRing": {
+          "label": "Inbox Ring anzeigen",
+          "description": "Fortschrittsring neben dem Eingangs-Verhältnis anzeigen"
+        },
+        "showDocumentsTotal": {
+          "label": "Gesamte Dokumente anzeigen",
+          "description": "Zeigt die Gesamtzahl der Dokumente im Archiv an"
+        },
+        "showDocumentsInbox": {
+          "label": "Eingangszähler anzeigen",
+          "description": "Zeige die Anzahl der nicht verarbeiteten Dokumente im Posteingang"
+        },
+        "showCorrespondents": {
+          "label": "Korrespondenten anzeigen",
+          "description": "Gesamtzahl der Korrespondenten anzeigen"
+        },
+        "showTags": {
+          "label": "Tags anzeigen",
+          "description": "Gesamtzahl der Tags anzeigen"
+        },
+        "showDocumentTypes": {
+          "label": "Dokumententypen anzeigen",
+          "description": "Gesamtzahl der Dokumenttypen anzeigen"
+        }
+      },
+      "error": {
+        "internalServerError": "Fehler beim Abrufen der Paperless-ngx-Daten"
+      }
+    },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich Serverstatistik einblenden",
+      "description": "Informationen über Ihre Immich Instanz",
       "option": {
         "showUsers": {
           "label": "Benutzer anzeigen",
-          "description": ""
+          "description": "Anzahl der Benutzer Ihrer Instanz anzeigen"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Fotos anzeigen",
+          "description": "Anzahl der Fotos in deiner Instanz anzeigen"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Videos anzeigen",
+          "description": "Anzahl der Videos in deiner Instanz anzeigen"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Speicher anzeigen",
+          "description": "Gesamtanzahl des verwendeten Speichers anzeigen"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Benutzer",
+      "photos": "Fotos",
+      "videos": "Videos",
+      "storage": "Verwendeter Speicher"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album ID",
+          "description": "Dies ist eine eindeutige ID, die sich auf Ihr Immich Album bezieht. Sie können diese ID finden, indem Sie ein Album öffnen und die einzigartige Zeichenkette von der URL kopieren, zum Beispiel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Intervall in Sekunden",
+          "description": "Rotieren Sie alle X Sekunden zwischen den Bildern im Album. Muss mindestens 1 sein und unter 3600 liegen."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Foto Infos anzeigen",
+          "description": "Datum des Bildes und des aktuellen Indexes am unteren Rand der Diashow anzeigen"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Diashow der Bilder in Ihrem Immich Album",
+      "noAlbumSelected": "Kein Album ausgewählt, Widget bearbeiten und Album auswählen",
+      "noPhotos": "Keine Fotos in diesem Album"
     },
     "downloads": {
       "name": "Download Client",
@@ -2668,7 +3084,7 @@
           "label": "Beschreibung ausblenden"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Poster Bild anzeigen"
         }
       }
     },
@@ -2883,40 +3299,147 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Zeigt die Ergebnisse des Speedtest Trackers an.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Letztes Ergebnis anzeigen"
         },
         "showStats": {
-          "label": ""
+          "label": "Durchschnitt anzeigen"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Letzte Ergebnisse anzeigen"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Ping Grafik anzeigen"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Letztes Ergebnis",
+      "averages": "Durchschnitt",
+      "tests": "{count} Versuche",
+      "recentResults": "Neueste Ergebnisse",
+      "recentResultsSpeed": "Geschwindigkeit",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Durchschnittlicher Download",
+      "avgUpload": "Durchschnittlicher Upload",
+      "avgPing": "Durchschnittlicher Ping",
+      "healthy": "Gesund",
+      "unhealthy": "Fehlerhaft",
+      "ok": "Ok",
+      "fail": "Fehlgeschlagen",
+      "noSectionsEnabled": "Aktivieren Sie mindestens einen Abschnitt in den Widget Optionen.",
+      "error": {
+        "internalServerError": "Fehler beim Abrufen der Speedtest Daten"
+      }
+    },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Laufzeit Statistiken von der Uptime Kuma Statusseite überwachen",
+      "option": {
+        "showAverageUptime": {
+          "label": "Durchschnittliche Laufzeit anzeigen",
+          "description": "Zeige den durchschnittlichen Prozentsatz der 24 Stunden Laufzeit an"
+        },
+        "showUptimeRing": {
+          "label": "Uptime Ring anzeigen",
+          "description": "Einen Fortschrittsring neben dem durchschnittlichen Laufzeit Wert anzeigen"
+        },
+        "showTotalMonitors": {
+          "label": "Alle Monitore anzeigen",
+          "description": "Zeigt die Gesamtzahl der konfigurierten Monitore an"
+        },
+        "showUpCount": {
+          "label": "Aktive anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit aktiv sind"
+        },
+        "showDownCount": {
+          "label": "Inaktive anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit nicht verfügbar sind"
+        },
+        "showPausedCount": {
+          "label": "Pausierte anzeigen",
+          "description": "Zeigt an, wie viele Monitore derzeit pausiert sind"
+        }
+      },
+      "averageUptime": "Durchschnittliche Laufzeit (24h)",
+      "stats": {
+        "totalMonitors": "Alle Monitore",
+        "upCount": "Aktiv",
+        "downCount": "Inaktiv",
+        "pausedCount": "Pausiert"
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "Audiostatistiken",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "Künstler anzeigen",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": "Zeigt die Gesamtzahl der Alben in deiner Musikbibliothek an (Navidrome)"
+        },
+        "showSongs": {
+          "label": "Songs anzeigen",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": "Zeigt deine gesamte Hörzeit (Audiobookshelf)"
+        },
+        "showActiveSessions": {
+          "label": "Aktive Streams anzeigen",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -2984,6 +3507,258 @@
       },
       "status": {
         "unhealthy": "Fehlerhaft"
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": "Arbeitsspeicher anzeigen"
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": "GPU anzeigen"
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": "Temperatur anzeigen"
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": "Dienste anzeigen"
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "metric": {
+        "cpu": "CPU",
+        "memory": "Arbeitsspeicher",
+        "disk": "",
+        "gpu": "GPU",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "Dienste",
+        "uptime": "",
+        "agent": "Agent"
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "Verlauf",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": "Ok"
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "System auswählen",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
+      "chart": {
+        "cpu": {
+          "title": "CPU-Auslastung",
+          "subtitle": "",
+          "series": "CPU"
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "Belegt",
+          "cache": ""
+        },
+        "disk": {
+          "title": "Festplattenbelegung",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4139,7 @@
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrationen",
+        "customWidgets": "",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
         "users": {
@@ -3380,9 +4156,10 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
-            "api": "API",
+            "api": "API & MCP",
             "certificates": "Zertifikate",
-            "tasks": "Aufgaben"
+            "tasks": "Aufgaben",
+            "backup": ""
           }
         },
         "settings": "Einstellungen",
@@ -3495,7 +4272,24 @@
               },
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
-              "accessibility": "Barrierefreiheit"
+              "accessibility": "Barrierefreiheit",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "Abgeschlossen",
+                  "notStarted": "Nicht gestartet"
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": "Dashboard"
+                }
+              }
             }
           },
           "security": {
@@ -3621,18 +4415,6 @@
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
               "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
-            },
-            "widgetData": {
-              "title": "Widget Daten",
-              "text": "Senden Sie die Widgets (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "integrationData": {
-              "title": "Integrationsdaten",
-              "text": "Senden Sie die Intregrationen (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "usersData": {
-              "title": "Benutzerdaten",
-              "text": "Senden Sie die Anzahl der Benutzer und ob Sie SSO aktiviert haben"
             }
           },
           "crawlingAndIndexing": {
@@ -3903,7 +4685,215 @@
                   "actions": "Aktionen"
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "API Key erstellen",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "Authentifizierung",
+                "intro": "",
+                "apiKey": {
+                  "title": "API Key (manuell)",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "Empfohlen",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "Verbindung testen",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "Verfügbare Tools",
+                "description": "",
+                "columnType": "Typ",
+                "columnName": "Tool",
+                "columnDescription": "Beschreibung"
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "In VS Code installieren",
+                "cursor": "In Cursor installieren",
+                "copyUrl": "MCP URL kopieren",
+                "copied": "Kopiert!",
+                "copyHint": "Für ChatGPT, Claude Code oder weitere MCP-Client",
+                "manualConfig": "Manuelle Konfiguration"
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "Komplette Datenbanksicherung",
+          "metaTitle": "Sichern & Wiederherstellen",
+          "export": {
+            "title": "Datenbank exportieren",
+            "description": "Laden Sie eine vollständige Sicherung Ihrer SQLite-Datenbank herunter, inklusive aller Einstellungen, Benutzer, Boards und verschlüsselten Integrationsgeheimnissen. Das Backup wird als ZIP-Datei mit dem Verschlüsselungsschlüssel und den Metadaten gebündelt.",
+            "button": "Sicherung herunterladen",
+            "error": "Export fehlgeschlagen",
+            "confirm": {
+              "title": "",
+              "warningTitle": "Dieser Export enthält Ihre gesamte Datenbank.",
+              "warningBody": "Das Backup umfasst alle Benutzer, Integrationsgeheimnisse (verschlüsselt), API-Keys, Board-Konfigurationen und App-Daten. Speichern Sie die exportierte Datei sicher ab und teilen Sie diese nicht.",
+              "typePrompt": "Geben Sie \"{phrase}\" ein, um fortzufahren",
+              "submit": "Datenbank exportieren",
+              "cancel": "Abbrechen"
+            }
+          },
+          "import": {
+            "title": "Datenbank wiederherstellen",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "Ziehen Sie Ihre Backup-ZIP hierher oder klicken Sie zum Durchsuchen",
+              "description": "Nur .zip Dateien aus einer Homarr SQLite-Sicherung werden akzeptiert"
+            },
+            "changeFile": "Datei ändern",
+            "button": "Datenbank wiederherstellen",
+            "success": {
+              "title": "Wiederherstellung abgeschlossen",
+              "message": "Datenbank wurde erfolgreich wiederhergestellt. Die Anwendung wird neu gestartet..."
+            },
+            "error": "Importieren fehlgeschlagen"
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "Analysiere Backup-Datei...",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "Boards",
+            "entities": {
+              "board": "Boards",
+              "user": "Benutzer",
+              "app": "Apps",
+              "integration": "Integrationen",
+              "item": "Widgets",
+              "media": "Medien",
+              "search_engine": "Suchmaschinen"
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "Backup-ZIP hierher ziehen",
+              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. 256 MB)"
+            },
+            "analyzing": "Analysiere Backup-Datei...",
+            "changeFile": "Datei ändern",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": "Wiederherstellung fehlgeschlagen"
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3952,7 +4942,9 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": "Insgesamt {count} Container"
+      "footer": "Insgesamt {count} Container",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -3985,11 +4977,17 @@
         "label": "Ports"
       },
       "host": {
-        "label": ""
+        "label": "Host"
       }
     },
     "action": {
       "title": "Aktionen",
+      "logs": {
+        "label": "Logs anzeigen",
+        "page": {
+          "title": "{name} Logs"
+        }
+      },
       "start": {
         "label": "Starten",
         "notification": {
@@ -4381,6 +5379,18 @@
           "label": "Bearbeiten"
         }
       },
+      "custom-widgets": {
+        "label": "Benutzerdefinierte Widgets",
+        "new": {
+          "label": "Neu"
+        },
+        "edit": {
+          "label": "Bearbeiten",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "Benutzer",
         "create": {
@@ -4402,7 +5412,10 @@
           "label": "Aufgaben"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": "Logs"
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
@@ -4551,13 +5564,141 @@
                 "label": "Neue Gruppe erstellen"
               }
             }
+          },
+          "preferences": {
+            "title": "Einstellungen",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": "Zurück"
+              }
+            },
+            "notification": {
+              "error": {
+                "message": "Einstellung konnte nicht aktualisiert werden"
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": "Einstellungen öffnen"
+              },
+              "boolean": {
+                "enabled": "Aktiviert",
+                "disabled": "Deaktiviert"
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "Farbschema",
+                "children": {
+                  "detail": {
+                    "title": "Farbschema auswählen"
+                  }
+                }
+              },
+              "locale": {
+                "label": "Sprache",
+                "children": {
+                  "detail": {
+                    "title": "Bevorzugte Sprache auswählen"
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "Standard Suchmaschine",
+                "children": {
+                  "detail": {
+                    "title": "Standard Suchmaschine auswählen"
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "Suchergebnisse in neuem Tab öffnen",
+                "children": {
+                  "detail": {
+                    "title": "Suchergebnisse in neuem Tab öffnen"
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "Erster Tag der Woche",
+                "children": {
+                  "detail": {
+                    "title": "Ersten Tag der Woche auswählen"
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": "Alle Einstellungen öffnen"
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "Suche nach Filmen oder Serien zum Abfragen",
         "requestMovie": "Einen Film anfordern",
         "requestSeries": "Eine Serie anfordern",
-        "openIn": "In {kind} öffnen"
+        "openIn": "In {kind} öffnen",
+        "group": {
+          "title": "Filme und Serien"
+        },
+        "action": {
+          "search": {
+            "label": "Suche nach Filmen oder Serien",
+            "description": "",
+            "disabled": {
+              "noIntegration": "",
+              "scoped": ""
+            }
+          }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
+        }
       },
       "external": {
         "help": "Externe Suchmaschine verwenden",
@@ -4833,7 +5974,11 @@
             "table": {
               "header": {
                 "season": "Staffel",
-                "episodes": "Episoden"
+                "episodes": "Episoden",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
               }
             },
             "button": {
@@ -4942,6 +6087,73 @@
         "info": "Info",
         "warn": "Hinweis",
         "error": "Fehler"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "App hinzufügen",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "Ihre Integrationen",
+        "description": ""
+      },
+      "integrationsCreate": {
+        "title": "Integration hinzufügen",
+        "description": ""
+      },
+      "usersList": {
+        "title": "Ihre Benutzer",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "Benutzer erstellen",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "editMode": {
+        "title": "Bearbeitungsmodus",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": ""
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
       }
     }
   }

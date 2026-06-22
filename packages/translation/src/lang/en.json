@@ -1653,6 +1653,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Connect an integration first",
+      "loading": "Loading...",
+      "placeholder": "Select an option",
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
     "app": {
       "name": "App",
       "description": "Embeds an app into the board.",
@@ -1737,6 +1744,15 @@
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "ArchiveTeam Warrior",
+      "description": "Monitor ArchiveTeam Warrior status, projects, and active archival jobs.",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "Show broadcast messages"
         }
       }
     },
@@ -3567,6 +3583,9 @@
         }
       },
       "noRecords": "No systems found",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "column": {
         "system": "System",
         "cpu": "CPU",
@@ -3623,6 +3642,9 @@
           "label": "Show agent version"
         }
       },
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3649,6 +3671,9 @@
         }
       },
       "empty": "No alerts configured",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
       "history": "History",
       "resolved": "Resolved",
       "status": {
@@ -3660,6 +3685,10 @@
       "name": "Beszel System Stats",
       "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
       "option": {
+        "systemId": {
+          "label": "System",
+          "description": "Select a Beszel system to display stats for"
+        },
         "timePeriod": {
           "label": "Time period"
         },
@@ -3689,6 +3718,12 @@
         }
       },
       "selectSystem": "Select system",
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
+        "switchToHistorical": "Switch to historical view",
+        "systemNotFound": "Selected system was not found. Choose a different system."
+      },
       "chart": {
         "cpu": {
           "title": "CPU Usage",
@@ -4384,20 +4419,8 @@
           "analytics": {
             "title": "Analytics",
             "general": {
-              "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "integrationData": {
-              "title": "Integration data",
-              "text": "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "usersData": {
-              "title": "Users data",
-              "text": "Send the amount of users and whether you've activated SSO"
+              "title": "Help us improve Homarr",
+              "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4951,9 @@
       "updated": "Updated {when}",
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
-      "footer": "Total {count} containers"
+      "footer": "Total {count} containers",
+      "totalCpu": "Total CPU: {cpu}%",
+      "totalMemory": "Total Mem: {memory}"
     },
     "field": {
       "name": {

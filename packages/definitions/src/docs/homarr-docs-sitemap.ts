@@ -322,6 +322,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/github-containerregistry"
   | "/docs/integrations/quay"
   | "/docs/integrations/ntfy"
+  | "/docs/integrations/gotify"
   | "/docs/integrations/ical"
   | "/docs/integrations/anchor"
   | "/docs/integrations/truenas"

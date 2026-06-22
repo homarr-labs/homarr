@@ -1,6 +1,9 @@
+import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
+import { createIntegrationAsync } from "@homarr/integrations";
+import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import {
   beszelAlertsRequestHandler,
   beszelStatsRequestHandler,
@@ -13,12 +16,21 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get all Beszel-monitored systems with CPU, memory, disk, GPU, network, temperature, and status. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
+            forceUpdate: false,
+          });
           return {
             integrationId: integration.id,
             integrationName: integration.name,
@@ -34,7 +46,11 @@ export const beszelRouter = createTRPCRouter({
   subscribeSystems: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; systems: BeszelSystemRow[]; timestamp: Date }>((emit) => {
+      return observable<{
+        integrationId: string;
+        systems: BeszelSystemRow[];
+        timestamp: Date;
+      }>((emit) => {
         const unsubscribes = ctx.integrations.map((integration) => {
           const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
           return innerHandler.subscribe((systems) => {
@@ -52,6 +68,13 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   getAlerts: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get Beszel alerts and optional alert history for all monitored systems. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all). OPTIONAL: includeHistory (default true), maxHistoryItems (default 10)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
@@ -96,14 +119,22 @@ export const beszelRouter = createTRPCRouter({
       }),
     )
     .subscription(({ ctx, input }) => {
-      return observable<{ integrationId: string; alerts: BeszelAlertsData; timestamp: Date }>((emit) => {
+      return observable<{
+        integrationId: string;
+        alerts: BeszelAlertsData;
+        timestamp: Date;
+      }>((emit) => {
         const unsubscribes = ctx.integrations.map((integration) => {
           const innerHandler = beszelAlertsRequestHandler.handler(integration, {
             includeHistory: input.includeHistory,
             maxHistoryItems: input.maxHistoryItems,
           });
           return innerHandler.subscribe((data) => {
-            emit.next({ integrationId: integration.id, alerts: data, timestamp: new Date() });
+            emit.next({
+              integrationId: integration.id,
+              alerts: data,
+              timestamp: new Date(),
+            });
           });
         });
         return () => {
@@ -113,17 +144,26 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   getSystemStats: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get historical Beszel system metrics (CPU, memory, disk, network, temperature) and optional Docker container stats. REQUIRED: integrationIds (pass the single integrationId from the beszel_getSystems entry containing the target system — only the first ID is used), systemId (from beszel_getSystems). OPTIONAL: timePeriod (1m/1h/12h/24h/1w/30d, default 1h), includeDocker (default true)",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({
         systemId: z.string(),
-        timePeriod: z.enum(["1h", "12h", "24h", "1w", "30d"]),
+        timePeriod: z.enum(["1m", "1h", "12h", "24h", "1w", "30d"]).default("1h"),
         includeDocker: z.boolean().default(true),
       }),
     )
     .query(async ({ ctx, input }) => {
       const integration = ctx.integrations[0];
-      if (!integration) return null;
+      if (!integration) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
+      }
       const innerHandler = beszelStatsRequestHandler.handler(integration, {
         systemId: input.systemId,
         timePeriod: input.timePeriod,
@@ -131,5 +171,46 @@ export const beszelRouter = createTRPCRouter({
       });
       const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return { integrationId: integration.id, ...data, updatedAt: timestamp };
+    }),
+
+  subscribeSystemStats: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .input(
+      z.object({
+        systemId: z.string(),
+      }),
+    )
+    .subscription(({ ctx, input }) => {
+      return observable<{
+        stats: BeszelSystemStatsRecord;
+        containerStats: BeszelContainerStatsRecord | null;
+      }>((emit) => {
+        const integration = ctx.integrations[0];
+        if (!integration) {
+          emit.error(new Error("No Beszel integration configured"));
+          return () => {};
+        }
+
+        const abortController = new AbortController();
+
+        void (async () => {
+          try {
+            const instance = await createIntegrationAsync(integration);
+            await instance.subscribeRealtimeMetrics(input.systemId, (data) => emit.next(data), abortController.signal);
+          } catch (error) {
+            if (!abortController.signal.aborted) {
+              if (error instanceof Error) {
+                emit.error(error);
+              } else {
+                emit.error(new Error(String(error)));
+              }
+            }
+          }
+        })();
+
+        return () => {
+          abortController.abort();
+        };
+      });
     }),
 });

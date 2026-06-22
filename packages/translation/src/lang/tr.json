@@ -7,7 +7,10 @@
         "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
         "action": {
           "scratch": "Sıfırdan Başla",
-          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın"
+          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
         }
       },
       "import": {
@@ -89,6 +92,48 @@
       "settings": {
         "title": "Ayarlar",
         "subtitle": "Sunucu ayarlarınızı yapılandırın."
+      },
+      "integrations": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "continue": "",
+          "skip": ""
+        },
+        "configure": {
+          "progress": "",
+          "skip": "",
+          "finishing": "",
+          "error": {
+            "title": "",
+            "message": ""
+          },
+          "helpers": {
+            "tooltip": "",
+            "description": ""
+          }
+        },
+        "urlTemplate": {
+          "label": "",
+          "placeholder": "",
+          "hint": "",
+          "warning": "",
+          "preview": "",
+          "mode": {
+            "subdomain": "",
+            "hostPort": ""
+          }
+        },
+        "docker": {
+          "detected": "",
+          "detectedBreakdown": "",
+          "summary": "",
+          "appBadge": "",
+          "appSectionLabel": "",
+          "scanning": "",
+          "scanningDescription": ""
+        }
       },
       "finish": {
         "title": "Kurulumu Bitir",
@@ -639,6 +684,211 @@
       "add": "Bir uygulama ekle"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "",
+        "noResults": "",
+        "loading": ""
+      },
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "edit": {
+        "title": ""
+      }
+    },
+    "action": {
+      "create": "",
+      "import": "",
+      "save": "",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "addMapping": "",
+      "addColumn": "",
+      "edit": "",
+      "removeMapping": "",
+      "removeColumn": "",
+      "addItem": "",
+      "removeItem": "",
+      "addBar": "",
+      "duplicate": "",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": ""
+    },
+    "field": {
+      "name": "",
+      "description": "",
+      "iconUrl": "",
+      "url": "",
+      "authType": "",
+      "headerName": "",
+      "method": "",
+      "requestBody": "",
+      "displayType": "",
+      "jsonPath": "",
+      "jsonPathHint": "",
+      "label": "",
+      "unit": "",
+      "mappings": "",
+      "tablePath": "",
+      "tablePathHint": "",
+      "columns": "",
+      "header": "",
+      "items": "",
+      "gridColumns": "",
+      "cardStyle": "",
+      "bars": "",
+      "valuePath": "",
+      "maxPath": "",
+      "showPercentage": "",
+      "barSize": "",
+      "goodValues": "",
+      "dotSize": "",
+      "valueSize": "",
+      "labelPosition": "",
+      "kvLayout": "",
+      "striped": "",
+      "compact": "",
+      "maxHeight": "",
+      "color": "",
+      "buttonLabel": "",
+      "buttonColor": "",
+      "confirmText": "",
+      "confirmTextHint": "",
+      "successMessage": "",
+      "successMessageHint": "",
+      "enabled": "",
+      "template": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "",
+      "exampleLabelShort": "",
+      "exampleHeader": "",
+      "exampleUnit": "",
+      "iconUrl": "",
+      "url": "",
+      "headerName": "",
+      "jsonPath": "",
+      "tablePath": "",
+      "columnJsonPath": "",
+      "valuePath": "",
+      "maxPath": "",
+      "goodValues": "",
+      "color": ""
+    },
+    "cardStyleOption": {
+      "filled": "",
+      "outline": "",
+      "subtle": ""
+    },
+    "layoutOption": {
+      "list": "",
+      "grid": ""
+    },
+    "sizeOption": {
+      "sm": "",
+      "md": "",
+      "lg": "",
+      "xl": ""
+    },
+    "labelPositionOption": {
+      "above": "",
+      "below": ""
+    },
+    "fieldset": {
+      "general": "",
+      "connection": "",
+      "display": ""
+    },
+    "displayTypeDescription": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "method": {
+      "GET": "",
+      "POST": "",
+      "PUT": "",
+      "DELETE": "",
+      "PATCH": ""
+    },
+    "authType": {
+      "none": "",
+      "bearer": "",
+      "basic": "",
+      "apiKeyHeader": "",
+      "apiKeyQuery": ""
+    },
+    "displayType": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "secret": {
+      "apiKey": "",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    },
+    "preview": {
+      "title": "",
+      "test": "",
+      "hint": "",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "",
+      "url": "",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Özel Uygulama URL'si"
+      },
+      "apiKeySettings": {
+        "label": ""
       }
     },
     "action": {
       "create": "Yeni Entegrasyon"
+    },
+    "grid": {
+      "widgetCount": "",
+      "noWidgets": "",
+      "detected": ""
+    },
+    "category": {
+      "dnsHole": "",
+      "mediaService": "",
+      "calendar": "",
+      "mediaSearch": "",
+      "mediaRelease": "",
+      "mediaRequest": "",
+      "downloadClient": "",
+      "usenet": "",
+      "torrent": "",
+      "miscellaneous": "",
+      "smartHomeServer": "",
+      "indexerManager": "",
+      "healthMonitoring": "",
+      "search": "",
+      "mediaTranscoding": "",
+      "networkController": "",
+      "releasesProvider": "",
+      "notifications": "",
+      "firewall": "",
+      "timetable": "",
+      "photoService": "",
+      "documents": "",
+      "notes": "",
+      "mediaMonitoring": "",
+      "speedtest": "",
+      "analytics": "",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "Özel Anahtar",
           "newLabel": "Yeni özel anahtar"
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "Öğelerdeki entegrasyonları seçin",
       "interact": "Entegrasyonlarla etkileşim kurun",
       "full": "Tam entegrasyon erişimi"
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1068,6 +1384,7 @@
       "add": "Ekle",
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
+      "skip": "",
       "change": "Değiştir",
       "create": "Oluştur",
       "createAnother": "Kaydet ve Yeni Oluştur",
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "Öğeyi Düzenle",
+      "tab": {
+        "widget": "",
+        "app": ""
+      },
+      "app": {
+        "propagationNotice": ""
+      },
       "advancedOptions": {
         "label": "Gelişmiş seçenekler",
         "title": "Gelişmiş öğe seçenekleri"
@@ -1328,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Uygulama",
       "description": "Panelin içine uygulama yerleştirir.",
@@ -1412,6 +1743,15 @@
         "items": {
           "label": "Yer İmleri",
           "add": "Yer imi ekle"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2065,6 +2405,37 @@
         "title": "Instances"
       }
     },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "tracearr": {
       "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",
@@ -2311,6 +2682,51 @@
             "target": "Hedef Kodek"
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "immich-serverStats": {
@@ -2921,6 +3337,113 @@
         "internalServerError": "Failed to fetch speedtest data"
       }
     },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
@@ -2984,6 +3507,258 @@
       },
       "status": {
         "unhealthy": "Unhealthy"
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4139,7 @@
         "boards": "Paneller",
         "apps": "Uygulamalar",
         "integrations": "Entegrasyonlar",
+        "customWidgets": "",
         "searchEngies": "Arama Motorları",
         "medias": "Medyalar",
         "users": {
@@ -3382,7 +4158,8 @@
             "logs": "Günlükler",
             "api": "API",
             "certificates": "Sertifikalar",
-            "tasks": "Görevler"
+            "tasks": "Görevler",
+            "backup": ""
           }
         },
         "settings": "Ayarlar",
@@ -3495,7 +4272,24 @@
               },
               "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
-              "accessibility": "Erişilebilirlik"
+              "accessibility": "Erişilebilirlik",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "",
+                  "notStarted": ""
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": ""
+                }
+              }
             }
           },
           "security": {
@@ -3621,18 +4415,6 @@
             "general": {
               "title": "Anonim analizler gönder",
               "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
-            },
-            "widgetData": {
-              "title": "Araç verileri",
-              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
-            },
-            "integrationData": {
-              "title": "Entegrasyon verileri",
-              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
-            },
-            "usersData": {
-              "title": "Kullanıcı verileri",
-              "text": "Kullanıcı sayısını ve SSO etkinleştirme verilerini gönder"
             }
           },
           "crawlingAndIndexing": {
@@ -3903,7 +4685,215 @@
                   "actions": "Eylemler"
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3952,7 +4942,9 @@
       "updated": "{when} Güncellendi",
       "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi",
-      "footer": "Toplam {count} konteyner"
+      "footer": "Toplam {count} konteyner",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -3990,6 +4982,12 @@
     },
     "action": {
       "title": "Eylemler",
+      "logs": {
+        "label": "",
+        "page": {
+          "title": ""
+        }
+      },
       "start": {
         "label": "Başlat",
         "notification": {
@@ -4381,6 +5379,18 @@
           "label": "Düzenle"
         }
       },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "Kullanıcılar",
         "create": {
@@ -4402,7 +5412,10 @@
           "label": "Görevler"
         },
         "docker": {
-          "label": "Docker"
+          "label": "Docker",
+          "logs": {
+            "label": ""
+          }
         },
         "kubernetes": {
           "label": "Kubernetes",
@@ -4551,13 +5564,141 @@
                 "label": "Yeni Grup Oluştur"
               }
             }
+          },
+          "preferences": {
+            "title": "",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": ""
+              }
+            },
+            "notification": {
+              "error": {
+                "message": ""
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": ""
+              },
+              "boolean": {
+                "enabled": "",
+                "disabled": ""
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "locale": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "media": {
+        "help": "",
         "requestMovie": "Filmi Talep Et",
         "requestSeries": "Diziyi Talep Et",
-        "openIn": "{kind} üzerinde göster"
+        "openIn": "{kind} üzerinde göster",
+        "group": {
+          "title": ""
+        },
+        "action": {
+          "search": {
+            "label": "",
+            "description": "",
+            "disabled": {
+              "noIntegration": "",
+              "scoped": ""
+            }
+          }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
+        }
       },
       "external": {
         "help": "Harici bir arama motoru kullanın",
@@ -4833,7 +5974,11 @@
             "table": {
               "header": {
                 "season": "Sezon",
-                "episodes": "Bölüm"
+                "episodes": "Bölüm",
+                "status": ""
+              },
+              "status": {
+                "requested": ""
               }
             },
             "button": {
@@ -4942,6 +6087,73 @@
         "info": "Bilgi",
         "warn": "Uyarı",
         "error": "Hata"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "",
+    "next": "",
+    "prev": "",
+    "done": "",
+    "skip": "",
+    "manage": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "boardsList": {
+        "title": "",
+        "description": ""
+      },
+      "boardsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "appsList": {
+        "title": "",
+        "description": ""
+      },
+      "appsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsList": {
+        "title": "",
+        "description": ""
+      },
+      "integrationsCreate": {
+        "title": "",
+        "description": ""
+      },
+      "usersList": {
+        "title": "",
+        "description": ""
+      },
+      "usersCreate": {
+        "title": "",
+        "description": ""
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "",
+        "description": ""
+      },
+      "editMode": {
+        "title": "",
+        "description": ""
+      },
+      "settings": {
+        "title": "",
+        "description": ""
+      },
+      "switcher": {
+        "title": "",
+        "description": ""
+      },
+      "userMenu": {
+        "title": "",
+        "description": ""
       }
     }
   }

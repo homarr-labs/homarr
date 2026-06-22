@@ -24,6 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",

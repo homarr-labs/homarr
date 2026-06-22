@@ -5,7 +5,7 @@
   bottom: calc(100% - 10px);
   margin-bottom: 1px;
   z-index: 200;
-  pointer-events: auto;
+  pointer-events: none;
   opacity: 0;
   transform: translateY(6px);
   transition:
@@ -13,8 +13,10 @@
     transform 150ms ease;
 }
 
-:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):hover) .wrapper,
-:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):focus-within) .wrapper {
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):hover)
+  .wrapper,
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):focus-within)
+  .wrapper {
   opacity: 1;
   transform: translateY(0);
 }
@@ -77,6 +79,8 @@
   gap: 4px;
   min-width: 0;
   margin-left: auto;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .metadataItem {

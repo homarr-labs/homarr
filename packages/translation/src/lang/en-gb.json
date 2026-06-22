@@ -7,7 +7,10 @@
         "description": "To get started, please select how you want to continue.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from a Homarr version before v1.0"
+          "importOldmarr": "Import from a Homarr version before v1.0",
+          "restoreSqlite": "Restore from SQLite backup",
+          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
+          "backToOptions": "← Back to setup options"
         }
       },
       "import": {
@@ -89,6 +92,48 @@
       "settings": {
         "title": "Settings",
         "subtitle": "Configure server settings"
+      },
+      "integrations": {
+        "title": "Integrations",
+        "subtitle": "Select the services you use.",
+        "description": "Choose the integrations you'd like to connect. We'll set up your dashboard with matching widgets automatically.",
+        "action": {
+          "continue": "Continue",
+          "skip": "Skip for now"
+        },
+        "configure": {
+          "progress": "{current} of {total}",
+          "skip": "Skip this integration",
+          "finishing": "Setting up your dashboard...",
+          "error": {
+            "title": "Setup failed",
+            "message": "Something went wrong while setting up your dashboard. Please try again."
+          },
+          "helpers": {
+            "tooltip": "URL helpers",
+            "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
+          "preview": "e.g. {example}",
+          "mode": {
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
+          "appBadge": "App",
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
+        }
       },
       "finish": {
         "title": "Finish set-up",
@@ -639,6 +684,211 @@
       "add": "Add an app"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "",
+        "noResults": "",
+        "loading": ""
+      },
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "edit": {
+        "title": ""
+      }
+    },
+    "action": {
+      "create": "",
+      "import": "",
+      "save": "",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "addMapping": "",
+      "addColumn": "",
+      "edit": "",
+      "removeMapping": "",
+      "removeColumn": "",
+      "addItem": "",
+      "removeItem": "",
+      "addBar": "",
+      "duplicate": "",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": ""
+    },
+    "field": {
+      "name": "",
+      "description": "",
+      "iconUrl": "",
+      "url": "",
+      "authType": "",
+      "headerName": "",
+      "method": "",
+      "requestBody": "",
+      "displayType": "",
+      "jsonPath": "",
+      "jsonPathHint": "",
+      "label": "",
+      "unit": "",
+      "mappings": "",
+      "tablePath": "",
+      "tablePathHint": "",
+      "columns": "",
+      "header": "",
+      "items": "",
+      "gridColumns": "",
+      "cardStyle": "",
+      "bars": "",
+      "valuePath": "",
+      "maxPath": "",
+      "showPercentage": "",
+      "barSize": "",
+      "goodValues": "",
+      "dotSize": "",
+      "valueSize": "",
+      "labelPosition": "",
+      "kvLayout": "",
+      "striped": "",
+      "compact": "",
+      "maxHeight": "",
+      "color": "",
+      "buttonLabel": "",
+      "buttonColor": "",
+      "confirmText": "",
+      "confirmTextHint": "",
+      "successMessage": "",
+      "successMessageHint": "",
+      "enabled": "",
+      "template": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "",
+      "exampleLabelShort": "",
+      "exampleHeader": "",
+      "exampleUnit": "",
+      "iconUrl": "",
+      "url": "",
+      "headerName": "",
+      "jsonPath": "",
+      "tablePath": "",
+      "columnJsonPath": "",
+      "valuePath": "",
+      "maxPath": "",
+      "goodValues": "",
+      "color": ""
+    },
+    "cardStyleOption": {
+      "filled": "",
+      "outline": "",
+      "subtle": ""
+    },
+    "layoutOption": {
+      "list": "",
+      "grid": ""
+    },
+    "sizeOption": {
+      "sm": "",
+      "md": "",
+      "lg": "",
+      "xl": ""
+    },
+    "labelPositionOption": {
+      "above": "",
+      "below": ""
+    },
+    "fieldset": {
+      "general": "",
+      "connection": "",
+      "display": ""
+    },
+    "displayTypeDescription": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "method": {
+      "GET": "",
+      "POST": "",
+      "PUT": "",
+      "DELETE": "",
+      "PATCH": ""
+    },
+    "authType": {
+      "none": "",
+      "bearer": "",
+      "basic": "",
+      "apiKeyHeader": "",
+      "apiKeyQuery": ""
+    },
+    "displayType": {
+      "singleValue": "",
+      "keyValue": "",
+      "table": "",
+      "statGrid": "",
+      "progressBars": "",
+      "statusIndicator": "",
+      "countGrid": "",
+      "raw": "",
+      "actionButton": "",
+      "customJsx": ""
+    },
+    "secret": {
+      "apiKey": "",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    },
+    "preview": {
+      "title": "",
+      "test": "",
+      "hint": "",
+      "rawResponse": ""
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "aiPromptCopied": "",
+      "aiPromptDescription": "",
+      "aiPromptCopy": "",
+      "aiPromptNoResponse": "",
+      "aiPromptCopyError": "",
+      "createError": "",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": "",
+      "executed": "",
+      "executeError": ""
+    },
+    "table": {
+      "name": "",
+      "url": "",
+      "display": ""
+    },
+    "widget": {
+      "disabled": ""
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -731,10 +981,48 @@
       },
       "appHref": {
         "placeholder": "Custom application URL"
+      },
+      "apiKeySettings": {
+        "label": ""
       }
     },
     "action": {
       "create": "New integration"
+    },
+    "grid": {
+      "widgetCount": "",
+      "noWidgets": "",
+      "detected": ""
+    },
+    "category": {
+      "dnsHole": "",
+      "mediaService": "",
+      "calendar": "",
+      "mediaSearch": "",
+      "mediaRelease": "",
+      "mediaRequest": "",
+      "downloadClient": "",
+      "usenet": "",
+      "torrent": "",
+      "miscellaneous": "",
+      "smartHomeServer": "",
+      "indexerManager": "",
+      "healthMonitoring": "",
+      "search": "",
+      "mediaTranscoding": "",
+      "networkController": "",
+      "releasesProvider": "",
+      "notifications": "",
+      "firewall": "",
+      "timetable": "",
+      "photoService": "",
+      "documents": "",
+      "notes": "",
+      "mediaMonitoring": "",
+      "speedtest": "",
+      "analytics": "",
+      "mediaLibrary": "",
+      "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
@@ -1007,6 +1295,10 @@
         "privateKey": {
           "label": "Private key",
           "newLabel": "New private key"
+        },
+        "slug": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1014,6 +1306,30 @@
       "use": "Select integrations in items",
       "interact": "Interact with integrations",
       "full": "Full integration access"
+    },
+    "audiobookshelf": {
+      "name": "",
+      "description": ""
+    },
+    "navidrome": {
+      "name": "",
+      "description": ""
+    },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "secret": {
+        "slug": {
+          "description": ""
+        },
+        "apiKey": {
+          "description": ""
+        }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1068,6 +1384,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "skip": "",
       "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
@@ -1303,6 +1620,13 @@
     },
     "edit": {
       "title": "Edit item",
+      "tab": {
+        "widget": "",
+        "app": ""
+      },
+      "app": {
+        "propagationNotice": ""
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"
@@ -1328,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Embeds an app into the board.",
@@ -1412,6 +1743,15 @@
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2065,6 +2405,37 @@
         "title": "Instances"
       }
     },
+    "ups": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBattery": {
+          "label": ""
+        },
+        "showLoad": {
+          "label": ""
+        },
+        "showVoltage": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "onBattery": "",
+        "lowBattery": "",
+        "charging": "",
+        "unknown": ""
+      },
+      "field": {
+        "runtime": "",
+        "load": "",
+        "input": "",
+        "output": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "tracearr": {
       "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",
@@ -2311,6 +2682,51 @@
             "target": "Target codec"
           }
         }
+      }
+    },
+    "paperlessNgx": {
+      "name": "",
+      "description": "",
+      "documentsTotal": "",
+      "documentsInbox": "",
+      "correspondents": "",
+      "tags": "",
+      "documentTypes": "",
+      "inboxRatio": "",
+      "inbox": "",
+      "total": "",
+      "option": {
+        "showInboxRatio": {
+          "label": "",
+          "description": ""
+        },
+        "showInboxRing": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsTotal": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentsInbox": {
+          "label": "",
+          "description": ""
+        },
+        "showCorrespondents": {
+          "label": "",
+          "description": ""
+        },
+        "showTags": {
+          "label": "",
+          "description": ""
+        },
+        "showDocumentTypes": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "immich-serverStats": {
@@ -2921,6 +3337,113 @@
         "internalServerError": ""
       }
     },
+    "uptimeKuma": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showAverageUptime": {
+          "label": "",
+          "description": ""
+        },
+        "showUptimeRing": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalMonitors": {
+          "label": "",
+          "description": ""
+        },
+        "showUpCount": {
+          "label": "",
+          "description": ""
+        },
+        "showDownCount": {
+          "label": "",
+          "description": ""
+        },
+        "showPausedCount": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "averageUptime": "",
+      "stats": {
+        "totalMonitors": "",
+        "upCount": "",
+        "downCount": "",
+        "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showArtists": {
+          "label": "",
+          "description": ""
+        },
+        "showAlbums": {
+          "label": "",
+          "description": ""
+        },
+        "showSongs": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlaying": {
+          "label": "",
+          "description": ""
+        },
+        "showNowPlayingList": {
+          "label": "",
+          "description": ""
+        },
+        "maxNowPlayingItems": {
+          "label": "",
+          "description": ""
+        },
+        "showLibraryCount": {
+          "label": "",
+          "description": ""
+        },
+        "showAudiobooks": {
+          "label": "",
+          "description": ""
+        },
+        "showPodcasts": {
+          "label": "",
+          "description": ""
+        },
+        "showListeningTime": {
+          "label": "",
+          "description": ""
+        },
+        "showActiveSessions": {
+          "label": "",
+          "description": ""
+        },
+        "compactMode": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "artists": "",
+      "albums": "",
+      "songs": "",
+      "libraryCount": "",
+      "audiobooks": "",
+      "podcasts": "",
+      "listeningTime": "",
+      "activeSessions": "",
+      "nowPlaying": "",
+      "nowPlayingCount": "",
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "systemResources": {
       "name": "",
       "description": "",
@@ -2984,6 +3507,258 @@
       },
       "status": {
         "unhealthy": ""
+      }
+    },
+    "customApi": {
+      "name": "",
+      "description": "",
+      "option": {
+        "definitionId": {
+          "label": ""
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "",
+      "noDisplayOutput": "",
+      "executeConfirm": "",
+      "executing": "",
+      "executeSuccess": "",
+      "executeFailed": ""
+    },
+    "beszelSystemTable": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "sortBy": {
+          "label": ""
+        },
+        "sortDirection": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "column": {
+        "system": "",
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelSystemGrid": {
+      "name": "",
+      "description": "",
+      "option": {
+        "statusFilter": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showGpu": {
+          "label": ""
+        },
+        "showLoadAvg": {
+          "label": ""
+        },
+        "showNet": {
+          "label": ""
+        },
+        "showTemp": {
+          "label": ""
+        },
+        "showBattery": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "metric": {
+        "cpu": "",
+        "memory": "",
+        "disk": "",
+        "gpu": "",
+        "loadAvg": "",
+        "net": "",
+        "temp": "",
+        "battery": "",
+        "services": "",
+        "uptime": "",
+        "agent": ""
+      }
+    },
+    "beszelAlerts": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showHistory": {
+          "label": ""
+        },
+        "maxHistoryItems": {
+          "label": ""
+        }
+      },
+      "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "history": "",
+      "resolved": "",
+      "status": {
+        "triggered": "",
+        "ok": ""
+      }
+    },
+    "beszelSystemStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
+        "timePeriod": {
+          "label": ""
+        },
+        "showCpu": {
+          "label": ""
+        },
+        "showMemory": {
+          "label": ""
+        },
+        "showDisk": {
+          "label": ""
+        },
+        "showDiskIO": {
+          "label": ""
+        },
+        "showNetwork": {
+          "label": ""
+        },
+        "showDockerCpu": {
+          "label": ""
+        },
+        "showDockerMemory": {
+          "label": ""
+        },
+        "showDockerNetwork": {
+          "label": ""
+        }
+      },
+      "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
+      "chart": {
+        "cpu": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "memory": {
+          "title": "",
+          "subtitle": "",
+          "series": "",
+          "cache": ""
+        },
+        "disk": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
+        "diskIO": {
+          "title": "",
+          "subtitle": "",
+          "read": "",
+          "write": ""
+        },
+        "network": {
+          "title": "",
+          "subtitle": "",
+          "sent": "",
+          "recv": ""
+        },
+        "dockerCpu": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "dockerNetwork": {
+          "title": "",
+          "subtitle": ""
+        }
       }
     }
   },
@@ -3364,6 +4139,7 @@
         "boards": "",
         "apps": "",
         "integrations": "",
+        "customWidgets": "",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -3382,7 +4158,8 @@
             "logs": "",
             "api": "",
             "certificates": "",
-            "tasks": ""
+            "tasks": "",
+            "backup": ""
           }
         },
         "settings": "",
@@ -3495,7 +4272,24 @@
               },
               "search": "",
               "firstDayOfWeek": "",
-              "accessibility": ""
+              "accessibility": "",
+              "onboardingTours": {
+                "title": "",
+                "description": "",
+                "reset": "",
+                "resetSuccess": {
+                  "title": "",
+                  "message": ""
+                },
+                "status": {
+                  "completed": "",
+                  "notStarted": ""
+                },
+                "name": {
+                  "management": "",
+                  "dashboard": ""
+                }
+              }
             }
           },
           "security": {
@@ -3619,18 +4413,6 @@
           "analytics": {
             "title": "",
             "general": {
-              "title": "",
-              "text": ""
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "",
-              "text": ""
-            },
-            "usersData": {
               "title": "",
               "text": ""
             }
@@ -3903,7 +4685,215 @@
                   "actions": ""
                 }
               }
+            },
+            "mcp": {
+              "label": "",
+              "title": "",
+              "subtitle": "",
+              "description": "",
+              "noApiKey": "",
+              "createApiKeyButton": "",
+              "endpoint": {
+                "title": ""
+              },
+              "authentication": {
+                "title": "",
+                "intro": "",
+                "apiKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "oauth": {
+                  "title": "",
+                  "description": "",
+                  "hint": ""
+                },
+                "permissions": ""
+              },
+              "clientConfig": {
+                "title": "",
+                "streamableHttp": {
+                  "recommended": "",
+                  "title": "",
+                  "worksWith": "",
+                  "addToConfig": "",
+                  "cursor": "",
+                  "claudeDesktop": "",
+                  "claudeCode": "",
+                  "vsCodeCopilot": "",
+                  "replaceHint": ""
+                },
+                "stdio": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "testConnection": {
+                "title": "",
+                "description": "",
+                "hint": ""
+              },
+              "availableTools": {
+                "title": "",
+                "description": "",
+                "columnType": "",
+                "columnName": "",
+                "columnDescription": ""
+              },
+              "troubleshooting": {
+                "title": "",
+                "missingHeader": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidFormat": {
+                  "title": "",
+                  "description": ""
+                },
+                "invalidKey": {
+                  "title": "",
+                  "description": ""
+                },
+                "connectionRefused": {
+                  "title": "",
+                  "description": ""
+                },
+                "toolsNotAppearing": {
+                  "title": "",
+                  "description": ""
+                }
+              },
+              "copy": "",
+              "oneClick": {
+                "title": "",
+                "subtitle": "",
+                "vsCode": "",
+                "cursor": "",
+                "copyUrl": "",
+                "copied": "",
+                "copyHint": "",
+                "manualConfig": ""
+              }
             }
+          }
+        },
+        "backup": {
+          "title": "",
+          "metaTitle": "",
+          "export": {
+            "title": "",
+            "description": "",
+            "button": "",
+            "error": "",
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "submit": "",
+              "cancel": ""
+            }
+          },
+          "import": {
+            "title": "",
+            "description": "",
+            "warning": "",
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "changeFile": "",
+            "button": "",
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": ""
+          },
+          "preview": {
+            "title": "",
+            "exported": "",
+            "loading": "",
+            "errorTitle": "",
+            "entity": "",
+            "count": "",
+            "boards": "",
+            "entities": {
+              "board": "",
+              "user": "",
+              "app": "",
+              "integration": "",
+              "item": "",
+              "media": "",
+              "search_engine": ""
+            },
+            "analyzeError": "",
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": ""
+          },
+          "restore": {
+            "dropzone": {
+              "title": "",
+              "description": ""
+            },
+            "analyzing": "",
+            "changeFile": "",
+            "continueToRestore": "",
+            "tryAgain": "",
+            "analysisError": "",
+            "preview": {
+              "title": "",
+              "exported": "",
+              "entity": "",
+              "count": "",
+              "boards": "",
+              "entities": {
+                "board": "",
+                "user": "",
+                "app": "",
+                "integration": "",
+                "item": "",
+                "media": "",
+                "search_engine": ""
+              },
+              "migrationsApplied": "",
+              "migrationsAppliedPlural": "",
+              "migrationsOlderVersion": "",
+              "migrationsOlderVersionPlural": "",
+              "migrationsUpToDate": "",
+              "upToDate": "",
+              "migrationsPending": ""
+            },
+            "migration": {
+              "title": "",
+              "migrationLabel": ""
+            },
+            "confirm": {
+              "title": "",
+              "warningTitle": "",
+              "warningBody": "",
+              "typePrompt": "",
+              "cancel": "",
+              "submit": ""
+            },
+            "progress": {
+              "title": "",
+              "extracting": "",
+              "migrating": "",
+              "encrypting": "",
+              "swapping": "",
+              "restarting": ""
+            },
+            "complete": {
+              "title": "",
+              "message": ""
+            },
+            "failed": {
+              "title": ""
+            },
+            "invalidMissingMetadata": "",
+            "invalidMissingDb": "",
+            "analyzeError": ""
           }
         }
       },
@@ -3952,7 +4942,9 @@
       "updated": "",
       "search": "",
       "selected": "",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -3990,6 +4982,12 @@
     },
     "action": {
       "title": "",
+      "logs": {
+        "label": "",
+        "page": {
+          "title": ""
+        }
+      },
       "start": {
         "label": "",
         "notification": {
@@ -4381,6 +5379,18 @@
           "label": ""
         }
       },
+      "custom-widgets": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
+        "edit": {
+          "label": "",
+          "flow": {
+            "label": ""
+          }
+        }
+      },
       "users": {
         "label": "",
         "create": {
@@ -4402,7 +5412,10 @@
           "label": ""
         },
         "docker": {
-          "label": ""
+          "label": "",
+          "logs": {
+            "label": ""
+          }
         },
         "kubernetes": {
           "label": "",
@@ -4551,26 +5564,140 @@
                 "label": "Create a new group"
               }
             }
+          },
+          "preferences": {
+            "title": "",
+            "children": {
+              "detail": {
+                "title": "",
+                "backHint": "",
+                "backAction": ""
+              }
+            },
+            "notification": {
+              "error": {
+                "message": ""
+              }
+            },
+            "option": {
+              "preferences": {
+                "label": ""
+              },
+              "boolean": {
+                "enabled": "",
+                "disabled": ""
+              },
+              "board": {
+                "none": "",
+                "unavailable": ""
+              },
+              "searchEngine": {
+                "none": "",
+                "unavailable": ""
+              },
+              "colorScheme": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "locale": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "defaultSearchEngineId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "openSearchInNewTab": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "ddgBangs": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "firstDayOfWeek": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "homeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "mobileHomeBoardId": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "fullPreferencesPage": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "media": {
-        "help": "Search for movies or shows to request",
+        "help": "",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": "Movies and shows"
+          "title": ""
         },
         "action": {
           "search": {
-            "label": "Search for movies or shows",
-            "description": "Start typing to search your media request integrations",
+            "label": "",
+            "description": "",
             "disabled": {
-              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
-              "scoped": "This widget does not have an accessible media request integration."
+              "noIntegration": "",
+              "scoped": ""
             }
           }
+        },
+        "availability": {
+          "available": "",
+          "partiallyAvailable": "",
+          "processing": "",
+          "requested": "",
+          "pending": ""
         }
       },
       "external": {
@@ -4602,15 +5729,15 @@
             "option": {
               "google": {
                 "name": "",
-                "description": ""
+                "description": "Search the web with Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Search the web with Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Search the web with DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrents",
@@ -4960,6 +6087,73 @@
         "info": "Info",
         "warn": "Warn",
         "error": "Error"
+      }
+    }
+  },
+  "onboardingTour": {
+    "learnMore": "Read the docs",
+    "next": "Next",
+    "prev": "Back",
+    "done": "Done",
+    "skip": "Skip tour",
+    "manage": {
+      "welcome": {
+        "title": "Welcome to Homarr!",
+        "description": "This is your control center. From here you manage boards, apps, integrations, users, and server settings. Let's take a tour of each section."
+      },
+      "boardsList": {
+        "title": "Your Boards",
+        "description": "Here are all your dashboards. Each board has its own layout, background, and access settings. You can see who created each one and whether it's public or private."
+      },
+      "boardsCreate": {
+        "title": "Create a Board",
+        "description": "Click here to create a new dashboard or import one from a previous Homarr installation. Each board gets its own URL you can share."
+      },
+      "appsList": {
+        "title": "Your Apps",
+        "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
+      },
+      "appsCreate": {
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
+      },
+      "integrationsList": {
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
+      },
+      "integrationsCreate": {
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
+      },
+      "usersList": {
+        "title": "Your Users",
+        "description": "See everyone who has access. Organise users into groups and control who can view or edit each board."
+      },
+      "usersCreate": {
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
+      }
+    },
+    "board": {
+      "welcome": {
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
+      },
+      "editMode": {
+        "title": "Edit Mode",
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
+      },
+      "settings": {
+        "title": "Board Settings",
+        "description": "Change this board's name, columns, background, colours, and who can access it. Each board can be public or private."
+      },
+      "switcher": {
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
+      },
+      "userMenu": {
+        "title": "Your Profile",
+        "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }
