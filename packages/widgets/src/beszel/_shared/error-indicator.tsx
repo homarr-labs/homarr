@@ -19,11 +19,7 @@ export function BeszelIntegrationErrorIndicator({ results }: BeszelIntegrationEr
   const label = failed.map((r) => r.integrationName ?? r.integrationId).join(", ");
   return (
     <Tooltip label={label} position="left" withArrow>
-      <IconAlertTriangle
-        size={14}
-        color="var(--mantine-color-orange-6)"
-        style={{ cursor: "help", flexShrink: 0 }}
-      />
+      <IconAlertTriangle size={14} color="var(--mantine-color-orange-6)" style={{ cursor: "help", flexShrink: 0 }} />
     </Tooltip>
   );
 }

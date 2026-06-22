@@ -365,7 +365,11 @@ export default function BeszelSystemGridWidget({
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
 
-  const { data: results = [], error: systemsError, isPending } = clientApi.widget.beszel.getSystems.useQuery(
+  const {
+    data: results = [],
+    error: systemsError,
+    isPending,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );

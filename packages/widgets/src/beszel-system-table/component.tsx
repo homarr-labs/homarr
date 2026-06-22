@@ -70,7 +70,11 @@ export default function BeszelSystemTableWidget({
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
-  const { data: results = [], error: systemsError, isPending } = clientApi.widget.beszel.getSystems.useQuery(
+  const {
+    data: results = [],
+    error: systemsError,
+    isPending,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
     { staleTime: 5_000, refetchInterval: 5_000, retry: false },
   );
