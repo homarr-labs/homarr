@@ -95,8 +95,8 @@ catalog:
   posthog-js: ^1.255.0
   posthog-node: ^4.18.0
   "@vitejs/plugin-react": ^6.0.2
-  "@vitest/coverage-v8": ^4.1.8
-  "@vitest/ui": ^4.1.8
+  "@vitest/coverage-v8": ^4.1.9
+  "@vitest/ui": ^4.1.9
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
@@ -182,7 +182,7 @@ catalog:
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.8
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.8
+  vitest: ^4.1.9
   winston: 3.19.0
   ws: ^8.21.0
   xml2js: ^0.6.2
