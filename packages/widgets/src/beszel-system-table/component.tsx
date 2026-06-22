@@ -76,7 +76,7 @@ export default function BeszelSystemTableWidget({
     isPending,
   } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
   );
   const size = getSizeConfig(width);
 

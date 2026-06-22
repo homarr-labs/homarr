@@ -371,7 +371,7 @@ export default function BeszelSystemGridWidget({
     isPending,
   } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
   );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
