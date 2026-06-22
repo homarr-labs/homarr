@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Badge, Box, Divider, Group, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
+import { Badge, Box, Center, Divider, Group, Loader, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconBellOff, IconCircleCheck, IconFlame, IconHistory } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -12,6 +12,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 
 const alertIconMap: Record<string, LucideIcon> = {
   CPU: Cpu,
@@ -40,7 +41,7 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const { data: results = [], error: alertsError } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
+  const { data: results = [], error: alertsError, isPending } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
     staleTime: 15_000,
     refetchInterval: 15_000,
     retry: false,
@@ -93,19 +94,31 @@ export default function BeszelAlertsWidget({
 
   if (alertsError) throw alertsError;
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
   return (
-    <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      <Stack gap="sm" p="sm">
-        {alerts.length === 0 && (
-          <Stack align="center" justify="center" py="xl" gap="xs">
-            <ThemeIcon variant="light" color="gray" size="lg" radius="xl">
-              <IconBellOff size={18} />
-            </ThemeIcon>
-            <Text size="sm" c="dimmed">
-              {t("empty")}
-            </Text>
-          </Stack>
-        )}
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
+        <BeszelIntegrationErrorIndicator results={results} />
+      </Box>
+      <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
+        <Stack gap="sm" p="sm">
+          {alerts.length === 0 && (
+            <Stack align="center" justify="center" py="xl" gap="xs">
+              <ThemeIcon variant="light" color="gray" size="lg" radius="xl">
+                <IconBellOff size={18} />
+              </ThemeIcon>
+              <Text size="sm" c="dimmed">
+                {t("empty")}
+              </Text>
+            </Stack>
+          )}
 
         {triggeredAlerts.length > 0 && (
           <Stack gap={6}>
@@ -200,6 +213,7 @@ export default function BeszelAlertsWidget({
         )}
       </Stack>
     </ScrollArea>
+    </Box>
   );
 }
 

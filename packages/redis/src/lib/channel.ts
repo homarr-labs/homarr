@@ -415,8 +415,18 @@ export const createChannelWithLatestAndEvents = <TData>(channelName: string) => 
       });
     },
     publishAndUpdateLastStateAsync: async (data: TData) => {
-      await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      // Set first, then publish. If publish fails the storage is still consistent
+      // and subscribers will catch up on the next event.
+      const payload = superjson.stringify({ data, timestamp: new Date() });
+      await getSetClient.set(channelName, payload);
+      try {
+        await publisher.publish(channelName, superjson.stringify(data));
+      } catch (error) {
+        logger.warn("Failed to publish cache update (storage is correct, subscribers will catch up)", {
+          channel: channelName,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
     },
     setAsync: async (data: TData) => {
       await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));

@@ -3639,6 +3639,9 @@
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3712,6 +3715,9 @@
         }
       },
       "selectSystem": "Select system",
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",

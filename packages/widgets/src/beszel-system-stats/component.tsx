@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
+import { Button, Box, Center, Loader, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconPlugConnectedX, IconServer, IconQuestionMark, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -30,6 +30,7 @@ import {
   formatPercent,
   formatStorageBytes,
 } from "../beszel/_shared/format";
+import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { makeTooltipProps } from "../beszel/_shared/tooltip";
 import { useLiveStats } from "../beszel/_shared/use-live-stats";
 
@@ -98,13 +99,18 @@ export default function BeszelSystemStatsWidget({
       timePeriod: options.timePeriod as "1m" | "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "", retry: false },
+    {
+      staleTime: 30 * 1000,
+      refetchInterval: isLive ? false : 5_000,
+      enabled: !isLive && systemReady && selectedSystem !== "",
+      retry: false,
+    },
   );
 
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
   let activeStats:
-    | { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] }
+    | { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[]; error?: string }
     | null
     | undefined = statsResult;
   if (isLive) {
@@ -191,6 +197,30 @@ export default function BeszelSystemStatsWidget({
   if (systemsError) throw systemsError;
   if (!isLive && statsError) throw statsError;
 
+  if (systemsPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (systems.length === 0) {
+    return (
+      <Box h="100%" pos="relative">
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
+        <Center h="100%">
+          <Stack align="center" gap="xs">
+            <IconServerOff size={28} opacity={0.5} />
+            <Text size="sm" c="dimmed">
+              {t("empty.noSystems")}
+            </Text>
+          </Stack>
+        </Center>
+      </Box>
+    );
+  }
+
   if (!systemsPending && !systemExists && systems.length > 0) {
     return (
       <Center h="100%">
@@ -228,41 +258,62 @@ export default function BeszelSystemStatsWidget({
   }
 
   return (
-    <ScrollArea
-      h="100%"
-      className={classes.beszelStatsContainer}
-      style={{ pointerEvents: (isEditMode && "none") || undefined }}
-    >
-      <Stack gap="md" p="sm">
-        {!isEditMode && systems.length > 1 && (
-          <Menu position="bottom-start" withArrow shadow="md" withinPortal>
-            <Menu.Target>
-              <Button
-                variant="default"
-                size="compact-xs"
-                leftSection={<IconServer size={14} />}
-                className={classes.beszelStatsSystemToggle}
-              >
-                {selectedLabel}
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {systems.map((s) => (
-                <Menu.Item
-                  key={s.value}
-                  fz="xs"
-                  fw={s.value === selectedSystem ? 600 : 400}
-                  c={s.value !== selectedSystem ? "dimmed" : undefined}
-                  onClick={() => handleSelectSystem(s.value)}
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
+      </Box>
+      <ScrollArea
+        h="100%"
+        className={classes.beszelStatsContainer}
+        style={{ pointerEvents: (isEditMode && "none") || undefined }}
+      >
+        <Stack gap="md" p="sm">
+          {!isEditMode && systems.length > 1 && (
+            <Menu position="bottom-start" withArrow shadow="md" withinPortal>
+              <Menu.Target>
+                <Button
+                  variant="default"
+                  size="compact-xs"
+                  leftSection={<IconServer size={14} />}
+                  className={classes.beszelStatsSystemToggle}
                 >
-                  {s.label}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
-        )}
+                  {selectedLabel}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {systems.map((s) => (
+                  <Menu.Item
+                    key={s.value}
+                    fz="xs"
+                    fw={s.value === selectedSystem ? 600 : 400}
+                    c={s.value !== selectedSystem ? "dimmed" : undefined}
+                    onClick={() => handleSelectSystem(s.value)}
+                  >
+                    {s.label}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          )}
 
-        {activeStats && (
+          {!isLive && !activeStats && systemReady && selectedSystem !== "" && (
+            <Center h={CHART_HEIGHT}>
+              <Loader size="sm" />
+            </Center>
+          )}
+
+          {!isLive && activeStats && "error" in activeStats && activeStats.error && (
+            <Center h={CHART_HEIGHT}>
+              <Stack align="center" gap="xs">
+                <IconServerOff size={24} opacity={0.5} />
+                <Text size="sm" c="dimmed">
+                  {activeStats.error}
+                </Text>
+              </Stack>
+            </Center>
+          )}
+
+          {activeStats && (!("error" in activeStats) || !activeStats.error) && (
           <SimpleGrid cols={cols} spacing="md">
             {options.showCpu && cpuData.length > 0 && (
               <BeszelChartPanel
@@ -387,5 +438,6 @@ export default function BeszelSystemStatsWidget({
         )}
       </Stack>
     </ScrollArea>
+    </Box>
   );
 }
