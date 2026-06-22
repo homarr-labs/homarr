@@ -67,7 +67,10 @@ export default function BeszelSystemStatsWidget({
     data: systemsResult = [],
     isPending: systemsPending,
     error: systemsError,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, retry: false });
+  } = clientApi.widget.beszel.getSystems.useQuery(
+    { integrationIds },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, retry: false },
+  );
 
   const systems = useMemo(
     () => systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name }))),

@@ -147,7 +147,7 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-cacheDuration: dayjs.duration(1, "second"),
+  cacheDuration: dayjs.duration(1, "second"),
   fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelStats",
