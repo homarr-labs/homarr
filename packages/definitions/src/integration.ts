@@ -486,7 +486,7 @@ export const integrationDefs = {
     name: "Gluetun",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
-    category: ["gluetun"],
+    category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
@@ -596,7 +596,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
-  "gluetun",
+  "vpn",
   "ups",
   "documents",
   "mediaLibrary",

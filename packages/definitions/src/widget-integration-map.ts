@@ -38,6 +38,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   speedtestTracker: ["speedtestTracker"],
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
+  vpn: getIntegrationKindsByCategory("vpn"),
   anchorNote: ["anchor"],
 };
 
