@@ -46,8 +46,9 @@ export default function BeszelAlertsWidget({
     error: alertsError,
     isPending,
   } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
-    staleTime: 15_000,
-    refetchInterval: 15_000,
+    staleTime: 10_000,
+    gcTime: 48 * 60 * 60 * 1000,
+    refetchInterval: 10_000,
     retry: false,
   });
   const utils = clientApi.useUtils();

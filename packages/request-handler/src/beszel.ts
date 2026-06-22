@@ -75,7 +75,7 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
     });
     return enriched;
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
   fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelSystems",
@@ -104,19 +104,19 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { alerts, history };
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
   fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelAlerts",
 });
 
-const timePeriodConfig: Record<string, { type: string; perPage: number; cacheSeconds: number }> = {
-  "1m": { type: "1m", perPage: 60, cacheSeconds: 5 },
-  "1h": { type: "1m", perPage: 60, cacheSeconds: 60 },
-  "12h": { type: "10m", perPage: 72, cacheSeconds: 300 },
-  "24h": { type: "20m", perPage: 72, cacheSeconds: 600 },
-  "1w": { type: "480m", perPage: 21, cacheSeconds: 1800 },
-  "30d": { type: "480m", perPage: 90, cacheSeconds: 3600 },
+const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
+  "1m": { type: "1m", perPage: 60 },
+  "1h": { type: "1m", perPage: 60 },
+  "12h": { type: "10m", perPage: 72 },
+  "24h": { type: "20m", perPage: 72 },
+  "1w": { type: "480m", perPage: 21 },
+  "30d": { type: "480m", perPage: 90 },
 };
 
 export interface BeszelStatsData {
@@ -131,7 +131,7 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
 >({
   async requestAsync(integration, input) {
     const start = performance.now();
-    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60, cacheSeconds: 60 };
+    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
     const instance = await createIntegrationAsync(integration);
     const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     const containerStats = input.includeDocker
@@ -147,13 +147,8 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-  cacheDuration: dayjs.duration(60, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
   fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelStats",
-  cacheDurationForInput(input) {
-    const config = timePeriodConfig[input.timePeriod];
-    if (!config) return undefined;
-    return dayjs.duration(config.cacheSeconds, "seconds");
-  },
 });
