@@ -10,9 +10,17 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { getStatusColor, RUNNING_STATUS } from "./helpers";
 
-export type VpnInfo = RouterOutputs["widget"]["gluetun"]["getVpnInfo"][number]["summary"];
+export type VpnInfo = RouterOutputs["widget"]["vpn"]["getSummaries"][number]["summary"];
 
-export function VpnIntegrationCard({ vpn, variant = "single" }: { vpn: VpnInfo; variant?: "single" | "list" }) {
+export function VpnIntegrationCard({
+  vpn,
+  integrationName,
+  variant = "single",
+}: {
+  vpn: VpnInfo;
+  integrationName?: string;
+  variant?: "single" | "list";
+}) {
   const board = useRequiredBoard();
   const compact = variant === "list";
 
@@ -20,6 +28,7 @@ export function VpnIntegrationCard({ vpn, variant = "single" }: { vpn: VpnInfo; 
     <Flex direction="row" w="100%" align="center" gap="xs">
       <VpnStatusColumn vpnStatus={vpn.vpnStatus} dnsStatus={vpn.dnsStatus} compact={compact} />
       <VpnInfoColumn
+        integrationName={compact ? integrationName : undefined}
         publicIp={vpn.publicIp}
         city={vpn.city}
         country={vpn.country}
@@ -29,7 +38,7 @@ export function VpnIntegrationCard({ vpn, variant = "single" }: { vpn: VpnInfo; 
       />
     </Flex>
   ) : (
-    <VpnUnavailableContent compact={compact} />
+    <VpnUnavailableContent compact={compact} integrationName={compact ? integrationName : undefined} />
   );
 
   if (compact) {
@@ -43,14 +52,19 @@ export function VpnIntegrationCard({ vpn, variant = "single" }: { vpn: VpnInfo; 
   return <Box w="100%">{content}</Box>;
 }
 
-function VpnUnavailableContent({ compact }: { compact: boolean }) {
-  const t = useScopedI18n("widget.gluetun");
+function VpnUnavailableContent({ compact, integrationName }: { compact: boolean; integrationName?: string }) {
+  const t = useScopedI18n("widget.vpn");
 
   return (
     <Flex direction="row" w="100%" align="center" gap="xs">
       {/* Empty statuses render the shield and DNS badge in red (see getStatusColor). */}
       <VpnStatusColumn vpnStatus="" dnsStatus="" compact={compact} />
       <Flex gap={2} direction="column" w="100%" align="flex-start" style={{ minWidth: 0 }}>
+        {integrationName ? (
+          <Text fw={600} size="xs" lh={1.2} c="dimmed" lineClamp={1}>
+            {integrationName}
+          </Text>
+        ) : null}
         <Text fw={700} size={compact ? "md" : "lg"} lh={1.2} c="red" lineClamp={2}>
           {t("serviceUnavailable")}
         </Text>
@@ -80,6 +94,7 @@ function VpnStatusColumn({
 }
 
 function VpnInfoColumn({
+  integrationName,
   publicIp,
   city,
   country,
@@ -87,6 +102,7 @@ function VpnInfoColumn({
   protocol,
   compact,
 }: {
+  integrationName?: string;
   publicIp: string;
   city: string;
   country: string;
@@ -96,6 +112,11 @@ function VpnInfoColumn({
 }) {
   return (
     <Flex gap={2} direction="column" w="100%" align="flex-start" style={{ minWidth: 0 }}>
+      {integrationName ? (
+        <Text fw={600} size="xs" lh={1.2} c="dimmed" lineClamp={1}>
+          {integrationName}
+        </Text>
+      ) : null}
       <Text fw={700} size={compact ? "xl" : "2xl"} lh={1.1} lineClamp={1}>
         {publicIp}
       </Text>

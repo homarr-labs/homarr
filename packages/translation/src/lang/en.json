@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -2389,9 +2390,9 @@
         "title": "Instances"
       }
     },
-    "gluetun": {
-      "name": "Gluetun",
-      "description": "Overview of your Gluetun vpn setup",
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
       "serviceUnavailable": "VPN unavailable"
     },
     "ups": {
@@ -4562,8 +4563,8 @@
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
             },
-            "gluetun": {
-              "label": "Gluetun VPN Status"
+            "vpn": {
+              "label": "VPN Status"
             }
           },
           "interval": {

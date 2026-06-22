@@ -2,7 +2,7 @@ import type { RouterOutputs } from "@homarr/api";
 
 export const RUNNING_STATUS = "running";
 
-type VpnInfoItem = RouterOutputs["widget"]["gluetun"]["getVpnInfo"][number];
+type VpnInfoItem = RouterOutputs["widget"]["vpn"]["getSummaries"][number];
 
 export function getStatusColor(status: string) {
   return status === RUNNING_STATUS ? "green" : "red";

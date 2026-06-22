@@ -9,15 +9,15 @@ import type { WidgetComponentProps } from "../definition";
 import { updateVpnInfoFromSubscription } from "./helpers";
 import { VpnIntegrationCard } from "./vpn-card";
 
-export default function GluetunWidget({ options, integrationIds }: WidgetComponentProps<"gluetun">) {
-  const [integrations] = clientApi.widget.gluetun.getVpnInfo.useSuspenseQuery(
+export default function VpnWidget({ options, integrationIds }: WidgetComponentProps<"vpn">) {
+  const [integrations] = clientApi.widget.vpn.getSummaries.useSuspenseQuery(
     {
       ...options,
       integrationIds,
     },
     {
       // Initial load only. Live updates arrive via the subscription below, which is
-      // fed by the gluetun cron job publishing to the integration channel.
+      // fed by the VPN cron job publishing to the integration channel.
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -26,13 +26,13 @@ export default function GluetunWidget({ options, integrationIds }: WidgetCompone
   );
   const utils = clientApi.useUtils();
 
-  clientApi.widget.gluetun.subscribeVpnInfo.useSubscription(
+  clientApi.widget.vpn.subscribeSummaries.useSubscription(
     {
       integrationIds,
     },
     {
       onData: (data) => {
-        utils.widget.gluetun.getVpnInfo.setData(
+        utils.widget.vpn.getSummaries.setData(
           {
             ...options,
             integrationIds,
@@ -50,7 +50,7 @@ export default function GluetunWidget({ options, integrationIds }: WidgetCompone
 
     return (
       <Flex align="center" justify="center" w="100%" h="100%" px="xs" py="sm">
-        <VpnIntegrationCard vpn={vpn.summary} />
+        <VpnIntegrationCard vpn={vpn.summary} integrationName={vpn.integration.name} />
       </Flex>
     );
   }
@@ -59,7 +59,12 @@ export default function GluetunWidget({ options, integrationIds }: WidgetCompone
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" offsetScrollbars>
       <Stack w="100%" gap="sm" py="xs" px="xs">
         {integrations.map((vpn) => (
-          <VpnIntegrationCard key={vpn.integration.id} vpn={vpn.summary} variant="list" />
+          <VpnIntegrationCard
+            key={vpn.integration.id}
+            vpn={vpn.summary}
+            integrationName={vpn.integration.name}
+            variant="list"
+          />
         ))}
       </Stack>
     </ScrollArea>

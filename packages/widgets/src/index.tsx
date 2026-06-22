@@ -20,7 +20,6 @@ import * as dnsHoleSummary from "./dns-hole/summary";
 import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
 import * as firewall from "./firewall";
-import * as gluetun from "./gluetun";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import * as immichAlbumCarousel from "./immich/album-carousel";
@@ -52,6 +51,7 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
+import * as vpn from "./vpn";
 import * as beszelSystemTable from "./beszel-system-table";
 import * as beszelSystemGrid from "./beszel-system-grid";
 import * as beszelAlerts from "./beszel-alerts";
@@ -107,7 +107,7 @@ export const widgetImports = {
   uptimeKuma,
   audioStats,
   umami,
-  gluetun,
+  vpn,
   ups,
   beszelSystemTable,
   beszelSystemGrid,
