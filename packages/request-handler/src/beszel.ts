@@ -115,8 +115,8 @@ const timePeriodConfig: Record<string, { type: string; perPage: number; cacheSec
   "1h": { type: "1m", perPage: 60, cacheSeconds: 60 },
   "12h": { type: "10m", perPage: 72, cacheSeconds: 300 },
   "24h": { type: "20m", perPage: 72, cacheSeconds: 600 },
-  "1w": { type: "1440m", perPage: 9, cacheSeconds: 1800 },
-  "30d": { type: "1440m", perPage: 32, cacheSeconds: 3600 },
+  "1w": { type: "480m", perPage: 21, cacheSeconds: 1800 },
+  "30d": { type: "480m", perPage: 90, cacheSeconds: 3600 },
 };
 
 export interface BeszelStatsData {
