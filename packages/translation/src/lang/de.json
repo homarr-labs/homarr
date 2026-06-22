@@ -3374,27 +3374,27 @@
         "pausedCount": "Pausiert"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Laufzeit Daten"
       }
     },
     "audioStats": {
       "name": "Audiostatistiken",
-      "description": "",
+      "description": "Bibliotheks- und Wiedergabestatistiken von Navidrome oder Audiobookshelf",
       "option": {
         "showArtists": {
           "label": "Künstler anzeigen",
-          "description": ""
+          "description": "Zeige die Gesamtzahl der Künstler in deiner Musikbibliothek (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
+          "label": "Alben anzeigen",
           "description": "Zeigt die Gesamtzahl der Alben in deiner Musikbibliothek an (Navidrome)"
         },
         "showSongs": {
           "label": "Songs anzeigen",
-          "description": ""
+          "description": "Zeigt die Gesamtzahl der Titel in deiner Musikbibliothek an (Navidrome)"
         },
         "showNowPlaying": {
-          "label": "",
+          "label": "\"Sie hören\" anzeigen",
           "description": ""
         },
         "showNowPlayingList": {
@@ -3720,7 +3720,7 @@
       },
       "chart": {
         "cpu": {
-          "title": "CPU-Auslastung",
+          "title": "CPU Auslastung",
           "subtitle": "",
           "series": "CPU"
         },

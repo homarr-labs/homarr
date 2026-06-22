@@ -4943,8 +4943,8 @@
       "search": "Cerca {count} container",
       "selected": "{selectCount} di {totalCount} containers selezionati",
       "footer": "Totale container {count}",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "CPU Totale: {cpu}%",
+      "totalMemory": "Mem Totale: {memory}"
     },
     "field": {
       "name": {
