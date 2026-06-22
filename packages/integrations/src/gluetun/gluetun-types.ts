@@ -114,16 +114,3 @@ export const gluetunVpnSettingsSchema = z.object({
 });
 
 export type GluetunVpnSettings = z.infer<typeof gluetunVpnSettingsSchema>;
-
-interface VpnProviderDetails {
-  protocol: string;
-  provider: string;
-}
-export interface GluetunStatusInfo {
-  vpnStatus: string;
-  dnsStatus: string;
-  publicIp: string;
-  country: string;
-  city: string;
-  vpnProvider: VpnProviderDetails;
-}

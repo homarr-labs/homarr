@@ -171,15 +171,15 @@ const createIntegrationWithBasicAuth = () =>
     ],
   });
 
-describe("GluetunIntegration.getVpnDetailsAsync", () => {
+describe("GluetunIntegration.getSummaryAsync", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  test("maps the four upstream responses into a flat GluetunStatusInfo", async () => {
+  test("maps the four upstream responses into a flat VPN summary", async () => {
     setupHappyPath();
 
-    const result = await createIntegrationWithApiKey().getVpnDetailsAsync();
+    const result = await createIntegrationWithApiKey().getSummaryAsync();
 
     expect(result).toEqual({
       vpnStatus: "running",
@@ -197,7 +197,7 @@ describe("GluetunIntegration.getVpnDetailsAsync", () => {
   test("hits each of the four control endpoints exactly once", async () => {
     setupHappyPath();
 
-    await createIntegrationWithApiKey().getVpnDetailsAsync();
+    await createIntegrationWithApiKey().getSummaryAsync();
 
     const calledPaths = mockFetch.mock.calls.map(([url]) => {
       const urlString = typeof url === "string" ? url : url.toString();
@@ -213,7 +213,7 @@ describe("GluetunIntegration.getVpnDetailsAsync", () => {
   test("sends X-API-Key header when an apiKey secret is configured", async () => {
     setupHappyPath();
 
-    await createIntegrationWithApiKey().getVpnDetailsAsync();
+    await createIntegrationWithApiKey().getSummaryAsync();
 
     for (const [, init] of mockFetch.mock.calls) {
       const headers = (init?.headers ?? {}) as Record<string, string>;
@@ -225,7 +225,7 @@ describe("GluetunIntegration.getVpnDetailsAsync", () => {
   test("sends Basic auth header when username/password are configured", async () => {
     setupHappyPath();
 
-    await createIntegrationWithBasicAuth().getVpnDetailsAsync();
+    await createIntegrationWithBasicAuth().getSummaryAsync();
 
     const expected = `Basic ${btoa(`${TEST_USERNAME}:${TEST_PASSWORD}`)}`;
     for (const [, init] of mockFetch.mock.calls) {
@@ -246,7 +246,7 @@ describe("GluetunIntegration.getVpnDetailsAsync", () => {
       return Promise.resolve(jsonResponse(VPN_STATUS_PAYLOAD));
     });
 
-    await expect(createIntegrationWithApiKey().getVpnDetailsAsync()).rejects.toThrow();
+    await expect(createIntegrationWithApiKey().getSummaryAsync()).rejects.toThrow();
   });
 
   test("throws when an upstream payload fails schema validation", async () => {
@@ -260,7 +260,7 @@ describe("GluetunIntegration.getVpnDetailsAsync", () => {
       return Promise.resolve(jsonResponse(VPN_STATUS_PAYLOAD));
     });
 
-    await expect(createIntegrationWithApiKey().getVpnDetailsAsync()).rejects.toThrow();
+    await expect(createIntegrationWithApiKey().getSummaryAsync()).rejects.toThrow();
   });
 });
 

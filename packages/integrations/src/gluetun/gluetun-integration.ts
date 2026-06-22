@@ -5,6 +5,8 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { VpnSummaryIntegration } from "../interfaces/vpn-summary/vpn-summary-integration";
+import type { VpnSummary } from "../interfaces/vpn-summary/vpn-summary-types";
 import {
   gluetunDnsStatusSchema,
   gluetunPublicIpSchema,
@@ -14,12 +16,11 @@ import {
 import type {
   GluetunDnsStatus,
   GluetunPublicIp,
-  GluetunStatusInfo,
   GluetunVpnSettings,
   GluetunVpnStatus,
 } from "./gluetun-types";
 
-export class GluetunIntegration extends Integration {
+export class GluetunIntegration extends Integration implements VpnSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = this.getAuthHeaders();
     const url = this.url("/v1/vpn/status");
@@ -34,7 +35,7 @@ export class GluetunIntegration extends Integration {
     return { success: true };
   }
 
-  public async getVpnDetailsAsync(): Promise<GluetunStatusInfo> {
+  public async getSummaryAsync(): Promise<VpnSummary> {
     const authHeaders = this.getAuthHeaders();
     const [vpnStatus, dnsStatus, publicIp, vpnSettings] = await Promise.all([
       this.getVpnStatusAsync(authHeaders),
