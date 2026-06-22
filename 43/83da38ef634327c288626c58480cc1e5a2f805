@@ -1,0 +1,19 @@
+packages/request-handler/src/beszel.ts
+  s_31f9e5b8ad57bf::t_c618e2c69856ed 118-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "4383da38ef634327c288626c58480cc1e5a2f805",
+  "prompts": {},
+  "sessions": {
+    "s_31f9e5b8ad57bf": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_11072e027ffe5pJEiF6a0QnJd9",
+        "model": "z-ai/glm-5.2"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
