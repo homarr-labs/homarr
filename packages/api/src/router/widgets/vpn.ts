@@ -3,17 +3,20 @@ import { observable } from "@trpc/server/observable";
 import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import type { GluetunStatusInfo } from "@homarr/integrations/types";
-import { gluetunVPNStatusHandler } from "@homarr/request-handler/gluetun";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { VpnSummary } from "@homarr/integrations/types";
+import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-export const gluetunRouter = createTRPCRouter({
-  getVpnInfo: publicProcedure.concat(createManyIntegrationMiddleware("query", "gluetun")).query(async ({ ctx }) => {
-    const results = await Promise.all(
+const createVpnIntegrationMiddleware = () => createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("vpn"));
+
+export const vpnRouter = createTRPCRouter({
+  getSummaries: publicProcedure.unstable_concat(createVpnIntegrationMiddleware()).query(async ({ ctx }) => {
+    return await Promise.all(
       ctx.integrations.map(async (integration) => {
-        const innerHandler = gluetunVPNStatusHandler.handler(integration, {});
+        const innerHandler = vpnSummaryHandler.handler(integration, {});
         const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
         return {
@@ -27,20 +30,18 @@ export const gluetunRouter = createTRPCRouter({
         };
       }),
     );
-
-    return results;
   }),
-  subscribeVpnInfo: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "gluetun"))
+  subscribeSummaries: publicProcedure
+    .unstable_concat(createVpnIntegrationMiddleware())
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"gluetun"> }>;
-        summary: GluetunStatusInfo | null;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"vpn"> }>;
+        summary: VpnSummary | null;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = gluetunVPNStatusHandler.handler(integrationWithSecrets, {});
+          const innerHandler = vpnSummaryHandler.handler(integrationWithSecrets, {});
           const unsubscribe = innerHandler.subscribe((summary) => {
             emit.next({
               integration,

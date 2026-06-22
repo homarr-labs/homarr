@@ -9,7 +9,6 @@ import {
   firewallMemoryJob,
   firewallVersionJob,
 } from "./jobs/integrations/firewall";
-import { gluetunJob } from "./jobs/integrations/gluetun";
 import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
@@ -22,6 +21,7 @@ import { refreshNotificationsJob } from "./jobs/integrations/notifications";
 import { timetableJob } from "./jobs/integrations/timetable";
 import { tracearrJob } from "./jobs/integrations/tracearr";
 import { umamiActiveVisitorsJob } from "./jobs/integrations/umami";
+import { vpnJob } from "./jobs/integrations/vpn";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
@@ -58,7 +58,7 @@ const getJobGroup = () => {
     timetable: timetableJob,
     tracearr: tracearrJob,
     umamiActiveVisitors: umamiActiveVisitorsJob,
-    gluetun: gluetunJob,
+    vpn: vpnJob,
   });
 };
 
