@@ -1,0 +1,36 @@
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_7c580ca8e6de67::t_c1298cc4ce0625 103,105
+  s_7c580ca8e6de67::t_97252ba6497d8a 104
+  s_7c580ca8e6de67::t_f56215b2e86d3b 70
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  s_7c580ca8e6de67::t_b7d4e75fc73468 46
+packages/request-handler/src/beszel.ts
+  s_7c580ca8e6de67::t_51c29559bc471b 78
+  s_7c580ca8e6de67::t_806b1c59ec7dd4 134
+  s_7c580ca8e6de67::t_b4aa40d5fcabe9 150
+  s_7c580ca8e6de67::t_fbdc0758ab447f 107
+  s_7c580ca8e6de67::t_d8770f8f09527f 113-119
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_7c580ca8e6de67::t_7388d6fb7ae527 374
+packages/widgets/src/beszel-system-table/component.tsx
+  s_7c580ca8e6de67::t_823d622847c2c1 79
+packages/widgets/src/beszel-alerts/component.tsx
+  s_7c580ca8e6de67::t_2a0c364244f8a8 50
+  s_7c580ca8e6de67::t_c1a65225007808 49,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "065b3de1db9f5d8dafd52adeb82e329283e9bbc4",
+  "prompts": {},
+  "sessions": {
+    "s_7c580ca8e6de67": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1106a7c9bffeAAZSJ9UUrPSiHx",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
