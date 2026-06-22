@@ -124,7 +124,7 @@ catalog:
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
-  esbuild: ^0.28.0
+  esbuild: ^0.28.1
   fast-xml-parser: ^5.9.2
   fastify: ^5.8.5
   flag-icons: ^7.5.0
@@ -178,7 +178,7 @@ catalog:
   turbo: ^2.9.18
   typescript: ^6.0.3
   vite: ^8.0.16
-  undici: 7.27.2
+  undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.8
   vite-tsconfig-paths: ^6.1.1
