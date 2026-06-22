@@ -20,6 +20,17 @@ ARG DISABLE_REDIS_LOGS='true'
 
 RUN corepack enable pnpm && pnpm build
 
+# The standalone output tracing omits server chunk source maps (.next/server/**/*.map), which is
+# where production Node stack frames point. Copy the .map files into the standalone tree (preserving
+# directory structure) so the existing standalone COPY ships them, keeping traces readable.
+# See https://github.com/homarr-labs/homarr/issues/5891
+RUN cd apps/nextjs/.next/server && \
+    find . -name '*.map' | while IFS= read -r map; do \
+      dest="../standalone/apps/nextjs/.next/server/$map"; \
+      mkdir -p "$(dirname "$dest")"; \
+      cp "$map" "$dest"; \
+    done
+
 FROM base AS runner
 WORKDIR /app
 
