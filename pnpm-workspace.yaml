@@ -151,7 +151,7 @@ catalog:
   node-loader: ^2.1.0
   octokit: ^5.0.5
   oxfmt: ^0.54.0
-  oxlint: ^1.69.0
+  oxlint: ^1.70.0
   pg: ^8.21.0
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
