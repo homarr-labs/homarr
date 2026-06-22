@@ -75,6 +75,9 @@ ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
+# Tell Node to symbolicate stack traces using the shipped .map files so production logs
+# show original source locations instead of minified frames, see https://github.com/homarr-labs/homarr/issues/5891
+ENV NODE_OPTIONS='--enable-source-maps'
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]
