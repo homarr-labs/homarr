@@ -323,6 +323,7 @@ fix: support video uploads for board backgrounds
 * Added image and video MIME constants in `packages/validation/src/media.ts`.
 * Allowed `video/mp4` and `video/webm` in backend media upload validation.
 * Added `packages/validation/src/media.spec.ts` to verify MP4/WebM uploads are accepted and unsupported uploads are rejected.
+* Expanded `packages/validation/src/media.spec.ts` to cover image upload regressions, invalid file type errors, and the 32 MB file size limit.
 * Updated `UploadMedia` so callers can choose accepted MIME types while keeping image-only uploads as the default.
 * Updated the board background settings upload button to accept both image and video media types.
 * Updated board background picker previews to support videos.
@@ -385,6 +386,24 @@ Results:
 * Targeted package type checks passed.
 * Targeted lint commands passed.
 * Lint still reports pre-existing warnings elsewhere in the repository; no new blocking lint failures were introduced.
+
+### Test Pass: Media Validation
+
+Added focused automated coverage for the media upload schema:
+
+* Bug fix coverage: `video/mp4` and `video/webm` uploads are accepted.
+* Regression coverage: existing image upload MIME types are still accepted.
+* Edge cases: unsupported file types return the `invalidFileType` custom error, and files larger than 32 MB return the `fileTooLarge` custom error.
+
+Commands run after this test update:
+
+```bash
+pnpm exec vitest run packages/validation/src/media.spec.ts
+pnpm -F @homarr/validation typecheck
+pnpm -F @homarr/validation lint
+```
+
+Result: all three commands passed.
 
 ---
 
