@@ -17,7 +17,7 @@ export class LocalIconRepository extends IconRepository {
     const medias = await db.query.medias.findMany();
     return {
       success: true,
-      icons: medias.map(mapMediaToIcon),
+      icons: medias.filter((media) => media.contentType.startsWith("image/")).map(mapMediaToIcon),
       slug: LOCAL_ICON_REPOSITORY_SLUG,
     };
   }

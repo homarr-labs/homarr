@@ -13,7 +13,7 @@ interface CopyMediaProps {
 export const CopyMedia = ({ media }: CopyMediaProps) => {
   const t = useI18n();
 
-  const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
+  const url = typeof window !== "undefined" ? `${window.location.origin}${createLocalMediaUrl(media)}` : "";
 
   // Clipboard only works on localhost or secure connections (https)
   if (url.startsWith("http://") && !url.startsWith("http://localhost")) {
@@ -31,4 +31,9 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
       )}
     </CopyButton>
   );
+};
+
+const createLocalMediaUrl = (media: { id: string; name: string }) => {
+  const extension = media.name.match(/\.[^./\\]+$/)?.[0].toLowerCase() ?? "";
+  return `/api/user-medias/${media.id}${extension}`;
 };
