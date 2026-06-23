@@ -421,7 +421,11 @@ Result: all three commands passed.
    * The video renders as the board background.
 5. Upload an unsupported file type and verify validation still rejects it.
 
-Status: manual browser verification is still pending after the latest code changes.
+Status:
+
+* Confirmed on localhost that an `.mp4` video can be selected, uploaded, saved as the board background, and rendered visibly on the board page.
+* Still pending: manual re-check that existing image backgrounds continue to work.
+* Still pending: manual re-check that unsupported file types are rejected in the UI/API flow.
 
 ### Automated Verification
 
