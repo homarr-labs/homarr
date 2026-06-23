@@ -13,12 +13,7 @@ import {
   gluetunVpnSettingsSchema,
   gluetunVpnStatusSchema,
 } from "./gluetun-types";
-import type {
-  GluetunDnsStatus,
-  GluetunPublicIp,
-  GluetunVpnSettings,
-  GluetunVpnStatus,
-} from "./gluetun-types";
+import type { GluetunDnsStatus, GluetunPublicIp, GluetunVpnSettings, GluetunVpnStatus } from "./gluetun-types";
 
 export class GluetunIntegration extends Integration implements VpnSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

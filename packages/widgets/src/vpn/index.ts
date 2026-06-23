@@ -1,4 +1,4 @@
-import { IconShieldLock } from '@tabler/icons-react';
+import { IconShieldLock } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
