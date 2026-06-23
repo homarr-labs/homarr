@@ -400,7 +400,7 @@ catalogs:
       specifier: ^4.5.0
       version: 4.5.0
     lucide-react:
-      specifier: ^1.20.0
+      specifier: ^1.21.0
       version: 1.21.0
     mantine-datatable:
       specifier: ^9.3.0
