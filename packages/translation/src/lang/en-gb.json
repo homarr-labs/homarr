@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Password",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Password suggestions",
         "suggestion": {
           "length": "Includes a minimum of 8 characters",
           "lowercase": "Includes a lower-case letter",
@@ -687,28 +687,28 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Custom Widgets",
+        "noResults": "No custom widgets yet. Create your first one!",
+        "loading": "Loading..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Create Custom Widget",
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
       },
       "edit": {
-        "title": ""
+        "title": "Edit Custom Widget"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
+      "create": "Create",
+      "import": "Import",
+      "save": "Save",
+      "delete": "Delete Custom Widget",
+      "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "export": "Export",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "edit": "Edit",
       "removeMapping": "",
       "removeColumn": "",
       "addItem": "",
@@ -5599,71 +5599,71 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your colour scheme"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Language",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your preferred language"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Default search engine",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your default search engine"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Open search results in new tab",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Open search results in new tab"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Enable DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Enable DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "First day of the week",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select the first day of the week"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Home board",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your home board"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobile home board",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your mobile home board"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Use icons for pings",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Use icons for pings"
                   }
                 }
               },

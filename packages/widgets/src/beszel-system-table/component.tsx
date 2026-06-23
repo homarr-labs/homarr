@@ -3,7 +3,7 @@
 import "./styles.css";
 
 import { useMemo, useState } from "react";
-import { Group, Indicator, Progress, Text } from "@mantine/core";
+import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import { DataTable } from "mantine-datatable";
 import {
@@ -28,6 +28,7 @@ import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
@@ -69,9 +70,13 @@ export default function BeszelSystemTableWidget({
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
-  const { data: results = [], error: systemsError } = clientApi.widget.beszel.getSystems.useQuery(
+  const {
+    data: results = [],
+    error: systemsError,
+    isPending,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
   );
   const size = getSizeConfig(width);
 
@@ -265,22 +270,35 @@ export default function BeszelSystemTableWidget({
 
   if (systemsError) throw systemsError;
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
   return (
-    <DataTable
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
-      withTableBorder={false}
-      borderRadius={0}
-      highlightOnHover
-      fz={size.fontSize}
-      records={sortedSystems}
-      columns={columns}
-      sortStatus={sortStatus}
-      onSortStatusChange={setSortStatus}
-      noRecordsText={t("noRecords")}
-      idAccessor="_key"
-      height="100%"
-      className="beszel-table"
-      onRowClick={isEditMode ? undefined : handleRowClick}
-    />
+    <div style={{ position: "relative", height: "100%" }}>
+      <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
+        <BeszelIntegrationErrorIndicator results={results} />
+      </div>
+      <DataTable
+        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+        withTableBorder={false}
+        borderRadius={0}
+        highlightOnHover
+        fz={size.fontSize}
+        records={sortedSystems}
+        columns={columns}
+        sortStatus={sortStatus}
+        onSortStatusChange={setSortStatus}
+        noRecordsText={t("noRecords")}
+        idAccessor="_key"
+        height="100%"
+        className="beszel-table"
+        onRowClick={isEditMode ? undefined : handleRowClick}
+      />
+    </div>
   );
 }
