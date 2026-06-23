@@ -535,7 +535,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
           {messages.map((message, index) => (
             <MessageBubble key={index} from={message.role} content={message.content} images={message.images} />
           ))}
-          {isStreaming ? <MessageBubble from="assistant" content={streamingText || "…"} /> : null}
+          {isStreaming ? <MessageBubble from="assistant" content={streamingText} loading={!streamingText} /> : null}
           {error ? (
             <Group gap="xs" justify="center" wrap="nowrap">
               <Text size="xs" c="red.6">
@@ -1158,7 +1158,27 @@ function AttachmentBadge({
   );
 }
 
-function MessageBubble({ from, content, images }: { from: ChatMessage["role"]; content: string; images?: string[] }) {
+function TypingDots() {
+  return (
+    <span className={classes.typing} aria-label="…">
+      <span className={classes.typingDot} />
+      <span className={classes.typingDot} />
+      <span className={classes.typingDot} />
+    </span>
+  );
+}
+
+function MessageBubble({
+  from,
+  content,
+  images,
+  loading,
+}: {
+  from: ChatMessage["role"];
+  content: string;
+  images?: string[];
+  loading?: boolean;
+}) {
   const isUser = from === "user";
   const avatar = (
     <Avatar size={22} radius="xl" variant="filled" color={isUser ? "gray" : "blue"} className={classes.avatar}>
@@ -1182,6 +1202,7 @@ function MessageBubble({ from, content, images }: { from: ChatMessage["role"]; c
             ))}
           </Group>
         ) : null}
+        {loading && !content ? <TypingDots /> : null}
         {content ? (
           <Text size="sm" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
             {content}
