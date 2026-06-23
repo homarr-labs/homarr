@@ -309,7 +309,7 @@ fix-issue-3371
 Pull Request:
 
 ```text
-TODO: Add PR link after implementation
+Not creating a pull request yet. Work is being tracked locally and on the fix branch for now.
 ```
 
 Commit Message:
@@ -318,7 +318,11 @@ Commit Message:
 fix: support video uploads for board backgrounds
 ```
 
-### Implemented Changes
+### Implementation Notes
+
+#### Implementation Progress
+
+Current status: Phase III implementation and first automated test pass are complete.
 
 * Added image and video MIME constants in `packages/validation/src/media.ts`.
 * Allowed `video/mp4` and `video/webm` in backend media upload validation.
@@ -333,12 +337,54 @@ fix: support video uploads for board backgrounds
 * Updated the media management table and copy/open actions to handle local video media URLs.
 * Updated board documentation to mention MP4 and WebM background videos.
 
-### Implementation Decisions
+#### Files Modified
+
+* `packages/validation/src/media.ts`
+* `packages/validation/src/media.spec.ts`
+* `packages/forms-collection/src/upload-media/upload-media.tsx`
+* `packages/api/src/router/medias/media-router.ts`
+* `packages/icons/src/repositories/local.icon-repository.ts`
+* `apps/nextjs/src/app/api/user-medias/[id]/route.ts`
+* `apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx`
+* `apps/nextjs/src/app/[locale]/manage/medias/page.tsx`
+* `apps/nextjs/src/app/[locale]/manage/medias/_actions/copy-media.tsx`
+* `apps/docs/docs/management/boards/index.mdx`
+* `CONTRIBUTION.md`
+
+#### Key Commits
+
+* `789b12d9` - `fix: support video uploads for board backgrounds`
+* `f1f746d3` - `docs: update issue 3371 progress log`
+* `b8f5bdde` - `test: cover media upload validation cases`
+* `64393116` - `docs: record media validation test pass`
+* `45e36931` - `docs: record video background manual check`
+
+#### Implementation Decisions
 
 * I did not make every `UploadMedia` usage accept video. The shared uploader now defaults to image-only so existing icon picker and media-manager behavior stays conservative.
 * Board background upload opts into the full media list because this is the feature that needs video support.
 * Local uploaded media URLs now include the source file extension when returned to the UI. This allows the existing `BoardBackgroundVideo` extension-based detection to work without rewriting the rendering layer.
 * Videos are filtered out of local icon indexing to avoid treating MP4/WebM uploads as selectable app icons.
+
+### Challenges Faced
+
+* The first blocker was discovering that the UI and backend both rejected videos: the file picker was image-only and the backend validator allowed only image MIME types.
+* The board already had a `BoardBackgroundVideo` component, but it only detected videos by URL extension. Uploaded local media URLs originally looked like `/api/user-medias/<id>` with no extension, so uploaded videos would not trigger the video renderer even after validation passed.
+* The shared `UploadMedia` component is also used by the icon picker. To avoid allowing videos where images are expected, I added a caller-controlled `accept` list and kept the default image-only.
+* Uploading videos to the media table also created a risk of treating videos as local icons. I filtered local icon indexing to image MIME types only.
+* A TypeScript issue came up while testing custom Zod errors: `params` only exists on custom issues, so the test now narrows `issue.code === "custom"` before checking the i18n key.
+* Git push was rejected because the remote branch had a duplicate contribution-notes commit with a different SHA. No push was completed yet; the branch needs a clean rebase or another integration choice before pushing.
+
+Tools and commands that helped:
+
+```bash
+rg "uploadMedia" .
+rg "invalidFileType" .
+rg "image/png" .
+rg "video/mp4|video/webm|<video|playsInline|autoplay|loop" .
+pnpm exec vitest run packages/validation/src/media.spec.ts
+pnpm -F @homarr/validation typecheck
+```
 
 ---
 
@@ -386,6 +432,17 @@ Results:
 * Targeted package type checks passed.
 * Targeted lint commands passed.
 * Lint still reports pre-existing warnings elsewhere in the repository; no new blocking lint failures were introduced.
+
+### Testing Strategy
+
+I used existing Vitest patterns in `packages/validation/src/form/i18n.spec.ts` as a reference and added schema-level coverage beside the validator in `packages/validation/src/media.spec.ts`.
+
+What the tests cover:
+
+* The bug fix: `video/mp4` and `video/webm` uploads are accepted.
+* Regressions: all existing supported image MIME types are still accepted.
+* Edge cases: unsupported MIME types fail with `invalidFileType`.
+* Edge cases: files larger than 32 MB fail with `fileTooLarge`.
 
 ### Test Pass: Media Validation
 
