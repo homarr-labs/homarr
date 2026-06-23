@@ -3559,6 +3559,7 @@
       "attach": "Attach",
       "attachImage": "Attach image",
       "attachKnowledge": "Knowledge",
+      "noKnowledge": "No knowledge bases in Open WebUI",
       "attachWebpage": "Webpage",
       "addUrl": "Add URL",
       "removeAttachment": "Remove attachment",

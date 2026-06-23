@@ -498,11 +498,11 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                     {t("widget.openWebUi.attachImage")}
                   </Button>
 
-                  {knowledge.length > 0 ? (
-                    <Stack gap={4}>
-                      <Text size="xs" fw={600} c="dimmed">
-                        {t("widget.openWebUi.attachKnowledge")}
-                      </Text>
+                  <Stack gap={4}>
+                    <Text size="xs" fw={600} c="dimmed">
+                      {t("widget.openWebUi.attachKnowledge")}
+                    </Text>
+                    {knowledge.length > 0 ? (
                       <Checkbox.Group value={knowledgeIds} onChange={setKnowledgeIds}>
                         <Stack gap={4}>
                           {knowledge.map((item) => (
@@ -510,8 +510,12 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                           ))}
                         </Stack>
                       </Checkbox.Group>
-                    </Stack>
-                  ) : null}
+                    ) : (
+                      <Text size="xs" c="dimmed">
+                        {t("widget.openWebUi.noKnowledge")}
+                      </Text>
+                    )}
+                  </Stack>
 
                   <Stack gap={4}>
                     <Text size="xs" fw={600} c="dimmed">
