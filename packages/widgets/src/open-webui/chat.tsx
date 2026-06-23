@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   Avatar,
@@ -36,6 +36,7 @@ import {
   IconFileText,
   IconHistory,
   IconMessage,
+  IconMicrophone,
   IconPaperclip,
   IconPlayerStopFilled,
   IconPlus,
@@ -122,14 +123,17 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   const [attachView, setAttachView] = useState<AttachView>("root");
 
   const [captureOpened, setCaptureOpened] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const streamingTextRef = useRef("");
   const viewportRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const captureStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioStreamRef = useRef<MediaStream | null>(null);
   const [composerHeight, setComposerHeight] = useState(72);
 
   const utils = clientApi.useUtils();
@@ -168,6 +172,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   const updateChat = clientApi.widget.openWebUi.updateChat.useMutation();
   const processWeb = clientApi.widget.openWebUi.processWeb.useMutation();
   const uploadFile = clientApi.widget.openWebUi.uploadFile.useMutation();
+  const transcribe = clientApi.widget.openWebUi.transcribe.useMutation();
 
   // Default to the first available model once the list loads.
   useEffect(() => {
@@ -208,8 +213,14 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
     if (!attachOpened) setAttachView("root");
   }, [attachOpened]);
 
-  // Stop the camera stream on unmount.
-  useEffect(() => () => stopCaptureStream(), []);
+  // Stop the camera and microphone streams on unmount.
+  useEffect(
+    () => () => {
+      stopCaptureStream();
+      audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+    },
+    [],
+  );
 
   clientApi.widget.openWebUi.sendMessage.useSubscription(
     {
@@ -414,12 +425,20 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
         : [...previous, file],
     );
 
-  const toggleNote = (note: NoteAttachment) =>
-    setNoteItems((previous) =>
-      previous.some((item) => item.id === note.id)
-        ? previous.filter((item) => item.id !== note.id)
-        : [...previous, note],
-    );
+  // The list endpoint truncates note bodies, so fetch the full note on attach.
+  const toggleNote = async (note: { id: string; title: string }) => {
+    if (!integrationId) return;
+    if (noteItems.some((item) => item.id === note.id)) {
+      setNoteItems((previous) => previous.filter((item) => item.id !== note.id));
+      return;
+    }
+    try {
+      const full = await utils.widget.openWebUi.getNote.fetch({ integrationId, noteId: note.id });
+      setNoteItems((previous) => [...previous, { id: full.id, title: full.title, content: full.content }]);
+    } catch {
+      setError(t("widget.openWebUi.noteError"));
+    }
+  };
 
   const toggleKnowledge = (id: string) =>
     setKnowledgeIds((previous) =>
@@ -465,11 +484,16 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
     setCaptureOpened(false);
   };
 
-  useEffect(() => {
-    if (captureOpened && videoRef.current && captureStreamRef.current) {
-      videoRef.current.srcObject = captureStreamRef.current;
+  // Attach the live stream the moment the <video> mounts (avoids a ref race
+  // where an effect runs before the modal's video element exists).
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const setVideoNode = useCallback((node: HTMLVideoElement | null) => {
+    videoRef.current = node;
+    if (node && captureStreamRef.current) {
+      node.srcObject = captureStreamRef.current;
+      void node.play().catch(() => undefined);
     }
-  }, [captureOpened]);
+  }, []);
 
   const takePhoto = () => {
     const video = videoRef.current;
@@ -483,6 +507,54 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
       { name: `capture-${Date.now()}.png`, dataUrl: canvas.toDataURL("image/png") },
     ]);
     closeCapture();
+  };
+
+  // ---- Voice recording (speech-to-text) ----
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
+      const recorder = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      recorder.addEventListener("dataavailable", (event) => {
+        if (event.data.size > 0) audioChunksRef.current.push(event.data);
+      });
+      recorder.addEventListener("stop", () => void transcribeRecording());
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setIsRecording(true);
+      setError(null);
+    } catch {
+      setError(t("widget.openWebUi.micError"));
+    }
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setIsRecording(false);
+  };
+
+  const transcribeRecording = async () => {
+    audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+    audioStreamRef.current = null;
+    const chunks = audioChunksRef.current;
+    audioChunksRef.current = [];
+    if (chunks.length === 0 || !integrationId) return;
+
+    const blob = new Blob(chunks, { type: chunks[0]?.type ?? "audio/webm" });
+    try {
+      const dataUrl = await readBlobAsDataUrl(blob);
+      const result = await transcribe.mutateAsync({
+        integrationId,
+        filename: "recording.webm",
+        contentBase64: dataUrl.split(",")[1] ?? "",
+        contentType: blob.type || "audio/webm",
+      });
+      const text = result.text.trim();
+      if (text) setInput((previous) => (previous ? `${previous} ${text}` : text));
+    } catch {
+      setError(t("widget.openWebUi.transcribeError"));
+    }
   };
 
   // Drop the noisy ":latest" tag from the label (common for Ollama models); the
@@ -607,7 +679,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                 color="yellow"
                 icon={<IconFileText size={12} />}
                 label={item.title}
-                onRemove={() => toggleNote(item)}
+                onRemove={() => void toggleNote(item)}
                 removeLabel={t("widget.openWebUi.removeAttachment")}
               />
             ))}
@@ -792,7 +864,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                             size="xs"
                             label={note.title}
                             checked={noteItems.some((item) => item.id === note.id)}
-                            onChange={() => toggleNote({ id: note.id, title: note.title, content: note.content })}
+                            onChange={() => void toggleNote({ id: note.id, title: note.title })}
                           />
                         ))}
                       </PickerList>
@@ -844,6 +916,20 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                 </ActionIcon>
               </Tooltip>
             ) : null}
+            <Tooltip
+              label={isRecording ? t("widget.openWebUi.stopRecording") : t("widget.openWebUi.record")}
+              withinPortal={false}
+            >
+              <ActionIcon
+                variant={isRecording ? "filled" : "subtle"}
+                color={isRecording ? "red" : "gray"}
+                loading={transcribe.isPending}
+                onClick={() => (isRecording ? stopRecording() : void startRecording())}
+                aria-label={t("widget.openWebUi.record")}
+              >
+                {isRecording ? <IconPlayerStopFilled size={16} /> : <IconMicrophone size={18} />}
+              </ActionIcon>
+            </Tooltip>
           </Group>
           <Group gap="xs" wrap="nowrap">
             <Select
@@ -904,9 +990,10 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
       <Modal opened={captureOpened} onClose={closeCapture} title={t("widget.openWebUi.capture")} centered>
         <Stack gap="sm">
           <video
-            ref={videoRef}
+            ref={setVideoNode}
             autoPlay
             playsInline
+            muted
             aria-label={t("widget.openWebUi.capture")}
             className={classes.captureVideo}
           >
@@ -964,13 +1051,15 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   );
 }
 
-const readFileAsDataUrl = (file: File): Promise<string> =>
+const readBlobAsDataUrl = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => resolve(reader.result as string));
     reader.addEventListener("error", () => reject(reader.error ?? new Error("Failed to read file")));
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
   });
+
+const readFileAsDataUrl = readBlobAsDataUrl;
 
 const hostnameOf = (url: string): string => {
   try {
