@@ -10,6 +10,17 @@ export const openWebUiModelSchema = z.object({
   name: z.string().nullish(),
   object: z.string().nullish(),
   owned_by: z.string().nullish(),
+  // Open WebUI exposes per-model capabilities here when configured; `vision`
+  // tells us whether the model can accept image attachments.
+  info: z
+    .object({
+      meta: z
+        .object({
+          capabilities: z.object({ vision: z.boolean().nullish() }).nullish(),
+        })
+        .nullish(),
+    })
+    .nullish(),
 });
 
 export const openWebUiModelsResponseSchema = z.object({
@@ -43,6 +54,57 @@ export const openWebUiChatMessageSchema = z.object({
 });
 
 export type OpenWebUiChatMessage = z.infer<typeof openWebUiChatMessageSchema>;
+
+// Multimodal content part (OpenAI vision format). Used only for outbound
+// completion requests so users can attach images to a message.
+export const openWebUiContentPartSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("text"), text: z.string() }),
+  z.object({ type: z.literal("image_url"), image_url: z.object({ url: z.string() }) }),
+]);
+
+// A completion message can carry plain text or multimodal parts (text + images).
+export const openWebUiCompletionMessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.union([z.string(), z.array(openWebUiContentPartSchema)]),
+});
+
+export type OpenWebUiCompletionMessage = z.infer<typeof openWebUiCompletionMessageSchema>;
+
+// GET /api/v1/knowledge/ — knowledge bases (RAG collections owned by the user).
+// Newer Open WebUI versions paginate the list as `{ items, total }`; older ones
+// return a bare array. Accept both and normalise in the integration.
+export const openWebUiKnowledgeSchema = z.object({
+  id: z.string(),
+  name: z.string().nullish(),
+  description: z.string().nullish(),
+});
+
+export type OpenWebUiKnowledge = z.infer<typeof openWebUiKnowledgeSchema>;
+
+export const openWebUiKnowledgeListSchema = z.union([
+  z.array(openWebUiKnowledgeSchema),
+  z.object({ items: z.array(openWebUiKnowledgeSchema) }),
+]);
+
+// POST /api/v1/retrieval/process/web — ingests a URL into a temporary vector
+// collection. We retrieve from that collection at send time and inject the
+// results as context (Open WebUI does not fetch URLs at completion time).
+export const openWebUiProcessWebResponseSchema = z.object({
+  collection_name: z.string(),
+  filename: z.string().nullish(),
+  file: z.object({ meta: z.object({ name: z.string().nullish() }).nullish() }).nullish(),
+});
+
+// POST /api/v1/retrieval/query/collection — top-k chunks per collection.
+export const openWebUiCollectionQueryResponseSchema = z.object({
+  documents: z.array(z.array(z.string())).nullish(),
+});
+
+// A web page ingested for grounding: the collection to retrieve from + a label.
+export interface OpenWebUiWebDocument {
+  collectionName: string;
+  title: string;
+}
 
 // GET /api/v1/chats/ — list of the user's chats (native Open WebUI shape).
 export const openWebUiChatListItemSchema = z.object({

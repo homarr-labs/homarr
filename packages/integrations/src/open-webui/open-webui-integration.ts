@@ -8,15 +8,20 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type {
   OpenWebUiChat,
   OpenWebUiChatListItem,
-  OpenWebUiChatMessage,
   OpenWebUiChatPayload,
+  OpenWebUiCompletionMessage,
+  OpenWebUiKnowledge,
   OpenWebUiModel,
+  OpenWebUiWebDocument,
 } from "./open-webui-types";
 import {
   openWebUiChatListItemSchema,
   openWebUiChatSchema,
+  openWebUiCollectionQueryResponseSchema,
   openWebUiCompletionChunkSchema,
+  openWebUiKnowledgeListSchema,
   openWebUiModelsResponseSchema,
+  openWebUiProcessWebResponseSchema,
 } from "./open-webui-types";
 
 const logger = createLogger({ module: "open-webui-integration" });
@@ -47,6 +52,65 @@ export class OpenWebUiIntegration extends Integration {
     }
 
     return openWebUiModelsResponseSchema.parse(await response.json()).data;
+  }
+
+  /**
+   * List the knowledge bases (RAG collections) the user can ground chats on.
+   */
+  public async getKnowledgeAsync(): Promise<OpenWebUiKnowledge[]> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/knowledge/"), {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiKnowledgeListSchema.parse(await response.json());
+    return Array.isArray(parsed) ? parsed : parsed.items;
+  }
+
+  /**
+   * Ingest a web page into a temporary vector collection and return a handle to
+   * retrieve from it. Open WebUI does not crawl URLs at completion time, so we
+   * embed the page here and inject retrieved chunks ourselves at send time.
+   */
+  public async processWebAsync(url: string): Promise<OpenWebUiWebDocument> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/retrieval/process/web"), {
+      method: "POST",
+      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ url, collection_name: "" }),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiProcessWebResponseSchema.parse(await response.json());
+    return { collectionName: parsed.collection_name, title: parsed.file?.meta?.name ?? url };
+  }
+
+  /**
+   * Retrieve the most relevant chunks for a query across the given collections
+   * (web pages and/or knowledge bases). Returns the chunk texts, best-effort.
+   */
+  public async queryCollectionsAsync(collectionNames: string[], query: string, k = 4): Promise<string[]> {
+    if (collectionNames.length === 0 || query.trim() === "") {
+      return [];
+    }
+
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/retrieval/query/collection"), {
+      method: "POST",
+      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ collection_names: collectionNames, query, k }),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiCollectionQueryResponseSchema.parse(await response.json());
+    return (parsed.documents ?? []).flat();
   }
 
   /**
@@ -119,7 +183,7 @@ export class OpenWebUiIntegration extends Integration {
    * content delta. Resolves when the stream completes ([DONE]) or is aborted.
    */
   public async streamChatCompletionAsync(
-    params: { model: string; messages: OpenWebUiChatMessage[] },
+    params: { model: string; messages: OpenWebUiCompletionMessage[] },
     onDelta: (delta: string) => void,
     signal: AbortSignal,
   ): Promise<void> {

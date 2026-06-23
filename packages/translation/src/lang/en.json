@@ -3554,6 +3554,15 @@
       "back": "Back",
       "send": "Send",
       "stop": "Stop",
+      "retry": "Retry",
+      "visionWarning": "This model may not support images",
+      "attach": "Attach",
+      "attachImage": "Attach image",
+      "attachKnowledge": "Knowledge",
+      "attachWebpage": "Webpage",
+      "addUrl": "Add URL",
+      "removeAttachment": "Remove attachment",
+      "webError": "Could not load that web page",
       "error": {
         "internalServerError": "Failed to reach Open WebUI"
       }
