@@ -37,13 +37,16 @@ Refer to the [Gluetun control server documentation](https://github.com/qdm12/glu
 
 ### Secrets
 
-Gluetun's control server can be protected with either an API key or HTTP Basic authentication. Configure one of the
-following options in Homarr, matching how your Gluetun instance is set up.
+Gluetun's control server can be left unprotected or secured with either an API key or HTTP Basic authentication.
+Choose the option that matches how your Gluetun instance integration is set up.
 
 <IntegrationSecrets secrets={[{
-  credentials: ['apiKey'],
+  credentials: [],
   steps: [],
 },{
   credentials: ['username', 'password'],
   steps: [],
-}]} />
+},{
+  credentials: ['apiKey'],
+  steps: [],
+},,]} />

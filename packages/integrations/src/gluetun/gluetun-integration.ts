@@ -101,11 +101,15 @@ export class GluetunIntegration extends Integration implements VpnSummaryIntegra
       return { "X-API-Key": this.getSecretValue("apiKey") };
     }
 
-    const username = this.getSecretValue("username");
-    const password = this.getSecretValue("password");
+    if (this.hasSecretValue("username") && this.hasSecretValue("password")) {
+      const username = this.getSecretValue("username");
+      const password = this.getSecretValue("password");
 
-    const encodedCredentials = btoa(`${username}:${password}`);
+      const encodedCredentials = btoa(`${username}:${password}`);
 
-    return { Authorization: `Basic ${encodedCredentials}` };
+      return { Authorization: `Basic ${encodedCredentials}` };
+    }
+
+    return {};
   }
 }

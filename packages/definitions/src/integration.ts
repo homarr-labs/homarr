@@ -491,7 +491,7 @@ export const integrationDefs = {
   },
   gluetun: {
     name: "Gluetun",
-    secretKinds: [["username", "password"], ["apiKey"]],
+    secretKinds: [["username", "password"], ["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
