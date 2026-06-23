@@ -138,7 +138,7 @@ catalog:
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
-  lucide-react: ^1.20.0
+  lucide-react: ^1.21.0
   "mantine-contextmenu": ^9.3.0
   mantine-datatable: ^9.3.0
   mantine-react-table: npm:mantine-react-table-open@9.0.3
@@ -211,7 +211,7 @@ overrides:
   "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.6"
   "esbuild@<=0.24.2": ">=0.28.0"
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
-  "hono@<4.6.5": ">=4.12.25"
+  "hono@<4.6.5": ">=4.12.26"
   "linkifyjs@<4.3.2": ">=4.3.3"
   "nanoid@>=4.0.0 <5.0.9": ">=5.1.11"
   "prismjs@<1.30.0": ">=1.30.0"
