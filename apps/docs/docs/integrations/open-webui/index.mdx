@@ -1,0 +1,39 @@
+---
+title: "Open WebUI"
+description: "Self-hosted AI chat interface for local and remote LLM providers"
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { openWebUiIntegration } from ".";
+import { openWebUiWidget } from "../../widgets/open-webui";
+
+<IntegrationHeader integration={openWebUiIntegration} categories={["AI", "Chat"]} />
+
+[Open WebUI](https://openwebui.com/) is a self-hosted AI chat interface that aggregates multiple LLM providers (Ollama, OpenAI-compatible APIs, and more) behind a single API. Homarr connects to it so you can chat with your models directly from your dashboard.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: openWebUiWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+:::info URL configuration
+Use the root URL of your Open WebUI instance, for example `http://localhost:3000`. Homarr calls the Open WebUI API under `/api` automatically.
+:::
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [],
+    },
+  ]}
+/>

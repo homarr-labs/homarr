@@ -23,3 +23,4 @@ export * from "./navidrome/navidrome-types";
 export * from "./paperless-ngx/paperless-ngx-types";
 export * from "./umami/umami-types";
 export * from "./beszel/beszel-types";
+export * from "./open-webui/open-webui-types";

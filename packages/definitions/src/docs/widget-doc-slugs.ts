@@ -50,4 +50,5 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   beszelAlerts: "beszel-alerts",
   beszelSystemStats: "beszel-system-stats",
   customApi: "custom-api",
+  openWebUi: "open-webui",
 };

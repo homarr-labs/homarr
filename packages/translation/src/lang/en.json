@@ -3532,6 +3532,32 @@
       "executeSuccess": "Action executed successfully",
       "executeFailed": "Action failed. Check the widget configuration."
     },
+    "openWebUi": {
+      "name": "AI Chat",
+      "description": "Chat with AI models through Open WebUI, with model picking and history.",
+      "option": {
+        "systemPrompt": {
+          "label": "System prompt",
+          "description": "Optional instruction prepended to every conversation."
+        },
+        "showHistory": {
+          "label": "Show chat history",
+          "description": "Show a button to browse and reopen previous Open WebUI chats."
+        }
+      },
+      "selectModel": "Select a model",
+      "noModels": "No models available",
+      "emptyState": "Start a conversation",
+      "messagePlaceholder": "Type a message…",
+      "newChat": "New chat",
+      "history": "History",
+      "back": "Back",
+      "send": "Send",
+      "stop": "Stop",
+      "error": {
+        "internalServerError": "Failed to reach Open WebUI"
+      }
+    },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",

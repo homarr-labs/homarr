@@ -48,6 +48,7 @@ export const widgetKinds = [
   "beszelAlerts",
   "beszelSystemStats",
   "customApi",
+  "openWebUi",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 

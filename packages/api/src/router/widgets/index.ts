@@ -38,4 +38,5 @@ export const widgetRouter = createTRPCRouter({
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
+  openWebUi: lazy(() => import("./open-webui").then((mod) => mod.openWebUiRouter)),
 });

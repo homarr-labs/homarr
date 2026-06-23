@@ -39,6 +39,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
   anchorNote: ["anchor"],
+  openWebUi: ["openWebUi"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

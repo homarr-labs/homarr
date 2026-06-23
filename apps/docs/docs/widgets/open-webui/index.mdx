@@ -1,0 +1,47 @@
+---
+title: "AI Chat"
+description: "Chat with AI models through Open WebUI, with model picking and history."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { openWebUiWidget } from ".";
+import { openWebUiIntegration } from "@site/docs/integrations/open-webui";
+
+<WidgetHeader widget={openWebUiWidget} categories={["AI", "Chat"]} />
+
+The AI Chat widget lets you chat with AI models served by Open WebUI directly from your dashboard. Responses stream in token-by-token, you can pick any model your Open WebUI instance exposes (Ollama, OpenAI, and other configured providers), and you can browse and reopen your Open WebUI chat history.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: openWebUiIntegration,
+    },
+  ]}
+/>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={openWebUiWidget.configuration} />
+
+### Features
+
+| Feature                 | Description                                                                                                                               |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Model picker**        | Lists every model exposed by Open WebUI's `/api/models` endpoint, selectable from the chat input. The first model is selected by default. |
+| **Streaming responses** | Assistant replies stream in live as they are generated.                                                                                   |
+| **Chat history**        | Browse and reopen previous chats. New conversations are saved back to Open WebUI.                                                         |
+
+### Notes
+
+- The widget uses a single Open WebUI integration.
+- Conversations are stored in Open WebUI itself, under the account that owns the API key, so they also appear in the Open WebUI app.
