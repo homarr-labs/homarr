@@ -2409,7 +2409,8 @@
     "vpn": {
       "name": "VPN",
       "description": "Overview of your VPN connections",
-      "serviceUnavailable": "VPN unavailable"
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
