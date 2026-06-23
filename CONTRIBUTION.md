@@ -158,7 +158,7 @@ The file picker only accepts images, and backend validation rejects video MIME t
 
 ## Match
 
-I will look for similar patterns in the codebase before implementing the fix.
+I looked for similar patterns in the codebase before implementing the fix.
 
 ### Patterns to Search For
 
@@ -177,6 +177,25 @@ rg "image/png" -n
 rg "accept=" apps/nextjs/src -n
 rg "video/mp4|video/webm|<video|playsInline|autoplay|loop" -n
 ```
+
+### Actual Code Paths Found
+
+The search showed that the board background upload path uses shared media upload code:
+
+* Board background settings UI:
+  `apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx`
+* Shared media upload button:
+  `packages/forms-collection/src/upload-media/upload-media.tsx`
+* Backend media upload validator:
+  `packages/validation/src/media.ts`
+* Upload mutation:
+  `packages/api/src/router/medias/media-router.ts`
+* Local media serving route:
+  `apps/nextjs/src/app/api/user-medias/[id]/route.ts`
+* Existing board background video rendering:
+  `apps/nextjs/src/components/layout/background.tsx`
+
+Important finding: video rendering already existed for URLs ending in video extensions such as `.mp4` and `.webm`. The missing pieces were upload validation, the file picker accept list, and local uploaded media URLs not including an extension.
 
 ---
 
@@ -279,12 +298,12 @@ Expected changes:
 
 ## Implement
 
-Implementation will occur in Phase III.
+Implementation is in progress on the working branch.
 
 Branch:
 
 ```text
-fix/video-board-background-upload
+fix-issue-3371
 ```
 
 Pull Request:
@@ -298,6 +317,27 @@ Commit Message:
 ```text
 fix: support video uploads for board backgrounds
 ```
+
+### Implemented Changes
+
+* Added image and video MIME constants in `packages/validation/src/media.ts`.
+* Allowed `video/mp4` and `video/webm` in backend media upload validation.
+* Added `packages/validation/src/media.spec.ts` to verify MP4/WebM uploads are accepted and unsupported uploads are rejected.
+* Updated `UploadMedia` so callers can choose accepted MIME types while keeping image-only uploads as the default.
+* Updated the board background settings upload button to accept both image and video media types.
+* Updated board background picker previews to support videos.
+* Preserved the existing board video renderer by making uploaded local media URLs include the original file extension, such as `/api/user-medias/<id>.mp4`.
+* Updated the local media route so `/api/user-medias/<id>` and `/api/user-medias/<id>.<extension>` both resolve to the same stored media.
+* Avoided adding video uploads to the local icon repository, because icons should remain image-only.
+* Updated the media management table and copy/open actions to handle local video media URLs.
+* Updated board documentation to mention MP4 and WebM background videos.
+
+### Implementation Decisions
+
+* I did not make every `UploadMedia` usage accept video. The shared uploader now defaults to image-only so existing icon picker and media-manager behavior stays conservative.
+* Board background upload opts into the full media list because this is the feature that needs video support.
+* Local uploaded media URLs now include the source file extension when returned to the UI. This allows the existing `BoardBackgroundVideo` extension-based detection to work without rewriting the rendering layer.
+* Videos are filtered out of local icon indexing to avoid treating MP4/WebM uploads as selectable app icons.
 
 ---
 
@@ -321,6 +361,31 @@ pnpm typecheck
 pnpm test
 ```
 
+### Verification Run
+
+Targeted verification completed:
+
+```bash
+pnpm exec vitest run packages/validation/src/media.spec.ts
+pnpm -F @homarr/validation typecheck
+pnpm -F @homarr/forms-collection typecheck
+pnpm -F @homarr/icons typecheck
+pnpm -F @homarr/api typecheck
+pnpm -F @homarr/nextjs typecheck
+pnpm -F @homarr/validation lint
+pnpm -F @homarr/forms-collection lint
+pnpm -F @homarr/icons lint
+pnpm -F @homarr/api lint
+pnpm -F @homarr/nextjs lint
+```
+
+Results:
+
+* New validation spec passed.
+* Targeted package type checks passed.
+* Targeted lint commands passed.
+* Lint still reports pre-existing warnings elsewhere in the repository; no new blocking lint failures were introduced.
+
 ---
 
 ## Evaluate
@@ -336,6 +401,8 @@ pnpm test
    * The upload succeeds.
    * The video renders as the board background.
 5. Upload an unsupported file type and verify validation still rejects it.
+
+Status: manual browser verification is still pending after the latest code changes.
 
 ### Automated Verification
 
