@@ -325,7 +325,12 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
     }
   };
 
-  const modelData = useMemo(() => models.map((m) => ({ value: m.id, label: m.name ?? m.id })), [models]);
+  // Drop the noisy ":latest" tag from the label (common for Ollama models); the
+  // value keeps the full id so the right model is still sent.
+  const modelData = useMemo(
+    () => models.map((m) => ({ value: m.id, label: (m.name ?? m.id).replace(/:latest$/i, "") })),
+    [models],
+  );
   const knowledgeName = (id: string) => knowledge.find((item) => item.id === id)?.name ?? id;
   const hasAttachments = attachments.length > 0 || knowledgeIds.length > 0 || webItems.length > 0;
 
@@ -574,7 +579,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
               nothingFoundMessage={t("widget.openWebUi.noModels")}
               rightSection={modelsLoading ? <Loader size="xs" /> : undefined}
               comboboxProps={{ withinPortal: false }}
-              maw={160}
+              maw={200}
               className={classes.modelSelect}
             />
             {isStreaming ? (
