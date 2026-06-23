@@ -1,3 +1,5 @@
+import { FormData } from "undici";
+
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -10,8 +12,10 @@ import type {
   OpenWebUiChatListItem,
   OpenWebUiChatPayload,
   OpenWebUiCompletionMessage,
+  OpenWebUiFileSummary,
   OpenWebUiKnowledge,
   OpenWebUiModel,
+  OpenWebUiNote,
   OpenWebUiWebDocument,
 } from "./open-webui-types";
 import {
@@ -19,9 +23,13 @@ import {
   openWebUiChatSchema,
   openWebUiCollectionQueryResponseSchema,
   openWebUiCompletionChunkSchema,
+  openWebUiFileListSchema,
+  openWebUiKnowledgeDetailSchema,
   openWebUiKnowledgeListSchema,
   openWebUiModelsResponseSchema,
+  openWebUiNoteListSchema,
   openWebUiProcessWebResponseSchema,
+  openWebUiUploadedFileSchema,
 } from "./open-webui-types";
 
 const logger = createLogger({ module: "open-webui-integration" });
@@ -68,6 +76,86 @@ export class OpenWebUiIntegration extends Integration {
 
     const parsed = openWebUiKnowledgeListSchema.parse(await response.json());
     return Array.isArray(parsed) ? parsed : parsed.items;
+  }
+
+  /**
+   * List the user's uploaded files (for the "Attach Files" picker).
+   */
+  public async listFilesAsync(): Promise<OpenWebUiFileSummary[]> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiFileListSchema.parse(await response.json());
+    const files = Array.isArray(parsed) ? parsed : parsed.items;
+    return files.map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
+  }
+
+  /**
+   * List the files contained in a knowledge base (for the expandable picker).
+   */
+  public async getKnowledgeFilesAsync(knowledgeId: string): Promise<OpenWebUiFileSummary[]> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/knowledge/${knowledgeId}`), {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiKnowledgeDetailSchema.parse(await response.json());
+    return (parsed.files ?? []).map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
+  }
+
+  /**
+   * List the user's notes (for the "Attach Notes" picker).
+   */
+  public async listNotesAsync(): Promise<OpenWebUiNote[]> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/notes/"), {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiNoteListSchema.parse(await response.json());
+    const notes = Array.isArray(parsed) ? parsed : parsed.items;
+    return notes.map((note) => ({
+      id: note.id,
+      title: note.title ?? "Untitled note",
+      content: note.data?.content?.md ?? "",
+    }));
+  }
+
+  /**
+   * Upload a file to Open WebUI so it can be retrieved from later. Returns the
+   * new file id (its vector collection is `file-{id}`).
+   */
+  public async uploadFileAsync(
+    filename: string,
+    base64Content: string,
+    contentType: string,
+  ): Promise<OpenWebUiFileSummary> {
+    const form = new FormData();
+    form.append("file", new Blob([Buffer.from(base64Content, "base64")], { type: contentType }), filename);
+
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
+      method: "POST",
+      headers: this.getAuthHeaders(),
+      body: form,
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiUploadedFileSchema.parse(await response.json());
+    return { id: parsed.id, name: parsed.meta?.name ?? parsed.filename ?? filename };
   }
 
   /**

@@ -86,6 +86,61 @@ export const openWebUiKnowledgeListSchema = z.union([
   z.object({ items: z.array(openWebUiKnowledgeSchema) }),
 ]);
 
+// A file stored in Open WebUI (uploaded directly or part of a knowledge base).
+export const openWebUiFileSchema = z.object({
+  id: z.string(),
+  filename: z.string().nullish(),
+  meta: z.object({ name: z.string().nullish(), content_type: z.string().nullish() }).nullish(),
+});
+
+export type OpenWebUiFile = z.infer<typeof openWebUiFileSchema>;
+
+export const openWebUiFileListSchema = z.union([
+  z.array(openWebUiFileSchema),
+  z.object({ items: z.array(openWebUiFileSchema) }),
+]);
+
+// POST /api/v1/files/ — upload response (we only need the new file id + name).
+export const openWebUiUploadedFileSchema = z.object({
+  id: z.string(),
+  filename: z.string().nullish(),
+  meta: z.object({ name: z.string().nullish() }).nullish(),
+});
+
+// GET /api/v1/knowledge/{id} — knowledge base with its files.
+export const openWebUiKnowledgeDetailSchema = z.object({
+  id: z.string(),
+  name: z.string().nullish(),
+  files: z.array(openWebUiFileSchema).nullish(),
+});
+
+export type OpenWebUiKnowledgeDetail = z.infer<typeof openWebUiKnowledgeDetailSchema>;
+
+// GET /api/v1/notes/ — user notes (markdown content under data.content.md).
+export const openWebUiNoteSchema = z.object({
+  id: z.string(),
+  title: z.string().nullish(),
+  data: z.object({ content: z.object({ md: z.string().nullish() }).nullish() }).nullish(),
+});
+
+export const openWebUiNoteListSchema = z.union([
+  z.array(openWebUiNoteSchema),
+  z.object({ items: z.array(openWebUiNoteSchema) }),
+]);
+
+// A note flattened for the widget: id, title and its markdown body.
+export interface OpenWebUiNote {
+  id: string;
+  title: string;
+  content: string;
+}
+
+// A file flattened for the widget: id and a display name.
+export interface OpenWebUiFileSummary {
+  id: string;
+  name: string;
+}
+
 // POST /api/v1/retrieval/process/web — ingests a URL into a temporary vector
 // collection. We retrieve from that collection at send time and inject the
 // results as context (Open WebUI does not fetch URLs at completion time).

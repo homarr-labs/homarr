@@ -38,6 +38,24 @@
   max-width: 85%;
 }
 
+.menuRowLabel {
+  flex: 1;
+  text-align: left;
+  font-weight: 400;
+}
+
+.attachmentBadge {
+  max-width: 180px;
+  text-transform: none;
+}
+
+.captureVideo {
+  width: 100%;
+  max-height: 50vh;
+  border-radius: var(--mantine-radius-md);
+  background-color: black;
+}
+
 .thumb {
   position: relative;
   line-height: 0;

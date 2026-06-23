@@ -6,8 +6,11 @@ import { createIntegrationAsync } from "@homarr/integrations";
 import {
   openWebUiChatRequestHandler,
   openWebUiChatsRequestHandler,
+  openWebUiFilesRequestHandler,
+  openWebUiKnowledgeFilesRequestHandler,
   openWebUiKnowledgeRequestHandler,
   openWebUiModelsRequestHandler,
+  openWebUiNotesRequestHandler,
 } from "@homarr/request-handler/open-webui";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -57,26 +60,30 @@ const groundMessagesAsync = async (
   client: { queryCollectionsAsync: (names: string[], query: string, k?: number) => Promise<string[]> },
   messages: CompletionMessage[],
   collections: string[],
+  contextTexts: string[],
 ): Promise<CompletionMessage[]> => {
-  if (collections.length === 0) return messages;
+  if (collections.length === 0 && contextTexts.length === 0) return messages;
 
   const lastUserMessage = messages.findLast((message) => message.role === "user");
   const query = lastUserMessage ? messageText(lastUserMessage) : "";
 
   let documents: string[] = [];
-  try {
-    documents = await client.queryCollectionsAsync(collections, query, 4);
-  } catch (error) {
-    logger.warn("Open WebUI context retrieval failed; continuing without it", { error });
+  if (collections.length > 0) {
+    try {
+      documents = await client.queryCollectionsAsync(collections, query, 4);
+    } catch (error) {
+      logger.warn("Open WebUI context retrieval failed; continuing without it", { error });
+    }
   }
-  if (documents.length === 0) return messages;
 
-  const context = documents.join("\n\n");
+  const blocks = [...documents, ...contextTexts].filter((block) => block.trim() !== "");
+  if (blocks.length === 0) return messages;
+
   const contextMessage: CompletionMessage = {
     role: "system",
     content:
-      "Use the following context from the user's attached sources (web pages and knowledge bases) " +
-      `to answer. If the answer is not in the context, say so.\n\n${context}`,
+      "Use the following context from the user's attached sources (web pages, knowledge bases, " +
+      `files, notes and chats) to answer. If the answer is not in the context, say so.\n\n${blocks.join("\n\n")}`,
   };
   return [contextMessage, ...messages];
 };
@@ -100,6 +107,29 @@ export const openWebUiRouter = createTRPCRouter({
     return data;
   }),
 
+  getFiles: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    const handler = openWebUiFilesRequestHandler.handler(ctx.integration, {});
+    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data;
+  }),
+
+  getNotes: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    const handler = openWebUiNotesRequestHandler.handler(ctx.integration, {});
+    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data;
+  }),
+
+  getKnowledgeFiles: publicProcedure
+    .input(z.object({ knowledgeId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .query(async ({ ctx, input }) => {
+      const handler = openWebUiKnowledgeFilesRequestHandler.handler(ctx.integration, {
+        knowledgeId: input.knowledgeId,
+      });
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
+
   // Ingest a web page so its content can ground later messages. Returns the
   // collection to retrieve from plus a display title.
   processWeb: protectedProcedure
@@ -108,6 +138,16 @@ export const openWebUiRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const client = await createIntegrationAsync(ctx.integration);
       return await client.processWebAsync(input.url);
+    }),
+
+  // Upload a file (e.g. a document) so it can be retrieved from later. Returns
+  // the file id; its vector collection is `file-{id}`.
+  uploadFile: protectedProcedure
+    .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .mutation(async ({ ctx, input }) => {
+      const client = await createIntegrationAsync(ctx.integration);
+      return await client.uploadFileAsync(input.filename, input.contentBase64, input.contentType);
     }),
 
   getChat: publicProcedure
@@ -152,9 +192,11 @@ export const openWebUiRouter = createTRPCRouter({
       z.object({
         model: z.string(),
         messages: z.array(completionMessageSchema),
-        // Collections to ground the reply on (web pages + knowledge bases). We
-        // retrieve relevant chunks and inject them as context before streaming.
+        // Collections to ground the reply on (web pages, knowledge bases, files).
+        // We retrieve relevant chunks and inject them before streaming.
         collections: z.array(z.string()).optional(),
+        // Verbatim context blocks (notes, referenced chats) injected as-is.
+        contextTexts: z.array(z.string()).optional(),
       }),
     )
     .concat(createOneIntegrationMiddleware("query", "openWebUi"))
@@ -165,7 +207,12 @@ export const openWebUiRouter = createTRPCRouter({
         void (async () => {
           try {
             const client = await createIntegrationAsync(ctx.integration);
-            const messages = await groundMessagesAsync(client, input.messages, input.collections ?? []);
+            const messages = await groundMessagesAsync(
+              client,
+              input.messages,
+              input.collections ?? [],
+              input.contextTexts ?? [],
+            );
             await client.streamChatCompletionAsync(
               { model: input.model, messages },
               (delta) => emit.next({ type: "delta", content: delta }),
