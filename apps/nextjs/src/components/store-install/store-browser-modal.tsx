@@ -26,7 +26,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { StoreSubmission } from "./store-api";
 import { fetchStoreSubmissions, getStoreFileUrl } from "./store-api";
 
-const MARKETPLACE_URL = process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://homarr.dev/marketplace";
+const WORKSHOP_URL = process.env.NEXT_PUBLIC_WORKSHOP_URL || "https://homarr.dev/workshop";
 
 interface Props {
   type: "css" | "widget";
@@ -59,15 +59,15 @@ export const StoreBrowserModal = ({ type, opened, onClose, onSelect, actionLabel
       onClose={handleClose}
       title={
         <Group gap="sm">
-          <Text fw={600}>Install from marketplace</Text>
+          <Text fw={600}>Install from Workshop</Text>
           <Anchor
-            href={MARKETPLACE_URL}
+            href={WORKSHOP_URL}
             target="_blank"
             rel="noopener noreferrer"
             size="xs"
             style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
           >
-            Open Marketplace <IconExternalLink size={12} />
+            Open Workshop <IconExternalLink size={12} />
           </Anchor>
         </Group>
       }
@@ -81,7 +81,7 @@ export const StoreBrowserModal = ({ type, opened, onClose, onSelect, actionLabel
           </Center>
         )}
 
-        {error && <Alert color="red">Failed to load the marketplace: {errorText}</Alert>}
+        {error && <Alert color="red">Failed to load the workshop: {errorText}</Alert>}
 
         {data && data.items.length === 0 && (
           <Text c="dimmed" ta="center" py="xl">
@@ -174,6 +174,11 @@ const SubmissionCard = ({
 
       <Stack gap={4} p="sm">
         <Group gap="xs" wrap="nowrap">
+          <Box
+            w={8}
+            h={8}
+            style={{ borderRadius: "50%", flexShrink: 0, backgroundColor: submission.type === "css" ? "var(--mantine-color-blue-5)" : "var(--mantine-color-yellow-5)" }}
+          />
           <Text fw={600} size="sm" truncate style={{ flex: 1 }}>
             {submission.title}
           </Text>
@@ -201,10 +206,10 @@ const SubmissionCard = ({
             variant="light"
             size="sm"
             component="a"
-            href={`${MARKETPLACE_URL}/${submission.id}/`}
+            href={`${WORKSHOP_URL}/${submission.id}/`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View in marketplace"
+            aria-label="View in workshop"
           >
             <IconExternalLink size={14} />
           </ActionIcon>

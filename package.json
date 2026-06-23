@@ -17,7 +17,7 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
-    "dev:marketplace": "docker compose -f ./apps/store/docker-compose.yml up",
+    "dev:workshop": "docker compose -f ./apps/store/docker-compose.yml up",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",

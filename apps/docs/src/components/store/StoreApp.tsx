@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   IconArrowBigDown,
   IconArrowBigUp,
-  IconBrandCss3,
   IconBrandGithub,
   IconCheck,
   IconChevronLeft,
@@ -13,10 +12,8 @@ import {
   IconLogout,
   IconPackage,
   IconPlus,
-  IconPuzzle,
   IconSearch,
   IconTrash,
-  IconUser,
   IconX,
 } from "@tabler/icons-react";
 
@@ -40,11 +37,8 @@ import { SubmitForm } from "./SubmitForm";
 import type { SortKey, TypeFilter } from "./useStore";
 import { useStore } from "./useStore";
 
-const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number }>> = {
-  css: IconBrandCss3,
-  widget: IconPuzzle,
-};
-const typeBadgeVariants: Record<SubmissionType, "secondary" | "default"> = { css: "secondary", widget: "default" };
+const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
+const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
 const filterActiveClass = "bg-background text-foreground shadow-sm";
 const filterInactiveClass = "text-muted-foreground hover:text-foreground";
 const copyState = [
@@ -56,11 +50,11 @@ const emptyState = {
   filtered: { title: "No matching results", hint: "Try adjusting your filters or search." },
 } as const;
 
-const typeFilters: { value: TypeFilter; label: string; Icon?: React.ComponentType<{ size: number }> }[] = [
+const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
-  { value: "widget", label: "Widgets", Icon: IconPuzzle },
-  { value: "css", label: "CSS", Icon: IconBrandCss3 },
-  { value: "yours", label: "Yours", Icon: IconUser },
+  { value: "widget", label: "Widgets", dot: typeDotColors.widget },
+  { value: "css", label: "CSS", dot: typeDotColors.css },
+  { value: "yours", label: "Yours" },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
@@ -119,7 +113,7 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
     <div className="mx-auto max-w-7xl px-4 pb-16">
       <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Marketplace</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
           <p className="mt-1 text-sm text-muted-foreground">Community custom widgets and CSS themes for Homarr.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -148,11 +142,11 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
                 key={opt.value}
                 onClick={() => setTypeFilter(opt.value)}
                 className={cn(
-                  "inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-medium transition-colors",
+                  "inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors",
                   typeFilter === opt.value ? filterActiveClass : filterInactiveClass,
                 )}
               >
-                {opt.Icon && <opt.Icon size={12} />}
+                {opt.dot && <span className={cn("size-2 rounded-full", opt.dot)} />}
                 {opt.label}
               </button>
             ))}
@@ -290,21 +284,20 @@ const SubmissionCard = ({
     if (reason && reason.trim().length >= 3) void onReport(submission.id, reason.trim());
   };
 
-  const TypeIcon = typeIcons[submission.type];
-
   return (
     <Card className="transition-transform duration-150 hover:scale-[1.02]">
-      <a href={`/marketplace/${submission.id}/`} className="block">
+      <a href={`/workshop/${submission.id}/`} className="block">
         {screenshotUrls.length > 0 && <ScreenshotGallery urls={screenshotUrls} title={submission.title} />}
       </a>
 
       <CardHeader>
         <div className="flex items-center gap-2">
-          <a href={`/marketplace/${submission.id}/`} className="min-w-0 truncate hover:underline">
+          <a href={`/workshop/${submission.id}/`} className="min-w-0 truncate hover:underline">
             <CardTitle className="truncate">{submission.title}</CardTitle>
           </a>
-          <Badge variant={typeBadgeVariants[submission.type]} className="shrink-0 px-1.5">
-            <TypeIcon size={12} />
+          <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
+            <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+            {typeLabels[submission.type]}
           </Badge>
         </div>
         <CardDescription className="text-xs">

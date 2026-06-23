@@ -32,7 +32,7 @@ import { Input } from "@/components/ui/input";
 import { cn, errorMessage } from "@/lib/utils";
 
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
-const typeBadgeVariants: Record<SubmissionType, "secondary" | "default"> = { css: "secondary", widget: "default" };
+const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
 const contentLanguages: Record<SubmissionType, string> = { css: "css", widget: "json" };
 const prismThemes = { light: themes.github, dark: themes.dracula } as const;
 const copyState = [
@@ -62,7 +62,7 @@ const scoreSign = (score: number): keyof typeof scoreClassBySign => {
 const parseSubmissionId = (pathname: string) => {
   const segments = pathname.split("/").filter(Boolean);
   const last = segments[segments.length - 1];
-  if (!last || last === "marketplace") return null;
+  if (!last || last === "workshop") return null;
   return last;
 };
 
@@ -465,7 +465,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
     if (!submission) return;
     try {
       await pb.collection("submissions").delete(submission.id);
-      window.location.href = "/marketplace/";
+      window.location.href = "/workshop/";
     } catch (caught) {
       setError(errorMessage(caught, "Failed to delete submission"));
     }
@@ -492,8 +492,8 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
         <p className="text-lg font-medium">Submission not found</p>
         <p className="mt-1 text-sm text-muted-foreground">This listing may have been removed or the link is invalid.</p>
-        <Link to="/marketplace" className="mt-6 inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
-          <IconArrowLeft size={14} /> Back to Marketplace
+        <Link to="/workshop" className="mt-6 inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+          <IconArrowLeft size={14} /> Back to Workshop
         </Link>
       </div>
     );
@@ -504,8 +504,8 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-4xl px-4 pb-16 pt-8">
-      <Link to="/marketplace" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <IconArrowLeft size={14} /> Back to Marketplace
+      <Link to="/workshop" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <IconArrowLeft size={14} /> Back to Workshop
       </Link>
 
       {error && (
@@ -524,7 +524,10 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-semibold tracking-tight">{submission.title}</h1>
-            <Badge variant={typeBadgeVariants[submission.type]}>{typeLabels[submission.type]}</Badge>
+            <Badge variant="secondary" className="gap-1.5">
+              <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+              {typeLabels[submission.type]}
+            </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {submission.authorName} · v{submission.version} · {relativeTime(submission.created)}
@@ -615,7 +618,7 @@ export default function MarketplaceDetailPage() {
   const storeUrl = (siteConfig.customFields?.storeUrl as string | undefined) ?? "http://localhost:8090";
 
   return (
-    <Layout title="Marketplace" description="Community custom CSS and custom widgets for Homarr">
+    <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
       <main className="marketplace bg-background text-foreground min-h-[80vh]">
         <BrowserOnly fallback={<DetailSkeleton />}>
           {() => <MarketplaceDetail storeUrl={storeUrl} />}

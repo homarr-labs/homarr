@@ -1,19 +1,19 @@
 ---
 tags:
-  - Store
+  - Workshop
   - Custom Widgets
   - Custom CSS
 ---
 
-# Community Store
+# Community Workshop
 
-The [Community Store](pathname:///store) is where Homarr users share and discover
+The [Community Workshop](pathname:///workshop) is where Homarr users share and discover
 **custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
 you like, report abuse, and install entries directly into your own Homarr instance.
 
 :::info
 
-The store is community-contributed content. Always review CSS and widget JSON before
+The workshop is community-contributed content. Always review CSS and widget JSON before
 installing it on your dashboard.
 
 :::
@@ -37,19 +37,19 @@ Submissions are published immediately. Reported entries are reviewed and may be 
 
 ## Installing into Homarr
 
-You can install store entries without leaving Homarr:
+You can install workshop entries without leaving Homarr:
 
-- **Custom widgets** — go to **Manage → Custom Widgets**, click **Install from store**, pick an
+- **Custom widgets** — go to **Manage → Custom Widgets**, click **Install from Workshop**, pick an
   entry, and it is imported (secrets such as API keys must be re-entered afterwards).
-- **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from store**, and
+- **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
   pick a theme to load it into the editor before saving.
 
 Alternatively, use **Copy** (or **Download** for widgets) on any submission and import it
 manually.
 
-## Self-hosting the store backend
+## Self-hosting the workshop backend
 
-The store is powered by a [PocketBase](https://pocketbase.io) instance (GitHub OAuth, database,
+The workshop is powered by a [PocketBase](https://pocketbase.io) instance (GitHub OAuth, database,
 file uploads, and an admin moderation dashboard). The deployment lives in `apps/store/` with a
 `docker-compose.yml`, version-controlled collection migrations, and vote-counter hooks. See the
 app's `README.md` for GitHub OAuth setup and the `STORE_URL` / `NEXT_PUBLIC_WIDGET_STORE_URL`

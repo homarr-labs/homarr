@@ -58,7 +58,7 @@ export const useStore = (storeUrl: string) => {
       );
       await refreshVotes();
     } catch (caught) {
-      setError(errorMessage(caught, "Failed to load the marketplace"));
+      setError(errorMessage(caught, "Failed to load the workshop"));
     } finally {
       setLoading(false);
     }

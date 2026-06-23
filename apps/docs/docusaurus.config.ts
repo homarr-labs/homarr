@@ -110,9 +110,9 @@ const config: Config = {
           to: "/blog",
         },
         {
-          label: "Marketplace",
+          label: "Workshop",
           position: "left",
-          to: "/marketplace",
+          to: "/workshop",
         },
         {
           label: "About us",
@@ -304,12 +304,12 @@ const config: Config = {
         },
       };
     },
-    function marketplaceDetailRoutePlugin() {
+    function workshopDetailRoutePlugin() {
       return {
-        name: "marketplace-detail-route",
+        name: "workshop-detail-route",
         async contentLoaded({ actions }) {
           actions.addRoute({
-            path: "/marketplace/:id",
+            path: "/workshop/:id",
             component: "@site/src/components/store/DetailPage",
             exact: true,
           });

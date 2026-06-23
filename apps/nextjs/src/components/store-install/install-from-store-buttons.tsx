@@ -33,14 +33,14 @@ export const InstallWidgetFromStoreButton = () => {
   const utils = clientApi.useUtils();
   const importMutation = clientApi.customWidget.import.useMutation({
     onSuccess: () => {
-      showSuccessNotification({ title: "Marketplace", message: "Custom widget installed" });
+      showSuccessNotification({ title: "Workshop", message: "Custom widget installed" });
       void utils.customWidget.all.invalidate();
       void revalidatePathActionAsync("/manage/custom-widgets");
       setPendingId(null);
       close();
     },
     onError: (err) => {
-      showErrorNotification({ title: "Marketplace", message: err.message || "Failed to install the custom widget" });
+      showErrorNotification({ title: "Workshop", message: err.message || "Failed to install the custom widget" });
       setPendingId(null);
     },
   });
@@ -48,7 +48,7 @@ export const InstallWidgetFromStoreButton = () => {
   const handleSelect = (submission: { id: string; content: string }) => {
     const parsed = parseWidgetContent(submission.content);
     if (!parsed.ok) {
-      showErrorNotification({ title: "Marketplace", message: parsed.message });
+      showErrorNotification({ title: "Workshop", message: parsed.message });
       return;
     }
     setPendingId(submission.id);
@@ -58,7 +58,7 @@ export const InstallWidgetFromStoreButton = () => {
   return (
     <>
       <MobileAffixButton variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
-        Install from marketplace
+        Install from Workshop
       </MobileAffixButton>
       <StoreBrowserModal
         type="widget"
@@ -78,7 +78,7 @@ export const InstallCssFromStoreButton = ({ onSelect }: { onSelect: (css: string
   return (
     <>
       <Button variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
-        Install from marketplace
+        Install from Workshop
       </Button>
       <StoreBrowserModal
         type="css"

@@ -211,7 +211,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
         <DialogHeader>
           <DialogTitle>Share with the community</DialogTitle>
-          <DialogDescription>Submit a custom CSS theme or widget to the marketplace.</DialogDescription>
+          <DialogDescription>Submit a custom CSS theme or widget to the Workshop.</DialogDescription>
         </DialogHeader>
 
         <div className="flex items-center gap-2">
