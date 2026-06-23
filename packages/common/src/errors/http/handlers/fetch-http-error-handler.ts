@@ -20,7 +20,7 @@ export class FetchHttpErrorHandler extends HttpErrorHandler {
     const result = matchErrorCode(error.cause.code);
     if (!result) return undefined;
 
-    return new RequestError(result, { cause: error });
+    return new RequestError(result, { cause: error }) as AnyRequestError;
   }
 
   /**
@@ -59,7 +59,7 @@ export const matchErrorCode = (code: string): AnyRequestErrorInput | undefined =
       type: key,
       reason: found[0] as RequestErrorReason<typeof key>,
       code: code as RequestErrorCode,
-    };
+    } as AnyRequestErrorInput;
   }
 
   return undefined;

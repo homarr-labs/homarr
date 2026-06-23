@@ -25,7 +25,7 @@ export class AxiosHttpErrorHandler extends HttpErrorHandler {
 
     return new RequestError(requestErrorInput, {
       cause: error,
-    });
+    }) as AnyRequestError;
   }
   handleResponseError(error: unknown): ResponseError | undefined {
     if (!(error instanceof AxiosError)) return undefined;

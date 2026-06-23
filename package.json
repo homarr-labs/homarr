@@ -43,6 +43,7 @@
     "@semantic-release/release-notes-generator": "catalog:",
     "@testcontainers/redis": "catalog:",
     "@turbo/gen": "catalog:",
+
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",
