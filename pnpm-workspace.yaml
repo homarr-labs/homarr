@@ -177,7 +177,7 @@ catalog:
   tsdav: ^2.3.0
   tsx: 4.20.4
   turbo: ^2.10.2
-  typescript: ^6.0.3
+  typescript: ^7.0.1-rc
   vite: ^8.1.2
   undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
@@ -191,6 +191,7 @@ catalog:
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
+
 catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false
@@ -201,6 +202,8 @@ minimumReleaseAgeExclude:
   - next
   - "@next/*"
   - "@immich/sdk@3.0.0"
+  - typescript@7.0.1-rc
+  - "@typescript/*"
   # Renovate security update: turbo@2.9.14
   - turbo@2.9.14
   # Renovate security update: form-data@4.0.6
