@@ -39,7 +39,7 @@ const copyState = [
   { Icon: IconCopy, label: "Copy", iconClass: "" },
   { Icon: IconCheck, label: "Copied!", iconClass: "text-green-500" },
 ] as const;
-const scoreClassBySign = { positive: "text-destructive", negative: "text-destructive", neutral: "" } as const;
+const scoreClassBySign = { positive: "text-foreground", negative: "text-destructive", neutral: "" } as const;
 const dotClass = ["bg-white/40", "bg-white"];
 
 const commentAuthorName = (c: StoreComment) => c.expand?.author?.name || c.expand?.author?.username || "unknown";
@@ -108,14 +108,14 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
       {urls.length > 1 && (
         <>
           <button
-            className="absolute left-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-0 shadow transition-opacity group-hover/gallery:opacity-100"
+            className="absolute left-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
             aria-label="Previous screenshot"
           >
             <IconChevronLeft size={16} />
           </button>
           <button
-            className="absolute right-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-0 shadow transition-opacity group-hover/gallery:opacity-100"
+            className="absolute right-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i + 1) % urls.length)}
             aria-label="Next screenshot"
           >
@@ -325,6 +325,34 @@ const CommentsSection = ({
   );
 };
 
+const DeleteConfirmButton = ({ onConfirm }: { onConfirm: () => void }) => {
+  const [pending, setPending] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(null);
+
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+
+  const handleClick = () => {
+    if (!pending) {
+      setPending(true);
+      timer.current = setTimeout(() => setPending(false), 3000);
+      return;
+    }
+    setPending(false);
+    onConfirm();
+  };
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className={cn(pending ? "border-destructive bg-destructive/10 text-destructive" : "text-destructive hover:bg-destructive/10")}
+      onClick={handleClick}
+    >
+      <IconTrash size={14} /> {pending ? "Confirm delete?" : "Delete"}
+    </Button>
+  );
+};
+
 const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
   const location = useLocation();
   const submissionId = parseSubmissionId(location.pathname);
@@ -492,9 +520,11 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
         <p className="text-lg font-medium">Submission not found</p>
         <p className="mt-1 text-sm text-muted-foreground">This listing may have been removed or the link is invalid.</p>
-        <Link to="/workshop" className="mt-6 inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
-          <IconArrowLeft size={14} /> Back to Workshop
-        </Link>
+        <Button variant="ghost" size="sm" className="mt-6 gap-1.5" asChild>
+          <Link to="/workshop">
+            <IconArrowLeft size={14} /> Back to Workshop
+          </Link>
+        </Button>
       </div>
     );
   }
@@ -504,9 +534,11 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-4xl px-4 pb-16 pt-8">
-      <Link to="/workshop" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <IconArrowLeft size={14} /> Back to Workshop
-      </Link>
+      <Button variant="ghost" size="sm" className="mb-6 gap-1.5 text-muted-foreground hover:text-foreground" asChild>
+        <Link to="/workshop">
+          <IconArrowLeft size={14} /> Back to Workshop
+        </Link>
+      </Button>
 
       {error && (
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
@@ -540,7 +572,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
             aria-label="Upvote"
             className={cn(
               "flex items-center justify-center rounded-[5px] p-1.5 transition-colors hover:bg-accent",
-              userVote?.value === 1 && "bg-destructive/15 text-destructive",
+              userVote?.value === 1 && "bg-primary/15 text-primary",
             )}
           >
             <IconArrowBigUp size={18} />
@@ -553,7 +585,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
             aria-label="Downvote"
             className={cn(
               "flex items-center justify-center rounded-[5px] p-1.5 transition-colors hover:bg-accent",
-              userVote?.value === -1 && "bg-destructive/15 text-destructive",
+              userVote?.value === -1 && "bg-primary/15 text-primary",
             )}
           >
             <IconArrowBigDown size={18} />
@@ -583,16 +615,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
           </Button>
         )}
         {user?.id === submission.author && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-destructive hover:bg-destructive/10"
-            onClick={() => {
-              if (window.confirm("Delete this submission? This cannot be undone.")) void handleDelete();
-            }}
-          >
-            <IconTrash size={14} /> Delete
-          </Button>
+          <DeleteConfirmButton onConfirm={handleDelete} />
         )}
       </div>
 

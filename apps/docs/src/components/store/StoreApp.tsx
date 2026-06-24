@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   IconArrowBigDown,
   IconArrowBigUp,
+  IconBrandCss3,
   IconBrandGithub,
   IconCheck,
   IconChevronLeft,
@@ -10,8 +11,10 @@ import {
   IconDownload,
   IconFlag,
   IconLogout,
+  IconMessage,
   IconPackage,
   IconPlus,
+  IconPuzzle,
   IconSearch,
   IconTrash,
   IconX,
@@ -39,6 +42,8 @@ import { useStore } from "./useStore";
 
 const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
+const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = { css: IconBrandCss3, widget: IconPuzzle };
+const typeBgColors: Record<SubmissionType, string> = { css: "bg-blue-500/5", widget: "bg-yellow-500/5" };
 const filterActiveClass = "bg-background text-foreground shadow-sm";
 const filterInactiveClass = "text-muted-foreground hover:text-foreground";
 const copyState = [
@@ -127,9 +132,12 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
               </Button>
             </>
           ) : (
-            <Button onClick={() => void store.login()}>
-              <IconBrandGithub size={14} /> Sign in with GitHub to vote and submit yours
-            </Button>
+            <div className="flex flex-col items-end gap-0.5">
+              <Button onClick={() => void store.login()}>
+                <IconBrandGithub size={14} /> Sign in with GitHub
+              </Button>
+              <p className="text-xs text-muted-foreground">Vote and share your creations</p>
+            </div>
           )}
         </div>
       </div>
@@ -250,6 +258,8 @@ const SubmissionCard = ({
 }: SubmissionCardProps) => {
   const isOwner = currentUserId === submission.author;
   const [copied, setCopied] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const confirmTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const copyTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const score = submission.upvotes - submission.downvotes;
   const { Icon: CopyIcon, label: copyLabel, iconClass: copyIconClass } = copyState[Number(copied)];
@@ -261,6 +271,7 @@ const SubmissionCard = ({
   useEffect(
     () => () => {
       if (copyTimer.current) clearTimeout(copyTimer.current);
+      if (confirmTimer.current) clearTimeout(confirmTimer.current);
     },
     [],
   );
@@ -279,29 +290,53 @@ const SubmissionCard = ({
     }
   };
 
-  const handleReport = () => {
-    const reason = window.prompt("Why are you reporting this submission?");
-    if (reason && reason.trim().length >= 3) void onReport(submission.id, reason.trim());
+  const handleDelete = () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      if (confirmTimer.current) clearTimeout(confirmTimer.current);
+      confirmTimer.current = setTimeout(() => setConfirmDelete(false), 3000);
+      return;
+    }
+    setConfirmDelete(false);
+    void onDelete(submission.id);
   };
+
+  const hasScreenshots = screenshotUrls.length > 0;
+  const TypeIcon = typeIcons[submission.type];
 
   return (
     <Card className="relative transition-transform duration-150 hover:scale-[1.02]">
-      <Badge
-        variant="secondary"
-        className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
-      >
-        <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
-        {typeLabels[submission.type]}
-      </Badge>
-
       <a href={`/workshop/${submission.id}/`} className="block">
-        {screenshotUrls.length > 0 && <ScreenshotGallery urls={screenshotUrls} title={submission.title} />}
+        {hasScreenshots ? (
+          <div className="relative">
+            <Badge
+              variant="secondary"
+              className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
+            >
+              <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+              {typeLabels[submission.type]}
+            </Badge>
+            <ScreenshotGallery urls={screenshotUrls} title={submission.title} />
+          </div>
+        ) : (
+          <div className={cn("flex items-center justify-center py-6", typeBgColors[submission.type])}>
+            <TypeIcon size={32} className="text-muted-foreground/20" />
+          </div>
+        )}
       </a>
 
       <CardHeader>
-        <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
-          <CardTitle className="truncate">{submission.title}</CardTitle>
-        </a>
+        <div className="flex items-center gap-2">
+          <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
+            <CardTitle className="truncate">{submission.title}</CardTitle>
+          </a>
+          {!hasScreenshots && (
+            <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
+              <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+              {typeLabels[submission.type]}
+            </Badge>
+          )}
+        </div>
         <CardDescription className="text-xs">
           {submission.authorName} · v{submission.version} · {relativeTime(submission.created)}
         </CardDescription>
@@ -312,7 +347,7 @@ const SubmissionCard = ({
               aria-label="Upvote"
               className={cn(
                 "flex items-center justify-center rounded-[5px] p-1 transition-colors hover:bg-accent",
-                userVote === 1 && "bg-destructive/15 text-destructive",
+                userVote === 1 && "bg-primary/15 text-primary",
               )}
             >
               <IconArrowBigUp size={14} />
@@ -320,7 +355,7 @@ const SubmissionCard = ({
             <span
               className={cn(
                 "min-w-5 text-center text-xs font-semibold tabular-nums",
-                score > 0 && "text-destructive",
+                score > 0 && "text-foreground",
                 score < 0 && "text-destructive",
               )}
             >
@@ -331,7 +366,7 @@ const SubmissionCard = ({
               aria-label="Downvote"
               className={cn(
                 "flex items-center justify-center rounded-[5px] p-1 transition-colors hover:bg-accent",
-                userVote === -1 && "bg-destructive/15 text-destructive",
+                userVote === -1 && "bg-primary/15 text-primary",
               )}
             >
               <IconArrowBigDown size={14} />
@@ -356,11 +391,11 @@ const SubmissionCard = ({
           >
             {copyFailed ? (
               <>
-                <IconX size={12} className="text-destructive" /> Failed
+                <IconX size={13} className="text-destructive" /> Failed
               </>
             ) : (
               <>
-                <CopyIcon size={12} className={copyIconClass} /> {copyLabel}
+                <CopyIcon size={13} className={copyIconClass} /> {copyLabel}
               </>
             )}
           </Button>
@@ -371,27 +406,37 @@ const SubmissionCard = ({
               onClick={() => downloadJson(submission)}
               className="text-muted-foreground hover:text-foreground"
             >
-              <IconDownload size={12} /> Download
+              <IconDownload size={13} /> Download
             </Button>
+          )}
+          {submission.commentCount > 0 && (
+            <a
+              href={`/workshop/${submission.id}/`}
+              className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <IconMessage size={13} /> {submission.commentCount}
+            </a>
           )}
           <div className="ml-auto flex items-center gap-px">
             {isOwner && (
               <button
-                className="flex items-center justify-center rounded p-1 text-muted-foreground/40 transition-colors hover:text-destructive"
-                onClick={() => {
-                  if (window.confirm("Delete this submission? This cannot be undone.")) void onDelete(submission.id);
-                }}
+                className={cn(
+                  "flex items-center gap-1 rounded px-1 py-0.5 text-xs transition-colors",
+                  confirmDelete ? "bg-destructive/10 text-destructive" : "text-muted-foreground/60 hover:text-destructive",
+                )}
+                onClick={handleDelete}
                 aria-label="Delete"
               >
-                <IconTrash size={11} />
+                <IconTrash size={13} />
+                {confirmDelete && "Confirm?"}
               </button>
             )}
             <button
-              className="flex items-center justify-center rounded p-1 text-muted-foreground/40 transition-colors hover:text-destructive"
-              onClick={handleReport}
+              className="flex items-center justify-center rounded p-1 text-muted-foreground/60 transition-colors hover:text-destructive"
+              onClick={() => void onReport(submission.id, "flagged")}
               aria-label="Report"
             >
-              <IconFlag size={11} />
+              <IconFlag size={13} />
             </button>
           </div>
         </div>
@@ -443,14 +488,14 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
       {urls.length > 1 && (
         <>
           <button
-            className="absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-0 shadow transition-opacity group-hover/gallery:opacity-100"
+            className="absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
             aria-label="Previous screenshot"
           >
             <IconChevronLeft size={14} />
           </button>
           <button
-            className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-0 shadow transition-opacity group-hover/gallery:opacity-100"
+            className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i + 1) % urls.length)}
             aria-label="Next screenshot"
           >

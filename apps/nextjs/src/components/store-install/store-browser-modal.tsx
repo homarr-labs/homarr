@@ -177,7 +177,8 @@ const SubmissionCard = ({
           <Box
             w={8}
             h={8}
-            style={{ borderRadius: "50%", flexShrink: 0, backgroundColor: submission.type === "css" ? "var(--mantine-color-blue-5)" : "var(--mantine-color-yellow-5)" }}
+            bg={submission.type === "css" ? "blue.5" : "yellow.5"}
+            style={{ borderRadius: "50%", flexShrink: 0 }}
           />
           <Text fw={600} size="sm" truncate style={{ flex: 1 }}>
             {submission.title}
