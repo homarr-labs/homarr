@@ -12,6 +12,16 @@
   inset: 0;
 }
 
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  background-color: var(--mantine-color-body);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
 .composer {
   position: absolute;
   left: 0;
@@ -23,10 +33,24 @@
   box-shadow: var(--mantine-shadow-md);
 }
 
-.modelSelect input {
+.modelSelectControl {
   font-size: var(--mantine-font-size-xs);
   cursor: pointer;
+  overflow: hidden;
+}
+
+/* Truncate the selected model name once it hits the control's max width. */
+.modelSelectLabel {
+  display: block;
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modelOptionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Markdown-rendered assistant replies: keep block spacing tight inside the bubble. */
@@ -189,7 +213,7 @@
 .historyOverlay {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   background-color: var(--mantine-color-body);

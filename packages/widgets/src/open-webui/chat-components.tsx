@@ -7,8 +7,11 @@ import {
   Button,
   Checkbox,
   CloseButton,
+  Combobox,
   Group,
   Image,
+  Input,
+  InputBase,
   Loader,
   Paper,
   Popover,
@@ -17,10 +20,14 @@ import {
   Text,
   TextInput,
   Tooltip,
+  useCombobox,
 } from "@mantine/core";
 import {
   IconArrowLeft,
   IconCamera,
+  IconCaretDownFilled,
+  IconCaretUpFilled,
+  IconCheck,
   IconChevronDown,
   IconChevronRight,
   IconDatabase,
@@ -36,11 +43,103 @@ import {
 import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
+import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { AttachView, ChatMessage, FileAttachment } from "./chat-types";
 import type { useAttachments } from "./use-attachments";
 import classes from "./chat.module.css";
+
+// Model picker: a non-editable button target showing the selected model, with a
+// search field inside the dropdown to filter the list on the frontend.
+export function ModelSelect({
+  data,
+  value,
+  onChange,
+  loading,
+  disabled,
+}: {
+  data: { value: string; label: string }[];
+  value: string | null;
+  onChange: (value: string) => void;
+  loading: boolean;
+  disabled: boolean;
+}) {
+  const t = useI18n();
+  const [search, setSearch] = useState("");
+  const combobox = useCombobox({
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+      setSearch("");
+    },
+    onDropdownOpen: () => combobox.focusSearchInput(),
+  });
+
+  const selectedLabel = data.find((item) => item.value === value)?.label;
+  const filtered = data.filter((item) => item.label.toLowerCase().includes(search.trim().toLowerCase()));
+
+  return (
+    <Combobox
+      store={combobox}
+      withinPortal={false}
+      onOptionSubmit={(submitted) => {
+        onChange(submitted);
+        combobox.closeDropdown();
+      }}
+    >
+      <Combobox.Target>
+        <InputBase
+          component="button"
+          type="button"
+          pointer
+          variant="unstyled"
+          size="sm"
+          disabled={disabled}
+          w={200}
+          classNames={{ input: classes.modelSelectControl }}
+          rightSection={
+            loading ? (
+              <Loader size="xs" />
+            ) : combobox.dropdownOpened ? (
+              <IconCaretUpFilled size={14} />
+            ) : (
+              <IconCaretDownFilled size={14} />
+            )
+          }
+          rightSectionPointerEvents="none"
+          onClick={() => combobox.toggleDropdown()}
+        >
+          {selectedLabel ? (
+            <span className={classes.modelSelectLabel}>{selectedLabel}</span>
+          ) : (
+            <Input.Placeholder>{t("widget.openWebUi.selectModel")}</Input.Placeholder>
+          )}
+        </InputBase>
+      </Combobox.Target>
+      <Combobox.Dropdown>
+        <Combobox.Search
+          value={search}
+          onChange={(event) => setSearch(event.currentTarget.value)}
+          placeholder={t("widget.openWebUi.searchModel")}
+        />
+        <Combobox.Options mah={220} style={{ overflowY: "auto" }}>
+          {filtered.length > 0 ? (
+            filtered.map((item) => (
+              <Combobox.Option value={item.value} key={item.value} active={item.value === value}>
+                <Group gap="xs" justify="space-between" wrap="nowrap">
+                  <span className={classes.modelOptionLabel}>{item.label}</span>
+                  {item.value === value ? <IconCheck size={14} /> : null}
+                </Group>
+              </Combobox.Option>
+            ))
+          ) : (
+            <Combobox.Empty>{t("widget.openWebUi.noModels")}</Combobox.Empty>
+          )}
+        </Combobox.Options>
+      </Combobox.Dropdown>
+    </Combobox>
+  );
+}
 
 export function MenuRow({
   icon,
@@ -226,7 +325,6 @@ export function AttachPopover({
           <ActionIcon
             variant="subtle"
             color="gray"
-            loading={attachments.isUploading}
             onClick={() => attachments.openAttach(!attachments.attachOpened)}
             aria-label={t("widget.openWebUi.attach")}
           >
@@ -443,9 +541,15 @@ export function MessageBubble({
   loading?: boolean;
 }) {
   const isUser = from === "user";
-  const avatar = (
-    <Avatar size={22} radius="xl" variant="filled" color={isUser ? "gray" : "blue"} className={classes.avatar}>
-      {isUser ? <IconUser size={14} /> : <IconRobot size={14} />}
+  // The assistant shows the Open WebUI brand logo (IconRobot is the fallback if
+  // the image fails to load); the user keeps a plain icon avatar.
+  const avatar = isUser ? (
+    <Avatar size={22} radius="xl" variant="filled" color="gray" className={classes.avatar}>
+      <IconUser size={14} />
+    </Avatar>
+  ) : (
+    <Avatar size={22} radius="xl" src={getIconUrl("openWebUi")} alt="Open WebUI" className={classes.avatar}>
+      <IconRobot size={14} />
     </Avatar>
   );
   return (

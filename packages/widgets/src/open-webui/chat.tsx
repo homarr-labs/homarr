@@ -8,12 +8,10 @@ import {
   CloseButton,
   Group,
   Image,
-  Loader,
   Modal,
   NavLink,
   Paper,
   ScrollArea,
-  Select,
   Stack,
   Text,
   Textarea,
@@ -43,7 +41,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { AttachmentBadge, AttachPopover, MessageBubble, RecordingWaveform } from "./chat-components";
+import { AttachmentBadge, AttachPopover, MessageBubble, ModelSelect, RecordingWaveform } from "./chat-components";
 import classes from "./chat.module.css";
 import { VISION_MODEL_PATTERN, formatSeconds, hostnameOf } from "./chat-utils";
 import { useAttachments } from "./use-attachments";
@@ -60,9 +58,11 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   const [error, setError] = useState<string | null>(null);
   const [historyOpened, setHistoryOpened] = useState(false);
   const [composerHeight, setComposerHeight] = useState(72);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const viewportRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: models = [], isLoading: modelsLoading } = clientApi.widget.openWebUi.getModels.useQuery(
@@ -128,6 +128,16 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
     return () => observer.disconnect();
   }, []);
 
+  // Track the floating header's height so messages can pad above it.
+  useEffect(() => {
+    const element = headerRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(() => setHeaderHeight(element.offsetHeight));
+    observer.observe(element);
+    setHeaderHeight(element.offsetHeight);
+    return () => observer.disconnect();
+  }, []);
+
   // Auto-scroll to the bottom as messages or streamed tokens arrive.
   useEffect(() => {
     viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
@@ -175,8 +185,42 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
 
   return (
     <Box className={classes.root} style={isEditMode ? { pointerEvents: "none" } : undefined}>
+      <Group ref={headerRef} className={classes.header} justify="space-between" gap="xs" wrap="nowrap" px="xs" py={6}>
+        <ModelSelect
+          data={modelData}
+          value={model}
+          onChange={setModel}
+          loading={modelsLoading}
+          disabled={stream.isStreaming}
+        />
+        <Group gap={4} wrap="nowrap">
+          <Tooltip label={t("widget.openWebUi.newChat")} withinPortal={false}>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              onClick={handleNewChat}
+              aria-label={t("widget.openWebUi.newChat")}
+            >
+              <IconPlus size={18} />
+            </ActionIcon>
+          </Tooltip>
+          {options.showHistory ? (
+            <Tooltip label={t("widget.openWebUi.history")} withinPortal={false}>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                onClick={() => setHistoryOpened(true)}
+                aria-label={t("widget.openWebUi.history")}
+              >
+                <IconHistory size={18} />
+              </ActionIcon>
+            </Tooltip>
+          ) : null}
+        </Group>
+      </Group>
+
       <ScrollArea className={classes.messages} viewportRef={viewportRef} type="auto">
-        <Stack gap="xs" p="xs" pb={composerHeight + 24}>
+        <Stack gap="xs" p="xs" pt={headerHeight + 8} pb={composerHeight + 24}>
           {stream.messages.length === 0 && !stream.isStreaming ? (
             <Stack align="center" justify="center" gap="xs" mt="xl" c="dimmed">
               <IconRobot size={32} />
@@ -337,16 +381,6 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
             />
             <Group justify="space-between" gap="xs" wrap="nowrap" mt={4}>
               <Group gap={4} wrap="nowrap">
-                <Tooltip label={t("widget.openWebUi.newChat")} withinPortal={false}>
-                  <ActionIcon
-                    variant="subtle"
-                    color="gray"
-                    onClick={handleNewChat}
-                    aria-label={t("widget.openWebUi.newChat")}
-                  >
-                    <IconPlus size={18} />
-                  </ActionIcon>
-                </Tooltip>
                 <AttachPopover
                   attachments={attachments}
                   chats={chats}
@@ -357,35 +391,8 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                     void camera.openCapture();
                   }}
                 />
-                {options.showHistory ? (
-                  <Tooltip label={t("widget.openWebUi.history")} withinPortal={false}>
-                    <ActionIcon
-                      variant="subtle"
-                      color="gray"
-                      onClick={() => setHistoryOpened(true)}
-                      aria-label={t("widget.openWebUi.history")}
-                    >
-                      <IconHistory size={18} />
-                    </ActionIcon>
-                  </Tooltip>
-                ) : null}
               </Group>
               <Group gap="xs" wrap="nowrap">
-                <Select
-                  variant="unstyled"
-                  size="sm"
-                  searchable
-                  data={modelData}
-                  value={model}
-                  onChange={setModel}
-                  disabled={stream.isStreaming}
-                  placeholder={t("widget.openWebUi.selectModel")}
-                  nothingFoundMessage={t("widget.openWebUi.noModels")}
-                  rightSection={modelsLoading ? <Loader size="xs" /> : undefined}
-                  comboboxProps={{ withinPortal: false }}
-                  maw={200}
-                  className={classes.modelSelect}
-                />
                 {!stream.isStreaming && composerEmpty ? (
                   <Tooltip label={t("widget.openWebUi.record")} withinPortal={false}>
                     <ActionIcon
