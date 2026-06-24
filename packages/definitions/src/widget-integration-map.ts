@@ -20,6 +20,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   "mediaRequests-requestList": getIntegrationKindsByCategory("mediaRequest"),
   "mediaRequests-requestStats": getIntegrationKindsByCategory("mediaRequest"),
   mediaTranscoding: getIntegrationKindsByCategory("mediaTranscoding"),
+  mediaMissing: getIntegrationKindsByCategory("mediaOrganizer"),
   networkControllerSummary: getIntegrationKindsByCategory("networkController"),
   networkControllerStatus: getIntegrationKindsByCategory("networkController"),
   indexerManager: getIntegrationKindsByCategory("indexerManager"),

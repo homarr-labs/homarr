@@ -17,6 +17,7 @@ export const widgetKinds = [
   "mediaRequests-requestList",
   "mediaRequests-requestStats",
   "mediaTranscoding",
+  "mediaMissing",
   "minecraftServerStatus",
   "networkControllerSummary",
   "networkControllerStatus",

@@ -3087,6 +3087,34 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "Missing & Queued Media",
+      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Show missing items"
+        },
+        "showQueued": {
+          "label": "Show queued items"
+        },
+        "pageSize": {
+          "label": "Items per page"
+        }
+      },
+      "tab": {
+        "missing": "Missing",
+        "queued": "Queued"
+      },
+      "type": {
+        "movie": "Movie",
+        "episode": "Episode"
+      },
+      "empty": {
+        "missing": "No missing items",
+        "queued": "No queued items"
+      },
+      "timeLeft": "Time left"
+    },
     "rssFeed": {
       "name": "RSS feeds",
       "description": "Monitor and display one or more generic RSS, ATOM or JSON feeds",
