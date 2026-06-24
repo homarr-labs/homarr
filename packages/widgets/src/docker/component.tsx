@@ -198,7 +198,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
         acc.memory += safeValue(container.memoryUsage);
         return acc;
       },
-      { cpu: 0, memory: 0 }
+      { cpu: 0, memory: 0 },
     );
   }, [containers]);
 
@@ -274,7 +274,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
             </Text>
-            
+
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
             </Text>

@@ -3,7 +3,6 @@ import superjson from "superjson";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
 
@@ -226,7 +225,6 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
   };
 };
 
-
 /**
  * Invalidates all cached data for a given integration by deleting every Redis key
  * that starts with `integration:${integrationId}:` as well as the integration's
@@ -256,7 +254,6 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
     logger.info("Invalidated integration cache", { integrationId, deletedKeys: deletedCount });
   }
 };
-
 
 export const createChannelEventHistory = <TData>(channelName: string, maxElements = 32) => {
   return {

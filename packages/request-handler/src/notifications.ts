@@ -1,4 +1,3 @@
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { Notification } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations";

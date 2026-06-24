@@ -6,7 +6,11 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { boards, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import { isPersistableWidgetQueryKey, queryCacheDefaultStaleTimeMs, queryCacheMaxValueBytes } from "@homarr/api/query-cache";
+import {
+  isPersistableWidgetQueryKey,
+  queryCacheDefaultStaleTimeMs,
+  queryCacheMaxValueBytes,
+} from "@homarr/api/query-cache";
 
 import { queryCacheRouter } from "../router/query-cache";
 
@@ -81,7 +85,12 @@ describe("queryCacheRouter", () => {
     await expect(caller.setItem({ boardId: "board-1", value: "cached-value" })).resolves.toEqual({
       stored: true,
     });
-    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith(session.user.id, "board-1", "cached-value", expect.any(Number));
+    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith(
+      session.user.id,
+      "board-1",
+      "cached-value",
+      expect.any(Number),
+    );
 
     await caller.removeItem({ boardId: "board-1" });
     expect(redisMock.removeQueryCacheAsync).toHaveBeenCalledWith(session.user.id, "board-1");
@@ -108,7 +117,12 @@ describe("queryCacheRouter", () => {
 
     await caller.setItem({ boardId: "board-1", value: "cached-value" });
 
-    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith("anonymous", "board-1", "cached-value", expect.any(Number));
+    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith(
+      "anonymous",
+      "board-1",
+      "cached-value",
+      expect.any(Number),
+    );
   });
 
   test("rejects oversized values", async () => {

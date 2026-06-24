@@ -1,4 +1,3 @@
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { NavidromeDashboardData } from "@homarr/integrations/types";
 

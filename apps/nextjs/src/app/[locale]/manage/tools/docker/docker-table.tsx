@@ -164,17 +164,21 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   const [isPending, setIsPending] = useState(false);
   const mutate = useCallback(() => {
     setIsPending(true);
-    void utils.docker.getContainers.invalidate().then(() => {
-      showSuccessNotification({
-        title: tDocker("action.refresh.notification.success.title"),
-        message: tDocker("action.refresh.notification.success.message"),
-      });
-    }).catch(() => {
-      showErrorNotification({
-        title: tDocker("action.refresh.notification.error.title"),
-        message: tDocker("action.refresh.notification.error.message"),
-      });
-    }).finally(() => setIsPending(false));
+    void utils.docker.getContainers
+      .invalidate()
+      .then(() => {
+        showSuccessNotification({
+          title: tDocker("action.refresh.notification.success.title"),
+          message: tDocker("action.refresh.notification.success.message"),
+        });
+      })
+      .catch(() => {
+        showErrorNotification({
+          title: tDocker("action.refresh.notification.error.title"),
+          message: tDocker("action.refresh.notification.error.message"),
+        });
+      })
+      .finally(() => setIsPending(false));
   }, [utils, tDocker]);
 
   const table = useTranslatedMantineReactTable({

@@ -41,11 +41,7 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const {
-    data: results = [],
-    error: alertsError,
-    isPending,
-  } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
+  const { data: results = [], error: alertsError, isPending } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};

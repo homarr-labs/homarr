@@ -147,7 +147,7 @@ export const umamiRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
-        const sortedNames = [...input.eventNames].sort();
+        const sortedNames = [...input.eventNames].toSorted();
         const innerHandler = umamiMultiEventRequestHandler.handler(ctx.integration, {
           websiteId: input.websiteId,
           timeFrame: input.timeFrame,

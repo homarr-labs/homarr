@@ -1,4 +1,3 @@
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
 

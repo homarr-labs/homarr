@@ -1,4 +1,3 @@
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats } from "@homarr/integrations/types";
 
@@ -16,11 +15,7 @@ export const umamiRequestHandler = createIntegrationRequestHandler<
   queryKey: "umamiVisitorStats",
 });
 
-export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<
-  string[],
-  "umami",
-  { websiteId: string }
->({
+export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<string[], "umami", { websiteId: string }>({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getEventNamesAsync(input.websiteId);

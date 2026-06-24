@@ -1,4 +1,3 @@
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { UpsSummary } from "@homarr/integrations/types";

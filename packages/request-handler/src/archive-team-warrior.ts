@@ -1,4 +1,3 @@
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { ArchiveTeamWarriorStatus } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations";

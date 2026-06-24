@@ -34,7 +34,7 @@ export const rssFeedRouter = createTRPCRouter({
     return rssFeeds
       .flatMap((rssFeed) => rssFeed.data.entries)
       .slice(0, input.maximumAmountPosts)
-      .sort((entryA, entryB) => {
+      .toSorted((entryA, entryB) => {
         return entryA.published && entryB.published
           ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
           : 0;
