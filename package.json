@@ -61,10 +61,10 @@
     "vitest": "catalog:"
   },
   "engines": {
-    "node": ">=24.16.0",
-    "pnpm": ">=11.7.0"
+    "node": ">=24.17.0",
+    "pnpm": ">=11.8.0"
   },
-  "packageManager": "pnpm@11.7.0",
+  "packageManager": "pnpm@11.8.0",
   "dependencies": {
     "jsonpath-plus": "catalog:"
   }
