@@ -1,4 +1,3 @@
-import { observable } from "@trpc/server/observable";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -6,7 +5,6 @@ import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { items, users } from "@homarr/db/schema";
-import type { ExtendedFeedEntry } from "@homarr/request-handler/rss-feeds";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
@@ -29,9 +27,7 @@ export const rssFeedRouter = createTRPCRouter({
           url,
           count: input.maximumAmountPosts,
         });
-        return await innerHandler.getCachedOrUpdatedDataAsync({
-          forceUpdate: false,
-        });
+        return await innerHandler.getDataAsync();
       }),
     );
 
@@ -43,21 +39,6 @@ export const rssFeedRouter = createTRPCRouter({
           ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
           : 0;
       });
-  }),
-  subscribeFeeds: publicProcedure.input(feedsInput).subscription(({ input }) => {
-    // It is not necessary to check access to all feeds here, as the client will only subscribe to feeds which already exist
-    return observable<{ url: string; entries: ExtendedFeedEntry[] }>((emit) => {
-      const unsubscribes = input.urls.map((url) => {
-        const innerHandler = rssFeedsRequestHandler.handler({ url, count: input.maximumAmountPosts });
-        return innerHandler.subscribe((data) => {
-          emit.next({ url, entries: data.entries });
-        });
-      });
-
-      return () => {
-        unsubscribes.forEach((unsubscribe) => unsubscribe());
-      };
-    });
   }),
 });
 

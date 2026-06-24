@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type {
@@ -12,7 +10,7 @@ import type {
   BeszelSystemStatsRecord,
 } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
 const logger = createLogger({ module: "beszelRequestHandler" });
 
@@ -53,7 +51,7 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
   };
 }
 
-export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
   BeszelSystemRow[],
   "beszel" | "mock",
   Record<string, never>
@@ -75,8 +73,6 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
     });
     return enriched;
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
-  fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelSystems",
 });
@@ -86,7 +82,7 @@ export interface BeszelAlertsData {
   history: BeszelAlertHistory[];
 }
 
-export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
   BeszelAlertsData,
   "beszel" | "mock",
   { includeHistory: boolean; maxHistoryItems: number }
@@ -104,8 +100,6 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { alerts, history };
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
-  fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelAlerts",
 });
@@ -124,7 +118,7 @@ export interface BeszelStatsData {
   containerStats: BeszelContainerStatsRecord[];
 }
 
-export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   BeszelStatsData,
   "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
@@ -147,13 +141,6 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-  cacheDuration: dayjs.duration(60, "seconds"),
-  fallbackToStaleOnError: true,
   retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelStats",
-  cacheDurationForInput(input) {
-    const config = timePeriodConfig[input.timePeriod];
-    if (!config) return undefined;
-    return dayjs.duration(config.cacheSeconds, "seconds");
-  },
 });

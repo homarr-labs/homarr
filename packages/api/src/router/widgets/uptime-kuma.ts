@@ -1,6 +1,3 @@
-import { observable } from "@trpc/server/observable";
-
-import type { UptimeKumaDashboardData } from "@homarr/integrations/types";
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -13,7 +10,7 @@ export const uptimeKumaRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = uptimeKumaRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
@@ -26,30 +23,5 @@ export const uptimeKumaRouter = createTRPCRouter({
       );
 
       return results;
-    }),
-
-  subscribeToDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "uptimeKuma"))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integrationId: string;
-        dashboard: UptimeKumaDashboardData;
-        timestamp: Date;
-      }>((emit) => {
-        const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = uptimeKumaRequestHandler.handler(integration, {});
-          return innerHandler.subscribe((dashboard) => {
-            emit.next({
-              integrationId: integration.id,
-              dashboard,
-              timestamp: new Date(),
-            });
-          });
-        });
-
-        return () => {
-          unsubscribes.forEach((unsubscribe) => unsubscribe());
-        };
-      });
     }),
 });

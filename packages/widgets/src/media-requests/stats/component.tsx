@@ -36,16 +36,9 @@ export default function MediaServerWidget({
   width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
+  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery({
+    integrationIds,
+  });
 
   const board = useRequiredBoard();
 

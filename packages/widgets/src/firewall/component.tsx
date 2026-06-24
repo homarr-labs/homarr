@@ -183,163 +183,32 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
 }
 
 export const useUpdatingCpuStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallCpuStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallCpuStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
+  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({
+    integrationIds,
+  });
 
   return firewallsCpuData;
 };
 
 export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 15 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallMemoryStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallMemoryStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
+  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
+    integrationIds,
+  });
 
   return firewallsMemoryData;
 };
 
 export const useUpdatingVersionStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 60 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallVersionStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallVersionStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
+  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
+    integrationIds,
+  });
   return firewallsVersionData;
 };
 
 export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 30 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallInterfacesStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallInterfacesStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
+  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
+    integrationIds,
+  });
 
   return firewallsInterfacesData;
 };

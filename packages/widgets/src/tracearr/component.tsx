@@ -35,28 +35,7 @@ interface TracearrContentProps {
 
 function TracearrContent({ integrationIds, options, width, isEditMode }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery(
-    { integrationIds },
-    { staleTime: 5 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.tracearr.subscribeToDashboard.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.tracearr.getDashboard.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) =>
-            instance.integrationId === newData.integrationId
-              ? { ...instance, dashboard: newData.dashboard, updatedAt: newData.timestamp }
-              : instance,
-          );
-        });
-      },
-    },
-  );
+  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
 
   // Merge data from all integrations
   const combined = dashboardData.reduce<TracearrDashboardData>(

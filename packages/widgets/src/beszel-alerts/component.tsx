@@ -45,31 +45,7 @@ export default function BeszelAlertsWidget({
     data: results = [],
     error: alertsError,
     isPending,
-  } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
-    staleTime: 15_000,
-    refetchInterval: 15_000,
-    retry: false,
-  });
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.beszel.subscribeAlerts.useSubscription(alertsInput, {
-    enabled: !isEditMode,
-    onData(data) {
-      utils.widget.beszel.getAlerts.setData(alertsInput, (prev) => {
-        if (!prev) return prev;
-        return prev.map((r) =>
-          r.integrationId === data.integrationId
-            ? {
-                ...r,
-                alerts: data.alerts.alerts,
-                history: data.alerts.history,
-                updatedAt: data.timestamp,
-              }
-            : r,
-        );
-      });
-    },
-  });
+  } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};

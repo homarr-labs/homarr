@@ -87,19 +87,10 @@ export default function DownloadClientsWidget({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
-    {
-      integrationIds,
-      limitPerIntegration: options.limitPerIntegration,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+    integrationIds,
+    limitPerIntegration: options.limitPerIntegration,
+  });
 
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
@@ -124,34 +115,6 @@ export default function DownloadClientsWidget({
   const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation();
   const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation();
   const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation();
-
-  //Subscribe to dynamic data changes
-  clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
-    {
-      integrationIds,
-      limitPerIntegration: options.limitPerIntegration,
-    },
-    {
-      onData: (data) => {
-        utils.widget.downloads.getJobsAndStatuses.setData(
-          { integrationIds, limitPerIntegration: options.limitPerIntegration },
-          (prevData) => {
-            return prevData?.map((item) => {
-              if (item.integration.id !== data.integration.id) return item;
-
-              return {
-                data: data.data,
-                integration: {
-                  ...data.integration,
-                  updatedAt: new Date(),
-                },
-              };
-            });
-          },
-        );
-      },
-    },
-  );
 
   //Flatten Data array for which each element has it's integration, data (base + calculated) and actions. Memoized on data subscription
   const data = useMemo<ExtendedDownloadClientItem[]>(

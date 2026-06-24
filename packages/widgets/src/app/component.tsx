@@ -23,16 +23,9 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const { data: app } = clientApi.app.byId.useQuery(
-    {
-      id: options.appId,
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: app } = clientApi.app.byId.useQuery({
+    id: options.appId,
+  });
   useRegisterSpotlightContextResults(
     `app-${app?.id ?? options.appId}`,
     app?.href

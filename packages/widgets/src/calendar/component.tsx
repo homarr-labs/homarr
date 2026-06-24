@@ -39,27 +39,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.calendar.subscribeToEvents.useSubscription(input, {
-    onData(data) {
-      utils.widget.calendar.findAllEvents.setData(input, (old) => {
-        return old?.map((item) => {
-          if (item.integration.id !== data.integration.id) return item;
-          return {
-            ...item,
-            events: data.events,
-          };
-        });
-      });
-    },
-  });
+  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 

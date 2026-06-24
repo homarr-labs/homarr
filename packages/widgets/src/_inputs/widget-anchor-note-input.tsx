@@ -30,9 +30,6 @@ export const WidgetAnchorNoteInput = ({ property, kind, options }: CommonWidgetI
     {
       enabled: Boolean(integrationId),
       refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
     },
   );
 

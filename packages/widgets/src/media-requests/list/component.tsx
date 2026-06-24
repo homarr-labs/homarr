@@ -35,44 +35,9 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
-  const utils = clientApi.useUtils();
-  clientApi.widget.mediaRequests.subscribeToLatestRequests.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData(data) {
-        utils.widget.mediaRequests.getLatestRequests.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return [];
-
-          const filteredData = prevData.filter(({ integrationId }) => integrationId !== data.integrationId);
-          const newData = filteredData.concat(
-            data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
-          );
-          return newData.toSorted((dataA, dataB) => {
-            if (dataA.status === dataB.status) {
-              return dataB.createdAt.getTime() - dataA.createdAt.getTime();
-            }
-
-            return (
-              mediaRequestStatusConfiguration[dataA.status].position -
-              mediaRequestStatusConfiguration[dataB.status].position
-            );
-          });
-        });
-      },
-    },
-  );
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+    integrationIds,
+  });
 
   if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();

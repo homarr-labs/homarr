@@ -1,8 +1,8 @@
 import superjson from "superjson";
 
-import { createId, hashObjectBase64 } from "@homarr/common";
+import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { WidgetKind } from "@homarr/definitions";
+
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
@@ -129,47 +129,27 @@ export const createGetSetChannel = <TData>(name: string) => {
   };
 };
 
-interface QueryCacheChannelOptions {
-  userId: string;
-  boardId: string;
-  key: string;
-  ttlMs: number;
-  maxValueBytes: number;
-}
+const queryCacheKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
+const queryCacheMaxValueBytes = 1024 * 1024;
 
-const queryCacheHashKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
-
-export const createQueryCacheChannel = ({ userId, boardId, key, ttlMs, maxValueBytes }: QueryCacheChannelOptions) => {
-  const hkey = queryCacheHashKey(userId, boardId);
-
-  return {
-    name: `${hkey}:${key}`,
-    getAsync: async () => {
-      return await getSetClient.hget(hkey, key);
-    },
-    setAsync: async (value: string) => {
-      if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
-        logger.warn("Query cache value exceeded maximum size", {
-          channel: hkey,
-          valueBytes: Buffer.byteLength(value, "utf8"),
-          maxValueBytes,
-        });
-        return false;
-      }
-
-      await getSetClient.hset(hkey, key, value);
-      await getSetClient.pexpire(hkey, ttlMs);
-      return true;
-    },
-    removeAsync: async () => {
-      await getSetClient.hdel(hkey, key);
-    },
-  };
+export const setQueryCacheAsync = async (userId: string, boardId: string, value: string, ttlMs: number) => {
+  if (Buffer.byteLength(value, "utf8") > queryCacheMaxValueBytes) {
+    logger.warn("Query cache value exceeded maximum size", {
+      key: queryCacheKey(userId, boardId),
+      valueBytes: Buffer.byteLength(value, "utf8"),
+      maxValueBytes: queryCacheMaxValueBytes,
+    });
+    return false;
+  }
+  await getSetClient.set(queryCacheKey(userId, boardId), value, "PX", ttlMs);
+  return true;
 };
 
-export const getAllQueryCacheAsync = async (userId: string, boardId: string): Promise<Record<string, string>> => {
-  const hkey = queryCacheHashKey(userId, boardId);
-  return await getSetClient.hgetall(hkey);
+export const getQueryCacheAsync = async (userId: string, boardId: string) =>
+  await getSetClient.get(queryCacheKey(userId, boardId));
+
+export const removeQueryCacheAsync = async (userId: string, boardId: string) => {
+  await getSetClient.del(queryCacheKey(userId, boardId));
 };
 
 /**
@@ -246,20 +226,6 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
   };
 };
 
-export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
-  const channelName = `item:${kind}:integration:${integrationId}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
-};
-
-export const createIntegrationOptionsChannel = <TData>(
-  integrationId: string,
-  queryKey: string,
-  options: Record<string, unknown>,
-) => {
-  const optionsKey = hashObjectBase64(options);
-  const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
-};
 
 /**
  * Invalidates all cached data for a given integration by deleting every Redis key
@@ -291,19 +257,6 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
   }
 };
 
-export const createWidgetOptionsChannel = <TData>(
-  widgetKind: WidgetKind,
-  queryKey: string,
-  options: Record<string, unknown>,
-) => {
-  const optionsKey = hashObjectBase64(options);
-  const channelName = `widget:${widgetKind}:${queryKey}:options:${optionsKey}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
-};
-
-export const createItemChannel = <TData>(itemId: string) => {
-  return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
-};
 
 export const createChannelEventHistory = <TData>(channelName: string, maxElements = 32) => {
   return {

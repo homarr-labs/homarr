@@ -23,26 +23,20 @@ vi.mock("@homarr/request-handler/docker", () => ({
   },
   dockerContainersRequestHandler: {
     handler: () => ({
-      getCachedOrUpdatedDataAsync: async () => {
-        return await Promise.resolve({ containers: [] });
-      },
-      invalidateAsync: async () => {
-        return await Promise.resolve();
+      getDataAsync: async () => {
+        return await Promise.resolve({ data: [], timestamp: new Date() });
       },
     }),
   },
 }));
 vi.mock("@homarr/redis", () => ({
   createCacheChannel: () => ({
-    // eslint-disable-next-line @typescript-eslint/require-await
     consumeAsync: async () => ({
       timestamp: new Date().toISOString(),
       data: { containers: [] },
     }),
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     invalidateAsync: async () => {},
   }),
-  createWidgetOptionsChannel: () => ({}),
 }));
 
 vi.mock("@homarr/docker/env", () => ({
@@ -67,12 +61,10 @@ const validInputs: {
   [key in (typeof procedureKeys)[number]]: RouterInputs["docker"][key];
 } = {
   getContainers: undefined,
-  subscribeContainers: undefined,
   startAll: { ids: ["1"] },
   stopAll: { ids: ["1"] },
   restartAll: { ids: ["1"] },
   removeAll: { ids: ["1"] },
-  invalidate: undefined,
   logs: { id: "1", tail: 200 },
   subscribeLogs: { id: "1", tail: 200 },
 };

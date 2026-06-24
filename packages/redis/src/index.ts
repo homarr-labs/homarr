@@ -4,17 +4,14 @@ import { createListChannel, createQueueChannel, createSubPubChannel } from "./li
 
 export {
   createCacheChannel,
-  createItemAndIntegrationChannel,
-  createItemChannel,
-  createIntegrationOptionsChannel,
-  createWidgetOptionsChannel,
   createChannelWithLatestAndEvents,
   createChannelEventHistory,
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
-  createQueryCacheChannel,
-  getAllQueryCacheAsync,
+  setQueryCacheAsync,
+  getQueryCacheAsync,
+  removeQueryCacheAsync,
   invalidateIntegrationCacheAsync,
 } from "./lib/channel";
 

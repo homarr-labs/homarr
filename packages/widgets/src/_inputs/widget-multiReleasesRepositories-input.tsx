@@ -84,8 +84,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     },
     {
       refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
     },
   );
   const integrations = useMemo(
@@ -609,8 +607,6 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
   const docker = clientApi.docker.getContainers.useQuery(undefined, {
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     enabled: innerProps.isAdmin,
   });
 

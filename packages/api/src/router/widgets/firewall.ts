@@ -1,15 +1,4 @@
-import { observable } from "@trpc/server/observable";
-
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type {
-  FirewallCpuSummary,
-  FirewallInterfacesSummary,
-  FirewallMemorySummary,
-  FirewallVersionSummary,
-} from "@homarr/integrations";
 import {
   firewallCpuRequestHandler,
   firewallInterfacesRequestHandler,
@@ -27,7 +16,7 @@ export const firewallRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = firewallCpuRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -41,32 +30,6 @@ export const firewallRouter = createTRPCRouter({
         }),
       );
       return results;
-    }),
-  subscribeFirewallCpuStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
-        summary: FirewallCpuSummary;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = firewallCpuRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((summary) => {
-            emit.next({
-              integration,
-              summary,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
 
   getFirewallInterfacesStatus: publicProcedure
@@ -75,7 +38,7 @@ export const firewallRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = firewallInterfacesRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -89,32 +52,6 @@ export const firewallRouter = createTRPCRouter({
         }),
       );
       return results;
-    }),
-  subscribeFirewallInterfacesStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
-        summary: FirewallInterfacesSummary[];
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = firewallInterfacesRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((summary) => {
-            emit.next({
-              integration,
-              summary,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
 
   getFirewallVersionStatus: publicProcedure
@@ -123,7 +60,7 @@ export const firewallRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = firewallVersionRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -137,32 +74,6 @@ export const firewallRouter = createTRPCRouter({
         }),
       );
       return results;
-    }),
-  subscribeFirewallVersionStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
-        summary: FirewallVersionSummary;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = firewallVersionRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((summary) => {
-            emit.next({
-              integration,
-              summary,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
 
   getFirewallMemoryStatus: publicProcedure
@@ -171,7 +82,7 @@ export const firewallRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = firewallMemoryRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -185,31 +96,5 @@ export const firewallRouter = createTRPCRouter({
         }),
       );
       return results;
-    }),
-  subscribeFirewallMemoryStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
-        summary: FirewallMemorySummary;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = firewallMemoryRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((summary) => {
-            emit.next({
-              integration,
-              summary,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
 });

@@ -1,12 +1,11 @@
-import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { Station, Timetable } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const timetableSearchStationsRequestHandler = createCachedIntegrationRequestHandler<
+export const timetableSearchStationsRequestHandler = createIntegrationRequestHandler<
   Station[],
   IntegrationKindByCategory<"timetable">,
   { query: string }
@@ -16,10 +15,9 @@ export const timetableSearchStationsRequestHandler = createCachedIntegrationRequ
     return await integrationInstance.searchStationsAsync(input.query);
   },
   queryKey: "timetableSearchStations",
-  cacheDuration: dayjs.duration(1, "day"),
 });
 
-export const timetableGetTimetableRequestHandler = createCachedIntegrationRequestHandler<
+export const timetableGetTimetableRequestHandler = createIntegrationRequestHandler<
   Timetable,
   IntegrationKindByCategory<"timetable">,
   { stationId: string; limit: number }
@@ -32,5 +30,4 @@ export const timetableGetTimetableRequestHandler = createCachedIntegrationReques
     });
   },
   queryKey: "timetableGetTimetable",
-  cacheDuration: dayjs.duration(1, "minute"),
 });

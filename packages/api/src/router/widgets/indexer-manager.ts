@@ -1,9 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import type { Indexer } from "@homarr/integrations/types";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
 import type { IntegrationAction } from "../../middlewares/integration";
@@ -20,7 +18,7 @@ export const indexerManagerRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-          const { data: indexers } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data: indexers } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
@@ -29,29 +27,6 @@ export const indexerManagerRouter = createTRPCRouter({
         }),
       );
       return results;
-    }),
-
-  subscribeIndexersStatus: publicProcedure
-    .concat(createIndexerManagerIntegrationMiddleware("query"))
-    .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; indexers: Indexer[] }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const innerHandler = indexerManagerRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((indexers) => {
-            emit.next({
-              integrationId: integrationWithSecrets.id,
-              indexers,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
   testAllIndexers: protectedProcedure
     .concat(createIndexerManagerIntegrationMiddleware("interact"))

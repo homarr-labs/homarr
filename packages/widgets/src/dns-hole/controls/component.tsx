@@ -51,50 +51,10 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery({
+    integrationIds,
+  });
   const utils = clientApi.useUtils();
-  // Subscribe to summary updates
-  clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.dnsHole.summary.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) return undefined;
-
-            const newData = prevData.map((summary) =>
-              summary.integration.id === data.integration.id
-                ? {
-                    integration: {
-                      ...summary.integration,
-                      updatedAt: new Date(),
-                    },
-                    summary: data.summary,
-                  }
-                : summary,
-            );
-
-            return newData;
-          },
-        );
-      },
-    },
-  );
 
   // Mutations for dnsHole state, set to undefined on click, and change again on settle
   const { mutate: enableDns } = clientApi.widget.dnsHole.enable.useMutation({

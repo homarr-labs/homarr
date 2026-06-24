@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
@@ -160,21 +161,21 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   });
   const relativeTime = useTimeAgo(data.timestamp);
   const utils = clientApi.useUtils();
-  const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
-    async onSuccess() {
-      await utils.docker.getContainers.invalidate();
+  const [isPending, setIsPending] = useState(false);
+  const mutate = useCallback(() => {
+    setIsPending(true);
+    void utils.docker.getContainers.invalidate().then(() => {
       showSuccessNotification({
         title: tDocker("action.refresh.notification.success.title"),
         message: tDocker("action.refresh.notification.success.message"),
       });
-    },
-    onError() {
+    }).catch(() => {
       showErrorNotification({
         title: tDocker("action.refresh.notification.error.title"),
         message: tDocker("action.refresh.notification.error.message"),
       });
-    },
-  });
+    }).finally(() => setIsPending(false));
+  }, [utils, tDocker]);
 
   const table = useTranslatedMantineReactTable({
     data: data.containers,

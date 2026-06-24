@@ -67,7 +67,7 @@ export default function BeszelSystemStatsWidget({
     data: systemsResult = [],
     isPending: systemsPending,
     error: systemsError,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { staleTime: 30 * 1000, retry: false });
+  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
   const systems = useMemo(
     () => systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name }))),
@@ -100,10 +100,8 @@ export default function BeszelSystemStatsWidget({
       includeDocker: showDocker,
     },
     {
-      staleTime: 30 * 1000,
       refetchInterval: isLive ? false : 5_000,
       enabled: !isLive && systemReady && selectedSystem !== "",
-      retry: false,
     },
   );
 

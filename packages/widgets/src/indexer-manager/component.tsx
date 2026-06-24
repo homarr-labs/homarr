@@ -18,33 +18,10 @@ export default function IndexerManagerWidget({
   height,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery(
-    { integrationIds },
-    {
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
 
   const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation();
   const board = useRequiredBoard();
-
-  clientApi.widget.indexerManager.subscribeIndexersStatus.useSubscription(
-    { integrationIds },
-    {
-      onData(newData) {
-        utils.widget.indexerManager.getIndexersStatus.setData({ integrationIds }, (previousData) =>
-          previousData?.map((item) =>
-            item.integrationId === newData.integrationId ? { ...item, indexers: newData.indexers } : item,
-          ),
-        );
-      },
-    },
-  );
-
   const hasSmallWidth = width < 256;
   const hasSmallHeight = height < 256;
 

@@ -1,6 +1,3 @@
-import { observable } from "@trpc/server/observable";
-
-import type { SpeedtestTrackerDashboardData } from "@homarr/integrations/types";
 import { speedtestTrackerRequestHandler } from "@homarr/request-handler/speedtest-tracker";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -13,7 +10,7 @@ export const speedtestTrackerRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = speedtestTrackerRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
@@ -26,30 +23,5 @@ export const speedtestTrackerRouter = createTRPCRouter({
       );
 
       return results;
-    }),
-
-  subscribeToDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "speedtestTracker"))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integrationId: string;
-        dashboard: SpeedtestTrackerDashboardData;
-        timestamp: Date;
-      }>((emit) => {
-        const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = speedtestTrackerRequestHandler.handler(integration, {});
-          return innerHandler.subscribe((dashboard) => {
-            emit.next({
-              integrationId: integration.id,
-              dashboard,
-              timestamp: new Date(),
-            });
-          });
-        });
-
-        return () => {
-          unsubscribes.forEach((unsubscribe) => unsubscribe());
-        };
-      });
     }),
 });

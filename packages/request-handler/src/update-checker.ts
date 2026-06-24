@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Octokit } from "octokit";
 import { compareSemVer, isValidSemVer, parseSemVer } from "semver-parser";
 
@@ -6,26 +5,18 @@ import { env } from "@homarr/common/env";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createChannelWithLatestAndEvents } from "@homarr/redis";
-import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
+import { createRequestHandler } from "@homarr/request-handler/lib/request-handler";
 
 import packageJson from "../../../package.json";
 
 const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
-export const updateCheckerRequestHandler = createCachedRequestHandler({
+export const updateCheckerRequestHandler = createRequestHandler({
   queryKey: "homarr-update-checker",
-  cacheDuration: dayjs.duration(1, "day"),
-  fallbackToStaleOnError: true,
   async requestAsync(_) {
     return {
       availableUpdates: await getAvailableUpdatesAsync(packageJson.version),
     };
-  },
-  createRedisChannel() {
-    return createChannelWithLatestAndEvents<{
-      availableUpdates: Update[];
-    }>("homarr:update");
   },
 });
 

@@ -1,4 +1,3 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -46,7 +45,7 @@ export const umamiRouter = createTRPCRouter({
             timeFrame: input.timeFrame,
             eventName: input.eventName,
           });
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
@@ -67,7 +66,7 @@ export const umamiRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       try {
         const innerHandler = umamiEventNamesRequestHandler.handler(ctx.integration, { websiteId: input.websiteId });
-        const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data } = await innerHandler.getDataAsync();
         return data;
       } catch (error) {
         logger.warn(
@@ -93,7 +92,7 @@ export const umamiRouter = createTRPCRouter({
           timeFrame: input.timeFrame,
           limit: input.limit,
         });
-        const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data } = await innerHandler.getDataAsync();
         return data;
       } catch (error) {
         logger.warn(
@@ -123,7 +122,7 @@ export const umamiRouter = createTRPCRouter({
           timeFrame: input.timeFrame,
           limit: input.limit,
         });
-        const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data } = await innerHandler.getDataAsync();
         return data;
       } catch (error) {
         logger.warn(
@@ -154,7 +153,7 @@ export const umamiRouter = createTRPCRouter({
           timeFrame: input.timeFrame,
           eventNames: sortedNames,
         });
-        const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data } = await innerHandler.getDataAsync();
         return data;
       } catch (error) {
         logger.warn(
@@ -176,7 +175,7 @@ export const umamiRouter = createTRPCRouter({
         const innerHandler = umamiActiveVisitorsRequestHandler.handler(ctx.integration, {
           websiteId: input.websiteId,
         });
-        const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data } = await innerHandler.getDataAsync();
         return data;
       } catch (error) {
         logger.warn(
@@ -184,22 +183,5 @@ export const umamiRouter = createTRPCRouter({
         );
         return 0;
       }
-    }),
-
-  subscribeActiveVisitors: publicProcedure
-    .input(z.object({ websiteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami"))
-    .subscription(({ ctx, input }) => {
-      return observable<number>((emit) => {
-        const innerHandler = umamiActiveVisitorsRequestHandler.handler(ctx.integration, {
-          websiteId: input.websiteId,
-        });
-        const unsubscribe = innerHandler.subscribe((count) => {
-          emit.next(count);
-        });
-        return () => {
-          unsubscribe();
-        };
-      });
     }),
 });

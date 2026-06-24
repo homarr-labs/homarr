@@ -107,29 +107,7 @@ interface UptimeKumaContentProps {
 
 function UptimeKumaContent({ integrationIds, isEditMode, options, width }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery(
-    { integrationIds },
-    { staleTime: 30 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.uptimeKuma.subscribeToDashboard.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.uptimeKuma.getDashboard.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) => {
-            if (instance.integrationId === newData.integrationId) {
-              return { ...instance, dashboard: newData.dashboard, updatedAt: newData.timestamp };
-            }
-            return instance;
-          });
-        });
-      },
-    },
-  );
+  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
 
   if (!dashboardData) return <WidgetEmptyState />;
 

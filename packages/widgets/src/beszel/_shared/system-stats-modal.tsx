@@ -43,7 +43,6 @@ export const BeszelSystemStatsModal = createModal<BeszelSystemStatsModalProps>((
       timePeriod,
       includeDocker: false,
     },
-    { staleTime: 30_000 },
   );
 
   const mappers = useMemo(

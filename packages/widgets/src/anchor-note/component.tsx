@@ -145,18 +145,10 @@ interface AnchorNoteWidgetContentProps {
 
 const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
-  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery(
-    {
-      integrationId,
-      noteId,
-    },
-    {
-      staleTime: 15 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
+    integrationId,
+    noteId,
+  });
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);

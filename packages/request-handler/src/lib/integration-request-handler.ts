@@ -1,11 +1,8 @@
-import type { Duration } from "dayjs/plugin/duration";
-
 import type { Modify } from "@homarr/common/types";
 import type { Integration, IntegrationSecret } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
-import { createIntegrationOptionsChannel } from "@homarr/redis";
 
-import { createCachedRequestHandler } from "./cached-request-handler";
+import { createRequestHandler } from "./request-handler";
 
 type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"> & {
   kind: TKind;
@@ -16,14 +13,11 @@ type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
   queryKey: string;
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
-  cacheDuration: Duration;
-  cacheDurationForInput?: (input: TInput) => Duration | undefined;
-  fallbackToStaleOnError?: boolean;
   retry?: { attempts?: number; delayMs?: number };
   isValid?: (data: TData) => boolean;
 }
 
-export const createCachedIntegrationRequestHandler = <
+export const createIntegrationRequestHandler = <
   TData,
   TKind extends IntegrationKind,
   TInput extends Record<string, unknown>,
@@ -32,18 +26,11 @@ export const createCachedIntegrationRequestHandler = <
 ) => {
   return {
     handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
-      createCachedRequestHandler({
+      createRequestHandler<TData, { options: TInput; integration: IntegrationOfKind<TKind> }>({
         queryKey: options.queryKey,
-        requestAsync: async (input: { options: TInput; integration: IntegrationOfKind<TKind> }) => {
-          return await options.requestAsync(input.integration, input.options);
-        },
-        cacheDuration: options.cacheDurationForInput?.(itemOptions) ?? options.cacheDuration,
-        fallbackToStaleOnError: options.fallbackToStaleOnError,
+        requestAsync: async (input) => options.requestAsync(input.integration, input.options),
         retry: options.retry,
         isValid: options.isValid,
-        createRedisChannel(input, handlerOptions) {
-          return createIntegrationOptionsChannel<TData>(input.integration.id, handlerOptions.queryKey, input.options);
-        },
       }).handler({ options: itemOptions, integration }),
   };
 };

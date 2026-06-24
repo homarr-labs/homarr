@@ -23,18 +23,10 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
-    {
-      integrationIds,
-      showOnlyPlaying: options.showOnlyPlaying,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+    integrationIds,
+    showOnlyPlaying: options.showOnlyPlaying,
+  });
 
   const t = useScopedI18n("widget.mediaServer");
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
@@ -81,32 +73,6 @@ export default function MediaServerWidget({
       },
     ],
     [t],
-  );
-
-  clientApi.widget.mediaServer.subscribeToCurrentStreams.useSubscription(
-    {
-      integrationIds,
-      showOnlyPlaying: options.showOnlyPlaying,
-    },
-    {
-      enabled: !isEditMode,
-      onData(data) {
-        utils.widget.mediaServer.getCurrentStreams.setData(
-          { integrationIds, showOnlyPlaying: options.showOnlyPlaying },
-          (previousData) => {
-            return previousData?.map((pair) => {
-              if (pair.integrationId === data.integrationId) {
-                return {
-                  ...pair,
-                  sessions: data.data,
-                };
-              }
-              return pair;
-            });
-          },
-        );
-      },
-    },
   );
 
   // Only render the flat list of sessions when the currentStreams change

@@ -11,18 +11,7 @@ import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MinecraftServerStatusWidget({ options }: WidgetComponentProps<"minecraftServerStatus">) {
-  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options, {
-    staleTime: 5 * 60 * 1000,
-  });
-  const utils = clientApi.useUtils();
-  clientApi.widget.minecraft.subscribeServerStatus.useSubscription(options, {
-    onData(data) {
-      utils.widget.minecraft.getServerStatus.setData(options, {
-        data,
-        timestamp: new Date(),
-      });
-    },
-  });
+  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const tStatus = useScopedI18n("widget.minecraftServerStatus.status");
 
   if (!result) return <WidgetEmptyState />;

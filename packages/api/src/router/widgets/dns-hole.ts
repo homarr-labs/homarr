@@ -1,12 +1,7 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -26,9 +21,7 @@ export const dnsHoleRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -44,33 +37,6 @@ export const dnsHoleRouter = createTRPCRouter({
       return results;
     }),
 
-  subscribeToSummary: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole"> }>;
-        summary: DnsHoleSummary;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = dnsHoleRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((summary) => {
-            emit.next({
-              integration,
-              summary,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
-    }),
-
   enable: protectedProcedure
     .meta({
       mcp: {
@@ -83,12 +49,6 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
-
-      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-      // We need to wait for the integration to be enabled before invalidating the cache
-      await new Promise<void>((resolve) => {
-        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
-      });
     }),
 
   disable: protectedProcedure
@@ -108,11 +68,5 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
-
-      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-      // We need to wait for the integration to be disabled before invalidating the cache
-      await new Promise<void>((resolve) => {
-        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
-      });
     }),
 });

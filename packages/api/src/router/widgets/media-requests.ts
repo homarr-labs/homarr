@@ -1,10 +1,8 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
-import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
@@ -25,9 +23,7 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data } = await innerHandler.getDataAsync();
           return {
             integration: {
               id: integration.id,
@@ -56,32 +52,6 @@ export const mediaRequestsRouter = createTRPCRouter({
           );
         });
     }),
-  subscribeToLatestRequests: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integrationId: string;
-        requests: MediaRequest[];
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = mediaRequestListRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((requests) => {
-            emit.next({
-              integrationId: integration.id,
-              requests,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
-    }),
   getStats: publicProcedure
     .meta({
       mcp: {
@@ -95,9 +65,7 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestStatsRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data } = await innerHandler.getDataAsync();
           return {
             integration: {
               id: integration.id,
@@ -139,7 +107,6 @@ export const mediaRequestsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx: { integration }, input }) => {
       const integrationInstance = await createIntegrationAsync(integration);
-      const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
       const answerActions = {
         approve: (id: number) => integrationInstance.approveRequestAsync(id),
@@ -147,6 +114,5 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
-      await innerHandler.invalidateAsync();
     }),
 });

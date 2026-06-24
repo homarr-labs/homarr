@@ -74,3 +74,4 @@ apps/nextjs/public/images/background.png
 # docusaurus
 apps/docs/.docusaurus
 apps/docs/build
+.pnpm-store

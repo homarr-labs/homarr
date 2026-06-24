@@ -1,11 +1,6 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
@@ -32,9 +27,7 @@ export const downloadsRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
 
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integration: {
@@ -47,35 +40,6 @@ export const downloadsRouter = createTRPCRouter({
           };
         }),
       );
-    }),
-  subscribeToJobsAndStatuses: publicProcedure
-    .concat(createDownloadClientIntegrationMiddleware("query"))
-    .input(z.object({ limitPerIntegration: z.number().default(50) }))
-    .subscription(({ ctx, input }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
-        data: DownloadClientJobsAndStatus;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {
-            limit: input.limitPerIntegration,
-          });
-          const unsubscribe = innerHandler.subscribe((data) => {
-            emit.next({
-              integration,
-              data,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
     }),
   pause: protectedProcedure
     .meta({

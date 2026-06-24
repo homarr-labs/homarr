@@ -5,8 +5,8 @@ import { TRPCError } from "@trpc/server";
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
-import type { DehydratedState } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { PersistedClient } from "@tanstack/react-query-persist-client";
 import { parse } from "superjson";
 
 import { getQueryClient } from "@homarr/api/server";
@@ -17,7 +17,7 @@ import { isNullOrWhitespace } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
-import { getAllQueryCacheAsync } from "@homarr/redis";
+import { getQueryCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
@@ -118,35 +118,15 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
   };
 };
 
-interface PersistedEntry {
-  state: { data: unknown; dataUpdatedAt: number; status: string };
-  queryKey: unknown[];
-  queryHash: string;
-}
-
 async function QueryCacheHydration({ userId, boardId }: { userId: string; boardId: string }) {
   try {
-    const entries = await getAllQueryCacheAsync(userId, boardId);
-    const queries: DehydratedState["queries"] = [];
+    const serialized = await getQueryCacheAsync(userId, boardId);
+    if (!serialized) return null;
 
-    for (const serialized of Object.values(entries)) {
-      try {
-        const persisted = parse<PersistedEntry>(serialized);
-        if (persisted.state.status !== "success") continue;
+    const persisted = parse<PersistedClient>(serialized);
+    if (!persisted?.clientState?.queries?.length) return null;
 
-        queries.push({
-          state: persisted.state as DehydratedState["queries"][number]["state"],
-          queryKey: persisted.queryKey,
-          queryHash: persisted.queryHash,
-        });
-      } catch {
-        // skip malformed entries
-      }
-    }
-
-    if (queries.length === 0) return null;
-
-    return <HydrationBoundary state={{ mutations: [], queries }} />;
+    return <HydrationBoundary state={persisted.clientState} />;
   } catch {
     return null;
   }

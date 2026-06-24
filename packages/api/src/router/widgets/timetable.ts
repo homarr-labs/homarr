@@ -20,7 +20,7 @@ export const timetableRouter = createTRPCRouter({
         limit: input.limit,
       });
 
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await innerHandler.getDataAsync();
 
       return data;
     }),
@@ -36,7 +36,7 @@ export const timetableRouter = createTRPCRouter({
         query: input.query,
       });
 
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await innerHandler.getDataAsync();
 
       return data;
     }),

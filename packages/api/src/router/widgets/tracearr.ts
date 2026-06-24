@@ -1,6 +1,3 @@
-import { observable } from "@trpc/server/observable";
-
-import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { tracearrRequestHandler } from "@homarr/request-handler/tracearr";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -11,7 +8,7 @@ export const tracearrRouter = createTRPCRouter({
     const results = await Promise.all(
       ctx.integrations.map(async (integration) => {
         const innerHandler = tracearrRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data, timestamp } = await innerHandler.getDataAsync();
 
         return {
           integrationId: integration.id,
@@ -25,24 +22,4 @@ export const tracearrRouter = createTRPCRouter({
 
     return results;
   }),
-  subscribeToDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "tracearr"))
-    .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; dashboard: TracearrDashboardData; timestamp: Date }>((emit) => {
-        const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = tracearrRequestHandler.handler(integration, {});
-          return innerHandler.subscribe((dashboard) => {
-            emit.next({
-              integrationId: integration.id,
-              dashboard,
-              timestamp: new Date(),
-            });
-          });
-        });
-
-        return () => {
-          unsubscribes.forEach((unsubscribe) => unsubscribe());
-        };
-      });
-    }),
 });
