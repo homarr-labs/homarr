@@ -179,6 +179,7 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
           <input
             className="h-7 w-48 rounded-md border border-input bg-transparent pl-8 text-xs outline-none placeholder:text-muted-foreground"
             placeholder="Search…"
+            aria-label="Search submissions"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

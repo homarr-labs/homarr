@@ -253,6 +253,7 @@ const CommentsSection = ({
         <Input
           className="flex-1"
           placeholder="Write a comment…"
+          aria-label="Write a comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           onKeyDown={(e) => {
@@ -303,6 +304,7 @@ const CommentsSection = ({
                 <div className="mt-2 flex items-center gap-1">
                   <Input
                     className="flex-1"
+                    aria-label="Edit comment"
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     onKeyDown={(e) => {

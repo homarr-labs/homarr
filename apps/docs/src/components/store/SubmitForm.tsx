@@ -25,7 +25,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn, errorMessage } from "@/lib/utils";
 
@@ -185,10 +184,11 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
         if (!open && !pending) onClose();
       }}
     >
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <DialogContent
         className="max-h-[90vh] overflow-y-auto sm:max-w-xl"
         showCloseButton={!pending}
-        onDragOver={(e) => {
+        onDragOver={(e: React.DragEvent) => {
           e.preventDefault();
           setJsonDropHint(true);
         }}
@@ -348,6 +348,7 @@ const StepType = ({
         ))}
       </div>
 
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <label
         onDragOver={(e) => {
           e.preventDefault();
@@ -405,8 +406,9 @@ const StepDetails = ({
 }) => (
   <div className="flex flex-col gap-4">
     <div className="flex flex-col gap-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">{contentLabels[type]} *</Label>
+      <label htmlFor="submit-content" className="text-xs font-medium text-muted-foreground">{contentLabels[type]} *</label>
       <Textarea
+        id="submit-content"
         className="font-mono text-xs"
         value={content}
         onChange={(e) => onContentChange(e.target.value)}
@@ -422,8 +424,9 @@ const StepDetails = ({
       )}
     </div>
     <div className="flex flex-col gap-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">Title *</Label>
+      <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">Title *</label>
       <Input
+        id="submit-title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
@@ -433,8 +436,9 @@ const StepDetails = ({
       />
     </div>
     <div className="flex flex-col gap-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">Description</Label>
+      <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">Description</label>
       <Textarea
+        id="submit-description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         maxLength={2000}
@@ -465,11 +469,12 @@ const StepMedia = ({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <Label className="text-xs font-medium text-muted-foreground">Screenshots (optional, up to 5)</Label>
+        <span className="text-xs font-medium text-muted-foreground">Screenshots (optional, up to 5)</span>
         <p className="mt-0.5 text-xs text-muted-foreground/70">
           Add screenshots to help others preview your submission.
         </p>
       </div>
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <label
         onDragOver={(e) => {
           e.preventDefault();
