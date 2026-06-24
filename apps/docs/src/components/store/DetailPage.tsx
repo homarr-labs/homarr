@@ -39,7 +39,7 @@ const copyState = [
   { Icon: IconCopy, label: "Copy", iconClass: "" },
   { Icon: IconCheck, label: "Copied!", iconClass: "text-green-500" },
 ] as const;
-const scoreClassBySign = { positive: "text-primary", negative: "text-destructive", neutral: "" } as const;
+const scoreClassBySign = { positive: "text-destructive", negative: "text-destructive", neutral: "" } as const;
 const dotClass = ["bg-white/40", "bg-white"];
 
 const commentAuthorName = (c: StoreComment) => c.expand?.author?.name || c.expand?.author?.username || "unknown";
@@ -540,7 +540,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
             aria-label="Upvote"
             className={cn(
               "flex items-center justify-center rounded-[5px] p-1.5 transition-colors hover:bg-accent",
-              userVote?.value === 1 && "bg-primary/15 text-primary",
+              userVote?.value === 1 && "bg-destructive/15 text-destructive",
             )}
           >
             <IconArrowBigUp size={18} />

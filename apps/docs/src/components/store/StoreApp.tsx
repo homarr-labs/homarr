@@ -312,7 +312,7 @@ const SubmissionCard = ({
               aria-label="Upvote"
               className={cn(
                 "flex items-center justify-center rounded-[5px] p-1 transition-colors hover:bg-accent",
-                userVote === 1 && "bg-primary/15 text-primary",
+                userVote === 1 && "bg-destructive/15 text-destructive",
               )}
             >
               <IconArrowBigUp size={14} />
@@ -320,7 +320,7 @@ const SubmissionCard = ({
             <span
               className={cn(
                 "min-w-5 text-center text-xs font-semibold tabular-nums",
-                score > 0 && "text-primary",
+                score > 0 && "text-destructive",
                 score < 0 && "text-destructive",
               )}
             >
