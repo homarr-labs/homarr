@@ -533,11 +533,9 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
         <p className="text-lg font-medium">Submission not found</p>
         <p className="mt-1 text-sm text-muted-foreground">This listing may have been removed or the link is invalid.</p>
-        <Button variant="ghost" size="sm" className="mt-6 gap-1.5" asChild>
-          <Link to="/workshop">
-            <IconArrowLeft size={14} /> Back to Workshop
-          </Link>
-        </Button>
+        <Link to="/workshop" className="mt-6 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+          <IconArrowLeft size={14} /> Back to Workshop
+        </Link>
       </div>
     );
   }
@@ -547,11 +545,9 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-4xl px-4 pb-16 pt-8">
-      <Button variant="ghost" size="sm" className="mb-6 gap-1.5 text-muted-foreground hover:text-foreground" asChild>
-        <Link to="/workshop">
-          <IconArrowLeft size={14} /> Back to Workshop
-        </Link>
-      </Button>
+      <Link to="/workshop" className="mb-6 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <IconArrowLeft size={14} /> Back to Workshop
+      </Link>
 
       {error && (
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
