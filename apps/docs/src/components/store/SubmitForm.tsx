@@ -406,7 +406,9 @@ const StepDetails = ({
 }) => (
   <div className="flex flex-col gap-4">
     <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-content" className="text-xs font-medium text-muted-foreground">{contentLabels[type]} *</label>
+      <label htmlFor="submit-content" className="text-xs font-medium text-muted-foreground">
+        {contentLabels[type]} *
+      </label>
       <Textarea
         id="submit-content"
         className="font-mono text-xs"
@@ -424,7 +426,9 @@ const StepDetails = ({
       )}
     </div>
     <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">Title *</label>
+      <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
+        Title *
+      </label>
       <Input
         id="submit-title"
         value={title}
@@ -436,7 +440,9 @@ const StepDetails = ({
       />
     </div>
     <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">Description</label>
+      <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
+        Description
+      </label>
       <Textarea
         id="submit-description"
         value={description}
