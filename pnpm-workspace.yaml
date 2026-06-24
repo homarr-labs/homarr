@@ -140,7 +140,7 @@ catalog:
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.21.0
   "mantine-contextmenu": ^9.3.1
-  mantine-datatable: ^9.3.0
+  mantine-datatable: ^9.3.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
