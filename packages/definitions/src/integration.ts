@@ -453,6 +453,7 @@ export const integrationDefs = {
       "smartHomeServer",
       "ups",
       "uptimeMonitoring",
+      "mediaOrganizer",
     ],
     documentationUrl: null,
   },

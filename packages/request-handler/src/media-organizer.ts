@@ -22,7 +22,7 @@ export const mediaOrganizerRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = (await createIntegrationAsync(integration)) as unknown as IMediaOrganizerIntegration;
     const [missingResult, queueResult] = await Promise.all([
       integrationInstance.getMissingAsync(10),
-      integrationInstance.getQueueAsync(),
+      integrationInstance.getMediaQueueAsync(),
     ]);
     return {
       missing: missingResult.items,

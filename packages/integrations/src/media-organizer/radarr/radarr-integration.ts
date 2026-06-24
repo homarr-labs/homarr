@@ -146,7 +146,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     };
   }
 
-  async getQueueAsync(): Promise<{ items: QueuedMediaItem[]; totalCount: number }> {
+  async getMediaQueueAsync(): Promise<{ items: QueuedMediaItem[]; totalCount: number }> {
     const url = this.url("/api/v3/queue", {
       page: 1,
       pageSize: 20,
