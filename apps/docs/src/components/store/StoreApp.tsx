@@ -285,21 +285,23 @@ const SubmissionCard = ({
   };
 
   return (
-    <Card className="transition-transform duration-150 hover:scale-[1.02]">
+    <Card className="relative transition-transform duration-150 hover:scale-[1.02]">
+      <Badge
+        variant="secondary"
+        className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
+      >
+        <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+        {typeLabels[submission.type]}
+      </Badge>
+
       <a href={`/workshop/${submission.id}/`} className="block">
         {screenshotUrls.length > 0 && <ScreenshotGallery urls={screenshotUrls} title={submission.title} />}
       </a>
 
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <a href={`/workshop/${submission.id}/`} className="min-w-0 truncate hover:underline">
-            <CardTitle className="truncate">{submission.title}</CardTitle>
-          </a>
-          <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
-            <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
-            {typeLabels[submission.type]}
-          </Badge>
-        </div>
+        <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
+          <CardTitle className="truncate">{submission.title}</CardTitle>
+        </a>
         <CardDescription className="text-xs">
           {submission.authorName} · v{submission.version} · {relativeTime(submission.created)}
         </CardDescription>
