@@ -18,7 +18,7 @@ export const mediaServerRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get currently active streams from Plex/Jellyfin/Emby media servers. REQUIRED: integrationIds (array of media server integration IDs from integration_all), showOnlyPlaying (boolean — true to filter to actively playing streams only)",
+          "Get currently active streams from Plex/Jellyfin/Emby/Navidrome media servers. REQUIRED: integrationIds (array of media server integration IDs from integration_all), showOnlyPlaying (boolean — true to filter to actively playing streams only)",
       },
     })
     .concat(createMediaServerIntegrationMiddleware("query"))

@@ -34,9 +34,9 @@ const subsonicOk = <T extends Record<string, unknown>>(data: T) =>
     "subsonic-response": { status: "ok", version: "1.16.1", ...data },
   });
 
-const subsonicFailed = (message: string) =>
+const subsonicFailed = (message: string, code = 70) =>
   JSON.stringify({
-    "subsonic-response": { status: "failed", error: { code: 70, message } },
+    "subsonic-response": { status: "failed", error: { code, message } },
   });
 
 beforeEach(() => {
@@ -197,5 +197,130 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
       username: "user1",
       playerName: "Chrome",
     });
+  });
+});
+
+describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
+  test("maps now playing entries to stream sessions", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(
+          new Response(
+            subsonicOk({
+              nowPlaying: {
+                entry: [
+                  {
+                    title: "Song",
+                    artist: "Band",
+                    album: "LP",
+                    username: "user1",
+                    playerName: "Chrome",
+                  },
+                  {
+                    title: "Second Song",
+                    artist: "Second Artist",
+                    album: "Second Album",
+                    username: "user2",
+                    playerName: "Mobile",
+                  },
+                ],
+              },
+            }),
+            { status: 200 },
+          ),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const integration = createIntegration();
+    const result = await integration.getCurrentSessionsAsync({ showOnlyPlaying: true });
+
+    expect(result).toEqual([
+      {
+        sessionId: "user1-Chrome",
+        sessionName: "Chrome",
+        user: {
+          userId: "user1",
+          username: "user1",
+          profilePictureUrl: null,
+        },
+        currentlyPlaying: {
+          type: "audio",
+          name: "Song",
+          seasonName: "Band",
+          episodeName: null,
+          albumName: "LP",
+          episodeCount: null,
+          metadata: null,
+        },
+      },
+      {
+        sessionId: "user2-Mobile",
+        sessionName: "Mobile",
+        user: {
+          userId: "user2",
+          username: "user2",
+          profilePictureUrl: null,
+        },
+        currentlyPlaying: {
+          type: "audio",
+          name: "Second Song",
+          seasonName: "Second Artist",
+          episodeName: null,
+          albumName: "Second Album",
+          episodeCount: null,
+          metadata: null,
+        },
+      },
+    ]);
+  });
+
+  test("returns an empty array when there are no now playing entries", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(new Response(subsonicOk({ nowPlaying: {} }), { status: 200 })) as unknown as ReturnType<
+          typeof fetchWithTrustedCertificatesAsync
+        >;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const integration = createIntegration();
+    const result = await integration.getCurrentSessionsAsync({ showOnlyPlaying: false });
+
+    expect(result).toEqual([]);
+  });
+
+  test("throws on subsonic auth failure", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(
+          new Response(subsonicFailed("Wrong username or password", 40), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const integration = createIntegration();
+
+    await expect(integration.getCurrentSessionsAsync({ showOnlyPlaying: true })).rejects.toThrow(
+      "Wrong username or password",
+    );
   });
 });

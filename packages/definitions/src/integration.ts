@@ -461,7 +461,7 @@ export const integrationDefs = {
     name: "Navidrome",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
-    category: ["mediaLibrary"],
+    category: ["mediaLibrary", "mediaService"],
     documentationUrl: null,
     defaultPort: 4533,
   },
