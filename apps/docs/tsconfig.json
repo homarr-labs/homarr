@@ -16,6 +16,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@site/*": ["./*"]
+    }
   },
   "include": [
     "**/*.ts",

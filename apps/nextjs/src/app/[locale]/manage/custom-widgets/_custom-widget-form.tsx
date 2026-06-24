@@ -30,9 +30,11 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type {
   CustomWidgetAuthType,
   CustomWidgetDisplayType,
+  CustomWidgetImport,
   CustomWidgetMethod,
   CustomWidgetSecretKind,
 } from "@homarr/validation/custom-widget";
+import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 import type { displayConfigSchema } from "@homarr/validation/custom-widget";
 import { JsonPathTreePicker } from "@homarr/widgets/_inputs/json-path-tree-picker";
 
@@ -467,6 +469,90 @@ const serverToFormFieldMap: Record<string, Record<string, string>> = {
   customJsx: { template: "template" },
 };
 
+const importToFormValues: Record<string, (config: Record<string, unknown>) => Record<string, unknown>> = {
+  singleValue: (c) => ({
+    jsonPath: c.jsonPath,
+    label: c.label ?? "",
+    unit: c.unit ?? "",
+    valueSize: c.valueSize ?? "lg",
+    labelPosition: c.labelPosition ?? "below",
+  }),
+  keyValue: (c) => ({
+    mappings:
+      (c.mappings as Array<Record<string, string>>)?.map((m) => ({
+        label: m.label,
+        jsonPath: m.jsonPath,
+        unit: m.unit ?? "",
+      })) ?? [],
+    kvLayout: c.layout ?? "list",
+    kvColumns: c.columns ?? 2,
+  }),
+  table: (c) => ({
+    tablePath: c.tablePath,
+    columns: c.columns ?? [],
+    striped: c.striped ?? true,
+    compact: c.compact ?? false,
+  }),
+  statGrid: (c) => ({
+    statGridItems: c.items ?? [],
+    statGridColumns: c.columns ?? 2,
+    cardStyle: c.cardStyle ?? "filled",
+  }),
+  progressBars: (c) => ({
+    progressBars:
+      (c.bars as Array<Record<string, unknown>>)?.map((b) => ({
+        label: b.label ?? "",
+        valuePath: b.valuePath ?? "",
+        maxPath: b.maxPath ?? "",
+        unit: b.unit ?? "",
+        color: b.color ?? "blue",
+      })) ?? [],
+    showPercentage: c.showPercentage ?? true,
+    barSize: c.barSize ?? "md",
+  }),
+  statusIndicator: (c) => ({
+    statusItems:
+      (c.items as Array<Record<string, unknown>>)?.map((i) => ({
+        label: i.label ?? "",
+        jsonPath: i.jsonPath ?? "",
+        goodValues: Array.isArray(i.goodValues) ? (i.goodValues as string[]).join(", ") : String(i.goodValues ?? ""),
+      })) ?? [],
+    statusLayout: c.layout ?? "list",
+    dotSize: c.dotSize ?? "md",
+  }),
+  countGrid: (c) => ({
+    countGridItems: c.items ?? [],
+    countGridColumns: c.columns ?? 2,
+    countValueSize: c.valueSize ?? "md",
+  }),
+  raw: (c) => ({ rawJsonPath: c.jsonPath ?? "$", rawMaxHeight: c.maxHeight ?? 300 }),
+  actionButton: (c) => ({
+    buttonLabel: c.buttonLabel ?? "",
+    buttonColor: c.buttonColor ?? "blue",
+    confirmText: c.confirmText ?? "",
+    successMessage: c.successMessage ?? "",
+  }),
+  customJsx: (c) => ({ template: c.template ?? "" }),
+};
+
+function importJsonToFormValues(imported: CustomWidgetImport): Partial<z.infer<typeof formSchema>> {
+  const displayFields =
+    importToFormValues[imported.displayType]?.(imported.displayConfig as unknown as Record<string, unknown>) ?? {};
+  return {
+    name: imported.name,
+    description: imported.description ?? "",
+    iconUrl: imported.iconUrl ?? "",
+    url: imported.url,
+    authType: imported.authType,
+    headerName: imported.headerName ?? "",
+    method: imported.method,
+    requestBody: imported.requestBody ?? "",
+    displayType: imported.displayType,
+    ...displayFields,
+    secrets: [],
+  };
+}
+
 function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
   const errors: Record<string, string> = {};
   const trpcErr = err as {
@@ -680,6 +766,32 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       setPreviewJson(null);
     }
   }, [getPreviewInput, previewMutation]);
+
+  useEffect(() => {
+    if (mode !== "create") return;
+    const onPaste = (e: ClipboardEvent) => {
+      const raw = e.clipboardData?.getData("text/plain");
+      if (!raw) return;
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        return;
+      }
+      const result = customWidgetImportSchema.safeParse(parsed);
+      if (!result.success) return;
+      e.preventDefault();
+      const formValues = importJsonToFormValues(result.data);
+      form.setValues({ ...defaultCreateValues, ...formValues });
+      form.clearErrors();
+      showSuccessNotification({
+        title: t("action.paste"),
+        message: t("notification.imported" as never, { name: result.data.name }),
+      });
+    };
+    document.addEventListener("paste", onPaste);
+    return () => document.removeEventListener("paste", onPaste);
+  }, [form, t, mode]);
 
   useEffect(() => {
     if (previewRefreshSignal > 0 && hasTestedRef.current) {

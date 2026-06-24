@@ -153,6 +153,7 @@ catalog:
   oxfmt: ^0.55.0
   oxlint: ^1.70.0
   pg: ^8.22.0
+  pocketbase: ^0.26.2
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
@@ -190,6 +191,10 @@ catalog:
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
+  class-variance-authority: ^0.7.1
+  tailwind-merge: ^3.6.0
+  framer-motion: ^12.40.0
+  '@base-ui/react': ^1.5.0
 catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false

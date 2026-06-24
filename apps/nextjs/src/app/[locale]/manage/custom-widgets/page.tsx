@@ -9,6 +9,7 @@ import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { InstallWidgetFromStoreButton } from "~/components/store-install/install-from-store-buttons";
 import { CustomWidgetBetaBanner } from "./_beta-banner";
 import { ImportCustomWidgetButton } from "./_custom-widget-actions";
 import { CustomWidgetList } from "./_custom-widget-list";
@@ -28,6 +29,7 @@ export default async function CustomWidgetsPage() {
       title={t("page.list.title")}
       primaryAction={
         <Group gap="xs">
+          <InstallWidgetFromStoreButton />
           <ImportCustomWidgetButton />
           <MobileAffixButton component={Link} href="/manage/custom-widgets/new" leftSection={<IconPlus size={16} />}>
             {t("action.create")}
