@@ -29,6 +29,45 @@
   text-overflow: ellipsis;
 }
 
+/* Markdown-rendered assistant replies: keep block spacing tight inside the bubble. */
+.markdown {
+  font-size: var(--mantine-font-size-sm);
+  word-break: break-word;
+}
+
+.markdown > :first-child {
+  margin-top: 0;
+}
+
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown pre {
+  margin-block: var(--mantine-spacing-xs);
+}
+
+.markdown pre {
+  overflow-x: auto;
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-default);
+}
+
+.markdown code {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 0.85em;
+}
+
+.markdown :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-default);
+}
+
 .avatar {
   flex-shrink: 0;
   margin-top: 2px;

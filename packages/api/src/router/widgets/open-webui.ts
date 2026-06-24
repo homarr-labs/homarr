@@ -55,6 +55,15 @@ const messageText = (message: CompletionMessage): string =>
         .map((part) => part.text)
         .join(" ");
 
+// Number of chunks to retrieve per collection when grounding a reply.
+const RETRIEVAL_K = 4;
+
+// Instruction prepended to the retrieved context so the model knows how to use
+// it. Model-facing, so intentionally not localized.
+const RETRIEVAL_INSTRUCTION =
+  "Use the following context from the user's attached sources (web pages, knowledge bases, " +
+  "files, notes and chats) to answer. If the answer is not in the context, say so.";
+
 // Retrieve relevant chunks from the attached collections and prepend them as a
 // system context message so the model can ground its reply on them.
 const groundMessagesAsync = async (
@@ -65,13 +74,19 @@ const groundMessagesAsync = async (
 ): Promise<CompletionMessage[]> => {
   if (collections.length === 0 && contextTexts.length === 0) return messages;
 
-  const lastUserMessage = messages.findLast((message) => message.role === "user");
-  const query = lastUserMessage ? messageText(lastUserMessage) : "";
+  // Use the most recent user message that has text. The latest turn can be
+  // image-only (no text), in which case we fall back to the prior question so
+  // attached collections still get a meaningful retrieval query.
+  const query =
+    messages
+      .filter((message) => message.role === "user")
+      .map(messageText)
+      .findLast((text) => text.trim() !== "") ?? "";
 
   let documents: string[] = [];
   if (collections.length > 0) {
     try {
-      documents = await client.queryCollectionsAsync(collections, query, 4);
+      documents = await client.queryCollectionsAsync(collections, query, RETRIEVAL_K);
     } catch (error) {
       logger.warn("Open WebUI context retrieval failed; continuing without it", { error });
     }
@@ -82,9 +97,7 @@ const groundMessagesAsync = async (
 
   const contextMessage: CompletionMessage = {
     role: "system",
-    content:
-      "Use the following context from the user's attached sources (web pages, knowledge bases, " +
-      `files, notes and chats) to answer. If the answer is not in the context, say so.\n\n${blocks.join("\n\n")}`,
+    content: `${RETRIEVAL_INSTRUCTION}\n\n${blocks.join("\n\n")}`,
   };
   return [contextMessage, ...messages];
 };
@@ -205,9 +218,12 @@ export const openWebUiRouter = createTRPCRouter({
     }),
 
   // Streaming chat completion. Delivered over the WebSocket subscription link so
-  // tokens can be emitted as they arrive. Uses "query" access (same level as
-  // viewing the widget) to match the other integration subscriptions in the app.
-  sendMessage: publicProcedure
+  // tokens can be emitted as they arrive. A completion spends the owner's upstream
+  // LLM credits, so it must not be reachable by anonymous viewers of a public
+  // board: protectedProcedure requires a session (the WS context resolves it from
+  // the session-token cookie) and the "interact" middleware checks integration
+  // access, matching processWeb/uploadFile/transcribe above.
+  sendMessage: protectedProcedure
     .input(
       z.object({
         model: z.string(),
@@ -219,7 +235,7 @@ export const openWebUiRouter = createTRPCRouter({
         contextTexts: z.array(z.string()).optional(),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .subscription(({ ctx, input }) => {
       return observable<StreamEvent>((emit) => {
         const controller = new AbortController();
