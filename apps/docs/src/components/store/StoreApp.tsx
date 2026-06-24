@@ -42,7 +42,10 @@ import { useStore } from "./useStore";
 
 const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
-const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = { css: IconBrandCss3, widget: IconPuzzle };
+const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = {
+  css: IconBrandCss3,
+  widget: IconPuzzle,
+};
 const typeBgColors: Record<SubmissionType, string> = { css: "bg-blue-500/5", widget: "bg-yellow-500/5" };
 const filterActiveClass = "bg-background text-foreground shadow-sm";
 const filterInactiveClass = "text-muted-foreground hover:text-foreground";
@@ -65,7 +68,6 @@ const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
   { value: "new", label: "Newest" },
 ];
-
 
 const relativeTime = (date: string) => {
   const minutes = Math.floor((Date.now() - new Date(date).getTime()) / 60000);
@@ -191,7 +193,9 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
 
       {store.loading && (
         <div className="columns-1 gap-4 lg:columns-2 xl:columns-3 2xl:columns-4 [&>*]:mb-4">
-          {Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} hasImage={i % 3 === 0} />)}
+          {Array.from({ length: 6 }, (_, i) => (
+            <SkeletonCard key={i} hasImage={i % 3 === 0} />
+          ))}
         </div>
       )}
 
@@ -422,7 +426,9 @@ const SubmissionCard = ({
               <button
                 className={cn(
                   "flex items-center gap-1 rounded px-1 py-0.5 text-xs transition-colors",
-                  confirmDelete ? "bg-destructive/10 text-destructive" : "text-muted-foreground/60 hover:text-destructive",
+                  confirmDelete
+                    ? "bg-destructive/10 text-destructive"
+                    : "text-muted-foreground/60 hover:text-destructive",
                 )}
                 onClick={handleDelete}
                 aria-label="Delete"
@@ -516,4 +522,3 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
     </div>
   );
 };
-

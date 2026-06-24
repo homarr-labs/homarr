@@ -53,9 +53,7 @@ export const useStore = (storeUrl: string) => {
     setLoading(true);
     setError(null);
     try {
-      setSubmissions(
-        await pb.collection("marketplace").getFullList<StoreSubmission>({ sort: "-created" }),
-      );
+      setSubmissions(await pb.collection("marketplace").getFullList<StoreSubmission>({ sort: "-created" }));
       await refreshVotes();
     } catch (caught) {
       setError(errorMessage(caught, "Failed to load the workshop"));

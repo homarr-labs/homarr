@@ -227,7 +227,9 @@ const CommentsSection = ({
     const trimmed = editContent.trim();
     if (!trimmed) return;
     try {
-      const updated = await pb.collection("comments").update<StoreComment>(id, { content: trimmed }, { expand: "author" });
+      const updated = await pb
+        .collection("comments")
+        .update<StoreComment>(id, { content: trimmed }, { expand: "author" });
       setRows((prev) => prev.map((c) => (c.id === id ? updated : c)));
       setEditingId(null);
     } catch (caught) {
@@ -329,7 +331,12 @@ const DeleteConfirmButton = ({ onConfirm }: { onConfirm: () => void }) => {
   const [pending, setPending] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(null);
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   const handleClick = () => {
     if (!pending) {
@@ -345,7 +352,9 @@ const DeleteConfirmButton = ({ onConfirm }: { onConfirm: () => void }) => {
     <Button
       variant="outline"
       size="sm"
-      className={cn(pending ? "border-destructive bg-destructive/10 text-destructive" : "text-destructive hover:bg-destructive/10")}
+      className={cn(
+        pending ? "border-destructive bg-destructive/10 text-destructive" : "text-destructive hover:bg-destructive/10",
+      )}
       onClick={handleClick}
     >
       <IconTrash size={14} /> {pending ? "Confirm delete?" : "Delete"}
@@ -465,7 +474,11 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
     const isToggleOff = prev?.value === value;
     const [upD, downD] = voteDelta(prev?.value, value);
 
-    setUserVote(isToggleOff ? undefined : { ...(prev ?? { id: "", submission: submission.id, user: userId }), value } as StoreVote);
+    setUserVote(
+      isToggleOff
+        ? undefined
+        : ({ ...(prev ?? { id: "", submission: submission.id, user: userId }), value } as StoreVote),
+    );
     setSubmission((s) => (s ? { ...s, upvotes: s.upvotes + upD, downvotes: s.downvotes + downD } : s));
 
     try {
@@ -577,7 +590,9 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
           >
             <IconArrowBigUp size={18} />
           </button>
-          <span className={cn("min-w-6 text-center text-sm font-semibold tabular-nums", scoreClassBySign[scoreSign(score)])}>
+          <span
+            className={cn("min-w-6 text-center text-sm font-semibold tabular-nums", scoreClassBySign[scoreSign(score)])}
+          >
             {score}
           </span>
           <button
@@ -614,9 +629,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
             <IconDownload size={14} /> Download
           </Button>
         )}
-        {user?.id === submission.author && (
-          <DeleteConfirmButton onConfirm={handleDelete} />
-        )}
+        {user?.id === submission.author && <DeleteConfirmButton onConfirm={handleDelete} />}
       </div>
 
       <div className="mt-6">
@@ -643,9 +656,7 @@ export default function MarketplaceDetailPage() {
   return (
     <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
       <main className="marketplace bg-background text-foreground min-h-[80vh]">
-        <BrowserOnly fallback={<DetailSkeleton />}>
-          {() => <MarketplaceDetail storeUrl={storeUrl} />}
-        </BrowserOnly>
+        <BrowserOnly fallback={<DetailSkeleton />}>{() => <MarketplaceDetail storeUrl={storeUrl} />}</BrowserOnly>
       </main>
     </Layout>
   );

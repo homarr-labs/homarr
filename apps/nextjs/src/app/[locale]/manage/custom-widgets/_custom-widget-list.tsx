@@ -53,7 +53,11 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
       const raw = e.clipboardData?.getData("text/plain");
       if (!raw) return;
       let parsed: unknown;
-      try { parsed = JSON.parse(raw); } catch { return; }
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        return;
+      }
       const result = customWidgetImportSchema.safeParse(parsed);
       if (!result.success) return;
       e.preventDefault();
@@ -79,8 +83,12 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
         <Table.Thead>
           <Table.Tr>
             <Table.Th>{t("table.name")}</Table.Th>
-            <Table.Th w="30%" visibleFrom="sm">{t("table.url")}</Table.Th>
-            <Table.Th w={120} visibleFrom="xs">{t("table.display")}</Table.Th>
+            <Table.Th w="30%" visibleFrom="sm">
+              {t("table.url")}
+            </Table.Th>
+            <Table.Th w={120} visibleFrom="xs">
+              {t("table.display")}
+            </Table.Th>
             <Table.Th w={90} />
           </Table.Tr>
         </Table.Thead>
