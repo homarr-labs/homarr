@@ -6,7 +6,7 @@ import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getMantineColor } from "@homarr/common";
+import { getMantineColor, toValidDate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
@@ -38,6 +38,19 @@ interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
 }
+
+const formatReleaseDate = (value: unknown, locale: string) => {
+  const date = toValidDate(value);
+  if (!date) return "—";
+  return Intl.DateTimeFormat(locale, {
+    month: "2-digit",
+    year: "numeric",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date);
+};
 
 const Item = ({ item, options }: ItemProps) => {
   const locale = useCurrentLocale();
@@ -93,14 +106,7 @@ const Item = ({ item, options }: ItemProps) => {
               <Group gap={6} style={{ rowGap: 0 }}>
                 <Info
                   icon={IconCalendar}
-                  label={Intl.DateTimeFormat(locale, {
-                    month: "2-digit",
-                    year: "numeric",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  }).format(item.releaseDate)}
+                  label={formatReleaseDate(item.releaseDate, locale)}
                 />
                 {length !== undefined && (
                   <>

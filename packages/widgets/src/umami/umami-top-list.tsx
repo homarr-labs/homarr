@@ -6,6 +6,8 @@ import { clientApi } from "@homarr/api/client";
 import type { UmamiMetricItem } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { umamiQueryOptions } from "./umami-utils";
+
 interface UmamiTopListProps {
   integrationIds: string[];
   websiteId: string;
@@ -15,23 +17,19 @@ interface UmamiTopListProps {
 
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const { data = [] } = clientApi.widget.umami.getTopPages.useQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    limit,
-  });
+  const { data = [] } = clientApi.widget.umami.getTopPages.useQuery(
+    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
+    umamiQueryOptions,
+  );
   return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("topPages.direct")} />;
 }
 
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const { data = [] } = clientApi.widget.umami.getTopReferrers.useQuery({
-    integrationId: integrationIds[0] ?? "",
-    websiteId,
-    timeFrame,
-    limit,
-  });
+  const { data = [] } = clientApi.widget.umami.getTopReferrers.useQuery(
+    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
+    umamiQueryOptions,
+  );
   return (
     <UmamiTopList
       items={data}

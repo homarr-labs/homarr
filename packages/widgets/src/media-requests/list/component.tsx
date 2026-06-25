@@ -19,6 +19,7 @@ import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { toValidDate } from "@homarr/common";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
@@ -134,7 +135,7 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
             <Group justify="space-between" gap="xs" className="mediaRequests-list-item-top-group">
               <Group gap="xs">
                 <Text className="mediaRequests-list-item-media-year" size="xs">
-                  {request.airDate?.getFullYear() ?? t("toBeDetermined")}
+                  {toValidDate(request.airDate)?.getFullYear() ?? t("toBeDetermined")}
                 </Text>
                 {!isTiny && (
                   <Badge

@@ -61,35 +61,35 @@ const wsClient = createWSClient({
 
 export function TRPCReactProvider(props: PropsWithChildren) {
   const [persister] = useState(() => createWidgetQueryPersister());
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: queryCacheDefaultStaleTimeMs,
-            refetchInterval: queryCacheDefaultRefetchIntervalMs,
-            gcTime: queryCacheDefaultGcTimeMs,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            retry: 3,
-          },
-          mutations: {
-            onError(error) {
-              if (
-                error instanceof TRPCClientError &&
-                error.data?.code === "FORBIDDEN" &&
-                error.message === "Mutations are disabled in demo mode"
-              ) {
-                showWarningNotification({
-                  title: "Demo mode",
-                  message: "This action is disabled in demo mode.",
-                });
-              }
-            },
+  const [queryClient] = useState(() => {
+    const client = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: queryCacheDefaultStaleTimeMs,
+          gcTime: queryCacheDefaultGcTimeMs,
+          refetchOnWindowFocus: false,
+          refetchOnReconnect: false,
+          retry: 3,
+        },
+        mutations: {
+          onError(error) {
+            if (
+              error instanceof TRPCClientError &&
+              error.data?.code === "FORBIDDEN" &&
+              error.message === "Mutations are disabled in demo mode"
+            ) {
+              showWarningNotification({
+                title: "Demo mode",
+                message: "This action is disabled in demo mode.",
+              });
+            }
           },
         },
-      }),
-  );
+      },
+    });
+    client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
+    return client;
+  });
 
   const [trpcClient] = useState(() => {
     return clientApi.createClient({
