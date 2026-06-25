@@ -25,7 +25,13 @@ export const queryCacheRouter = createTRPCRouter({
     await validateBoardAccessAsync(ctx, input.boardId);
     const userId = ctx.session?.user.id ?? "anonymous";
     return {
-      stored: await setQueryCacheAsync(userId, input.boardId, input.value, queryCacheDefaultGcTimeMs, queryCacheMaxValueBytes),
+      stored: await setQueryCacheAsync(
+        userId,
+        input.boardId,
+        input.value,
+        queryCacheDefaultGcTimeMs,
+        queryCacheMaxValueBytes,
+      ),
     };
   }),
   removeItem: publicProcedure.input(queryCacheBoardInput).mutation(async ({ ctx, input }) => {

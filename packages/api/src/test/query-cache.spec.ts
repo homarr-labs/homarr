@@ -19,11 +19,13 @@ const redisMock = vi.hoisted(() => {
 
   return {
     values,
-    setQueryCacheAsync: vi.fn(async (_userId: string, _boardId: string, value: string, _ttlMs: number, maxValueBytes: number) => {
-      if (Buffer.byteLength(value, "utf8") > maxValueBytes) return false;
-      values.set(`${_userId}:${_boardId}`, value);
-      return true;
-    }),
+    setQueryCacheAsync: vi.fn(
+      async (_userId: string, _boardId: string, value: string, _ttlMs: number, maxValueBytes: number) => {
+        if (Buffer.byteLength(value, "utf8") > maxValueBytes) return false;
+        values.set(`${_userId}:${_boardId}`, value);
+        return true;
+      },
+    ),
     removeQueryCacheAsync: vi.fn(async (_userId: string, _boardId: string) => {
       values.delete(`${_userId}:${_boardId}`);
     }),
