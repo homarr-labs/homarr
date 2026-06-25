@@ -17,23 +17,21 @@ export default function TracearrWidget({
   options,
   integrationIds,
   width,
-  isEditMode,
 }: WidgetComponentProps<"tracearr">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <TracearrContent integrationIds={integrationIds} options={options} width={width} isEditMode={isEditMode} />;
+  return <TracearrContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface TracearrContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"tracearr">["options"];
   width: number;
-  isEditMode: boolean;
 }
 
-function TracearrContent({ integrationIds, options, width, isEditMode }: TracearrContentProps) {
+function TracearrContent({ integrationIds, options, width }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
   const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
 

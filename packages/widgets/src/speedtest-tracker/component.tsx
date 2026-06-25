@@ -17,7 +17,6 @@ import { RecentResultsSection } from "./recent-results";
 export default function SpeedtestTrackerWidget({
   options,
   integrationIds,
-  isEditMode,
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
   const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });

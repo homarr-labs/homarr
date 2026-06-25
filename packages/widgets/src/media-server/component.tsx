@@ -21,7 +21,6 @@ import type { WidgetComponentProps } from "../definition";
 export default function MediaServerWidget({
   options,
   integrationIds,
-  isEditMode,
 }: WidgetComponentProps<"mediaServer">) {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,

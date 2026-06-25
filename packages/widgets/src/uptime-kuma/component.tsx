@@ -87,7 +87,6 @@ const heroVariantByRing = {
 
 export default function UptimeKumaWidget({
   integrationIds,
-  isEditMode,
   options,
   width,
 }: WidgetComponentProps<"uptimeKuma">) {
@@ -95,17 +94,16 @@ export default function UptimeKumaWidget({
     throw new NoIntegrationDataError();
   }
 
-  return <UptimeKumaContent integrationIds={integrationIds} isEditMode={isEditMode} options={options} width={width} />;
+  return <UptimeKumaContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface UptimeKumaContentProps {
   integrationIds: string[];
-  isEditMode: boolean;
   options: WidgetComponentProps<"uptimeKuma">["options"];
   width: number;
 }
 
-function UptimeKumaContent({ integrationIds, isEditMode, options, width }: UptimeKumaContentProps) {
+function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
   const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
 

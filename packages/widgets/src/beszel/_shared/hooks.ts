@@ -2,8 +2,6 @@
 
 import { useMemo } from "react";
 
-import { clientApi } from "@homarr/api/client";
-
 import type { BeszelSystemRow } from "./types";
 
 type SystemRowWithKey = BeszelSystemRow & { _key: string };
