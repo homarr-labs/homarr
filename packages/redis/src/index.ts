@@ -1,6 +1,6 @@
 import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 
-import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
+import { createListChannel, createSubPubChannel } from "./lib/channel";
 
 export {
   handshakeAsync,
@@ -12,22 +12,10 @@ export {
   invalidateIntegrationCacheAsync,
 } from "./lib/channel";
 
-export const exampleChannel = createSubPubChannel<{ message: string }>("example");
 export const pingChannel = createSubPubChannel<
   { url: string; statusCode: number; durationMs: number } | { url: string; error: string }
 >("ping");
 export const pingUrlChannel = createListChannel<string>("ping-url");
-
-export const homeAssistantEntityState = createSubPubChannel<{
-  entityId: string;
-  state: string;
-}>("home-assistant/entity-state");
-
-export const queueChannel = createQueueChannel<{
-  name: string;
-  executionDate: Date;
-  data: unknown;
-}>("common-queue");
 
 export interface LoggerMessage {
   message: string;

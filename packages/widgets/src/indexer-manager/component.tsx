@@ -20,7 +20,10 @@ export default function IndexerManagerWidget({
   const t = useI18n();
   const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
 
-  const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation();
+  const utils = clientApi.useUtils();
+  const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
+    onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
+  });
   const board = useRequiredBoard();
   const hasSmallWidth = width < 256;
   const hasSmallHeight = height < 256;
