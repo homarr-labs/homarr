@@ -157,7 +157,9 @@ export const removeQueryCacheAsync = async (userId: string, boardId: string) => 
 };
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
-  await getSetClient.del(`session-store:${integrationId}`);
+  const client = getSetClient as typeof getSetClient | null;
+  if (!client) return;
+  await client.del(`session-store:${integrationId}`);
 };
 
 /**
