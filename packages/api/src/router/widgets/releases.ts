@@ -1,11 +1,14 @@
 import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "releases" });
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
@@ -38,7 +41,7 @@ export const releasesRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await Promise.all(
+      const settled = await Promise.allSettled(
         input.repositories.map(async (repository) => {
           const response = await releasesRequestHandler
             .handler(ctx.integration, {
@@ -56,5 +59,11 @@ export const releasesRouter = createTRPCRouter({
           };
         }),
       );
+
+      return settled.flatMap((result, index) => {
+        if (result.status === "fulfilled") return [result.value];
+        logger.warn("Release fetch failed", { repository: input.repositories[index]?.identifier, error: result.reason });
+        return [];
+      });
     }),
 });

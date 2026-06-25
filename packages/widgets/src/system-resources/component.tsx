@@ -50,7 +50,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     const firstItem = data[0];
     if (!firstItem) return;
     setItems((prev) => [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE));
-  }, [dataUpdatedAt]);
+  }, [dataUpdatedAt, data]);
 
   const showNetwork =
     items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));

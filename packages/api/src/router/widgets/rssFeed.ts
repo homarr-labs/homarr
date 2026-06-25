@@ -5,10 +5,13 @@ import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { items, users } from "@homarr/db/schema";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "rssFeed" });
 
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
@@ -21,7 +24,7 @@ export const rssFeedRouter = createTRPCRouter({
       ? input.urls
       : await restrictUrlsAsync(ctx.db, input.urls);
 
-    const rssFeeds = await Promise.all(
+    const settled = await Promise.allSettled(
       urls.map(async (url) => {
         const innerHandler = rssFeedsRequestHandler.handler({
           url,
@@ -31,8 +34,12 @@ export const rssFeedRouter = createTRPCRouter({
       }),
     );
 
-    return rssFeeds
-      .flatMap((rssFeed) => rssFeed.data.entries)
+    return settled
+      .flatMap((result, index) => {
+        if (result.status === "fulfilled") return result.value.data.entries;
+        logger.warn("RSS feed fetch failed", { url: urls[index], error: result.reason });
+        return [];
+      })
       .slice(0, input.maximumAmountPosts)
       .toSorted((entryA, entryB) => {
         return entryA.published && entryB.published

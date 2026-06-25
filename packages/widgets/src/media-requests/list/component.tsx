@@ -200,7 +200,7 @@ interface DecisionButtonsProps {
 const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => {
   const utils = clientApi.useUtils();
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation({
-    onSettled: () => void utils.widget.mediaRequests.getLatestRequests.invalidate(),
+    onSettled: () => void utils.widget.mediaRequests.invalidate(),
   });
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const handleDecision = (answer: RouterInputs["widget"]["mediaRequests"]["answerRequest"]["answer"]) => {
