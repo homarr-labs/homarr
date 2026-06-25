@@ -126,9 +126,7 @@ async function QueryCacheHydration({ userId, boardId }: { userId: string; boardI
 
     return <HydrationBoundary state={persisted.clientState} />;
   } catch (error) {
-    logger.warn(
-      new ErrorWithMetadata("Failed to hydrate query cache", { userId, boardId }, { cause: error }),
-    );
+    logger.warn(new ErrorWithMetadata("Failed to hydrate query cache", { userId, boardId }, { cause: error }));
     return null;
   }
 }
