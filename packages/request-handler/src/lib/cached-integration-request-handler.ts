@@ -24,6 +24,9 @@ interface Options<TData, TKind extends IntegrationKind, TInput extends Record<st
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
   cacheDuration: Duration;
   cacheDurationForInput?: (input: TInput) => Duration | undefined;
+  fallbackToStaleOnError?: boolean;
+  retry?: { attempts?: number; delayMs?: number };
+  isValid?: (data: TData) => boolean;
 }
 
 export const createCachedIntegrationRequestHandler = <
@@ -41,6 +44,9 @@ export const createCachedIntegrationRequestHandler = <
           return await options.requestAsync(input.integration, input.options);
         },
         cacheDuration: options.cacheDurationForInput?.(itemOptions) ?? options.cacheDuration,
+        fallbackToStaleOnError: options.fallbackToStaleOnError,
+        retry: options.retry,
+        isValid: options.isValid,
         createRedisChannel(input, handlerOptions) {
           return createIntegrationOptionsChannel<TData>(input.integration.id, handlerOptions.queryKey, input.options);
         },

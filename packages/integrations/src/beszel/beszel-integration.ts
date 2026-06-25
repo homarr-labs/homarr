@@ -46,10 +46,13 @@ export class BeszelIntegration extends Integration {
   private async authenticateAsync(): Promise<BeszelSession> {
     const existingSession = await this.sessionStore.getAsync();
     if (existingSession) {
+      logger.debug("Using stored Beszel session", { integrationId: this.integration.id });
       return existingSession;
     }
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/collections/users/auth-with-password"), {
+    const authUrl = this.url("/api/collections/users/auth-with-password");
+    logger.debug("Authenticating with Beszel", { integrationId: this.integration.id, url: authUrl.pathname });
+    const response = await fetchWithTrustedCertificatesAsync(authUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -57,23 +60,28 @@ export class BeszelIntegration extends Integration {
         password: this.getSecretValue("password"),
       }),
     });
+    logger.debug("Beszel auth response received", { integrationId: this.integration.id, status: response.status });
 
     if (!response.ok) {
+      logger.warn("Beszel auth failed", { integrationId: this.integration.id, status: response.status });
       throw new ResponseError(response);
     }
 
     const data = (await response.json()) as BeszelAuthResponse;
     const session: BeszelSession = { token: data.token, userId: data.record.id };
     await this.sessionStore.setAsync(session);
+    logger.debug("Saved Beszel session", { integrationId: this.integration.id, userId: session.userId });
     return session;
   }
 
   private async fetchWithAuthAsync(url: URL, options: { method?: string; body?: string } = {}) {
+    const method = options.method ?? "GET";
+    const start = performance.now();
     let session = await this.authenticateAsync();
 
     const doFetch = (token: string) =>
       fetchWithTrustedCertificatesAsync(url, {
-        method: options.method ?? "GET",
+        method,
         headers: {
           Authorization: token,
           ...(options.body ? { "Content-Type": "application/json" } : {}),
@@ -82,14 +90,42 @@ export class BeszelIntegration extends Integration {
       });
 
     let response = await doFetch(session.token);
+    logger.debug("Beszel response", {
+      integrationId: this.integration.id,
+      method,
+      path: url.pathname,
+      status: response.status,
+      durationMs: Math.round(performance.now() - start),
+      attempt: 1,
+    });
 
     if (response.status === 401) {
+      logger.warn("Beszel 401, clearing session and retrying", {
+        integrationId: this.integration.id,
+        method,
+        path: url.pathname,
+      });
       await this.sessionStore.clearAsync();
       session = await this.authenticateAsync();
       response = await doFetch(session.token);
+      logger.debug("Beszel response (after re-auth)", {
+        integrationId: this.integration.id,
+        method,
+        path: url.pathname,
+        status: response.status,
+        durationMs: Math.round(performance.now() - start),
+        attempt: 2,
+      });
     }
 
     if (!response.ok) {
+      logger.warn("Beszel request failed", {
+        integrationId: this.integration.id,
+        method,
+        path: url.pathname,
+        status: response.status,
+        durationMs: Math.round(performance.now() - start),
+      });
       throw new ResponseError(response);
     }
 
@@ -257,6 +293,7 @@ export class BeszelIntegration extends Integration {
   ): Promise<void> {
     const session = await this.authenticateAsync();
     const sseUrl = this.url("/api/realtime");
+    logger.debug("Opening Beszel SSE connection", { integrationId: this.integration.id, systemId });
 
     const sseResponse = await fetchWithTrustedCertificatesAsync(sseUrl, {
       headers: { Authorization: session.token },
@@ -264,8 +301,14 @@ export class BeszelIntegration extends Integration {
     });
 
     if (!sseResponse.ok || !sseResponse.body) {
+      logger.warn("Beszel SSE connection failed", {
+        integrationId: this.integration.id,
+        systemId,
+        status: sseResponse.status,
+      });
       throw new ResponseError(sseResponse);
     }
+    logger.debug("Beszel SSE connection opened", { integrationId: this.integration.id, systemId });
 
     const reader = sseResponse.body.getReader();
     const decoder = new TextDecoder();
@@ -322,6 +365,10 @@ export class BeszelIntegration extends Integration {
         }
       }
       if (!signal.aborted) {
+        logger.warn("Beszel SSE stream ended unexpectedly", {
+          integrationId: this.integration.id,
+          systemId,
+        });
         throw new Error("Beszel SSE stream ended unexpectedly");
       }
     } finally {

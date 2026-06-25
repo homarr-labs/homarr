@@ -1652,6 +1652,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Uygulama",
       "description": "Panelin içine uygulama yerleştirir.",
@@ -3570,6 +3577,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3626,6 +3636,9 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3652,6 +3665,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3663,6 +3679,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3692,6 +3712,12 @@
         }
       },
       "selectSystem": "",
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4389,18 +4415,6 @@
             "general": {
               "title": "Anonim analizler gönder",
               "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
-            },
-            "widgetData": {
-              "title": "Araç verileri",
-              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
-            },
-            "integrationData": {
-              "title": "Entegrasyon verileri",
-              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
-            },
-            "usersData": {
-              "title": "Kullanıcı verileri",
-              "text": "Kullanıcı sayısını ve SSO etkinleştirme verilerini gönder"
             }
           },
           "crawlingAndIndexing": {
@@ -4928,7 +4942,9 @@
       "updated": "{when} Güncellendi",
       "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi",
-      "footer": "Toplam {count} konteyner"
+      "footer": "Toplam {count} konteyner",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

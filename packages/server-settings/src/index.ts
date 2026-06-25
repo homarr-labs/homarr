@@ -16,9 +16,7 @@ export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[num
 export const defaultServerSettings = {
   analytics: {
     enableGeneral: true,
-    enableWidgetData: false,
-    enableIntegrationData: false,
-    enableUserData: false,
+    instanceId: null as string | null,
   },
   crawlingAndIndexing: {
     noIndex: true,
