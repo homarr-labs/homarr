@@ -30,9 +30,15 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
   }, []);
 
   const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({ integrationIds });
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({ integrationIds });
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({ integrationIds });
+  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
+    integrationIds,
+  });
+  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
+    integrationIds,
+  });
+  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
+    integrationIds,
+  });
 
   const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
   const isTiny = width < 256;

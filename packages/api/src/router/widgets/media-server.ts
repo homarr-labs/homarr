@@ -24,7 +24,9 @@ export const mediaServerRouter = createTRPCRouter({
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data } = await mediaServerRequestHandler.handler(integration, { showOnlyPlaying: input.showOnlyPlaying }).getDataAsync();
+        const { data } = await mediaServerRequestHandler
+          .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
+          .getDataAsync();
         return { integrationId: integration.id, integrationKind: integration.kind, sessions: data };
       });
     }),

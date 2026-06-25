@@ -198,7 +198,12 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
-      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isFetching}>
+      <Button
+        variant="default"
+        rightSection={<IconRefresh size="1rem" />}
+        onClick={() => mutate()}
+        loading={isFetching}
+      >
         {tDocker("action.refresh.label")}
       </Button>
     ),

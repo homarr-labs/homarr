@@ -19,7 +19,12 @@ export const healthMonitoringRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
         const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
-        return { integrationId: integration.id, integrationName: integration.name, healthInfo: data, updatedAt: timestamp };
+        return {
+          integrationId: integration.id,
+          integrationName: integration.name,
+          healthInfo: data,
+          updatedAt: timestamp,
+        };
       });
     }),
   getClusterHealthStatus: publicProcedure
