@@ -104,10 +104,7 @@ const Item = ({ item, options }: ItemProps) => {
                 )}
               </Stack>
               <Group gap={6} style={{ rowGap: 0 }}>
-                <Info
-                  icon={IconCalendar}
-                  label={formatReleaseDate(item.releaseDate, locale)}
-                />
+                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
                 {length !== undefined && (
                   <>
                     <InfoDivider />
