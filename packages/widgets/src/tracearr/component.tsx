@@ -13,11 +13,7 @@ import { StatsBar } from "./stats-section";
 import { StreamsList } from "./streams-section";
 import { ViolationsList } from "./violations-section";
 
-export default function TracearrWidget({
-  options,
-  integrationIds,
-  width,
-}: WidgetComponentProps<"tracearr">) {
+export default function TracearrWidget({ options, integrationIds, width }: WidgetComponentProps<"tracearr">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }

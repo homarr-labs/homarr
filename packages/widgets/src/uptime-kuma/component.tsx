@@ -85,11 +85,7 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
-export default function UptimeKumaWidget({
-  integrationIds,
-  options,
-  width,
-}: WidgetComponentProps<"uptimeKuma">) {
+export default function UptimeKumaWidget({ integrationIds, options, width }: WidgetComponentProps<"uptimeKuma">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }

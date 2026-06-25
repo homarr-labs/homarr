@@ -18,10 +18,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaServerWidget({
-  options,
-  integrationIds,
-}: WidgetComponentProps<"mediaServer">) {
+export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,

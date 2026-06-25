@@ -14,10 +14,7 @@ import { mergeStats } from "./helpers";
 import { LatestResultSection } from "./latest-result";
 import { RecentResultsSection } from "./recent-results";
 
-export default function SpeedtestTrackerWidget({
-  options,
-  integrationIds,
-}: WidgetComponentProps<"speedtestTracker">) {
+export default function SpeedtestTrackerWidget({ options, integrationIds }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
   const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
 
