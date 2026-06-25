@@ -1,0 +1,34 @@
+apps/nextjs/src/app/[locale]/_client-providers/query-cache-persister.ts
+  s_3dcc22b87e2334::t_c6a4946eb7a130 6,12-14,19-21
+packages/widgets/src/beszel/_shared/use-live-stats.ts
+  s_3dcc22b87e2334::t_c6a7a3442424df 6-8
+packages/request-handler/src/beszel.ts
+  s_3dcc22b87e2334::t_3018e4c33abb7d 65-68
+  s_3dcc22b87e2334::t_c6f7e4a7cac1fa 131-134
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_3dcc22b87e2334::t_81cfd986d1ff46 124,128-131
+packages/boards/src/context.tsx
+  s_3dcc22b87e2334::t_171c449e49156f 25
+packages/widgets/src/system-resources/component.tsx
+  s_3dcc22b87e2334::t_8db29cf79381e8 44
+packages/api/src/test/query-cache.spec.ts
+  s_3dcc22b87e2334::t_dbfcc9d3dbfa7b 95,128
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_3dcc22b87e2334::t_cfb626937944c3 28-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "c4a664b7ac6fcd821b216aad353da7ab897bd160",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
