@@ -62,7 +62,10 @@ export const releasesRouter = createTRPCRouter({
 
       return settled.flatMap((result, index) => {
         if (result.status === "fulfilled") return [result.value];
-        logger.warn("Release fetch failed", { repository: input.repositories[index]?.identifier, error: result.reason });
+        logger.warn("Release fetch failed", {
+          repository: input.repositories[index]?.identifier,
+          error: result.reason,
+        });
         return [];
       });
     }),
