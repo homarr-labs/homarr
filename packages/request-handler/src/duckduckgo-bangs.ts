@@ -37,7 +37,6 @@ const normalizeBangToken = (token: string) => token.toLowerCase().trim();
 const compareBangTokenAsc = (left: DuckDuckGoBang, right: DuckDuckGoBang) => left.t.localeCompare(right.t);
 
 export const duckDuckGoBangsRequestHandler = createRequestHandler({
-  queryKey: "duckduckgo-bangs",
   async requestAsync(_) {
     if (env.NO_EXTERNAL_CONNECTION) {
       return [];

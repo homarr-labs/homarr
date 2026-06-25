@@ -41,7 +41,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
 
   const [items, setItems] = useState<
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
-  >([]);
+  >(() => (data[0] ? [toChartItem(data[0].healthInfo)] : []));
 
   useEffect(() => {
     const firstItem = data[0];

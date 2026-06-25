@@ -3,9 +3,6 @@ import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 
 export {
-  createCacheChannel,
-  createChannelWithLatestAndEvents,
-  createChannelEventHistory,
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
@@ -14,8 +11,6 @@ export {
   removeQueryCacheAsync,
   invalidateIntegrationCacheAsync,
 } from "./lib/channel";
-
-export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
 export const pingChannel = createSubPubChannel<

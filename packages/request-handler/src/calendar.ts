@@ -23,5 +23,4 @@ export const calendarMonthRequestHandler = createIntegrationRequestHandler<
       input.showUnmonitored,
     );
   },
-  queryKey: "calendarMonth",
 });

@@ -13,5 +13,4 @@ export const upsSummariesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getUpsSummariesAsync();
   },
-  queryKey: "upsSummaries",
 });

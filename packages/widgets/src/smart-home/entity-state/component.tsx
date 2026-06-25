@@ -25,7 +25,10 @@ export default function SmartHomeEntityStateWidget({
   };
   const { data: entityState } = clientApi.widget.smartHome.entityState.useQuery(input);
 
-  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation();
+  const utils = clientApi.useUtils();
+  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation({
+    onSettled: () => void utils.widget.smartHome.entityState.invalidate(input),
+  });
 
   const attribute = options.entityUnit.length > 0 ? " " + options.entityUnit : "";
 

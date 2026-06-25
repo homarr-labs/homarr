@@ -10,7 +10,6 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
 export const rssFeedsRequestHandler = createWidgetRequestHandler({
-  queryKey: "rssFeedList",
   async requestAsync(input: { url: string; count: number }) {
     const result = (await extract(input.url, {
       getExtraEntryFields: (feedEntry) => {

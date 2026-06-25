@@ -11,7 +11,6 @@ type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"
 };
 
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
-  queryKey: string;
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
 }
 
@@ -24,7 +23,6 @@ export const createIntegrationRequestHandler = <
 ) => ({
   handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
     createRequestHandler<TData, { options: TInput; integration: IntegrationOfKind<TKind> }>({
-      queryKey: options.queryKey,
       requestAsync: async (input) => options.requestAsync(input.integration, input.options),
     }).handler({ options: itemOptions, integration }),
 });

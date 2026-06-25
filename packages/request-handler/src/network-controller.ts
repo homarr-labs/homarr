@@ -13,5 +13,4 @@ export const networkControllerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNetworkSummaryAsync();
   },
-  queryKey: "networkControllerSummary",
 });

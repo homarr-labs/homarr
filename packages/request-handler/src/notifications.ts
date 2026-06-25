@@ -13,5 +13,4 @@ export const notificationsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNotificationsAsync();
   },
-  queryKey: "notificationsJobStatus",
 });

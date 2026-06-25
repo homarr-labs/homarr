@@ -3,17 +3,22 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { fetchApi } from "@homarr/api/client";
 import { getActiveQueryCacheBoardId, queryCacheStoragePrefix } from "@homarr/api/query-cache";
 
+// ponytail: write-only persister — restore is SSR-only via QueryCacheHydration
 const queryCacheStorage = {
   getItem: (_key: string) => null as string | null,
   async setItem(_key: string, value: string) {
     const boardId = getActiveQueryCacheBoardId();
     if (!boardId) return;
-    await fetchApi.queryCache.setItem.mutate({ boardId, value }).catch(() => {});
+    await fetchApi.queryCache.setItem.mutate({ boardId, value }).catch((error) => {
+      console.warn("[query-cache] persist failed", error);
+    });
   },
   async removeItem(_key: string) {
     const boardId = getActiveQueryCacheBoardId();
     if (!boardId) return;
-    await fetchApi.queryCache.removeItem.mutate({ boardId }).catch(() => {});
+    await fetchApi.queryCache.removeItem.mutate({ boardId }).catch((error) => {
+      console.warn("[query-cache] remove failed", error);
+    });
   },
 };
 

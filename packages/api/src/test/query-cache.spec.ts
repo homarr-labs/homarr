@@ -92,6 +92,7 @@ describe("queryCacheRouter", () => {
       "board-1",
       "cached-value",
       expect.any(Number),
+      queryCacheMaxValueBytes,
     );
 
     await caller.removeItem({ boardId: "board-1" });
@@ -124,6 +125,7 @@ describe("queryCacheRouter", () => {
       "board-1",
       "cached-value",
       expect.any(Number),
+      queryCacheMaxValueBytes,
     );
   });
 

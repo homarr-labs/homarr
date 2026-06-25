@@ -1,5 +1,4 @@
 interface Options<TData, TInput extends Record<string, unknown>> {
-  queryKey: string;
   requestAsync: (input: TInput) => Promise<TData>;
 }
 

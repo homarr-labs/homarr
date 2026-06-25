@@ -8,7 +8,6 @@ export const anchorNotesListRequestHandler = createIntegrationRequestHandler<
   "anchor",
   AnchorNotesListInput
 >({
-  queryKey: "anchorNotesList",
   async requestAsync(integration, input) {
     const instance = await createIntegrationAsync(integration);
     return instance.listNotesAsync(input);
@@ -16,7 +15,6 @@ export const anchorNotesListRequestHandler = createIntegrationRequestHandler<
 });
 
 export const anchorNoteRequestHandler = createIntegrationRequestHandler<AnchorNote, "anchor", { noteId: string }>({
-  queryKey: "anchorNote",
   async requestAsync(integration, input) {
     const instance = await createIntegrationAsync(integration);
     return instance.getNoteAsync(input.noteId);

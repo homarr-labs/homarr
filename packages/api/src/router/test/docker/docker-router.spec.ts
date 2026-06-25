@@ -29,16 +29,6 @@ vi.mock("@homarr/request-handler/docker", () => ({
     }),
   },
 }));
-vi.mock("@homarr/redis", () => ({
-  createCacheChannel: () => ({
-    consumeAsync: async () => ({
-      timestamp: new Date().toISOString(),
-      data: { containers: [] },
-    }),
-    invalidateAsync: async () => {},
-  }),
-}));
-
 vi.mock("@homarr/docker/env", () => ({
   env: {
     ENABLE_DOCKER: true,

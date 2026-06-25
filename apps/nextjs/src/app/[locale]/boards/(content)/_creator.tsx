@@ -7,8 +7,6 @@ import "~/styles/gridstack.scss";
 
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
-import { parse } from "superjson";
-
 import { getQueryClient } from "@homarr/api/server";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
@@ -123,11 +121,14 @@ async function QueryCacheHydration({ userId, boardId }: { userId: string; boardI
     const serialized = await getQueryCacheAsync(userId, boardId);
     if (!serialized) return null;
 
-    const persisted = parse<PersistedClient>(serialized);
+    const persisted = JSON.parse(serialized) as PersistedClient;
     if (!persisted?.clientState?.queries?.length) return null;
 
     return <HydrationBoundary state={persisted.clientState} />;
-  } catch {
+  } catch (error) {
+    logger.warn(
+      new ErrorWithMetadata("Failed to hydrate query cache", { userId, boardId }, { cause: error }),
+    );
     return null;
   }
 }

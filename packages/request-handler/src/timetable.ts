@@ -13,7 +13,6 @@ export const timetableSearchStationsRequestHandler = createIntegrationRequestHan
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.searchStationsAsync(input.query);
   },
-  queryKey: "timetableSearchStations",
 });
 
 export const timetableGetTimetableRequestHandler = createIntegrationRequestHandler<
@@ -28,5 +27,4 @@ export const timetableGetTimetableRequestHandler = createIntegrationRequestHandl
       limit: input.limit,
     });
   },
-  queryKey: "timetableGetTimetable",
 });

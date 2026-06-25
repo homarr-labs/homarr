@@ -9,7 +9,6 @@ export const mediaTranscodingRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"mediaTranscoding">,
   { pageOffset: number; pageSize: number }
 >({
-  queryKey: "mediaTranscoding",
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return {

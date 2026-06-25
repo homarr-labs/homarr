@@ -15,5 +15,4 @@ export const mediaServerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getCurrentSessionsAsync({ showOnlyPlaying: input.showOnlyPlaying });
   },
-  queryKey: "mediaServerSessions",
 });

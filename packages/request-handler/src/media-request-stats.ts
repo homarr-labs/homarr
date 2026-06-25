@@ -16,5 +16,4 @@ export const mediaRequestStatsRequestHandler = createIntegrationRequestHandler<
       users: await integrationInstance.getUsersAsync(),
     };
   },
-  queryKey: "mediaRequestStats",
 });

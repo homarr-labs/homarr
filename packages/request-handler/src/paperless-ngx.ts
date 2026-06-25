@@ -12,5 +12,4 @@ export const paperlessNgxStatsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatsAsync();
   },
-  queryKey: "paperless-ngx-stats",
 });

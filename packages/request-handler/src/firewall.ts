@@ -18,7 +18,6 @@ export const firewallCpuRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return integrationInstance.getFirewallCpuAsync();
   },
-  queryKey: "firewallCpuSummary",
 });
 
 export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
@@ -30,7 +29,6 @@ export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallMemoryAsync();
   },
-  queryKey: "firewallMemorySummary",
 });
 
 export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
@@ -42,7 +40,6 @@ export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallInterfacesAsync();
   },
-  queryKey: "firewallInterfacesSummary",
 });
 
 export const firewallVersionRequestHandler = createIntegrationRequestHandler<
@@ -54,5 +51,4 @@ export const firewallVersionRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallVersionAsync();
   },
-  queryKey: "firewallVersionSummary",
 });

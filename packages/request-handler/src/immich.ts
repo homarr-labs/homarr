@@ -13,7 +13,6 @@ export const immichStatsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getServerStatsAsync();
   },
-  queryKey: "immich-server-stats",
 });
 
 export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
@@ -29,7 +28,6 @@ export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumsAsync();
   },
-  queryKey: "immich-albums",
 });
 
 export const immichAlbumRequestHandler = createIntegrationRequestHandler<
@@ -41,5 +39,4 @@ export const immichAlbumRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumAsync(input.albumId);
   },
-  queryKey: "immich-album",
 });

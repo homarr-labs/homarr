@@ -12,7 +12,6 @@ import packageJson from "../../../package.json";
 const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
 export const updateCheckerRequestHandler = createRequestHandler({
-  queryKey: "homarr-update-checker",
   async requestAsync(_) {
     return {
       availableUpdates: await getAvailableUpdatesAsync(packageJson.version),

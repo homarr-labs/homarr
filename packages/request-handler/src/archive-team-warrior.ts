@@ -13,5 +13,4 @@ export const archiveTeamWarriorRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatusAsync();
   },
-  queryKey: "archiveTeamWarriorStatus",
 });

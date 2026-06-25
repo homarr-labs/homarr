@@ -22,14 +22,8 @@ export const BoardProvider = ({
 }>) => {
   const { data } = clientApi.board.getBoardByName.useQuery(
     { name: initialBoard.name },
-    {
-      initialData: initialBoard,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
+    { initialData: initialBoard },
   );
-
-  setActiveQueryCacheBoardId(data.id);
 
   // Update the board name so it can be used within updateBoard method
   updateBoardName(initialBoard.name);

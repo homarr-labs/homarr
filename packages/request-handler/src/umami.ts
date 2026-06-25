@@ -12,7 +12,6 @@ export const umamiRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getVisitorStatsAsync(input.websiteId, input.timeFrame, input.eventName);
   },
-  queryKey: "umamiVisitorStats",
 });
 
 export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<string[], "umami", { websiteId: string }>({
@@ -20,7 +19,6 @@ export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<str
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getEventNamesAsync(input.websiteId);
   },
-  queryKey: "umamiEventNames",
 });
 
 export const umamiTopPagesRequestHandler = createIntegrationRequestHandler<
@@ -32,7 +30,6 @@ export const umamiTopPagesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopPagesAsync(input.websiteId, input.timeFrame, input.limit);
   },
-  queryKey: "umamiTopPages",
 });
 
 export const umamiTopReferrersRequestHandler = createIntegrationRequestHandler<
@@ -44,7 +41,6 @@ export const umamiTopReferrersRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopReferrersAsync(input.websiteId, input.timeFrame, input.limit);
   },
-  queryKey: "umamiTopReferrers",
 });
 
 export const umamiMultiEventRequestHandler = createIntegrationRequestHandler<
@@ -56,7 +52,6 @@ export const umamiMultiEventRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getMultiEventTimeSeriesAsync(input.websiteId, input.timeFrame, input.eventNames);
   },
-  queryKey: "umamiMultiEvent",
 });
 
 export const umamiActiveVisitorsRequestHandler = createIntegrationRequestHandler<
@@ -68,5 +63,4 @@ export const umamiActiveVisitorsRequestHandler = createIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getActiveVisitorsAsync(input.websiteId);
   },
-  queryKey: "umamiActiveVisitors",
 });

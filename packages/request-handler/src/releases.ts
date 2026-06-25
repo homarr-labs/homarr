@@ -13,5 +13,4 @@ export const releasesRequestHandler = createIntegrationRequestHandler<
     const instance = await createIntegrationAsync(integration);
     return instance.getLatestMatchingReleaseAsync(input.identifier, input.versionRegex);
   },
-  queryKey: "repositoriesReleases",
 });

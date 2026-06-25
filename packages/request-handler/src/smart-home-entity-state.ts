@@ -18,5 +18,4 @@ export const smartHomeEntityStateRequestHandler = createIntegrationRequestHandle
 
     return result.data.state;
   },
-  queryKey: "smartHome-entityState",
 });

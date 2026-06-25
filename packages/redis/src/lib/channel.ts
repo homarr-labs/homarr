@@ -157,80 +157,6 @@ export const removeQueryCacheAsync = async (userId: string, boardId: string) => 
 };
 
 /**
- * Creates a new cache channel.
- * @param name name of the channel
- * @param cacheDurationMs duration in milliseconds to cache
- * @returns cache channel object
- */
-export const createCacheChannel = <TData>(name: string, cacheDurationMs: number = 5 * 60 * 1000) => {
-  const cacheChannelName = `cache:${name}`;
-
-  return {
-    /**
-     * Get the data from the cache channel.
-     * @returns data or null if not found or expired
-     */
-    getAsync: async () => {
-      const data = await getSetClient.get(cacheChannelName);
-      if (!data) return null;
-
-      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
-      const now = new Date();
-      const diff = now.getTime() - parsedData.timestamp.getTime();
-      if (diff > cacheDurationMs) return null;
-
-      return parsedData;
-    },
-    /**
-     * Consume the data from the cache channel, if not present or expired, it will call the callback to get new data.
-     * @param callback callback function to get new data if not present or expired
-     * @returns data or new data if not present or expired
-     */
-    consumeAsync: async (callback: () => Promise<TData>) => {
-      const data = await getSetClient.get(cacheChannelName);
-
-      const getNewDataAsync = async () => {
-        logger.debug(`Cache miss for channel '${cacheChannelName}'`);
-        const newData = await callback();
-        const result = { data: newData, timestamp: new Date() };
-        await getSetClient.set(cacheChannelName, superjson.stringify(result));
-        logger.debug(`Cache updated for channel '${cacheChannelName}'`);
-        return result;
-      };
-
-      if (!data) {
-        return await getNewDataAsync();
-      }
-
-      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
-      const now = new Date();
-      const diff = now.getTime() - parsedData.timestamp.getTime();
-
-      if (diff > cacheDurationMs) {
-        return await getNewDataAsync();
-      }
-
-      logger.debug(`Cache hit for channel '${cacheChannelName}'`);
-
-      return parsedData;
-    },
-    /**
-     * Invalidate the cache channels data.
-     */
-    invalidateAsync: async () => {
-      await getSetClient.del(cacheChannelName);
-    },
-    /**
-     * Set the data in the cache channel.
-     * @param data data to be stored in the cache channel
-     */
-    setAsync: async (data: TData) => {
-      await getSetClient.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
-    },
-  };
-};
-
-/**
  * Invalidates all cached data for a given integration by deleting every Redis key
  * that starts with `integration:${integrationId}:` as well as the integration's
  * session store entry. This ensures that stale data from a misconfigured or
@@ -258,44 +184,6 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
   if (deletedCount > 0) {
     logger.info("Invalidated integration cache", { integrationId, deletedKeys: deletedCount });
   }
-};
-
-export const createChannelEventHistory = <TData>(channelName: string, maxElements = 32) => {
-  return {
-    subscribe: (callback: (data: TData) => void) => {
-      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
-        callback(superjson.parse(message));
-      });
-    },
-    pushAsync: async (data: TData, options = { publish: false }) => {
-      if (options.publish) await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
-      await getSetClient.ltrim(channelName, 0, maxElements);
-    },
-    clearAsync: async () => {
-      await getSetClient.del(channelName);
-    },
-    /**
-     * Returns a slice of the available data in the channel.
-     * If any of the indexes are out of range (or -range), returned data will be clamped.
-     * @param startIndex Start index of the slice, negative values are counted from the end, defaults at beginning of range.
-     * @param endIndex End index of the slice, negative values are counted from the end, defaults at end of range.
-     */
-    getSliceAsync: async (startIndex = 0, endIndex = -1) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
-      return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
-    },
-    getSliceUntilTimeAsync: async (time: Date) => {
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, -1);
-      return itemsInCollection
-        .map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item))
-        .filter((item) => item.timestamp < time);
-    },
-    getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
-    },
-    name: channelName,
-  };
 };
 
 /**
@@ -357,40 +245,6 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
     },
     getLengthAsync: async () => {
       return await getSetClient.llen(channelName);
-    },
-    name: channelName,
-  };
-};
-
-export const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
-  return {
-    subscribe: (callback: (data: TData) => void) => {
-      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
-        callback(superjson.parse(message));
-      });
-    },
-    publishAndUpdateLastStateAsync: async (data: TData) => {
-      // Set first, then publish. If publish fails the storage is still consistent
-      // and subscribers will catch up on the next event.
-      const payload = superjson.stringify({ data, timestamp: new Date() });
-      await getSetClient.set(channelName, payload);
-      try {
-        await publisher.publish(channelName, superjson.stringify(data));
-      } catch (error) {
-        logger.warn("Failed to publish cache update (storage is correct, subscribers will catch up)", {
-          channel: channelName,
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-    },
-    setAsync: async (data: TData) => {
-      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
-    },
-    getAsync: async () => {
-      const data = await getSetClient.get(channelName);
-      if (!data) return null;
-
-      return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
     name: channelName,
   };

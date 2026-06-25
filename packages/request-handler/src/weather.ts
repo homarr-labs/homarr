@@ -6,7 +6,6 @@ import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const weatherRequestHandler = createWidgetRequestHandler({
-  queryKey: "weatherAtLocation",
   async requestAsync(input: { latitude: number; longitude: number }) {
     const res = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(

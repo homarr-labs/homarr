@@ -62,7 +62,10 @@ export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
     const systems = await instance.getSystemsAsync();
     const enriched = await Promise.all(
       systems.map(async (system) => {
-        const details = await instance.getSystemDetailsAsync(system.id).catch(() => null);
+        const details = await instance.getSystemDetailsAsync(system.id).catch((error) => {
+          logger.warn("Failed to fetch Beszel system details", { systemId: system.id, error: String(error) });
+          return null;
+        });
         return mapToSystemRow(system, details);
       }),
     );
@@ -73,7 +76,6 @@ export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
     });
     return enriched;
   },
-  queryKey: "beszelSystems",
 });
 
 export interface BeszelAlertsData {
@@ -99,7 +101,6 @@ export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
     });
     return { alerts, history };
   },
-  queryKey: "beszelAlerts",
 });
 
 const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
@@ -127,7 +128,10 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
     const instance = await createIntegrationAsync(integration);
     const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     const containerStats = input.includeDocker
-      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch(() => [])
+      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch((error) => {
+          logger.warn("Failed to fetch Beszel container stats", { systemId: input.systemId, error: String(error) });
+          return [];
+        })
       : [];
     logger.debug("beszelStats fetch completed", {
       integrationId: integration.id,
@@ -139,5 +143,4 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-  queryKey: "beszelStats",
 });

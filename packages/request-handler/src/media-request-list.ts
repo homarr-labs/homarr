@@ -13,5 +13,4 @@ export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getRequestsAsync();
   },
-  queryKey: "mediaRequestList",
 });

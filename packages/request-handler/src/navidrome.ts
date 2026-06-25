@@ -12,5 +12,4 @@ export const navidromeRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  queryKey: "navidromeDashboard",
 });

@@ -12,5 +12,4 @@ export const audiobookshelfRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  queryKey: "audiobookshelfDashboard",
 });

@@ -13,5 +13,4 @@ export const downloadClientRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getClientJobsAndStatusAsync(input);
   },
-  queryKey: "downloadClientJobStatus",
 });
