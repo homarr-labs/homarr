@@ -1,6 +1,0 @@
-PocketBase backend exists in apps/store with docker-compose.yml, version-controlled pb_migrations creating submissions/votes/reports collections with correct access rules and GitHub OAuth, pb_hooks enforcing ownership and recomputing vote counters, and a README
-Store schema-version validation helper exists (apps/docs/src/lib/store-schema.ts) and its test (store-schema.spec.ts) passes via vitest
-Docs /store page and components exist (browse/filter/sort, GitHub login, submit, vote, report, copy/download), catalog pocketbase dep + customFields.storeUrl + navbar Store link + management/store docs are wired, and `pnpm -F @homarr/docs build` succeeds
-In-app Install-from-store is wired into the Next.js custom-widgets manage page (reusing customWidget.import) and the board custom-CSS settings, NEXT_PUBLIC_WIDGET_STORE_URL is documented, and `pnpm -F nextjs typecheck` passes
-End-to-end runtime check: `docker compose up` in apps/store boots PocketBase, the init migration applies cleanly (submissions/votes/reports collections present), and the public REST API responds (GET /api/health and GET /api/collections/submissions/records return 200) and access rules behave (anonymous create on submissions is rejected)
-No regressions: oxlint reports no errors on the new/changed files and the git diff contains only intended store-related changes
