@@ -7,94 +7,26 @@ import {
 } from "@homarr/request-handler/firewall";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
+const firewallMiddleware = createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall"));
+
+// ponytail: can't extract a generic factory here because each handler returns a different data type
+const queryFirewall = <THandler extends { handler: (integration: any, input: any) => { getDataAsync: () => Promise<{ data: any; timestamp: Date }> } }>(handler: THandler) =>
+  publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
+    settleIntegrationQueries(ctx.integrations, async (integration) => {
+      const { data, timestamp } = await handler.handler(integration, {}).getDataAsync();
+      return {
+        integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+        summary: data as Awaited<ReturnType<ReturnType<THandler["handler"]>["getDataAsync"]>>["data"],
+      };
+    }),
+  );
+
 export const firewallRouter = createTRPCRouter({
-  getFirewallCpuStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = firewallCpuRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            summary: data,
-          };
-        }),
-      );
-      return results;
-    }),
-
-  getFirewallInterfacesStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = firewallInterfacesRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            summary: data,
-          };
-        }),
-      );
-      return results;
-    }),
-
-  getFirewallVersionStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = firewallVersionRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            summary: data,
-          };
-        }),
-      );
-      return results;
-    }),
-
-  getFirewallMemoryStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
-    .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = firewallMemoryRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            summary: data,
-          };
-        }),
-      );
-      return results;
-    }),
+  getFirewallCpuStatus: queryFirewall(firewallCpuRequestHandler),
+  getFirewallInterfacesStatus: queryFirewall(firewallInterfacesRequestHandler),
+  getFirewallVersionStatus: queryFirewall(firewallVersionRequestHandler),
+  getFirewallMemoryStatus: queryFirewall(firewallMemoryRequestHandler),
 });

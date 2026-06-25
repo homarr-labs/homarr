@@ -5,6 +5,7 @@ import { mediaServerRequestHandler } from "@homarr/request-handler/media-server"
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const createMediaServerIntegrationMiddleware = (action: IntegrationAction) =>
@@ -22,18 +23,9 @@ export const mediaServerRouter = createTRPCRouter({
     .concat(createMediaServerIntegrationMiddleware("query"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
-      return await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaServerRequestHandler.handler(integration, {
-            showOnlyPlaying: input.showOnlyPlaying,
-          });
-          const { data } = await innerHandler.getDataAsync();
-          return {
-            integrationId: integration.id,
-            integrationKind: integration.kind,
-            sessions: data,
-          };
-        }),
-      );
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data } = await mediaServerRequestHandler.handler(integration, { showOnlyPlaying: input.showOnlyPlaying }).getDataAsync();
+        return { integrationId: integration.id, integrationKind: integration.kind, sessions: data };
+      });
     }),
 });

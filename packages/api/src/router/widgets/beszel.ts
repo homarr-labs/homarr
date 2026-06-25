@@ -95,13 +95,17 @@ export const beszelRouter = createTRPCRouter({
             maxHistoryItems: input.maxHistoryItems,
           });
           const systemsHandler = beszelSystemsRequestHandler.handler(integration, {});
-          const [alertsResult, systemsResult] = await Promise.all([
+          const [alertsSettled, systemsSettled] = await Promise.allSettled([
             alertsHandler.getDataAsync(),
             systemsHandler.getDataAsync(),
           ]);
+          if (alertsSettled.status === "rejected") throw alertsSettled.reason;
+          const alertsResult = alertsSettled.value;
           const systemNameMap: Record<string, string> = {};
-          for (const system of systemsResult.data) {
-            systemNameMap[system.id] = system.name;
+          if (systemsSettled.status === "fulfilled") {
+            for (const system of systemsSettled.value.data) {
+              systemNameMap[system.id] = system.name;
+            }
           }
           return {
             integrationId: integration.id,

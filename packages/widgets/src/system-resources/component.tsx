@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -43,7 +43,10 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
   >(() => (data[0] ? [toChartItem(data[0].healthInfo)] : []));
 
+  const lastUpdatedAt = useRef(dataUpdatedAt);
   useEffect(() => {
+    if (dataUpdatedAt === lastUpdatedAt.current) return;
+    lastUpdatedAt.current = dataUpdatedAt;
     const firstItem = data[0];
     if (!firstItem) return;
     setItems((prev) => [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE));

@@ -3,6 +3,7 @@ import { notificationsRequestHandler } from "@homarr/request-handler/notificatio
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const createNotificationsIntegrationMiddleware = (action: IntegrationAction) =>
@@ -12,21 +13,19 @@ export const notificationsRouter = createTRPCRouter({
   getNotifications: publicProcedure
     .unstable_concat(createNotificationsIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      return await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = notificationsRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const innerHandler = notificationsRequestHandler.handler(integration, {});
+        const { data, timestamp } = await innerHandler.getDataAsync();
 
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            data,
-          };
-        }),
-      );
+        return {
+          integration: {
+            id: integration.id,
+            name: integration.name,
+            kind: integration.kind,
+            updatedAt: timestamp,
+          },
+          data,
+        };
+      });
     }),
 });

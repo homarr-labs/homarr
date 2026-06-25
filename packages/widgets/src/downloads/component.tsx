@@ -111,10 +111,11 @@ export default function DownloadClientsWidget({
     return statuses;
   }, [currentItems]);
 
-  //Get API mutation functions
-  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation();
-  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation();
-  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation();
+  const utils = clientApi.useUtils();
+  const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
+  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation(invalidateDownloads);
+  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation(invalidateDownloads);
+  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(invalidateDownloads);
 
   //Flatten Data array for which each element has it's integration, data (base + calculated) and actions. Memoized on data subscription
   const data = useMemo<ExtendedDownloadClientItem[]>(

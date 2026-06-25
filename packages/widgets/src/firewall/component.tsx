@@ -29,10 +29,10 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
     }
   }, []);
 
-  const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
-  const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
-  const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
-  const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
+  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
+  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({ integrationIds });
+  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({ integrationIds });
+  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({ integrationIds });
 
   const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
   const isTiny = width < 256;
@@ -181,37 +181,6 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
     </ScrollArea>
   );
 }
-
-export const useUpdatingCpuStatus = (integrationIds: string[]) => {
-  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({
-    integrationIds,
-  });
-
-  return firewallsCpuData;
-};
-
-export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
-    integrationIds,
-  });
-
-  return firewallsMemoryData;
-};
-
-export const useUpdatingVersionStatus = (integrationIds: string[]) => {
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
-    integrationIds,
-  });
-  return firewallsVersionData;
-};
-
-export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
-    integrationIds,
-  });
-
-  return firewallsInterfacesData;
-};
 
 export function formatBitsPerSec(bytes: number, decimals: number): string {
   if (bytes === 0) return "0 b/s";

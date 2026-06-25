@@ -156,34 +156,8 @@ export const removeQueryCacheAsync = async (userId: string, boardId: string) => 
   await getSetClient.del(queryCacheKey(userId, boardId));
 };
 
-/**
- * Invalidates all cached data for a given integration by deleting every Redis key
- * that starts with `integration:${integrationId}:` as well as the integration's
- * session store entry. This ensures that stale data from a misconfigured or
- * updated integration is never served from cache.
- */
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
-  const client = getSetClient as typeof getSetClient | null;
-  if (!client) {
-    return;
-  }
-
-  const patterns = [`integration:${integrationId}:*`, `session-store:${integrationId}`];
-  let deletedCount = 0;
-  for (const pattern of patterns) {
-    let cursor = "0";
-    do {
-      const [nextCursor, keys] = await client.scan(cursor, "MATCH", pattern, "COUNT", 200);
-      cursor = nextCursor;
-      if (keys.length > 0) {
-        await client.del(...keys);
-        deletedCount += keys.length;
-      }
-    } while (cursor !== "0");
-  }
-  if (deletedCount > 0) {
-    logger.info("Invalidated integration cache", { integrationId, deletedKeys: deletedCount });
-  }
+  await getSetClient.del(`session-store:${integrationId}`);
 };
 
 /**

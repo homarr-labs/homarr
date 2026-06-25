@@ -7,6 +7,7 @@ import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-re
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const mediaRequestsRouter = createTRPCRouter({
@@ -20,20 +21,10 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getDataAsync();
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-            },
-            data,
-          };
-        }),
-      );
+      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data } = await mediaRequestListRequestHandler.handler(integration, {}).getDataAsync();
+        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+      });
       return results
         .flatMap(({ data, integration }) =>
           data.map((request) => ({
@@ -62,20 +53,10 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaRequestStatsRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getDataAsync();
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-            },
-            data,
-          };
-        }),
-      );
+      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
+        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+      });
       return {
         stats: results.flatMap((result) => result.data.stats),
         users: results

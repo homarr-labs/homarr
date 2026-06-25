@@ -5,6 +5,7 @@ import { createIntegrationAsync } from "@homarr/integrations";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
@@ -18,23 +19,13 @@ export const dnsHoleRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            summary: data,
-          };
-        }),
-      );
-      return results;
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
+        return {
+          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+          summary: data,
+        };
+      });
     }),
 
   enable: protectedProcedure

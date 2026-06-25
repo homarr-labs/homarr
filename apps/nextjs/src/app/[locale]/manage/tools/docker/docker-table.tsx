@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
@@ -153,17 +153,13 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
 export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
+  const { data, isFetching, refetch } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData: { containers, timestamp },
     refetchOnMount: false,
   });
   const relativeTime = useTimeAgo(data.timestamp);
-  const utils = clientApi.useUtils();
-  const [isPending, setIsPending] = useState(false);
   const mutate = useCallback(() => {
-    setIsPending(true);
-    void utils.docker.getContainers
-      .invalidate()
+    void refetch()
       .then(() => {
         showSuccessNotification({
           title: tDocker("action.refresh.notification.success.title"),
@@ -175,9 +171,8 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
           title: tDocker("action.refresh.notification.error.title"),
           message: tDocker("action.refresh.notification.error.message"),
         });
-      })
-      .finally(() => setIsPending(false));
-  }, [utils, tDocker]);
+      });
+  }, [refetch, tDocker]);
 
   const table = useTranslatedMantineReactTable({
     data: data.containers,
@@ -203,7 +198,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
-      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isFetching}>
         {tDocker("action.refresh.label")}
       </Button>
     ),

@@ -6,6 +6,7 @@ import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-ma
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
@@ -15,18 +16,15 @@ export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
     .concat(createIndexerManagerIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-          const { data: indexers } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const innerHandler = indexerManagerRequestHandler.handler(integration, {});
+        const { data: indexers } = await innerHandler.getDataAsync();
 
-          return {
-            integrationId: integration.id,
-            indexers,
-          };
-        }),
-      );
-      return results;
+        return {
+          integrationId: integration.id,
+          indexers,
+        };
+      });
     }),
   testAllIndexers: protectedProcedure
     .concat(createIndexerManagerIntegrationMiddleware("interact"))
