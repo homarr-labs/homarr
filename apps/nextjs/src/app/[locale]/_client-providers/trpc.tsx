@@ -71,7 +71,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
             gcTime: queryCacheDefaultGcTimeMs,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
-            retry: false,
+            retry: 3,
           },
           mutations: {
             onError(error) {

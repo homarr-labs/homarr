@@ -129,14 +129,13 @@ export const createGetSetChannel = <TData>(name: string) => {
 };
 
 const queryCacheKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
-const queryCacheMaxValueBytes = 1024 * 1024;
 
-export const setQueryCacheAsync = async (userId: string, boardId: string, value: string, ttlMs: number) => {
-  if (Buffer.byteLength(value, "utf8") > queryCacheMaxValueBytes) {
+export const setQueryCacheAsync = async (userId: string, boardId: string, value: string, ttlMs: number, maxValueBytes: number) => {
+  if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
     logger.warn("Query cache value exceeded maximum size", {
       key: queryCacheKey(userId, boardId),
       valueBytes: Buffer.byteLength(value, "utf8"),
-      maxValueBytes: queryCacheMaxValueBytes,
+      maxValueBytes,
     });
     return false;
   }

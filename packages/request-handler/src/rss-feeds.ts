@@ -11,7 +11,6 @@ const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
 export const rssFeedsRequestHandler = createWidgetRequestHandler({
   queryKey: "rssFeedList",
-  widgetKind: "rssFeed",
   async requestAsync(input: { url: string; count: number }) {
     const result = (await extract(input.url, {
       getExtraEntryFields: (feedEntry) => {

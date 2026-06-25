@@ -73,7 +73,6 @@ export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
     });
     return enriched;
   },
-  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelSystems",
 });
 
@@ -100,7 +99,6 @@ export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
     });
     return { alerts, history };
   },
-  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelAlerts",
 });
 
@@ -141,6 +139,5 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelStats",
 });

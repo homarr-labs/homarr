@@ -7,7 +7,6 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const minecraftServerStatusRequestHandler = createWidgetRequestHandler({
   queryKey: "minecraftServerStatusApiResult",
-  widgetKind: "minecraftServerStatus",
   async requestAsync(input: { domain: string; isBedrockServer: boolean }) {
     const path = `${input.isBedrockServer ? "/bedrock" : ""}/3/${input.domain}`;
 

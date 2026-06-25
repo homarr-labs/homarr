@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -33,7 +33,7 @@ const toChartItem = (healthInfo: {
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemResources">) {
   const { ref, width } = useElementSize();
 
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+  const { data = [], dataUpdatedAt } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
     integrationIds,
   });
   const memoryCapacityInBytes =
@@ -41,21 +41,13 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
 
   const [items, setItems] = useState<
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
-  >(() => data.map((item) => toChartItem(item.healthInfo)));
-
-  const lastUpdatedAtRef = useRef<number | null>(null);
+  >([]);
 
   useEffect(() => {
     const firstItem = data[0];
     if (!firstItem) return;
-
-    const updatedAt = firstItem.updatedAt?.getTime?.() ?? null;
-    if (updatedAt !== null && updatedAt === lastUpdatedAtRef.current) return;
-    lastUpdatedAtRef.current = updatedAt;
-
-    const next = toChartItem(firstItem.healthInfo);
-    setItems((previousItems) => [...previousItems, next].slice(-MAX_QUEUE_SIZE));
-  }, [data]);
+    setItems((prev) => [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE));
+  }, [dataUpdatedAt]);
 
   const showNetwork =
     items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));

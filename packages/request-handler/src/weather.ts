@@ -7,7 +7,6 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const weatherRequestHandler = createWidgetRequestHandler({
   queryKey: "weatherAtLocation",
-  widgetKind: "weather",
   async requestAsync(input: { latitude: number; longitude: number }) {
     const res = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(

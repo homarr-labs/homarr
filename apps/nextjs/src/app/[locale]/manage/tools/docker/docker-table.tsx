@@ -156,8 +156,6 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   const { data } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData: { containers, timestamp },
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
   const relativeTime = useTimeAgo(data.timestamp);
   const utils = clientApi.useUtils();

@@ -7,7 +7,6 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const fetchStockPriceHandler = createWidgetRequestHandler({
   queryKey: "fetchStockPriceResult",
-  widgetKind: "stockPrice",
   async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
     const response = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(

@@ -172,7 +172,6 @@ const mockContainers: {
 
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
   queryKey: "dockerContainersResult",
-  widgetKind: "dockerContainers",
   async requestAsync() {
     if (isDemoMode) {
       return mockContainers;

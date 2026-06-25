@@ -13,8 +13,6 @@ type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
   queryKey: string;
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
-  retry?: { attempts?: number; delayMs?: number };
-  isValid?: (data: TData) => boolean;
 }
 
 export const createIntegrationRequestHandler = <
@@ -23,14 +21,10 @@ export const createIntegrationRequestHandler = <
   TInput extends Record<string, unknown>,
 >(
   options: Options<TData, TKind, TInput>,
-) => {
-  return {
-    handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
-      createRequestHandler<TData, { options: TInput; integration: IntegrationOfKind<TKind> }>({
-        queryKey: options.queryKey,
-        requestAsync: async (input) => options.requestAsync(input.integration, input.options),
-        retry: options.retry,
-        isValid: options.isValid,
-      }).handler({ options: itemOptions, integration }),
-  };
-};
+) => ({
+  handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
+    createRequestHandler<TData, { options: TInput; integration: IntegrationOfKind<TKind> }>({
+      queryKey: options.queryKey,
+      requestAsync: async (input) => options.requestAsync(input.integration, input.options),
+    }).handler({ options: itemOptions, integration }),
+});
