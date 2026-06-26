@@ -4,7 +4,9 @@
 
 Remove widget-only services from Homarr's global Integration system.
 
-The affected services are release providers, Search.ch, and ArchiveTeam Warrior. They are only used by specific widgets, so keeping them as global integrations added unnecessary setup, UI, database rows, docs pages, and integration package code.
+The affected services are release providers and Search.ch. They are only used by specific widgets, so keeping them as global integrations added unnecessary setup, UI, database rows, docs pages, and integration package code.
+
+ArchiveTeam Warrior remains a proper integration but is no longer auto-seeded on first install.
 
 ## Why
 
@@ -12,7 +14,6 @@ These services do not need shared integration state.
 
 - Release providers are selected per Releases widget repository.
 - Search.ch is only used by the Timetable widget.
-- ArchiveTeam Warrior is only used by the ArchiveTeam Warrior widget.
 
 Moving them into widget options makes configuration simpler and removes dead-weight integration code from `packages/integrations`.
 
@@ -41,16 +42,13 @@ Moving them into widget options makes configuration simpler and removes dead-wei
 
 ### ArchiveTeam Warrior
 
-- Removed ArchiveTeam Warrior as an integration.
-- Added an ArchiveTeam Warrior widget `url` option, defaulting to `http://localhost:8001`.
-- Moved ArchiveTeam Warrior status/WebSocket handling into `packages/request-handler/src/archive-team-warrior.ts`.
-- Updated the widget API and component to use the widget `url` option.
+- Kept as a proper integration (not removed).
+- Removed `defaultUrl` from the integration definition to prevent auto-seeding on first install.
 
 ### Integration Cleanup
 
 - Removed creators, exports, docs references, and implementation files for the deleted integrations.
 - Removed unused dependencies from `packages/integrations/package.json`.
-- Added required request-handler dependencies for the moved WebSocket logic.
 
 ### Database Migration
 
@@ -68,7 +66,6 @@ Moving them into widget options makes configuration simpler and removes dead-wei
 ### Translations
 
 - Added English labels for the new widget options:
-  - `widget.archiveTeamWarrior.option.url.label`
   - `widget.timetable.option.baseUrl.label`
   - `widget.releases.option.repositories.providerUrl.label`
 
@@ -76,7 +73,9 @@ Moving them into widget options makes configuration simpler and removes dead-wei
 
 Release provider configuration lives on each Releases widget repository entry. The request handler resolves provider metadata and fetches releases directly from the provider-specific endpoint. GHCR uses anonymous OCI registry access for public packages.
 
-Timetable and ArchiveTeam Warrior now pass their widget URL options directly to their API routers and request handlers. No global integration lookup is needed.
+Timetable passes its widget URL option directly to its API router and request handler. No global integration lookup is needed.
+
+ArchiveTeam Warrior continues to use the standard integration system, but users must manually add the integration (it is not auto-created on install).
 
 ## Deliberate Non-Goals
 

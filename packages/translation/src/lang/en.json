@@ -3224,7 +3224,6 @@
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found",
           "noProviderSelected": "No provider selected",
-          "noProviderSeleceted": "No provider selected",
           "noProviderResponse": "No response from provider",
           "unexpected": "Unexpected provider error"
         }
