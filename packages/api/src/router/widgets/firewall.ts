@@ -12,7 +12,6 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const firewallMiddleware = createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall"));
 
-// ponytail: can't extract a generic factory here because each handler returns a different data type
 const queryFirewall = <
   THandler extends {
     handler: (integration: any, input: any) => { getDataAsync: () => Promise<{ data: any; timestamp: Date }> };

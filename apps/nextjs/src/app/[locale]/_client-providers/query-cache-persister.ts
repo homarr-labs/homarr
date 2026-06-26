@@ -3,7 +3,6 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { fetchApi } from "@homarr/api/client";
 import { getActiveQueryCacheBoardId, queryCacheStoragePrefix } from "@homarr/api/query-cache";
 
-// ponytail: write-only persister — restore is SSR-only via QueryCacheHydration
 const queryCacheStorage = {
   getItem: (_key: string) => null as string | null,
   async setItem(_key: string, value: string) {
