@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Nincs Szolgáltató",
             "tooltip": "A szolgáltató adatai nem értelmezhetők; kérjük, az importálás után állítsa be azokat manuálisan"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "",
           "noReleasesFound": "",
           "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderResponse": "",
+          "noProviderSelected": ""
         }
       }
     },

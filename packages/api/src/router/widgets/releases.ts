@@ -1,10 +1,9 @@
 import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { releaseProviderKinds } from "@homarr/definitions";
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
@@ -25,26 +24,29 @@ const releaseVersionFilterSchema = z.object({
 
 export const releasesRouter = createTRPCRouter({
   getLatest: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("releasesProvider")))
     .input(
       z.object({
         repositories: z.array(
           z.object({
             id: z.string(),
+            provider: z.enum(releaseProviderKinds),
             identifier: z.string(),
             versionFilter: releaseVersionFilterSchema.optional(),
+            providerUrl: z.string().url().optional(),
           }),
         ),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       return await Promise.all(
         input.repositories.map(async (repository) => {
           const response = await releasesRequestHandler
-            .handler(ctx.integration, {
+            .handler({
               id: repository.id,
+              provider: repository.provider,
               identifier: repository.identifier,
               versionRegex: formatVersionFilterRegex(repository.versionFilter),
+              providerUrl: repository.providerUrl,
             })
             .getCachedOrUpdatedDataAsync({
               forceUpdate: false,
@@ -52,7 +54,7 @@ export const releasesRouter = createTRPCRouter({
 
           return {
             id: repository.id,
-            integration: { name: ctx.integration.name, kind: ctx.integration.kind },
+            provider: repository.provider,
             timestamp: response.timestamp,
             ...response.data,
           };

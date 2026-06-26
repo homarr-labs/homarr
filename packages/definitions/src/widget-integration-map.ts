@@ -30,7 +30,6 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances"],
   systemDisks: ["dashDot", "openmediavault", "truenas", "unraid"],
   coolify: ["coolify"],
-  timetable: ["searchCh"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
   paperlessNgx: ["paperlessNgx"],
@@ -80,18 +79,7 @@ export const featuredIntegrations: readonly IntegrationKind[] = [
   "jellyfin",
 ];
 
-export const hiddenFromOnboarding = new Set<IntegrationKind>([
-  "searchCh",
-  "github",
-  "dockerHub",
-  "gitlab",
-  "npm",
-  "codeberg",
-  "linuxServerIO",
-  "gitHubContainerRegistry",
-  "quay",
-  "mock",
-]);
+export const hiddenFromOnboarding = new Set<IntegrationKind>(["mock"]);
 
 export const defaultBookmarkApps = [
   {

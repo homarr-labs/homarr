@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Ingen leverandør",
             "tooltip": "Leverandøren kunne ikke tolkes, sett den manuelt etter import av bildene"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "Ingen samsvarende versjon funnet",
           "noReleasesFound": "Ingen utgivelser funnet",
           "noProviderSeleceted": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør"
+          "noProviderResponse": "Ingen respons fra leverandør",
+          "noProviderSelected": "Ingen leverandør valgt"
         }
       }
     },

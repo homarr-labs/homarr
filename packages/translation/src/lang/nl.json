@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Geen aanbieder",
             "tooltip": ""
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "Geen overeenkomende versie gevonden",
           "noReleasesFound": "Geen uitgaves gevonden",
           "noProviderSeleceted": "Geen aanbieder geselecteerd",
-          "noProviderResponse": "Geen reactie van aanbieder"
+          "noProviderResponse": "Geen reactie van aanbieder",
+          "noProviderSelected": "Geen aanbieder geselecteerd"
         }
       }
     },

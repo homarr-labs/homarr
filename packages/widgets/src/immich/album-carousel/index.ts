@@ -1,6 +1,8 @@
 import { IconPhoto } from "@tabler/icons-react";
 import z from "zod";
 
+import { clientApi } from "@homarr/api/client";
+
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
@@ -10,9 +12,20 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
   integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      albumId: factory.text({
-        defaultValue: "",
+      albumId: factory.integrationSelect({
         withDescription: true,
+        clearable: true,
+        useOptions: (integrationIds: string[]) => {
+          const {
+            data = [],
+            isPending,
+            isError,
+          } = clientApi.widget.immich.getAlbums.useQuery(
+            { integrationId: integrationIds[0] ?? "" },
+            { enabled: integrationIds.length > 0, staleTime: 15 * 60 * 1000 },
+          );
+          return { data: data.map((album) => ({ value: album.id, label: album.albumName })), isPending, isError };
+        },
       }),
       rotationIntervalSeconds: factory.number({
         defaultValue: 5,
@@ -20,6 +33,10 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
         withDescription: true,
       }),
       showPhotoInfo: factory.switch({
+        defaultValue: false,
+        withDescription: true,
+      }),
+      randomizePhotos: factory.switch({
         defaultValue: false,
         withDescription: true,
       }),

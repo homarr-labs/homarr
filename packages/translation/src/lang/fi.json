@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "",
           "noReleasesFound": "",
           "noProviderSeleceted": "Toimittajaa ei ole valittu",
-          "noProviderResponse": ""
+          "noProviderResponse": "",
+          "noProviderSelected": "Toimittajaa ei ole valittu"
         }
       }
     },

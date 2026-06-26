@@ -1,6 +1,8 @@
 import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { releaseProviderKinds } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -42,7 +44,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: [],
         validate: z.array(
           z.object({
-            providerIntegrationId: z.string().optional(),
+            provider: z.enum(releaseProviderKinds).optional(),
             identifier: z.string().min(1),
             name: z.string().optional(),
             versionFilter: z
@@ -53,6 +55,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
               })
               .optional(),
             iconUrl: z.string().optional(),
+            providerUrl: z.string().url().optional(),
           }),
         ),
       }),

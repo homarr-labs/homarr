@@ -4,41 +4,33 @@ import { Avatar, Badge, Card, Group, SimpleGrid, Stack, Text } from "@mantine/co
 
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
-import { getIconUrl } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function ArchiveTeamWarriorWidget({
-  integrationIds,
-  options,
-}: WidgetComponentProps<"archiveTeamWarrior">) {
-  const integrationId = integrationIds[0];
+const archiveTeamWarriorIconUrl = "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png";
 
-  if (!integrationId) {
-    return null;
-  }
-
-  return <ArchiveTeamWarriorWidgetContent integrationId={integrationId} options={options} />;
+export default function ArchiveTeamWarriorWidget({ options }: WidgetComponentProps<"archiveTeamWarrior">) {
+  return <ArchiveTeamWarriorWidgetContent url={options.url} options={options} />;
 }
 
 const ArchiveTeamWarriorWidgetContent = ({
-  integrationId,
+  url,
   options,
 }: {
-  integrationId: string;
+  url: string;
   options: WidgetComponentProps<"archiveTeamWarrior">["options"];
 }) => {
   const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({
-    integrationId,
+    url,
   });
 
   const utils = clientApi.useUtils();
 
   clientApi.widget.archiveTeamWarrior.subscribeStatus.useSubscription(
-    { integrationId },
+    { url },
     {
       onData: (next) => {
-        utils.widget.archiveTeamWarrior.getStatus.setData({ integrationId }, next);
+        utils.widget.archiveTeamWarrior.getStatus.setData({ url }, next);
       },
     },
   );
@@ -50,7 +42,7 @@ const ArchiveTeamWarriorWidgetContent = ({
     <Stack p="xs" gap="xs" h="100%">
       <Group justify="space-between" align="center" wrap="nowrap">
         <Group gap="xs" wrap="nowrap" miw={0}>
-          <Avatar size="sm" radius="md" src={getIconUrl("archiveTeamWarrior")} />
+          <Avatar size="sm" radius="md" src={archiveTeamWarriorIconUrl} />
           <Text size="sm" c="dimmed" lineClamp={1}>
             {projectName}
           </Text>

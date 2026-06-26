@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Нет провайдера",
             "tooltip": "Не удалось определить провайдер, укажите его вручную после импорта образов"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "Подходящая версия не найдена",
           "noReleasesFound": "Релизы не найдены",
           "noProviderSeleceted": "Провайдер не выбран",
-          "noProviderResponse": "Нет ответа от провайдера"
+          "noProviderResponse": "Нет ответа от провайдера",
+          "noProviderSelected": "Провайдер не выбран"
         }
       }
     },

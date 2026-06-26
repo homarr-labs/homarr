@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "找不到匹配的版本",
           "noReleasesFound": "",
           "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderResponse": "",
+          "noProviderSelected": ""
         }
       }
     },

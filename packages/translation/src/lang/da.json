@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Ingen Udbyder",
             "tooltip": "Udbyderen kunne ikke fortolkes, angiv venligst det manuelt efter import af billederne"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "Ingen matchende version fundet",
           "noReleasesFound": "Ingen udgivelser fundet",
           "noProviderSeleceted": "Ingen udbyder valgt",
-          "noProviderResponse": "Intet svar fra udbyder"
+          "noProviderResponse": "Intet svar fra udbyder",
+          "noProviderSelected": "Ingen udbyder valgt"
         }
       }
     },

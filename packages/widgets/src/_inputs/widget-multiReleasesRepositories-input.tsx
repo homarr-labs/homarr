@@ -38,16 +38,20 @@ import { escapeForRegEx } from "@tiptap/react";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createId } from "@homarr/common";
-import { getIconUrl } from "@homarr/definitions";
-import type { IntegrationKind } from "@homarr/definitions";
+import type { ReleaseProviderKind } from "@homarr/definitions";
+import {
+  getReleaseProviderDefaultUrl,
+  getReleaseProviderIconUrl,
+  getReleaseProviderName,
+  normalizeReleaseProviderIdentifier,
+  releaseProviderKinds,
+} from "@homarr/definitions";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedImage } from "@homarr/ui";
 
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
-import { WidgetIntegrationSelect } from "../widget-integration-select";
-import type { IntegrationSelectOption } from "../widget-integration-select";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -55,10 +59,6 @@ import { useFormContext } from "./form";
 interface FormValidation {
   hasErrors: boolean;
   errors: FormErrors;
-}
-
-interface Integration extends IntegrationSelectOption {
-  iconUrl: string;
 }
 
 export const WidgetMultiReleasesRepositoriesInput = ({
@@ -78,38 +78,19 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
-  const integrationsApi = clientApi.integration.allOfGivenCategory.useQuery(
-    {
-      category: "releasesProvider",
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
-  const integrations = useMemo(
-    () =>
-      integrationsApi.data?.reduce<Record<string, Integration>>((acc, integration) => {
-        acc[integration.id] = {
-          id: integration.id,
-          name: integration.name,
-          url: integration.url,
-          kind: integration.kind,
-          iconUrl: getIconUrl(integration.kind),
-        };
-        return acc;
-      }, {}) ?? {},
-    [integrationsApi],
+  const providerOptions = useMemo(
+    () => releaseProviderKinds.map((provider) => ({ value: provider, label: getReleaseProviderName(provider) })),
+    [],
   );
 
   const onRepositorySave = useCallback(
     (repository: ReleasesRepository, index: number): FormValidation => {
-      form.setFieldValue(`options.${property}.${index}.providerIntegrationId`, repository.providerIntegrationId);
+      form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
       form.setFieldValue(`options.${property}.${index}.name`, repository.name);
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
+      form.setFieldValue(`options.${property}.${index}.providerUrl`, repository.providerUrl);
 
       const formValidation = form.validate();
       const fieldErrors: FormErrors = Object.entries(formValidation.errors).reduce((acc, [key, value]) => {
@@ -152,7 +133,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       onRepositorySave: (saved) => onRepositorySave(saved, index),
       onRepositoryCancel: () => onRepositoryRemove(index),
       versionFilterPrecisionOptions,
-      integrations,
+      providerOptions,
     });
   };
 
@@ -183,7 +164,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
               onClick={() =>
                 openImportModal({
                   repositories,
-                  integrations,
                   versionFilterPrecisionOptions,
                   onConfirm: (selectedRepositories) => {
                     if (!selectedRepositories.length) return;
@@ -210,14 +190,14 @@ export const WidgetMultiReleasesRepositoriesInput = ({
         <Divider my="sm" />
 
         {repositories.map((repository, index) => {
-          const integration = repository.providerIntegrationId
-            ? integrations[repository.providerIntegrationId]
-            : undefined;
+          const providerName = repository.provider ? getReleaseProviderName(repository.provider) : "";
           return (
             <Stack key={repository.id} gap={5}>
               <Group align="center" gap="xs">
                 <Image
-                  src={repository.iconUrl ?? integration?.iconUrl ?? null}
+                  src={
+                    repository.iconUrl ?? (repository.provider ? getReleaseProviderIconUrl(repository.provider) : null)
+                  }
                   style={{
                     height: "1.2em",
                     width: "1.2em",
@@ -225,7 +205,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                 />
 
                 <Text c="dimmed" fw={100} size="xs">
-                  {integration?.name ?? ""}
+                  {providerName}
                 </Text>
 
                 <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
@@ -242,7 +222,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                       repository,
                       onRepositorySave: (saved) => onRepositorySave(saved, index),
                       versionFilterPrecisionOptions,
-                      integrations,
+                      providerOptions,
                     })
                   }
                   variant="light"
@@ -294,7 +274,7 @@ interface RepositoryEditProps {
   onRepositorySave: (repository: ReleasesRepository) => FormValidation;
   onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
-  integrations: Record<string, Integration>;
+  providerOptions: { value: ReleaseProviderKind; label: string }[];
 }
 
 const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
@@ -302,11 +282,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const integrationSelectOptions: IntegrationSelectOption[] = useMemo(
-    () => Object.values(innerProps.integrations),
-    [innerProps.integrations],
-  );
-
   // Allows user to not select an icon by removing the url from the input,
   // will only try and get an icon if the name or identifier changes
   const [autoSetIcon, setAutoSetIcon] = useState(false);
@@ -361,15 +336,14 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
     <Stack>
       <Group align="start" wrap="nowrap" grow preventGrowOverflow={false}>
         <div style={{ flex: 0.3 }}>
-          <WidgetIntegrationSelect
-            canSelectMultiple={false}
+          <Select
             withAsterisk
             label={tRepository("provider.label")}
-            data={integrationSelectOptions}
-            value={tempRepository.providerIntegrationId ? [tempRepository.providerIntegrationId] : []}
-            error={formErrors[`${innerProps.fieldPath}.providerIntegrationId`] as string}
+            data={innerProps.providerOptions}
+            value={tempRepository.provider ?? null}
+            error={formErrors[`${innerProps.fieldPath}.provider`] as string}
             onChange={(value) => {
-              handleChange({ providerIntegrationId: value.length > 0 ? value.pop() : undefined });
+              handleChange({ provider: value ? (value as ReleaseProviderKind) : undefined });
             }}
           />
         </div>
@@ -396,6 +370,16 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
           style={{ flex: 0.7 }}
         />
       </Group>
+
+      <TextInput
+        label={tRepository("providerUrl.label")}
+        placeholder={tempRepository.provider ? getReleaseProviderDefaultUrl(tempRepository.provider) : undefined}
+        value={tempRepository.providerUrl ?? ""}
+        onChange={(event) => {
+          handleChange({ providerUrl: event.currentTarget.value || undefined });
+        }}
+        error={formErrors[`${innerProps.fieldPath}.providerUrl`]}
+      />
 
       <Group align="center" wrap="nowrap" grow preventGrowOverflow={false}>
         <TextInput
@@ -513,7 +497,6 @@ interface ReleasesRepositoryImport extends ReleasesRepository {
 interface ImportRepositorySelectProps {
   repository: ReleasesRepositoryImport;
   checked: boolean;
-  integration?: Integration;
   versionFilterPrecisionOptions: string[];
   disabled: boolean;
   onImageSelectionChanged?: (isSelected: boolean) => void;
@@ -522,12 +505,12 @@ interface ImportRepositorySelectProps {
 const ImportRepositorySelect = ({
   repository,
   checked,
-  integration,
   versionFilterPrecisionOptions,
   disabled = false,
   onImageSelectionChanged = undefined,
 }: ImportRepositorySelectProps) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const provider = repository.provider;
 
   return (
     <Group gap="xl" justify="space-between">
@@ -570,12 +553,12 @@ const ImportRepositorySelect = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={integration !== undefined} withArrow>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={provider !== undefined} withArrow>
         <Group>
-          {integration ? (
+          {provider ? (
             <MaskedImage
               color="dimmed"
-              imageUrl={integration.iconUrl}
+              imageUrl={getReleaseProviderIconUrl(provider)}
               style={{
                 height: "1em",
                 width: "1em",
@@ -586,7 +569,7 @@ const ImportRepositorySelect = ({
           )}
 
           <Text ff="monospace" c="dimmed" size="sm">
-            {integration?.name ?? tRepository("noProvider.label")}
+            {provider ? getReleaseProviderName(provider) : tRepository("noProvider.label")}
           </Text>
         </Group>
       </Tooltip>
@@ -596,7 +579,6 @@ const ImportRepositorySelect = ({
 
 interface RepositoryImportProps {
   repositories: ReleasesRepository[];
-  integrations: Record<string, Integration>;
   versionFilterPrecisionOptions: string[];
   onConfirm: (selectedRepositories: ReleasesRepositoryImport[]) => void;
   isAdmin: boolean;
@@ -625,28 +607,25 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
         if (!identifier) return acc;
 
-        const providerKind = containerImageToProviderKind[source] ?? "dockerHub";
-        const integrationId = Object.values(innerProps.integrations).find(
-          (integration) => integration.kind === providerKind,
-        )?.id;
+        const provider = containerImageToProviderKind[source] ?? "dockerHub";
+        const normalizedIdentifier = normalizeReleaseProviderIdentifier(provider, identifier);
 
-        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
-          return acc;
+        if (acc.some((item) => item.provider === provider && item.identifier === normalizedIdentifier)) return acc;
 
         acc.push({
           id: createId(),
-          providerIntegrationId: integrationId,
-          identifier,
+          provider,
+          identifier: normalizedIdentifier,
           iconUrl: container.iconUrl ?? undefined,
-          name: formatIdentifierName(identifier),
+          name: formatIdentifierName(normalizedIdentifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
+            (item) => item.provider === provider && item.identifier === normalizedIdentifier,
           ),
         });
         return acc;
       }, []) ?? [],
-    [docker.data, innerProps.repositories, innerProps.integrations],
+    [docker.data, innerProps.repositories],
   );
 
   const handleConfirm = useCallback(() => {
@@ -722,27 +701,20 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
                     {importRepositories
                       .filter((repository) => !repository.alreadyImported)
-                      .map((repository) => {
-                        const integration = repository.providerIntegrationId
-                          ? innerProps.integrations[repository.providerIntegrationId]
-                          : undefined;
-
-                        return (
-                          <ImportRepositorySelect
-                            key={repository.id}
-                            repository={repository}
-                            checked={selectedImages.includes(repository)}
-                            integration={integration}
-                            versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
-                            disabled={false}
-                            onImageSelectionChanged={(isSelected) =>
-                              isSelected
-                                ? setSelectedImages([...selectedImages, repository])
-                                : setSelectedImages(selectedImages.filter((img) => img !== repository))
-                            }
-                          />
-                        );
-                      })}
+                      .map((repository) => (
+                        <ImportRepositorySelect
+                          key={repository.id}
+                          repository={repository}
+                          checked={selectedImages.includes(repository)}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                          disabled={false}
+                          onImageSelectionChanged={(isSelected) =>
+                            isSelected
+                              ? setSelectedImages([...selectedImages, repository])
+                              : setSelectedImages(selectedImages.filter((img) => img !== repository))
+                          }
+                        />
+                      ))}
                   </Stack>
                 )}
               </Accordion.Panel>
@@ -756,22 +728,15 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                   <Stack justify="center" gap="xs">
                     {importRepositories
                       .filter((repository) => repository.alreadyImported)
-                      .map((repository) => {
-                        const integration = repository.providerIntegrationId
-                          ? innerProps.integrations[repository.providerIntegrationId]
-                          : undefined;
-
-                        return (
-                          <ImportRepositorySelect
-                            key={repository.id}
-                            repository={repository}
-                            integration={integration}
-                            versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
-                            checked
-                            disabled
-                          />
-                        );
-                      })}
+                      .map((repository) => (
+                        <ImportRepositorySelect
+                          key={repository.id}
+                          repository={repository}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                          checked
+                          disabled
+                        />
+                      ))}
                   </Stack>
                 )}
               </Accordion.Panel>
@@ -798,8 +763,8 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const containerImageToProviderKind: Record<string, IntegrationKind> = {
-  "ghcr.io": "github",
+const containerImageToProviderKind: Record<string, ReleaseProviderKind> = {
+  "ghcr.io": "gitHubContainerRegistry",
   "docker.io": "dockerHub",
   "lscr.io": "linuxServerIO",
   "quay.io": "quay",

@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "ללא ספק",
             "tooltip": "לא ניתן היה לנתח את הספק, אנא הגדר אותו ידנית לאחר ייבוא ​​התמונות"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "לא נמצאה גרסה תואמת",
           "noReleasesFound": "לא נמצאו שיחרורים",
           "noProviderSeleceted": "לא נבחר ספק",
-          "noProviderResponse": "אין תשובה מהספק"
+          "noProviderResponse": "אין תשובה מהספק",
+          "noProviderSelected": "לא נבחר ספק"
         }
       }
     },

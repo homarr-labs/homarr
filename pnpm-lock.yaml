@@ -42,9 +42,6 @@ catalogs:
     '@gfazioli/mantine-onboarding-tour':
       specifier: ^4.0.5
       version: 4.0.5
-    '@gitbeaker/rest':
-      specifier: ^43.8.0
-      version: 43.8.0
     '@homarr/gridstack':
       specifier: ^1.12.0
       version: 1.12.0
@@ -96,9 +93,6 @@ catalogs:
     '@modelcontextprotocol/sdk':
       specifier: 1.29.0
       version: 1.29.0
-    '@octokit/auth-app':
-      specifier: ^8.2.0
-      version: 8.2.0
     '@paralleldrive/cuid2':
       specifier: ^3.3.0
       version: 3.3.0
@@ -1906,9 +1900,6 @@ importers:
       '@ctrl/transmission':
         specifier: 'catalog:'
         version: 7.4.0
-      '@gitbeaker/rest':
-        specifier: 'catalog:'
-        version: 43.8.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1942,9 +1933,6 @@ importers:
       '@jellyfin/sdk':
         specifier: 'catalog:'
         version: 0.13.0(axios@1.15.0)
-      '@octokit/auth-app':
-        specifier: 'catalog:'
-        version: 8.2.0
       ical.js:
         specifier: 'catalog:'
         version: 2.2.1
@@ -2271,6 +2259,9 @@ importers:
       undici:
         specifier: 'catalog:'
         version: 7.27.2
+      ws:
+        specifier: 'catalog:'
+        version: 8.21.0
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -2278,6 +2269,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/ws':
+        specifier: 'catalog:'
+        version: 8.18.1
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -4827,18 +4821,6 @@ packages:
       '@tabler/icons-react': ^3.30.0
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
-
-  '@gitbeaker/core@43.8.0':
-    resolution: {integrity: sha512-H+LfKuf4dExBinb79c+CXViRBvTVQNf5BYLNSizm2SiqdED5JruhKX88payefleY0szp7G/mySlFSXPyGRH1dQ==}
-    engines: {node: '>=18.20.0'}
-
-  '@gitbeaker/requester-utils@43.8.0':
-    resolution: {integrity: sha512-d/SiJdxijc+aH5ZBQOw83XLxNSXqsBZNm5k3nPu1EHxGxK0fajXmxdMl0/vNXbKRggnIquFCxURkrQSEzfjqxQ==}
-    engines: {node: '>=18.20.0'}
-
-  '@gitbeaker/rest@43.8.0':
-    resolution: {integrity: sha512-xxqsNsUXaFang9b2e/NTIgqUeuUlifA2Opy1mOVqTDuJZZNIOTgUNyziwBJoleBhMC0XuvY3JNVMWthufcVjRw==}
-    engines: {node: '>=18.20.0'}
 
   '@grpc/grpc-js@1.12.5':
     resolution: {integrity: sha512-d3iiHxdpg5+ZcJ6jnDSOT8Z0O0VMVGy34jAnYLUX8yd36b1qn8f1TwOA/Lc7TsOh03IkPJ38eGI5qD2EjNkoEA==}
@@ -12449,10 +12431,6 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  picomatch-browser@2.2.6:
-    resolution: {integrity: sha512-0ypsOQt9D4e3hziV8O4elD9uN0z/jtUEfxVRtNaAAtXIyUx9m/SzlO020i8YNL2aL/E6blOvvHQcin6HZlFy/w==}
-    engines: {node: '>=8.6'}
-
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
@@ -13156,9 +13134,6 @@ packages:
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
-
-  rate-limiter-flexible@8.1.0:
-    resolution: {integrity: sha512-J+4xBdVboibP1h0Imn4nFoCLT+UM9Os9vJaWaRWkLsQxS7jrhLJeLlmzP5hyCEsLwtgFIIY5KcWiJGyyVTMaKg==}
 
   raw-body@2.5.3:
     resolution: {integrity: sha512-s4VSOf6yN0rvbRZGxs8Om5CWj6seneMwK3oDb4lWDH0UPhWcxwOWw5+qk24bxq87szX1ydrwylIOp2uG1ojUpA==}
@@ -15035,9 +15010,6 @@ packages:
   wsl-utils@0.1.0:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
-
-  xcase@2.0.1:
-    resolution: {integrity: sha512-UmFXIPU+9Eg3E9m/728Bii0lAIuoc+6nbrNUKaRPJOFp91ih44qqGlWtxMB6kXFrRD6po+86ksHM5XHCfk6iPw==}
 
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
@@ -18158,24 +18130,6 @@ snapshots:
       '@tabler/icons-react': 3.44.0(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-
-  '@gitbeaker/core@43.8.0':
-    dependencies:
-      '@gitbeaker/requester-utils': 43.8.0
-      qs: 6.15.2
-      xcase: 2.0.1
-
-  '@gitbeaker/requester-utils@43.8.0':
-    dependencies:
-      picomatch-browser: 2.2.6
-      qs: 6.15.2
-      rate-limiter-flexible: 8.1.0
-      xcase: 2.0.1
-
-  '@gitbeaker/rest@43.8.0':
-    dependencies:
-      '@gitbeaker/core': 43.8.0
-      '@gitbeaker/requester-utils': 43.8.0
 
   '@grpc/grpc-js@1.12.5':
     dependencies:
@@ -26573,8 +26527,6 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch-browser@2.2.6: {}
-
   picomatch@2.3.1: {}
 
   picomatch@4.0.4: {}
@@ -27398,8 +27350,6 @@ snapshots:
   range-parser@1.2.0: {}
 
   range-parser@1.2.1: {}
-
-  rate-limiter-flexible@8.1.0: {}
 
   raw-body@2.5.3:
     dependencies:
@@ -29680,8 +29630,6 @@ snapshots:
   wsl-utils@0.1.0:
     dependencies:
       is-wsl: 3.1.1
-
-  xcase@2.0.1: {}
 
   xdg-basedir@5.1.0: {}
 

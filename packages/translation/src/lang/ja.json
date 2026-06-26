@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "プロバイダーがありません",
             "tooltip": "プロバイダーを解析できませんでした。画像をインポートしたあとで、手動で設定してください"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "一致するバージョンが見つかりません",
           "noReleasesFound": "リリースが見つかりませんでした",
           "noProviderSeleceted": "プロバイダーが選択されていません",
-          "noProviderResponse": "プロバイダーからの応答がありません"
+          "noProviderResponse": "プロバイダーからの応答がありません",
+          "noProviderSelected": "プロバイダーが選択されていません"
         }
       }
     },

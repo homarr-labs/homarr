@@ -1755,6 +1755,9 @@
       "name": "ArchiveTeam Warrior",
       "description": "Monitor ArchiveTeam Warrior status, projects, and active archival jobs.",
       "option": {
+        "url": {
+          "label": "Warrior URL"
+        },
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
         }
@@ -1900,6 +1903,9 @@
       "title": "Departures {station}",
       "noStation": "No station selected",
       "option": {
+        "baseUrl": {
+          "label": "Search.ch URL"
+        },
         "station": {
           "label": "Station"
         }
@@ -2770,8 +2776,8 @@
       "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "Album ID",
-          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "label": "Album",
+          "description": "Select the Immich album to show in the slideshow."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -2780,6 +2786,10 @@
         "showPhotoInfo": {
           "label": "Show photo info",
           "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        },
+        "randomizePhotos": {
+          "label": "Randomize photos",
+          "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
       "description": "Slideshow of pictures in your Immich album",
@@ -3144,6 +3154,9 @@
           "provider": {
             "label": "Provider"
           },
+          "providerUrl": {
+            "label": "Provider URL"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -3213,8 +3226,10 @@
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found",
+          "noProviderSelected": "No provider selected",
           "noProviderSeleceted": "No provider selected",
-          "noProviderResponse": "No response from provider"
+          "noProviderResponse": "No response from provider",
+          "unexpected": "Unexpected provider error"
         }
       }
     },

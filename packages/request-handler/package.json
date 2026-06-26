@@ -33,10 +33,12 @@
     "octokit": "catalog:",
     "superjson": "catalog:",
     "undici": "catalog:",
+    "ws": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/ws": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -3180,6 +3180,9 @@
           "noProvider": {
             "label": "Keine Anbieter",
             "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
+          },
+          "providerUrl": {
+            "label": ""
           }
         }
       },
@@ -3203,7 +3206,8 @@
           "noMatchingVersion": "Keine passende Version gefunden",
           "noReleasesFound": "Keine Veröffentlichungen gefunden",
           "noProviderSeleceted": "Kein Anbieter ausgewählt",
-          "noProviderResponse": "Keine Antwort vom Anbieter"
+          "noProviderResponse": "Keine Antwort vom Anbieter",
+          "noProviderSelected": "Kein Anbieter ausgewählt"
         }
       }
     },

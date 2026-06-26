@@ -1,6 +1,5 @@
 // General integrations
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
-export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
 export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
 export { Aria2Integration } from "./download-client/aria2/aria2-integration";
@@ -64,7 +63,6 @@ export type {
   TdarrStatistics,
   TdarrWorker,
 } from "./interfaces/media-transcoding/media-transcoding-types";
-export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 export type { PaperlessNgxStats } from "./paperless-ngx/paperless-ngx-types";
@@ -75,11 +73,6 @@ export type {
   AnchorNotesListInput,
   AnchorNoteSummary,
 } from "./anchor/anchor-types";
-export type {
-  ArchiveTeamWarriorBandwidth,
-  ArchiveTeamWarriorItem,
-  ArchiveTeamWarriorStatus,
-} from "./archive-team-warrior/archive-team-warrior-types";
 export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 export type { SpeedtestTrackerDashboardData } from "./speedtest-tracker/speedtest-tracker-types";
 export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshelf-types";
