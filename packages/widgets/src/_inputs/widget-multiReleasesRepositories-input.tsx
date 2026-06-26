@@ -257,15 +257,16 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   );
 };
 
-const providersWithAuth: ReleaseProviderKind[] = ["github", "gitHubContainerRegistry", "dockerHub", "gitlab", "npm", "codeberg"];
+const providersWithAuth: ReleaseProviderKind[] = [
+  "github",
+  "gitHubContainerRegistry",
+  "dockerHub",
+  "gitlab",
+  "npm",
+  "codeberg",
+];
 
-const ProviderTokensSection = ({
-  itemId,
-  repositories,
-}: {
-  itemId: string;
-  repositories: ReleasesRepository[];
-}) => {
+const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repositories: ReleasesRepository[] }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
   const setSecret = clientApi.widget.secrets.setSecret.useMutation({ onSuccess: () => refetch() });

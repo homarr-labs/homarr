@@ -11,10 +11,7 @@ import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const secretKindSchema = z.enum(releaseProviderKinds);
 
-const resolveItemWithBoardAccess = async (
-  ctx: { db: any; session: any },
-  itemId: string,
-) => {
+const resolveItemWithBoardAccess = async (ctx: { db: any; session: any }, itemId: string) => {
   const item = await ctx.db.query.items.findFirst({ where: eq(items.id, itemId) });
   if (!item || item.kind !== "releases") throw new TRPCError({ code: "NOT_FOUND" });
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "modify");
@@ -49,15 +46,13 @@ export const widgetSecretsRouter = createTRPCRouter({
         .where(and(eq(widgetSecrets.itemId, input.itemId), eq(widgetSecrets.kind, input.kind)));
     }),
 
-  getConfiguredKinds: protectedProcedure
-    .input(z.object({ itemId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      await resolveItemWithBoardAccess(ctx, input.itemId);
+  getConfiguredKinds: protectedProcedure.input(z.object({ itemId: z.string() })).query(async ({ ctx, input }) => {
+    await resolveItemWithBoardAccess(ctx, input.itemId);
 
-      const secrets = await ctx.db.query.widgetSecrets.findMany({
-        where: eq(widgetSecrets.itemId, input.itemId),
-        columns: { kind: true },
-      });
-      return secrets.map((s: { kind: string }) => s.kind);
-    }),
+    const secrets = await ctx.db.query.widgetSecrets.findMany({
+      where: eq(widgetSecrets.itemId, input.itemId),
+      columns: { kind: true },
+    });
+    return secrets.map((s: { kind: string }) => s.kind);
+  }),
 });

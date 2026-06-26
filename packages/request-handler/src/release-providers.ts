@@ -174,7 +174,7 @@ const getGitHubContainerRegistryReleaseAsync = async (
   try {
     const repositoryName = `${parsed.owner}/${parsed.name}`;
     const registryUrl = new URL(baseUrl);
-    const registryToken = token ?? await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName);
+    const registryToken = token ?? (await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName));
     const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, registryToken);
     const matchingTags = versionRegex ? tags.filter((tag) => new RegExp(versionRegex).test(tag)) : tags;
     const tagsToCheck = versionRegex
@@ -187,7 +187,12 @@ const getGitHubContainerRegistryReleaseAsync = async (
     const releases = await Promise.all(
       tagsToCheck.map(async (tag) => ({
         latestRelease: tag,
-        latestReleaseAt: await getGitHubContainerRegistryTagCreatedAtAsync(registryUrl, repositoryName, tag, registryToken),
+        latestReleaseAt: await getGitHubContainerRegistryTagCreatedAtAsync(
+          registryUrl,
+          repositoryName,
+          tag,
+          registryToken,
+        ),
         releaseUrl: `https://github.com/${repositoryName}/pkgs/container/${encodeURIComponent(parsed.name)}`,
       })),
     );
@@ -445,7 +450,11 @@ const getGitlabReleaseAsync = async (
   return { success: true, data: { ...details, ...latestRelease } };
 };
 
-const getGitlabDetailsAsync = async (baseUrl: string, encodedIdentifier: string, token?: string): Promise<DetailsProviderResponse> => {
+const getGitlabDetailsAsync = async (
+  baseUrl: string,
+  encodedIdentifier: string,
+  token?: string,
+): Promise<DetailsProviderResponse> => {
   const headers: Record<string, string> = {};
   if (token) headers["PRIVATE-TOKEN"] = token;
 
