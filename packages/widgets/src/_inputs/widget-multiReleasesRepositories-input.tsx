@@ -12,6 +12,7 @@ import {
   Group,
   Image,
   Loader,
+  PasswordInput,
   Select,
   Stack,
   Text,
@@ -27,6 +28,7 @@ import {
   IconCopy,
   IconCopyCheckFilled,
   IconEdit,
+  IconKey,
   IconPackageImport,
   IconPlus,
   IconTrash,
@@ -64,6 +66,7 @@ interface FormValidation {
 export const WidgetMultiReleasesRepositoriesInput = ({
   property,
   kind,
+  itemId,
 }: CommonWidgetInputProps<"multiReleasesRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tRepository = useScopedI18n("widget.releases.option.repositories");
@@ -249,7 +252,105 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           );
         })}
       </Stack>
+      {itemId && <ProviderTokensSection itemId={itemId} repositories={repositories} />}
     </Fieldset>
+  );
+};
+
+const providersWithAuth: ReleaseProviderKind[] = ["github", "gitHubContainerRegistry", "dockerHub", "gitlab", "npm", "codeberg"];
+
+const ProviderTokensSection = ({
+  itemId,
+  repositories,
+}: {
+  itemId: string;
+  repositories: ReleasesRepository[];
+}) => {
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
+  const setSecret = clientApi.widget.secrets.setSecret.useMutation({ onSuccess: () => refetch() });
+  const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({ onSuccess: () => refetch() });
+
+  const usedProviders = useMemo(
+    () => [...new Set(repositories.map((r) => r.provider).filter((p): p is ReleaseProviderKind => p !== undefined))],
+    [repositories],
+  );
+
+  const authProviders = usedProviders.filter((p) => providersWithAuth.includes(p));
+  if (authProviders.length === 0) return null;
+
+  return (
+    <>
+      <Divider my="sm" label={tRepository("tokens.label")} labelPosition="center" />
+      <Stack gap="xs">
+        {authProviders.map((provider) => (
+          <ProviderTokenInput
+            key={provider}
+            provider={provider}
+            hasToken={configuredKinds.includes(provider)}
+            onSave={(value) => setSecret.mutate({ itemId, kind: provider, value })}
+            onDelete={() => deleteSecret.mutate({ itemId, kind: provider })}
+          />
+        ))}
+      </Stack>
+    </>
+  );
+};
+
+const ProviderTokenInput = ({
+  provider,
+  hasToken,
+  onSave,
+  onDelete,
+}: {
+  provider: ReleaseProviderKind;
+  hasToken: boolean;
+  onSave: (value: string) => void;
+  onDelete: () => void;
+}) => {
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const [value, setValue] = useState("");
+  const [editing, setEditing] = useState(false);
+
+  const handleSave = () => {
+    if (value.trim()) {
+      onSave(value.trim());
+      setValue("");
+      setEditing(false);
+    }
+  };
+
+  const handleDelete = () => {
+    onDelete();
+    setValue("");
+    setEditing(false);
+  };
+
+  return (
+    <Group gap="xs" align="end">
+      <PasswordInput
+        label={`${getReleaseProviderName(provider)} ${tRepository("tokens.token")}`}
+        placeholder={hasToken ? tRepository("tokens.configured") : tRepository("tokens.notConfigured")}
+        value={value}
+        onChange={(e) => {
+          setValue(e.currentTarget.value);
+          setEditing(true);
+        }}
+        style={{ flex: 1 }}
+        size="xs"
+        leftSection={<IconKey size={14} />}
+      />
+      {editing && value.trim() && (
+        <Button size="xs" onClick={handleSave}>
+          {tRepository("tokens.save")}
+        </Button>
+      )}
+      {hasToken && !editing && (
+        <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete}>
+          <IconTrash size={14} />
+        </ActionIcon>
+      )}
+    </Group>
   );
 };
 

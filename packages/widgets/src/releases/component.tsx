@@ -36,7 +36,7 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
+export default function ReleasesWidget({ options, itemId }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -85,6 +85,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const queryResults = clientApi.useQueries((trpc) =>
     batchedRepositories.flatMap(({ provider, repositories }) =>
       trpc.widget.releases.getLatest({
+        itemId,
         repositories: repositories.map((repository) => ({
           id: repository.id,
           provider,

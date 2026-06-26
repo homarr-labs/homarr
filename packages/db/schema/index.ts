@@ -51,6 +51,7 @@ export const {
   cronJobConfigurations,
   customWidgetDefinitions,
   customWidgetSecrets,
+  widgetSecrets,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;

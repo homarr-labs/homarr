@@ -14,6 +14,7 @@ export interface ReleasesRepositoryRequest extends Record<string, unknown> {
   identifier: string;
   versionRegex?: string;
   providerUrl?: string;
+  token?: string;
 }
 
 export interface DetailsProviderResponse {
@@ -61,17 +62,17 @@ export const getLatestMatchingReleaseAsync = async (input: ReleasesRepositoryReq
 
   switch (input.provider) {
     case "github":
-      return await getGithubReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getGithubReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "gitHubContainerRegistry":
-      return await getGitHubContainerRegistryReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getGitHubContainerRegistryReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "dockerHub":
-      return await getDockerHubReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getDockerHubReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "gitlab":
-      return await getGitlabReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getGitlabReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "npm":
-      return await getNpmReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getNpmReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "codeberg":
-      return await getCodebergReleaseAsync(baseUrl, identifier, input.versionRegex);
+      return await getCodebergReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "linuxServerIO":
       return await getLinuxServerIOReleaseAsync(baseUrl, identifier);
     case "quay":
@@ -96,9 +97,10 @@ const removeTrailingSlash = (url: string) => url.replace(/\/$/, "");
 
 const buildUrl = (baseUrl: string, path: `/${string}`) => new URL(`${baseUrl}${path}`);
 
-const getGithubApi = (baseUrl: string, userAgent: string) =>
+const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
   new Octokit({
     baseUrl,
+    auth: token,
     request: { fetch: fetchWithTrustedCertificatesAsync },
     throttle: { enabled: false },
     userAgent,
@@ -108,11 +110,12 @@ const getGithubReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
   if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
 
-  const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider");
+  const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
     const releasesResponse = await api.rest.repos.listReleases({ owner: parsed.owner, repo: parsed.name });
     if (releasesResponse.data.length === 0) return { success: false, error: { code: "noMatchingVersion" } };
@@ -163,6 +166,7 @@ const getGitHubContainerRegistryReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerPackageName(identifier);
   if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
@@ -170,8 +174,8 @@ const getGitHubContainerRegistryReleaseAsync = async (
   try {
     const repositoryName = `${parsed.owner}/${parsed.name}`;
     const registryUrl = new URL(baseUrl);
-    const token = await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName);
-    const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, token);
+    const registryToken = token ?? await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName);
+    const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, registryToken);
     const matchingTags = versionRegex ? tags.filter((tag) => new RegExp(versionRegex).test(tag)) : tags;
     const tagsToCheck = versionRegex
       ? matchingTags.slice(-100)
@@ -183,7 +187,7 @@ const getGitHubContainerRegistryReleaseAsync = async (
     const releases = await Promise.all(
       tagsToCheck.map(async (tag) => ({
         latestRelease: tag,
-        latestReleaseAt: await getGitHubContainerRegistryTagCreatedAtAsync(registryUrl, repositoryName, tag, token),
+        latestReleaseAt: await getGitHubContainerRegistryTagCreatedAtAsync(registryUrl, repositoryName, tag, registryToken),
         releaseUrl: `https://github.com/${repositoryName}/pkgs/container/${encodeURIComponent(parsed.name)}`,
       })),
     );
@@ -323,6 +327,7 @@ const getDockerHubReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = identifier.includes("/") ? parseOwnerName(identifier) : { owner: "", name: identifier };
   if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
@@ -331,9 +336,13 @@ const getDockerHubReleaseAsync = async (
     ? `/v2/namespaces/${encodeURIComponent(parsed.owner)}/repositories/${encodeURIComponent(parsed.name)}`
     : `/v2/repositories/library/${encodeURIComponent(parsed.name)}`;
 
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   for (let page = 0; page <= 5; page++) {
     const response = await fetchWithTrustedCertificatesAsync(
       buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}` as `/${string}`),
+      headers.Authorization ? { headers } : undefined,
     );
     if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
 
@@ -344,7 +353,7 @@ const getDockerHubReleaseAsync = async (
     const latestRelease = getLatestRelease(result.data.results, versionRegex);
     if (!latestRelease) continue;
 
-    const details = await getDockerHubDetailsAsync(baseUrl, relativeUrl as `/${string}`);
+    const details = await getDockerHubDetailsAsync(baseUrl, relativeUrl as `/${string}`, token);
     return { success: true, data: { ...details, ...latestRelease } };
   }
 
@@ -354,8 +363,15 @@ const getDockerHubReleaseAsync = async (
 const getDockerHubDetailsAsync = async (
   baseUrl: string,
   relativeUrl: `/${string}`,
+  token?: string,
 ): Promise<DetailsProviderResponse> => {
-  const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, `${relativeUrl}/` as `/${string}`));
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const response = await fetchWithTrustedCertificatesAsync(
+    buildUrl(baseUrl, `${relativeUrl}/` as `/${string}`),
+    headers.Authorization ? { headers } : undefined,
+  );
   if (!response.ok) return {};
 
   const result = dockerHubDetailsSchema.safeParse(await response.json());
@@ -394,10 +410,15 @@ const getGitlabReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   const encodedIdentifier = encodeURIComponent(identifier);
+  const headers: Record<string, string> = {};
+  if (token) headers["PRIVATE-TOKEN"] = token;
+
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}/releases?per_page=100`),
+    headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
   if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
 
@@ -420,12 +441,18 @@ const getGitlabReleaseAsync = async (
   const latestRelease = getLatestRelease(releases, versionRegex);
   if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
-  const details = await getGitlabDetailsAsync(baseUrl, encodedIdentifier);
+  const details = await getGitlabDetailsAsync(baseUrl, encodedIdentifier, token);
   return { success: true, data: { ...details, ...latestRelease } };
 };
 
-const getGitlabDetailsAsync = async (baseUrl: string, encodedIdentifier: string): Promise<DetailsProviderResponse> => {
-  const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}`));
+const getGitlabDetailsAsync = async (baseUrl: string, encodedIdentifier: string, token?: string): Promise<DetailsProviderResponse> => {
+  const headers: Record<string, string> = {};
+  if (token) headers["PRIVATE-TOKEN"] = token;
+
+  const response = await fetchWithTrustedCertificatesAsync(
+    buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}`),
+    headers["PRIVATE-TOKEN"] ? { headers } : undefined,
+  );
   if (!response.ok) return {};
 
   const result = gitlabDetailsSchema.safeParse(await response.json());
@@ -464,10 +491,17 @@ const getNpmReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   if (!identifier) return { success: false, error: { code: "invalidIdentifier" } };
 
-  const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`));
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const response = await fetchWithTrustedCertificatesAsync(
+    buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`),
+    headers.Authorization ? { headers } : undefined,
+  );
   if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
 
   const result = npmReleasesSchema.safeParse(await response.json());
@@ -509,12 +543,17 @@ const getCodebergReleaseAsync = async (
   baseUrl: string,
   identifier: string,
   versionRegex?: string,
+  token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
   if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
 
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `token ${token}`;
+
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/releases`),
+    headers.Authorization ? { headers } : undefined,
   );
   if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
 
@@ -531,7 +570,7 @@ const getCodebergReleaseAsync = async (
   const latestRelease = getLatestRelease(releases, versionRegex);
   if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
-  const details = await getCodebergDetailsAsync(baseUrl, parsed.owner, parsed.name);
+  const details = await getCodebergDetailsAsync(baseUrl, parsed.owner, parsed.name, token);
   return { success: true, data: { ...details, ...latestRelease } };
 };
 
@@ -539,9 +578,14 @@ const getCodebergDetailsAsync = async (
   baseUrl: string,
   owner: string,
   name: string,
+  token?: string,
 ): Promise<DetailsProviderResponse> => {
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `token ${token}`;
+
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
+    headers.Authorization ? { headers } : undefined,
   );
   if (!response.ok) return {};
 

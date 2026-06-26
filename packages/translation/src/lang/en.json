@@ -3201,6 +3201,13 @@
           "noProvider": {
             "label": "No Provider",
             "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          },
+          "tokens": {
+            "label": "Provider Tokens",
+            "token": "Token",
+            "configured": "Token configured",
+            "notConfigured": "No token set",
+            "save": "Save"
           }
         }
       },
