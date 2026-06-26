@@ -270,5 +270,4 @@ describe("testConnectionAsync should run test connection of integration", () => 
       externalUrl: null,
     });
   });
-
 });

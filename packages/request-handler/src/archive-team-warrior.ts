@@ -145,7 +145,9 @@ const applyFrameToSnapshot = (frame: SeesawFrame, snapshot: WarriorSnapshotState
       const message = projectRefreshMessageSchema.safeParse(frame.message);
       if (!message.success) return;
       snapshot.project = mapProject(message.data?.project);
-      snapshot.runnerStatus = message.data?.status ? normalizeDisplayStatus(message.data.status) : snapshot.runnerStatus;
+      snapshot.runnerStatus = message.data?.status
+        ? normalizeDisplayStatus(message.data.status)
+        : snapshot.runnerStatus;
       for (const item of message.data?.items ?? []) snapshot.items.set(item.id, mapItem(item));
       return;
     }
@@ -265,7 +267,10 @@ const normalizeDisplayStatus = (status?: string | null) => {
 };
 
 const formatItemName = (name: string) => {
-  const parts = name.replace(/^Item\s+/i, "").split("\u0000").filter(Boolean);
+  const parts = name
+    .replace(/^Item\s+/i, "")
+    .split("\u0000")
+    .filter(Boolean);
   const first = parts[0];
   if (!first) return "Item";
   const label = parts.length === 1 ? first : `${first} + ${parts.length - 1} more`;
