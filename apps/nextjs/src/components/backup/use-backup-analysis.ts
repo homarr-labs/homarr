@@ -142,7 +142,8 @@ export const useBackupAnalysis = () => {
                   phase: "error",
                 });
                 throw new Error(
-                  `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`, { cause: migrationErr },
+                  `Migration ${migration.tag} failed: ${migrationErr instanceof Error ? migrationErr.message : "Unknown error"}`,
+                  { cause: migrationErr },
                 );
               }
 

@@ -171,7 +171,7 @@ catalog:
   superjson: 2.2.6
   svgson: ^5.3.1
   testcontainers: ^12.0.3
-  timezones-ical-library: ^2.2.0
+  timezones-ical-library: ^2.2.1
   trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
   tsdav: ^2.2.2
@@ -181,7 +181,7 @@ catalog:
   vite: ^8.0.16
   undici: 7.27.2
   use-deep-compare-effect: ^1.8.1
-  video.js: ^8.23.8
+  video.js: ^8.23.9
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.1.9
   winston: 3.19.0
@@ -214,7 +214,7 @@ overrides:
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
   "hono@<4.6.5": ">=4.12.26"
   "linkifyjs@<4.3.2": ">=4.3.3"
-  "nanoid@>=4.0.0 <5.0.9": ">=5.1.14"
+  "nanoid@>=4.0.0 <5.0.9": ">=5.1.15"
   "prismjs@<1.30.0": ">=1.30.0"
   "proxmox-api>undici": "7.27.1"
   "react-is": "^19.2.7"

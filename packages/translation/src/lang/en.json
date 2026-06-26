@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -1467,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -2407,6 +2409,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -4142,6 +4150,11 @@
       "title": "Not Found",
       "text": "Could not find requested resource"
     },
+    "error": {
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4295,7 +4308,7 @@
                   "notStarted": "Not started"
                 },
                 "name": {
-                  "management": "Management",
+"management": "Management",
                   "dashboard": "Dashboard"
                 }
               }

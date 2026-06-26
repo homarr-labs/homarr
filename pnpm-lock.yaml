@@ -505,8 +505,8 @@ catalogs:
       specifier: ^12.0.3
       version: 12.0.3
     timezones-ical-library:
-      specifier: ^2.2.0
-      version: 2.2.0
+      specifier: ^2.2.1
+      version: 2.2.1
     trpc-to-mcp:
       specifier: ^1.3.2
       version: 1.3.2
@@ -532,8 +532,8 @@ catalogs:
       specifier: ^1.8.1
       version: 1.8.1
     video.js:
-      specifier: ^8.23.8
-      version: 8.23.8
+      specifier: ^8.23.9
+      version: 8.23.9
     vite:
       specifier: ^8.0.16
       version: 8.0.16
@@ -575,7 +575,7 @@ overrides:
   form-data@>=4.0.0 <4.0.4: '>=4.0.6'
   hono@<4.6.5: '>=4.12.26'
   linkifyjs@<4.3.2: '>=4.3.3'
-  nanoid@>=4.0.0 <5.0.9: '>=5.1.14'
+  nanoid@>=4.0.0 <5.0.9: '>=5.1.15'
   prismjs@<1.30.0: '>=1.30.0'
   proxmox-api>undici: 7.27.1
   react-is: ^19.2.7
@@ -1965,7 +1965,7 @@ importers:
         version: 1.1.1
       timezones-ical-library:
         specifier: 'catalog:'
-        version: 2.2.0
+        version: 2.2.1
       tsdav:
         specifier: 'catalog:'
         version: 2.2.2
@@ -2697,7 +2697,7 @@ importers:
         version: 3.8.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
       video.js:
         specifier: 'catalog:'
-        version: 8.23.8
+        version: 8.23.9
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -7882,14 +7882,18 @@ packages:
     resolution: {integrity: sha512-Fw28YZpRnA3cAHHDlkt7xQHiJ0fcL+NRcIqsocZQUSmbzeIKRpwttJjik5ZGanXP+vlA4SbTg+AbA3bP363l+w==}
     engines: {node: '>= 20'}
 
-  '@videojs/http-streaming@3.17.4':
-    resolution: {integrity: sha512-XAvdG2dolBuV2Fx8bu1kjmQ2D4TonGzZH68Pgv/O9xMSFWdZtITSMFismeQLEAtMmGwze8qNJp3RgV+jStrJqg==}
+  '@videojs/http-streaming@3.17.5':
+    resolution: {integrity: sha512-PRRQVu0hYW5h0XvRWpIyIpEatpMZzZtf7L1avV89Hnu+69f+0c7oLsSL9jwpg2nbvzGkdX5rQxQkz5Vc7tFR9w==}
     engines: {node: '>=8', npm: '>=5'}
     peerDependencies:
       video.js: ^8.19.0
 
   '@videojs/vhs-utils@4.1.1':
     resolution: {integrity: sha512-5iLX6sR2ownbv4Mtejw6Ax+naosGvoT9kY+gcuHzANyUZZ+4NpeNdKMUhb6ag0acYej1Y7cmr/F2+4PrggMiVA==}
+    engines: {node: '>=8', npm: '>=5'}
+
+  '@videojs/vhs-utils@4.1.2':
+    resolution: {integrity: sha512-1Dsv5dtWOq0LP1G37O46FQFA2tKAZON5UMe6dFPxT7JvPhEx8QIXcFQxan8+hHI3fX6aomFRFrUBJNgRYQDSXA==}
     engines: {node: '>=8', npm: '>=5'}
 
   '@videojs/xhr@2.7.0':
@@ -11802,8 +11806,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  mpd-parser@1.3.1:
-    resolution: {integrity: sha512-1FuyEWI5k2HcmhS1HkKnUAQV7yFPfXPht2DnRRGtoiiAAW+ESTbtEXIDpRkwdU+XyrQuwrIym7UkoPKsZ0SyFw==}
+  mpd-parser@1.4.0:
+    resolution: {integrity: sha512-blbA7XpAaOdC/PR0Tu8GiUxlx6CpBuRowQPYV7lhi9Yr9G9+dkPXIUjqjzc/NCn/uZZPopluaJlIYntIEI/VLw==}
     hasBin: true
 
   mrmime@2.0.0:
@@ -14259,9 +14263,8 @@ packages:
     resolution: {integrity: sha512-75voc/9G4rDIJleOo4jPvN4/YC4GRZrY8yy1uU4lwrB3XEQbWve8zXoO5No4eFrGcTAMYyoY67p8jRQdtA1HbA==}
     engines: {node: '>=12'}
 
-  timezones-ical-library@2.2.0:
-    resolution: {integrity: sha512-D8pKEBzYnCAGZSEyinMZqh2yTc7ZJqonXtNkpTzhPuJlkJjPEUJOXBs7ExeHcHGBaGpaJRTye5t0mLR20BeklA==}
-    engines: {node: '>=22.18.0', npm: '>=10.9.3'}
+  timezones-ical-library@2.2.1:
+    resolution: {integrity: sha512-VfDloy50AHsckqwuqc2ea+uyqxY7RjKXOqFMBd4T1zLkq31aVQNKhASvIF4+hSE2tuqaUGzGi4UQk5VzVNn94A==}
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -14721,8 +14724,8 @@ packages:
   victory-vendor@37.3.6:
     resolution: {integrity: sha512-SbPDPdDBYp+5MJHhBCAyI7wKM3d5ivekigc2Dk2s7pgbZ9wIgIBYGVw4zGHBml/qTFbexrofXW6Gu4noGxrOwQ==}
 
-  video.js@8.23.8:
-    resolution: {integrity: sha512-plZuWxN4clhDESSpi3QLYVs6tgnnf9qT9SA4iahHwZEmdVSuUh4+O6vQPcA5XqiEDvjeBDJvLafH1bhkAXaXKQ==}
+  video.js@8.23.9:
+    resolution: {integrity: sha512-3UCqyFW4wIusQu4TuhgRUxqtbzbj0WPT9hps0XIEXST43QBD11zb+bG7tBPrinrZztwVYdXCiOBo2pcGj9L05w==}
 
   videojs-contrib-quality-levels@4.1.0:
     resolution: {integrity: sha512-TfrXJJg1Bv4t6TOCMEVMwF/CoS8iENYsWNKip8zfhB5kTcegiFYezEA0eHAJPU64ZC8NQbxQgOwAsYU8VXbOWA==}
@@ -21476,18 +21479,23 @@ snapshots:
 
   '@vercel/oidc@3.1.0': {}
 
-  '@videojs/http-streaming@3.17.4(video.js@8.23.8)':
+  '@videojs/http-streaming@3.17.5(video.js@8.23.9)':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 4.1.1
+      '@videojs/vhs-utils': 4.1.2
       aes-decrypter: 4.0.2
       global: 4.4.0
       m3u8-parser: 7.2.0
-      mpd-parser: 1.3.1
+      mpd-parser: 1.4.0
       mux.js: 7.1.0
-      video.js: 8.23.8
+      video.js: 8.23.9
 
   '@videojs/vhs-utils@4.1.1':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      global: 4.4.0
+
+  '@videojs/vhs-utils@4.1.2':
     dependencies:
       '@babel/runtime': 7.29.7
       global: 4.4.0
@@ -25988,10 +25996,10 @@ snapshots:
 
   mkdirp@3.0.1: {}
 
-  mpd-parser@1.3.1:
+  mpd-parser@1.4.0:
     dependencies:
       '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 4.1.1
+      '@videojs/vhs-utils': 4.1.2
       '@xmldom/xmldom': 0.8.10
       global: 4.4.0
 
@@ -28801,7 +28809,7 @@ snapshots:
     dependencies:
       convert-hrtime: 5.0.0
 
-  timezones-ical-library@2.2.0: {}
+  timezones-ical-library@2.2.1: {}
 
   tiny-invariant@1.3.3: {}
 
@@ -29250,25 +29258,25 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  video.js@8.23.8:
+  video.js@8.23.9:
     dependencies:
       '@babel/runtime': 7.29.7
-      '@videojs/http-streaming': 3.17.4(video.js@8.23.8)
-      '@videojs/vhs-utils': 4.1.1
+      '@videojs/http-streaming': 3.17.5(video.js@8.23.9)
+      '@videojs/vhs-utils': 4.1.2
       '@videojs/xhr': 2.7.0
       aes-decrypter: 4.0.2
       global: 4.4.0
       m3u8-parser: 7.2.0
-      mpd-parser: 1.3.1
+      mpd-parser: 1.4.0
       mux.js: 7.1.0
-      videojs-contrib-quality-levels: 4.1.0(video.js@8.23.8)
+      videojs-contrib-quality-levels: 4.1.0(video.js@8.23.9)
       videojs-font: 4.2.0
       videojs-vtt.js: 0.15.5
 
-  videojs-contrib-quality-levels@4.1.0(video.js@8.23.8):
+  videojs-contrib-quality-levels@4.1.0(video.js@8.23.9):
     dependencies:
       global: 4.4.0
-      video.js: 8.23.8
+      video.js: 8.23.9
 
   videojs-font@4.2.0: {}
 

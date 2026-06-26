@@ -1,6 +1,7 @@
 "use client";
 
 import "../widgets-common.css";
+import "./styles.css";
 
 import { useCallback, useMemo, useState } from "react";
 import type { MantineStyleProp } from "@mantine/core";
@@ -541,7 +542,7 @@ export default function DownloadClientsWidget({
     enableColumnOrdering: isEditMode,
     enableRowVirtualization: true,
     rowVirtualizerOptions: { overscan: 5 },
-    mantinePaperProps: { flex: 1, withBorder: false, shadow: undefined },
+    mantinePaperProps: { flex: 1, withBorder: false, shadow: undefined, bg: "transparent" },
     mantineTableContainerProps: { style: { height: "100%" } },
     mantineTableProps: {
       className: "downloads-widget-table",
