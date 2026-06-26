@@ -55,6 +55,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   audiobookshelf: "audiobookshelf",
   navidrome: "navidrome",
   umami: "umami",
+  gluetun: "gluetun",
   peaNut: "peanut",
   beszel: "beszel",
   archiveTeamWarrior: null,

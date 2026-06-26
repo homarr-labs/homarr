@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -2407,6 +2408,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -4588,6 +4595,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
+            },
+            "vpn": {
+              "label": "VPN Status"
             }
           },
           "interval": {
