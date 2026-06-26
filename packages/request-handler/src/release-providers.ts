@@ -37,23 +37,34 @@ export interface ReleaseProviderResponse {
 }
 
 export type ReleaseData = DetailsProviderResponse & ReleaseProviderResponse;
-export type ReleaseError =
-  | { code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" }
-  | { code: "unexpected"; message: string };
+export type ReleaseError = { code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" | "unexpected"; message: string };
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
 
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
   versionRegex?: string,
-): ReleaseProviderResponse | null => {
+): { release: ReleaseProviderResponse } | { noMatch: string } => {
   const validReleases = releases.filter((result) => {
     if (!result.latestRelease) return false;
     return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
   });
 
-  return validReleases.length === 0
-    ? null
-    : validReleases.reduce((latest, current) => (current.latestReleaseAt > latest.latestReleaseAt ? current : latest));
+  if (validReleases.length > 0) {
+    return {
+      release: validReleases.reduce((latest, current) =>
+        current.latestReleaseAt > latest.latestReleaseAt ? current : latest,
+      ),
+    };
+  }
+
+  const sampleTags = releases
+    .slice(0, 5)
+    .map((r) => r.latestRelease)
+    .join(", ");
+  const reason = versionRegex
+    ? `Regex /${versionRegex}/ matched 0/${releases.length} tags. Sample tags: [${sampleTags}]`
+    : `Found ${releases.length} releases but none had a valid tag`;
+  return { noMatch: reason };
 };
 
 export const getLatestMatchingReleaseAsync = async (input: ReleasesRepositoryRequest): Promise<ReleaseResponse> => {
@@ -113,12 +124,14 @@ const getGithubReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
 
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
     const releasesResponse = await api.rest.repos.listReleases({ owner: parsed.owner, repo: parsed.name });
-    if (releasesResponse.data.length === 0) return { success: false, error: { code: "noMatchingVersion" } };
+    if (releasesResponse.data.length === 0) {
+      return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitHub releases` } };
+    }
 
     const releases = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
       if (!release.published_at) return acc;
@@ -131,11 +144,13 @@ const getGithubReleaseAsync = async (
       });
       return acc;
     }, []);
-    const latestRelease = getLatestRelease(releases, versionRegex);
-    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+    const result = getLatestRelease(releases, versionRegex);
+    if ("noMatch" in result) {
+      return { success: false, error: { code: "noMatchingVersion", message: result.noMatch } };
+    }
 
     const details = await getGithubDetailsAsync(api, parsed.owner, parsed.name);
-    return { success: true, data: { ...details, ...latestRelease } };
+    return { success: true, data: { ...details, ...result.release } };
   } catch (error) {
     const message = error instanceof OctokitRequestError ? error.message : String(error);
     logger.warn("Failed to get GitHub releases", { identifier, error: message });
@@ -169,20 +184,29 @@ const getGitHubContainerRegistryReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerPackageName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/package` } };
 
   try {
     const repositoryName = `${parsed.owner}/${parsed.name}`;
     const registryUrl = new URL(baseUrl);
     const registryToken = token ?? (await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName));
     const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, registryToken);
+    if (tags.length === 0) {
+      return { success: false, error: { code: "noReleasesFound", message: `${repositoryName} has no container tags` } };
+    }
     const matchingTags = versionRegex ? tags.filter((tag) => new RegExp(versionRegex).test(tag)) : tags;
     const tagsToCheck = versionRegex
       ? matchingTags.slice(-100)
       : matchingTags.includes("latest")
         ? ["latest"]
         : matchingTags.slice(-100);
-    if (tagsToCheck.length === 0) return { success: false, error: { code: "noMatchingVersion" } };
+    if (tagsToCheck.length === 0) {
+      const sampleTags = tags.slice(0, 5).join(", ");
+      const msg = versionRegex
+        ? `Regex /${versionRegex}/ matched 0/${tags.length} tags. Sample: [${sampleTags}]`
+        : `No "latest" tag found among ${tags.length} tags. Sample: [${sampleTags}]`;
+      return { success: false, error: { code: "noMatchingVersion", message: msg } };
+    }
 
     const releases = await Promise.all(
       tagsToCheck.map(async (tag) => ({
@@ -196,14 +220,16 @@ const getGitHubContainerRegistryReleaseAsync = async (
         releaseUrl: `https://github.com/${repositoryName}/pkgs/container/${encodeURIComponent(parsed.name)}`,
       })),
     );
-    const latestRelease = getLatestRelease(releases, versionRegex);
-    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+    const result = getLatestRelease(releases, versionRegex);
+    if ("noMatch" in result) {
+      return { success: false, error: { code: "noMatchingVersion", message: result.noMatch } };
+    }
 
     return {
       success: true,
       data: {
         projectUrl: `https://github.com/${repositoryName}`,
-        ...latestRelease,
+        ...result.release,
       },
     };
   } catch (error) {
@@ -335,7 +361,7 @@ const getDockerHubReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = identifier.includes("/") ? parseOwnerName(identifier) : { owner: "", name: identifier };
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}"` } };
 
   const relativeUrl = parsed.owner
     ? `/v2/namespaces/${encodeURIComponent(parsed.owner)}/repositories/${encodeURIComponent(parsed.name)}`
@@ -344,25 +370,29 @@ const getDockerHubReleaseAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `Bearer ${token}`;
 
+  let lastNoMatch = "";
   for (let page = 0; page <= 5; page++) {
     const response = await fetchWithTrustedCertificatesAsync(
       buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}` as `/${string}`),
       headers.Authorization ? { headers } : undefined,
     );
-    if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+    if (!response.ok) return { success: false, error: { code: "unexpected", message: `Docker Hub ${response.status}: ${response.statusText}` } };
 
     const json: unknown = await response.json();
     const result = dockerHubReleasesSchema.safeParse(json);
     if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
 
-    const latestRelease = getLatestRelease(result.data.results, versionRegex);
-    if (!latestRelease) continue;
+    const matched = getLatestRelease(result.data.results, versionRegex);
+    if ("noMatch" in matched) {
+      lastNoMatch = matched.noMatch;
+      continue;
+    }
 
     const details = await getDockerHubDetailsAsync(baseUrl, relativeUrl as `/${string}`, token);
-    return { success: true, data: { ...details, ...latestRelease } };
+    return { success: true, data: { ...details, ...matched.release } };
   }
 
-  return { success: false, error: { code: "noMatchingVersion" } };
+  return { success: false, error: { code: "noMatchingVersion", message: lastNoMatch || `No matching tags found for ${identifier}` } };
 };
 
 const getDockerHubDetailsAsync = async (
@@ -425,11 +455,11 @@ const getGitlabReleaseAsync = async (
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}/releases?per_page=100`),
     headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+  if (!response.ok) return { success: false, error: { code: "unexpected", message: `GitLab ${response.status}: ${response.statusText}` } };
 
   const result = gitlabReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
-  if (result.data.length === 0) return { success: false, error: { code: "noReleasesFound" } };
+  if (result.data.length === 0) return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitLab releases` } };
 
   const releases = result.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
     if (!release.released_at) return acc;
@@ -443,11 +473,11 @@ const getGitlabReleaseAsync = async (
     });
     return acc;
   }, []);
-  const latestRelease = getLatestRelease(releases, versionRegex);
-  if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+  const matched = getLatestRelease(releases, versionRegex);
+  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
 
   const details = await getGitlabDetailsAsync(baseUrl, encodedIdentifier, token);
-  return { success: true, data: { ...details, ...latestRelease } };
+  return { success: true, data: { ...details, ...matched.release } };
 };
 
 const getGitlabDetailsAsync = async (
@@ -502,7 +532,7 @@ const getNpmReleaseAsync = async (
   versionRegex?: string,
   token?: string,
 ): Promise<ReleaseResponse> => {
-  if (!identifier) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!identifier) return { success: false, error: { code: "invalidIdentifier", message: "Empty npm package name" } };
 
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -511,7 +541,7 @@ const getNpmReleaseAsync = async (
     buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+  if (!response.ok) return { success: false, error: { code: "unexpected", message: `npm ${response.status}: ${response.statusText}` } };
 
   const result = npmReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
@@ -521,10 +551,10 @@ const getNpmReleaseAsync = async (
     releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(result.data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
     releaseDescription: result.data.versions[tag.latestRelease]?.description ?? "",
   }));
-  const latestRelease = getLatestRelease(releases, versionRegex);
-  if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+  const matched = getLatestRelease(releases, versionRegex);
+  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
 
-  return { success: true, data: latestRelease };
+  return { success: true, data: matched.release };
 };
 
 const codebergReleasesSchema = z.array(
@@ -555,7 +585,7 @@ const getCodebergReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
 
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `token ${token}`;
@@ -564,7 +594,7 @@ const getCodebergReleaseAsync = async (
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/releases`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+  if (!response.ok) return { success: false, error: { code: "unexpected", message: `Codeberg ${response.status}: ${response.statusText}` } };
 
   const result = codebergReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
@@ -576,11 +606,11 @@ const getCodebergReleaseAsync = async (
     releaseDescription: tag.body,
     isPreRelease: tag.prerelease,
   }));
-  const latestRelease = getLatestRelease(releases, versionRegex);
-  if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+  const matched = getLatestRelease(releases, versionRegex);
+  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
 
   const details = await getCodebergDetailsAsync(baseUrl, parsed.owner, parsed.name, token);
-  return { success: true, data: { ...details, ...latestRelease } };
+  return { success: true, data: { ...details, ...matched.release } };
 };
 
 const getCodebergDetailsAsync = async (
@@ -638,16 +668,16 @@ const linuxServerIOReleasesSchema = z.object({
 
 const getLinuxServerIOReleaseAsync = async (baseUrl: string, identifier: string): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` } };
 
   const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, "/api/v1/images"));
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+  if (!response.ok) return { success: false, error: { code: "unexpected", message: `LSIO ${response.status}: ${response.statusText}` } };
 
   const result = linuxServerIOReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
 
   const release = result.data.data.repositories.linuxserver.find((repo) => repo.name === parsed.name);
-  if (!release) return { success: false, error: { code: "noMatchingVersion" } };
+  if (!release) return { success: false, error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` } };
 
   return {
     success: true,
@@ -675,7 +705,7 @@ const getQuayReleaseAsync = async (
   versionRegex?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier" } };
+  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
 
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(
@@ -683,7 +713,7 @@ const getQuayReleaseAsync = async (
       `/api/v1/repository/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}?includeTags=true&includeStats=true`,
     ),
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: response.statusText } };
+  if (!response.ok) return { success: false, error: { code: "unexpected", message: `Quay ${response.status}: ${response.statusText}` } };
 
   const result = quayReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
@@ -697,8 +727,8 @@ const getQuayReleaseAsync = async (
     });
     return acc;
   }, []);
-  const latestRelease = getLatestRelease(releases, versionRegex);
-  if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+  const matched = getLatestRelease(releases, versionRegex);
+  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
 
-  return { success: true, data: { projectDescription: result.data.description, ...latestRelease } };
+  return { success: true, data: { projectDescription: result.data.description, ...matched.release } };
 };
