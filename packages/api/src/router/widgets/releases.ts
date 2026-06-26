@@ -48,26 +48,30 @@ export const releasesRouter = createTRPCRouter({
       let allowedRepoIds: Set<string> | null = null;
 
       if (input.itemId) {
-        const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
-        if (item && item.kind === "releases") {
-          await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+        try {
+          const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
+          if (item && item.kind === "releases") {
+            await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
 
-          const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-          const repos = options.repositories as Array<{ id?: string }> | undefined;
-          if (repos) {
-            allowedRepoIds = new Set(repos.map((r) => r.id).filter((id): id is string => Boolean(id)));
-          }
+            const options = SuperJSON.parse<Record<string, unknown>>(item.options);
+            const repos = options.repositories as Array<{ id?: string }> | undefined;
+            if (repos) {
+              allowedRepoIds = new Set(repos.map((r) => r.id).filter((id): id is string => Boolean(id)));
+            }
 
-          const secrets = await ctx.db.query.widgetSecrets.findMany({
-            where: eq(widgetSecrets.itemId, input.itemId),
-          });
-          for (const secret of secrets) {
-            try {
-              tokensByProvider.set(secret.kind, decryptSecret(secret.value));
-            } catch {
-              // Skip corrupt secrets
+            const secrets = await ctx.db.query.widgetSecrets.findMany({
+              where: eq(widgetSecrets.itemId, input.itemId),
+            });
+            for (const secret of secrets) {
+              try {
+                tokensByProvider.set(secret.kind, decryptSecret(secret.value));
+              } catch {
+                // Skip corrupt secrets
+              }
             }
           }
+        } catch {
+          // Access denied or table not yet migrated -- proceed without tokens
         }
       }
 
