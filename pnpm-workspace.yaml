@@ -6,7 +6,7 @@ catalog:
   "@auth/core": ^0.41.2
   "@auth/drizzle-adapter": ^1.11.2
   "@ctrl/deluge": ^8.0.0
-  "@ctrl/qbittorrent": ^9.12.2
+  "@ctrl/qbittorrent": ^9.14.0
   "@ctrl/transmission": ^7.4.0
   "@dnd-kit/core": ^6.3.1
   "@dnd-kit/modifiers": ^9.0.0
@@ -52,22 +52,22 @@ catalog:
   "@testcontainers/mysql": ^12.0.3
   "@testcontainers/postgresql": ^12.0.3
   "@testcontainers/redis": ^12.0.3
-  "@tiptap/extension-color": 3.27.0
-  "@tiptap/extension-highlight": 3.27.0
-  "@tiptap/extension-image": 3.27.0
-  "@tiptap/extension-link": ^3.27.0
-  "@tiptap/extension-placeholder": ^3.27.0
-  "@tiptap/extension-table": 3.27.0
-  "@tiptap/extension-table-cell": 3.27.0
-  "@tiptap/extension-table-header": 3.27.0
-  "@tiptap/extension-table-row": 3.27.0
-  "@tiptap/extension-task-item": 3.27.0
-  "@tiptap/extension-task-list": 3.27.0
-  "@tiptap/extension-text-align": 3.27.0
-  "@tiptap/extension-text-style": 3.27.0
-  "@tiptap/extension-underline": 3.27.0
-  "@tiptap/react": ^3.27.0
-  "@tiptap/starter-kit": ^3.27.0
+  "@tiptap/extension-color": 3.27.1
+  "@tiptap/extension-highlight": 3.27.1
+  "@tiptap/extension-image": 3.27.1
+  "@tiptap/extension-link": ^3.27.1
+  "@tiptap/extension-placeholder": ^3.27.1
+  "@tiptap/extension-table": 3.27.1
+  "@tiptap/extension-table-cell": 3.27.1
+  "@tiptap/extension-table-header": 3.27.1
+  "@tiptap/extension-table-row": 3.27.1
+  "@tiptap/extension-task-item": 3.27.1
+  "@tiptap/extension-task-list": 3.27.1
+  "@tiptap/extension-text-align": 3.27.1
+  "@tiptap/extension-text-style": 3.27.1
+  "@tiptap/extension-underline": 3.27.1
+  "@tiptap/react": ^3.27.1
+  "@tiptap/starter-kit": ^3.27.1
   "@trpc/client": ^11.17.0
   "@trpc/next": ^11.17.0
   "@trpc/react-query": ^11.17.0
@@ -92,7 +92,7 @@ catalog:
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
-  posthog-js: ^1.390.2
+  posthog-js: ^1.391.2
   posthog-node: ^4.18.0
   "@vitejs/plugin-react": ^6.0.2
   "@vitest/coverage-v8": ^4.1.9
@@ -125,13 +125,13 @@ catalog:
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
-  fast-xml-parser: ^5.9.2
+  fast-xml-parser: ^5.9.3
   fastify: ^5.8.5
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.11.1
-  isomorphic-dompurify: ^3.17.0
+  isomorphic-dompurify: ^3.18.0
   jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
@@ -139,8 +139,8 @@ catalog:
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.21.0
-  "mantine-contextmenu": ^9.3.0
-  mantine-datatable: ^9.3.0
+  "mantine-contextmenu": ^9.3.1
+  mantine-datatable: ^9.3.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
@@ -152,7 +152,7 @@ catalog:
   octokit: ^5.0.5
   oxfmt: ^0.55.0
   oxlint: ^1.70.0
-  pg: ^8.21.0
+  pg: ^8.22.0
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
@@ -180,7 +180,7 @@ catalog:
   vite: ^8.0.16
   undici: 7.27.2
   use-deep-compare-effect: ^1.8.1
-  video.js: ^8.23.8
+  video.js: ^8.23.9
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.1.9
   winston: 3.19.0
@@ -213,11 +213,11 @@ overrides:
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
   "hono@<4.6.5": ">=4.12.26"
   "linkifyjs@<4.3.2": ">=4.3.3"
-  "nanoid@>=4.0.0 <5.0.9": ">=5.1.11"
+  "nanoid@>=4.0.0 <5.0.9": ">=5.1.15"
   "prismjs@<1.30.0": ">=1.30.0"
   "proxmox-api>undici": "7.27.1"
   "react-is": "^19.2.7"
-  "rollup@>=4.0.0 <4.22.4": ">=4.62.0"
+  "rollup@>=4.0.0 <4.22.4": ">=4.62.2"
   "sha.js@<=2.4.11": ">=2.4.12"
   "tar-fs@>=3.0.0 <3.0.9": ">=3.1.2"
   "tar-fs@>=2.0.0 <2.1.3": ">=3.1.2"
