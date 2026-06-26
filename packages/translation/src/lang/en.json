@@ -1468,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -4307,7 +4308,7 @@
                   "notStarted": "Not started"
                 },
                 "name": {
-                  "management": "Management",
+"management": "Management",
                   "dashboard": "Dashboard"
                 }
               }
