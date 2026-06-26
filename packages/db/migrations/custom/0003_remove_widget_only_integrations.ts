@@ -14,7 +14,6 @@ const removedIntegrationKinds = [
   "gitHubContainerRegistry",
   "quay",
   "searchCh",
-  "archiveTeamWarrior",
 ] as const;
 
 type RemovedIntegrationKind = (typeof removedIntegrationKinds)[number];
@@ -65,7 +64,7 @@ export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) 
     }, new Map());
 
   const existingItems = await db.query.items.findMany({
-    where: (items, { inArray }) => inArray(items.kind, ["releases", "timetable", "archiveTeamWarrior"]),
+    where: (items, { inArray }) => inArray(items.kind, ["releases", "timetable"]),
   });
 
   const updatedItems: { id: string; options: object }[] = [];
@@ -95,11 +94,6 @@ export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) 
 
     if (item.kind === "timetable" && linkedIntegration?.kind === "searchCh") {
       updatedItems.push({ id: item.id, options: { ...options, baseUrl: linkedIntegration.url } });
-      unlinkItemIds.push(item.id);
-    }
-
-    if (item.kind === "archiveTeamWarrior" && linkedIntegration?.kind === "archiveTeamWarrior") {
-      updatedItems.push({ id: item.id, options: { ...options, url: linkedIntegration.url } });
       unlinkItemIds.push(item.id);
     }
   }

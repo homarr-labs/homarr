@@ -1755,9 +1755,6 @@
       "name": "ArchiveTeam Warrior",
       "description": "Monitor ArchiveTeam Warrior status, projects, and active archival jobs.",
       "option": {
-        "url": {
-          "label": "Warrior URL"
-        },
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
         }

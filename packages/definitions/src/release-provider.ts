@@ -73,5 +73,6 @@ export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind
       ? trimmedIdentifier.slice(registryPrefix.length)
       : trimmedIdentifier;
 
-  return removeContainerImageVersion(withoutRegistry);
+  // ponytail: only strip container image versions/digests for providers that use them
+  return registryPrefix ? removeContainerImageVersion(withoutRegistry) : withoutRegistry;
 };

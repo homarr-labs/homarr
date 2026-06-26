@@ -38,6 +38,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
   vpn: getIntegrationKindsByCategory("vpn"),
+  archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
 };
 

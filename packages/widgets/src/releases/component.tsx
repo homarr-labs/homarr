@@ -531,7 +531,7 @@ const ExpandedDisplay = ({
         p={10}
       >
         <Group className="releases-repository-expanded-header" justify="space-between" align="center" gap="xs">
-          <Text className="releases-repository-expanded-header-identifier" size="xs" c="iconColor" ff="monospace">
+          <Text className="releases-repository-expanded-header-identifier" size="xs" c="dimmed" ff="monospace">
             {repository.identifier}
           </Text>
 
@@ -549,7 +549,7 @@ const ExpandedDisplay = ({
               <Text
                 className="releases-repository-expanded-header-provider-name"
                 size="xs"
-                c="iconColor"
+                c="dimmed"
                 ff="monospace"
               >
                 {repository.providerMetadata.name}
@@ -616,7 +616,7 @@ const ExpandedDisplay = ({
         {repository.error && (
           <>
             <Divider className="releases-repository-expanded-error-divider" mx="30%" />
-            <Title className="releases-repository-expanded-error-title" order={4} ta="center">
+            <Title className="releases-repository-expanded-error-title" order={4} ta="center" c="red">
               {t("error.label")}
             </Title>
             <Text

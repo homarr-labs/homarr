@@ -15,6 +15,7 @@ import { SlskdIntegration } from "../download-client/slskd/slskd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
@@ -120,6 +121,7 @@ export const integrationCreators = {
   navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
   gluetun: GluetunIntegration,
+  archiveTeamWarrior: ArchiveTeamWarriorIntegration,
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,

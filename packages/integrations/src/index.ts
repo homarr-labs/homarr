@@ -1,4 +1,5 @@
 // General integrations
+export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
 export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
@@ -79,6 +80,11 @@ export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshel
 export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
 export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
+export type {
+  ArchiveTeamWarriorBandwidth,
+  ArchiveTeamWarriorItem,
+  ArchiveTeamWarriorStatus,
+} from "./archive-team-warrior/archive-team-warrior-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";
