@@ -546,12 +546,7 @@ const ExpandedDisplay = ({
                   aspectRatio: "1/1",
                 }}
               />
-              <Text
-                className="releases-repository-expanded-header-provider-name"
-                size="xs"
-                c="dimmed"
-                ff="monospace"
-              >
+              <Text className="releases-repository-expanded-header-provider-name" size="xs" c="dimmed" ff="monospace">
                 {repository.providerMetadata.name}
               </Text>
             </Group>
