@@ -2259,9 +2259,6 @@ importers:
       undici:
         specifier: 'catalog:'
         version: 7.27.2
-      ws:
-        specifier: 'catalog:'
-        version: 8.21.0
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -2269,9 +2266,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/ws':
-        specifier: 'catalog:'
-        version: 8.18.1
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
