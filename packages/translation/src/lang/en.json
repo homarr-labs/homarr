@@ -4149,6 +4149,11 @@
       "title": "Not Found",
       "text": "Could not find requested resource"
     },
+    "error": {
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
