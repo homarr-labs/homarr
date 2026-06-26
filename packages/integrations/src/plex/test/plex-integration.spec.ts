@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
