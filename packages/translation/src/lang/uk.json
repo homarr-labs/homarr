@@ -687,7 +687,7 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Власні віджети",
         "noResults": "",
         "loading": ""
       },
@@ -874,7 +874,7 @@
       "exportError": "",
       "duplicated": "",
       "duplicateError": "",
-      "toggleError": "",
+      "toggleError": "Не вдалося змінити стан віджету.",
       "deleteError": "",
       "previewError": "",
       "executed": "",
@@ -1021,7 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
-      "mediaLibrary": "",
+      "mediaLibrary": "Медіа бібліотека",
       "uptimeMonitoring": ""
     },
     "testConnection": {
@@ -1139,7 +1139,7 @@
           "description": {
             "connection": {
               "hostUnreachable": "",
-              "networkUnreachable": "",
+              "networkUnreachable": "Мережа недоступна. Перевірте підключення до Інтернету або налаштування мережі.",
               "refused": "",
               "reset": ""
             },
@@ -1328,7 +1328,7 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
+      "name": "Безпаперовий ngx",
       "description": ""
     }
   },
@@ -1679,9 +1679,9 @@
           "label": "",
           "option": {
             "row": "",
-            "row-reverse": "",
+            "row-reverse": "Горизонтально (зворотнє)",
             "column": "",
-            "column-reverse": ""
+            "column-reverse": "Вертикальна (перевернута)"
           }
         },
         "descriptionDisplayMode": {
@@ -1690,7 +1690,7 @@
           "option": {
             "normal": "",
             "tooltip": "",
-            "hidden": ""
+            "hidden": "Приховати"
           }
         }
       },
@@ -1703,7 +1703,7 @@
     },
     "bookmarks": {
       "name": "Закладки",
-      "description": "",
+      "description": "Показує декілька посилань додатка",
       "option": {
         "title": {
           "label": "Назва"
@@ -1747,8 +1747,8 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "АрхівTeam Warrior",
+      "description": "Слідкуйте за станом, проєктами та активними архівними завданнями ArchiveTeam Warrior.",
       "option": {
         "showBroadcastMessage": {
           "label": ""
@@ -1778,7 +1778,7 @@
         }
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Не вдалося отримати резюме DNS Hole",
         "integrationsDisconnected": "Немає даних, всі інтеграції відключені"
       },
       "data": {
@@ -1808,7 +1808,7 @@
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Показати всі кнопки"
         }
       },
       "error": {
@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Надсилати анонімну аналітику",
               "text": "Homarr буде відправляти анонімну аналітику з використанням програмного забезпечення з відкритим вихідним кодом Umami. Він ніколи не збирає жодної особистої інформації і, таким чином, сумісний з GDPR та CCPA. Ми заохочуємо вас увімкнути аналітику, тому що це допомагає нашій команді визначати проблеми та пріоритетні задачі."
-            },
-            "widgetData": {
-              "title": "Дані віджетів",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "integrationData": {
-              "title": "Дані інтеграції",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "usersData": {
-              "title": "Дані користувачів",
-              "text": "Надсилати кількість користувачів і чи активували ви SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Оновлено {when}",
       "search": "",
       "selected": "Вибрано {selectCount} із {totalCount} контейнерів",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

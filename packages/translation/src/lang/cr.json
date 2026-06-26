@@ -4413,20 +4413,8 @@
           "analytics": {
             "title": "crwdns1764:0crwdne1764:0",
             "general": {
-              "title": "crwdns1766:0crwdne1766:0",
-              "text": "crwdns3878:0crwdne3878:0"
-            },
-            "widgetData": {
-              "title": "crwdns1770:0crwdne1770:0",
-              "text": "crwdns1772:0crwdne1772:0"
-            },
-            "integrationData": {
-              "title": "crwdns1774:0crwdne1774:0",
-              "text": "crwdns1776:0crwdne1776:0"
-            },
-            "usersData": {
-              "title": "crwdns1778:0crwdne1778:0",
-              "text": "crwdns1780:0crwdne1780:0"
+              "title": "crwdns5673:0crwdne5673:0",
+              "text": "crwdns5675:0crwdne5675:0"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "crwdns1894:0{when}crwdne1894:0",
       "search": "crwdns3432:0{count}crwdne3432:0",
       "selected": "crwdns1898:0{selectCount}crwdnd1898:0{totalCount}crwdne1898:0",
-      "footer": "crwdns3434:0{count}crwdne3434:0"
+      "footer": "crwdns3434:0{count}crwdne3434:0",
+      "totalCpu": "crwdns5669:0{cpu}crwdne5669:0",
+      "totalMemory": "crwdns5671:0{memory}crwdne5671:0"
     },
     "field": {
       "name": {

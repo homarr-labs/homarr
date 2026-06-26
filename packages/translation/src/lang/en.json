@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -1412,7 +1413,10 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you."
+      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+      "headerLoading": "Type to search icons…",
+      "noResults": "No icons match \"{search}\".",
+      "error": "Couldn't load icons."
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -2404,6 +2409,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -3639,6 +3650,9 @@
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3712,6 +3726,9 @@
         }
       },
       "selectSystem": "Select system",
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
@@ -4133,6 +4150,11 @@
       "title": "Not Found",
       "text": "Could not find requested resource"
     },
+    "error": {
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4286,7 +4308,7 @@
                   "notStarted": "Not started"
                 },
                 "name": {
-                  "management": "Management",
+"management": "Management",
                   "dashboard": "Dashboard"
                 }
               }
@@ -4579,6 +4601,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
+            },
+            "vpn": {
+              "label": "VPN Status"
             }
           },
           "interval": {

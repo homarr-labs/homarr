@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Invia analytics anonimi",
               "text": "Homarr invierà analisi anonime utilizzando il software open source Umami. Non raccoglie mai informazioni personali ed è quindi pienamente conforme al GDPR e al CCPA. Ti invitiamo ad abilitare l'analisi perché aiuta il nostro team open source a identificare i problemi e a dare priorità al nostro arretrato."
-            },
-            "widgetData": {
-              "title": "Dati widget",
-              "text": "Invia quali widget (e la loro quantità) hai configurato. Non include URL, nomi o altri dati."
-            },
-            "integrationData": {
-              "title": "Dati di integrazione",
-              "text": "Invia quali integrazioni (e la loro quantità) hai configurato. Non include URL, nomi o altri dati."
-            },
-            "usersData": {
-              "title": "Dati utenti",
-              "text": "Invia il numero di utenti e se hai attivato SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Aggiornato {when}",
       "search": "Cerca {count} container",
       "selected": "{selectCount} di {totalCount} containers selezionati",
-      "footer": "Totale container {count}"
+      "footer": "Totale container {count}",
+      "totalCpu": "CPU Totale: {cpu}%",
+      "totalMemory": "Mem Totale: {memory}"
     },
     "field": {
       "name": {

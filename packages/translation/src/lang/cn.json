@@ -4415,18 +4415,6 @@
             "general": {
               "title": "发送匿名分析",
               "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
-            },
-            "widgetData": {
-              "title": "组件数据",
-              "text": "发送您已配置的组件（及其数量）。不包括URL、名称或任何其他数据。"
-            },
-            "integrationData": {
-              "title": "集成数据",
-              "text": "发送您已配置的集成（及其数量）。不包括URL、名称或任何其他数据。"
-            },
-            "usersData": {
-              "title": "用户数据",
-              "text": "发送用户数量以及您是否激活了SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "已更新 {when}",
       "search": "搜索 {count} 容器",
       "selected": "{totalCount} 容器的 {selectCount}",
-      "footer": "总计 {count} 容器"
+      "footer": "总计 {count} 容器",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

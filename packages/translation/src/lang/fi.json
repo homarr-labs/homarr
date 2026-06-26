@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Lähetä anonyymejä käyttötietoja",
               "text": "Homarr lähettää anonymisoitua analytiikkaa avoimen lähdekoodin Umami‑järjestelmän avulla. Kun analytiikka on käytössä, keräämme seuraavat tiedot: Homarrin version, tietokannan tyypin (MySQL/PostgreSQL/SQLite), Docker‑/Kubernetes‑tilan, käytössä olevat tunnistautumismenetelmät sekä eri ominaisuuksien lukumäärät. Kaikki tiedot on anonymisoitu ja koottu tilastomuotoon – mitään henkilötietoja, URL‑osoitteita, nimiä tai muita tunnistettavia tietoja ei koskaan kerätä. Tämä auttaa avoimen lähdekoodin tiimiämme ymmärtämään käyttötapoja ja priorisoimaan kehitystä."
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "Integraatiotiedot",
-              "text": "Lähetä mitä ja miten monta integraatiota olet määrittänyt. Ei sisällä URL-osoitteita, nimiä tai mitään muita tietoja."
-            },
-            "usersData": {
-              "title": "",
-              "text": ""
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Päivitetty {when}",
       "search": "Suodata {count} konttia...",
       "selected": "{selectCount}/{totalCount} kontista valittu",
-      "footer": "Yhteensä {count} konttia"
+      "footer": "Yhteensä {count} konttia",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {

@@ -4415,18 +4415,6 @@
             "general": {
               "title": "Enviar análises anônimas",
               "text": "O Homarr enviará análises anonimizadas usando o software de código aberto Umami. Quando habilitado, coletamos: versão do Homarr, tipo de banco de dados (MySQL/PostgreSQL/SQLite), status Docker/Kubernetes, métodos de autenticação habilitados e a quantidade de cada recurso. Todos os dados são anônimos e agregados - nenhuma informação pessoal, URLs, nomes ou dados identificáveis são coletados. Isso ajuda nossa equipe de código aberto a entender padrões de uso e priorizar o desenvolvimento."
-            },
-            "widgetData": {
-              "title": "Dados de widgets",
-              "text": "Envia quais widgets (e suas quantidades) você configurou. Não inclui URLs, nomes ou quaisquer outros dados."
-            },
-            "integrationData": {
-              "title": "Dados de integrações",
-              "text": "Envia quais integrações (e suas quantidades) você configurou. Não inclui URLs, nomes ou quaisquer outros dados."
-            },
-            "usersData": {
-              "title": "Dados dos usuários",
-              "text": "Envia a quantidade de usuários e se você ativou SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4954,7 +4942,9 @@
       "updated": "Atualizado em {when}",
       "search": "Buscar {count} contêineres",
       "selected": "{selectCount} de {totalCount} contêineres selecionados",
-      "footer": "Total de contêineres: {count}"
+      "footer": "Total de contêineres: {count}",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
