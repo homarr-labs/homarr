@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "無効な識別子",
           "noMatchingVersion": "一致するバージョンが見つかりません",
           "noReleasesFound": "リリースが見つかりませんでした",
-          "noProviderSeleceted": "プロバイダーが選択されていません",
           "noProviderResponse": "プロバイダーからの応答がありません",
           "noProviderSelected": "プロバイダーが選択されていません"
         }

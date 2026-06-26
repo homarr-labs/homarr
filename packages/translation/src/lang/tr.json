@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "Geçersiz tanımlayıcı",
           "noMatchingVersion": "Eşleşen sürüm bulunamadı",
           "noReleasesFound": "Hiçbir sürüm bulunamadı",
-          "noProviderSeleceted": "Hiçbir sağlayıcı seçilmedi",
           "noProviderResponse": "Sağlayıcıdan yanıt alınamadı",
           "noProviderSelected": "Hiçbir sağlayıcı seçilmedi"
         }

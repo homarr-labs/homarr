@@ -46,8 +46,8 @@ export const getLatestRelease = (
   versionRegex?: string,
 ): ReleaseProviderResponse | null => {
   const validReleases = releases.filter((result) => {
-    if (result.latestRelease) return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
-    return true;
+    if (!result.latestRelease) return false;
+    return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
   });
 
   return validReleases.length === 0
@@ -443,16 +443,20 @@ const getGitlabDetailsAsync = async (baseUrl: string, encodedIdentifier: string)
   };
 };
 
+const npmTimeMetadataKeys = new Set(["created", "modified"]);
+
 const npmReleasesSchema = z.object({
   time: z
     .record(
       z.string(),
       z.string().transform((value) => new Date(value)),
     )
-    .transform((version) =>
-      Object.entries(version).map(([key, value]) => ({ latestRelease: key, latestReleaseAt: value })),
+    .transform((entries) =>
+      Object.entries(entries)
+        .filter(([key]) => !npmTimeMetadataKeys.has(key))
+        .map(([key, value]) => ({ latestRelease: key, latestReleaseAt: value })),
     ),
-  versions: z.record(z.string(), z.object({ description: z.string() })),
+  versions: z.record(z.string(), z.object({ description: z.string().optional() })),
   name: z.string(),
 });
 

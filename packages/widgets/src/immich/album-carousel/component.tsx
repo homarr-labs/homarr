@@ -31,6 +31,10 @@ export default function ImmichAlbumCarouselWidget({
     return options.randomizePhotos ? shuffle(assets) : assets;
   }, [album?.assets, options.randomizePhotos]);
 
+  useEffect(() => {
+    setCurrentPhotoIndex(0);
+  }, [photoAssets]);
+
   if (!options.albumId) {
     return <NoAlbumSelected />;
   }

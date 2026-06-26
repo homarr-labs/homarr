@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "מזהה לא חוקי",
           "noMatchingVersion": "לא נמצאה גרסה תואמת",
           "noReleasesFound": "לא נמצאו שיחרורים",
-          "noProviderSeleceted": "לא נבחר ספק",
           "noProviderResponse": "אין תשובה מהספק",
           "noProviderSelected": "לא נבחר ספק"
         }

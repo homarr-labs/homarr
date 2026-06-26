@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "无效标识符",
           "noMatchingVersion": "没有找到匹配的版本",
           "noReleasesFound": "没有发现发布信息",
-          "noProviderSeleceted": "没有选择提供者",
           "noProviderResponse": "提供者没有响应",
           "noProviderSelected": "没有选择提供者"
         }

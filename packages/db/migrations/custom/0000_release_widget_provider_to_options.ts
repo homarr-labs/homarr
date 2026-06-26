@@ -23,18 +23,19 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
     if (options.repositories.length === 0) continue;
     if (!options.repositories.some((repository) => "providerKey" in repository)) continue;
 
-    const updatedRepositories = options.repositories.map(
-      ({ providerKey, ...otherFields }: { providerKey: string; [key: string]: unknown }) => {
-        // Ensure providerKey is camelCase
+    const updatedRepositories = options.repositories
+      .map(({ providerKey, ...otherFields }: { providerKey: string; [key: string]: unknown }) => {
         const provider = providerKey.charAt(0).toLowerCase() + providerKey.slice(1);
+        const matchedProvider = releaseProviderKinds.find((kind) => kind === provider);
+        if (!matchedProvider) return null;
 
         return {
           id: createId(),
-          provider: releaseProviderKinds.find((kind) => kind === provider),
+          provider: matchedProvider,
           ...otherFields,
         };
-      },
-    );
+      })
+      .filter((repo) => repo !== null);
 
     updates.push({
       id: item.id,

@@ -204,7 +204,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   }}
                 />
 
-                <Text c="dimmed" fw={100} size="xs">
+                <Text c="dimmed" size="xs">
                   {providerName}
                 </Text>
 

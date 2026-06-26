@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "Ungültige Kennung",
           "noMatchingVersion": "Keine passende Version gefunden",
           "noReleasesFound": "Keine Veröffentlichungen gefunden",
-          "noProviderSeleceted": "Kein Anbieter ausgewählt",
           "noProviderResponse": "Keine Antwort vom Anbieter",
           "noProviderSelected": "Kein Anbieter ausgewählt"
         }

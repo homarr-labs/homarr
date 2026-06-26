@@ -48,11 +48,11 @@ You may refresh anytime and continue from a different device - the onboarding is
 ### Starting from scratch
 
 Depending on your auth provider configuration you will either first see the admin user creation form or the external group creation form.
-If credentials provider was selected, you'll be prompted to create an admin user for Homarr.
-This user cannot be deleted and has full control over Homarr and all of it's boards.
-You must choose an username and password (both can later be changed).
-We enforce strict password requirements, when you enter your password, to protect your instance if you accidentially
-expose it to the Internet.
+If the credentials provider was selected, you'll be prompted to create an admin user for Homarr.
+This user cannot be deleted and has full control over Homarr and all of its boards.
+You must choose a username and password (both can later be changed).
+We enforce strict password requirements when you enter your password to protect your instance if you accidentally
+expose it to the internet.
 
 <img
   src={imageStartFromScratchStepAdminUser}
@@ -62,8 +62,8 @@ expose it to the Internet.
 
 If you selected external providers (such as LDAP or OIDC), you'll be prompted to create an admin group.
 This group will be used to synchronize users from your provider to Homarr.
-When a user is logged in through the provider the groups of him that match groups with any in Homarr will be added to the user.
-The name of the group has to match exactly the name of the group in the provider.
+When a user logs in through the provider, any of their groups that match groups in Homarr will be assigned to the user.
+The name of the group must match exactly the name of the group in the provider.
 
 <img
   src={imageStartFromScratchStepExternalAdminGroup}
@@ -107,7 +107,7 @@ You can optionally auto-create bookmark apps for all discovered Docker container
 
 :::note
 
-Release providers and Search.ch are configured directly in their widgets instead of the integrations page.
+Release providers, Search.ch, and ArchiveTeam Warrior are configured directly in their widgets instead of the integrations page.
 
 :::
 

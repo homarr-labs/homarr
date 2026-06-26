@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import z from "zod/v4";
+import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -88,7 +88,18 @@ const getTimetableAsync = async (
   options: { stationId: string; limit: number },
 ): Promise<Timetable> => {
   const now = new Date();
-  const [date, time] = now.toLocaleString("en-CH", { timeZone: "Europe/Zurich" }).split(", ") as [string, string];
+  const date = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Zurich",
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(now);
+  const time = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Zurich",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(now);
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(baseUrl, "/timetable/api/stationboard.json", {
       stop: options.stationId,
@@ -96,7 +107,7 @@ const getTimetableAsync = async (
       show_delays: 1,
       show_tracks: 1,
       date,
-      time: time.substring(0, 5),
+      time,
     }),
   );
   if (!response.ok) throw new ResponseError(response);

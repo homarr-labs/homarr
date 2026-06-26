@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "Identifiant non valide",
           "noMatchingVersion": "Aucune version correspondante trouvée",
           "noReleasesFound": "Aucune publication trouvée",
-          "noProviderSeleceted": "Aucun fournisseur sélectionné",
           "noProviderResponse": "Aucune réponse du fournisseur",
           "noProviderSelected": "Aucun fournisseur sélectionné"
         }

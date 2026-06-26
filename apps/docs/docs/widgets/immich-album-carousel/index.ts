@@ -24,7 +24,7 @@ export const immichAlbumCarouselWidget: WidgetDefinition = {
         name: "Show photo info",
         description: "Display date of the picture and the current index at the bottom of the slideshow",
         values: { type: "boolean" },
-        defaultValue: "yes",
+        defaultValue: "no",
       },
       {
         name: "Randomize photos",

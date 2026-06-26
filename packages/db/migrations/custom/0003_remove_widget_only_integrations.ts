@@ -54,21 +54,11 @@ export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) 
       .filter((item) => oldIntegrationById.has(item.integrationId))
       .map((item) => [item.itemId, oldIntegrationById.get(item.integrationId)]),
   );
-  const oldIntegrationItemIdsByItemId = oldIntegrationItems
-    .filter((item) => oldIntegrationById.has(item.integrationId))
-    .reduce<Map<string, string[]>>((acc, item) => {
-      const itemIds = acc.get(item.itemId) ?? [];
-      itemIds.push(item.integrationId);
-      acc.set(item.itemId, itemIds);
-      return acc;
-    }, new Map());
-
   const existingItems = await db.query.items.findMany({
     where: (items, { inArray }) => inArray(items.kind, ["releases", "timetable"]),
   });
 
   const updatedItems: { id: string; options: object }[] = [];
-  const unlinkItemIds: string[] = [];
 
   for (const item of existingItems) {
     const options = SuperJSON.parse<Record<string, unknown>>(item.options);
@@ -89,12 +79,10 @@ export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) 
         };
       });
       updatedItems.push({ id: item.id, options: { ...options, repositories } });
-      if (oldIntegrationItemIdsByItemId.has(item.id)) unlinkItemIds.push(item.id);
     }
 
     if (item.kind === "timetable" && linkedIntegration?.kind === "searchCh") {
       updatedItems.push({ id: item.id, options: { ...options, baseUrl: linkedIntegration.url } });
-      unlinkItemIds.push(item.id);
     }
   }
 
@@ -105,10 +93,7 @@ export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) 
       .where(eq(items.id, update.id));
   }
 
-  if (unlinkItemIds.length > 0) {
-    await db.delete(integrationItems).where(inArray(integrationItems.itemId, unlinkItemIds));
-  }
-
+  await db.delete(integrationItems).where(inArray(integrationItems.integrationId, oldIntegrationIds));
   await db.delete(integrations).where(inArray(integrations.id, oldIntegrationIds));
 
   console.log(`Migrated widget-only integrations to widget options count="${updatedItems.length}"`);

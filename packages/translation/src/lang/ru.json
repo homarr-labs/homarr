@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "Неверный идентификатор",
           "noMatchingVersion": "Подходящая версия не найдена",
           "noReleasesFound": "Релизы не найдены",
-          "noProviderSeleceted": "Провайдер не выбран",
           "noProviderResponse": "Нет ответа от провайдера",
           "noProviderSelected": "Провайдер не выбран"
         }

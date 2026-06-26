@@ -3205,7 +3205,6 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen samsvarende versjon funnet",
           "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSeleceted": "Ingen leverandør valgt",
           "noProviderResponse": "Ingen respons fra leverandør",
           "noProviderSelected": "Ingen leverandør valgt"
         }

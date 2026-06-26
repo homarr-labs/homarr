@@ -15,7 +15,7 @@ export const timetableRouter = createTRPCRouter({
       z.object({
         baseUrl: baseUrlSchema,
         stationId: z.string(),
-        limit: z.number(),
+        limit: z.number().int().min(1).max(100),
       }),
     )
     .query(async ({ input }) => {
