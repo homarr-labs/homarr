@@ -77,26 +77,36 @@ export const releasesRouter = createTRPCRouter({
 
       return await Promise.all(
         input.repositories.map(async (repository) => {
-          const useToken = allowedRepoIds === null || allowedRepoIds.has(repository.id);
-          const response = await releasesRequestHandler
-            .handler({
+          try {
+            const useToken = allowedRepoIds === null || allowedRepoIds.has(repository.id);
+            const response = await releasesRequestHandler
+              .handler({
+                id: repository.id,
+                provider: repository.provider,
+                identifier: repository.identifier,
+                versionRegex: formatVersionFilterRegex(repository.versionFilter),
+                providerUrl: repository.providerUrl,
+                token: useToken ? tokensByProvider.get(repository.provider) : undefined,
+              })
+              .getCachedOrUpdatedDataAsync({
+                forceUpdate: false,
+              });
+
+            return {
               id: repository.id,
               provider: repository.provider,
-              identifier: repository.identifier,
-              versionRegex: formatVersionFilterRegex(repository.versionFilter),
-              providerUrl: repository.providerUrl,
-              token: useToken ? tokensByProvider.get(repository.provider) : undefined,
-            })
-            .getCachedOrUpdatedDataAsync({
-              forceUpdate: false,
-            });
-
-          return {
-            id: repository.id,
-            provider: repository.provider,
-            timestamp: response.timestamp,
-            ...response.data,
-          };
+              timestamp: response.timestamp,
+              ...response.data,
+            };
+          } catch (error) {
+            return {
+              id: repository.id,
+              provider: repository.provider,
+              timestamp: new Date(),
+              success: false as const,
+              error: { code: "unexpected" as const, message: String(error) },
+            };
+          }
         }),
       );
     }),
