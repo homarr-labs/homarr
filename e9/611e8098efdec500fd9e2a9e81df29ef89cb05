@@ -1,0 +1,123 @@
+packages/request-handler/src/audiobookshelf.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/cron-jobs/src/jobs/integrations/network-controller.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/cron-jobs/src/jobs/integrations/downloads.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-16
+packages/request-handler/src/media-server.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,20-21
+packages/cron-jobs/src/jobs/integrations/health-monitoring.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-33
+packages/cron-jobs/src/jobs/update-checker.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-11
+packages/request-handler/src/calendar.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 7,9,26-27
+packages/request-handler/src/indexer-manager.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/navidrome.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/request-handler/src/tracearr.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/request-handler/src/ups.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/lib/cached-request-handler.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-160
+packages/cron-jobs/src/jobs/integrations/media-transcoding.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/request-handler/src/releases.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/speedtest-tracker.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/request-handler/src/weather.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1,7,9-11,37
+apps/tasks/src/on-start/invalidate-update-checker-cache.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-18
+packages/request-handler/src/lib/cached-request-integration-job-handler.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-115
+packages/cron-jobs/src/jobs/docker.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-31
+packages/request-handler/src/coolify.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/request-handler/src/media-release.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/archive-team-warrior.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/stock-price.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1,7,9-11,45
+packages/cron-jobs/src/jobs/integrations/vpn.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/cron-jobs/src/jobs/integrations/timetable.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-20
+packages/cron-jobs/src/jobs/integrations/tracearr.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/request-handler/src/media-transcoding.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,14-15
+packages/request-handler/src/minecraft-server-status.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1,7,9-11,20
+packages/cron-jobs/src/jobs/weather.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-36
+packages/cron-jobs/src/jobs/integrations/home-assistant.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-16
+packages/request-handler/src/lib/cached-widget-request-handler.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-36
+packages/request-handler/src/network-controller.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/notifications.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/cron-jobs/src/jobs/integrations/notifications.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/cron-jobs/src/jobs/integrations/media-requests.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-24
+packages/request-handler/src/paperless-ngx.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/request-handler/src/smart-home-entity-state.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,23-24
+packages/cron-jobs/src/jobs/integrations/firewall.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-46
+packages/request-handler/src/downloads.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/request-handler/src/media-request-list.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/cron-jobs/src/jobs/integrations/indexer-manager.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/request-handler/src/dns-hole.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,18-19
+packages/cron-jobs/src/jobs/minecraft-server-status.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-25
+packages/cron-jobs/src/jobs/rss-feeds.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-39
+packages/request-handler/src/media-request-stats.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,7,9,21-22
+packages/request-handler/src/rss-feeds.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 3,9,13-15,34
+packages/request-handler/src/uptime-kuma.ts
+  s_3dcc22b87e2334::t_c819c9f12539ea 1-2,6,8,17-18
+packages/cron-jobs/src/jobs/integrations/dns-hole.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-15
+packages/request-handler/src/lib/cached-integration-request-handler.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-49
+packages/cron-jobs/src/jobs/integrations/media-server.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+packages/redis/src/lib/channels/history-channel.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-6
+packages/cron-jobs/src/jobs/integrations/media-organizer.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-36
+packages/cron-jobs/src/jobs/integrations/umami.ts
+  s_3dcc22b87e2334::t_064aabc42b0755 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "e9611e8098efdec500fd9e2a9e81df29ef89cb05",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
