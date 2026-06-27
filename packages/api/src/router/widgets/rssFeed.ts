@@ -40,12 +40,12 @@ export const rssFeedRouter = createTRPCRouter({
         logger.warn("RSS feed fetch failed", { url: urls[index], error: result.reason });
         return [];
       })
-      .slice(0, input.maximumAmountPosts)
       .toSorted((entryA, entryB) => {
         return entryA.published && entryB.published
           ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
           : 0;
-      });
+      })
+      .slice(0, input.maximumAmountPosts);
   }),
 });
 

@@ -163,19 +163,19 @@ export function DockerTable({ initialData }: DockerTableProps) {
   });
   const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
   const mutate = useCallback(() => {
-    void refetch()
-      .then(() => {
-        showSuccessNotification({
-          title: tDocker("action.refresh.notification.success.title"),
-          message: tDocker("action.refresh.notification.success.message"),
-        });
-      })
-      .catch(() => {
+    void refetch().then((result) => {
+      if (result.isError) {
         showErrorNotification({
           title: tDocker("action.refresh.notification.error.title"),
           message: tDocker("action.refresh.notification.error.message"),
         });
-      });
+      } else {
+        showSuccessNotification({
+          title: tDocker("action.refresh.notification.success.title"),
+          message: tDocker("action.refresh.notification.success.message"),
+        });
+      }
+    });
   }, [refetch, tDocker]);
 
   const containers = data?.containers ?? [];

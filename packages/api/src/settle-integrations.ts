@@ -13,7 +13,7 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
 ): Promise<TResult[]> {
-  const settled = await Promise.allSettled(integrations.map(fn));
+  const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
   return settled.flatMap((result, index) => {
     if (result.status === "fulfilled") return [result.value];
     const integration = integrations[index];
