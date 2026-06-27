@@ -3586,6 +3586,7 @@
       "noteError": "Could not load that note",
       "record": "Record voice message",
       "stopRecording": "Stop recording",
+      "cancelRecording": "Cancel recording",
       "micError": "Could not access the microphone",
       "transcribeError": "Could not transcribe the recording",
       "error": {

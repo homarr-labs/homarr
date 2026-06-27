@@ -29,6 +29,7 @@ import {
   IconArrowLeft,
   IconArrowUp,
   IconCamera,
+  IconCheck,
   IconChevronDown,
   IconChevronRight,
   IconDatabase,
@@ -44,6 +45,7 @@ import {
   IconRobot,
   IconUser,
   IconWorld,
+  IconX,
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -124,6 +126,8 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
 
   const [captureOpened, setCaptureOpened] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const streamingTextRef = useRef("");
@@ -134,6 +138,9 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioStreamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const recordingTimerRef = useRef<number | null>(null);
+  const recordingCancelledRef = useRef(false);
   const [composerHeight, setComposerHeight] = useState(72);
 
   const utils = clientApi.useUtils();
@@ -217,7 +224,9 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   useEffect(
     () => () => {
       stopCaptureStream();
+      if (recordingTimerRef.current !== null) window.clearInterval(recordingTimerRef.current);
       audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+      void audioContextRef.current?.close().catch(() => undefined);
     },
     [],
   );
@@ -510,36 +519,68 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   };
 
   // ---- Voice recording (speech-to-text) ----
+  const teardownRecording = () => {
+    if (recordingTimerRef.current !== null) {
+      window.clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+    audioStreamRef.current = null;
+    void audioContextRef.current?.close().catch(() => undefined);
+    audioContextRef.current = null;
+    setAnalyser(null);
+    setIsRecording(false);
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStreamRef.current = stream;
+
+      // Live audio analyser drives the waveform animation.
+      const audioContext = new AudioContext();
+      const sourceNode = audioContext.createMediaStreamSource(stream);
+      const analyserNode = audioContext.createAnalyser();
+      analyserNode.fftSize = 256;
+      sourceNode.connect(analyserNode);
+      audioContextRef.current = audioContext;
+      setAnalyser(analyserNode);
+
       const recorder = new MediaRecorder(stream);
       audioChunksRef.current = [];
+      recordingCancelledRef.current = false;
       recorder.addEventListener("dataavailable", (event) => {
         if (event.data.size > 0) audioChunksRef.current.push(event.data);
       });
-      recorder.addEventListener("stop", () => void transcribeRecording());
+      recorder.addEventListener("stop", () => void finishRecording());
       mediaRecorderRef.current = recorder;
       recorder.start();
-      setIsRecording(true);
+
       setError(null);
+      setRecordingSeconds(0);
+      recordingTimerRef.current = window.setInterval(() => setRecordingSeconds((value) => value + 1), 1000);
+      setIsRecording(true);
     } catch {
       setError(t("widget.openWebUi.micError"));
     }
   };
 
-  const stopRecording = () => {
+  const cancelRecording = () => {
+    recordingCancelledRef.current = true;
     mediaRecorderRef.current?.stop();
-    setIsRecording(false);
   };
 
-  const transcribeRecording = async () => {
-    audioStreamRef.current?.getTracks().forEach((track) => track.stop());
-    audioStreamRef.current = null;
+  const confirmRecording = () => {
+    recordingCancelledRef.current = false;
+    mediaRecorderRef.current?.stop();
+  };
+
+  const finishRecording = async () => {
+    const cancelled = recordingCancelledRef.current;
     const chunks = audioChunksRef.current;
     audioChunksRef.current = [];
-    if (chunks.length === 0 || !integrationId) return;
+    teardownRecording();
+    if (cancelled || chunks.length === 0 || !integrationId) return;
 
     const blob = new Blob(chunks, { type: chunks[0]?.type ?? "audio/webm" });
     try {
@@ -705,274 +746,305 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
           </Group>
         ) : null}
 
-        <Textarea
-          variant="unstyled"
-          size="sm"
-          autosize
-          minRows={1}
-          maxRows={5}
-          value={input}
-          onChange={(event) => setInput(event.currentTarget.value)}
-          placeholder={t("widget.openWebUi.messagePlaceholder")}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              handleSend();
-            }
-          }}
-        />
-        <Group justify="space-between" gap="xs" wrap="nowrap" mt={4}>
-          <Group gap={4} wrap="nowrap">
-            <Tooltip label={t("widget.openWebUi.newChat")} withinPortal={false}>
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                onClick={handleNewChat}
-                aria-label={t("widget.openWebUi.newChat")}
-              >
-                <IconPlus size={18} />
-              </ActionIcon>
-            </Tooltip>
-            <Popover
-              opened={attachOpened}
-              onChange={setAttachOpened}
-              position="top-start"
-              withinPortal={false}
-              width={280}
-              shadow="md"
+        {isRecording ? (
+          <Group gap="xs" wrap="nowrap" className={classes.recordingBar} mt={4}>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              radius="xl"
+              onClick={cancelRecording}
+              aria-label={t("widget.openWebUi.cancelRecording")}
             >
-              <Popover.Target>
-                <Tooltip label={t("widget.openWebUi.attach")} withinPortal={false}>
+              <IconX size={18} />
+            </ActionIcon>
+            <Box className={classes.waveformWrap}>
+              <RecordingWaveform analyser={analyser} />
+            </Box>
+            <Text size="xs" c="dimmed" className={classes.recordingTime}>
+              {formatSeconds(recordingSeconds)}
+            </Text>
+            <ActionIcon
+              variant="filled"
+              radius="xl"
+              loading={transcribe.isPending}
+              onClick={confirmRecording}
+              aria-label={t("widget.openWebUi.stopRecording")}
+            >
+              <IconCheck size={18} />
+            </ActionIcon>
+          </Group>
+        ) : (
+          <>
+            <Textarea
+              variant="unstyled"
+              size="sm"
+              autosize
+              minRows={1}
+              maxRows={5}
+              value={input}
+              onChange={(event) => setInput(event.currentTarget.value)}
+              placeholder={t("widget.openWebUi.messagePlaceholder")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  handleSend();
+                }
+              }}
+            />
+            <Group justify="space-between" gap="xs" wrap="nowrap" mt={4}>
+              <Group gap={4} wrap="nowrap">
+                <Tooltip label={t("widget.openWebUi.newChat")} withinPortal={false}>
                   <ActionIcon
                     variant="subtle"
                     color="gray"
-                    loading={processWeb.isPending || uploadFile.isPending}
-                    onClick={() => setAttachOpened((value) => !value)}
-                    aria-label={t("widget.openWebUi.attach")}
+                    onClick={handleNewChat}
+                    aria-label={t("widget.openWebUi.newChat")}
                   >
-                    <IconPaperclip size={18} />
+                    <IconPlus size={18} />
                   </ActionIcon>
                 </Tooltip>
-              </Popover.Target>
-              <Popover.Dropdown p={4}>
-                {attachView === "root" ? (
-                  <Stack gap={2}>
-                    <MenuRow
-                      icon={<IconPaperclip size={16} />}
-                      label={t("widget.openWebUi.uploadFiles")}
-                      onClick={() => fileInputRef.current?.click()}
-                    />
-                    <MenuRow
-                      icon={<IconCamera size={16} />}
-                      label={t("widget.openWebUi.capture")}
-                      onClick={() => void openCapture()}
-                    />
-                    <MenuRow
-                      icon={<IconWorld size={16} />}
-                      label={t("widget.openWebUi.attachWebpage")}
-                      hasSub
-                      onClick={() => setAttachView("webpage")}
-                    />
-                    <MenuRow
-                      icon={<IconFile size={16} />}
-                      label={t("widget.openWebUi.attachFiles")}
-                      hasSub
-                      onClick={() => setAttachView("files")}
-                    />
-                    <MenuRow
-                      icon={<IconFileText size={16} />}
-                      label={t("widget.openWebUi.attachNotes")}
-                      hasSub
-                      onClick={() => setAttachView("notes")}
-                    />
-                    <MenuRow
-                      icon={<IconDatabase size={16} />}
-                      label={t("widget.openWebUi.attachKnowledge")}
-                      hasSub
-                      onClick={() => setAttachView("knowledge")}
-                    />
-                    <MenuRow
-                      icon={<IconMessage size={16} />}
-                      label={t("widget.openWebUi.referenceChats")}
-                      hasSub
-                      onClick={() => setAttachView("chats")}
-                    />
-                  </Stack>
-                ) : (
-                  <Stack gap={4}>
-                    <Group gap={6} wrap="nowrap" px={4} pt={2}>
+                <Popover
+                  opened={attachOpened}
+                  onChange={setAttachOpened}
+                  position="top-start"
+                  withinPortal={false}
+                  width={280}
+                  shadow="md"
+                >
+                  <Popover.Target>
+                    <Tooltip label={t("widget.openWebUi.attach")} withinPortal={false}>
                       <ActionIcon
                         variant="subtle"
                         color="gray"
-                        size="sm"
-                        onClick={() => setAttachView("root")}
-                        aria-label={t("widget.openWebUi.back")}
+                        loading={processWeb.isPending || uploadFile.isPending}
+                        onClick={() => setAttachOpened((value) => !value)}
+                        aria-label={t("widget.openWebUi.attach")}
                       >
-                        <IconArrowLeft size={16} />
+                        <IconPaperclip size={18} />
                       </ActionIcon>
-                      <Text fw={600} size="sm">
-                        {attachViewTitle}
-                      </Text>
-                    </Group>
-
-                    {attachView === "webpage" ? (
-                      <Group gap={4} wrap="nowrap" p={4}>
-                        <TextInput
-                          size="xs"
-                          flex={1}
-                          placeholder="https://…"
-                          value={webInput}
-                          onChange={(event) => setWebInput(event.currentTarget.value)}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                              event.preventDefault();
-                              void addWebUrl();
-                            }
-                          }}
+                    </Tooltip>
+                  </Popover.Target>
+                  <Popover.Dropdown p={4}>
+                    {attachView === "root" ? (
+                      <Stack gap={2}>
+                        <MenuRow
+                          icon={<IconPaperclip size={16} />}
+                          label={t("widget.openWebUi.uploadFiles")}
+                          onClick={() => fileInputRef.current?.click()}
                         />
-                        <ActionIcon
-                          variant="light"
-                          color="gray"
-                          loading={processWeb.isPending}
-                          onClick={() => void addWebUrl()}
-                          aria-label={t("widget.openWebUi.addUrl")}
-                        >
-                          <IconPlus size={16} />
-                        </ActionIcon>
-                      </Group>
-                    ) : null}
+                        <MenuRow
+                          icon={<IconCamera size={16} />}
+                          label={t("widget.openWebUi.capture")}
+                          onClick={() => void openCapture()}
+                        />
+                        <MenuRow
+                          icon={<IconWorld size={16} />}
+                          label={t("widget.openWebUi.attachWebpage")}
+                          hasSub
+                          onClick={() => setAttachView("webpage")}
+                        />
+                        <MenuRow
+                          icon={<IconFile size={16} />}
+                          label={t("widget.openWebUi.attachFiles")}
+                          hasSub
+                          onClick={() => setAttachView("files")}
+                        />
+                        <MenuRow
+                          icon={<IconFileText size={16} />}
+                          label={t("widget.openWebUi.attachNotes")}
+                          hasSub
+                          onClick={() => setAttachView("notes")}
+                        />
+                        <MenuRow
+                          icon={<IconDatabase size={16} />}
+                          label={t("widget.openWebUi.attachKnowledge")}
+                          hasSub
+                          onClick={() => setAttachView("knowledge")}
+                        />
+                        <MenuRow
+                          icon={<IconMessage size={16} />}
+                          label={t("widget.openWebUi.referenceChats")}
+                          hasSub
+                          onClick={() => setAttachView("chats")}
+                        />
+                      </Stack>
+                    ) : (
+                      <Stack gap={4}>
+                        <Group gap={6} wrap="nowrap" px={4} pt={2}>
+                          <ActionIcon
+                            variant="subtle"
+                            color="gray"
+                            size="sm"
+                            onClick={() => setAttachView("root")}
+                            aria-label={t("widget.openWebUi.back")}
+                          >
+                            <IconArrowLeft size={16} />
+                          </ActionIcon>
+                          <Text fw={600} size="sm">
+                            {attachViewTitle}
+                          </Text>
+                        </Group>
 
-                    {attachView === "files" ? (
-                      <PickerList emptyLabel={t("widget.openWebUi.noFiles")} count={files.length}>
-                        {files.map((file) => (
-                          <Checkbox
-                            key={file.id}
-                            size="xs"
-                            label={file.name}
-                            checked={fileItems.some((item) => item.id === file.id)}
-                            onChange={() => toggleFile(file)}
-                          />
-                        ))}
-                      </PickerList>
-                    ) : null}
+                        {attachView === "webpage" ? (
+                          <Group gap={4} wrap="nowrap" p={4}>
+                            <TextInput
+                              size="xs"
+                              flex={1}
+                              placeholder="https://…"
+                              value={webInput}
+                              onChange={(event) => setWebInput(event.currentTarget.value)}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  void addWebUrl();
+                                }
+                              }}
+                            />
+                            <ActionIcon
+                              variant="light"
+                              color="gray"
+                              loading={processWeb.isPending}
+                              onClick={() => void addWebUrl()}
+                              aria-label={t("widget.openWebUi.addUrl")}
+                            >
+                              <IconPlus size={16} />
+                            </ActionIcon>
+                          </Group>
+                        ) : null}
 
-                    {attachView === "notes" ? (
-                      <PickerList emptyLabel={t("widget.openWebUi.noNotes")} count={notes.length}>
-                        {notes.map((note) => (
-                          <Checkbox
-                            key={note.id}
-                            size="xs"
-                            label={note.title}
-                            checked={noteItems.some((item) => item.id === note.id)}
-                            onChange={() => void toggleNote({ id: note.id, title: note.title })}
-                          />
-                        ))}
-                      </PickerList>
-                    ) : null}
+                        {attachView === "files" ? (
+                          <PickerList emptyLabel={t("widget.openWebUi.noFiles")} count={files.length}>
+                            {files.map((file) => (
+                              <Checkbox
+                                key={file.id}
+                                size="xs"
+                                label={file.name}
+                                checked={fileItems.some((item) => item.id === file.id)}
+                                onChange={() => toggleFile(file)}
+                              />
+                            ))}
+                          </PickerList>
+                        ) : null}
 
-                    {attachView === "knowledge" ? (
-                      <PickerList emptyLabel={t("widget.openWebUi.noKnowledge")} count={knowledge.length}>
-                        {knowledge.map((item) => (
-                          <KnowledgeRow
-                            key={item.id}
-                            integrationId={integrationId ?? ""}
-                            knowledgeId={item.id}
-                            name={item.name ?? item.id}
-                            selected={knowledgeIds.includes(item.id)}
-                            onToggle={() => toggleKnowledge(item.id)}
-                            isFileSelected={(id) => fileItems.some((file) => file.id === id)}
-                            onToggleFile={toggleFile}
-                          />
-                        ))}
-                      </PickerList>
-                    ) : null}
+                        {attachView === "notes" ? (
+                          <PickerList emptyLabel={t("widget.openWebUi.noNotes")} count={notes.length}>
+                            {notes.map((note) => (
+                              <Checkbox
+                                key={note.id}
+                                size="xs"
+                                label={note.title}
+                                checked={noteItems.some((item) => item.id === note.id)}
+                                onChange={() => void toggleNote({ id: note.id, title: note.title })}
+                              />
+                            ))}
+                          </PickerList>
+                        ) : null}
 
-                    {attachView === "chats" ? (
-                      <PickerList emptyLabel={t("widget.openWebUi.noChats")} count={chats.length}>
-                        {chats.map((chat) => (
-                          <Checkbox
-                            key={chat.id}
-                            size="xs"
-                            label={chat.title ?? chat.id}
-                            checked={chatItems.some((item) => item.id === chat.id)}
-                            onChange={() => void toggleChatReference(chat)}
-                          />
-                        ))}
-                      </PickerList>
-                    ) : null}
-                  </Stack>
+                        {attachView === "knowledge" ? (
+                          <PickerList emptyLabel={t("widget.openWebUi.noKnowledge")} count={knowledge.length}>
+                            {knowledge.map((item) => (
+                              <KnowledgeRow
+                                key={item.id}
+                                integrationId={integrationId ?? ""}
+                                knowledgeId={item.id}
+                                name={item.name ?? item.id}
+                                selected={knowledgeIds.includes(item.id)}
+                                onToggle={() => toggleKnowledge(item.id)}
+                                isFileSelected={(id) => fileItems.some((file) => file.id === id)}
+                                onToggleFile={toggleFile}
+                              />
+                            ))}
+                          </PickerList>
+                        ) : null}
+
+                        {attachView === "chats" ? (
+                          <PickerList emptyLabel={t("widget.openWebUi.noChats")} count={chats.length}>
+                            {chats.map((chat) => (
+                              <Checkbox
+                                key={chat.id}
+                                size="xs"
+                                label={chat.title ?? chat.id}
+                                checked={chatItems.some((item) => item.id === chat.id)}
+                                onChange={() => void toggleChatReference(chat)}
+                              />
+                            ))}
+                          </PickerList>
+                        ) : null}
+                      </Stack>
+                    )}
+                  </Popover.Dropdown>
+                </Popover>
+                {options.showHistory ? (
+                  <Tooltip label={t("widget.openWebUi.history")} withinPortal={false}>
+                    <ActionIcon
+                      variant="subtle"
+                      color="gray"
+                      onClick={() => setHistoryOpened(true)}
+                      aria-label={t("widget.openWebUi.history")}
+                    >
+                      <IconHistory size={18} />
+                    </ActionIcon>
+                  </Tooltip>
+                ) : null}
+              </Group>
+              <Group gap="xs" wrap="nowrap">
+                <Select
+                  variant="unstyled"
+                  size="sm"
+                  searchable
+                  data={modelData}
+                  value={model}
+                  onChange={setModel}
+                  placeholder={t("widget.openWebUi.selectModel")}
+                  nothingFoundMessage={t("widget.openWebUi.noModels")}
+                  rightSection={modelsLoading ? <Loader size="xs" /> : undefined}
+                  comboboxProps={{ withinPortal: false }}
+                  maw={200}
+                  className={classes.modelSelect}
+                />
+                {!isStreaming && !input.trim() && attachments.length === 0 ? (
+                  <Tooltip label={t("widget.openWebUi.record")} withinPortal={false}>
+                    <ActionIcon
+                      radius="xl"
+                      variant="subtle"
+                      color="gray"
+                      loading={transcribe.isPending}
+                      onClick={() => void startRecording()}
+                      aria-label={t("widget.openWebUi.record")}
+                    >
+                      <IconMicrophone size={18} />
+                    </ActionIcon>
+                  </Tooltip>
+                ) : null}
+                {isStreaming ? (
+                  <Tooltip label={t("widget.openWebUi.stop")} withinPortal={false}>
+                    <ActionIcon
+                      radius="xl"
+                      color="red"
+                      variant="filled"
+                      onClick={finalizeAssistantMessage}
+                      aria-label={t("widget.openWebUi.stop")}
+                    >
+                      <IconPlayerStopFilled size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+                ) : (
+                  <Tooltip label={t("widget.openWebUi.send")} withinPortal={false}>
+                    <ActionIcon
+                      radius="xl"
+                      variant="filled"
+                      onClick={handleSend}
+                      disabled={(!input.trim() && attachments.length === 0) || !model}
+                      aria-label={t("widget.openWebUi.send")}
+                    >
+                      <IconArrowUp size={18} />
+                    </ActionIcon>
+                  </Tooltip>
                 )}
-              </Popover.Dropdown>
-            </Popover>
-            {options.showHistory ? (
-              <Tooltip label={t("widget.openWebUi.history")} withinPortal={false}>
-                <ActionIcon
-                  variant="subtle"
-                  color="gray"
-                  onClick={() => setHistoryOpened(true)}
-                  aria-label={t("widget.openWebUi.history")}
-                >
-                  <IconHistory size={18} />
-                </ActionIcon>
-              </Tooltip>
-            ) : null}
-            <Tooltip
-              label={isRecording ? t("widget.openWebUi.stopRecording") : t("widget.openWebUi.record")}
-              withinPortal={false}
-            >
-              <ActionIcon
-                variant={isRecording ? "filled" : "subtle"}
-                color={isRecording ? "red" : "gray"}
-                loading={transcribe.isPending}
-                onClick={() => (isRecording ? stopRecording() : void startRecording())}
-                aria-label={t("widget.openWebUi.record")}
-              >
-                {isRecording ? <IconPlayerStopFilled size={16} /> : <IconMicrophone size={18} />}
-              </ActionIcon>
-            </Tooltip>
-          </Group>
-          <Group gap="xs" wrap="nowrap">
-            <Select
-              variant="unstyled"
-              size="sm"
-              searchable
-              data={modelData}
-              value={model}
-              onChange={setModel}
-              placeholder={t("widget.openWebUi.selectModel")}
-              nothingFoundMessage={t("widget.openWebUi.noModels")}
-              rightSection={modelsLoading ? <Loader size="xs" /> : undefined}
-              comboboxProps={{ withinPortal: false }}
-              maw={200}
-              className={classes.modelSelect}
-            />
-            {isStreaming ? (
-              <Tooltip label={t("widget.openWebUi.stop")} withinPortal={false}>
-                <ActionIcon
-                  radius="xl"
-                  color="red"
-                  variant="filled"
-                  onClick={finalizeAssistantMessage}
-                  aria-label={t("widget.openWebUi.stop")}
-                >
-                  <IconPlayerStopFilled size={16} />
-                </ActionIcon>
-              </Tooltip>
-            ) : (
-              <Tooltip label={t("widget.openWebUi.send")} withinPortal={false}>
-                <ActionIcon
-                  radius="xl"
-                  variant="filled"
-                  onClick={handleSend}
-                  disabled={(!input.trim() && attachments.length === 0) || !model}
-                  aria-label={t("widget.openWebUi.send")}
-                >
-                  <IconArrowUp size={18} />
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </Group>
-        </Group>
+              </Group>
+            </Group>
+          </>
+        )}
 
         <input
           ref={fileInputRef}
@@ -1067,6 +1139,12 @@ const hostnameOf = (url: string): string => {
   } catch {
     return url;
   }
+};
+
+const formatSeconds = (total: number): string => {
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 };
 
 // Convert displayed messages to the OpenAI completion format, inlining any
@@ -1245,6 +1323,43 @@ function AttachmentBadge({
       {label}
     </Badge>
   );
+}
+
+// Live microphone waveform driven by a Web Audio analyser node.
+function RecordingWaveform({ analyser }: { analyser: AnalyserNode | null }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!analyser || !canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    const color = getComputedStyle(canvas).color;
+    let raf = 0;
+
+    const render = () => {
+      raf = requestAnimationFrame(render);
+      analyser.getByteFrequencyData(data);
+      const { width, height } = canvas;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = color;
+      const barCount = 56;
+      const step = Math.max(1, Math.floor(data.length / barCount));
+      const slot = width / barCount;
+      for (let index = 0; index < barCount; index++) {
+        const value = (data[index * step] ?? 0) / 255;
+        const barHeight = Math.max(2, value * height);
+        ctx.fillRect(index * slot + slot * 0.3, (height - barHeight) / 2, slot * 0.4, barHeight);
+      }
+    };
+
+    render();
+    return () => cancelAnimationFrame(raf);
+  }, [analyser]);
+
+  return <canvas ref={canvasRef} width={640} height={32} aria-hidden className={classes.waveformCanvas} />;
 }
 
 function TypingDots() {
