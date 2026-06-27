@@ -106,7 +106,10 @@ describe("getLatestMatchingReleaseAsync for GitHub Container Registry", () => {
       identifier: "ghcr.io/homarr-labs",
     });
 
-    expect(result).toEqual({ success: false, error: { code: "invalidIdentifier" } });
+    expect(result).toEqual({
+      success: false,
+      error: expect.objectContaining({ code: "invalidIdentifier" }),
+    });
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 

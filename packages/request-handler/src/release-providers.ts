@@ -153,12 +153,12 @@ const getGithubReleaseAsync = async (
 
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
-    const releasesResponse = await api.rest.repos.listReleases({ owner: parsed.owner, repo: parsed.name });
-    if (releasesResponse.data.length === 0) {
+    const allReleases = await api.paginate(api.rest.repos.listReleases, { owner: parsed.owner, repo: parsed.name, per_page: 100 });
+    if (allReleases.length === 0) {
       return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitHub releases` } };
     }
 
-    const releases = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
+    const releases = allReleases.reduce<ReleaseProviderResponse[]>((acc, release) => {
       if (!release.published_at) return acc;
       acc.push({
         latestRelease: release.tag_name,
@@ -510,7 +510,7 @@ const getGitlabReleaseAsync = async (
     if (!release.released_at) return acc;
     const releaseDate = new Date(release.released_at);
     acc.push({
-      latestRelease: release.name ?? release.tag_name,
+      latestRelease: release.tag_name,
       latestReleaseAt: releaseDate,
       releaseUrl: release._links?.self,
       releaseDescription: release.description ?? undefined,
