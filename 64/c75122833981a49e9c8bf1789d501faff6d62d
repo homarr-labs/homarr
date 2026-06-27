@@ -1,0 +1,23 @@
+packages/request-handler/src/release-providers.ts
+  s_7ba3fee1318525::t_638c7a9afd12e4 11-14
+  s_7ba3fee1318525::t_3f26abda46ba02 50-58,63-67,70
+  s_7ba3fee1318525::t_a7a00eebd99636 220-223,230
+  s_7ba3fee1318525::t_c8644501e6e417 752-760
+  s_7ba3fee1318525::t_bd7ccfb64bf297 286,301,331,351,408,446,494,536,585,643,679,735,802
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "64c75122833981a49e9c8bf1789d501faff6d62d",
+  "prompts": {},
+  "sessions": {
+    "s_7ba3fee1318525": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a27f97ff-185c-401c-9c33-42c2e5ecb237",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
