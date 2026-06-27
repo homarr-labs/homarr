@@ -489,6 +489,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
+  gluetun: {
+    name: "Gluetun",
+    secretKinds: [["username", "password"], ["apiKey"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
+    category: ["vpn"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+  },
   archiveTeamWarrior: {
     name: "ArchiveTeam Warrior",
     secretKinds: [[], ["username", "password"]],
@@ -613,6 +620,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "vpn",
   "archiving",
   "ups",
   "documents",

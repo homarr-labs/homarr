@@ -52,6 +52,7 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
+import * as vpn from "./vpn";
 import * as beszelSystemTable from "./beszel-system-table";
 import * as beszelSystemGrid from "./beszel-system-grid";
 import * as beszelAlerts from "./beszel-alerts";
@@ -109,6 +110,7 @@ export const widgetImports = {
   uptimeKuma,
   audioStats,
   umami,
+  vpn,
   ups,
   beszelSystemTable,
   beszelSystemGrid,

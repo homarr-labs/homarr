@@ -1,6 +1,11 @@
 # ── CODEOWNERS ───────────────────────────────────────
 * @homarr-labs/maintainers
 
+# Specific features / integrations 
+# Glueten
+apps/docs/docs/integrations/glueten @Lok3sh-kumar
+packages/integrations/src/gluetun @Lok3sh-kumar
+
 # Exempt Renovate‑managed files (no owners)
 package.json
 **/package.json

@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import Image from "next/image";
 import {
   Accordion,
@@ -41,11 +40,10 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
-import type { PackageJsonDependencies } from "~/versions/package-reader";
-import { getPackageVersion } from "~/versions/package-reader";
-import type githubContributorsJson from "../../../../../../../static-data/contributors.json";
-import type openCollectiveContributorsJson from "../../../../../../../static-data/opencollective-contributors.json";
-import type crowdinContributorsJson from "../../../../../../../static-data/translators.json";
+import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";
+import githubContributors from "@static-data/contributors.json";
+import openCollectiveContributors from "@static-data/opencollective-contributors.json";
+import crowdinContributors from "@static-data/translators.json";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
@@ -56,32 +54,10 @@ export async function generateMetadata() {
   };
 }
 
-const getHostAsync = async () => {
-  if (process.env.HOSTNAME) {
-    return `${process.env.HOSTNAME}:3000`;
-  }
-
-  return (await headers()).get("host");
-};
-
 export default async function AboutPage() {
-  const baseServerUrl = `http://${await getHostAsync()}`;
   const t = await getScopedI18n("management.page.about");
   const version = getPackageVersion();
-  const dependencies = (await fetch(`${baseServerUrl}/api/about/dependencies`).then((res) =>
-    res.json(),
-  )) as PackageJsonDependencies;
-  const githubContributors = (await fetch(`${baseServerUrl}/api/about/contributors/github`).then((res) =>
-    res.json(),
-  )) as typeof githubContributorsJson;
-
-  const crowdinContributors = (await fetch(`${baseServerUrl}/api/about/contributors/crowdin`).then((res) =>
-    res.json(),
-  )) as typeof crowdinContributorsJson;
-
-  const openCollectiveContributors = (await fetch(`${baseServerUrl}/api/about/contributors/opencollective`).then(
-    (res) => res.json(),
-  )) as typeof openCollectiveContributorsJson;
+  const dependencies = await getDependenciesAsync();
 
   return (
     <div>
@@ -185,7 +161,7 @@ export default async function AboutPage() {
             <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
               {Object.entries(dependencies)
                 .filter(([, value]) => !value.includes("workspace:"))
-                .sort(([key1], [key2]) => key1.localeCompare(key2))
+                .toSorted(([key1], [key2]) => key1.localeCompare(key2))
                 .map(([name, version]) => (
                   <UnstyledButton
                     key={name}

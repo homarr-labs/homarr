@@ -66,7 +66,7 @@ jobs:
       - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           package-manager-cache: false
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'

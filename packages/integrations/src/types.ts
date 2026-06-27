@@ -4,6 +4,7 @@ export * from "./interfaces/network-controller-summary/network-controller-summar
 export * from "./interfaces/firewall-summary/firewall-summary-types";
 export * from "./interfaces/health-monitoring/health-monitoring-types";
 export * from "./interfaces/ups-summary/ups-summary-types";
+export * from "./interfaces/vpn-summary/vpn-summary-types";
 export * from "./interfaces/indexer-manager/indexer-manager-types";
 export * from "./interfaces/media-requests/media-request-types";
 export * from "./base/searchable-integration";
@@ -22,5 +23,6 @@ export * from "./audiobookshelf/audiobookshelf-types";
 export * from "./navidrome/navidrome-types";
 export * from "./paperless-ngx/paperless-ngx-types";
 export * from "./umami/umami-types";
+export * from "./gluetun/gluetun-types";
 export * from "./beszel/beszel-types";
 export * from "./open-webui/open-webui-types";
