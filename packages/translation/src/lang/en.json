@@ -2357,6 +2357,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": "Columns to show"
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
