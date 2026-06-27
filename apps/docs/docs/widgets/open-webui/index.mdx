@@ -13,7 +13,7 @@ import { openWebUiIntegration } from "@site/docs/integrations/open-webui";
 
 <WidgetHeader widget={openWebUiWidget} categories={["AI", "Chat"]} />
 
-The AI Chat widget lets you chat with AI models served by Open WebUI directly from your dashboard. Responses stream in token-by-token, you can pick any model your Open WebUI instance exposes (Ollama, OpenAI, and other configured providers), and you can browse and reopen your Open WebUI chat history. You can also ground a conversation by attaching images, knowledge bases, or web pages.
+The AI Chat widget lets you chat with AI models served by Open WebUI directly from your dashboard. Responses stream in token-by-token, you can pick any model your Open WebUI instance exposes (Ollama, OpenAI, and other configured providers), and you can browse and reopen your Open WebUI chat history. A full attachment menu lets you ground a conversation on images, uploaded or stored files, web pages, knowledge bases, notes, and previous chats.
 
 ### Supported Integrations
 
@@ -40,9 +40,12 @@ The AI Chat widget lets you chat with AI models served by Open WebUI directly fr
 | **Model picker**        | Lists every model exposed by Open WebUI's `/api/models` endpoint, selectable from the chat input. The first model is selected by default. |
 | **Streaming responses** | Assistant replies stream in live as they are generated.                                                                                   |
 | **Chat history**        | Browse and reopen previous chats. New conversations are saved back to Open WebUI.                                                         |
-| **Image attachments**   | Attach images to a message for vision-capable models (sent inline as multimodal content).                                                 |
-| **Knowledge bases**     | Ground replies on any RAG knowledge collection (`/api/v1/knowledge/`) your account owns.                                                   |
-| **Web pages**           | Attach a URL and Open WebUI fetches and embeds the page as context for the reply.                                                          |
+| **Image attachments**   | Attach or capture images for vision-capable models (sent inline as multimodal content). A hint warns when the model has no vision support. |
+| **File attachments**    | Upload new documents or attach files already stored in Open WebUI; their content is retrieved as context.                                 |
+| **Web pages**           | Attach a URL; Open WebUI ingests the page and the relevant parts are retrieved as context.                                                 |
+| **Knowledge bases**     | Ground replies on any RAG knowledge collection your account owns, with an expandable picker to inspect a base's files.                     |
+| **Notes**               | Attach the contents of your Open WebUI notes.                                                                                              |
+| **Reference chats**     | Bring a previous conversation in as context for the current one.                                                                          |
 
 ### Notes
 
