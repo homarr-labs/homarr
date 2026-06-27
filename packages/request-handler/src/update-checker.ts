@@ -11,11 +11,17 @@ import packageJson from "../../../package.json";
 
 const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
+const CACHE_TTL_MS = 30 * 60 * 1000;
+let cached: { data: Update[]; expiresAt: number } | null = null;
+
 export const updateCheckerRequestHandler = createRequestHandler({
   async requestAsync(_) {
-    return {
-      availableUpdates: await getAvailableUpdatesAsync(packageJson.version),
-    };
+    if (cached && Date.now() < cached.expiresAt) {
+      return { availableUpdates: cached.data };
+    }
+    const availableUpdates = await getAvailableUpdatesAsync(packageJson.version);
+    cached = { data: availableUpdates, expiresAt: Date.now() + CACHE_TTL_MS };
+    return { availableUpdates };
   },
 });
 
