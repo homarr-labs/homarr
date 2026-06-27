@@ -16,7 +16,6 @@ export default function VpnWidget({ options, integrationIds }: WidgetComponentPr
 
   const [vpn] = integrations;
   if (integrations.length === 1 && vpn) {
-
     return (
       <Flex align="center" justify="center" w="100%" h="100%" px="xs" py="sm">
         <VpnIntegrationCard vpn={vpn.summary} integrationName={vpn.integration.name} />
