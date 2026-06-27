@@ -52,7 +52,11 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     if (!firstItem) return;
     const idsChanged = prevIntegrationIds.current !== integrationIds;
     prevIntegrationIds.current = integrationIds;
-    setItems((prev) => (idsChanged ? [toChartItem(firstItem.healthInfo)] : [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE)));
+    setItems((prev) =>
+      idsChanged
+        ? [toChartItem(firstItem.healthInfo)]
+        : [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE),
+    );
   }, [dataUpdatedAt, data, integrationIds]);
 
   const showNetwork =
