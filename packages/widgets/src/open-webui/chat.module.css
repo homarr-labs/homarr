@@ -24,9 +24,9 @@
 }
 
 .modelSelect input {
-  text-align: right;
   font-size: var(--mantine-font-size-xs);
   cursor: pointer;
+  text-overflow: ellipsis;
 }
 
 .avatar {
