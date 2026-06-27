@@ -8,6 +8,10 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 const logger = createLogger({ module: "releaseProviders" });
 
+const PROVIDER_TIMEOUT_MS = 10_000;
+const fetchProvider = (url: URL | RequestInfo, options?: RequestInit & { timeout?: number }) =>
+  fetchWithTrustedCertificatesAsync(url, { timeout: PROVIDER_TIMEOUT_MS, ...options });
+
 export interface ReleasesRepositoryRequest extends Record<string, unknown> {
   id: string;
   provider: ReleaseProviderKind;
@@ -43,13 +47,27 @@ export type ReleaseError = {
 };
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
 
+const compileVersionRegex = (versionRegex?: string): RegExp | null => {
+  if (!versionRegex) return null;
+  try {
+    return new RegExp(versionRegex);
+  } catch {
+    return null;
+  }
+};
+
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
   versionRegex?: string,
 ): { release: ReleaseProviderResponse } | { noMatch: string } => {
+  const regex = compileVersionRegex(versionRegex);
+  if (versionRegex && !regex) {
+    return { noMatch: `Invalid regex: /${versionRegex}/` };
+  }
+
   const validReleases = releases.filter((result) => {
     if (!result.latestRelease) return false;
-    return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
+    return regex ? regex.test(result.latestRelease) : true;
   });
 
   if (validReleases.length > 0) {
@@ -199,13 +217,17 @@ const getGitHubContainerRegistryReleaseAsync = async (
 
   try {
     const repositoryName = `${parsed.owner}/${parsed.name}`;
+    const regex = compileVersionRegex(versionRegex);
+    if (versionRegex && !regex) {
+      return { success: false, error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` } };
+    }
     const registryUrl = new URL(baseUrl);
     const registryToken = token ?? (await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName));
     const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, registryToken);
     if (tags.length === 0) {
       return { success: false, error: { code: "noReleasesFound", message: `${repositoryName} has no container tags` } };
     }
-    const matchingTags = versionRegex ? tags.filter((tag) => new RegExp(versionRegex).test(tag)) : tags;
+    const matchingTags = regex ? tags.filter((tag) => regex.test(tag)) : tags;
     const tagsToCheck = versionRegex
       ? matchingTags.slice(-100)
       : matchingTags.includes("latest")
@@ -261,7 +283,7 @@ const gitHubContainerRegistryConfigSchema = z.object({
 });
 
 const getGitHubContainerRegistryTokenAsync = async (registryUrl: URL, repositoryName: string) => {
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(
       registryUrl.origin,
       `/token?service=${registryUrl.host}&scope=${encodeURIComponent(`repository:${repositoryName}:pull`)}` as `/${string}`,
@@ -276,7 +298,7 @@ const getGitHubContainerRegistryTokenAsync = async (registryUrl: URL, repository
 };
 
 const getGitHubContainerRegistryTagsAsync = async (registryUrl: URL, repositoryName: string, token: string) => {
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(registryUrl.origin, `/v2/${repositoryName}/tags/list`),
     { headers: { Authorization: `Bearer ${token}` } },
   );
@@ -306,7 +328,7 @@ const getGitHubContainerRegistryTagCreatedAtAsync = async (
   const configDigest = imageManifest.config?.digest;
   if (!configDigest) throw new Error("Missing image config digest");
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(registryUrl.origin, `/v2/${repositoryName}/blobs/${configDigest}`),
     { headers: { Authorization: `Bearer ${token}` } },
   );
@@ -326,7 +348,7 @@ const getGitHubContainerRegistryManifestAsync = async (
 ) => {
   if (!reference) throw new Error("Missing image manifest reference");
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(registryUrl.origin, `/v2/${repositoryName}/manifests/${reference}`),
     {
       headers: {
@@ -383,7 +405,7 @@ const getDockerHubReleaseAsync = async (
 
   let lastNoMatch = "";
   for (let page = 0; page <= 5; page++) {
-    const response = await fetchWithTrustedCertificatesAsync(
+    const response = await fetchProvider(
       buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}` as `/${string}`),
       headers.Authorization ? { headers } : undefined,
     );
@@ -421,7 +443,7 @@ const getDockerHubDetailsAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `${relativeUrl}/` as `/${string}`),
     headers.Authorization ? { headers } : undefined,
   );
@@ -469,7 +491,7 @@ const getGitlabReleaseAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers["PRIVATE-TOKEN"] = token;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}/releases?per_page=100`),
     headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
@@ -511,7 +533,7 @@ const getGitlabDetailsAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers["PRIVATE-TOKEN"] = token;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}`),
     headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
@@ -560,7 +582,7 @@ const getNpmReleaseAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`),
     headers.Authorization ? { headers } : undefined,
   );
@@ -618,7 +640,7 @@ const getCodebergReleaseAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `token ${token}`;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/releases`),
     headers.Authorization ? { headers } : undefined,
   );
@@ -654,7 +676,7 @@ const getCodebergDetailsAsync = async (
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `token ${token}`;
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
     headers.Authorization ? { headers } : undefined,
   );
@@ -710,7 +732,7 @@ const getLinuxServerIOReleaseAsync = async (
       error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` },
     };
 
-  const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, "/api/v1/images"));
+  const response = await fetchProvider(buildUrl(baseUrl, "/api/v1/images"));
   if (!response.ok)
     return {
       success: false,
@@ -727,7 +749,15 @@ const getLinuxServerIOReleaseAsync = async (
       error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` },
     };
 
-  if (versionRegex && !new RegExp(versionRegex).test(release.version)) {
+  const regex = compileVersionRegex(versionRegex);
+  if (versionRegex && !regex) {
+    return {
+      success: false,
+      error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` },
+    };
+  }
+
+  if (regex && !regex.test(release.version)) {
     return {
       success: false,
       error: {
@@ -769,7 +799,7 @@ const getQuayReleaseAsync = async (
       error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
     };
 
-  const response = await fetchWithTrustedCertificatesAsync(
+  const response = await fetchProvider(
     buildUrl(
       baseUrl,
       `/api/v1/repository/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}?includeTags=true&includeStats=true`,
