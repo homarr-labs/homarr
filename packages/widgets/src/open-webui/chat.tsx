@@ -952,6 +952,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                                 onToggle={() => toggleKnowledge(item.id)}
                                 isFileSelected={(id) => fileItems.some((file) => file.id === id)}
                                 onToggleFile={toggleFile}
+                                emptyFilesLabel={t("widget.openWebUi.noFiles")}
                               />
                             ))}
                           </PickerList>
@@ -1255,6 +1256,7 @@ function KnowledgeRow({
   onToggle,
   isFileSelected,
   onToggleFile,
+  emptyFilesLabel,
 }: {
   integrationId: string;
   knowledgeId: string;
@@ -1263,8 +1265,10 @@ function KnowledgeRow({
   onToggle: () => void;
   isFileSelected: (id: string) => boolean;
   onToggleFile: (file: FileAttachment) => void;
+  emptyFilesLabel: string;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  // Default to expanded so a base's documents are visible without an extra click.
+  const [expanded, setExpanded] = useState(true);
   const { data: files = [], isLoading } = clientApi.widget.openWebUi.getKnowledgeFiles.useQuery(
     { integrationId, knowledgeId },
     { enabled: expanded && Boolean(integrationId), refetchOnWindowFocus: false, retry: false },
@@ -1274,7 +1278,13 @@ function KnowledgeRow({
     <Stack gap={4}>
       <Group gap={6} wrap="nowrap" justify="space-between">
         <Checkbox size="xs" label={name} checked={selected} onChange={onToggle} />
-        <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => setExpanded((value) => !value)}>
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          size="sm"
+          onClick={() => setExpanded((value) => !value)}
+          aria-label={name}
+        >
           {expanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
         </ActionIcon>
       </Group>
@@ -1282,6 +1292,10 @@ function KnowledgeRow({
         <Stack gap={4} pl="md">
           {isLoading ? (
             <Loader size="xs" />
+          ) : files.length === 0 ? (
+            <Text size="xs" c="dimmed">
+              {emptyFilesLabel}
+            </Text>
           ) : (
             files.map((file) => (
               <Checkbox
