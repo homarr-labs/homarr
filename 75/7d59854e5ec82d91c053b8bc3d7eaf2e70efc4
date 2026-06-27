@@ -1,0 +1,27 @@
+packages/api/src/router/widgets/widget-secrets.ts
+  s_7ba3fee1318525::t_a56e5db1227e45 5,28-29,31-47
+  s_7ba3fee1318525::t_7f0f82c43d81e9 62-65
+  s_7ba3fee1318525::t_9d5c145d62d1b0 23
+  s_7ba3fee1318525::t_942ae5fe0a2fdb 52
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_7ba3fee1318525::t_a56e5db1227e45 275-281,294-299,315-316,321,323-327,330-331,335-343,361,366
+packages/api/src/mcp.ts
+  s_7ba3fee1318525::t_e28eacabe009f5 20
+  s_7ba3fee1318525::t_25982e3ff05f21 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "757d59854e5ec82d91c053b8bc3d7eaf2e70efc4",
+  "prompts": {},
+  "sessions": {
+    "s_7ba3fee1318525": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a27f97ff-185c-401c-9c33-42c2e5ecb237",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
