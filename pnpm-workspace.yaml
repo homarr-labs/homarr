@@ -192,7 +192,6 @@ catalog:
   zod-validation-error: ^5.0.0
 catalogMode: strict
 enableGlobalVirtualStore: true
-nodeLinker: hoisted
 strictPeerDependencies: false
 engineStrict: true
 verifyDepsBeforeRun: warn

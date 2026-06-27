@@ -1,5 +1,5 @@
 import superjson from "superjson";
-import Transport from "winston-transport";
+import winston from "winston";
 
 import type { RedisClient } from "../../redis/client";
 import { createRedisClient } from "../../redis/client";
@@ -7,11 +7,7 @@ import { createRedisClient } from "../../redis/client";
 const messageSymbol = Symbol.for("message");
 const levelSymbol = Symbol.for("level");
 
-//
-// Inherit from `winston-transport` so you can take advantage
-// of the base functionality and `.exceptions.handle()`.
-//
-export class RedisTransport extends Transport {
+export class RedisTransport extends winston.Transport {
   private redis: RedisClient | null = null;
   public static readonly publishChannel = "pubSub:logging";
 
