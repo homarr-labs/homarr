@@ -85,7 +85,7 @@ export const getLatestMatchingReleaseAsync = async (input: ReleasesRepositoryReq
     case "codeberg":
       return await getCodebergReleaseAsync(baseUrl, identifier, input.versionRegex, input.token);
     case "linuxServerIO":
-      return await getLinuxServerIOReleaseAsync(baseUrl, identifier);
+      return await getLinuxServerIOReleaseAsync(baseUrl, identifier, input.versionRegex);
     case "quay":
       return await getQuayReleaseAsync(baseUrl, identifier, input.versionRegex);
   }
@@ -666,7 +666,7 @@ const linuxServerIOReleasesSchema = z.object({
   }),
 });
 
-const getLinuxServerIOReleaseAsync = async (baseUrl: string, identifier: string): Promise<ReleaseResponse> => {
+const getLinuxServerIOReleaseAsync = async (baseUrl: string, identifier: string, versionRegex?: string): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
   if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` } };
 
@@ -678,6 +678,10 @@ const getLinuxServerIOReleaseAsync = async (baseUrl: string, identifier: string)
 
   const release = result.data.data.repositories.linuxserver.find((repo) => repo.name === parsed.name);
   if (!release) return { success: false, error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` } };
+
+  if (versionRegex && !new RegExp(versionRegex).test(release.version)) {
+    return { success: false, error: { code: "noMatchingVersion", message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"` } };
+  }
 
   return {
     success: true,
