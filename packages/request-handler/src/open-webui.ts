@@ -77,6 +77,19 @@ export const openWebUiNotesRequestHandler = createCachedIntegrationRequestHandle
   queryKey: "openWebUiNotes",
 });
 
+export const openWebUiNoteRequestHandler = createCachedIntegrationRequestHandler<
+  OpenWebUiNote,
+  "openWebUi",
+  { noteId: string }
+>({
+  async requestAsync(integration, input) {
+    const integrationInstance = await createIntegrationAsync(integration);
+    return await integrationInstance.getNoteAsync(input.noteId);
+  },
+  cacheDuration: dayjs.duration(30, "seconds"),
+  queryKey: "openWebUiNote",
+});
+
 export const openWebUiChatsRequestHandler = createCachedIntegrationRequestHandler<
   OpenWebUiChatListItem[],
   "openWebUi",

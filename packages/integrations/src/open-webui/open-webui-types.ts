@@ -135,6 +135,9 @@ export interface OpenWebUiNote {
   content: string;
 }
 
+// POST /api/v1/audio/transcriptions — speech-to-text result.
+export const openWebUiTranscriptionSchema = z.object({ text: z.string() });
+
 // A file flattened for the widget: id and a display name.
 export interface OpenWebUiFileSummary {
   id: string;

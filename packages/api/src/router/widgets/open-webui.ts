@@ -10,6 +10,7 @@ import {
   openWebUiKnowledgeFilesRequestHandler,
   openWebUiKnowledgeRequestHandler,
   openWebUiModelsRequestHandler,
+  openWebUiNoteRequestHandler,
   openWebUiNotesRequestHandler,
 } from "@homarr/request-handler/open-webui";
 
@@ -119,6 +120,15 @@ export const openWebUiRouter = createTRPCRouter({
     return data;
   }),
 
+  getNote: publicProcedure
+    .input(z.object({ noteId: z.string() }))
+    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .query(async ({ ctx, input }) => {
+      const handler = openWebUiNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
+
   getKnowledgeFiles: publicProcedure
     .input(z.object({ knowledgeId: z.string() }))
     .concat(createOneIntegrationMiddleware("query", "openWebUi"))
@@ -148,6 +158,16 @@ export const openWebUiRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const client = await createIntegrationAsync(ctx.integration);
       return await client.uploadFileAsync(input.filename, input.contentBase64, input.contentType);
+    }),
+
+  // Transcribe recorded audio to text for voice messages.
+  transcribe: protectedProcedure
+    .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .mutation(async ({ ctx, input }) => {
+      const client = await createIntegrationAsync(ctx.integration);
+      const text = await client.transcribeAudioAsync(input.filename, input.contentBase64, input.contentType);
+      return { text };
     }),
 
   getChat: publicProcedure

@@ -28,7 +28,9 @@ import {
   openWebUiKnowledgeListSchema,
   openWebUiModelsResponseSchema,
   openWebUiNoteListSchema,
+  openWebUiNoteSchema,
   openWebUiProcessWebResponseSchema,
+  openWebUiTranscriptionSchema,
   openWebUiUploadedFileSchema,
 } from "./open-webui-types";
 
@@ -130,6 +132,43 @@ export class OpenWebUiIntegration extends Integration {
       title: note.title ?? "Untitled note",
       content: note.data?.content?.md ?? "",
     }));
+  }
+
+  /**
+   * Get a single note including its full markdown content. The list endpoint
+   * truncates the body, so we fetch the note directly when attaching it.
+   */
+  public async getNoteAsync(noteId: string): Promise<OpenWebUiNote> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/notes/${noteId}`), {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const parsed = openWebUiNoteSchema.parse(await response.json());
+    return { id: parsed.id, title: parsed.title ?? "Untitled note", content: parsed.data?.content?.md ?? "" };
+  }
+
+  /**
+   * Transcribe recorded audio to text (speech-to-text) for voice messages.
+   */
+  public async transcribeAudioAsync(filename: string, base64Content: string, contentType: string): Promise<string> {
+    const form = new FormData();
+    form.append("file", new Blob([Buffer.from(base64Content, "base64")], { type: contentType }), filename);
+
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/audio/transcriptions"), {
+      method: "POST",
+      headers: this.getAuthHeaders(),
+      body: form,
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    return openWebUiTranscriptionSchema.parse(await response.json()).text;
   }
 
   /**

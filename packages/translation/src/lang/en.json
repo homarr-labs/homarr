@@ -3583,6 +3583,11 @@
       "uploadError": "Could not upload the file",
       "captureError": "Could not access the camera",
       "chatError": "Could not load that chat",
+      "noteError": "Could not load that note",
+      "record": "Record voice message",
+      "stopRecording": "Stop recording",
+      "micError": "Could not access the microphone",
+      "transcribeError": "Could not transcribe the recording",
       "error": {
         "internalServerError": "Failed to reach Open WebUI"
       }
