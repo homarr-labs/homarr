@@ -1,0 +1,19 @@
+packages/request-handler/src/update-checker.ts
+  s_3dcc22b87e2334::t_e18f0831e976df 14-16,19-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "1cd04aaf458b64ac32856bc8d6a7ef0af3e757f7",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
