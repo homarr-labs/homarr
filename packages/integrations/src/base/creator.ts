@@ -60,6 +60,7 @@ import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
+import {DawarichIntegration} from "../dawarich/dawarich-integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
@@ -143,6 +144,7 @@ export const integrationCreators = {
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,
+  dawarich: DawarichIntegration
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

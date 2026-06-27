@@ -504,6 +504,13 @@ export const integrationDefs = {
     defaultUrl: "http://localhost:8001",
     documentationUrl: createDocumentationLink("/docs/integrations/archiveteam-warrior"),
   },
+  dawarich: {
+    name: "Dawarch",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/dawarich.png",
+    category: ["geolocationTracking"],
+    documentationUrl: createDocumentationLink("/docs/integrations/dawarich")
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -617,6 +624,7 @@ export const integrationCategories = [
   "documents",
   "mediaLibrary",
   "uptimeMonitoring",
+  "geolocationTracking"
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
