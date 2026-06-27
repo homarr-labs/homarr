@@ -3554,6 +3554,7 @@
         }
       },
       "selectModel": "Select a model",
+      "searchModel": "Search models…",
       "noModels": "No models available",
       "emptyState": "Start a conversation",
       "messagePlaceholder": "Type a message…",
