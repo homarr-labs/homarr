@@ -12,7 +12,7 @@ export const hashObjectBase64 = (obj: object) => {
   const json = JSON.stringify([obj], (_, val) =>
     typeof val === "object" && val !== null && !Array.isArray(val)
       ? Object.keys(val)
-          .sort()
+          .toSorted()
           .reduce(
             (acc, key) => {
               acc[key] = (val as Record<string, unknown>)[key];
