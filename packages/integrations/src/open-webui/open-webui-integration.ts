@@ -35,6 +35,10 @@ import {
 
 const logger = createLogger({ module: "open-webui-integration" });
 
+// The (undici) request options accepted by the shared fetch helper. Derived so
+// the request helpers stay in sync with the underlying fetch types.
+type RequestOptions = NonNullable<Parameters<typeof fetchWithTrustedCertificatesAsync>[1]>;
+
 export class OpenWebUiIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/models"), {
@@ -52,30 +56,15 @@ export class OpenWebUiIntegration extends Integration {
    * List the models served by Open WebUI (aggregates all configured providers).
    */
   public async getModelsAsync(): Promise<OpenWebUiModel[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/models"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiModelsResponseSchema.parse(await response.json()).data;
+    const parsed = await this.getJsonAsync("/api/models", openWebUiModelsResponseSchema);
+    return parsed.data;
   }
 
   /**
    * List the knowledge bases (RAG collections) the user can ground chats on.
    */
   public async getKnowledgeAsync(): Promise<OpenWebUiKnowledge[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/knowledge/"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiKnowledgeListSchema.parse(await response.json());
+    const parsed = await this.getJsonAsync("/api/v1/knowledge/", openWebUiKnowledgeListSchema);
     return Array.isArray(parsed) ? parsed : parsed.items;
   }
 
@@ -83,16 +72,7 @@ export class OpenWebUiIntegration extends Integration {
    * List the user's uploaded files (for the "Attach Files" picker).
    */
   public async listFilesAsync(): Promise<OpenWebUiFileSummary[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiFileListSchema.parse(await response.json());
-    const files = Array.isArray(parsed) ? parsed : parsed.items;
+    const files = await this.fetchFilesAsync();
     return files.map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
   }
 
@@ -102,34 +82,23 @@ export class OpenWebUiIntegration extends Integration {
    * we read the files list and filter by the base's collection id instead.
    */
   public async getKnowledgeFilesAsync(knowledgeId: string): Promise<OpenWebUiFileSummary[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiFileListSchema.parse(await response.json());
-    const files = Array.isArray(parsed) ? parsed : parsed.items;
+    const files = await this.fetchFilesAsync();
     return files
       .filter((file) => file.meta?.collection_name === knowledgeId)
       .map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
+  }
+
+  /** Fetch the raw file list, normalizing the paginated and bare-array shapes. */
+  private async fetchFilesAsync() {
+    const parsed = await this.getJsonAsync("/api/v1/files/", openWebUiFileListSchema);
+    return Array.isArray(parsed) ? parsed : parsed.items;
   }
 
   /**
    * List the user's notes (for the "Attach Notes" picker).
    */
   public async listNotesAsync(): Promise<OpenWebUiNote[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/notes/"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiNoteListSchema.parse(await response.json());
+    const parsed = await this.getJsonAsync("/api/v1/notes/", openWebUiNoteListSchema);
     const notes = Array.isArray(parsed) ? parsed : parsed.items;
     return notes.map((note) => ({
       id: note.id,
@@ -143,15 +112,10 @@ export class OpenWebUiIntegration extends Integration {
    * truncates the body, so we fetch the note directly when attaching it.
    */
   public async getNoteAsync(noteId: string): Promise<OpenWebUiNote> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/notes/${noteId}`), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiNoteSchema.parse(await response.json());
+    const parsed = await this.getJsonAsync(
+      `/api/v1/notes/${encodeURIComponent(noteId)}`,
+      openWebUiNoteSchema,
+    );
     return { id: parsed.id, title: parsed.title ?? "Untitled note", content: parsed.data?.content?.md ?? "" };
   }
 
@@ -162,17 +126,8 @@ export class OpenWebUiIntegration extends Integration {
     const form = new FormData();
     form.append("file", new Blob([Buffer.from(base64Content, "base64")], { type: contentType }), filename);
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/audio/transcriptions"), {
-      method: "POST",
-      headers: this.getAuthHeaders(),
-      body: form,
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiTranscriptionSchema.parse(await response.json()).text;
+    const parsed = await this.postFormAsync("/api/v1/audio/transcriptions", form, openWebUiTranscriptionSchema);
+    return parsed.text;
   }
 
   /**
@@ -187,17 +142,7 @@ export class OpenWebUiIntegration extends Integration {
     const form = new FormData();
     form.append("file", new Blob([Buffer.from(base64Content, "base64")], { type: contentType }), filename);
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
-      method: "POST",
-      headers: this.getAuthHeaders(),
-      body: form,
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiUploadedFileSchema.parse(await response.json());
+    const parsed = await this.postFormAsync("/api/v1/files/", form, openWebUiUploadedFileSchema);
     return { id: parsed.id, name: parsed.meta?.name ?? parsed.filename ?? filename };
   }
 
@@ -207,17 +152,11 @@ export class OpenWebUiIntegration extends Integration {
    * embed the page here and inject retrieved chunks ourselves at send time.
    */
   public async processWebAsync(url: string): Promise<OpenWebUiWebDocument> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/retrieval/process/web"), {
-      method: "POST",
-      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({ url, collection_name: "" }),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiProcessWebResponseSchema.parse(await response.json());
+    const parsed = await this.postJsonAsync(
+      "/api/v1/retrieval/process/web",
+      { url, collection_name: "" },
+      openWebUiProcessWebResponseSchema,
+    );
     return { collectionName: parsed.collection_name, title: parsed.file?.meta?.name ?? url };
   }
 
@@ -230,17 +169,11 @@ export class OpenWebUiIntegration extends Integration {
       return [];
     }
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/retrieval/query/collection"), {
-      method: "POST",
-      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({ collection_names: collectionNames, query, k }),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const parsed = openWebUiCollectionQueryResponseSchema.parse(await response.json());
+    const parsed = await this.postJsonAsync(
+      "/api/v1/retrieval/query/collection",
+      { collection_names: collectionNames, query, k },
+      openWebUiCollectionQueryResponseSchema,
+    );
     return (parsed.documents ?? []).flat();
   }
 
@@ -248,64 +181,32 @@ export class OpenWebUiIntegration extends Integration {
    * List the user's chats (native Open WebUI history).
    */
   public async listChatsAsync(): Promise<OpenWebUiChatListItem[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/chats/"), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiChatListItemSchema.array().parse(await response.json());
+    return await this.getJsonAsync("/api/v1/chats/", openWebUiChatListItemSchema.array());
   }
 
   /**
    * Get a single chat including its messages.
    */
   public async getChatAsync(chatId: string): Promise<OpenWebUiChat> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/chats/${chatId}`), {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiChatSchema.parse(await response.json());
+    return await this.getJsonAsync(`/api/v1/chats/${encodeURIComponent(chatId)}`, openWebUiChatSchema);
   }
 
   /**
    * Create a new chat in the native history.
    */
   public async createChatAsync(payload: OpenWebUiChatPayload): Promise<OpenWebUiChat> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/chats/new"), {
-      method: "POST",
-      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({ chat: payload }),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiChatSchema.parse(await response.json());
+    return await this.postJsonAsync("/api/v1/chats/new", { chat: payload }, openWebUiChatSchema);
   }
 
   /**
    * Update an existing chat in the native history.
    */
   public async updateChatAsync(chatId: string, payload: OpenWebUiChatPayload): Promise<OpenWebUiChat> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/chats/${chatId}`), {
-      method: "POST",
-      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({ chat: payload }),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return openWebUiChatSchema.parse(await response.json());
+    return await this.postJsonAsync(
+      `/api/v1/chats/${encodeURIComponent(chatId)}`,
+      { chat: payload },
+      openWebUiChatSchema,
+    );
   }
 
   /**
@@ -318,14 +219,14 @@ export class OpenWebUiIntegration extends Integration {
     onDelta: (delta: string) => void,
     signal: AbortSignal,
   ): Promise<void> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/chat/completions"), {
+    const response = await this.requestAsync("/api/chat/completions", {
       method: "POST",
-      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ model: params.model, messages: params.messages, stream: true }),
       signal,
     });
 
-    if (!response.ok || !response.body) {
+    if (!response.body) {
       throw new ResponseError(response);
     }
 
@@ -343,16 +244,20 @@ export class OpenWebUiIntegration extends Integration {
 
       try {
         const parsed = openWebUiCompletionChunkSchema.parse(JSON.parse(payload));
-        const delta = parsed.choices?.[0]?.delta?.content;
-        if (delta) {
-          onDelta(delta);
+        const choice = parsed.choices?.[0];
+        if (choice?.delta?.content) {
+          onDelta(choice.delta.content);
         }
+        // Some providers end the stream with a finish_reason chunk and no
+        // explicit [DONE] sentinel; treat that as a clean completion too.
+        if (choice?.finish_reason) return true;
       } catch {
         logger.debug("Failed to parse Open WebUI completion chunk", { line: trimmed });
       }
       return false;
     };
 
+    let completed = false;
     try {
       while (!signal.aborted) {
         const { done, value } = await reader.read();
@@ -362,13 +267,24 @@ export class OpenWebUiIntegration extends Integration {
         const lines = buffer.split("\n");
         buffer = lines.pop() ?? "";
         for (const line of lines) {
-          if (processLine(line)) return;
+          if (processLine(line)) {
+            completed = true;
+            break;
+          }
         }
+        if (completed) break;
       }
     } finally {
       reader.cancel().catch(() => {
         // ignore cancellation errors during teardown
       });
+    }
+
+    // The reader ended without a [DONE]/finish_reason marker: the upstream
+    // connection was cut mid-stream. Surface it instead of presenting the
+    // partial reply as a complete answer.
+    if (!signal.aborted && !completed) {
+      throw new Error("Open WebUI stream ended before completion");
     }
   }
 
@@ -376,5 +292,59 @@ export class OpenWebUiIntegration extends Integration {
     return {
       Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
     };
+  }
+
+  /**
+   * Issue an authenticated request against the Open WebUI API and throw a
+   * {@link ResponseError} on a non-2xx status. Centralizes the auth header,
+   * trusted-certificate fetch and error handling shared by every endpoint.
+   */
+  private async requestAsync(
+    path: `/${string}`,
+    init?: Omit<RequestOptions, "headers"> & { headers?: Record<string, string> },
+  ) {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
+      ...init,
+      headers: { ...this.getAuthHeaders(), ...init?.headers },
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    return response;
+  }
+
+  /** GET an endpoint and validate the JSON body against `schema`. */
+  private async getJsonAsync<TOutput>(
+    path: `/${string}`,
+    schema: { parse: (data: unknown) => TOutput },
+  ): Promise<TOutput> {
+    const response = await this.requestAsync(path);
+    return schema.parse(await response.json());
+  }
+
+  /** POST a JSON body and validate the JSON response against `schema`. */
+  private async postJsonAsync<TOutput>(
+    path: `/${string}`,
+    body: unknown,
+    schema: { parse: (data: unknown) => TOutput },
+  ): Promise<TOutput> {
+    const response = await this.requestAsync(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return schema.parse(await response.json());
+  }
+
+  /** POST a multipart form (file upload) and validate the JSON response. */
+  private async postFormAsync<TOutput>(
+    path: `/${string}`,
+    form: FormData,
+    schema: { parse: (data: unknown) => TOutput },
+  ): Promise<TOutput> {
+    const response = await this.requestAsync(path, { method: "POST", body: form });
+    return schema.parse(await response.json());
   }
 }
