@@ -5099,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Failed to fetch Docker containers"
+      "internalServerError": "Failed to fetch Docker containers",
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {
