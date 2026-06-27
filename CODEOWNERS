@@ -108,8 +108,8 @@ apps/docs/docs/integrations/npm @Aandree5
 packages/integrations/src/npm @Aandree5
 
 # ntfy - introduced in https://github.com/homarr-labs/homarr/pull/2900 by @itzTheMeow
-apps/docs/docs/integrations/ntfy @itzTheMeow
-packages/integrations/src/ntfy @itzTheMeow
+apps/docs/docs/integrations/ntfy @ajnart @manuel-rw
+packages/integrations/src/ntfy @ajnart @manuel-rw
 
 # OpenMediaVault - introduced in https://github.com/homarr-labs/homarr/pull/1142 by @hillaliy
 apps/docs/docs/integrations/open-media-vault @hillaliy
