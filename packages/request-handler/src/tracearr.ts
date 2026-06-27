@@ -1,9 +1,11 @@
+import dayjs from "dayjs";
+
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const tracearrRequestHandler = createIntegrationRequestHandler<
+export const tracearrRequestHandler = createCachedIntegrationRequestHandler<
   TracearrDashboardData,
   "tracearr",
   Record<string, never>
@@ -12,4 +14,6 @@ export const tracearrRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
+  cacheDuration: dayjs.duration(5, "seconds"),
+  queryKey: "tracearrDashboard",
 });

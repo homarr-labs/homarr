@@ -1,9 +1,11 @@
+import dayjs from "dayjs";
+
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const coolifyRequestHandler = createIntegrationRequestHandler<
+export const coolifyRequestHandler = createCachedIntegrationRequestHandler<
   CoolifyInstanceInfo,
   "coolify",
   Record<string, never>
@@ -12,4 +14,6 @@ export const coolifyRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getInstanceInfoAsync();
   },
+  cacheDuration: dayjs.duration(30, "seconds"),
+  queryKey: "coolifyInfo",
 });

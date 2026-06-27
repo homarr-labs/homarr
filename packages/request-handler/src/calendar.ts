@@ -4,9 +4,9 @@ import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { CalendarEvent, RadarrReleaseType } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const calendarMonthRequestHandler = createIntegrationRequestHandler<
+export const calendarMonthRequestHandler = createCachedIntegrationRequestHandler<
   CalendarEvent[],
   IntegrationKindByCategory<"calendar">,
   { year: number; month: number; releaseType: RadarrReleaseType[]; showUnmonitored: boolean }
@@ -23,4 +23,6 @@ export const calendarMonthRequestHandler = createIntegrationRequestHandler<
       input.showUnmonitored,
     );
   },
+  cacheDuration: dayjs.duration(1, "minute"),
+  queryKey: "calendarMonth",
 });

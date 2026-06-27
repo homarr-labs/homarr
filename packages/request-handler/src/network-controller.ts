@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { NetworkControllerSummary } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const networkControllerRequestHandler = createIntegrationRequestHandler<
+export const networkControllerRequestHandler = createCachedIntegrationRequestHandler<
   NetworkControllerSummary,
   IntegrationKindByCategory<"networkController">,
   Record<string, never>
@@ -13,4 +15,6 @@ export const networkControllerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNetworkSummaryAsync();
   },
+  cacheDuration: dayjs.duration(5, "minutes"),
+  queryKey: "networkControllerSummary",
 });

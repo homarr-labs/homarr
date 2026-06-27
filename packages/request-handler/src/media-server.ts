@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const mediaServerRequestHandler = createIntegrationRequestHandler<
+export const mediaServerRequestHandler = createCachedIntegrationRequestHandler<
   StreamSession[],
   IntegrationKindByCategory<"mediaService">,
   {
@@ -15,4 +17,6 @@ export const mediaServerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getCurrentSessionsAsync({ showOnlyPlaying: input.showOnlyPlaying });
   },
+  cacheDuration: dayjs.duration(5, "seconds"),
+  queryKey: "mediaServerSessions",
 });

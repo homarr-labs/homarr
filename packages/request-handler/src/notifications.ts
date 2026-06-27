@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { Notification } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const notificationsRequestHandler = createIntegrationRequestHandler<
+export const notificationsRequestHandler = createCachedIntegrationRequestHandler<
   Notification[],
   IntegrationKindByCategory<"notifications">,
   Record<string, never>
@@ -13,4 +15,6 @@ export const notificationsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNotificationsAsync();
   },
+  cacheDuration: dayjs.duration(5, "minutes"),
+  queryKey: "notificationsJobStatus",
 });

@@ -1,15 +1,18 @@
 import type { FeedData, FeedEntry } from "@extractus/feed-extractor";
 import { extract } from "@extractus/feed-extractor";
+import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import { createWidgetRequestHandler } from "./lib/widget-request-handler";
+import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
-export const rssFeedsRequestHandler = createWidgetRequestHandler({
+export const rssFeedsRequestHandler = createCachedWidgetRequestHandler({
+  queryKey: "rssFeedList",
+  widgetKind: "rssFeed",
   async requestAsync(input: { url: string; count: number }) {
     const result = (await extract(input.url, {
       getExtraEntryFields: (feedEntry) => {
@@ -28,6 +31,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
       entries: result.entries?.map((entry) => ({ ...entry, feedUrl: input.url })).slice(0, input.count) ?? [],
     };
   },
+  cacheDuration: dayjs.duration(5, "minutes"),
 });
 
 const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {

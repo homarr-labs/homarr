@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { MediaRequest } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
+export const mediaRequestListRequestHandler = createCachedIntegrationRequestHandler<
   MediaRequest[],
   IntegrationKindByCategory<"mediaRequest">,
   Record<string, never>
@@ -13,4 +15,6 @@ export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getRequestsAsync();
   },
+  cacheDuration: dayjs.duration(1, "minute"),
+  queryKey: "mediaRequestList",
 });

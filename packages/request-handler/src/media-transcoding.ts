@@ -1,14 +1,18 @@
+import dayjs from "dayjs";
+
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "@homarr/integrations";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const mediaTranscodingRequestHandler = createIntegrationRequestHandler<
+export const mediaTranscodingRequestHandler = createCachedIntegrationRequestHandler<
   MediaTranscoding,
   IntegrationKindByCategory<"mediaTranscoding">,
   { pageOffset: number; pageSize: number }
 >({
+  queryKey: "mediaTranscoding",
+  cacheDuration: dayjs.duration(5, "minutes"),
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return {

@@ -1,9 +1,11 @@
+import dayjs from "dayjs";
+
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { NavidromeDashboardData } from "@homarr/integrations/types";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const navidromeRequestHandler = createIntegrationRequestHandler<
+export const navidromeRequestHandler = createCachedIntegrationRequestHandler<
   NavidromeDashboardData,
   "navidrome",
   Record<string, never>
@@ -12,4 +14,6 @@ export const navidromeRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
+  cacheDuration: dayjs.duration(10, "minutes"),
+  queryKey: "navidromeDashboard",
 });
