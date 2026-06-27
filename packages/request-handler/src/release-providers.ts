@@ -153,7 +153,11 @@ const getGithubReleaseAsync = async (
 
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
-    const allReleases = await api.paginate(api.rest.repos.listReleases, { owner: parsed.owner, repo: parsed.name, per_page: 100 });
+    const allReleases = await api.paginate(api.rest.repos.listReleases, {
+      owner: parsed.owner,
+      repo: parsed.name,
+      per_page: 100,
+    });
     if (allReleases.length === 0) {
       return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitHub releases` } };
     }
@@ -298,10 +302,9 @@ const getGitHubContainerRegistryTokenAsync = async (registryUrl: URL, repository
 };
 
 const getGitHubContainerRegistryTagsAsync = async (registryUrl: URL, repositoryName: string, token: string) => {
-  const response = await fetchProvider(
-    buildUrl(registryUrl.origin, `/v2/${repositoryName}/tags/list`),
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
+  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/tags/list`), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!response.ok) throw new Error(response.statusText);
 
   const result = gitHubContainerRegistryTagsSchema.safeParse(await response.json());
@@ -328,10 +331,9 @@ const getGitHubContainerRegistryTagCreatedAtAsync = async (
   const configDigest = imageManifest.config?.digest;
   if (!configDigest) throw new Error("Missing image config digest");
 
-  const response = await fetchProvider(
-    buildUrl(registryUrl.origin, `/v2/${repositoryName}/blobs/${configDigest}`),
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
+  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/blobs/${configDigest}`), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!response.ok) throw new Error(response.statusText);
 
   const result = gitHubContainerRegistryConfigSchema.safeParse(await response.json());
@@ -348,20 +350,17 @@ const getGitHubContainerRegistryManifestAsync = async (
 ) => {
   if (!reference) throw new Error("Missing image manifest reference");
 
-  const response = await fetchProvider(
-    buildUrl(registryUrl.origin, `/v2/${repositoryName}/manifests/${reference}`),
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: [
-          "application/vnd.oci.image.index.v1+json",
-          "application/vnd.docker.distribution.manifest.list.v2+json",
-          "application/vnd.oci.image.manifest.v1+json",
-          "application/vnd.docker.distribution.manifest.v2+json",
-        ].join(", "),
-      },
+  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/manifests/${reference}`), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: [
+        "application/vnd.oci.image.index.v1+json",
+        "application/vnd.docker.distribution.manifest.list.v2+json",
+        "application/vnd.oci.image.manifest.v1+json",
+        "application/vnd.docker.distribution.manifest.v2+json",
+      ].join(", "),
     },
-  );
+  });
   if (!response.ok) throw new Error(response.statusText);
 
   const result = gitHubContainerRegistryManifestSchema.safeParse(await response.json());
