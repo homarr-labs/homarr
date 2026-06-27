@@ -38,6 +38,20 @@
   max-width: 85%;
 }
 
+.thumb {
+  position: relative;
+  line-height: 0;
+}
+
+.thumbRemove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-xl);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
 .historyOverlay {
   position: absolute;
   inset: 0;
