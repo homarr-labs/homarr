@@ -24,7 +24,6 @@ import {
   openWebUiCollectionQueryResponseSchema,
   openWebUiCompletionChunkSchema,
   openWebUiFileListSchema,
-  openWebUiKnowledgeDetailSchema,
   openWebUiKnowledgeListSchema,
   openWebUiModelsResponseSchema,
   openWebUiNoteListSchema,
@@ -99,9 +98,11 @@ export class OpenWebUiIntegration extends Integration {
 
   /**
    * List the files contained in a knowledge base (for the expandable picker).
+   * The knowledge detail endpoint returns `files: null` on recent versions, so
+   * we read the files list and filter by the base's collection id instead.
    */
   public async getKnowledgeFilesAsync(knowledgeId: string): Promise<OpenWebUiFileSummary[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/knowledge/${knowledgeId}`), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/files/"), {
       headers: this.getAuthHeaders(),
     });
 
@@ -109,8 +110,11 @@ export class OpenWebUiIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const parsed = openWebUiKnowledgeDetailSchema.parse(await response.json());
-    return (parsed.files ?? []).map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
+    const parsed = openWebUiFileListSchema.parse(await response.json());
+    const files = Array.isArray(parsed) ? parsed : parsed.items;
+    return files
+      .filter((file) => file.meta?.collection_name === knowledgeId)
+      .map((file) => ({ id: file.id, name: file.meta?.name ?? file.filename ?? file.id }));
   }
 
   /**

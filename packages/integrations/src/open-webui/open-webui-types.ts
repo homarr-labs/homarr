@@ -87,10 +87,17 @@ export const openWebUiKnowledgeListSchema = z.union([
 ]);
 
 // A file stored in Open WebUI (uploaded directly or part of a knowledge base).
+// `meta.collection_name` is the knowledge base id when the file belongs to one.
 export const openWebUiFileSchema = z.object({
   id: z.string(),
   filename: z.string().nullish(),
-  meta: z.object({ name: z.string().nullish(), content_type: z.string().nullish() }).nullish(),
+  meta: z
+    .object({
+      name: z.string().nullish(),
+      content_type: z.string().nullish(),
+      collection_name: z.string().nullish(),
+    })
+    .nullish(),
 });
 
 export type OpenWebUiFile = z.infer<typeof openWebUiFileSchema>;
