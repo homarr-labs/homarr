@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { Indexer } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const indexerManagerRequestHandler = createCachedIntegrationRequestHandler<
+export const indexerManagerRequestHandler = createIntegrationRequestHandler<
   Indexer[],
   IntegrationKindByCategory<"indexerManager">,
   Record<string, never>
@@ -15,6 +13,4 @@ export const indexerManagerRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getIndexersAsync();
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "indexerManager",
 });
