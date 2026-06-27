@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { encryptSecret } from "@homarr/common/server";
-import { and, eq } from "@homarr/db";
+import { and, eq, handleTransactionsAsync } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
 
@@ -20,23 +20,36 @@ const resolveItemWithBoardAccess = async (ctx: { db: any; session: any }, itemId
 
 export const widgetSecretsRouter = createTRPCRouter({
   setSecret: protectedProcedure
+    .meta({ mcp: { enabled: true, description: "Set an authentication token for a release provider on a specific releases widget. Requires modify permission on the widget's board. Use widget_secrets_getConfiguredKinds to check existing tokens" } })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema, value: z.string().min(1).max(4096) }))
     .mutation(async ({ ctx, input }) => {
       await resolveItemWithBoardAccess(ctx, input.itemId);
 
-      await ctx.db
-        .delete(widgetSecrets)
-        .where(and(eq(widgetSecrets.itemId, input.itemId), eq(widgetSecrets.kind, input.kind)));
+      const encrypted = encryptSecret(input.value);
+      const row = { itemId: input.itemId, kind: input.kind, value: encrypted, updatedAt: new Date() };
 
-      await ctx.db.insert(widgetSecrets).values({
-        itemId: input.itemId,
-        kind: input.kind,
-        value: encryptSecret(input.value),
-        updatedAt: new Date(),
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (tx) => {
+            await tx
+              .delete(schema.widgetSecrets)
+              .where(and(eq(schema.widgetSecrets.itemId, input.itemId), eq(schema.widgetSecrets.kind, input.kind)));
+            await tx.insert(schema.widgetSecrets).values(row);
+          });
+        },
+        handleSync(db) {
+          db.transaction((tx) => {
+            tx.delete(widgetSecrets)
+              .where(and(eq(widgetSecrets.itemId, input.itemId), eq(widgetSecrets.kind, input.kind)))
+              .run();
+            tx.insert(widgetSecrets).values(row).run();
+          });
+        },
       });
     }),
 
   deleteSecret: protectedProcedure
+    .meta({ mcp: { enabled: true, description: "Remove an authentication token for a release provider from a specific releases widget. Requires modify permission on the widget's board" } })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema }))
     .mutation(async ({ ctx, input }) => {
       await resolveItemWithBoardAccess(ctx, input.itemId);
@@ -46,7 +59,10 @@ export const widgetSecretsRouter = createTRPCRouter({
         .where(and(eq(widgetSecrets.itemId, input.itemId), eq(widgetSecrets.kind, input.kind)));
     }),
 
-  getConfiguredKinds: protectedProcedure.input(z.object({ itemId: z.string() })).query(async ({ ctx, input }) => {
+  getConfiguredKinds: protectedProcedure
+    .meta({ mcp: { enabled: true, description: "List which release provider kinds have tokens configured for a releases widget. Returns an array of provider kind strings (e.g. github, gitlab, dockerHub). Requires modify permission on the widget's board" } })
+    .input(z.object({ itemId: z.string() }))
+    .query(async ({ ctx, input }) => {
     await resolveItemWithBoardAccess(ctx, input.itemId);
 
     const secrets = await ctx.db.query.widgetSecrets.findMany({

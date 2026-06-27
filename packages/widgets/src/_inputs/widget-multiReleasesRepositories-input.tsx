@@ -272,12 +272,14 @@ const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repos
   const setSecret = clientApi.widget.secrets.setSecret.useMutation({ onSuccess: () => refetch() });
   const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({ onSuccess: () => refetch() });
 
-  const usedProviders = useMemo(
-    () => [...new Set(repositories.map((r) => r.provider).filter((p): p is ReleaseProviderKind => p !== undefined))],
-    [repositories],
-  );
+  const authProviders = useMemo(() => {
+    const usedProviders = repositories.map((r) => r.provider).filter((p): p is ReleaseProviderKind => p !== undefined);
+    const configuredProviders = configuredKinds.filter((k): k is ReleaseProviderKind =>
+      providersWithAuth.includes(k as ReleaseProviderKind),
+    );
+    return [...new Set([...usedProviders, ...configuredProviders])].filter((p) => providersWithAuth.includes(p));
+  }, [repositories, configuredKinds]);
 
-  const authProviders = usedProviders.filter((p) => providersWithAuth.includes(p));
   if (authProviders.length === 0) return null;
 
   return (
@@ -289,8 +291,12 @@ const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repos
             key={provider}
             provider={provider}
             hasToken={configuredKinds.includes(provider)}
-            onSave={(value) => setSecret.mutate({ itemId, kind: provider, value })}
-            onDelete={() => deleteSecret.mutate({ itemId, kind: provider })}
+            onSave={async (value) => {
+              await setSecret.mutateAsync({ itemId, kind: provider, value });
+            }}
+            onDelete={async () => {
+              await deleteSecret.mutateAsync({ itemId, kind: provider });
+            }}
           />
         ))}
       </Stack>
@@ -306,25 +312,35 @@ const ProviderTokenInput = ({
 }: {
   provider: ReleaseProviderKind;
   hasToken: boolean;
-  onSave: (value: string) => void;
-  onDelete: () => void;
+  onSave: (value: string) => Promise<void>;
+  onDelete: () => Promise<void>;
 }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [value, setValue] = useState("");
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    if (value.trim()) {
-      onSave(value.trim());
+  const handleSave = async () => {
+    if (!value.trim()) return;
+    setSaving(true);
+    try {
+      await onSave(value.trim());
       setValue("");
       setEditing(false);
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleDelete = () => {
-    onDelete();
-    setValue("");
-    setEditing(false);
+  const handleDelete = async () => {
+    setSaving(true);
+    try {
+      await onDelete();
+      setValue("");
+      setEditing(false);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -342,12 +358,12 @@ const ProviderTokenInput = ({
         leftSection={<IconKey size={14} />}
       />
       {editing && value.trim() && (
-        <Button size="xs" onClick={handleSave}>
+        <Button size="xs" onClick={handleSave} loading={saving}>
           {tRepository("tokens.save")}
         </Button>
       )}
       {hasToken && !editing && (
-        <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete}>
+        <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete} loading={saving}>
           <IconTrash size={14} />
         </ActionIcon>
       )}
