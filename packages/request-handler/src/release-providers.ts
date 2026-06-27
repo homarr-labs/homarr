@@ -37,7 +37,10 @@ export interface ReleaseProviderResponse {
 }
 
 export type ReleaseData = DetailsProviderResponse & ReleaseProviderResponse;
-export type ReleaseError = { code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" | "unexpected"; message: string };
+export type ReleaseError = {
+  code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" | "unexpected";
+  message: string;
+};
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
 
 export const getLatestRelease = (
@@ -124,7 +127,11 @@ const getGithubReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
+  if (!parsed)
+    return {
+      success: false,
+      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
+    };
 
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
@@ -184,7 +191,11 @@ const getGitHubContainerRegistryReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerPackageName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/package` } };
+  if (!parsed)
+    return {
+      success: false,
+      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/package` },
+    };
 
   try {
     const repositoryName = `${parsed.owner}/${parsed.name}`;
@@ -376,7 +387,11 @@ const getDockerHubReleaseAsync = async (
       buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}` as `/${string}`),
       headers.Authorization ? { headers } : undefined,
     );
-    if (!response.ok) return { success: false, error: { code: "unexpected", message: `Docker Hub ${response.status}: ${response.statusText}` } };
+    if (!response.ok)
+      return {
+        success: false,
+        error: { code: "unexpected", message: `Docker Hub ${response.status}: ${response.statusText}` },
+      };
 
     const json: unknown = await response.json();
     const result = dockerHubReleasesSchema.safeParse(json);
@@ -392,7 +407,10 @@ const getDockerHubReleaseAsync = async (
     return { success: true, data: { ...details, ...matched.release } };
   }
 
-  return { success: false, error: { code: "noMatchingVersion", message: lastNoMatch || `No matching tags found for ${identifier}` } };
+  return {
+    success: false,
+    error: { code: "noMatchingVersion", message: lastNoMatch || `No matching tags found for ${identifier}` },
+  };
 };
 
 const getDockerHubDetailsAsync = async (
@@ -455,11 +473,16 @@ const getGitlabReleaseAsync = async (
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}/releases?per_page=100`),
     headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: `GitLab ${response.status}: ${response.statusText}` } };
+  if (!response.ok)
+    return {
+      success: false,
+      error: { code: "unexpected", message: `GitLab ${response.status}: ${response.statusText}` },
+    };
 
   const result = gitlabReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
-  if (result.data.length === 0) return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitLab releases` } };
+  if (result.data.length === 0)
+    return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitLab releases` } };
 
   const releases = result.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
     if (!release.released_at) return acc;
@@ -541,7 +564,8 @@ const getNpmReleaseAsync = async (
     buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: `npm ${response.status}: ${response.statusText}` } };
+  if (!response.ok)
+    return { success: false, error: { code: "unexpected", message: `npm ${response.status}: ${response.statusText}` } };
 
   const result = npmReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
@@ -585,7 +609,11 @@ const getCodebergReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
+  if (!parsed)
+    return {
+      success: false,
+      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
+    };
 
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `token ${token}`;
@@ -594,7 +622,11 @@ const getCodebergReleaseAsync = async (
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/releases`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: `Codeberg ${response.status}: ${response.statusText}` } };
+  if (!response.ok)
+    return {
+      success: false,
+      error: { code: "unexpected", message: `Codeberg ${response.status}: ${response.statusText}` },
+    };
 
   const result = codebergReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
@@ -666,21 +698,43 @@ const linuxServerIOReleasesSchema = z.object({
   }),
 });
 
-const getLinuxServerIOReleaseAsync = async (baseUrl: string, identifier: string, versionRegex?: string): Promise<ReleaseResponse> => {
+const getLinuxServerIOReleaseAsync = async (
+  baseUrl: string,
+  identifier: string,
+  versionRegex?: string,
+): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` } };
+  if (!parsed)
+    return {
+      success: false,
+      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` },
+    };
 
   const response = await fetchWithTrustedCertificatesAsync(buildUrl(baseUrl, "/api/v1/images"));
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: `LSIO ${response.status}: ${response.statusText}` } };
+  if (!response.ok)
+    return {
+      success: false,
+      error: { code: "unexpected", message: `LSIO ${response.status}: ${response.statusText}` },
+    };
 
   const result = linuxServerIOReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
 
   const release = result.data.data.repositories.linuxserver.find((repo) => repo.name === parsed.name);
-  if (!release) return { success: false, error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` } };
+  if (!release)
+    return {
+      success: false,
+      error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` },
+    };
 
   if (versionRegex && !new RegExp(versionRegex).test(release.version)) {
-    return { success: false, error: { code: "noMatchingVersion", message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"` } };
+    return {
+      success: false,
+      error: {
+        code: "noMatchingVersion",
+        message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
+      },
+    };
   }
 
   return {
@@ -709,7 +763,11 @@ const getQuayReleaseAsync = async (
   versionRegex?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` } };
+  if (!parsed)
+    return {
+      success: false,
+      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
+    };
 
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(
@@ -717,7 +775,11 @@ const getQuayReleaseAsync = async (
       `/api/v1/repository/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}?includeTags=true&includeStats=true`,
     ),
   );
-  if (!response.ok) return { success: false, error: { code: "unexpected", message: `Quay ${response.status}: ${response.statusText}` } };
+  if (!response.ok)
+    return {
+      success: false,
+      error: { code: "unexpected", message: `Quay ${response.status}: ${response.statusText}` },
+    };
 
   const result = quayReleasesSchema.safeParse(await response.json());
   if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };

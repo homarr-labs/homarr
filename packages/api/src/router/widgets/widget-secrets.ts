@@ -20,7 +20,13 @@ const resolveItemWithBoardAccess = async (ctx: { db: any; session: any }, itemId
 
 export const widgetSecretsRouter = createTRPCRouter({
   setSecret: protectedProcedure
-    .meta({ mcp: { enabled: true, description: "Set an authentication token for a release provider on a specific releases widget. Requires modify permission on the widget's board. Use widget_secrets_getConfiguredKinds to check existing tokens" } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Set an authentication token for a release provider on a specific releases widget. Requires modify permission on the widget's board. Use widget_secrets_getConfiguredKinds to check existing tokens",
+      },
+    })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema, value: z.string().min(1).max(4096) }))
     .mutation(async ({ ctx, input }) => {
       await resolveItemWithBoardAccess(ctx, input.itemId);
@@ -49,7 +55,13 @@ export const widgetSecretsRouter = createTRPCRouter({
     }),
 
   deleteSecret: protectedProcedure
-    .meta({ mcp: { enabled: true, description: "Remove an authentication token for a release provider from a specific releases widget. Requires modify permission on the widget's board" } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Remove an authentication token for a release provider from a specific releases widget. Requires modify permission on the widget's board",
+      },
+    })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema }))
     .mutation(async ({ ctx, input }) => {
       await resolveItemWithBoardAccess(ctx, input.itemId);
@@ -60,15 +72,21 @@ export const widgetSecretsRouter = createTRPCRouter({
     }),
 
   getConfiguredKinds: protectedProcedure
-    .meta({ mcp: { enabled: true, description: "List which release provider kinds have tokens configured for a releases widget. Returns an array of provider kind strings (e.g. github, gitlab, dockerHub). Requires modify permission on the widget's board" } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List which release provider kinds have tokens configured for a releases widget. Returns an array of provider kind strings (e.g. github, gitlab, dockerHub). Requires modify permission on the widget's board",
+      },
+    })
     .input(z.object({ itemId: z.string() }))
     .query(async ({ ctx, input }) => {
-    await resolveItemWithBoardAccess(ctx, input.itemId);
+      await resolveItemWithBoardAccess(ctx, input.itemId);
 
-    const secrets = await ctx.db.query.widgetSecrets.findMany({
-      where: eq(widgetSecrets.itemId, input.itemId),
-      columns: { kind: true },
-    });
-    return secrets.map((s: { kind: string }) => s.kind);
-  }),
+      const secrets = await ctx.db.query.widgetSecrets.findMany({
+        where: eq(widgetSecrets.itemId, input.itemId),
+        columns: { kind: true },
+      });
+      return secrets.map((s: { kind: string }) => s.kind);
+    }),
 });
