@@ -1,0 +1,73 @@
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_7ba3fee1318525::t_0e00d0ec81f8fe 260-356
+  s_7ba3fee1318525::t_cd72571ffb9e64 15
+  s_7ba3fee1318525::t_4969e4f1a85571 69
+  s_7ba3fee1318525::t_62551564b4b4a7 31
+  s_7ba3fee1318525::t_be80afe95805fb 255
+packages/api/src/router/widgets/widget-secrets.ts
+  s_7ba3fee1318525::t_7eaaa3339411b9 2-3,5,8,11,24-25,27,29-30,40-42,44,47-51,53-54,57-60,62-63
+  s_7ba3fee1318525::t_91c892295ab5c9 1,6-7,9-10,12-23,26,28,43,45-46,52,55-56,61
+  s_7ba3fee1318525::t_435909cad3d316 31-39
+  s_7ba3fee1318525::t_8d4ab139905a02 4
+packages/request-handler/src/release-providers.ts
+  s_7ba3fee1318525::t_e7753621a5a6d2 17
+  s_7ba3fee1318525::t_6321031a45ab35 169,177
+  s_7ba3fee1318525::t_23460519ca5eae 494,498-504
+  s_7ba3fee1318525::t_9c6559e131c3b0 330,339-341,345
+  s_7ba3fee1318525::t_8a19c20ce26220 65,67,69,71,73,75
+  s_7ba3fee1318525::t_c1980a0339d891 573,581,583-585,588
+  s_7ba3fee1318525::t_3c616941b3cab8 413,416-418,421
+  s_7ba3fee1318525::t_70773c9186c5b7 178,190
+  s_7ba3fee1318525::t_9bd170dd0b2629 100,103,113,118
+  s_7ba3fee1318525::t_ca5e2300da9418 444,448-455
+  s_7ba3fee1318525::t_af0ded11bd7c65 546,551-553,556
+  s_7ba3fee1318525::t_5a0d17a11461ce 356,366,368-374
+packages/db/schema/postgresql.ts
+  s_7ba3fee1318525::t_b4f77d80ca2fac 543-561,778
+  s_7ba3fee1318525::t_4fc8ccb24d8aec 767,774-777
+  s_7ba3fee1318525::t_550c889d088ba2 779-780
+packages/api/src/router/widgets/releases.ts
+  s_7ba3fee1318525::t_333df0e0b133b0 7,12,49,51,53,61-70
+  s_7ba3fee1318525::t_f775ef41f61679 5-6,34,46-47,50,71-73
+  s_7ba3fee1318525::t_acd66e822fe603 1,48,52,54-60,76,84
+packages/translation/src/lang/en.json
+  s_7ba3fee1318525::t_5138198e715409 3204-3210
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_7ba3fee1318525::t_762ea7761d7453 88
+packages/db/schema/sqlite.ts
+  s_7ba3fee1318525::t_3217b9aa44e65b 533-551,768
+  s_7ba3fee1318525::t_1536e69db7c431 757,764-767
+  s_7ba3fee1318525::t_a763428cc774f2 769-770
+packages/db/schema/index.ts
+  s_7ba3fee1318525::t_807ea4978adb6f 54
+packages/db/schema/mysql.ts
+  s_7ba3fee1318525::t_546e41ed75c6f0 768,775-778
+  s_7ba3fee1318525::t_e8b58ece5e71cb 544-562,779
+  s_7ba3fee1318525::t_a7f2677483c9cc 780-781
+packages/api/src/router/widgets/index.ts
+  s_7ba3fee1318525::t_05015190c9faf1 42
+packages/widgets/src/releases/component.tsx
+  s_7ba3fee1318525::t_e3b49fb14e6627 88
+  s_7ba3fee1318525::t_f53c91b16530e2 39
+packages/widgets/src/_inputs/common.tsx
+  s_7ba3fee1318525::t_76cc009cf86bf7 11
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_7ba3fee1318525::t_57aeedc45fcfc5 41
+  s_7ba3fee1318525::t_e6017308e3a39a 150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "77884a31794e12a6f7bc59d96c8f61aa429ca68d",
+  "prompts": {},
+  "sessions": {
+    "s_7ba3fee1318525": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a27f97ff-185c-401c-9c33-42c2e5ecb237",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

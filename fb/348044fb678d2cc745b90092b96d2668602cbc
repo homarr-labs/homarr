@@ -1,0 +1,199 @@
+packages/definitions/src/docker-integration-match.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 63
+packages/translation/src/lang/sk.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/request-handler/src/releases.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 3,5-7,9-19
+packages/translation/src/lang/en-gb.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/immich/album-carousel/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 4-5,15,17-28,39
+  s_b77428fd657e13::t_02c0d8cc57dd66 40-42
+packages/translation/src/lang/el.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/request-handler/src/release-providers.ts
+  s_e8261aa0109ba9::t_9086c27ac31a6e 1-2,4,6-11,13,16,39-42,44-51,53-59,61-63,65,67,69,71,73,75,77,79-87,95-162,164-166,168-170,190-192,200,202-203,303-353,358-447,452-533,539-564,569-647
+  s_b77428fd657e13::t_9e761fdf420aa0 88-94,167,204-206,230-231,238
+  s_b77428fd657e13::t_9b4a6aaa8c6a85 163,172-174,186,217,220-221,232,234,245-251,254-259,264,275-280,284
+  s_b77428fd657e13::t_64cfacbc186e2d 171,175,181-185,187-189,193-199,207-216,218-219,222-229,233,235-237,239-244,260-263,265-274,281-283,285-302
+  s_b77428fd657e13::t_6982a70c8d5b21 5,60,64,66,68,70,72,74,76,78
+  s_b77428fd657e13::t_9fa100cf30a7a0 176-180,252-253,354-357,448-451,534-538,565-568
+  s_b77428fd657e13::t_6a03189303a144 201
+packages/translation/src/lang/zh.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/en.json
+  s_b77428fd657e13::t_7cf14976a2bf30 1758-1760,1906-1908,2779-2780,2789-2792,3157-3158,3229,3231-3232
+  s_b77428fd657e13::t_45c20894ed6008 3159
+packages/translation/src/lang/no.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/hu.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/cs.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/ru.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/fi.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/definitions/src/test/release-provider.spec.ts
+  s_b77428fd657e13::t_0cca5044eeb3ca 1-21,23,25-32
+  s_b77428fd657e13::t_3fad8f43ea2538 22,24
+packages/request-handler/src/archive-team-warrior.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 1-2,4-6,8-247,249-331
+packages/translation/src/lang/sv.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/db/migrations/custom/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 5,11
+packages/api/src/router/widgets/releases.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 4,32,35,40,44,46,49,57
+apps/docs/docs/widgets/releases/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 57-58,63-64,67-71
+  s_b77428fd657e13::t_2245de285de44c 72
+packages/db/migrations/custom/0000_release_widget_provider_to_options.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 4,33,57
+packages/widgets/src/archive-team-warrior/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 2,11-14
+packages/api/src/router/widgets/timetable.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 10-11,14-23,35,39-41
+packages/translation/src/lang/pt-br.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/ko.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/ro.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/releases/component.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 24-25,59,63,71,77,79,85-87,90,93,107,113,121,178,192,538,542,555,629-630
+packages/translation/src/lang/fr.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/pl.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/cron-jobs/src/jobs/integrations/timetable.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 1-4,6-7,10,13-39
+packages/translation/src/lang/it.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+apps/docs/docs/widgets/timetable/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 12-16
+  s_b77428fd657e13::t_b8a17fcaa81c31 11
+packages/translation/src/lang/pt.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/timetable/component.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 10,17,22,25,28
+packages/translation/src/lang/lt.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/ca.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/de-CH.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+apps/docs/docs/widgets/timetable/index.mdx
+  s_b77428fd657e13::t_7cf14976a2bf30 2-3,7-10,12,18-19,22-31,39
+packages/widgets/src/timetable/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 2,13-16,18,21,25
+packages/translation/src/lang/et.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 41-48,81-83,88,93,136,193,198-200,208,225,277,339,342-344,346,374-383,513,556,558,561,572,610-611,613,617-618,620,623,628,704-717,731-739,766-767
+packages/translation/src/lang/ja.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/he.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/releases/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 4-5,47,58
+packages/translation/src/lang/lv.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/cr.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+apps/docs/docs/widgets/immich-album-carousel/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 12-13,29-33
+  s_b77428fd657e13::t_a037374e0c43e0 34
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 10,12-13,17,20,24,30,33,45
+packages/request-handler/src/timetable.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 2,4-49,51-144,146-153
+packages/db/migrations/custom/0003_remove_widget_only_integrations.ts
+  s_e8261aa0109ba9::t_0247ccfc4c092a 33-35,88
+  s_b77428fd657e13::t_451cbefd8813ba 58-65,82-83,93
+  s_e8261aa0109ba9::t_3854a3acb57e13 22-31
+  s_e8261aa0109ba9::t_6f096089ba3f4f 1-21,32,36-42,47-57,66-81,86-87,90,92,96-98,101-103,105,107,112,114-116,118,120
+  s_b77428fd657e13::t_fa54f7bce56736 43-46,108-111
+  s_b77428fd657e13::t_e429906f6640d3 84-85,89
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_b77428fd657e13::t_7cf14976a2bf30 31,49,57-61,64,68-72,77-81,88,93,96,101,105,110,119-123,126,130-134,137-138,142-143,150,153,166,172,183,185,200-204,211-215,220-224,228-231,278,283,289,305,312,342,347,357,384,389,393,400,404
+packages/translation/src/lang/tr.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/de.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/nl.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/definitions/src/release-provider.ts
+  s_e8261aa0109ba9::t_daa87ff49eeb1e 1-36,38-51
+  s_b77428fd657e13::t_cb45bf490aec95 52-77
+  s_b77428fd657e13::t_49ef99d451fa56 37
+packages/request-handler/package.json
+  s_b77428fd657e13::t_7cf14976a2bf30 36,41
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 27-31
+packages/translation/src/lang/cn.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/es.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/api/src/router/widgets/archive-team-warrior.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 2,4,9-10,12-14,16-20,22-28,31-36
+packages/translation/src/lang/vi.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/definitions/src/index.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 20
+packages/translation/src/lang/da.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+apps/docs/docs/widgets/releases/index.mdx
+  s_b77428fd657e13::t_7cf14976a2bf30 2-3,7-15,19-21,23,29-34,41
+packages/definitions/src/widget-integration-map.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 82
+packages/translation/src/lang/uk.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+CHANGES.md
+  s_b77428fd657e13::t_750866584efce4 95
+  s_b77428fd657e13::t_99e5bae322a623 33,73,77,93-94,96
+  s_b77428fd657e13::t_576d094f211bab 97
+  s_e8261aa0109ba9::t_b6b06a9224c5a5 1-32,34-72,74-76,78-92
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_b77428fd657e13::t_7cf14976a2bf30 4,29-33,59-69
+  s_b77428fd657e13::t_66c0d30b9346c2 70-71
+packages/request-handler/src/test/release-providers.spec.ts
+  s_b77428fd657e13::t_249b1d9a16d571 2
+  s_b77428fd657e13::t_8d1eb1c6a56556 11-15
+  s_b77428fd657e13::t_1aa7c7f3facba3 171-173,175-176
+  s_b77428fd657e13::t_5a8152c32355c4 1,5-10,16-29,33-37,39,41-63,65-70,72-87,89-94,96-107,109-111,113-114,116-120,122-124,126-131,133-145,147-148,150-154,156-157,159,161-164,166-170,177-189
+packages/widgets/src/options.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 57
+packages/translation/src/lang/sl.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/translation/src/lang/hr.json
+  s_b77428fd657e13::t_7cf14976a2bf30 3183-3185,3209-3210
+packages/widgets/src/releases/releases-repository.ts
+  s_b77428fd657e13::t_7cf14976a2bf30 1-2,11,16,38
+pnpm-lock.yaml
+  s_b77428fd657e13::t_733a2cf7c0d875 2262-2264,2272-2274
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "fb348044fb678d2cc745b90092b96d2668602cbc",
+  "prompts": {},
+  "sessions": {
+    "s_b77428fd657e13": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0435-23ce-7421-91ea-2c226983d6f3",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e8261aa0109ba9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0fc00f9eaffepHHZzk5w6qfMh4",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
