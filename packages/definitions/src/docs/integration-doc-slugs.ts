@@ -59,5 +59,6 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   peaNut: "peanut",
   beszel: "beszel",
   archiveTeamWarrior: null,
+  openWebUi: "open-webui",
   mock: null,
 };

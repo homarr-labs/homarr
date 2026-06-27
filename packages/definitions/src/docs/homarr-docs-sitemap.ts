@@ -195,6 +195,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/ntfy"
   | "/docs/integrations/nzbget"
   | "/docs/integrations/open-media-vault"
+  | "/docs/integrations/open-webui"
   | "/docs/integrations/opnsense"
   | "/docs/integrations/overseerr"
   | "/docs/integrations/paperless-ngx"

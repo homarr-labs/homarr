@@ -504,6 +504,15 @@ export const integrationDefs = {
     defaultUrl: "http://localhost:8001",
     documentationUrl: null,
   },
+  openWebUi: {
+    name: "Open WebUI",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/open-webui.svg",
+    category: ["ai"],
+    documentationUrl: createDocumentationLink("/docs/integrations/open-webui"),
+    defaultPort: 8080,
+    apiKeySettingsPath: "/?settings=open#account",
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -617,6 +626,7 @@ export const integrationCategories = [
   "documents",
   "mediaLibrary",
   "uptimeMonitoring",
+  "ai",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
