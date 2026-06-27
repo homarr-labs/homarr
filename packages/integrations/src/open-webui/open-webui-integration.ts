@@ -112,10 +112,7 @@ export class OpenWebUiIntegration extends Integration {
    * truncates the body, so we fetch the note directly when attaching it.
    */
   public async getNoteAsync(noteId: string): Promise<OpenWebUiNote> {
-    const parsed = await this.getJsonAsync(
-      `/api/v1/notes/${encodeURIComponent(noteId)}`,
-      openWebUiNoteSchema,
-    );
+    const parsed = await this.getJsonAsync(`/api/v1/notes/${encodeURIComponent(noteId)}`, openWebUiNoteSchema);
     return { id: parsed.id, title: parsed.title ?? "Untitled note", content: parsed.data?.content?.md ?? "" };
   }
 
