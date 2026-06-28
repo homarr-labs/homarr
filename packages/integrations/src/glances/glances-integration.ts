@@ -195,10 +195,10 @@ const sensorsSchema = z.array(
 
 const cpuTempLabelPriority = ["CPU", "Package id 0"] as const;
 
-export const parseGlancesCpuTempFromSensors = (
-  sensors: z.infer<typeof sensorsSchema>,
-): number | undefined => {
-  const temperatureSensors = sensors.filter((sensor) => sensor.type === "temperature_core" || sensor.type === "temperature");
+export const parseGlancesCpuTempFromSensors = (sensors: z.infer<typeof sensorsSchema>): number | undefined => {
+  const temperatureSensors = sensors.filter(
+    (sensor) => sensor.type === "temperature_core" || sensor.type === "temperature",
+  );
 
   for (const label of cpuTempLabelPriority) {
     const match = temperatureSensors.find((sensor) => sensor.label === label);
