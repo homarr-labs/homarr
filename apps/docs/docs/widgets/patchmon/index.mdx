@@ -19,6 +19,20 @@ import { patchmonIntegration } from '@site/docs/integrations/patchmon';
 
 This widget displays patch statistics from your PatchMon instance, including total hosts, hosts needing updates, and security update counts. Additional statistics can be enabled in the widget configuration.
 
+### Threshold colors
+
+When **Enable threshold colors** is on (default), stat values are colored for at-a-glance severity:
+
+| Stat | Green | Yellow | Red |
+|------|-------|--------|-----|
+| Needs Updates | 0 | 1–4 | 5+ |
+| Security Updates | 0 | 1–9 | 10+ |
+| Hosts with Security Updates | 0 | — | 1+ |
+| Up-to-Date Hosts | 100% of total | 90–99% | below 90% |
+| Outdated Packages | 0 | 1–49 | 50+ |
+
+Enable **Advanced thresholds** to override warning and critical values per stat, using either absolute counts or percentages of total hosts.
+
 When **Show OS distribution** is enabled, the widget renders a scrollable list of horizontal bars below the stat grid, showing each operating system's share of monitored hosts. A widget size of **2×3** or larger is recommended when using this section alongside the default stats.
 
 ### Supported Integrations

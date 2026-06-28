@@ -58,6 +58,18 @@ export const patchmonWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "Enable threshold colors",
+        description: "Colors stat values green, yellow, or red based on built-in severity presets",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Advanced thresholds",
+        description: "Customize warning and critical thresholds per stat (absolute count or % of total hosts)",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Show OS distribution",
         description: "Displays a horizontal bar breakdown of monitored hosts by operating system",
         values: { type: "boolean" },

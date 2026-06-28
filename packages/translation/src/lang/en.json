@@ -2760,6 +2760,7 @@
     "patchmon": {
       "name": "PatchMon",
       "description": "Overview of host patch status from PatchMon",
+      "title": "PatchMon Statistics",
       "totalHosts": "Total Hosts",
       "hostsNeedingUpdates": "Needs Updates",
       "securityUpdates": "Security Updates",
@@ -2801,6 +2802,80 @@
         "showTotalRepos": {
           "label": "Show repositories",
           "description": "Display the number of active repositories being monitored"
+        },
+        "enableThresholdColors": {
+          "label": "Enable threshold colors",
+          "description": "Color stat values green, yellow, or red based on severity presets"
+        },
+        "useCustomThresholds": {
+          "label": "Advanced thresholds",
+          "description": "Customize warning and critical thresholds per stat using absolute counts or percentages of total hosts"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolute count",
+            "percent": "Percent of total hosts"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Needs updates threshold mode",
+          "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Needs updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Needs updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Security updates threshold mode",
+          "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Hosts with security updates threshold mode",
+          "description": "Compare the host count as an absolute value or percentage of total hosts"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Hosts with security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Hosts with security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Up-to-date hosts threshold mode",
+          "description": "Compare the up-to-date host count as an absolute value or percentage of total hosts"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Up-to-date hosts warning threshold",
+          "description": "Enter yellow when the percentage falls below this value"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Up-to-date hosts critical threshold",
+          "description": "Enter red when the percentage falls below this value"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Outdated packages threshold mode",
+          "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Outdated packages warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Outdated packages critical threshold",
+          "description": "Enter red when the value reaches this threshold"
         },
         "showOsDistribution": {
           "label": "Show OS distribution",

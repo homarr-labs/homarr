@@ -10,16 +10,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 import { OsDistributionSection } from "./os-distribution-section";
-
-type StatKey =
-  | "totalHosts"
-  | "hostsNeedingUpdates"
-  | "securityUpdates"
-  | "upToDateHosts"
-  | "hostsWithSecurityUpdates"
-  | "recentUpdates24h"
-  | "totalOutdatedPackages"
-  | "totalRepos";
+import { resolveStatColor, severityToMantineColor, type PatchMonStatKey } from "./stat-colors";
 
 const statVisibilityByOption = {
   showTotalHosts: "totalHosts",
@@ -31,12 +22,6 @@ const statVisibilityByOption = {
   showTotalOutdatedPackages: "totalOutdatedPackages",
   showTotalRepos: "totalRepos",
 } as const;
-
-const statColors: Partial<Record<StatKey, string>> = {
-  hostsNeedingUpdates: "yellow",
-  securityUpdates: "red",
-  hostsWithSecurityUpdates: "red",
-};
 
 const gridColsByWidth = [
   { minWidth: 380, cols: 3 },
@@ -53,7 +38,7 @@ export default function PatchMonWidget({ integrationIds, options, width }: Widge
 
   if (!stats) return <WidgetEmptyState />;
 
-  const statValues: Record<StatKey, number> = {
+  const statValues: Record<PatchMonStatKey, number> = {
     totalHosts: stats.totalHosts,
     hostsNeedingUpdates: stats.hostsNeedingUpdates,
     securityUpdates: stats.securityUpdates,
@@ -70,10 +55,17 @@ export default function PatchMonWidget({ integrationIds, options, width }: Widge
 
   const showOsSection = options.showOsDistribution && stats.osDistribution.length > 0;
   const hasContent = visibleStatKeys.length > 0 || showOsSection;
+  const colorContext = { totalHosts: stats.totalHosts };
+
+  const isCompact = width < 220;
+  const gridCols = getGridCols(width);
 
   if (!hasContent) {
     return (
       <div className={classes.root}>
+        <Text size={isCompact ? "xs" : "sm"} fw={600} className={classes.title}>
+          {t("title")}
+        </Text>
         <div className={classes.emptyState}>
           <Text size="sm" c="dimmed">
             —
@@ -83,29 +75,29 @@ export default function PatchMonWidget({ integrationIds, options, width }: Widge
     );
   }
 
-  const gridCols = getGridCols(width);
-
   return (
     <div className={classes.root}>
+      <Text size={isCompact ? "xs" : "sm"} fw={600} className={classes.title}>
+        {t("title")}
+      </Text>
       <div className={classes.content}>
         {visibleStatKeys.length > 0 && (
           <div className={`${classes.statsSection} ${showOsSection ? classes.statsSectionCompact : ""}`}>
             <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
-              {visibleStatKeys.map((statKey) => (
-                <div key={statKey} className={classes.statTile}>
-                  <span className={classes.statValue}>
-                    <Text
-                      component="span"
-                      fw={700}
-                      size="inherit"
-                      c={statColors[statKey] ?? "var(--mantine-primary-color-filled)"}
-                    >
-                      {statValues[statKey]}
-                    </Text>
-                  </span>
-                  <span className={classes.statLabel}>{t(statKey)}</span>
-                </div>
-              ))}
+              {visibleStatKeys.map((statKey) => {
+                const severity = resolveStatColor(statKey, statValues[statKey], colorContext, options);
+
+                return (
+                  <div key={statKey} className={classes.statTile}>
+                    <span className={classes.statValue}>
+                      <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>
+                        {statValues[statKey]}
+                      </Text>
+                    </span>
+                    <span className={classes.statLabel}>{t(statKey)}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
