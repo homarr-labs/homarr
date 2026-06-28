@@ -122,5 +122,6 @@ describe("PatchMonIntegration authentication", () => {
     const [url, requestInit] = mockFetch.mock.calls[0] ?? [];
     expect(String(url)).toContain("/api/v1/gethomepage/stats");
     expect(requestInit?.headers).toMatchObject({ Authorization: expected });
+    expect(requestInit?.timeout).toBe(10_000);
   });
 });

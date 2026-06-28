@@ -8,6 +8,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { PatchMonStats } from "./patchmon-types";
 import { mapPatchMonStats, patchmonStatsResponseSchema } from "./patchmon-types";
 
+const STATS_REQUEST_TIMEOUT_MS = 10_000;
+
 export class PatchMonIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v1/gethomepage/stats"), {
@@ -31,6 +33,7 @@ export class PatchMonIntegration extends Integration {
   public async getStatsAsync(): Promise<PatchMonStats> {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/gethomepage/stats"), {
       headers: this.getAuthHeaders(),
+      timeout: STATS_REQUEST_TIMEOUT_MS,
     });
 
     if (!response.ok) {
