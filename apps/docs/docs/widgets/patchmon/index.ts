@@ -135,13 +135,13 @@ export const patchmonWidget: WidgetDefinition = {
       },
       {
         name: "Up-to-date hosts warning threshold",
-        description: "Enter yellow when the percentage falls below this value",
+        description: "Enter yellow when the value is at or above this threshold but below full coverage",
         values: "Integer ≥ 0",
         defaultValue: "90",
       },
       {
         name: "Up-to-date hosts critical threshold",
-        description: "Enter red when the percentage falls below this value",
+        description: "Enter red when the value falls below this threshold",
         values: "Integer ≥ 0",
         defaultValue: "90",
       },
