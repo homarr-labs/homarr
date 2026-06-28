@@ -57,7 +57,8 @@ describe("resolveStatColor presets", () => {
 
   test("upToDateHosts uses percent of total hosts", () => {
     expect(resolveStatColor("upToDateHosts", 100, context, defaultOptions)).toBe("green");
-    expect(resolveStatColor("upToDateHosts", 95, context, defaultOptions)).toBe("yellow");
+    expect(resolveStatColor("upToDateHosts", 95, context, defaultOptions)).toBe("green");
+    expect(resolveStatColor("upToDateHosts", 90, context, defaultOptions)).toBe("green");
     expect(resolveStatColor("upToDateHosts", 80, context, defaultOptions)).toBe("red");
   });
 
@@ -132,5 +133,37 @@ describe("resolveStatColor options", () => {
         hostsNeedingUpdatesCriticalAt: 200,
       }),
     ).toBe("yellow");
+  });
+
+  test("supports custom absolute thresholds for higher-is-better stats", () => {
+    expect(
+      resolveStatColor("upToDateHosts", 85, context, {
+        ...defaultOptions,
+        useCustomThresholds: true,
+        upToDateHostsThresholdMode: "absolute",
+        upToDateHostsWarningAt: 80,
+        upToDateHostsCriticalAt: 60,
+      }),
+    ).toBe("green");
+
+    expect(
+      resolveStatColor("upToDateHosts", 70, context, {
+        ...defaultOptions,
+        useCustomThresholds: true,
+        upToDateHostsThresholdMode: "absolute",
+        upToDateHostsWarningAt: 80,
+        upToDateHostsCriticalAt: 60,
+      }),
+    ).toBe("yellow");
+
+    expect(
+      resolveStatColor("upToDateHosts", 50, context, {
+        ...defaultOptions,
+        useCustomThresholds: true,
+        upToDateHostsThresholdMode: "absolute",
+        upToDateHostsWarningAt: 80,
+        upToDateHostsCriticalAt: 60,
+      }),
+    ).toBe("red");
   });
 });

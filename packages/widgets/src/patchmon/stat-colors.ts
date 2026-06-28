@@ -151,15 +151,15 @@ const resolveHigherIsBetter = (
     return "green";
   }
 
-  if (comparable >= 100) {
+  if (comparable >= rule.warningAt) {
     return "green";
   }
 
-  if (comparable >= rule.warningAt) {
-    return "yellow";
+  if (rule.skipYellow || comparable < rule.criticalAt) {
+    return "red";
   }
 
-  return "red";
+  return "yellow";
 };
 
 const getThresholdRule = (statKey: ColorablePatchMonStatKey, options: PatchMonColorOptions): StatThresholdRule => {
