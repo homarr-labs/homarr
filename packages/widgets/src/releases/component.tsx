@@ -20,7 +20,7 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
+import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -56,9 +56,14 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
+  const normalizedRepositories = useMemo(
+    () => options.repositories.map((repo) => (repo.id ? repo : { ...repo, id: createId() })),
+    [options.repositories],
+  );
+
   // Group repositories by provider
   const groupedRepositories = useMemo(() => {
-    return options.repositories.reduce(
+    return normalizedRepositories.reduce(
       (acc, repo) => {
         const key = repo.provider;
         if (!key) return acc;
@@ -70,7 +75,7 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
       },
       {} as Partial<Record<ReleaseProviderKind, ReleasesRepository[]>>,
     );
-  }, [options.repositories]);
+  }, [normalizedRepositories]);
 
   // For each group, split into chunks of 5
   const batchedRepositories = useMemo(() => {
@@ -103,7 +108,7 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
   );
 
   const repositories = useMemo(() => {
-    const formattedResults = options.repositories
+    const formattedResults = normalizedRepositories
       .map((repository) => {
         if (!repository.provider) return { ...repository, error: { code: "noProviderSelected" } };
 
@@ -142,7 +147,7 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
     return formattedResults;
   }, [
     results,
-    options.repositories,
+    normalizedRepositories,
     options.showOnlyHighlighted,
     options.topReleases,
     relativeDateOptions.newReleaseWithin,

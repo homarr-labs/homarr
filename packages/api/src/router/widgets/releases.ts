@@ -34,7 +34,7 @@ export const releasesRouter = createTRPCRouter({
         itemId: z.string().optional(),
         repositories: z.array(
           z.object({
-            id: z.string(),
+            id: z.string().optional(),
             provider: z.enum(releaseProviderKinds),
             identifier: z.string(),
             versionFilter: releaseVersionFilterSchema.optional(),

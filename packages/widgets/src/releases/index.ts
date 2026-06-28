@@ -1,6 +1,7 @@
 import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { createId } from "@homarr/common";
 import { releaseProviderKinds } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
@@ -43,6 +44,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       repositories: factory.multiReleasesRepositories({
         defaultValue: [
           {
+            id: createId(),
             provider: "github" as const,
             identifier: "homarr-labs/homarr",
             name: "Homarr",
@@ -52,6 +54,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         ],
         validate: z.array(
           z.object({
+            id: z.string().default(() => createId()),
             provider: z.enum(releaseProviderKinds).optional(),
             identifier: z.string().min(1),
             name: z.string().optional(),
