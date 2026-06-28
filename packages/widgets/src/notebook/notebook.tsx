@@ -263,8 +263,14 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
     setIsEditing(handleEditToggleCallback);
   }, [setIsEditing, handleEditToggleCallback]);
 
+  const handleDoubleClick = useCallback(() => {
+    if (canChange && !isEditing) {
+      setIsEditing(handleEditToggleCallback);
+    }
+  }, [canChange, isEditing, setIsEditing, handleEditToggleCallback]);
+
   return (
-    <Box h="100%">
+    <Box h="100%" onDoubleClick={handleDoubleClick}>
       <RichTextEditor
         p={0}
         mt={0}

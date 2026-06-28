@@ -35,14 +35,16 @@ export const getDependenciesAsync = async (): Promise<PackageJsonDependencies> =
 type DependencyCatalog = Map<string, string>;
 const parseDependencyCatalogsAsync = async (): Promise<DependencyCatalog> => {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  const workspaceConfigContent = await fsPromises.readFile(
-    path.join(currentDir, "..", "..", "..", "..", "pnpm-workspace.yaml"),
-    "utf-8",
-  );
-  const workspaceConfig: unknown = parseYaml(workspaceConfigContent);
-  const parseResult = workspaceConfigCatalogSchema.parse(workspaceConfig);
+  const workspaceConfigPath = path.join(currentDir, "..", "..", "..", "..", "pnpm-workspace.yaml");
 
-  return new Map(Object.entries(parseResult.catalog ?? {}));
+  try {
+    const workspaceConfigContent = await fsPromises.readFile(workspaceConfigPath, "utf-8");
+    const workspaceConfig: unknown = parseYaml(workspaceConfigContent);
+    const parseResult = workspaceConfigCatalogSchema.parse(workspaceConfig);
+    return new Map(Object.entries(parseResult.catalog ?? {}));
+  } catch {
+    return new Map();
+  }
 };
 
 const workspaceConfigCatalogSchema = z.object({
