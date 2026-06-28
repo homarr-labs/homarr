@@ -168,8 +168,8 @@ apps/docs/docs/integrations/tracearr @StrandedTurtle
 packages/integrations/src/tracearr @StrandedTurtle
 
 # TrueNAS - introduced in https://github.com/homarr-labs/homarr/pull/3745 by @manuel-rw
-apps/docs/docs/integrations/truenas @manuel-rw
-packages/integrations/src/truenas @manuel-rw
+apps/docs/docs/integrations/truenas @manuel-rw @afonsojramos
+packages/integrations/src/truenas @manuel-rw @afonsojramos
 
 # Umami - introduced in https://github.com/homarr-labs/homarr/pull/5362 by @febrile42
 apps/docs/docs/integrations/umami @febrile42
