@@ -1,0 +1,33 @@
+packages/integrations/src/glances/glances-integration.ts
+  s_fb9187908eefc7::t_07788c4c864079 84-87,89-95
+  s_fb9187908eefc7::t_c569f2e93bb90f 204-207
+packages/integrations/test/lidarr-unit.spec.ts
+  s_fb9187908eefc7::t_f53140af3ab97f 65-74
+apps/nextjs/src/versions/package-reader.ts
+  s_fb9187908eefc7::t_1448fbda3b960b 45-52
+packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts
+  s_fb9187908eefc7::t_e40313a6f1534b 70-75,81-82
+  s_fb9187908eefc7::t_5efdaf60571fdb 143
+packages/widgets/src/notebook/notebook.tsx
+  s_fb9187908eefc7::t_4aaefd149b1ba9 3
+  s_fb9187908eefc7::t_a166a246fc14eb 267,269-274,276-278
+  s_fb9187908eefc7::t_11e60999631273 268
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.tsx
+  s_fb9187908eefc7::t_6b955a8d2c7636 65-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "34e4d7831804cf84c49b81227f3260ec4ad9ad8c",
+  "prompts": {},
+  "sessions": {
+    "s_fb9187908eefc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fd6ad890-f3fb-44f5-97c1-51dc8861aa27",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
