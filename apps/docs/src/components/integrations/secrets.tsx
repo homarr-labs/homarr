@@ -47,6 +47,16 @@ const secretKinds = {
     description: "The Secret part of the API Key for authentication.",
     icon: IconPassword,
   },
+  patchmonApiKey: {
+    name: "API Key",
+    description: "The API key from PatchMon's GetHomepage integration.",
+    icon: IconKey,
+  },
+  patchmonApiSecret: {
+    name: "API Secret",
+    description: "The API secret from PatchMon's GetHomepage integration.",
+    icon: IconPassword,
+  },
   githubAppId: { name: "App ID", description: "The ID of the GitHub App", icon: IconCode },
   githubInstallationId: {
     name: "Installation ID",

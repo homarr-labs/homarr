@@ -1,0 +1,102 @@
+import { Response } from "undici";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
+import type { IntegrationSecret } from "../../base/types";
+import { PatchMonIntegration } from "../patchmon-integration";
+
+vi.mock("@homarr/core/infrastructure/http", () => ({
+  fetchWithTrustedCertificatesAsync: vi.fn(),
+}));
+
+const TEST_URL = "https://patchmon.example.com";
+const TEST_API_KEY = "test-api-key";
+const TEST_API_SECRET = "test-api-secret";
+
+const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
+
+const sampleStatsResponse = {
+  total_hosts: 42,
+  hosts_needing_updates: 15,
+  security_updates: 23,
+  up_to_date_hosts: 27,
+  hosts_with_security_updates: 8,
+  recent_updates_24h: 34,
+  total_outdated_packages: 156,
+  total_repos: 12,
+  last_updated: "2025-10-11T12:34:56.789Z",
+};
+
+const createIntegration = (decryptedSecrets: IntegrationSecret[] = []) =>
+  new PatchMonIntegration({
+    id: "test-patchmon",
+    name: "Test PatchMon",
+    url: TEST_URL,
+    externalUrl: null,
+    decryptedSecrets:
+      decryptedSecrets.length > 0
+        ? decryptedSecrets
+        : [
+            { kind: "patchmonApiKey", value: TEST_API_KEY },
+            { kind: "patchmonApiSecret", value: TEST_API_SECRET },
+          ],
+  });
+
+beforeEach(() => {
+  mockFetch.mockReset();
+});
+
+describe("PatchMonIntegration getStatsAsync", () => {
+  test("maps API response fields to camelCase stats", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify(sampleStatsResponse), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    const stats = await createIntegration().getStatsAsync();
+
+    expect(stats).toStrictEqual({
+      totalHosts: 42,
+      hostsNeedingUpdates: 15,
+      securityUpdates: 23,
+      upToDateHosts: 27,
+      hostsWithSecurityUpdates: 8,
+      recentUpdates24h: 34,
+      totalOutdatedPackages: 156,
+      totalRepos: 12,
+      lastUpdated: "2025-10-11T12:34:56.789Z",
+    });
+  });
+
+  test("throws when API returns an error", async () => {
+    mockFetch.mockResolvedValue(
+      new Response("Unauthorized", {
+        status: 401,
+        headers: { "content-type": "text/plain" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    await expect(createIntegration().getStatsAsync()).rejects.toThrow();
+  });
+});
+
+describe("PatchMonIntegration authentication", () => {
+  test("sends a Basic auth header with api key and secret", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify(sampleStatsResponse), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    await createIntegration().getStatsAsync();
+
+    const expected = `Basic ${Buffer.from(`${TEST_API_KEY}:${TEST_API_SECRET}`).toString("base64")}`;
+    const [url, requestInit] = mockFetch.mock.calls[0] ?? [];
+    expect(String(url)).toContain("/api/v1/gethomepage/stats");
+    expect(requestInit?.headers).toMatchObject({ Authorization: expected });
+  });
+});
