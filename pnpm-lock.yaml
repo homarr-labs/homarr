@@ -565,7 +565,7 @@ catalogs:
 overrides:
   '@babel/helpers@<7.26.10': '>=7.29.7'
   '@babel/runtime@<7.26.10': '>=7.29.7'
-  axios@>=1.0.0 <1.8.2: '>=1.18.0'
+  axios@>=1.0.0 <1.8.2: '>=1.18.1'
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.6'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.6'
   esbuild@<=0.24.2: '>=0.28.0'
@@ -7981,7 +7981,7 @@ packages:
     resolution: {integrity: sha512-SDobKBbPIOe0cVL7QxMzGkuUGHvWTdihi9zOrrWaWUgFKe15cwEcwfWmgrcNzjT6kHnNmWuTajPHoIzUjYNYYQ==}
     peerDependencies:
       async-validator: ^4
-      axios: '>=1.18.0'
+      axios: '>=1.18.1'
       change-case: ^5
       drauu: ^0.4
       focus-trap: ^7
