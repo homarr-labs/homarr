@@ -204,8 +204,8 @@ minimumReleaseAgeExclude:
   # Renovate security update: form-data@4.0.6
   - form-data@4.0.6
 overrides:
-  "@babel/helpers@<7.26.10": ">=7.29.7"
-  "@babel/runtime@<7.26.10": ">=7.29.7"
+  "@babel/helpers@<7.26.10": ">=8.0.0"
+  "@babel/runtime@<7.26.10": ">=8.0.0"
   "axios@>=1.0.0 <1.8.2": ">=1.18.1"
   "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.6"
   "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.6"
