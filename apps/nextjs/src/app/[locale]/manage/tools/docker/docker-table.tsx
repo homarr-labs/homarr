@@ -149,16 +149,20 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
 ];
 
-export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
+interface DockerTableProps {
+  initialData?: RouterOutputs["docker"]["getContainers"];
+}
+
+export function DockerTable({ initialData }: DockerTableProps) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
-    initialData: { containers, timestamp },
+  const { data, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {
+    initialData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
-  const relativeTime = useTimeAgo(data.timestamp);
+  const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
   const utils = clientApi.useUtils();
   const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
     async onSuccess() {
@@ -176,8 +180,11 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     },
   });
 
+  const containers = data?.containers ?? [];
+
   const table = useTranslatedMantineReactTable({
-    data: data.containers,
+    data: containers,
+    state: { isLoading: isFetching },
     enableDensityToggle: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -190,7 +197,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     enableBottomToolbar: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: tDocker("table.search", { count: String(data.containers.length) }),
+      placeholder: tDocker("table.search", { count: String(containers.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },

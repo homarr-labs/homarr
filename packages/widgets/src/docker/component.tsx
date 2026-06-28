@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
 import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
+import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -213,6 +213,15 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
 
   const columns = useMemo(() => createColumns(t), [t]);
 
+  const columnVisibility: MRT_VisibilityState = {
+    name: options.columns.includes("name"),
+    state: options.columns.includes("state"),
+    host: options.columns.includes("host"),
+    cpuUsage: options.columns.includes("cpuUsage"),
+    memoryUsage: options.columns.includes("memoryUsage"),
+    actions: options.columns.includes("actions"),
+  };
+
   const table = useTranslatedMantineReactTable({
     columns,
     data: containers,
@@ -232,6 +241,9 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     initialState: {
       sorting: [{ id: options.defaultSort, desc: options.descendingDefaultSort }],
       density: "xs",
+    },
+    state: {
+      columnVisibility,
     },
     mantinePaperProps: {
       flex: 1,
@@ -259,6 +271,13 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
       },
     },
   });
+
+  if (options.columns.length === 0)
+    return (
+      <Center h="100%">
+        <Text>{t("error.noColumns")}</Text>
+      </Center>
+    );
 
   return (
     <Stack gap={0} h="100%" display="flex">
