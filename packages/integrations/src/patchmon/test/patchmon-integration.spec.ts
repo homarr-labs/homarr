@@ -1,8 +1,10 @@
+import { ParseError } from "@homarr/common/server";
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import { IntegrationParseError } from "../../base/errors/parse/integration-parse-error";
 import type { IntegrationSecret } from "../../base/types";
 import { PatchMonIntegration } from "../patchmon-integration";
 
@@ -93,6 +95,22 @@ describe("PatchMonIntegration getStatsAsync", () => {
     const stats = await createIntegration().getStatsAsync();
 
     expect(stats.osDistribution).toStrictEqual([]);
+  });
+
+  test("throws ParseError when API response does not match schema", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify({ invalid: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    await expect(createIntegration().getStatsAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+
+      const cause = error.cause;
+      return cause instanceof ParseError && cause.message.includes("Invalid PatchMon stats response");
+    });
   });
 
   test("throws when API returns an error", async () => {

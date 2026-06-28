@@ -40,8 +40,12 @@ export class PatchMonIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = patchmonStatsResponseSchema.parse(await response.json());
-    return mapPatchMonStats(data);
+    const parseResult = await patchmonStatsResponseSchema.safeParseAsync(await response.json());
+    if (!parseResult.success) {
+      throw new ParseError("Invalid PatchMon stats response", { cause: parseResult.error });
+    }
+
+    return mapPatchMonStats(parseResult.data);
   }
 
   private getAuthHeaders(): Record<string, string> {
