@@ -1,6 +1,12 @@
+// @vitest-environment node
 import { ParseError } from "@homarr/common/server";
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SKIP_ENV_VALIDATION = "true";
+  process.env.SECRET_ENCRYPTION_KEY = "ff3f4f7ce30e870c9630de9e5d244ffa81101a24ed0dfe5f064beb53a7e684f1";
+});
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -95,6 +101,22 @@ describe("PatchMonIntegration getStatsAsync", () => {
     const stats = await createIntegration().getStatsAsync();
 
     expect(stats.osDistribution).toStrictEqual([]);
+  });
+
+  test("throws ParseError when API response is not valid JSON", async () => {
+    mockFetch.mockResolvedValue(
+      new Response("not-json", {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    await expect(createIntegration().getStatsAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+
+      const cause = error.cause;
+      return cause instanceof ParseError && cause.message.includes("Invalid PatchMon stats response");
+    });
   });
 
   test("throws ParseError when API response does not match schema", async () => {

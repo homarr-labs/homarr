@@ -6,7 +6,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { PatchMonStats } from "./patchmon-types";
-import { mapPatchMonStats, patchmonStatsResponseSchema } from "./patchmon-types";
+import { mapPatchMonStats, parsePatchMonStatsResponseAsync } from "./patchmon-types";
 
 const STATS_REQUEST_TIMEOUT_MS = 10_000;
 
@@ -20,11 +20,14 @@ export class PatchMonIntegration extends Integration {
       return TestConnectionError.StatusResult(response);
     }
 
-    const parseResult = await patchmonStatsResponseSchema.safeParseAsync(await response.json());
-    if (!parseResult.success) {
-      return TestConnectionError.ParseResult(
-        new ParseError("Invalid PatchMon stats response", { cause: parseResult.error }),
-      );
+    try {
+      await parsePatchMonStatsResponseAsync(response);
+    } catch (error) {
+      if (error instanceof ParseError) {
+        return TestConnectionError.ParseResult(error);
+      }
+
+      throw error;
     }
 
     return { success: true };
@@ -40,12 +43,9 @@ export class PatchMonIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const parseResult = await patchmonStatsResponseSchema.safeParseAsync(await response.json());
-    if (!parseResult.success) {
-      throw new ParseError("Invalid PatchMon stats response", { cause: parseResult.error });
-    }
+    const data = await parsePatchMonStatsResponseAsync(response);
 
-    return mapPatchMonStats(parseResult.data);
+    return mapPatchMonStats(data);
   }
 
   private getAuthHeaders(): Record<string, string> {

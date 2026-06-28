@@ -1,4 +1,7 @@
+import { ParseError } from "@homarr/common/server";
 import { z } from "zod/v4";
+
+const PATCHMON_STATS_PARSE_ERROR_MESSAGE = "Invalid PatchMon stats response";
 
 export const patchmonOsDistributionEntrySchema = z.object({
   name: z.string(),
@@ -48,6 +51,26 @@ const mapOsDistributionEntry = (
   osType: entry.os_type,
   osVersion: entry.os_version,
 });
+
+export const parsePatchMonStatsResponseAsync = async (
+  response: { json: () => Promise<unknown> },
+): Promise<z.infer<typeof patchmonStatsResponseSchema>> => {
+  let json: unknown;
+  try {
+    json = await response.json();
+  } catch (error) {
+    throw new ParseError(PATCHMON_STATS_PARSE_ERROR_MESSAGE, {
+      cause: error instanceof Error ? error : new Error(String(error)),
+    });
+  }
+
+  const parseResult = await patchmonStatsResponseSchema.safeParseAsync(json);
+  if (!parseResult.success) {
+    throw new ParseError(PATCHMON_STATS_PARSE_ERROR_MESSAGE, { cause: parseResult.error });
+  }
+
+  return parseResult.data;
+};
 
 export const mapPatchMonStats = (data: z.infer<typeof patchmonStatsResponseSchema>): PatchMonStats => ({
   totalHosts: data.total_hosts,
