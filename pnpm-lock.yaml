@@ -298,8 +298,8 @@ catalogs:
       specifier: ^6.0.0
       version: 6.0.0
     better-sqlite3:
-      specifier: ^12.10.0
-      version: 12.10.0
+      specifier: ^12.11.1
+      version: 12.11.1
     chroma-js:
       specifier: ^3.2.0
       version: 3.2.0
@@ -961,7 +961,7 @@ importers:
         version: 1.0.0
       better-sqlite3:
         specifier: 'catalog:'
-        version: 12.10.0
+        version: 12.11.1
       chroma-js:
         specifier: 'catalog:'
         version: 3.2.0
@@ -976,7 +976,7 @@ importers:
         version: 17.4.2
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
       flag-icons:
         specifier: 'catalog:'
         version: 7.5.0
@@ -1039,7 +1039,7 @@ importers:
         version: 2.2.6
       trpc-to-mcp:
         specifier: 'catalog:'
-        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3)
+        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3)
       use-deep-compare-effect:
         specifier: 'catalog:'
         version: 1.8.1(react@19.2.7)
@@ -1346,7 +1346,7 @@ importers:
         version: 2.2.6
       trpc-to-mcp:
         specifier: 'catalog:'
-        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3)
+        version: 1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3)
       trpc-to-openapi:
         specifier: 'catalog:'
         version: 3.3.0(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.17.0(typescript@6.0.3))(zod-openapi@5.3.0(zod@4.4.3))(zod@4.4.3)
@@ -1522,13 +1522,13 @@ importers:
         version: 0.13.11(arktype@2.1.20)(typescript@6.0.3)(zod@4.4.3)
       better-sqlite3:
         specifier: 'catalog:'
-        version: 12.10.0
+        version: 12.11.1
       dns-caching:
         specifier: 'catalog:'
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
       ioredis:
         specifier: 'catalog:'
         version: 5.11.1
@@ -1694,7 +1694,7 @@ importers:
         version: 12.0.3
       better-sqlite3:
         specifier: 'catalog:'
-        version: 12.10.0
+        version: 12.11.1
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
@@ -1703,10 +1703,10 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3)
+        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3)
       mysql2:
         specifier: 'catalog:'
         version: 3.22.5(@types/node@24.13.2)
@@ -8511,8 +8511,8 @@ packages:
       zod:
         optional: true
 
-  better-sqlite3@12.10.0:
-    resolution: {integrity: sha512-CyzaZRQKyHkB2ZInfTTl2nvT33EbDpjkLEbE8/Zck3Ll6O0qqvuGdrJ45HgtH+HykRg88ITY3AdreBGN70aBSQ==}
+  better-sqlite3@12.11.1:
+    resolution: {integrity: sha512-dq9AtApgg5PGFtBzPFSBl3HZQjHok5gaQCM6zh2Yk0aSmDCs1CbnVI8/HgASQkNKsWFpseIO9beg5xxpYhbIfA==}
     engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x || 26.x}
 
   bidi-js@1.0.3:
@@ -16196,12 +16196,12 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@better-auth/drizzle-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))':
+  '@better-auth/drizzle-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))':
     dependencies:
       '@better-auth/core': 1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
       '@better-auth/utils': 0.4.1
     optionalDependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
 
   '@better-auth/kysely-adapter@1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(kysely@0.29.2)':
     dependencies:
@@ -22093,10 +22093,10 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)):
+  better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)):
     dependencies:
       '@better-auth/core': 1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
-      '@better-auth/drizzle-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))
+      '@better-auth/drizzle-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))
       '@better-auth/kysely-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)(kysely@0.29.2)
       '@better-auth/memory-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)
       '@better-auth/mongo-adapter': 1.6.15(@better-auth/core@1.6.15(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.0)(better-call@1.3.5(zod@4.4.3))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.1)
@@ -22113,9 +22113,9 @@ snapshots:
       nanostores: 1.3.0
       zod: 4.4.3
     optionalDependencies:
-      better-sqlite3: 12.10.0
+      better-sqlite3: 12.11.1
       drizzle-kit: 0.31.10
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
       mysql2: 3.22.5(@types/node@24.13.2)
       next: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
       pg: 8.22.0
@@ -22136,7 +22136,7 @@ snapshots:
     optionalDependencies:
       zod: 4.4.3
 
-  better-sqlite3@12.10.0:
+  better-sqlite3@12.11.1:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -23319,22 +23319,22 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1):
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@opentelemetry/api': 1.9.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.20.0
-      better-sqlite3: 12.10.0
+      better-sqlite3: 12.11.1
       gel: 2.0.0
       kysely: 0.29.2
       mysql2: 3.22.5(@types/node@24.13.2)
       pg: 8.22.0
       sql.js: 1.14.1
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1)
       zod: 4.4.3
 
   dunder-proto@1.0.1:
@@ -28851,22 +28851,22 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3):
+  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3):
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@trpc/server': 11.17.0(typescript@6.0.3)
-      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3))
+      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3))
       mcp-handler: 1.1.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))
       zod: 4.4.3
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - supports-color
 
-  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3):
+  trpc-to-mcp@1.3.2(@trpc/server@11.17.0(typescript@6.0.3))(better-auth@1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3)))(mcp-handler@1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)))(zod@4.4.3):
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@trpc/server': 11.17.0(typescript@6.0.3)
-      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3))
+      better-auth: 1.6.15(@opentelemetry/api@1.9.0)(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0)(kysely@0.29.2)(mysql2@3.22.5(@types/node@24.13.2))(pg@8.22.0)(sql.js@1.14.1))(mysql2@3.22.5(@types/node@24.13.2))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(pg@8.22.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vitest@4.1.9)(vue@3.5.35(typescript@6.0.3))
       mcp-handler: 1.1.0(@modelcontextprotocol/sdk@1.26.0(zod@4.4.3))(next@16.2.9(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))
       zod: 4.4.3
     transitivePeerDependencies:
