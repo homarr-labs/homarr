@@ -70,6 +70,101 @@ export const patchmonWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "Needs updates threshold mode",
+        description:
+          "Compare the needs-updates count as an absolute value or percentage of total hosts. Shown when threshold colors and advanced thresholds are enabled.",
+        values: { type: "select", options: ["Absolute count", "Percent of total hosts"] },
+        defaultValue: "Absolute count",
+      },
+      {
+        name: "Needs updates warning threshold",
+        description: "Enter yellow when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "1",
+      },
+      {
+        name: "Needs updates critical threshold",
+        description: "Enter red when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "5",
+      },
+      {
+        name: "Security updates threshold mode",
+        description:
+          "Compare the security-updates count as an absolute value or percentage of total hosts. Shown when threshold colors and advanced thresholds are enabled.",
+        values: { type: "select", options: ["Absolute count", "Percent of total hosts"] },
+        defaultValue: "Absolute count",
+      },
+      {
+        name: "Security updates warning threshold",
+        description: "Enter yellow when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "1",
+      },
+      {
+        name: "Security updates critical threshold",
+        description: "Enter red when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "10",
+      },
+      {
+        name: "Hosts with security updates threshold mode",
+        description:
+          "Compare the host count as an absolute value or percentage of total hosts. Shown when threshold colors and advanced thresholds are enabled.",
+        values: { type: "select", options: ["Absolute count", "Percent of total hosts"] },
+        defaultValue: "Absolute count",
+      },
+      {
+        name: "Hosts with security updates warning threshold",
+        description: "Enter yellow when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "1",
+      },
+      {
+        name: "Hosts with security updates critical threshold",
+        description: "Enter red when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "1",
+      },
+      {
+        name: "Up-to-date hosts threshold mode",
+        description:
+          "Compare the up-to-date host count as an absolute value or percentage of total hosts. Shown when threshold colors and advanced thresholds are enabled.",
+        values: { type: "select", options: ["Absolute count", "Percent of total hosts"] },
+        defaultValue: "Percent of total hosts",
+      },
+      {
+        name: "Up-to-date hosts warning threshold",
+        description: "Enter yellow when the percentage falls below this value",
+        values: "Integer ≥ 0",
+        defaultValue: "90",
+      },
+      {
+        name: "Up-to-date hosts critical threshold",
+        description: "Enter red when the percentage falls below this value",
+        values: "Integer ≥ 0",
+        defaultValue: "90",
+      },
+      {
+        name: "Outdated packages threshold mode",
+        description:
+          "Compare the outdated-packages count as an absolute value or percentage of total hosts. Shown when threshold colors, advanced thresholds, and Show outdated packages are enabled.",
+        values: { type: "select", options: ["Absolute count", "Percent of total hosts"] },
+        defaultValue: "Absolute count",
+      },
+      {
+        name: "Outdated packages warning threshold",
+        description: "Enter yellow when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "1",
+      },
+      {
+        name: "Outdated packages critical threshold",
+        description: "Enter red when the value reaches this threshold",
+        values: "Integer ≥ 0",
+        defaultValue: "50",
+      },
+      {
         name: "Show OS distribution",
         description: "Displays a horizontal bar breakdown of monitored hosts by operating system",
         values: { type: "boolean" },
