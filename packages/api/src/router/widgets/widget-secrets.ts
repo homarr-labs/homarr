@@ -83,10 +83,15 @@ export const widgetSecretsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       await resolveItemWithBoardAccess(ctx, input.itemId);
 
-      const secrets = await ctx.db.query.widgetSecrets.findMany({
-        where: eq(widgetSecrets.itemId, input.itemId),
-        columns: { kind: true },
-      });
-      return secrets.map((s: { kind: string }) => s.kind);
+      try {
+        const secrets = await ctx.db.query.widgetSecrets.findMany({
+          where: eq(widgetSecrets.itemId, input.itemId),
+          columns: { kind: true },
+        });
+        return secrets.map((s: { kind: string }) => s.kind);
+      } catch {
+        // ponytail: table may not exist pre-migration, return empty
+        return [] as string[];
+      }
     }),
 });

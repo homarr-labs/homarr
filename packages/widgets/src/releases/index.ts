@@ -41,7 +41,15 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         validate: z.number().min(0),
       }),
       repositories: factory.multiReleasesRepositories({
-        defaultValue: [],
+        defaultValue: [
+          {
+            provider: "github" as const,
+            identifier: "homarr-labs/homarr",
+            name: "Homarr",
+            iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homarr.png",
+            versionFilter: { prefix: "v", precision: 3 },
+          },
+        ],
         validate: z.array(
           z.object({
             provider: z.enum(releaseProviderKinds).optional(),
