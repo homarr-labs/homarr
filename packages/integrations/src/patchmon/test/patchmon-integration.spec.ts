@@ -26,6 +26,11 @@ const sampleStatsResponse = {
   total_outdated_packages: 156,
   total_repos: 12,
   last_updated: "2025-10-11T12:34:56.789Z",
+  os_distribution: [
+    { name: "Debian", count: 12, os_type: "linux", os_version: "12" },
+    { name: "Ubuntu", count: 20, os_type: "linux", os_version: "22.04" },
+    { name: "Rocky Linux", count: 10, os_type: "linux", os_version: "9" },
+  ],
 };
 
 const createIntegration = (decryptedSecrets: IntegrationSecret[] = []) =>
@@ -68,7 +73,26 @@ describe("PatchMonIntegration getStatsAsync", () => {
       totalOutdatedPackages: 156,
       totalRepos: 12,
       lastUpdated: "2025-10-11T12:34:56.789Z",
+      osDistribution: [
+        { name: "Ubuntu", count: 20, osType: "linux", osVersion: "22.04" },
+        { name: "Debian", count: 12, osType: "linux", osVersion: "12" },
+        { name: "Rocky Linux", count: 10, osType: "linux", osVersion: "9" },
+      ],
     });
+  });
+
+  test("defaults os distribution to empty array when absent", async () => {
+    const { os_distribution: _osDistribution, ...responseWithoutOs } = sampleStatsResponse;
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify(responseWithoutOs), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    const stats = await createIntegration().getStatsAsync();
+
+    expect(stats.osDistribution).toStrictEqual([]);
   });
 
   test("throws when API returns an error", async () => {

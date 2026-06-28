@@ -1,5 +1,12 @@
 import { z } from "zod/v4";
 
+export const patchmonOsDistributionEntrySchema = z.object({
+  name: z.string(),
+  count: z.number(),
+  os_type: z.string().optional(),
+  os_version: z.string().optional(),
+});
+
 export const patchmonStatsResponseSchema = z.object({
   total_hosts: z.number(),
   hosts_needing_updates: z.number(),
@@ -10,7 +17,15 @@ export const patchmonStatsResponseSchema = z.object({
   total_outdated_packages: z.number(),
   total_repos: z.number(),
   last_updated: z.string(),
+  os_distribution: z.array(patchmonOsDistributionEntrySchema).default([]),
 });
+
+export interface PatchMonOsDistributionEntry {
+  name: string;
+  count: number;
+  osType?: string;
+  osVersion?: string;
+}
 
 export interface PatchMonStats {
   totalHosts: number;
@@ -22,7 +37,17 @@ export interface PatchMonStats {
   totalOutdatedPackages: number;
   totalRepos: number;
   lastUpdated: string;
+  osDistribution: PatchMonOsDistributionEntry[];
 }
+
+const mapOsDistributionEntry = (
+  entry: z.infer<typeof patchmonOsDistributionEntrySchema>,
+): PatchMonOsDistributionEntry => ({
+  name: entry.name,
+  count: entry.count,
+  osType: entry.os_type,
+  osVersion: entry.os_version,
+});
 
 export const mapPatchMonStats = (data: z.infer<typeof patchmonStatsResponseSchema>): PatchMonStats => ({
   totalHosts: data.total_hosts,
@@ -34,4 +59,7 @@ export const mapPatchMonStats = (data: z.infer<typeof patchmonStatsResponseSchem
   totalOutdatedPackages: data.total_outdated_packages,
   totalRepos: data.total_repos,
   lastUpdated: data.last_updated,
+  osDistribution: [...data.os_distribution]
+    .map(mapOsDistributionEntry)
+    .sort((a, b) => b.count - a.count),
 });

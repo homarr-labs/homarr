@@ -8,9 +8,26 @@
   overflow: hidden;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 8px);
+}
+
+.statsSection {
+  flex: 1;
+  min-height: 0;
+}
+
+.statsSectionCompact {
+  flex: 0 1 auto;
+}
+
 .grid {
   display: grid;
-  flex: 1;
+  height: 100%;
   min-height: 0;
   gap: clamp(4px, 2cqi, 10px);
   grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
@@ -56,4 +73,58 @@
   align-items: center;
   justify-content: center;
   min-height: 0;
+}
+
+.osSectionWrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.osSectionWithStats {
+  padding-top: clamp(4px, 2cqi, 8px);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.osSection {
+  min-height: 0;
+}
+
+.osHeading {
+  flex-shrink: 0;
+}
+
+.osScroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.osRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.osLabel {
+  font-size: clamp(9px, 2.5cqi, 12px);
+  line-height: 1.2;
+}
+
+.osBarGroup {
+  width: 100%;
+  min-width: 0;
+}
+
+.osBar {
+  flex: 1;
+  min-width: 0;
+}
+
+.osCount {
+  flex: 0 0 auto;
+  min-width: 1.5rem;
+  text-align: right;
+  font-size: clamp(9px, 2.5cqi, 12px);
 }

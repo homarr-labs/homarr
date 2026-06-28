@@ -57,6 +57,24 @@ export const patchmonWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "no",
       },
+      {
+        name: "Show OS distribution",
+        description: "Displays a horizontal bar breakdown of monitored hosts by operating system",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
+        name: "OS distribution limit",
+        description: "Maximum number of operating systems to display in the distribution section",
+        values: { type: "select", options: ["Top 3", "Top 5", "Top 10", "All"] },
+        defaultValue: "Top 5",
+      },
+      {
+        name: "Show OS version",
+        description: "Append the OS version to each distribution label when available",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
     ],
   },
 };

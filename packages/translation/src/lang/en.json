@@ -2768,6 +2768,7 @@
       "recentUpdates24h": "Updates (24h)",
       "totalOutdatedPackages": "Outdated Packages",
       "totalRepos": "Repositories",
+      "osDistribution": "OS Distribution",
       "option": {
         "showTotalHosts": {
           "label": "Show total hosts",
@@ -2800,6 +2801,24 @@
         "showTotalRepos": {
           "label": "Show repositories",
           "description": "Display the number of active repositories being monitored"
+        },
+        "showOsDistribution": {
+          "label": "Show OS distribution",
+          "description": "Display a breakdown of monitored hosts by operating system"
+        },
+        "osDistributionLimit": {
+          "label": "OS distribution limit",
+          "description": "Maximum number of operating systems to display",
+          "option": {
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "All"
+          }
+        },
+        "showOsVersion": {
+          "label": "Show OS version",
+          "description": "Append the OS version to each distribution label when available"
         }
       },
       "error": {

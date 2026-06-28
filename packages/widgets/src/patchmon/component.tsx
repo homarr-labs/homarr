@@ -9,6 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
+import { OsDistributionSection } from "./os-distribution-section";
 
 type StatKey =
   | "totalHosts"
@@ -67,7 +68,10 @@ export default function PatchMonWidget({ integrationIds, options, width }: Widge
     .filter(([optionKey]) => options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  if (visibleStatKeys.length === 0) {
+  const showOsSection = options.showOsDistribution && stats.osDistribution.length > 0;
+  const hasContent = visibleStatKeys.length > 0 || showOsSection;
+
+  if (!hasContent) {
     return (
       <div className={classes.root}>
         <div className={classes.emptyState}>
@@ -83,22 +87,38 @@ export default function PatchMonWidget({ integrationIds, options, width }: Widge
 
   return (
     <div className={classes.root}>
-      <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
-        {visibleStatKeys.map((statKey) => (
-          <div key={statKey} className={classes.statTile}>
-            <span className={classes.statValue}>
-              <Text
-                component="span"
-                fw={700}
-                size="inherit"
-                c={statColors[statKey] ?? "var(--mantine-primary-color-filled)"}
-              >
-                {statValues[statKey]}
-              </Text>
-            </span>
-            <span className={classes.statLabel}>{t(statKey)}</span>
+      <div className={classes.content}>
+        {visibleStatKeys.length > 0 && (
+          <div className={`${classes.statsSection} ${showOsSection ? classes.statsSectionCompact : ""}`}>
+            <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+              {visibleStatKeys.map((statKey) => (
+                <div key={statKey} className={classes.statTile}>
+                  <span className={classes.statValue}>
+                    <Text
+                      component="span"
+                      fw={700}
+                      size="inherit"
+                      c={statColors[statKey] ?? "var(--mantine-primary-color-filled)"}
+                    >
+                      {statValues[statKey]}
+                    </Text>
+                  </span>
+                  <span className={classes.statLabel}>{t(statKey)}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        )}
+
+        {showOsSection && (
+          <div className={`${classes.osSectionWrapper} ${visibleStatKeys.length > 0 ? classes.osSectionWithStats : ""}`}>
+            <OsDistributionSection
+              entries={stats.osDistribution}
+              limit={Number(options.osDistributionLimit)}
+              showOsVersion={options.showOsVersion}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
