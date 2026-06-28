@@ -1,4 +1,5 @@
 import type { WidgetComponentProps } from "../definition";
+import { clampPercentThreshold } from "./threshold-validation";
 
 export type PatchMonStatKey =
   | "totalHosts"
@@ -167,8 +168,8 @@ const getThresholdRule = (statKey: ColorablePatchMonStatKey, options: PatchMonCo
   }
 
   const mode = options[thresholdModeOptionKey[statKey]] as ThresholdMode;
-  const warningAt = options[warningAtOptionKey[statKey]] as number;
-  const criticalAt = options[criticalAtOptionKey[statKey]] as number;
+  const warningAt = clampPercentThreshold(options[warningAtOptionKey[statKey]] as number, mode);
+  const criticalAt = clampPercentThreshold(options[criticalAtOptionKey[statKey]] as number, mode);
   const preset = PATCHMON_STAT_COLOR_PRESETS[statKey];
 
   return {

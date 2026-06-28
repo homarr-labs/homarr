@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { PATCHMON_STAT_COLOR_PRESETS } from "./stat-colors";
+import { patchmonOptionsSuperRefine } from "./threshold-validation";
 
 export const { definition, componentLoader } = createWidgetDefinition("patchmon", {
   icon: IconShieldCheck,
@@ -206,6 +207,7 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
           shouldHide: (options) => !options.showOsDistribution,
         },
       },
+      patchmonOptionsSuperRefine,
     );
   },
   errors: {

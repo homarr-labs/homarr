@@ -121,4 +121,16 @@ describe("resolveStatColor options", () => {
       }),
     ).toBe("red");
   });
+
+  test("clamps invalid percent thresholds when resolving colors", () => {
+    expect(
+      resolveStatColor("hostsNeedingUpdates", 50, context, {
+        ...defaultOptions,
+        useCustomThresholds: true,
+        hostsNeedingUpdatesThresholdMode: "percent",
+        hostsNeedingUpdatesWarningAt: 40,
+        hostsNeedingUpdatesCriticalAt: 200,
+      }),
+    ).toBe("yellow");
+  });
 });
