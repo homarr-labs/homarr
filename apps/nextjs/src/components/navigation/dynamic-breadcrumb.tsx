@@ -62,7 +62,8 @@ export const DynamicBreadcrumb = ({
         const translationKey = `${pathnameParts.slice(0, index + 1).join(".")}`;
         const mappedValue = dynamicMappings?.get(pathnamePart);
 
-        const isNonInteractable = nonInteractable?.includes(pathnamePart) ?? categorySegments.has(pathnamePart);
+        const isNonInteractable =
+          nonInteractable?.includes(pathnamePart) === true || categorySegments.has(pathnamePart);
 
         if (mappedValue) {
           if (isNonInteractable) {

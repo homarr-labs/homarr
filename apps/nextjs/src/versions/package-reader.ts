@@ -42,8 +42,14 @@ const parseDependencyCatalogsAsync = async (): Promise<DependencyCatalog> => {
     const workspaceConfig: unknown = parseYaml(workspaceConfigContent);
     const parseResult = workspaceConfigCatalogSchema.parse(workspaceConfig);
     return new Map(Object.entries(parseResult.catalog ?? {}));
-  } catch {
-    return new Map();
+  } catch (error) {
+    // The workspace config is absent in Docker (only the runner stage is shipped),
+    // so a missing file is expected. Surface any other failure (e.g. malformed YAML).
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return new Map();
+    }
+
+    throw error;
   }
 };
 

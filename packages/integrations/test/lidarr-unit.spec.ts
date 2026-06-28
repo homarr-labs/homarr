@@ -62,5 +62,15 @@ describe("LidarrIntegration calendar", () => {
       href: "http://localhost:8686/artist/test-artist",
       logo: "/images/apps/lidarr.svg",
     });
+    // The existing external artist link must survive the Lidarr-link prepend.
+    expect(events[0]?.links).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "LastFM",
+          href: "https://last.fm/music/Test+Artist",
+          logo: "/images/apps/lastfm.svg",
+        }),
+      ]),
+    );
   });
 });

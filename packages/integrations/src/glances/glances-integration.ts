@@ -81,14 +81,20 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
   }
 
   private async getCpuTempAsync(): Promise<number | undefined> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/sensors"));
+    // CPU temperature is optional data, so a transport error or payload drift on
+    // /api/4/sensors must not fail the whole getSystemInfoAsync() call.
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/sensors"));
 
-    if (!response.ok) {
+      if (!response.ok) {
+        return undefined;
+      }
+
+      const sensors = await sensorsSchema.parseAsync(await response.json());
+      return parseGlancesCpuTempFromSensors(sensors);
+    } catch {
       return undefined;
     }
-
-    const sensors = await sensorsSchema.parseAsync(await response.json());
-    return parseGlancesCpuTempFromSensors(sensors);
   }
 
   private async getAllStatsAsync() {

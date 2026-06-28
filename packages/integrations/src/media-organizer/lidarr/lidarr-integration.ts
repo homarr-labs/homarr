@@ -67,15 +67,19 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
   }
 
   private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
-    const links: CalendarLink[] = [
-      {
+    const links: CalendarLink[] = [];
+
+    // titleSlug is only present when Lidarr returns it; guard so a missing value
+    // neither breaks the link nor drops the event.
+    if (event.artist.titleSlug) {
+      links.push({
         href: this.externalUrl(`/artist/${event.artist.titleSlug}`).toString(),
         name: "Lidarr",
         logo: "/images/apps/lidarr.svg",
         color: undefined,
         isDark: true,
-      },
-    ];
+      });
+    }
 
     for (const link of event.artist.links) {
       const externalLink = lidarrExternalCalendarLinks[link.name];
@@ -136,7 +140,7 @@ const lidarrCalendarEventSchema = z.object({
   artist: z.object({
     links: z.array(z.object({ url: z.string().url(), name: z.string() })),
     artistName: z.string(),
-    titleSlug: z.string(),
+    titleSlug: z.string().optional(),
   }),
   releaseDate: z.string().transform((value) => new Date(value)),
 });
