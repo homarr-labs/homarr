@@ -39,7 +39,7 @@ export const WidgetIntegrationMultiSelectInput = ({
   }
 
   const description = options.withDescription ? tInput("description") : undefined;
-  const placeholder = isPending ? t("loading") : t("placeholder");
+  const placeholder = isPending ? t("loading") : tInput("placeholder");
   const error = isError ? t("loadError") : undefined;
 
   return (
