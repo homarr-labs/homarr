@@ -31,8 +31,7 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   reactStrictMode: true,
-  // Ship browser source maps so production client stack traces are readable, see https://github.com/homarr-labs/homarr/issues/5891
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: process.env.HOMARR_ENABLE_SOURCE_MAPS === "true",
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
@@ -43,8 +42,7 @@ const nextConfig: NextConfig = {
    */
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
-    // Ship server source maps so production Node stack traces in logs reference original source, see https://github.com/homarr-labs/homarr/issues/5891
-    serverSourceMaps: true,
+    serverSourceMaps: process.env.HOMARR_ENABLE_SOURCE_MAPS === "true",
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,
     preloadEntriesOnStart: false,
