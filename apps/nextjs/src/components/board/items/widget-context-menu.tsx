@@ -153,6 +153,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
         label: tItem("action.edit"),
         icon: IconPencil,
         onClick: openEditModal,
+        disabled: isPending,
       });
       actions.push({
         key: "moveResize",
@@ -191,6 +192,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     return actions.filter((a) => !a.hidden);
   }, [
     isEditMode,
+    isPending,
     autoToggleActions,
     widgetContextActions,
     openEditModal,
@@ -201,8 +203,6 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     openMoveModal,
     duplicateItem,
   ]);
-
-  if (isPending) return <>{children}</>;
 
   return (
     <Menu shadow="md" width={200}>

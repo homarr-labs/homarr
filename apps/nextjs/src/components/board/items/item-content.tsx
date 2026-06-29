@@ -59,32 +59,32 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   );
 
   return (
-    <>
-      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+    <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+      <div style={{ position: "relative" }}>
         {cardElement}
-      </WidgetContextMenu>
-      {item.advancedOptions.title?.trim() && (
-        <Badge
-          pos="absolute"
-          // It's 4 because of the mantine-react-table that has z-index 3
-          style={{ zIndex: 4 }}
-          top={2}
-          left={16}
-          size="xs"
-          radius={board.itemRadius}
-          styles={{
-            root: {
-              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-              "--opacity": board.opacity / 100,
-            },
-          }}
-          className={itemContentClasses.badge}
-          c="var(--mantine-color-text)"
-        >
-          {item.advancedOptions.title}
-        </Badge>
-      )}
-    </>
+        {item.advancedOptions.title?.trim() && (
+          <Badge
+            pos="absolute"
+            // It's 4 because of the mantine-react-table that has z-index 3
+            style={{ zIndex: 4 }}
+            top={2}
+            left={16}
+            size="xs"
+            radius={board.itemRadius}
+            styles={{
+              root: {
+                "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+                "--opacity": board.opacity / 100,
+              },
+            }}
+            className={itemContentClasses.badge}
+            c="var(--mantine-color-text)"
+          >
+            {item.advancedOptions.title}
+          </Badge>
+        )}
+      </div>
+    </WidgetContextMenu>
   );
 };
 
