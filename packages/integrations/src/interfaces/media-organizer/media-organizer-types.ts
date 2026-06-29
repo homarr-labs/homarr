@@ -17,6 +17,7 @@ export interface QueuedMediaItem {
   status: string;
   timeLeft: string | null;
   percentComplete: number;
+  year?: number;
   seasonNumber?: number;
   episodeNumber?: number;
   seriesTitle?: string;

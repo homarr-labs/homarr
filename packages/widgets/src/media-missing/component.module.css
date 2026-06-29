@@ -1,0 +1,29 @@
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--border-color);
+  transition:
+    border-color 100ms ease,
+    background-color 100ms ease;
+
+  @mixin dark {
+    --border-color: var(--mantine-color-dark-4);
+    --hover-bg: var(--mantine-color-dark-6);
+  }
+  @mixin light {
+    --border-color: var(--mantine-color-gray-3);
+    --hover-bg: var(--mantine-color-gray-0);
+  }
+
+  &:hover {
+    border-color: var(--mantine-primary-color-filled);
+    background-color: var(--hover-bg);
+  }
+}
+
+.poster {
+  flex-shrink: 0;
+  object-fit: cover;
+  background-color: var(--mantine-color-default-hover);
+}
