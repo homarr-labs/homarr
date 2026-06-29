@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
+import { WidgetContextMenu } from "./widget-context-menu";
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -30,30 +32,37 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
+  const widgetStateRef = useRef<Record<string, unknown> | null>(null);
+
+  const cardElement = (
+    <Card
+      ref={ref}
+      className={combineClasses(
+        classes.itemCard,
+        `${item.kind}-wrapper`,
+        "grid-stack-item-content",
+        item.advancedOptions.customCssClasses.join(" "),
+      )}
+      radius={board.itemRadius}
+      styles={{
+        root: {
+          "--opacity": board.opacity / 100,
+          containerType: "size",
+          overflow: getOverflowFromKind(item.kind),
+          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+        },
+      }}
+      p={0}
+    >
+      <InnerContent item={item} width={width} height={height} widgetStateRef={widgetStateRef} />
+    </Card>
+  );
 
   return (
     <>
-      <Card
-        ref={ref}
-        className={combineClasses(
-          classes.itemCard,
-          `${item.kind}-wrapper`,
-          "grid-stack-item-content",
-          item.advancedOptions.customCssClasses.join(" "),
-        )}
-        radius={board.itemRadius}
-        styles={{
-          root: {
-            "--opacity": board.opacity / 100,
-            containerType: "size",
-            overflow: getOverflowFromKind(item.kind),
-            "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-          },
-        }}
-        p={0}
-      >
-        <InnerContent item={item} width={width} height={height} />
-      </Card>
+      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+        {cardElement}
+      </WidgetContextMenu>
       {item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
@@ -83,6 +92,7 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
+  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>;
 }
 
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {

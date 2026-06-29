@@ -13,6 +13,7 @@ import type { ReleasesRepository } from "./releases/releases-repository";
 interface CommonInput<TType> {
   defaultValue?: TType;
   withDescription?: boolean;
+  skipContextMenu?: boolean;
 }
 
 interface TextInput extends CommonInput<string> {
