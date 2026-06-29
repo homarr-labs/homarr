@@ -20,7 +20,8 @@ export const WidgetIntegrationMultiSelectInput = ({
   const form = useFormContext();
 
   const integrationIds = form.values.integrationIds as string[];
-  const selectedValues = (form.getInputProps(`options.${property}`).value as string[] | undefined) ?? [];
+  const inputProps = form.getInputProps(`options.${property}`);
+  const selectedValues = (inputProps.value as string[] | undefined) ?? [];
 
   const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
   const data = [
@@ -40,10 +41,11 @@ export const WidgetIntegrationMultiSelectInput = ({
 
   const description = options.withDescription ? tInput("description") : undefined;
   const placeholder = isPending ? t("loading") : tInput("placeholder");
-  const error = isError ? t("loadError") : undefined;
+  const loadError = isError ? t("loadError") : undefined;
 
   return (
     <MultiSelect
+      {...inputProps}
       label={tInput("label")}
       description={description}
       placeholder={placeholder}
@@ -52,8 +54,7 @@ export const WidgetIntegrationMultiSelectInput = ({
       nothingFoundMessage={t("noResults")}
       data={data}
       disabled={isError}
-      error={error}
-      {...form.getInputProps(`options.${property}`)}
+      error={loadError ?? inputProps.error}
     />
   );
 };
