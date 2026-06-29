@@ -81,7 +81,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         },
         visibleStorageVolumes: {
           shouldHide(_, integrationKinds) {
-            return !integrationKinds.includes("synology");
+            return integrationKinds.length === 0 || !integrationKinds.every((kind) => kind === "synology");
           },
         },
         showUptime: {
