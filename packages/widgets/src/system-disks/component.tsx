@@ -124,8 +124,14 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const lastItem = data.at(-1);
 
   if (!lastItem) return <WidgetEmptyState />;
+
+  const rawFileSystem = lastItem.healthInfo.fileSystem;
+  if (rawFileSystem.length === 0) {
+    throw new NoIntegrationDataError();
+  }
+
   const fileSystem = filterStorageVolumes(
-    lastItem.healthInfo.fileSystem,
+    rawFileSystem,
     options.visibleStorageVolumes,
     lastItem.integrationId,
   );
@@ -135,9 +141,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     lastItem.integrationId,
   );
 
-  if (fileSystem.length === 0) {
-    throw new NoIntegrationDataError();
-  }
+  if (fileSystem.length === 0) return <WidgetEmptyState />;
 
   return (
     <Stack gap="xs" p="xs" h="100%">
