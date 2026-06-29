@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { filterStorageVolumes, normalizeStorageDeviceName } from "./filter-storage-volumes";
+import {
+  filterStorageVolumes,
+  normalizeStorageDeviceName,
+  toScopedStorageVolumeValue,
+} from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
 
 describe("normalizeStorageDeviceName", () => {
@@ -12,6 +16,16 @@ describe("normalizeStorageDeviceName", () => {
   test("preserves Synology-style volume names", () => {
     expect(normalizeStorageDeviceName("volume_1")).toBe("volume_1");
     expect(normalizeStorageDeviceName("volume_2")).toBe("volume_2");
+  });
+});
+
+describe("toScopedStorageVolumeValue", () => {
+  test("scopes unscoped volume names to the query integration", () => {
+    expect(toScopedStorageVolumeValue("nas-a", "volume_1")).toBe("nas-a:volume_1");
+  });
+
+  test("re-scopes already-prefixed values using the query integration", () => {
+    expect(toScopedStorageVolumeValue("nas-b", "nas-a:volume_1")).toBe("nas-b:volume_1");
   });
 });
 
@@ -39,6 +53,13 @@ describe("filterStorageVolumes", () => {
     const visibleVolumes = [`${integrationId}:volume_1`];
 
     expect(filterStorageVolumes(entries, visibleVolumes, integrationId)).toEqual([{ deviceName: "volume_1" }]);
+  });
+
+  test("does not apply another integration's scoped selection", () => {
+    const entries = [{ deviceName: "volume_1" }, { deviceName: "volume_2" }];
+    const visibleVolumes = ["nas-b:volume_1"];
+
+    expect(filterStorageVolumes(entries, visibleVolumes, integrationId)).toEqual([]);
   });
 });
 

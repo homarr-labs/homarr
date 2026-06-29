@@ -6,6 +6,12 @@ export const normalizeStorageDeviceName = (deviceName: string): string => {
   return deviceName.replace(/(?<=[a-zA-Z])[0-9]+$/, "");
 };
 
+export const toScopedStorageVolumeValue = (integrationId: string, value: string): string => {
+  const separatorIndex = value.indexOf(":");
+  const volumeName = separatorIndex === -1 ? value : value.slice(separatorIndex + 1);
+  return `${integrationId}:${volumeName}`;
+};
+
 const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
