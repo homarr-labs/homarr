@@ -203,6 +203,8 @@ const mockSuccessfulFlow = (options?: {
     data: Record<string, unknown>;
   };
   utilization?: typeof utilizationResponse;
+  storageV2?: typeof storageV2Response;
+  storageLoadInfo?: typeof storageLoadInfoResponse;
 }) => {
   mockFetch.mockImplementation((url) => {
     const urlString = toUrlString(url);
@@ -239,7 +241,7 @@ const mockSuccessfulFlow = (options?: {
           new Response(JSON.stringify({ success: false, error: { code: 103 } }), { status: 200 }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
-      return Promise.resolve(new Response(JSON.stringify(storageV2Response), { status: 200 })) as unknown as ReturnType<
+      return Promise.resolve(new Response(JSON.stringify(options?.storageV2 ?? storageV2Response), { status: 200 })) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     }
@@ -285,7 +287,7 @@ const mockSuccessfulFlow = (options?: {
 
     if (apiName === "SYNO.Storage.CGI.Storage" && method === "load_info") {
       return Promise.resolve(
-        new Response(JSON.stringify(storageLoadInfoResponse), { status: 200 }),
+        new Response(JSON.stringify(options?.storageLoadInfo ?? storageLoadInfoResponse), { status: 200 }),
       ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
     }
 
@@ -360,6 +362,55 @@ describe("SynologyIntegration.getSystemInfoAsync", () => {
         healthy: false,
         overallStatus: "degraded",
         temperature: 44,
+      },
+    ]);
+  });
+
+  test("picks worst disk status when volume status is missing", async () => {
+    mockSuccessfulFlow({
+      storageV2: {
+        success: true,
+        data: {
+          volumes: [
+            {
+              id: "volume_1",
+              display_name: "Data Volume 1",
+              size: { total: 10_000_000_000, used: 4_000_000_000 },
+            },
+          ],
+        },
+      },
+      storageLoadInfo: {
+        success: true,
+        data: {
+          disks: [
+            {
+              id: "sda",
+              display_name: "Drive 1",
+              temp: 38,
+              status: "normal",
+              volume_id: "volume_1",
+            },
+            {
+              id: "sdb",
+              display_name: "Drive 2",
+              temp: 40,
+              status: "degraded",
+              volume_id: "volume_1",
+            },
+          ],
+        },
+      },
+    });
+    const integration = createIntegration();
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.smart).toEqual([
+      {
+        deviceName: "volume_1",
+        healthy: false,
+        overallStatus: "degraded",
+        temperature: 40,
       },
     ]);
   });
