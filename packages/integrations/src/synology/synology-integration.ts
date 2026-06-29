@@ -232,7 +232,7 @@ function mapVolumeSmartEntries(volumes: SynologyVolumeRecord[], diskRecords: Syn
     const temperatures = matchingDisks
       .map((disk) => disk.temperature)
       .filter((temperature): temperature is number => temperature !== null);
-    const overallStatus = volume.status ?? matchingDisks.find((disk) => disk.status)?.status ?? "normal";
+    const overallStatus = volume.status ?? pickWorstDiskStatus(matchingDisks);
 
     return {
       deviceName: volume.name,
@@ -278,6 +278,28 @@ function diskBelongsToVolume(disk: SynologyDiskRecord, volumeName: string): bool
     volumeName.endsWith(disk.volumeName) ||
     disk.volumeName.includes(volumeName) ||
     volumeName.includes(disk.volumeName)
+  );
+}
+
+const UNHEALTHY_STATUS_TOKENS = ["critical", "error", "crash", "failed", "fail", "degraded", "warning"] as const;
+
+function getStatusSeverityIndex(status: string): number {
+  const normalizedStatus = status.toLowerCase();
+  const index = UNHEALTHY_STATUS_TOKENS.findIndex((token) => normalizedStatus.includes(token));
+  return index === -1 ? UNHEALTHY_STATUS_TOKENS.length : index;
+}
+
+function pickWorstDiskStatus(disks: SynologyDiskRecord[]): string {
+  const statuses = disks
+    .map((disk) => disk.status)
+    .filter((status): status is string => status !== undefined && status.length > 0);
+
+  if (statuses.length === 0) {
+    return "normal";
+  }
+
+  return statuses.reduce((worstStatus, currentStatus) =>
+    getStatusSeverityIndex(currentStatus) < getStatusSeverityIndex(worstStatus) ? currentStatus : worstStatus,
   );
 }
 
