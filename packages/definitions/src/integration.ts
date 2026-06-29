@@ -321,6 +321,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
     defaultPort: 80,
   },
+  synology: {
+    name: "Synology DiskStation",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/synology.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/synology"),
+    defaultPort: 5000,
+  },
   unraid: {
     name: "Unraid",
     secretKinds: [["apiKey"]],

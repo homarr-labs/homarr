@@ -321,6 +321,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/ical"
   | "/docs/integrations/anchor"
   | "/docs/integrations/truenas"
+  | "/docs/integrations/synology"
   | "/docs/integrations/unraid"
   | "/docs/integrations/coolify"
   | "/docs/integrations/immich"

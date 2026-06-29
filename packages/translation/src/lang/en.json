@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Leave empty to show all detected Synology storage volumes.",
+          "placeholder": "Select storage volumes"
+        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Leave empty to show all detected Synology storage volumes.",
+          "placeholder": "Select storage volumes"
         }
       },
       "status": {
