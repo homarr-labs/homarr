@@ -2,6 +2,17 @@ interface StorageVolumeEntry {
   deviceName: string;
 }
 
+export const normalizeStorageDeviceName = (deviceName: string): string => {
+  return deviceName.replace(/(?<=[a-zA-Z])[0-9]+$/, "");
+};
+
+const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+  return (
+    leftDeviceName === rightDeviceName ||
+    normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
+  );
+};
+
 const matchesVisibleStorageVolume = (
   visibleVolume: string,
   integrationId: string,
@@ -9,12 +20,12 @@ const matchesVisibleStorageVolume = (
 ): boolean => {
   const separatorIndex = visibleVolume.indexOf(":");
   if (separatorIndex === -1) {
-    return visibleVolume === deviceName;
+    return storageDeviceNamesMatch(visibleVolume, deviceName);
   }
 
   const visibleIntegrationId = visibleVolume.slice(0, separatorIndex);
   const visibleVolumeName = visibleVolume.slice(separatorIndex + 1);
-  return visibleIntegrationId === integrationId && visibleVolumeName === deviceName;
+  return visibleIntegrationId === integrationId && storageDeviceNamesMatch(visibleVolumeName, deviceName);
 };
 
 export const filterStorageVolumes = <TEntry extends StorageVolumeEntry>(
