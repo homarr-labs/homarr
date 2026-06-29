@@ -36,8 +36,9 @@ import { humanFileSize } from "@homarr/common";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import type { WidgetComponentProps } from "../definition";
+import { filterStorageVolumes } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
+import type { WidgetComponentProps } from "../definition";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
@@ -92,7 +93,9 @@ export const SystemHealthMonitoring = ({
   return (
     <Stack h="100%" gap="sm" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-        const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
+        const filteredFileSystem = filterStorageVolumes(healthInfo.fileSystem, options.visibleStorageVolumes);
+        const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes);
+        const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
         return (
           <Stack

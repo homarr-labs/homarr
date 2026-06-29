@@ -10,6 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { filterStorageVolumes } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
@@ -134,7 +135,8 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const lastItem = data.at(-1);
 
   if (!lastItem) return <WidgetEmptyState />;
-  const { fileSystem, smart } = lastItem.healthInfo;
+  const fileSystem = filterStorageVolumes(lastItem.healthInfo.fileSystem, options.visibleStorageVolumes);
+  const smart = filterStorageVolumes(lastItem.healthInfo.smart, options.visibleStorageVolumes);
 
   if (fileSystem.length === 0) {
     throw new NoIntegrationDataError();
