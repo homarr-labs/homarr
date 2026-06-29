@@ -55,13 +55,17 @@ export const BoardContentHeaderActions = () => {
 
   const openAllInNewTabs = useCallback(async () => {
     const currentLayoutId = getCurrentLayout(board);
-    const appIds = filterByItemKind(
-      board.items.filter((item) => item.layouts.some((layout) => layout.layoutId === currentLayoutId)),
-      settings,
-      "app",
-    ).map((item) => {
-      return item.options.appId;
-    });
+    const appIds = [
+      ...new Set(
+        filterByItemKind(
+          board.items.filter((item) => item.layouts.some((layout) => layout.layoutId === currentLayoutId)),
+          settings,
+          "app",
+        ).map((item) => {
+          return item.options.appId;
+        }),
+      ),
+    ];
 
     const apps = await fetchApi.app.byIds.query(appIds);
     const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
