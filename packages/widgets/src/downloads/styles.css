@@ -1,0 +1,12 @@
+/* Make the MantineReactTable transparent so the board card's opacity-controlled
+   background shows through. MRT defaults to var(--mantine-color-body) which is opaque. */
+.downloads-widget-table,
+.downloads-widget-table .mantine-Table-table,
+.downloads-widget-table .mantine-Table-thead,
+.downloads-widget-table .mantine-Table-tbody,
+.downloads-widget-table .mantine-Table-tfoot,
+.downloads-widget-table .mantine-Table-tr,
+.downloads-widget-table th,
+.downloads-widget-table td {
+  background-color: transparent !important;
+}

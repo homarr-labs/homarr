@@ -489,13 +489,20 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
+  gluetun: {
+    name: "Gluetun",
+    secretKinds: [["username", "password"], ["apiKey"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
+    category: ["vpn"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+  },
   archiveTeamWarrior: {
     name: "ArchiveTeam Warrior",
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
     defaultUrl: "http://localhost:8001",
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/archiveteam-warrior"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -604,6 +611,7 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "vpn",
   "archiving",
   "ups",
   "documents",

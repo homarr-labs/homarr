@@ -1,0 +1,40 @@
+---
+title: 'VPN'
+description: 'Monitor the status of your VPN integrations.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { vpnWidget } from '.';
+import { gluetunIntegration } from '@site/docs/integrations/gluetun';
+
+<WidgetHeader
+  widget={vpnWidget}
+  categories={['Network', 'Security']}
+/>
+
+The VPN widget provides a compact overview of each configured VPN integration. It shows whether the tunnel and DNS
+services are up, the currently exposed public IP address, and the VPN provider and protocol being used.
+
+When multiple VPN integrations are attached, the widget renders one card per integration so you can compare their
+current status at a glance.
+
+### Screenshots
+
+import singleIntegrationImage from './img/single.png';
+
+<div>
+  <img src={singleIntegrationImage} alt="VPN widget showing a single integration" width={128 * 3} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: gluetunIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
