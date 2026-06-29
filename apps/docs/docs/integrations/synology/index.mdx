@@ -10,6 +10,7 @@ import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { synologyIntegration } from ".";
 import { systemResourcesWidget } from "@site/docs/widgets/system-resources";
+import { systemDisksWidget } from "@site/docs/widgets/system-disks";
 import { healthMonitoringWidget } from "@site/docs/widgets/health-monitoring";
 import Alert from "@theme/Admonition";
 
@@ -17,9 +18,13 @@ import Alert from "@theme/Admonition";
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[{ widget: healthMonitoringWidget }, { widget: systemResourcesWidget }]} />
-
-The System Disks widget also supports Synology DiskStation integrations.
+<IntegrationCapabilites
+  items={[
+    { widget: healthMonitoringWidget },
+    { widget: systemResourcesWidget },
+    { widget: systemDisksWidget },
+  ]}
+/>
 
 ### Supported metrics
 
