@@ -85,9 +85,7 @@ export interface WidgetDefinition {
       }
     >
   >;
-  contextActions?: (
-    props: Omit<WidgetContextActionProps<WidgetKind>, "kind">,
-  ) => WidgetContextMenuAction[];
+  contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
 }
 
 export interface WidgetProps<TKind extends WidgetKind> {

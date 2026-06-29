@@ -2,12 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { Menu } from "@mantine/core";
-import {
-  IconCopy,
-  IconLayoutKanban,
-  IconPencil,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconCopy, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -17,10 +12,7 @@ import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { WidgetContextMenuAction } from "@homarr/widgets";
-import {
-  reduceWidgetOptionsWithDefaultValues,
-  widgetImports,
-} from "@homarr/widgets";
+import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -34,11 +26,7 @@ interface WidgetContextMenuProps {
   children: React.ReactNode;
 }
 
-export const WidgetContextMenu = ({
-  item,
-  widgetStateRef,
-  children,
-}: WidgetContextMenuProps) => {
+export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetContextMenuProps) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
@@ -47,36 +35,20 @@ export const WidgetContextMenu = ({
   const { openModal } = useModalAction(WidgetEditModal);
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
-  const {
-    updateItemOptions,
-    updateItemAdvancedOptions,
-    updateItemIntegrations,
-    duplicateItem,
-    removeItem,
-  } = useItemActions();
-  const { data: integrationData, isPending } =
-    clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(
-    () => widgetImports[item.kind].definition,
-    [item.kind],
-  );
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
+    useItemActions();
+  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
 
   const options = useMemo(
-    () =>
-      reduceWidgetOptionsWithDefaultValues(
-        item.kind,
-        settings,
-        item.options,
-      ) as Record<string, unknown>,
+    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
     [item.kind, settings, item.options],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const autoToggleActions = useMemo(() => {
-    const rawOptions = currentDefinition.createOptions(
-      settings,
-    ) as unknown as Record<string, OptionDef>;
+    const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
     return Object.entries(rawOptions)
       .filter(([, def]) => def.type === "switch" && !def.skipContextMenu)
       .map<WidgetContextMenuAction>(([key]) => ({
@@ -114,14 +86,7 @@ export const WidgetContextMenu = ({
       widgetStateRef,
     });
     return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  }, [
-    currentDefinition,
-    options,
-    item,
-    updateItemOptions,
-    isEditMode,
-    widgetStateRef,
-  ]);
+  }, [currentDefinition, options, item, updateItemOptions, isEditMode, widgetStateRef]);
 
   const openEditModal = useCallback(() => {
     openModal(
@@ -149,17 +114,11 @@ export const WidgetContextMenu = ({
         integrationData: (integrationData ?? []).filter(
           (integration) =>
             "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some(
-              (kind) => kind === integration.kind,
-            ),
+            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
-        integrationSupport:
-          "supportedIntegrations" in currentDefinition,
+        integrationSupport: "supportedIntegrations" in currentDefinition,
         settings,
-        appId:
-          item.kind === "app"
-            ? (item.options.appId as string | undefined)
-            : undefined,
+        appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { title: (translateFn: any) => `${translateFn("item.edit.title")} - ${translateFn(`widget.${item.kind}.name`)}` },
@@ -216,10 +175,7 @@ export const WidgetContextMenu = ({
       });
     }
 
-    const widgetActions: WidgetContextMenuAction[] = [
-      ...autoToggleActions,
-      ...widgetContextActions,
-    ];
+    const widgetActions: WidgetContextMenuAction[] = [...autoToggleActions, ...widgetContextActions];
     actions.push(...widgetActions);
 
     if (isEditMode) {
