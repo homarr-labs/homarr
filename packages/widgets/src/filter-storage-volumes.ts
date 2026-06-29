@@ -2,8 +2,24 @@ interface StorageVolumeEntry {
   deviceName: string;
 }
 
+const partitionSuffixPatterns: ReadonlyArray<{ pattern: RegExp; baseGroupIndex: number }> = [
+  // SCSI/SATA/VirtIO: /dev/sda1 -> /dev/sda
+  { pattern: /^(\/dev\/(?:sd|vd|hd|xvd)[a-z]+)[0-9]+$/, baseGroupIndex: 1 },
+  // NVMe: /dev/nvme0n1p2 -> /dev/nvme0n1
+  { pattern: /^(\/dev\/nvme[0-9]+n[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+  // eMMC: /dev/mmcblk0p1 -> /dev/mmcblk0
+  { pattern: /^(\/dev\/mmcblk[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+];
+
 export const normalizeStorageDeviceName = (deviceName: string): string => {
-  return deviceName.replace(/(?<=[a-zA-Z])[0-9]+$/, "");
+  for (const { pattern, baseGroupIndex } of partitionSuffixPatterns) {
+    const match = deviceName.match(pattern);
+    if (match) {
+      return match[baseGroupIndex] ?? deviceName;
+    }
+  }
+
+  return deviceName;
 };
 
 export const toScopedStorageVolumeValue = (integrationId: string, value: string): string => {
