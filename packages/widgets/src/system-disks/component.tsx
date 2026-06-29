@@ -135,8 +135,16 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const lastItem = data.at(-1);
 
   if (!lastItem) return <WidgetEmptyState />;
-  const fileSystem = filterStorageVolumes(lastItem.healthInfo.fileSystem, options.visibleStorageVolumes);
-  const smart = filterStorageVolumes(lastItem.healthInfo.smart, options.visibleStorageVolumes);
+  const fileSystem = filterStorageVolumes(
+    lastItem.healthInfo.fileSystem,
+    options.visibleStorageVolumes,
+    lastItem.integrationId,
+  );
+  const smart = filterStorageVolumes(
+    lastItem.healthInfo.smart,
+    options.visibleStorageVolumes,
+    lastItem.integrationId,
+  );
 
   if (fileSystem.length === 0) {
     throw new NoIntegrationDataError();

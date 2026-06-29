@@ -445,8 +445,8 @@ describe("SynologyIntegration.listStorageVolumesAsync", () => {
     const volumes = await integration.listStorageVolumesAsync();
 
     expect(volumes).toEqual([
-      { value: "volume_1", label: "volume_1" },
-      { value: "volume_2", label: "volume_2" },
+      { value: "test-synology:volume_1", label: "volume_1 (Test Synology)" },
+      { value: "test-synology:volume_2", label: "volume_2 (Test Synology)" },
     ]);
   });
 });

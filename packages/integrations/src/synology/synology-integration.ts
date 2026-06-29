@@ -85,9 +85,10 @@ export class SynologyIntegration extends Integration implements ISystemHealthMon
 
   public async listStorageVolumesAsync(): Promise<{ value: string; label: string }[]> {
     const volumes = await this.getClient().getStorageVolumesAsync();
+    const { id: integrationId, name: integrationName } = this.integration;
     return volumes.map((volume) => ({
-      value: volume.name,
-      label: volume.name,
+      value: `${integrationId}:${volume.name}`,
+      label: `${volume.name} (${integrationName})`,
     }));
   }
 

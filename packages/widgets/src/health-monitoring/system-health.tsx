@@ -93,8 +93,12 @@ export const SystemHealthMonitoring = ({
   return (
     <Stack h="100%" gap="sm" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-        const filteredFileSystem = filterStorageVolumes(healthInfo.fileSystem, options.visibleStorageVolumes);
-        const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes);
+        const filteredFileSystem = filterStorageVolumes(
+          healthInfo.fileSystem,
+          options.visibleStorageVolumes,
+          integrationId,
+        );
+        const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes, integrationId);
         const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
         return (
