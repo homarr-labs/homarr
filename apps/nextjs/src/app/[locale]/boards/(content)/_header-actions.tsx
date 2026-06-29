@@ -9,6 +9,7 @@ import {
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
+  IconExternalLink,
   IconLayoutBoard,
   IconPencil,
   IconPencilOff,
@@ -19,10 +20,12 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
+import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useSettings } from "@homarr/settings";
+import { filterByItemKind } from "~/components/board/sections/category/filter";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
@@ -46,9 +49,48 @@ export const BoardContentHeaderActions = () => {
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const { data: demoMode, isLoading } = clientApi.info.isDemoMode.useQuery();
+  const settings = useSettings();
+  const t = useI18n();
+  const { openConfirmModal } = useConfirmModal();
+
+  const openAllInNewTabs = useCallback(async () => {
+    const currentLayoutId = getCurrentLayout(board);
+    const appIds = filterByItemKind(
+      board.items.filter((item) => item.layouts.some((layout) => layout.layoutId === currentLayoutId)),
+      settings,
+      "app",
+    ).map((item) => {
+      return item.options.appId;
+    });
+
+    const apps = await fetchApi.app.byIds.query(appIds);
+    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
+
+    for (const app of appsWithUrls) {
+      const openedWindow = window.open(app.href ?? undefined);
+      if (openedWindow) {
+        continue;
+      }
+
+      openConfirmModal({
+        title: t("section.category.openAllInNewTabs.title"),
+        children: t("section.category.openAllInNewTabs.text"),
+      });
+      break;
+    }
+  }, [board, t, openConfirmModal, settings]);
 
   if (!hasChangeAccess || isLoading) {
-    return <SelectBoardsMenu />;
+    return (
+      <>
+        {!isLoading && (
+          <HeaderButton onClick={openAllInNewTabs} aria-label={t("section.category.action.openAllInNewTabs")}>
+            <IconExternalLink stroke={1.5} />
+          </HeaderButton>
+        )}
+        <SelectBoardsMenu />
+      </>
+    );
   }
 
   return (
@@ -56,6 +98,12 @@ export const BoardContentHeaderActions = () => {
       {isEditMode && <AddMenu />}
 
       <EditModeMenu demoMode={demoMode ?? false} />
+
+      {!isEditMode && (
+        <HeaderButton onClick={openAllInNewTabs} aria-label={t("section.category.action.openAllInNewTabs")}>
+          <IconExternalLink stroke={1.5} />
+        </HeaderButton>
+      )}
 
       {!demoMode && (
         <OnboardingTour.Target id="board-settings">
