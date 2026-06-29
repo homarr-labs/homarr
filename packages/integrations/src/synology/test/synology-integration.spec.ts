@@ -102,12 +102,14 @@ const storageV2Response = {
   data: {
     volumes: [
       {
-        display_name: "volume_1",
+        id: "volume_1",
+        display_name: "Data Volume 1",
         size: { total: 10_000_000_000, used: 4_000_000_000 },
         status: "normal",
       },
       {
-        display_name: "volume_2",
+        id: "volume_2",
+        display_name: "Data Volume 2",
         size: { total: 20_000_000_000, used: 5_000_000_000 },
         status: "degraded",
       },
@@ -445,8 +447,8 @@ describe("SynologyIntegration.listStorageVolumesAsync", () => {
     const volumes = await integration.listStorageVolumesAsync();
 
     expect(volumes).toEqual([
-      { value: "test-synology:volume_1", label: "volume_1 (Test Synology)" },
-      { value: "test-synology:volume_2", label: "volume_2 (Test Synology)" },
+      { value: "test-synology:volume_1", label: "Data Volume 1 (Test Synology)" },
+      { value: "test-synology:volume_2", label: "Data Volume 2 (Test Synology)" },
     ]);
   });
 });

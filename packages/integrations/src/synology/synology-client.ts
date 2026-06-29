@@ -154,11 +154,17 @@ export class SynologyClient {
   private mapStorageV2Volumes(storage: z.infer<typeof synologyStorageV2DataSchema>) {
     return (storage.volumes ?? [])
       .map((volume) => {
-        const name = volume.display_name ?? volume.vol_path ?? volume.id;
+        const name = volume.id ?? volume.vol_path ?? volume.display_name;
         if (!name) {
           return null;
         }
-        return this.mapVolumeRecord(name, volume.size?.used, volume.size?.total, volume.status);
+        return this.mapVolumeRecord(
+          name,
+          volume.size?.used,
+          volume.size?.total,
+          volume.status,
+          volume.display_name,
+        );
       })
       .filter((volume): volume is SynologyVolumeRecord => volume !== null);
   }
@@ -168,6 +174,7 @@ export class SynologyClient {
     usedValue: number | string | undefined,
     totalValue: number | string | undefined,
     status: string | undefined,
+    displayName?: string,
   ): SynologyVolumeRecord | null {
     const usedBytes = parseNumericValue(usedValue);
     const totalBytes = parseNumericValue(totalValue);
@@ -177,6 +184,7 @@ export class SynologyClient {
 
     return {
       name,
+      displayName: displayName && displayName !== name ? displayName : undefined,
       usedBytes,
       totalBytes,
       status,
