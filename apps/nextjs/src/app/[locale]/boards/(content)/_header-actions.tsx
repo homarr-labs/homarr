@@ -71,8 +71,9 @@ export const BoardContentHeaderActions = () => {
     const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
 
     for (const app of appsWithUrls) {
-      const openedWindow = window.open(app.href ?? undefined);
+      const openedWindow = window.open(app.href ?? undefined, "_blank", "noopener,noreferrer");
       if (openedWindow) {
+        openedWindow.opener = null;
         continue;
       }
 
