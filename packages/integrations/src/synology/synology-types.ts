@@ -176,6 +176,7 @@ export const synologyUpgradeCheckDataSchema = z
 
 export type SynologyVolumeRecord = {
   name: string;
+  displayName?: string;
   usedBytes: number;
   totalBytes: number;
   status: string | undefined;

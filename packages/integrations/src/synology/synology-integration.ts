@@ -88,7 +88,7 @@ export class SynologyIntegration extends Integration implements ISystemHealthMon
     const { id: integrationId, name: integrationName } = this.integration;
     return volumes.map((volume) => ({
       value: `${integrationId}:${volume.name}`,
-      label: `${volume.name} (${integrationName})`,
+      label: `${volume.displayName ?? volume.name} (${integrationName})`,
     }));
   }
 
