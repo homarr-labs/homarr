@@ -1,0 +1,63 @@
+---
+title: 'Media Missing & Queue'
+description: 'Track missing media and active downloads from Radarr and Sonarr'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { mediaMissingWidget } from '.';
+import { radarrIntegration } from '@site/docs/integrations/radarr';
+import { sonarrIntegration } from '@site/docs/integrations/sonarr';
+
+<WidgetHeader
+  widget={mediaMissingWidget}
+  categories={['Media', 'Downloads']}
+/>
+
+Monitor which movies and episodes are missing from your library, and track what is currently being downloaded. The widget pulls data from Radarr and Sonarr and groups results by type in two tabs.
+
+### Screenshots
+
+import widgetMissing from './img/missing.png';
+import widgetQueued from './img/queued.png';
+import widgetCompact from './img/compact.png';
+
+<div className="flex gap-2 flex-wrap">
+  <img src={widgetMissing} alt="media-missing tab showing missing movies and episodes" width={256} />
+  <img src={widgetQueued} alt="media-missing tab showing download queue with progress bars" width={256} />
+  <img src={widgetCompact} alt="media-missing widget in compact 2x1 size" width={256} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: radarrIntegration,
+}, {
+  integration: sonarrIntegration,
+}]} />
+
+### Tabs
+
+| Tab | Description |
+|---|---|
+| **Missing** | Lists movies (Radarr) and episodes (Sonarr) that are monitored but not yet available in your library. |
+| **Queued** | Shows items currently being downloaded with a progress bar and estimated time remaining. |
+
+### Sizing
+
+The widget adapts to its container size:
+
+- **Narrow (1×N)** — tab labels collapse to counts only; posters scale down.
+- **Wide and short (2×1)** — items arrange in a two-column grid to make use of horizontal space.
+- **Standard (2×2 and larger)** — full single-column layout with poster art.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={mediaMissingWidget.configuration} />
