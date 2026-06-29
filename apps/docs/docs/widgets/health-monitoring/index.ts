@@ -43,7 +43,7 @@ export const healthMonitoringWidget: WidgetDefinition = {
         description:
           "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
         values: "List of storage volumes",
-        defaultValue: "All volumes",
+        defaultValue: "Empty list",
       },
       {
         name: "Default tab",
