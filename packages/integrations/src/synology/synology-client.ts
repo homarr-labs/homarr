@@ -299,34 +299,32 @@ export class SynologyClient {
     loginUrl.searchParams.set("api", AUTH_API_NAME);
     loginUrl.searchParams.set("version", String(authDefinition.maxVersion));
     loginUrl.searchParams.set("method", "login");
-    loginUrl.searchParams.set("account", this.username);
-    loginUrl.searchParams.set("passwd", this.password);
-    loginUrl.searchParams.set("session", AUTH_SESSION_NAME);
-    loginUrl.searchParams.set("format", "cookie");
+    const safeLoginUrl = loginUrl.toString();
 
     const response = await fetchWithTrustedCertificatesAsync(loginUrl, {
+      method: "POST",
       headers: {
         "User-Agent": "Homarr",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: new URLSearchParams({
+        account: this.username,
+        passwd: this.password,
+        session: AUTH_SESSION_NAME,
+        format: "cookie",
+      }).toString(),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
     if (!response.ok) {
-      throw new ResponseError(response);
+      throw new ResponseError({ status: response.status, url: safeLoginUrl });
     }
 
     const payload = synologyAuthResponseSchema.parse(await response.json());
     if (!payload.success) {
-      const errorCode = payload.error?.code;
-      if (errorCode === 403 || errorCode === 404) {
-        throw new ResponseError({
-          status: 401,
-          url: loginUrl.toString(),
-        });
-      }
       throw new ResponseError({
         status: 401,
-        url: loginUrl.toString(),
+        url: safeLoginUrl,
       });
     }
 
@@ -334,7 +332,7 @@ export class SynologyClient {
     if (!cookieHeader) {
       throw new ResponseError({
         status: 401,
-        url: loginUrl.toString(),
+        url: safeLoginUrl,
       });
     }
 

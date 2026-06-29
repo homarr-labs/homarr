@@ -30,7 +30,10 @@ vi.mock("../../base/session-store", () => ({
   }),
 }));
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
+import { IntegrationResponseError } from "../../base/errors/http/integration-response-error";
 
 import type { IntegrationSecret } from "../../base/types";
 import { SynologyIntegration } from "../synology-integration";
@@ -481,5 +484,51 @@ describe("SynologyIntegration authentication", () => {
 
     const integration = createIntegration();
     await expect(integration.getSystemInfoAsync()).rejects.toThrow();
+  });
+
+  test("does not leak credentials in login error URLs", async () => {
+    mockFetch.mockImplementation((url, init) => {
+      const urlString = toUrlString(url);
+      const apiName = getApiFromUrl(urlString);
+      const method = getMethodFromUrl(urlString);
+
+      if (apiName === "SYNO.API.Info" && method === "query") {
+        const query = new URL(urlString).searchParams.get("query") ?? "SYNO.API.Auth";
+        const definition = apiDefinitions[query as keyof typeof apiDefinitions];
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true, data: { [query]: definition } }), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      if (apiName === "SYNO.API.Auth" && method === "login") {
+        expect(init?.method).toBe("POST");
+        expect(init?.body).toContain("account=homarr");
+        expect(init?.body).toContain("passwd=secret-password");
+        expect(urlString).not.toContain("account=");
+        expect(urlString).not.toContain("passwd=");
+
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: false, error: { code: 403 } }), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response("{}", { status: 500 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const integration = createIntegration();
+
+    try {
+      await integration.getSystemInfoAsync();
+      expect.unreachable("Expected login to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(IntegrationResponseError);
+      const responseError = (error as IntegrationResponseError).cause;
+      expect(responseError).toBeInstanceOf(ResponseError);
+      expect(responseError.url).not.toContain("secret-password");
+      expect(responseError.url).not.toContain("passwd=");
+      expect(responseError.url).not.toContain("account=homarr");
+    }
   });
 });
