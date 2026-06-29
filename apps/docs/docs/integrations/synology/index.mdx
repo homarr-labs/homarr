@@ -85,7 +85,11 @@ import Alert from "@theme/Admonition";
 
 ### Storage volume selection
 
-Health Monitoring and System Disks widgets can auto-detect Synology storage volumes during editing. Leave the **Visible storage volumes** option empty to show all volumes, or select specific volumes such as `volume_1` and `volume_2`.
+Health Monitoring and System Disks widgets can filter Synology storage volumes when **every** selected integration is a Synology DiskStation. Leave **Visible storage volumes** empty to show all volumes, or pick specific volumes from the list. When multiple Synology integrations are connected, volumes are labeled with the integration name.
+
+<Alert type="note" title="Synology-only option">
+  The volume filter is hidden when the widget also uses non-Synology integrations such as TrueNAS or Unraid.
+</Alert>
 
 <Alert type="note" title="Volume ordering">
   When no volume filter is configured, the first volume returned by DSM is not guaranteed to be `volume_1`.

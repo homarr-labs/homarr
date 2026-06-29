@@ -33,7 +33,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   notifications: "notifications",
   systemResources: "system-resources",
   coolify: "coolify",
-  systemDisks: null,
+  systemDisks: "system-disks",
   timetable: "timetable",
   "immich-serverStats": "immich-server-stats",
   "immich-albumCarousel": "immich-album-carousel",

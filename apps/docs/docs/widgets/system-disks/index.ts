@@ -31,7 +31,8 @@ export const systemDisksWidget: WidgetDefinition = {
       },
       {
         name: "Visible storage volumes",
-        description: "Leave empty to show all detected Synology storage volumes",
+        description:
+          "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
         values: "List of storage volumes",
         defaultValue: "All volumes",
       },
