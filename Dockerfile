@@ -20,19 +20,6 @@ ARG DISABLE_REDIS_LOGS='true'
 
 RUN corepack enable pnpm && pnpm build
 
-# Copy server chunk source maps into standalone output when enabled.
-# Off by default to avoid the significant memory overhead of --enable-source-maps in Node.js.
-# See https://github.com/homarr-labs/homarr/issues/6123 and https://github.com/nodejs/node/issues/46140
-ARG ENABLE_SOURCE_MAPS=false
-RUN if [ "$ENABLE_SOURCE_MAPS" = "true" ]; then \
-      cd apps/nextjs/.next/server && \
-      find . -name '*.map' | while IFS= read -r map; do \
-        dest="../standalone/apps/nextjs/.next/server/$map"; \
-        mkdir -p "$(dirname "$dest")"; \
-        cp "$map" "$dest"; \
-      done; \
-    fi
-
 FROM base AS runner
 WORKDIR /app
 
@@ -77,9 +64,6 @@ ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
-# Pass through the source maps toggle so run.sh can conditionally set NODE_OPTIONS.
-ARG ENABLE_SOURCE_MAPS=false
-ENV HOMARR_ENABLE_SOURCE_MAPS=$ENABLE_SOURCE_MAPS
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]

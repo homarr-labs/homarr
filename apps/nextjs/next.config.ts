@@ -31,7 +31,6 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   reactStrictMode: true,
-  productionBrowserSourceMaps: process.env.HOMARR_ENABLE_SOURCE_MAPS === "true",
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
@@ -42,7 +41,6 @@ const nextConfig: NextConfig = {
    */
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
-    serverSourceMaps: process.env.HOMARR_ENABLE_SOURCE_MAPS === "true",
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,
     preloadEntriesOnStart: false,

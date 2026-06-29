@@ -188,13 +188,20 @@ jobs:
         run: |
           docker run -d --name homarr-mem-test -p 17575:7575 homarr-memory-test
           # Wait for container to be healthy (up to 60s)
+          healthy=false
           for i in $(seq 1 30); do
             if curl -sf http://localhost:17575/api/health 2>/dev/null; then
               echo "Container healthy after $((i * 2))s"
+              healthy=true
               break
             fi
             sleep 2
           done
+          if [ "$healthy" != "true" ]; then
+            echo "ERROR: Container never became healthy"
+            docker logs homarr-mem-test --tail 50
+            exit 1
+          fi
           # Warm up: hit the dashboard page a few times
           for i in $(seq 1 5); do
             curl -sf http://localhost:17575/ > /dev/null 2>&1 || true

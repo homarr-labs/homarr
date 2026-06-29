@@ -58,12 +58,6 @@ terminate() {
 
 trap terminate TERM INT
 
-# Enable source maps in Node.js when explicitly opted in.
-# Default off — see https://github.com/homarr-labs/homarr/issues/6123
-if [ "${HOMARR_ENABLE_SOURCE_MAPS}" = "true" ]; then
-  export NODE_OPTIONS="--enable-source-maps${NODE_OPTIONS:+ $NODE_OPTIONS}"
-fi
-
 node apps/nextjs/server.js &
 NEXTJS_PID=$!
 
