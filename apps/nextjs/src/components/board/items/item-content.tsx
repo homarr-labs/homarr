@@ -73,7 +73,8 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
             radius={board.itemRadius}
             styles={{
               root: {
-                "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+                "--border-color":
+                  item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
                 "--opacity": board.opacity / 100,
               },
             }}
