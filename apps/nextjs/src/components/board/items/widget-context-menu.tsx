@@ -5,6 +5,7 @@ import { Menu } from "@mantine/core";
 import { IconCopy, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -27,6 +28,7 @@ interface WidgetContextMenuProps {
 }
 
 export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetContextMenuProps) => {
+  const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
@@ -203,6 +205,8 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     openMoveModal,
     duplicateItem,
   ]);
+
+  if (!session) return <>{children}</>;
 
   return (
     <Menu shadow="md" width={200}>
