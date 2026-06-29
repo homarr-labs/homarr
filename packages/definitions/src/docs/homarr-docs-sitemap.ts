@@ -165,7 +165,6 @@ export type HomarrDocumentationPath =
   | "/docs/getting-started/installation/unraid"
   | "/docs/integrations/adguard-home"
   | "/docs/integrations/anchor"
-  | "/docs/integrations/archiveteam-warrior"
   | "/docs/integrations/aria2"
   | "/docs/integrations/audiobookshelf"
   | "/docs/integrations/beszel"
