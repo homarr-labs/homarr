@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 
-import { fetchApi } from "@homarr/api/client";
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -8,6 +7,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
+import { openAppsInNewTabs } from "~/components/board/open-apps-in-new-tabs";
 import { useCategoryActions } from "./category-actions";
 import { CategoryEditModal } from "./category-edit-modal";
 import { filterByItemKind } from "./filter";
@@ -115,21 +115,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
       return item.options.appId;
     });
 
-    const apps = await fetchApi.app.byIds.query(appIds);
-    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
-
-    for (const app of appsWithUrls) {
-      const openedWindow = window.open(app.href ?? undefined);
-      if (openedWindow) {
-        continue;
-      }
-
-      openConfirmModal({
-        title: t("section.category.openAllInNewTabs.title"),
-        children: t("section.category.openAllInNewTabs.text"),
-      });
-      break;
-    }
+    await openAppsInNewTabs(appIds, { t, openConfirmModal });
   }, [category, board, t, openConfirmModal, settings]);
 
   return {

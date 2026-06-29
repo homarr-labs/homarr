@@ -20,11 +20,12 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import { clientApi, fetchApi } from "@homarr/api/client";
+import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
+import { openAppsInNewTabs } from "~/components/board/open-apps-in-new-tabs";
 import { filterByItemKind } from "~/components/board/sections/category/filter";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -55,34 +56,15 @@ export const BoardContentHeaderActions = () => {
 
   const openAllInNewTabs = useCallback(async () => {
     const currentLayoutId = getCurrentLayout(board);
-    const appIds = [
-      ...new Set(
-        filterByItemKind(
-          board.items.filter((item) => item.layouts.some((layout) => layout.layoutId === currentLayoutId)),
-          settings,
-          "app",
-        ).map((item) => {
-          return item.options.appId;
-        }),
-      ),
-    ];
+    const appIds = filterByItemKind(
+      board.items.filter((item) => item.layouts.some((layout) => layout.layoutId === currentLayoutId)),
+      settings,
+      "app",
+    ).map((item) => {
+      return item.options.appId;
+    });
 
-    const apps = await fetchApi.app.byIds.query(appIds);
-    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
-
-    for (const app of appsWithUrls) {
-      const openedWindow = window.open(app.href ?? undefined, "_blank", "noopener,noreferrer");
-      if (openedWindow) {
-        openedWindow.opener = null;
-        continue;
-      }
-
-      openConfirmModal({
-        title: t("section.category.openAllInNewTabs.title"),
-        children: t("section.category.openAllInNewTabs.text"),
-      });
-      break;
-    }
+    await openAppsInNewTabs(appIds, { t, openConfirmModal });
   }, [board, t, openConfirmModal, settings]);
 
   if (!hasChangeAccess || isLoading) {
