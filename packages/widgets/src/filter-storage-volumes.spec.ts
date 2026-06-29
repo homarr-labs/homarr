@@ -17,6 +17,17 @@ describe("normalizeStorageDeviceName", () => {
     expect(normalizeStorageDeviceName("volume_1")).toBe("volume_1");
     expect(normalizeStorageDeviceName("volume_2")).toBe("volume_2");
   });
+
+  test("strips NVMe partition suffixes without collapsing the namespace id", () => {
+    expect(normalizeStorageDeviceName("/dev/nvme0n1")).toBe("/dev/nvme0n1");
+    expect(normalizeStorageDeviceName("/dev/nvme0n1p2")).toBe("/dev/nvme0n1");
+    expect(normalizeStorageDeviceName("/dev/nvme0n2p1")).toBe("/dev/nvme0n2");
+  });
+
+  test("does not collapse unrelated md devices", () => {
+    expect(normalizeStorageDeviceName("/dev/md0")).toBe("/dev/md0");
+    expect(normalizeStorageDeviceName("/dev/md1")).toBe("/dev/md1");
+  });
 });
 
 describe("toScopedStorageVolumeValue", () => {
@@ -61,6 +72,13 @@ describe("filterStorageVolumes", () => {
 
     expect(filterStorageVolumes(entries, visibleVolumes, integrationId)).toEqual([]);
   });
+
+  test("does not treat different md devices as the same volume", () => {
+    const entries = [{ deviceName: "/dev/md0" }, { deviceName: "/dev/md1" }];
+    const visibleVolumes = [`${integrationId}:/dev/md0`];
+
+    expect(filterStorageVolumes(entries, visibleVolumes, integrationId)).toEqual([{ deviceName: "/dev/md0" }]);
+  });
 });
 
 describe("matchFileSystemAndSmart", () => {
@@ -92,6 +110,37 @@ describe("matchFileSystemAndSmart", () => {
       deviceName: "volume_1",
       temperature: 39,
       overallStatus: "normal",
+    });
+  });
+
+  test("joins NVMe partitions with their base device SMART data", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/nvme0n1p2", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/nvme0n1", temperature: 41, overallStatus: "GOOD" }],
+    );
+
+    expect(result).toEqual([
+      {
+        deviceName: "/dev/nvme0n1",
+        used: "100",
+        available: "900",
+        percentage: 10,
+        temperature: 41,
+        overallStatus: "GOOD",
+      },
+    ]);
+  });
+
+  test("does not join SMART data from a different md device", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/md1", temperature: 41, overallStatus: "GOOD" }],
+    );
+
+    expect(result[0]).toMatchObject({
+      deviceName: "/dev/md0",
+      temperature: null,
+      overallStatus: "",
     });
   });
 });
