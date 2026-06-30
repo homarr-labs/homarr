@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "Медіа бібліотека",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "тут",
     "iconPicker": {
       "label": "",
-      "header": ""
+      "header": "",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Перемикнути на темну тему",
         "switchToLightMode": "Перемикнути на світлу тему",
         "management": "Управління",
+        "docker": "",
         "preferences": "Ваші налаштування",
         "logout": "Вийти",
         "login": "Логін",
@@ -1938,7 +1943,7 @@
         "addTable": "Додати таблицю",
         "deleteTable": "Видалити таблицю",
         "colorCell": "",
-        "mergeCell": "",
+        "mergeCell": "Ввімкнути/вимкнути об'єднання клітини",
         "addColumnLeft": "",
         "addColumnRight": "",
         "deleteColumn": "",
@@ -2101,13 +2106,13 @@
               "label": ""
             },
             "1y": {
-              "label": ""
+              "label": "1 рік"
             },
             "2y": {
               "label": ""
             },
             "5y": {
-              "label": ""
+              "label": "5 років"
             },
             "10y": {
               "label": ""
@@ -2142,7 +2147,7 @@
               "label": ""
             },
             "1mo": {
-              "label": ""
+              "label": "1 місяць"
             }
           }
         }
@@ -2182,7 +2187,7 @@
           "label": "Температура за Фаренгейтом"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Вимкнути десяткові дроби температури"
         },
         "showCurrentWindSpeed": {
           "label": "Показати поточну швидкість вітру",
@@ -2352,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2359,7 +2367,7 @@
           "label": "",
           "option": {
             "name": "",
-            "state": "",
+            "state": "Стан",
             "cpuUsage": "",
             "memoryUsage": ""
           }
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2470,7 +2484,7 @@
         "videoDecision": {
           "directPlay": "",
           "transcode": "",
-          "directStream": ""
+          "directStream": "Прямий потік"
         }
       },
       "recentActivity": {
@@ -2550,7 +2564,7 @@
           "label": "",
           "description": "",
           "option": {
-            "chart": "",
+            "chart": "Графік",
             "events": "",
             "topPages": "",
             "topReferrers": ""
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Не знайдено",
       "text": "Не вдалося знайти запитуваний ресурс"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

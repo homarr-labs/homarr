@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "Hier",
     "iconPicker": {
       "label": "",
-      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
+      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
+        "docker": "",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -2352,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Nicht gefunden",
       "text": "Konnte die angeforderte Ressource nicht finden"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fehler beim Abrufen der Docker Container"
+      "internalServerError": "Fehler beim Abrufen der Docker Container",
+      "noColumns": ""
     }
   },
   "kubernetes": {
