@@ -17,7 +17,7 @@ jobs:
     if: github.actor_id == 158783068 || github.actor_id == 190541745 || github.actor_id == 210161987 || github.actor_id == 175486441
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Obtain token
         id: obtainToken
         uses: actions/create-github-app-token@v3

@@ -57,7 +57,7 @@ jobs:
           client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
@@ -119,7 +119,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -158,7 +158,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
