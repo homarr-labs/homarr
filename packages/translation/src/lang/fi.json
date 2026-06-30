@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Valvonta",
       "speedtest": "Nopeustestaus",
       "analytics": "Analytiikka",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1044,7 +1045,7 @@
           "description": "Vastausta ei voitu jäsentää. Tarkista, että URL-osoite osoittaa palvelun perusosoitteeseen."
         },
         "authorization": {
-          "title": "Tuonnistautumisvirhe",
+          "title": "Tunnistautumisvirhe",
           "description": "Pyyntöä ei hyväksytty. Varmista, että kirjautumistiedot ovat oikein ja että niille on määritetty riittävät käyttöoikeudet."
         },
         "statusCode": {
@@ -1412,7 +1413,10 @@
     "here": "",
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
-      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta."
+      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "Hallinta",
+        "docker": "",
         "preferences": "Asetuksesi",
         "logout": "Kirjaudu ulos",
         "login": "",
@@ -2352,6 +2357,9 @@
       "name": "Docker-tilastot",
       "description": "Konttiesi tilastot (tämä widget voidaan lisätä vain ylläpito-oikeuksilla)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Salli kohteiden järjestys"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "",
       "text": ""
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4579,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umamin aktiiviset käyttäjät"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {
