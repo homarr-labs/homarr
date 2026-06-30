@@ -21,9 +21,6 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
               baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
               query,
             },
-            {
-              enabled: query.length > 0,
-            },
           );
 
           return {
