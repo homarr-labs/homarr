@@ -97,7 +97,12 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
               board.items.map((boardItem) =>
                 boardItem.id !== item.id
                   ? boardItem
-                  : { ...boardItem, options: editResult.options, advancedOptions: editResult.advancedOptions, integrationIds: editResult.integrationIds },
+                  : {
+                      ...boardItem,
+                      options: editResult.options,
+                      advancedOptions: editResult.advancedOptions,
+                      integrationIds: editResult.integrationIds,
+                    },
               ),
             );
           }
@@ -133,9 +138,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
       const newOptions = { ...options, [key]: checked };
       updateItemOptions({ itemId: item.id, newOptions });
       persistBoard(
-        board.items.map((boardItem) =>
-          boardItem.id !== item.id ? boardItem : { ...boardItem, options: newOptions },
-        ),
+        board.items.map((boardItem) => (boardItem.id !== item.id ? boardItem : { ...boardItem, options: newOptions })),
       );
     },
     [options, item.id, updateItemOptions, persistBoard, board],
