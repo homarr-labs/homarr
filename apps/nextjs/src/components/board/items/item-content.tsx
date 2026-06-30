@@ -1,3 +1,4 @@
+import type { MutableRefObject } from "react";
 import { useRef } from "react";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
@@ -88,7 +89,7 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
-  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>;
+  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
 }
 
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {

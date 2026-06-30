@@ -1,5 +1,6 @@
 "use client";
 
+import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useMemo } from "react";
 import { Group, Menu, Switch } from "@mantine/core";
 import { IconCopy, IconLayoutKanban, IconSettings, IconTrash } from "@tabler/icons-react";
@@ -23,8 +24,8 @@ import { ItemMoveModal } from "./item-move-modal";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
-  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>;
-  children: React.ReactNode;
+  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
+  children: ReactNode;
 }
 
 export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetContextMenuProps) => {
