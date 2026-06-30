@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je."
+      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Schakel naar donkere modus",
         "switchToLightMode": "Schakel naar lichte modus",
         "management": "Beheer",
+        "docker": "",
         "preferences": "Jouw voorkeuren",
         "logout": "Uitloggen",
         "login": "Inloggen",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Een app insluiten op het bord.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Bladwijzers",
           "add": "Bladwijzer toevoegen"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker statistieken",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Niet gevonden",
       "text": "Kon de aangevraagde bron niet vinden"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Anonieme analyses sturen",
               "text": "Homarr verstuurt geanonimiseerde analyses met behulp van de open source software Umami. Het verzamelt nooit persoonlijke informatie en is daarom volledig GDPR & CCPA compliant. We moedigen je aan om analytics in te schakelen omdat het ons open source team helpt bij het identificeren van problemen en het prioriteren van onze backlog."
-            },
-            "widgetData": {
-              "title": "Widgetgegevens",
-              "text": "Stuur welke widgets (en hun aantal) je hebt geconfigureerd. Bevat geen URL's, namen of andere gegevens."
-            },
-            "integrationData": {
-              "title": "Integratiegegevens",
-              "text": "Stuur welke integraties (en het aantal) je hebt geconfigureerd. Bevat geen URL's, namen of andere gegevens."
-            },
-            "usersData": {
-              "title": "Gebruikersgegevens",
-              "text": "Stuur het aantal gebruikers en of je SSO hebt geactiveerd"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "{when} bijgewerkt",
       "search": "{count} containers zoeken",
       "selected": "{selectCount} van {totalCount} containers geselecteerd",
-      "footer": "Totaal {count} containers"
+      "footer": "Totaal {count} containers",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker-containers zijn niet opgehaald"
+      "internalServerError": "Docker-containers zijn niet opgehaald",
+      "noColumns": ""
     }
   },
   "kubernetes": {

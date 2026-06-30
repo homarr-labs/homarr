@@ -13,6 +13,7 @@ import type { ReleasesRepository } from "./releases/releases-repository";
 interface CommonInput<TType> {
   defaultValue?: TType;
   withDescription?: boolean;
+  skipContextMenu?: boolean;
 }
 
 interface TextInput extends CommonInput<string> {
@@ -60,6 +61,16 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   };
 }
 
+interface IntegrationSelectInput extends CommonInput<string> {
+  clearable?: boolean;
+  searchable?: boolean;
+  useOptions: (integrationIds: string[]) => {
+    data: { value: string; label: string }[];
+    isPending: boolean;
+    isError: boolean;
+  };
+}
+
 interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
@@ -81,6 +92,7 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    skipContextMenu: input?.skipContextMenu ?? false,
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,
@@ -174,6 +186,14 @@ const optionsFactory = {
     type: "umamiWebsite" as const,
     defaultValue: "",
     withDescription: true,
+  }),
+  integrationSelect: (input: IntegrationSelectInput) => ({
+    type: "integrationSelect" as const,
+    defaultValue: input.defaultValue ?? "",
+    withDescription: input.withDescription ?? false,
+    clearable: input.clearable ?? false,
+    searchable: input.searchable ?? true,
+    useOptions: input.useOptions,
   }),
   customWidgetSelect: (input?: CommonInput<string>) => ({
     type: "customWidgetSelect" as const,

@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "ici",
     "iconPicker": {
       "label": "URL de l'icône :",
-      "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous."
+      "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Activer le mode sombre",
         "switchToLightMode": "Activer le mode clair",
         "management": "Administration",
+        "docker": "",
         "preferences": "Vos préférences",
         "logout": "Se déconnecter",
         "login": "Connexion",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Intègre une application dans le tableau.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Signets",
           "add": "Ajouter un signet"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Statistiques de Docker",
       "description": "Statistiques de vos conteneurs (Ce widget ne peut être ajouté qu'avec les privilèges d'administrateur)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Activer le tri des éléments"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Non trouvé",
       "text": "Impossible de trouver la ressource demandée"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Accueil",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Envoyer des statistiques anonymes",
               "text": "Homarr enverra des statistiques anonymes en utilisant le logiciel open source Umami. Il ne recueille jamais aucune information personnelle et est donc entièrement conforme au RGPD & CCPA. Nous vous encourageons à activer les statistiques parce qu'elles aident notre équipe open source à identifier les problèmes et à prioriser notre backlog."
-            },
-            "widgetData": {
-              "title": "Données du widget",
-              "text": "Envoie quels widgets (et leur quantité) vous avez configurés. N'inclut pas les URLs, les noms ou toute autre donnée."
-            },
-            "integrationData": {
-              "title": "Données d'intégration",
-              "text": "Envoie quelles intégrations (et leur quantité) vous avez configurées. N'inclut pas les URLs, les noms ou toute autre donnée."
-            },
-            "usersData": {
-              "title": "Données utilisateur",
-              "text": "Envoie le nombre d'utilisateurs et si vous avez activé le SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "Mis à jour {when}",
       "search": "Rechercher dans {count} conteneurs",
       "selected": "{selectCount} sur {totalCount} conteneurs sélectionnés",
-      "footer": "Total des conteneurs {count}"
+      "footer": "Total des conteneurs {count}",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Impossible de récupérer les conteneurs Docker"
+      "internalServerError": "Impossible de récupérer les conteneurs Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

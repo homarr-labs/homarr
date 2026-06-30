@@ -10,6 +10,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import * as anchorNote from "./anchor-note";
 import * as audioStats from "./audio-stats";
 import * as app from "./app";
+import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
@@ -51,6 +52,7 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
+import * as vpn from "./vpn";
 import * as beszelSystemTable from "./beszel-system-table";
 import * as beszelSystemGrid from "./beszel-system-grid";
 import * as beszelAlerts from "./beszel-alerts";
@@ -59,7 +61,12 @@ import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
 
-export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
+export type {
+  WidgetDefinition,
+  WidgetContextMenuAction,
+  WidgetContextActionProps,
+  WidgetOptionsSettings,
+} from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 
@@ -67,6 +74,7 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  archiveTeamWarrior,
   anchorNote,
   notebook,
   iframe,
@@ -106,6 +114,7 @@ export const widgetImports = {
   uptimeKuma,
   audioStats,
   umami,
+  vpn,
   ups,
   beszelSystemTable,
   beszelSystemGrid,

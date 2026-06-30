@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Valvonta",
       "speedtest": "Nopeustestaus",
       "analytics": "Analytiikka",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1044,7 +1045,7 @@
           "description": "Vastausta ei voitu jäsentää. Tarkista, että URL-osoite osoittaa palvelun perusosoitteeseen."
         },
         "authorization": {
-          "title": "Tuonnistautumisvirhe",
+          "title": "Tunnistautumisvirhe",
           "description": "Pyyntöä ei hyväksytty. Varmista, että kirjautumistiedot ovat oikein ja että niille on määritetty riittävät käyttöoikeudet."
         },
         "statusCode": {
@@ -1412,7 +1413,10 @@
     "here": "",
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
-      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta."
+      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "Hallinta",
+        "docker": "",
         "preferences": "Asetuksesi",
         "logout": "Kirjaudu ulos",
         "login": "",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Sovellus",
       "description": "",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "",
           "add": ""
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker-tilastot",
       "description": "Konttiesi tilastot (tämä widget voidaan lisätä vain ylläpito-oikeuksilla)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Salli kohteiden järjestys"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "",
       "text": ""
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Aloitus",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Lähetä anonyymejä käyttötietoja",
               "text": "Homarr lähettää anonymisoitua analytiikkaa avoimen lähdekoodin Umami‑järjestelmän avulla. Kun analytiikka on käytössä, keräämme seuraavat tiedot: Homarrin version, tietokannan tyypin (MySQL/PostgreSQL/SQLite), Docker‑/Kubernetes‑tilan, käytössä olevat tunnistautumismenetelmät sekä eri ominaisuuksien lukumäärät. Kaikki tiedot on anonymisoitu ja koottu tilastomuotoon – mitään henkilötietoja, URL‑osoitteita, nimiä tai muita tunnistettavia tietoja ei koskaan kerätä. Tämä auttaa avoimen lähdekoodin tiimiämme ymmärtämään käyttötapoja ja priorisoimaan kehitystä."
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "Integraatiotiedot",
-              "text": "Lähetä mitä ja miten monta integraatiota olet määrittänyt. Ei sisällä URL-osoitteita, nimiä tai mitään muita tietoja."
-            },
-            "usersData": {
-              "title": "",
-              "text": ""
             }
           },
           "crawlingAndIndexing": {
@@ -4556,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umamin aktiiviset käyttäjät"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -4919,7 +4970,9 @@
       "updated": "Päivitetty {when}",
       "search": "Suodata {count} konttia...",
       "selected": "{selectCount}/{totalCount} kontista valittu",
-      "footer": "Yhteensä {count} konttia"
+      "footer": "Yhteensä {count} konttia",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

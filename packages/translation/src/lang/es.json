@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
-      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti."
+      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Cambiar a modo oscuro",
         "switchToLightMode": "Cambiar a modo claro",
         "management": "Administración",
+        "docker": "",
         "preferences": "Tus preferencias",
         "logout": "Cerrar sesión",
         "login": "Iniciar sesión",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Aplicación",
       "description": "Insertar una aplicación en el tablero.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Marcadores",
           "add": "Añadir marcador"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Estadísticas de Docker",
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Habilitar ordenar elementos"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instancias"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "No Encontrado",
       "text": "No se pudo encontrar el recurso solicitado"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Inicio",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Enviar estadísticas anónimas",
               "text": "Homarr enviará estadísticas anónimas usando el software de código abierto Umami. Nunca recopila información personal y por lo tanto cumple plenamente con GDPR y CCPA. Te animamos a habilitar esta característica ya que ayuda a nuestro equipo de código abierto a identificar problemas y priorizar su resolución."
-            },
-            "widgetData": {
-              "title": "Datos del widget",
-              "text": "Enviar qué widgets (y su cantidad) has configurado. No incluye URLs, nombres ni ningún otro dato."
-            },
-            "integrationData": {
-              "title": "Datos de integración",
-              "text": "Enviar qué integraciones (y su cantidad) has configurado. No incluye URLs, nombres ni ningún otro dato."
-            },
-            "usersData": {
-              "title": "Datos de usuarios",
-              "text": "Enviar la cantidad de usuarios y si has activado SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "Actualizado {when}",
       "search": "Buscar {count} contenedores",
       "selected": "{selectCount} de {totalCount} contenedores seleccionados",
-      "footer": "{count} contenedores en total"
+      "footer": "{count} contenedores en total",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fallo al obtener los contenedores de Docker"
+      "internalServerError": "Fallo al obtener los contenedores de Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

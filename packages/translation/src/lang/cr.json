@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "crwdns4473:0crwdne4473:0",
       "speedtest": "crwdns4475:0crwdne4475:0",
       "analytics": "crwdns4477:0crwdne4477:0",
+      "vpn": "crwdns5687:0crwdne5687:0",
       "mediaLibrary": "crwdns4979:0crwdne4979:0",
       "uptimeMonitoring": "crwdns4981:0crwdne4981:0"
     },
@@ -1412,7 +1413,10 @@
     "here": "crwdns552:0crwdne552:0",
     "iconPicker": {
       "label": "crwdns554:0crwdne554:0",
-      "header": "crwdns556:0{countIcons}crwdne556:0"
+      "header": "crwdns556:0{countIcons}crwdne556:0",
+      "headerLoading": "crwdns5681:0crwdne5681:0",
+      "noResults": "crwdns5683:0{search}crwdne5683:0",
+      "error": "crwdns5685:0crwdne5685:0"
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "crwdns594:0crwdne594:0",
         "switchToLightMode": "crwdns596:0crwdne596:0",
         "management": "crwdns598:0crwdne598:0",
+        "docker": "crwdns5703:0crwdne5703:0",
         "preferences": "crwdns600:0crwdne600:0",
         "logout": "crwdns602:0crwdne602:0",
         "login": "crwdns604:0crwdne604:0",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "crwdns5641:0crwdne5641:0",
+      "loading": "crwdns5643:0crwdne5643:0",
+      "placeholder": "crwdns5645:0crwdne5645:0",
+      "noResults": "crwdns5647:0crwdne5647:0",
+      "loadError": "crwdns5649:0crwdne5649:0"
+    },
     "app": {
       "name": "crwdns732:0crwdne732:0",
       "description": "crwdns734:0crwdne734:0",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "crwdns764:0crwdne764:0",
           "add": "crwdns766:0crwdne766:0"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "crwdns5635:0crwdne5635:0",
+      "description": "crwdns5637:0crwdne5637:0",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "crwdns5639:0crwdne5639:0"
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "crwdns3424:0crwdne3424:0",
       "description": "crwdns3426:0crwdne3426:0",
       "option": {
+        "columns": {
+          "label": "crwdns5705:0crwdne5705:0"
+        },
         "enableRowSorting": {
           "label": "crwdns3808:0crwdne3808:0"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "crwdns3876:0crwdne3876:0"
       }
+    },
+    "vpn": {
+      "name": "crwdns5689:0crwdne5689:0",
+      "description": "crwdns5691:0crwdne5691:0",
+      "serviceUnavailable": "crwdns5693:0crwdne5693:0",
+      "option": {}
     },
     "ups": {
       "name": "crwdns4481:0crwdne4481:0",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "crwdns4811:0crwdne4811:0",
+      "error": {
+        "internalServerError": "crwdns5651:0crwdne5651:0"
+      },
       "column": {
         "system": "crwdns4813:0crwdne4813:0",
         "cpu": "crwdns4815:0crwdne4815:0",
@@ -3617,6 +3650,12 @@
           "label": "crwdns4863:0crwdne4863:0"
         }
       },
+      "error": {
+        "internalServerError": "crwdns5653:0crwdne5653:0"
+      },
+      "empty": {
+        "noSystems": "crwdns5677:0crwdne5677:0"
+      },
       "metric": {
         "cpu": "crwdns4865:0crwdne4865:0",
         "memory": "crwdns4867:0crwdne4867:0",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "crwdns4895:0crwdne4895:0",
+      "error": {
+        "internalServerError": "crwdns5655:0crwdne5655:0"
+      },
       "history": "crwdns4897:0crwdne4897:0",
       "resolved": "crwdns4899:0crwdne4899:0",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "crwdns4905:0crwdne4905:0",
       "description": "crwdns4907:0crwdne4907:0",
       "option": {
+        "systemId": {
+          "label": "crwdns5657:0crwdne5657:0",
+          "description": "crwdns5659:0crwdne5659:0"
+        },
         "timePeriod": {
           "label": "crwdns4909:0crwdne4909:0"
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "crwdns4927:0crwdne4927:0",
+      "empty": {
+        "noSystems": "crwdns5679:0crwdne5679:0"
+      },
+      "error": {
+        "internalServerError": "crwdns5661:0crwdne5661:0",
+        "liveConnectionFailed": "crwdns5663:0crwdne5663:0",
+        "switchToHistorical": "crwdns5665:0crwdne5665:0",
+        "systemNotFound": "crwdns5667:0crwdne5667:0"
+      },
       "chart": {
         "cpu": {
           "title": "crwdns4929:0crwdne4929:0",
@@ -4098,6 +4153,11 @@
       "title": "crwdns1568:0crwdne1568:0",
       "text": "crwdns1570:0crwdne1570:0"
     },
+    "error": {
+      "title": "crwdns5697:0crwdne5697:0",
+      "text": "crwdns5699:0crwdne5699:0",
+      "digest": "crwdns5701:0{digest}crwdne5701:0"
+    },
     "navbar": {
       "items": {
         "home": "crwdns1572:0crwdne1572:0",
@@ -4378,20 +4438,8 @@
           "analytics": {
             "title": "crwdns1764:0crwdne1764:0",
             "general": {
-              "title": "crwdns1766:0crwdne1766:0",
-              "text": "crwdns3878:0crwdne3878:0"
-            },
-            "widgetData": {
-              "title": "crwdns1770:0crwdne1770:0",
-              "text": "crwdns1772:0crwdne1772:0"
-            },
-            "integrationData": {
-              "title": "crwdns1774:0crwdne1774:0",
-              "text": "crwdns1776:0crwdne1776:0"
-            },
-            "usersData": {
-              "title": "crwdns1778:0crwdne1778:0",
-              "text": "crwdns1780:0crwdne1780:0"
+              "title": "crwdns5673:0crwdne5673:0",
+              "text": "crwdns5675:0crwdne5675:0"
             }
           },
           "crawlingAndIndexing": {
@@ -4556,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "crwdns4223:0crwdne4223:0"
+            },
+            "vpn": {
+              "label": "crwdns5695:0crwdne5695:0"
             }
           },
           "interval": {
@@ -4919,7 +4970,9 @@
       "updated": "crwdns1894:0{when}crwdne1894:0",
       "search": "crwdns3432:0{count}crwdne3432:0",
       "selected": "crwdns1898:0{selectCount}crwdnd1898:0{totalCount}crwdne1898:0",
-      "footer": "crwdns3434:0{count}crwdne3434:0"
+      "footer": "crwdns3434:0{count}crwdne3434:0",
+      "totalCpu": "crwdns5669:0{cpu}crwdne5669:0",
+      "totalMemory": "crwdns5671:0{memory}crwdne5671:0"
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "crwdns2262:0crwdne2262:0"
+      "internalServerError": "crwdns2262:0crwdne2262:0",
+      "noColumns": "crwdns5707:0crwdne5707:0"
     }
   },
   "kubernetes": {

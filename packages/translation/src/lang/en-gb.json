@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Start from scratch",
           "importOldmarr": "Import from a Homarr version before v1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restore from SQLite backup",
+          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
+          "backToOptions": "← Back to setup options"
         }
       },
       "import": {
@@ -115,24 +115,24 @@
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Base URL",
+          "placeholder": "homelab.local or 192.168.1.1",
+          "hint": "Enter your base domain or IP to auto-fill integration URLs",
+          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
+          "preview": "e.g. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomain",
+            "hostPort": "Host:Port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker detected {count} services",
+          "detectedBreakdown": "{integrations} integrations · {apps} apps",
+          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
+          "appBadge": "App",
+          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
+          "scanning": "Scanning Docker...",
+          "scanningDescription": "Looking for running containers on your system"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Password",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Password suggestions",
         "suggestion": {
           "length": "Includes a minimum of 8 characters",
           "lowercase": "Includes a lower-case letter",
@@ -687,28 +687,28 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Custom Widgets",
+        "noResults": "No custom widgets yet. Create your first one!",
+        "loading": "Loading..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Create Custom Widget",
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
       },
       "edit": {
-        "title": ""
+        "title": "Edit Custom Widget"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
+      "create": "Create",
+      "import": "Import",
+      "save": "Save",
+      "delete": "Delete Custom Widget",
+      "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "export": "Export",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "edit": "Edit",
       "removeMapping": "",
       "removeColumn": "",
       "addItem": "",
@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one."
+      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "",
         "preferences": "Your preferences",
         "logout": "Log-out",
         "login": "Log-in",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Embeds an app into the board.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "",
       "text": ""
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "",
               "text": ""
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "",
-              "text": ""
-            },
-            "usersData": {
-              "title": "",
-              "text": ""
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "",
       "search": "",
       "selected": "",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {
@@ -5574,71 +5628,71 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your colour scheme"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Language",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your preferred language"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Default search engine",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your default search engine"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Open search results in new tab",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Open search results in new tab"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Enable DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Enable DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "First day of the week",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select the first day of the week"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Home board",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your home board"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobile home board",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your mobile home board"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Use icons for pings",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Use icons for pings"
                   }
                 }
               },
@@ -5704,10 +5758,10 @@
             "option": {
               "google": {
                 "name": "",
-                "description": ""
+                "description": "Search the web with Google"
               },
               "bing": {
-                "name": "",
+                "name": "Bing",
                 "description": "Search the web with Bing"
               },
               "duckduckgo": {
@@ -6089,46 +6143,46 @@
         "description": "These are all the apps you've added — links to your self-hosted services. Each app has an icon, optional health check, and a status badge on the dashboard."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Add an App",
+        "description": "Register a new service here. Give it a name, URL, and icon — it will appear as a tile on your boards with live status monitoring."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Your Integrations",
+        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Add an Integration",
+        "description": "Connect a new service here. Pick the type, enter the URL and API key — Homarr validates the connection before saving."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Your Users",
+        "description": "See everyone who has access. Organise users into groups and control who can view or edit each board."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Create a User",
+        "description": "Add a new user account here. You can also use invite links for easy onboarding. That's the tour — you're all set!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "This is your board",
+        "description": "A drag-and-drop dashboard where you arrange apps and widgets. Press Ctrl+K anytime to search for apps, boards, and actions."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Edit Mode",
+        "description": "Click here to enter edit mode. You can then add widgets, apps, and sections — drag to reposition, resize with the corner handle. Click again to save your changes."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Board Settings",
+        "description": "Change this board's name, columns, background, colours, and who can access it. Each board can be public or private."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Switch Boards",
+        "description": "Jump between boards. Create separate dashboards for different purposes — media, networking, per-user, or anything you like."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Your Profile",
+        "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
   }

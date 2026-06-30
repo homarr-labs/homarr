@@ -3,6 +3,7 @@ import { lazy } from "@trpc/server";
 import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
+  archiveTeamWarrior: lazy(() => import("./archive-team-warrior").then((mod) => mod.archiveTeamWarriorRouter)),
   beszel: lazy(() => import("./beszel").then((mod) => mod.beszelRouter)),
   anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
@@ -35,6 +36,7 @@ export const widgetRouter = createTRPCRouter({
   uptimeKuma: lazy(() => import("./uptime-kuma").then((mod) => mod.uptimeKumaRouter)),
   audioStats: lazy(() => import("./audio-stats").then((mod) => mod.audioStatsRouter)),
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
+  vpn: lazy(() => import("./vpn").then((mod) => mod.vpnRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
 });

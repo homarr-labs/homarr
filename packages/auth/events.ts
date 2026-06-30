@@ -31,7 +31,12 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
     // Groups from oidc provider are provided from the profile, it's not typed.
-    if (profile && groupsKey in profile && Array.isArray(profile[groupsKey])) {
+    if (
+      !env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT &&
+      profile &&
+      groupsKey in profile &&
+      Array.isArray(profile[groupsKey])
+    ) {
       logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profile[groupsKey])}`);
       await synchronizeGroupsWithExternalForUserAsync(db, user.id, profile[groupsKey] as string[]);
     }

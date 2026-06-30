@@ -15,6 +15,7 @@ export {
   createGetSetChannel,
   createQueryCacheChannel,
   getAllQueryCacheAsync,
+  invalidateIntegrationCacheAsync,
 } from "./lib/channel";
 
 export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";

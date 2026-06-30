@@ -355,6 +355,13 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
     defaultPort: 80,
   },
+  gotify: {
+    name: "Gotify",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
+    category: ["notifications"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+  },
   ical: {
     name: "iCal",
     secretKinds: [["url"]],
@@ -482,6 +489,21 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
+  gluetun: {
+    name: "Gluetun",
+    secretKinds: [["username", "password"], ["apiKey"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
+    category: ["vpn"],
+    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+  },
+  archiveTeamWarrior: {
+    name: "ArchiveTeam Warrior",
+    secretKinds: [[], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
+    category: ["archiving"],
+    defaultUrl: "http://localhost:8001",
+    documentationUrl: createDocumentationLink("/docs/integrations/archiveteam-warrior"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -589,6 +611,8 @@ export const integrationCategories = [
   "mediaMonitoring",
   "speedtest",
   "analytics",
+  "vpn",
+  "archiving",
   "ups",
   "documents",
   "mediaLibrary",

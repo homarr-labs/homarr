@@ -28,6 +28,11 @@ export const env = createEnv({
     AUTH_LOGOUT_REDIRECT_URL: z.string().url().optional(),
     AUTH_SESSION_EXPIRY_TIME: createDurationSchema("30d"),
     AUTH_PROVIDERS: authProvidersSchema,
+    AUTH_COOKIE_PREFIX: z
+      .string()
+      .min(1)
+      .regex(/^[a-zA-Z0-9-_]+$/, "AUTH_COOKIE_PREFIX must only contain letters, numbers, hyphens and underscores")
+      .default("homarr"),
     ...(authProviders.includes("oidc")
       ? {
           AUTH_OIDC_ISSUER: z.string().url(),
@@ -37,6 +42,7 @@ export const env = createEnv({
           AUTH_OIDC_AUTO_LOGIN: createBooleanSchema(false),
           AUTH_OIDC_SCOPE_OVERWRITE: z.string().min(1).default("openid email profile groups"),
           AUTH_OIDC_GROUPS_ATTRIBUTE: z.string().default("groups"), // Is used in the signIn event to assign the correct groups, key is from object of decoded id_token
+          AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT: createBooleanSchema(false), // When enabled, group memberships of oidc users are managed locally instead of synced from the groups claim
           AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),
           AUTH_OIDC_FORCE_USERINFO: createBooleanSchema(false),
           AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING: createBooleanSchema(false),

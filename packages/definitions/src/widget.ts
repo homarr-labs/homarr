@@ -41,6 +41,8 @@ export const widgetKinds = [
   "uptimeKuma",
   "audioStats",
   "umami",
+  "vpn",
+  "archiveTeamWarrior",
   "ups",
   "beszelSystemTable",
   "beszelSystemGrid",

@@ -226,7 +226,10 @@ describe.each(VERSIONS)("Technitium DNS $tag ($apiVersion)", ({ tag, apiVersion 
 
     test("recovers from an expired/invalid stored token by re-logging in", async () => {
       // Plant a bad token with the correct version so it hits the right API path before failing
-      sessionState[INTEGRATION_ID] = { token: "deliberately-invalid-token", version: apiVersion };
+      sessionState[INTEGRATION_ID] = {
+        token: "deliberately-invalid-token",
+        version: apiVersion,
+      };
 
       const integration = new TechnitiumDnsIntegration(makeInput(baseUrl, { kind: "credentials" }), apiVersion);
 
@@ -315,7 +318,10 @@ describe.each(VERSIONS)("Technitium DNS $tag ($apiVersion)", ({ tag, apiVersion 
 
     test("fails with wrong password — returns authorization error", async () => {
       const integration = new TechnitiumDnsIntegration(
-        makeInput(baseUrl, { kind: "credentials", password: "wrong-password" }),
+        makeInput(baseUrl, {
+          kind: "credentials",
+          password: "wrong-password",
+        }),
       );
 
       const result = await integration.testConnectionAsync();

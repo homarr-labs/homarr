@@ -1,10 +1,12 @@
 import { WidgetDefinition } from "@site/src/types";
 import { IconAd } from "@tabler/icons-react";
 
+export const integrations = "Pi-hole, AdGuard Home or Technitium DNS";
+
 export const dnsHoleSummaryWidget: WidgetDefinition = {
   icon: IconAd,
   name: "DNS Hole Summary",
-  description: "Displays the summary of your DNS Hole",
+  description: `Displays the summary of your ${integrations} blocks and queries statistics`,
   path: "../../widgets/dns-hole-summary",
   configuration: {
     items: [
@@ -19,7 +21,7 @@ export const dnsHoleSummaryWidget: WidgetDefinition = {
       },
       {
         name: "Use Pi-Hole colors",
-        description: "Color the tiles using the background color, that is used by default in PiHole.",
+        description: `Color the tiles using the background color, that is used by default in ${integrations}.`,
         values: { type: "boolean" },
         defaultValue: "yes",
       },

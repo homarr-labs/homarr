@@ -1,0 +1,14 @@
+.beszelStatsSystemToggle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.beszelStatsContainer:hover .beszelStatsSystemToggle {
+  opacity: 1;
+  pointer-events: auto;
+}

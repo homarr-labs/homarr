@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type {
   BeszelAlert,
@@ -12,6 +13,8 @@ import type {
 } from "@homarr/integrations/types";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+
+const logger = createLogger({ module: "beszelRequestHandler" });
 
 export type { BeszelSystemRow } from "@homarr/integrations/types";
 
@@ -56,6 +59,7 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
   Record<string, never>
 >({
   async requestAsync(integration) {
+    const start = performance.now();
     const instance = await createIntegrationAsync(integration);
     const systems = await instance.getSystemsAsync();
     const enriched = await Promise.all(
@@ -64,9 +68,16 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
         return mapToSystemRow(system, details);
       }),
     );
+    logger.debug("beszelSystems fetch completed", {
+      integrationId: integration.id,
+      durationMs: Math.round(performance.now() - start),
+      count: enriched.length,
+    });
     return enriched;
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
+  fallbackToStaleOnError: true,
+  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelSystems",
 });
 
@@ -81,20 +92,30 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
   { includeHistory: boolean; maxHistoryItems: number }
 >({
   async requestAsync(integration, input) {
+    const start = performance.now();
     const instance = await createIntegrationAsync(integration);
     const alerts = await instance.getAlertsAsync();
     const history = input.includeHistory ? await instance.getAlertHistoryAsync(undefined, input.maxHistoryItems) : [];
+    logger.debug("beszelAlerts fetch completed", {
+      integrationId: integration.id,
+      durationMs: Math.round(performance.now() - start),
+      alertsCount: alerts.length,
+      historyCount: history.length,
+    });
     return { alerts, history };
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
+  fallbackToStaleOnError: true,
+  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelAlerts",
 });
 
 const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
+  "1m": { type: "1m", perPage: 60 },
   "1h": { type: "1m", perPage: 60 },
   "12h": { type: "10m", perPage: 72 },
   "24h": { type: "20m", perPage: 72 },
-  "1w": { type: "120m", perPage: 84 },
+  "1w": { type: "480m", perPage: 21 },
   "30d": { type: "480m", perPage: 90 },
 };
 
@@ -109,14 +130,25 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
   async requestAsync(integration, input) {
+    const start = performance.now();
     const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
     const instance = await createIntegrationAsync(integration);
     const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     const containerStats = input.includeDocker
       ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch(() => [])
       : [];
+    logger.debug("beszelStats fetch completed", {
+      integrationId: integration.id,
+      systemId: input.systemId,
+      timePeriod: input.timePeriod,
+      durationMs: Math.round(performance.now() - start),
+      systemStatsCount: systemStats.length,
+      containerStatsCount: containerStats.length,
+    });
     return { systemStats, containerStats };
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(1, "second"),
+  fallbackToStaleOnError: true,
+  retry: { attempts: 2, delayMs: 500 },
   queryKey: "beszelStats",
 });

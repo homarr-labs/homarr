@@ -9,11 +9,18 @@ export const beszelSystemStatsWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "System",
+        description: "The Beszel system to display stats for. Searchable select populated from the integration.",
+        values: { type: "string" },
+        defaultValue: "First available system",
+      },
+      {
         name: "Time period",
-        description: "The time range for chart data",
+        description:
+          "The time range for chart data. '1 Minute' enables live streaming via PocketBase SSE (requires Beszel agent >= 0.13.0)",
         values: {
           type: "select",
-          options: ["1 Hour", "12 Hours", "24 Hours", "1 Week", "30 Days"],
+          options: ["1 Minute", "1 Hour", "12 Hours", "24 Hours", "1 Week", "30 Days"],
         },
         defaultValue: "1 Hour",
       },

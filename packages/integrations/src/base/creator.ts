@@ -3,6 +3,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { BeszelIntegration } from "../beszel/beszel-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
+import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
@@ -20,6 +21,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
 import { ImmichIntegration } from "../immich/immich-integration";
@@ -35,6 +37,7 @@ import { MockIntegration } from "../mock/mock-integration";
 import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
+import { GotifyIntegration } from "../gotify/gotify-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
@@ -121,6 +124,7 @@ export const integrationCreators = {
   ical: ICalIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
+  gotify: GotifyIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
@@ -134,6 +138,8 @@ export const integrationCreators = {
   audiobookshelf: AudiobookshelfIntegration,
   navidrome: NavidromeIntegration,
   umami: UmamiIntegration,
+  gluetun: GluetunIntegration,
+  archiveTeamWarrior: ArchiveTeamWarriorIntegration,
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,

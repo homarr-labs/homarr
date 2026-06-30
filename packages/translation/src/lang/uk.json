@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Почати з нуля",
           "importOldmarr": "Імпорт з Homarr пре-1.0",
-          "restoreSqlite": "",
+          "restoreSqlite": "Відновлення з резервної копії SQLite",
           "restoreSqliteDescription": "Завантажте повну резервну копію бази даних SQLite з попереднього екземпляра Homarr. Це відновить усі дошки, користувачів, програми, інтеграції та налаштування.",
-          "backToOptions": ""
+          "backToOptions": "Назад до параметрів налаштування"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Налаштування сервера."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Інтеграції",
+        "subtitle": "Виберіть сервіси, якими ви користуєтеся.",
+        "description": "Виберіть інтеграції, які ви хочете під'єднати. Ми автоматично налаштуємо вашу інформаційну панель з відповідними віджетами.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Продовжити",
+          "skip": "Пропустити поки що"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{поточний} з {загальний}",
+          "skip": "Пропустити цю інтеграцію",
+          "finishing": "Налаштування панелі інструментів..",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося налаштувати",
+            "message": "Під час налаштування вашої інформаційної панелі сталася помилка. Спробуйте ще раз."
           },
           "helpers": {
             "tooltip": "Помічники URL-адрес",
-            "description": ""
+            "description": "Ці помічники намагаються вгадати URL-адресу ваших послуг. Якщо це не працює, просто введіть адресу вручну."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Базовий URL",
+          "placeholder": "homelab.local чи 192.168.1.1",
+          "hint": "Введіть свій базовий домен або IP-адресу для автоматичного заповнення URL-адрес інтеграції",
+          "warning": "Якщо встановити базову URL-адресу зараз, усі URL-адреси інтеграції будуть автоматично заповнені, що заощадить ваш час під час налаштування",
+          "preview": "напр. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Субдомен",
+            "hostPort": "Хост:Порт"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker виявив {count} служб",
+          "detectedBreakdown": "{integrations} інтеграцій - {apps} програм",
+          "summary": "Homarr виявив {apps} програми, {integrations} з яких мають вбудовану інтеграцію",
+          "appBadge": "Додаток",
+          "appSectionLabel": "Додатки для додавання на інформаційну панель (вибрано {count})",
+          "scanning": "Сканування Docker...",
+          "scanningDescription": "Пошук запущених контейнерів у вашій системі"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Пароль",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Пропозиції паролів",
         "suggestion": {
           "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
@@ -205,7 +205,7 @@
         "label": "Відкрити результати пошуку в новій вкладці"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Увімкніть чубчик DuckDuckGo"
       }
     },
     "error": {
@@ -298,10 +298,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Чубчик DuckDuckGo успішно змінено"
           },
           "error": {
-            "message": ""
+            "message": "Неможливо перемкнути чубчик DuckDuckGo"
           }
         }
       },
@@ -367,11 +367,11 @@
       "members": "Учасники",
       "homeBoard": {
         "label": "Домашня дошка",
-        "description": ""
+        "description": "Можна вибрати лише дошки, доступні групі"
       },
       "mobileBoard": {
         "label": "Мобільна дошка",
-        "description": ""
+        "description": "Можна вибрати лише дошки, доступні групі"
       }
     },
     "permission": {
@@ -492,8 +492,8 @@
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Деякі учасники належать до зовнішніх постачальників, і ними не можна керувати тут",
+      "external": "Усі учасники належать до зовнішніх постачальників, і ними не можна керувати тут"
     },
     "reservedNotice": {
       "message": "Ця група зарезервована для використання системою та обмежує деякі дії. <checkoutDocs></checkoutDocs>"
@@ -573,8 +573,8 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Налаштування збережено",
+              "message": "Налаштування дошки успішно збережено"
             },
             "error": {
               "title": "Не вдалося зберегти налаштування",
@@ -586,17 +586,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Позицію успішно змінено"
           },
           "error": {
-            "message": ""
+            "message": "Неможливо змінити позицію"
           }
         }
       }
     },
     "defaultGroup": {
       "name": "Група за замовчуванням",
-      "description": ""
+      "description": "{name} – усі авторизовані користувачі"
     }
   },
   "app": {
@@ -662,8 +662,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Використовуйте іншу URL-адресу для ping",
+          "description": "Корисно, якщо Homarr може отримати прямий доступ за допомогою внутрішньої назви хоста або мережі, щоб уникнути використання пропускної здатності провайдера"
         }
       }
     },
@@ -671,23 +671,23 @@
       "select": {
         "label": "Оберіть додаток",
         "notFound": "Додатків не знайдено",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Пошук програми",
+        "noResults": "Результатів немає",
+        "action": "Оберіть {app}",
+        "title": "Оберіть додаток, щоб додати на цю дошку"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Створити новий додаток",
+        "description": "Створити новий додаток",
+        "action": "Відкрийте створення додатку"
       },
-      "add": ""
+      "add": "Додати додаток"
     }
   },
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Власні віджети",
         "noResults": "",
         "loading": ""
       },
@@ -812,7 +812,7 @@
       "singleValue": "",
       "keyValue": "",
       "table": "",
-      "statGrid": "",
+      "statGrid": "Кольорові картки статистики в сітці — як-от віджети Pi-Hole або Speedtest",
       "progressBars": "",
       "statusIndicator": "",
       "countGrid": "",
@@ -874,7 +874,7 @@
       "exportError": "",
       "duplicated": "",
       "duplicateError": "",
-      "toggleError": "",
+      "toggleError": "Не вдалося змінити стан віджету.",
       "deleteError": "",
       "previewError": "",
       "executed": "",
@@ -1021,7 +1021,8 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
-      "mediaLibrary": "",
+      "vpn": "",
+      "mediaLibrary": "Медіа бібліотека",
       "uptimeMonitoring": ""
     },
     "testConnection": {
@@ -1139,7 +1140,7 @@
           "description": {
             "connection": {
               "hostUnreachable": "",
-              "networkUnreachable": "",
+              "networkUnreachable": "Мережа недоступна. Перевірте підключення до Інтернету або налаштування мережі.",
               "refused": "",
               "reset": ""
             },
@@ -1328,7 +1329,7 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
+      "name": "Безпаперовий ngx",
       "description": ""
     }
   },
@@ -1412,7 +1413,10 @@
     "here": "тут",
     "iconPicker": {
       "label": "",
-      "header": ""
+      "header": "",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Перемикнути на темну тему",
         "switchToLightMode": "Перемикнути на світлу тему",
         "management": "Управління",
+        "docker": "",
         "preferences": "Ваші налаштування",
         "logout": "Вийти",
         "login": "Логін",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Додаток",
       "description": "Вбудовує додаток до дошки.",
@@ -1672,9 +1684,9 @@
           "label": "",
           "option": {
             "row": "",
-            "row-reverse": "",
+            "row-reverse": "Горизонтально (зворотнє)",
             "column": "",
-            "column-reverse": ""
+            "column-reverse": "Вертикальна (перевернута)"
           }
         },
         "descriptionDisplayMode": {
@@ -1683,7 +1695,7 @@
           "option": {
             "normal": "",
             "tooltip": "",
-            "hidden": ""
+            "hidden": "Приховати"
           }
         }
       },
@@ -1696,7 +1708,7 @@
     },
     "bookmarks": {
       "name": "Закладки",
-      "description": "",
+      "description": "Показує декілька посилань додатка",
       "option": {
         "title": {
           "label": "Назва"
@@ -1739,6 +1751,15 @@
         }
       }
     },
+    "archiveTeamWarrior": {
+      "name": "АрхівTeam Warrior",
+      "description": "Слідкуйте за станом, проєктами та активними архівними завданнями ArchiveTeam Warrior.",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "",
       "description": "",
@@ -1762,7 +1783,7 @@
         }
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Не вдалося отримати резюме DNS Hole",
         "integrationsDisconnected": "Немає даних, всі інтеграції відключені"
       },
       "data": {
@@ -1792,7 +1813,7 @@
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Показати всі кнопки"
         }
       },
       "error": {
@@ -1922,7 +1943,7 @@
         "addTable": "Додати таблицю",
         "deleteTable": "Видалити таблицю",
         "colorCell": "",
-        "mergeCell": "",
+        "mergeCell": "Ввімкнути/вимкнути об'єднання клітини",
         "addColumnLeft": "",
         "addColumnRight": "",
         "deleteColumn": "",
@@ -2085,13 +2106,13 @@
               "label": ""
             },
             "1y": {
-              "label": ""
+              "label": "1 рік"
             },
             "2y": {
               "label": ""
             },
             "5y": {
-              "label": ""
+              "label": "5 років"
             },
             "10y": {
               "label": ""
@@ -2126,7 +2147,7 @@
               "label": ""
             },
             "1mo": {
-              "label": ""
+              "label": "1 місяць"
             }
           }
         }
@@ -2166,7 +2187,7 @@
           "label": "Температура за Фаренгейтом"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Вимкнути десяткові дроби температури"
         },
         "showCurrentWindSpeed": {
           "label": "Показати поточну швидкість вітру",
@@ -2336,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2343,7 +2367,7 @@
           "label": "",
           "option": {
             "name": "",
-            "state": "",
+            "state": "Стан",
             "cpuUsage": "",
             "memoryUsage": ""
           }
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2454,7 +2484,7 @@
         "videoDecision": {
           "directPlay": "",
           "transcode": "",
-          "directStream": ""
+          "directStream": "Прямий потік"
         }
       },
       "recentActivity": {
@@ -2534,7 +2564,7 @@
           "label": "",
           "description": "",
           "option": {
-            "chart": "",
+            "chart": "Графік",
             "events": "",
             "topPages": "",
             "topReferrers": ""
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Не знайдено",
       "text": "Не вдалося знайти запитуваний ресурс"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Головна",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Надсилати анонімну аналітику",
               "text": "Homarr буде відправляти анонімну аналітику з використанням програмного забезпечення з відкритим вихідним кодом Umami. Він ніколи не збирає жодної особистої інформації і, таким чином, сумісний з GDPR та CCPA. Ми заохочуємо вас увімкнути аналітику, тому що це допомагає нашій команді визначати проблеми та пріоритетні задачі."
-            },
-            "widgetData": {
-              "title": "Дані віджетів",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "integrationData": {
-              "title": "Дані інтеграції",
-              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
-            },
-            "usersData": {
-              "title": "Дані користувачів",
-              "text": "Надсилати кількість користувачів і чи активували ви SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "Оновлено {when}",
       "search": "",
       "selected": "Вибрано {selectCount} із {totalCount} контейнерів",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

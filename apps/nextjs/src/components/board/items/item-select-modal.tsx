@@ -41,7 +41,12 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
           name: t(`widget.${kind}.name`),
           description: t(`widget.${kind}.description`),
         }))
-        .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
+        .sort((itemA, itemB) => {
+          if (itemA.kind === "app") return -1;
+          if (itemB.kind === "app") return 1;
+
+          return itemA.name.localeCompare(itemB.name);
+        }),
     [t],
   );
 
