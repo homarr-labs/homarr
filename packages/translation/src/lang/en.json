@@ -2359,6 +2359,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": "Columns to show"
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -5098,7 +5101,8 @@
       }
     },
     "error": {
-      "internalServerError": "Failed to fetch Docker containers"
+      "internalServerError": "Failed to fetch Docker containers",
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {

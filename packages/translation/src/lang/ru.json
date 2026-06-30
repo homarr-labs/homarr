@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "здесь",
     "iconPicker": {
       "label": "URL иконки",
-      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок."
+      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Переключить на тёмную тему",
         "switchToLightMode": "Переключить на светлую тему",
         "management": "Управление",
+        "docker": "",
         "preferences": "Настройки",
         "logout": "Выйти",
         "login": "Вход",
@@ -2352,6 +2357,9 @@
       "name": "Статистика Docker",
       "description": "Статистика контейнеров (этот виджет можно добавить только с правами администратора)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Включить сортировку элементов"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "Экземпляры"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Не найдено",
       "text": "Запрошенный ресурс не найден"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах"
+      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах",
+      "noColumns": ""
     }
   },
   "kubernetes": {

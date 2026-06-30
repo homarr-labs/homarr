@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "这里",
     "iconPicker": {
       "label": "图标 URL",
-      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。"
+      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "切换到暗黑模式",
         "switchToLightMode": "切换到日间模式",
         "management": "管理中心",
+        "docker": "",
         "preferences": "偏好设置",
         "logout": "退出登录",
         "login": "登录",
@@ -2352,6 +2357,9 @@
       "name": "Docker 状态",
       "description": "您的容器状态 (这个小部件只能用管理员权限添加)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "启用项目排序"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "实例"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "未找到",
       "text": "找不到请求的资源"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4579,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami 活跃访客"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "获取 Docker 容器失败"
+      "internalServerError": "获取 Docker 容器失败",
+      "noColumns": ""
     }
   },
   "kubernetes": {
