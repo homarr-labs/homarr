@@ -7,9 +7,10 @@ import { createCustomErrorParams } from "./form/i18n";
 //   - absolute URL with http/https scheme (or any non-javascript scheme)
 //   - path-only URL starting with "/" followed by a non-"/" character
 //
-// Path-only hrefs are resolved against the current origin in the browser, and
-// against the request origin server-side via `resolveServerUrl`. This lets a
-// single dashboard work across multiple hostnames (mDNS, VPN FQDN, DHCP DNS).
+// Path-only hrefs are resolved against the current origin in the browser, which
+// lets a single dashboard work across multiple hostnames (mDNS, VPN FQDN, DHCP
+// DNS). They are not resolvable server-side: `resolveServerUrl` returns null for
+// them, so status pinging a path-only app needs an explicit `pingUrl`.
 //
 // Rejects: javascript: scheme, protocol-relative ("//host/..."), single-slash
 // root ("/"), bare strings without scheme or leading slash.
