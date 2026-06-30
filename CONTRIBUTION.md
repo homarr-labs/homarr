@@ -309,8 +309,18 @@ fix-issue-3371
 Pull Request:
 
 ```text
-Not creating a pull request yet. Work is being tracked locally and on the fix branch for now.
+https://github.com/homarr-labs/homarr/pull/6139#issue-4779919975
 ```
+
+### Pull Request Tracking
+
+PR Link: https://github.com/homarr-labs/homarr/pull/6139#issue-4779919975
+
+PR Description: This contribution fixes issue #3371 by allowing MP4/WebM uploads for board backgrounds, updating the background upload UI to accept videos, and ensuring uploaded local video URLs render through the existing video background component.
+
+Maintainer Feedback: No feedback yet
+
+Status: Awaiting review
 
 Commit Message:
 
