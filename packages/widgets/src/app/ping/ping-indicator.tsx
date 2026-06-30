@@ -21,7 +21,9 @@ export const PingIndicator = ({ appId }: PingIndicatorProps) => {
   return (
     <ErrorBoundary fallbackRender={PingIndicatorErrorFallback}>
       <Suspense fallback={loadingDot}>
-        <PingIndicatorInner appId={appId} />
+        {/* Key by appId so a changed app remounts with fresh ping state
+            instead of showing the previous app's status. */}
+        <PingIndicatorInner key={appId} appId={appId} />
       </Suspense>
     </ErrorBoundary>
   );
