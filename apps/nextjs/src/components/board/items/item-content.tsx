@@ -34,58 +34,53 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const board = useRequiredBoard();
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
 
-  const cardElement = (
-    <Card
-      ref={ref}
-      className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "grid-stack-item-content",
-        item.advancedOptions.customCssClasses.join(" "),
-      )}
-      radius={board.itemRadius}
-      styles={{
-        root: {
-          "--opacity": board.opacity / 100,
-          containerType: "size",
-          overflow: getOverflowFromKind(item.kind),
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
-      p={0}
-    >
-      <InnerContent item={item} width={width} height={height} widgetStateRef={widgetStateRef} />
-    </Card>
-  );
-
   return (
-    <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
-      <div style={{ position: "relative" }}>
-        {cardElement}
-        {item.advancedOptions.title?.trim() && (
-          <Badge
-            pos="absolute"
-            // It's 4 because of the mantine-react-table that has z-index 3
-            style={{ zIndex: 4 }}
-            top={2}
-            left={16}
-            size="xs"
-            radius={board.itemRadius}
-            styles={{
-              root: {
-                "--border-color":
-                  item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-                "--opacity": board.opacity / 100,
-              },
-            }}
-            className={itemContentClasses.badge}
-            c="var(--mantine-color-text)"
-          >
-            {item.advancedOptions.title}
-          </Badge>
-        )}
-      </div>
-    </WidgetContextMenu>
+    <>
+      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+        <Card
+          ref={ref}
+          className={combineClasses(
+            classes.itemCard,
+            `${item.kind}-wrapper`,
+            "grid-stack-item-content",
+            item.advancedOptions.customCssClasses.join(" "),
+          )}
+          radius={board.itemRadius}
+          styles={{
+            root: {
+              "--opacity": board.opacity / 100,
+              containerType: "size",
+              overflow: getOverflowFromKind(item.kind),
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+            },
+          }}
+          p={0}
+        >
+          <InnerContent item={item} width={width} height={height} widgetStateRef={widgetStateRef} />
+        </Card>
+      </WidgetContextMenu>
+      {item.advancedOptions.title?.trim() && (
+        <Badge
+          pos="absolute"
+          // It's 4 because of the mantine-react-table that has z-index 3
+          style={{ zIndex: 4 }}
+          top={2}
+          left={16}
+          size="xs"
+          radius={board.itemRadius}
+          styles={{
+            root: {
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+              "--opacity": board.opacity / 100,
+            },
+          }}
+          className={itemContentClasses.badge}
+          c="var(--mantine-color-text)"
+        >
+          {item.advancedOptions.title}
+        </Badge>
+      )}
+    </>
   );
 };
 

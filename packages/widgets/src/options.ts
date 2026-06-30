@@ -92,6 +92,7 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    skipContextMenu: input?.skipContextMenu ?? false,
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,

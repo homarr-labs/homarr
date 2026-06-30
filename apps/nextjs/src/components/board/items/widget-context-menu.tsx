@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { Menu } from "@mantine/core";
-import { IconCopy, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { Group, Menu, Switch } from "@mantine/core";
+import { IconCopy, IconLayoutKanban, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -32,6 +32,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
+  const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
   const settings = useSettings();
   const { openModal } = useModalAction(WidgetEditModal);
@@ -40,6 +41,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
 
@@ -49,23 +51,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
-  const autoToggleActions = useMemo(() => {
+  const toggleOptions = useMemo(() => {
     const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
-    return Object.entries(rawOptions)
-      .filter(([, def]) => def.type === "switch" && !def.skipContextMenu)
-      .map<WidgetContextMenuAction>(([key]) => ({
-        key: `toggle-${key}`,
-        label: `widget.${item.kind}.option.${key}.label`,
-        onClick: () => {
-          const currentValue = options[key] as boolean | undefined;
-          const newOptions = { [key]: !currentValue };
-          updateItemOptions({
-            itemId: item.id,
-            newOptions: { ...options, ...newOptions },
-          });
-        },
-      }));
-  }, [currentDefinition, settings, options, item, updateItemOptions]);
+    return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
+  }, [currentDefinition, settings]);
 
   const widgetContextActions = useMemo(() => {
     const def = currentDefinition as Record<string, unknown>;
@@ -74,21 +63,21 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     const actions = (def.contextActions as any)({
       options,
       setOptions: (partial: Record<string, unknown>) => {
-        updateItemOptions({
-          itemId: item.id,
-          newOptions: { ...options, ...partial },
-        });
+        updateItemOptions({ itemId: item.id, newOptions: { ...options, ...partial } });
       },
       integrationIds: item.integrationIds,
-      context: {
-        isEditMode,
-        boardId: board.id,
-        itemId: item.id,
-      },
+      context: { isEditMode, boardId: board.id, itemId: item.id },
       widgetStateRef,
     });
     return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  }, [currentDefinition, options, item, updateItemOptions, isEditMode, widgetStateRef]);
+  }, [currentDefinition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
+
+  const persistBoard = useCallback(
+    (updatedItems: typeof board.items) => {
+      saveBoard({ ...board, items: updatedItems });
+    },
+    [board, saveBoard],
+  );
 
   const openEditModal = useCallback(() => {
     openModal(
@@ -99,19 +88,19 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
           options: item.options,
           integrationIds: item.integrationIds,
         },
-        onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
-          updateItemOptions({
-            itemId: item.id,
-            newOptions: options,
-          });
-          updateItemAdvancedOptions({
-            itemId: item.id,
-            newAdvancedOptions: advancedOptions,
-          });
-          updateItemIntegrations({
-            itemId: item.id,
-            newIntegrations: integrationIds,
-          });
+        onSuccessfulEdit: (editResult) => {
+          updateItemOptions({ itemId: item.id, newOptions: editResult.options });
+          updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
+          updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
+          if (!isEditMode) {
+            persistBoard(
+              board.items.map((boardItem) =>
+                boardItem.id !== item.id
+                  ? boardItem
+                  : { ...boardItem, options: editResult.options, advancedOptions: editResult.advancedOptions, integrationIds: editResult.integrationIds },
+              ),
+            );
+          }
         },
         integrationData: (integrationData ?? []).filter(
           (integration) =>
@@ -123,7 +112,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      { title: (translateFn: any) => `${translateFn("item.edit.title")} - ${translateFn(`widget.${item.kind}.name`)}` },
+      { title: (fn: any) => `${fn("item.edit.title")} - ${fn(`widget.${item.kind}.name`)}` },
     );
   }, [
     openModal,
@@ -134,99 +123,123 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     integrationData,
     currentDefinition,
     settings,
-  ]);
-
-  const openRemoveModal = useCallback(() => {
-    openConfirmModal({
-      title: tItem("remove.title"),
-      children: tItem("remove.message"),
-      onConfirm: () => {
-        removeItem({ itemId: item.id });
-      },
-    });
-  }, [openConfirmModal, tItem, removeItem, item.id]);
-
-  const allActions = useMemo(() => {
-    const actions: WidgetContextMenuAction[] = [];
-
-    if (isEditMode) {
-      actions.push({
-        key: "edit",
-        label: tItem("action.edit"),
-        icon: IconPencil,
-        onClick: openEditModal,
-        disabled: isPending,
-      });
-      actions.push({
-        key: "moveResize",
-        label: tItem("action.moveResize"),
-        icon: IconLayoutKanban,
-        onClick: () => {
-          if (!gridstack.current) return;
-          openMoveModal({
-            item,
-            columnCount: gridstack.current.getColumn(),
-            gridStack: gridstack.current,
-          });
-        },
-      });
-      actions.push({
-        key: "duplicate",
-        label: tItem("action.duplicate"),
-        icon: IconCopy,
-        onClick: () => duplicateItem({ itemId: item.id }),
-      });
-    }
-
-    const widgetActions: WidgetContextMenuAction[] = [...autoToggleActions, ...widgetContextActions];
-    actions.push(...widgetActions);
-
-    if (isEditMode) {
-      actions.push({
-        key: "remove",
-        label: tItem("action.remove"),
-        icon: IconTrash,
-        onClick: openRemoveModal,
-        color: "red",
-      });
-    }
-
-    return actions.filter((a) => !a.hidden);
-  }, [
     isEditMode,
-    isPending,
-    autoToggleActions,
-    widgetContextActions,
-    openEditModal,
-    openRemoveModal,
-    tItem,
-    gridstack,
-    item,
-    openMoveModal,
-    duplicateItem,
+    persistBoard,
+    board,
   ]);
+
+  const handleToggle = useCallback(
+    (key: string) => (checked: boolean) => {
+      const newOptions = { ...options, [key]: checked };
+      updateItemOptions({ itemId: item.id, newOptions });
+      persistBoard(
+        board.items.map((boardItem) =>
+          boardItem.id !== item.id ? boardItem : { ...boardItem, options: newOptions },
+        ),
+      );
+    },
+    [options, item.id, updateItemOptions, persistBoard, board],
+  );
 
   if (!session) return <>{children}</>;
 
+  const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
+
   return (
-    <Menu shadow="md" width={200}>
+    <Menu shadow="md" width={300} closeOnItemClick={false} position="right-start" offset={4}>
       <Menu.ContextMenu>{children}</Menu.ContextMenu>
       <Menu.Dropdown>
-        {allActions.map((action) => {
-          const label = String(translateIfNecessary(t, action.label));
-          const Icon = action.icon;
-          return (
+        {toggleOptions.length > 0 && (
+          <>
+            <Menu.Label>{tMenu("options")}</Menu.Label>
+            {toggleOptions.map(([key]) => (
+              <Menu.Item key={key} onClick={() => handleToggle(key)(!options[key])}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                <Group wrap="nowrap">
+                  {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+                  <Switch size="xs" checked={Boolean(options[key])} readOnly tabIndex={-1} ml="auto" />
+                </Group>
+              </Menu.Item>
+            ))}
+          </>
+        )}
+
+        {visibleWidgetActions.length > 0 && (
+          <>
+            {toggleOptions.length > 0 && <Menu.Divider />}
+            <Menu.Label>{tMenu("actions")}</Menu.Label>
+            {visibleWidgetActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <Menu.Item
+                  key={action.key}
+                  closeMenuOnClick
+                  leftSection={Icon ? <Icon size={16} /> : undefined}
+                  onClick={action.onClick}
+                  disabled={action.disabled}
+                  color={action.color}
+                >
+                  {String(translateIfNecessary(t, action.label))}
+                </Menu.Item>
+              );
+            })}
+          </>
+        )}
+
+        {isEditMode && (
+          <>
+            {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
             <Menu.Item
-              key={action.key}
-              leftSection={Icon ? <Icon size={16} /> : undefined}
-              onClick={action.onClick}
-              disabled={action.disabled}
-              c={action.color}
+              closeMenuOnClick
+              leftSection={<IconLayoutKanban size={16} />}
+              onClick={() => {
+                if (!gridstack.current) return;
+                openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
+              }}
             >
-              {label}
+              {tItem("action.moveResize")}
             </Menu.Item>
-          );
-        })}
+            <Menu.Item
+              closeMenuOnClick
+              leftSection={<IconCopy size={16} />}
+              onClick={() => duplicateItem({ itemId: item.id })}
+            >
+              {tItem("action.duplicate")}
+            </Menu.Item>
+          </>
+        )}
+
+        <>
+          {!isEditMode && (toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+          <Menu.Item
+            closeMenuOnClick
+            leftSection={<IconSettings size={16} />}
+            onClick={openEditModal}
+            disabled={isPending}
+          >
+            {tMenu("settings")}
+          </Menu.Item>
+        </>
+
+        {isEditMode && (
+          <>
+            <Menu.Divider />
+            <Menu.Item
+              closeMenuOnClick
+              color="red"
+              leftSection={<IconTrash size={16} />}
+              onClick={() => {
+                openConfirmModal({
+                  title: tItem("remove.title"),
+                  children: tItem("remove.message"),
+                  onConfirm: () => removeItem({ itemId: item.id }),
+                });
+              }}
+            >
+              {tItem("action.remove")}
+            </Menu.Item>
+          </>
+        )}
       </Menu.Dropdown>
     </Menu>
   );
