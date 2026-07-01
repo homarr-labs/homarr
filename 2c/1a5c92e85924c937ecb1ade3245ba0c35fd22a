@@ -1,0 +1,87 @@
+packages/translation/src/lang/da.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/tr.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/et.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/el.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/ro.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/ko.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/de.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/uk.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/hr.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/pt-br.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/nl.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/sk.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/cn.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/pl.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/cs.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/ja.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/lt.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/es.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/de-CH.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/it.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/ca.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/en-gb.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/cr.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/sl.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/he.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/hu.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/vi.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/zh.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/sv.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/fr.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/pt.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/fi.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/lv.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/no.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+packages/translation/src/lang/ru.json
+  s_1fce197abe7563::t_1a7b94ca603175 3219-3220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "2c1a5c92e85924c937ecb1ade3245ba0c35fd22a",
+  "prompts": {},
+  "sessions": {
+    "s_1fce197abe7563": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d9653783-f2ee-4c01-98b0-0dd93dacd6ba",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
