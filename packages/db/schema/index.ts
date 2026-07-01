@@ -51,6 +51,7 @@ export const {
   cronJobConfigurations,
   customWidgetDefinitions,
   customWidgetSecrets,
+  dockerAppSources,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;

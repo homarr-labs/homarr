@@ -5,6 +5,7 @@ export const defaultServerSettingsKeys = [
   "analytics",
   "crawlingAndIndexing",
   "board",
+  "docker",
   "user",
   "appearance",
   "culture",
@@ -29,6 +30,14 @@ export const defaultServerSettings = {
     mobileHomeBoardId: null as string | null,
     enableStatusByDefault: true,
     forceDisableStatus: false,
+  },
+  docker: {
+    targetBoardName: null as string | null,
+    readHomepageLabels: true,
+    pruneRemoved: false,
+    createIntegrations: true,
+    defaultItemWidth: 1,
+    defaultItemHeight: 1,
   },
   user: {
     enableGravatar: true,

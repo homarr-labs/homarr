@@ -9,3 +9,4 @@ export const containerStates = ["created", "running", "paused", "restarting", "e
 
 export type ContainerState = (typeof containerStates)[number];
 export * from "./labels";
+export * from "./discovery";
