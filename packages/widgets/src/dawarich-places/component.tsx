@@ -10,10 +10,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function DawarichPlacesWidget({
-  integrationIds,
-  options,
-}: WidgetComponentProps<"dawarichPlaces">) {
+export default function DawarichPlacesWidget({ integrationIds, options }: WidgetComponentProps<"dawarichPlaces">) {
   const t = useI18n();
   const { data: places } = clientApi.widget.dawarich.getPlaces.useQuery(
     {

@@ -4,14 +4,12 @@ import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dawarichRouter = createTRPCRouter({
-  getStatistics: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "dawarich"))
-    .query(async ({ ctx }) => {
-      const { dawarichStatisticsRequestHandler } = await import("@homarr/request-handler/dawarich");
-      const innerHandler = dawarichStatisticsRequestHandler.handler(ctx.integration, {});
-      const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-      return data.data;
-    }),
+  getStatistics: publicProcedure.concat(createOneIntegrationMiddleware("query", "dawarich")).query(async ({ ctx }) => {
+    const { dawarichStatisticsRequestHandler } = await import("@homarr/request-handler/dawarich");
+    const innerHandler = dawarichStatisticsRequestHandler.handler(ctx.integration, {});
+    const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data.data;
+  }),
 
   getPlaces: publicProcedure
     .concat(createOneIntegrationMiddleware("query", "dawarich"))
