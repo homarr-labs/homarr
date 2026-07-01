@@ -69,36 +69,24 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
   private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
     const links: CalendarLink[] = [];
 
+    // titleSlug is only present when Lidarr returns it; guard so a missing value
+    // neither breaks the link nor drops the event.
+    if (event.artist.titleSlug) {
+      links.push({
+        href: this.externalUrl(`/artist/${event.artist.titleSlug}`).toString(),
+        name: "Lidarr",
+        logo: "/images/apps/lidarr.svg",
+        color: undefined,
+        isDark: true,
+      });
+    }
+
     for (const link of event.artist.links) {
-      switch (link.name) {
-        case "vgmdb":
-          links.push({
-            href: link.url,
-            name: "VgmDB",
-            color: "#f5c518",
-            isDark: false,
-            logo: "/images/apps/vgmdb.svg",
-          });
-          break;
-        case "imdb":
-          links.push({
-            href: link.url,
-            name: "IMDb",
-            color: "#f5c518",
-            isDark: false,
-            logo: "/images/apps/imdb.png",
-          });
-          break;
-        case "last":
-          links.push({
-            href: link.url,
-            name: "LastFM",
-            color: "#cf222a",
-            isDark: false,
-            logo: "/images/apps/lastfm.svg",
-          });
-          break;
+      const externalLink = lidarrExternalCalendarLinks[link.name];
+      if (!externalLink) {
+        continue;
       }
+      links.push({ ...externalLink, href: link.url });
     }
 
     return links;
@@ -109,7 +97,7 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
   ): z.infer<typeof lidarrCalendarEventSchema>["images"][number] | undefined => {
     const flatImages = [...event.images];
 
-    const sortedImages = flatImages.sort(
+    const sortedImages = flatImages.toSorted(
       (imageA, imageB) =>
         mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
     );
@@ -149,6 +137,16 @@ const lidarrCalendarEventSchema = z.object({
   title: z.string(),
   overview: z.string().optional(),
   images: lidarrCalendarEventImageSchema,
-  artist: z.object({ links: z.array(z.object({ url: z.string().url(), name: z.string() })), artistName: z.string() }),
+  artist: z.object({
+    links: z.array(z.object({ url: z.string().url(), name: z.string() })),
+    artistName: z.string(),
+    titleSlug: z.string().optional(),
+  }),
   releaseDate: z.string().transform((value) => new Date(value)),
 });
+
+const lidarrExternalCalendarLinks: Record<string, Omit<CalendarLink, "href">> = {
+  vgmdb: { name: "VgmDB", color: "#f5c518", isDark: false, logo: "/images/apps/vgmdb.svg" },
+  imdb: { name: "IMDb", color: "#f5c518", isDark: false, logo: "/images/apps/imdb.png" },
+  last: { name: "LastFM", color: "#cf222a", isDark: false, logo: "/images/apps/lastfm.svg" },
+};
