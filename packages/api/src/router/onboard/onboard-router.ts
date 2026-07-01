@@ -371,7 +371,9 @@ export const onboardRouter = createTRPCRouter({
       if (input.length === 0) return;
 
       const existingApps = await ctx.db.query.apps.findMany({ columns: { href: true } });
-      const existingHrefs = new Set(existingApps.map((app) => app.href).filter((href): href is string => Boolean(href)));
+      const existingHrefs = new Set(
+        existingApps.map((app) => app.href).filter((href): href is string => Boolean(href)),
+      );
       const appsToCreate = input.filter((app) => !app.href || !existingHrefs.has(app.href));
       if (appsToCreate.length === 0) return;
 

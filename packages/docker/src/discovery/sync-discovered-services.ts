@@ -218,7 +218,10 @@ export const syncDiscoveredServicesAsync = async (
   await handleTransactionsAsync(db, {
     async handleAsync(innerDb) {
       for (const { id, values } of appsToUpdate) {
-        await innerDb.update(apps as never).set(values).where(eq(apps.id, id));
+        await innerDb
+          .update(apps as never)
+          .set(values)
+          .where(eq(apps.id, id));
       }
       await insertCollection.insertAllAsync(innerDb);
       const table = dockerAppSources as never;
@@ -238,7 +241,11 @@ export const syncDiscoveredServicesAsync = async (
     },
     handleSync(innerDb) {
       for (const { id, values } of appsToUpdate) {
-        innerDb.update(apps as never).set(values).where(eq(apps.id, id)).run();
+        innerDb
+          .update(apps as never)
+          .set(values)
+          .where(eq(apps.id, id))
+          .run();
       }
       insertCollection.insertAll(innerDb);
       for (const source of sourcesToUpsert) {

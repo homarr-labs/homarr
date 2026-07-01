@@ -4,7 +4,10 @@ import { describe, expect, test } from "vitest";
 import { dockerLabels, homepageLabels } from "../../labels";
 import { parseContainerLabels } from "../parse-container-labels";
 
-const createContainer = (labels: Record<string, string>, id = "container-abc123"): Pick<ContainerInfo, "Id" | "Labels"> => ({
+const createContainer = (
+  labels: Record<string, string>,
+  id = "container-abc123",
+): Pick<ContainerInfo, "Id" | "Labels"> => ({
   Id: id,
   Labels: labels,
 });

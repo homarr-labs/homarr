@@ -159,7 +159,7 @@ export const InitIntegrations = () => {
       const imageApps = selectedApps.filter((app) => app.source !== "label");
 
       if (labelApps.length > 0) {
-        const labelAppsWithHost = labelApps.filter((app): app is (typeof app & { host: string }) => Boolean(app.host));
+        const labelAppsWithHost = labelApps.filter((app): app is typeof app & { host: string } => Boolean(app.host));
         if (labelAppsWithHost.length > 0) {
           await syncLabelApps(
             labelAppsWithHost.map((app) => ({
