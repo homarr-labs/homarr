@@ -182,7 +182,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/glances"
   | "/docs/integrations/gluetun"
   | "/docs/integrations/gotify"
-  | "/docs/integrations/pushover"
   | "/docs/integrations/home-assistant"
   | "/docs/integrations/ical"
   | "/docs/integrations/immich"
