@@ -13,7 +13,7 @@ export const integrationSecretKindObject = {
   topic: { isPublic: true, multiline: false },
   opnsenseApiKey: { isPublic: false, multiline: false },
   opnsenseApiSecret: { isPublic: false, multiline: false },
-  patchmonApiKey: { isPublic: false, multiline: false },
+  patchmonApiKey: { isPublic: true, multiline: false },
   patchmonApiSecret: { isPublic: false, multiline: false },
   url: { isPublic: false, multiline: false },
   privateKey: { isPublic: false, multiline: true },
