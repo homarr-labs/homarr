@@ -105,7 +105,7 @@ catalog:
   sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
-  better-sqlite3: ^12.10.0
+  better-sqlite3: ^12.11.1
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   concurrently: ^10.0.3
