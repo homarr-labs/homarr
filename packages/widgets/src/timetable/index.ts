@@ -16,12 +16,10 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
       }),
       station: factory.dynamicSelect({
         useOptions(query, _integrationIds, options) {
-          const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery(
-            {
-              baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
-              query,
-            },
-          );
+          const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery({
+            baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
+            query,
+          });
 
           return {
             isPending,
