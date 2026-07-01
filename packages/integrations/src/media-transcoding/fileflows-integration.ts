@@ -104,9 +104,7 @@ export class FileFlowsIntegration extends Integration implements IMediaTranscodi
       filePath: worker.RelativeFile ?? "",
       fps: 0,
       percentage: worker.CurrentPartPercent,
-      ETA: worker.ProcessingTime?.TotalSeconds
-        ? `${Math.round(worker.ProcessingTime.TotalSeconds)}s`
-        : "",
+      ETA: worker.ProcessingTime?.TotalSeconds ? `${Math.round(worker.ProcessingTime.TotalSeconds)}s` : "",
       jobType: worker.CurrentPartName ?? "Processing",
       status: "Processing",
       step: worker.CurrentPartName ?? "",
