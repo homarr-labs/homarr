@@ -337,8 +337,8 @@ catalogs:
       specifier: ^0.2.9
       version: 0.2.9
     dockerode:
-      specifier: ^5.0.0
-      version: 5.0.0
+      specifier: ^5.0.1
+      version: 5.0.1
     dotenv:
       specifier: ^17.4.2
       version: 17.4.2
@@ -445,8 +445,8 @@ catalogs:
       specifier: ^1.18.0
       version: 1.18.0
     posthog-js:
-      specifier: ^1.393.4
-      version: 1.393.4
+      specifier: ^1.393.5
+      version: 1.395.0
     posthog-node:
       specifier: ^4.18.0
       version: 4.18.0
@@ -1012,7 +1012,7 @@ importers:
         version: 1.18.0(postcss@8.5.15)
       posthog-js:
         specifier: 'catalog:'
-        version: 1.393.4
+        version: 1.395.0
       prismjs:
         specifier: 'catalog:'
         version: 1.30.0
@@ -1771,7 +1771,7 @@ importers:
         version: link:../core
       dockerode:
         specifier: 'catalog:'
-        version: 5.0.0
+        version: 5.0.1
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -6421,8 +6421,8 @@ packages:
   '@polka/url@1.0.0-next.25':
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
 
-  '@posthog/core@1.37.3':
-    resolution: {integrity: sha512-Dvw4CTlRVH4K5ag/B8YIHgG4E27w43MCUsXpn1iKQHIggIMN3Shq9whG4Omm3OvXPF+VikBTmpyMKUjckPxw+g==}
+  '@posthog/core@1.38.0':
+    resolution: {integrity: sha512-QLrJh0hMVpEJXHNyiJR9YhvIO5tzLDedw4UHdvB+ub4fXHMtHCA8H44qgl11HWR3ajpjxtJ8hs3HyOGVF3Zc1w==}
 
   '@posthog/types@1.391.1':
     resolution: {integrity: sha512-ASwd7Nf4pViqdYRYaNRyPYRVKWa1CcHUAUWR0XeQJLGdNnsWACBwe0sSieb/cHnKsRXjRwO/23KIY83lm/Ccpw==}
@@ -9679,6 +9679,10 @@ packages:
 
   dockerode@5.0.0:
     resolution: {integrity: sha512-C52mvJ+7lcyhWNfrzVfFsbTrBfy/ezE9FGEYLpu17FUeBcCkxERk9nN7uDl/478ynDiQ4U+5DbQC2vENHkVEtQ==}
+    engines: {node: '>= 14.17'}
+
+  dockerode@5.0.1:
+    resolution: {integrity: sha512-avsq/xk4YPIrn0CgleX5bjT9Y8IT1p9PxrNQ++RBQ2WEyFfHCTDsT9kmyxz+H/axnjAwg8wJWEIuPGOUuNupiA==}
     engines: {node: '>= 14.17'}
 
   docusaurus-plugin-image-zoom@3.0.1:
@@ -13119,8 +13123,8 @@ packages:
     resolution: {integrity: sha512-Ray65LYEJrMMqDtsBUBXunEVP/g4wtATvq/xz9rchUoLy/9mSkkFgUko/8DVtGxgiP3vivpFMgfb9HpCuDrBHg==}
     engines: {node: '>=10.15.1'}
 
-  posthog-js@1.393.4:
-    resolution: {integrity: sha512-mOBSVQczEfyLnW3aFRbLXZEuE0Rfbmhqm9UCnuLeMFUUz0uYTkbnyhl5+Uc+BLSGfyiXHLf3nm2BqxYC+G/PXA==}
+  posthog-js@1.395.0:
+    resolution: {integrity: sha512-5iTb00CGt2eQUUiBQysQiX89RAbCN6wK2sDNzvs9zv0alaY8mJ0ZySrUD3LQ+XyLhgM5pCpacBuUwChqiYDLDw==}
 
   posthog-node@4.18.0:
     resolution: {integrity: sha512-XROs1h+DNatgKh/AlIlCtDxWzwrKdYDb2mOs58n4yN8BkGN9ewqeQwG5ApS4/IzwCb7HPttUkOVulkYatd2PIw==}
@@ -17954,7 +17958,7 @@ snapshots:
 
   '@esbuild-kit/core-utils@3.3.2':
     dependencies:
-      esbuild: 0.28.0
+      esbuild: 0.28.1
       source-map-support: 0.5.21
 
   '@esbuild-kit/esm-loader@2.6.5':
@@ -19900,7 +19904,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.25': {}
 
-  '@posthog/core@1.37.3':
+  '@posthog/core@1.38.0':
     dependencies:
       '@posthog/types': 1.391.1
 
@@ -23472,6 +23476,17 @@ snapshots:
       - supports-color
 
   dockerode@5.0.0:
+    dependencies:
+      '@balena/dockerignore': 1.0.2
+      '@grpc/grpc-js': 1.12.5
+      '@grpc/proto-loader': 0.7.13
+      docker-modem: 5.0.7
+      protobufjs: 7.4.0
+      tar-fs: 2.1.4
+    transitivePeerDependencies:
+      - supports-color
+
+  dockerode@5.0.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
@@ -27408,9 +27423,9 @@ snapshots:
 
   posthog-docusaurus@2.0.5: {}
 
-  posthog-js@1.393.4:
+  posthog-js@1.395.0:
     dependencies:
-      '@posthog/core': 1.37.3
+      '@posthog/core': 1.38.0
       '@posthog/types': 1.391.1
       core-js: 3.49.0
       dompurify: 3.4.11
