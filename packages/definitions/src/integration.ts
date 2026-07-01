@@ -509,7 +509,7 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/dawarich.png",
     category: ["geolocationTracking"],
-    documentationUrl: createDocumentationLink("/docs/integrations/dawarich")
+    documentationUrl: createDocumentationLink("/docs/integrations/dawarich"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -624,7 +624,7 @@ export const integrationCategories = [
   "documents",
   "mediaLibrary",
   "uptimeMonitoring",
-  "geolocationTracking"
+  "geolocationTracking",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
