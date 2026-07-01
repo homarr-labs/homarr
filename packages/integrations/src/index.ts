@@ -19,6 +19,7 @@ export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integratio
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
 export { GotifyIntegration } from "./gotify/gotify-integration";
+export { PushoverIntegration } from "./pushover/pushover-integration";
 export { NTFYIntegration } from "./ntfy/ntfy-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { GlancesIntegration } from "./glances/glances-integration";
