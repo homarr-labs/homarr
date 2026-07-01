@@ -5,4 +5,5 @@ export const quayIntegration: IntegrationDefinition = {
   description: "Quay is a container registry for storing and managing container images.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/quay.png",
   path: "../../integrations/quay",
+  data: "Fetches container image tags and repository metadata from a Quay.io registry.",
 };

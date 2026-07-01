@@ -4,6 +4,7 @@ description: "Proxmox is a powerful open-source virtualization platform that all
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { systemResourcesWidget } from '@site/docs/widgets/system-resources';
   integration={proxmoxIntegration}
   categories={['System monitoring']}
 />
+
+### Data
+
+<IntegrationData integration={proxmoxIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

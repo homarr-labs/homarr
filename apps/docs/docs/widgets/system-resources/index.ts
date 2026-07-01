@@ -5,6 +5,7 @@ export const systemResourcesWidget: WidgetDefinition = {
   icon: IconGraph,
   name: "System Resources",
   description: "Displays CPU, RAM and network of your host",
+  data: "Displays real-time system resource usage charts for CPU, memory, GPU, and network over time.",
   path: "../../widgets/system-resources",
   configuration: {
     items: [

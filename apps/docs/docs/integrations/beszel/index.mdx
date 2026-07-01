@@ -4,6 +4,7 @@ description: "Beszel is a lightweight server monitoring platform with Docker sta
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -26,6 +27,10 @@ Beszel monitors your servers in real time via lightweight agents, collecting CPU
 ### Screenshots
 
 <img src={beszelDashboard} alt="Beszel dashboard overview showing all four widgets" />
+
+### Data
+
+<IntegrationData integration={beszelIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

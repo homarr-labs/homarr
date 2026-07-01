@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { mediaReleasesWidget } from '.';
 import { embyIntegration } from '@site/docs/integrations/emby';
@@ -20,6 +21,10 @@ import { plexIntegration } from '@site/docs/integrations/plex';
 />
 
 Provides a list of newly added media or upcoming releases from your media server.
+
+### Data
+
+<WidgetData widget={mediaReleasesWidget} />
 
 ### Screenshots
 

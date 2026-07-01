@@ -5,6 +5,7 @@ export const mediaServerWidget: WidgetDefinition = {
   icon: IconVideo,
   name: "Media server streams",
   description: "Show the current streams on your media servers",
+  data: "Displays active media server streaming sessions with user, device, and currently playing media details.",
   path: "../../widgets/media-server",
   configuration: {
     items: [

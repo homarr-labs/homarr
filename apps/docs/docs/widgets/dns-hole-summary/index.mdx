@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { IconAd } from "@tabler/icons-react";
 import Tabs from '@theme/Tabs';
@@ -20,6 +21,10 @@ import { dnsHoleSummaryWidget } from '.';
 />
 
 This widget allows you to display statistics about your DNS Hole like total queries, blocked queries, and more.
+
+### Data
+
+<WidgetData widget={dnsHoleSummaryWidget} />
 
 ### Screenshots
 

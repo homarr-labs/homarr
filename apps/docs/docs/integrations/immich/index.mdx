@@ -9,6 +9,7 @@ import { immichAlbumCarouselWidget } from '../../widgets/immich-album-carousel';
 } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
 import { immichIntegration } from '.';
 import { immichServerStatsWidget } from '../../widgets/immich-server-stats';
@@ -18,6 +19,10 @@ import { immichServerStatsWidget } from '../../widgets/immich-server-stats';
   integration={immichIntegration}
   categories={['Photo server']}
 />
+
+### Data
+
+<IntegrationData integration={immichIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

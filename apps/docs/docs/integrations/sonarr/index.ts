@@ -5,4 +5,5 @@ export const sonarrIntegration: IntegrationDefinition = {
     "Sonarr is a TV series management tool that automates the process of downloading, sorting, and renaming episodes.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg",
   path: "../../integrations/sonarr",
+  data: "Fetches TV episode release calendar events from Sonarr.",
 };

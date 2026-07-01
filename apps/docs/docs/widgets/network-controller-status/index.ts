@@ -5,6 +5,7 @@ export const networkControllerStatusWidget: WidgetDefinition = {
   icon: IconTopologyFull,
   name: "Network Status",
   description: "Display connected devices on a network",
+  data: "Displays UniFi network client connection counts for Wi-Fi or wired clients.",
   path: "../../widgets/network-controller-status",
   configuration: {
     items: [

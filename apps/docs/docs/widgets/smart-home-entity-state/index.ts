@@ -5,6 +5,7 @@ export const smartHomeEntityStateWidget: WidgetDefinition = {
   icon: IconBinaryTree,
   name: "Entity State",
   description: "Display the state of an entity and toggle it optionally",
+  data: "Displays the current state of a Home Assistant entity with optional toggle action.",
   path: "../../widgets/smart-home-entity-state",
   configuration: {
     items: [

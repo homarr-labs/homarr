@@ -11,6 +11,7 @@ export interface IntegrationDefinition {
         dark: string;
       };
   path: string;
+  data?: string;
 }
 
 export interface WidgetConfigurationItem {
@@ -36,4 +37,5 @@ export interface WidgetDefinition {
   description: string;
   path: string;
   configuration?: WidgetConfiguration;
+  data?: string;
 }

@@ -5,6 +5,7 @@ export const upsWidget: WidgetDefinition = {
   icon: IconBatteryCharging,
   name: "UPS",
   description: "Monitor the status of your UPS devices through a NUT server.",
+  data: "Displays UPS status including battery charge, runtime, load, and input/output voltage.",
   path: "../../widgets/ups",
   configuration: {
     items: [

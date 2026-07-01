@@ -4,6 +4,7 @@ description: "Technitium DNS Server is a self-hosted DNS server with ad-blocking
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -21,6 +22,10 @@ import { dnsHoleControlsWidget } from '@site/docs/widgets/dns-hole-controls';
 <Alert type="note" className='my-2'>
     Homarr supports Technitium DNS v11 and above. The correct API version is detected automatically - no manual configuration is required.
 </Alert>
+
+### Data
+
+<IntegrationData integration={technitiumDnsIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

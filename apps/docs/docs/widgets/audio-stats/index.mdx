@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { audioStatsWidget } from '.';
 import { navidromeIntegration } from '@site/docs/integrations/navidrome';
@@ -24,6 +25,10 @@ This widget adapts its display based on the linked integration:
 - **Audiobookshelf**: Shows library count, audiobook/podcast totals, listening time, and active sessions
 
 Only options relevant to your linked integration are shown in the configuration panel.
+
+### Data
+
+<WidgetData widget={audioStatsWidget} />
 
 ### Supported Integrations
 

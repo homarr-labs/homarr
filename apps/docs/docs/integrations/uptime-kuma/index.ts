@@ -6,4 +6,5 @@ export const uptimeKumaIntegration: IntegrationDefinition = {
     "Uptime Kuma is a self-hosted monitoring tool that tracks the availability of your services and websites.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg",
   path: "../../integrations/uptime-kuma",
+  data: "Fetches monitor status and uptime percentages from an Uptime Kuma status page.",
 };

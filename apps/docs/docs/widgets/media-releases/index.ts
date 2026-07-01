@@ -5,6 +5,7 @@ export const mediaReleasesWidget: WidgetDefinition = {
   icon: IconTicket,
   name: "Media releases",
   description: "Display newly added medias or upcoming releases from different integrations",
+  data: "Displays recently released media items (movies, TV, music, books) with poster or backdrop images and metadata.",
   path: "../../widgets/media-releases",
   configuration: {
     items: [

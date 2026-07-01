@@ -5,4 +5,5 @@ export const delugeIntegration: IntegrationDefinition = {
   description: "Deluge is a lightweight, Free Software, cross-platform BitTorrent client.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/deluge.svg",
   path: "../../integrations/deluge",
+  data: "Manages and monitors Deluge torrents including progress, speeds, and pause/resume/delete actions.",
 };

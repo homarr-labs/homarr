@@ -4,6 +4,7 @@ description: "Anchor is a self-hosted note-taking application."
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { anchorNoteWidget } from '@site/docs/widgets/anchor-note';
 />
 
 The Anchor integration lets Homarr connect to your Anchor instance so you can display and edit selected notes directly from your dashboard.
+
+### Data
+
+<IntegrationData integration={anchorIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

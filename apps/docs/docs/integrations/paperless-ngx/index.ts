@@ -6,4 +6,5 @@ export const paperlessNgxIntegration: IntegrationDefinition = {
     "Paperless-ngx is a document management system that transforms your physical documents into a searchable online archive.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless-ngx.svg",
   path: "../../integrations/paperless-ngx",
+  data: "Fetches document statistics including total documents, inbox count, tags, correspondents, and document types.",
 };

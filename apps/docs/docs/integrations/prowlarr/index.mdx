@@ -4,6 +4,7 @@ description: "Prowlarr is an indexer manager for Usenet and BitTorrent, providin
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { indexerManagerWidget } from '@site/docs/widgets/indexer-manager';
   integration={prowlarrIntegration}
   categories={['Indexer']}
 />
+
+### Data
+
+<IntegrationData integration={prowlarrIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

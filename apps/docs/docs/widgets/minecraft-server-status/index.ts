@@ -5,6 +5,7 @@ export const minecraftServerStatusWidget: WidgetDefinition = {
   icon: IconBrandMinecraft,
   name: "Minecraft Server Status",
   description: "Displays the status of a Minecraft server.",
+  data: "Displays Minecraft server online status, player count, and server icon for Java and Bedrock editions.",
   path: "../../widgets/minecraft-server-status",
   configuration: {
     items: [

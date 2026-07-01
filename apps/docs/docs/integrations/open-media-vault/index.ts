@@ -4,4 +4,5 @@ export const openMediaVaultIntegration: IntegrationDefinition = {
   description: "Open Media Vault is a free network-attached storage server based on the Debian operating system.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/openmediavault.svg",
   path: "../../integrations/open-media-vault",
+  data: "Fetches system health data including CPU, memory, filesystem, SMART status, and CPU temperature from OpenMediaVault.",
 };

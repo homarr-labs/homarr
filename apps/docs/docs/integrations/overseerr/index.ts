@@ -4,4 +4,5 @@ export const overseerrIntegration: IntegrationDefinition = {
   description: "Overseerr is a self-hosted media request management system that integrates with Plex.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg",
   path: "../../integrations/overseerr",
+  data: "Fetches media requests, search results, and user information from Overseerr with approve/decline actions.",
 };

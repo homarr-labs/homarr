@@ -27,6 +27,7 @@ export const downloadsWidget: WidgetDefinition = {
   icon: IconDownload,
   name: "Download Client",
   description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
+  data: "Displays a sortable download manager table with progress, speeds, ETA, and per-item pause/resume/delete actions.",
   path: "../../widgets/downloads",
   configuration: {
     items: [

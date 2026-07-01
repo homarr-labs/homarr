@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { coolifyWidget } from '.';
 import { coolifyIntegration } from '@site/docs/integrations/coolify';
@@ -17,6 +18,10 @@ import { coolifyIntegration } from '@site/docs/integrations/coolify';
 />
 
 The Coolify widget displays a compact overview of your Coolify instance. It can show servers, applications, and services with status indicators, project and environment context, direct links to Coolify, and the installed Coolify version.
+
+### Data
+
+<WidgetData widget={coolifyWidget} />
 
 ### Supported Integrations
 

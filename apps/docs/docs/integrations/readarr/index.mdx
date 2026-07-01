@@ -4,6 +4,7 @@ description: "Readarr is a book management tool that automates the process of do
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -17,6 +18,10 @@ import { calendarWidget } from '@site/docs/widgets/calendar';
   integration={readarrIntegration}
   categories={['Media manager', "Servarr"]}
 />
+
+### Data
+
+<IntegrationData integration={readarrIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

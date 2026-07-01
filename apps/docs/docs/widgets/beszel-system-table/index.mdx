@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { beszelSystemTableWidget } from '.';
 import { beszelIntegration } from '@site/docs/integrations/beszel';
@@ -18,6 +19,10 @@ import { beszelIntegration } from '@site/docs/integrations/beszel';
 />
 
 This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, and the table supports sorting by any column.
+
+### Data
+
+<WidgetData widget={beszelSystemTableWidget} />
 
 ### Supported Integrations
 

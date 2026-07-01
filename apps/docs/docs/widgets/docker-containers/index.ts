@@ -5,6 +5,7 @@ export const dockerContainersWidget: WidgetDefinition = {
   icon: IconBrandDocker,
   name: "Docker stats",
   description: "Stats of your containers",
+  data: "Displays a table of Docker containers with status, CPU, memory usage, and start/stop/restart actions.",
   path: "../../widgets/docker-containers",
   configuration: {
     items: [

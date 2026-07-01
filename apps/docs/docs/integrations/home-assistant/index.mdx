@@ -4,6 +4,7 @@ description: "Home Assistant is an open-source home automation platform that foc
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { smartHomeExecuteAutomationWidget } from '@site/docs/widgets/smart-home-
     integration={homeAssistantIntegration}
     categories={['Smart Home', 'Automation']}
 />
+
+### Data
+
+<IntegrationData integration={homeAssistantIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

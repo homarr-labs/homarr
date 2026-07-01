@@ -4,6 +4,7 @@ description: 'Monitor the status of your VPN integrations.'
 hide_title: true
 ---
 
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
@@ -20,6 +21,10 @@ services are up, the currently exposed public IP address, and the VPN provider a
 
 When multiple VPN integrations are attached, the widget renders one card per integration so you can compare their
 current status at a glance.
+
+### Data
+
+<WidgetData widget={vpnWidget} />
 
 ### Screenshots
 

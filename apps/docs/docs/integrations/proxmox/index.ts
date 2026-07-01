@@ -5,4 +5,5 @@ export const proxmoxIntegration: IntegrationDefinition = {
     "Proxmox is a powerful open-source virtualization platform that allows you to run virtual machines and containers.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg",
   path: "../../integrations/proxmox",
+  data: "Fetches Proxmox cluster resources including nodes, VMs, containers, and storage information.",
 };

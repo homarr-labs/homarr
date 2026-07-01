@@ -4,6 +4,7 @@ description: "Pi-hole is a network-wide ad blocker that acts as a DNS sinkhole, 
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -23,6 +24,10 @@ import { piHoleIntegration } from '.';
 <Alert type="note" className='my-2'>
     Homarr supports both Pi-hole v5 and v6. It automatically detects the version and uses the correct API.
 </Alert>
+
+### Data
+
+<IntegrationData integration={piHoleIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

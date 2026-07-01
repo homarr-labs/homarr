@@ -5,4 +5,5 @@ export const dockerHubIntegration: IntegrationDefinition = {
   description: "Docker Hub is a cloud-based registry service for sharing and managing Docker images.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/docker.svg",
   path: "../../integrations/docker-hub",
+  data: "Fetches container image tags and repository metadata from Docker Hub.",
 };

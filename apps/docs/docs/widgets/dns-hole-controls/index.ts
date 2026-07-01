@@ -6,6 +6,7 @@ export const dnsHoleControlsWidget: WidgetDefinition = {
   icon: IconDeviceGamepad,
   name: "DNS Hole Controls",
   description: `Control the blocking feature of your ${integrations} from your dashboard`,
+  data: "Displays enable/disable controls for Pi-hole and AdGuard Home DNS filtering with timer-based disable options.",
   path: "../../widgets/dns-hole-controls",
   configuration: {
     items: [

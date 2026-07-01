@@ -4,6 +4,7 @@ description: "Navidrome is a self-hosted music server and streamer compatible wi
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { audioStatsWidget } from '@site/docs/widgets/audio-stats';
 />
 
 Navidrome provides music library statistics including artist, album, and song counts, as well as now playing information via the Subsonic API.
+
+### Data
+
+<IntegrationData integration={navidromeIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

@@ -4,6 +4,7 @@ description: "LinuxServer.io is a platform for managing and deploying containeri
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { releasesWidget } from '@site/docs/widgets/releases';
     integration={linuxServerIoIntegration}
     categories={['Container Management', 'Software']}
 />
+
+### Data
+
+<IntegrationData integration={linuxServerIoIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

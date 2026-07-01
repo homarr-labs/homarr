@@ -12,6 +12,7 @@ import { transmissionIntegration } from '@site/docs/integrations/transmission';
 import { slskdIntegration } from '@site/docs/integrations/slskd';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { IconAd } from "@tabler/icons-react";
@@ -26,6 +27,10 @@ import { downloadsWidget } from '.';
 />
 
 This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information.
+
+### Data
+
+<WidgetData widget={downloadsWidget} />
 
 ### Screenshots
 

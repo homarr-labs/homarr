@@ -4,6 +4,7 @@ description: "Jellyfin is a free and open-source media server software that allo
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { mediaReleasesWidget } from '@site/docs/widgets/media-releases';
     integration={jellyfinIntegration}
     categories={['Media server']}
 />
+
+### Data
+
+<IntegrationData integration={jellyfinIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

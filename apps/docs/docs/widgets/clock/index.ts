@@ -5,6 +5,7 @@ export const clockWidget: WidgetDefinition = {
   icon: IconClock,
   name: "Date and time",
   description: "Displays the current date and time.",
+  data: "Displays the current time and date with customizable format, timezone, and optional title.",
   path: "../../widgets/clock",
   configuration: {
     items: [

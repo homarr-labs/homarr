@@ -5,6 +5,7 @@ export const appWidget: WidgetDefinition = {
   icon: IconApps,
   name: "App",
   description: "Embeds an app into the board.",
+  data: "Displays an application shortcut with icon, name, optional description, and a live ping/status indicator.",
   path: "../../widgets/app",
   configuration: {
     items: [

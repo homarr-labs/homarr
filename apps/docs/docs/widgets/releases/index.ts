@@ -5,6 +5,7 @@ export const releasesWidget: WidgetDefinition = {
   icon: IconRocket,
   name: "Releases",
   description: "Displays a list of the current version of the given repositories with the given version regex.",
+  data: "Displays latest software releases from GitHub, GitLab, and other repositories with version info and release notes.",
   path: "../../widgets/releases",
   configuration: {
     items: [

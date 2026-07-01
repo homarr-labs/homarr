@@ -5,6 +5,7 @@ export const timetableWidget: WidgetDefinition = {
   icon: IconBusStop,
   name: "Timetable",
   description: "Displays departure times for a station.",
+  data: "Displays Swiss public transport departure timetables with line, destination, delay, and platform info.",
   path: "../../widgets/timetable",
   configuration: {
     items: [

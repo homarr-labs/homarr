@@ -4,6 +4,7 @@ description: "Docker Hub is a cloud-based registry service for sharing and manag
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { releasesWidget } from '@site/docs/widgets/releases';
     integration={dockerHubIntegration}
     categories={['Container Management', 'Software']}
 />
+
+### Data
+
+<IntegrationData integration={dockerHubIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

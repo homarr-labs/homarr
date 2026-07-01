@@ -4,6 +4,7 @@ description: "Glances is a cross-platform system monitoring tool."
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -17,6 +18,10 @@ import { healthMonitoringWidget } from '@site/docs/widgets/health-monitoring';
     integration={glancesIntegration}
     categories={['System Monitoring']}
 />
+
+### Data
+
+<IntegrationData integration={glancesIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

@@ -4,6 +4,7 @@ description: "Tracearr is a comprehensive media monitoring solution that tracks 
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { tracearrWidget } from '@site/docs/widgets/tracearr';
   integration={tracearrIntegration}
   categories={['Media Monitoring']}
 />
+
+### Data
+
+<IntegrationData integration={tracearrIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

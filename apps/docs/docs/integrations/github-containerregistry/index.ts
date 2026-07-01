@@ -8,4 +8,5 @@ export const gitHubContainerRegistryIntegration: IntegrationDefinition = {
     dark: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg",
   },
   path: "../../integrations/github-packages",
+  data: "Fetches container image tags and package metadata from GitHub Container Registry.",
 };

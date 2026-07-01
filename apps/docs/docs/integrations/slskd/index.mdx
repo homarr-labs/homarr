@@ -4,6 +4,7 @@ description: "A modern client-server application for the Soulseek file sharing n
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { downloadsWidget } from '@site/docs/widgets/downloads';
     integration={slskdIntegration}
     categories={['System Monitoring']}
 />
+
+### Data
+
+<IntegrationData integration={slskdIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { upsWidget } from '.';
 import { peaNutIntegration } from '@site/docs/integrations/peanut';
@@ -19,6 +20,10 @@ import { peaNutIntegration } from '@site/docs/integrations/peanut';
 This widget displays the status of the UPS devices reported by a Network UPS Tools (NUT) server. Each device shows its
 status (online, on battery, charging or low battery), battery charge and estimated runtime, output load, and input and
 output voltage.
+
+### Data
+
+<WidgetData widget={upsWidget} />
 
 ### Layouts
 

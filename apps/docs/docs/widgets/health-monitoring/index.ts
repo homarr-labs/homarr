@@ -5,6 +5,7 @@ export const healthMonitoringWidget: WidgetDefinition = {
   icon: IconHeartRateMonitor,
   name: "System Health Monitoring",
   description: "Displays information showing the health and status of your system(s).",
+  data: "Displays system health metrics including CPU, memory, GPU, filesystem usage, temperature, and uptime.",
   path: "../../widgets/health-monitoring",
   configuration: {
     items: [

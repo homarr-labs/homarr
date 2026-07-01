@@ -4,6 +4,7 @@ description: "AdGuard Home is a network-wide software for blocking ads and track
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -17,6 +18,10 @@ import { dnsHoleControlsWidget } from '@site/docs/widgets/dns-hole-controls';
     integration={adguardHomeIntegration}
     categories={['DNS Hole']}
 />
+
+### Data
+
+<IntegrationData integration={adguardHomeIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

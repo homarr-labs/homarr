@@ -4,6 +4,7 @@ description: "Kubernetes is a powerful container orchestration platform that aut
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
@@ -23,6 +24,10 @@ This integration is read-only, meaning Homarr does not modify or manage cluster 
 :::
 
 ![Dashboard](img/dashboard.jpeg)
+
+### Data
+
+<IntegrationData integration={kubernetesIntegration} />
 
 ### Prerequisites
 

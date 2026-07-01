@@ -5,6 +5,7 @@ export const calendarWidget: WidgetDefinition = {
   icon: IconCalendar,
   name: "Calendar",
   description: "Display events from your integrations in a calendar view within a certain relative time period",
+  data: "Displays a monthly calendar with event dots and detailed event lists for media releases from Sonarr/Radarr.",
   path: "../../widgets/calendar",
   configuration: {
     items: [

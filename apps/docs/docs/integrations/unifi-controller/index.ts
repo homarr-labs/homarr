@@ -4,4 +4,5 @@ export const unifiControllerIntegration: IntegrationDefinition = {
   description: "Unifi Controller is a network management platform for Unifi devices.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/unifi.svg",
   path: "../../integrations/unifi-controller",
+  data: "Fetches network controller summary including WAN, LAN, Wi-Fi, and VPN status from a UniFi Controller.",
 };

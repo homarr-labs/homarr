@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { anchorNoteWidget } from '.';
 import { anchorIntegration } from '@site/docs/integrations/anchor';
@@ -18,6 +19,10 @@ import { anchorIntegration } from '@site/docs/integrations/anchor';
 />
 
 The Anchor Note widget shows a selected note from your Anchor integration. If your note permissions allow it, you can also edit the note title and content directly in Homarr.
+
+### Data
+
+<WidgetData widget={anchorNoteWidget} />
 
 ### Screenshots
 

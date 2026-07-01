@@ -6,6 +6,7 @@ export const audioStatsWidget: WidgetDefinition = {
   name: "Audio Stats",
   description:
     "Displays library statistics from Navidrome or Audiobookshelf, adapting its display based on the linked integration.",
+  data: "Displays music server statistics including artist, album, song counts, and currently playing tracks.",
   path: "../../widgets/audio-stats",
   configuration: {
     items: [

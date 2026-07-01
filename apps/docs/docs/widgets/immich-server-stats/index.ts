@@ -5,6 +5,7 @@ export const immichServerStatsWidget: WidgetDefinition = {
   icon: IconGraph,
   name: "Immich Server Stats",
   description: "Information about your Immich instance",
+  data: "Displays Immich server statistics including user count, photo/video count, and total storage usage.",
   path: "../../widgets/immich-server-stats",
   configuration: {
     items: [

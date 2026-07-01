@@ -5,6 +5,7 @@ export const indexerManagerWidget: WidgetDefinition = {
   icon: IconReportSearch,
   name: "Indexer manager status",
   description: "View the status of your indexers.",
+  data: "Displays media indexer statuses with health indicators and a test-all-connections button.",
   path: "../../widgets/indexer-manager",
   configuration: {
     items: [

@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { speedtestTrackerWidget } from '.';
 import { speedtestTrackerIntegration } from '@site/docs/integrations/speedtest-tracker';
@@ -18,6 +19,10 @@ import { speedtestTrackerIntegration } from '@site/docs/integrations/speedtest-t
 
 This widget displays internet speed test results from your [Speedtest Tracker](https://docs.speedtest-tracker.dev/) instance,
 including the latest result, historical averages, and a live chart of the last 12 hours.
+
+### Data
+
+<WidgetData widget={speedtestTrackerWidget} />
 
 ### Screenshots
 

@@ -6,4 +6,5 @@ export const npmIntegration: IntegrationDefinition = {
     "NPM is a package manager for the JavaScript programming language, primarily used for managing Node.js packages.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/npm.svg",
   path: "../../integrations/npm",
+  data: "Fetches the latest npm package version and metadata from the npm registry.",
 };

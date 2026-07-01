@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { systemResourcesWidget } from '.';
 import { dashDotIntegration } from '@site/docs/integrations/dash-dot';
@@ -21,6 +22,10 @@ import { proxmoxIntegration } from '@site/docs/integrations/proxmox';
 />
 
 Displays CPU, RAM and network of your host in real time
+
+### Data
+
+<WidgetData widget={systemResourcesWidget} />
 
 ### Screenshots
 

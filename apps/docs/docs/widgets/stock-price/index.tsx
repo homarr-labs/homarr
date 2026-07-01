@@ -5,6 +5,7 @@ export const stockPriceWidget: WidgetDefinition = {
   icon: IconBuildingBank,
   name: "Stock Price",
   description: "Displays the current stock price of a company.",
+  data: "Displays a stock or cryptocurrency price chart with current price, change, and trend indicator.",
   path: "../../widgets/stock-price",
   configuration: {
     items: [

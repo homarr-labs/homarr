@@ -6,6 +6,7 @@ hide_title: true
 
 import { notificationsWidget } from '@site/docs/widgets/notifications';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
@@ -15,6 +16,10 @@ import { gotifyIntegration } from '.';
     integration={gotifyIntegration}
     categories={['Notifications', 'Messaging']}
 />
+
+### Data
+
+<IntegrationData integration={gotifyIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

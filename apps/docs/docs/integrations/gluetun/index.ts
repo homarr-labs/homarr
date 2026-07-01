@@ -5,4 +5,5 @@ export const gluetunIntegration: IntegrationDefinition = {
   description: "VPN control server integration for Homarr's VPN widget.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gluetun.svg",
   path: "../../integrations/gluetun",
+  data: "Fetches VPN status, public IP, and DNS information from a Gluetun VPN container.",
 };

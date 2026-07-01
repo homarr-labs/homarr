@@ -5,6 +5,7 @@ export const beszelSystemTableWidget: WidgetDefinition = {
   icon: IconTable,
   name: "Beszel Systems (Table)",
   description: "Table view of all Beszel-monitored systems with sortable columns and status indicators.",
+  data: "Displays a sortable table of all Beszel systems with live metrics and progress bars.",
   path: "../../widgets/beszel-system-table",
   configuration: {
     items: [

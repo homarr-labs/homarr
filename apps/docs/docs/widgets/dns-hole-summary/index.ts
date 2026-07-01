@@ -7,6 +7,7 @@ export const dnsHoleSummaryWidget: WidgetDefinition = {
   icon: IconAd,
   name: "DNS Hole Summary",
   description: `Displays the summary of your ${integrations} blocks and queries statistics`,
+  data: "Displays DNS ad-blocking statistics including ads blocked today, percentage, total queries, and domains being blocked.",
   path: "../../widgets/dns-hole-summary",
   configuration: {
     items: [

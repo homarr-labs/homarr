@@ -4,6 +4,7 @@ description: 'Displays a summary of firewalls.'
 hide_title: true
 ---
 
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
@@ -17,6 +18,10 @@ import { opnsenseIntegration } from '../../integrations/opnsense';
   widget={firewallWidget}
   categories={['Firewall']}
 />
+
+### Data
+
+<WidgetData widget={firewallWidget} />
 
 ### Screenshots
 

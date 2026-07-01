@@ -6,6 +6,7 @@ hide_title: true
 
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { releasesWidget } from '.';
@@ -22,6 +23,10 @@ import { codebergIntegration } from '@site/docs/integrations/codeberg';
 
 The releases widget enables you to track a list of repositories and see their respective latest release. 
 It also supports importing releases from your local docker containers. 
+
+### Data
+
+<WidgetData widget={releasesWidget} />
 
 ### Screenshots
 

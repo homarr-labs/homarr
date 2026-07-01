@@ -4,6 +4,7 @@ description: 'Self-hosted PaaS and deployment platform'
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -15,6 +16,10 @@ import { coolifyWidget } from '../../widgets/coolify';
   integration={coolifyIntegration}
   categories={['System monitoring', 'Deployment']}
 />
+
+### Data
+
+<IntegrationData integration={coolifyIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

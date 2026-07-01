@@ -5,6 +5,7 @@ export const beszelAlertsWidget: WidgetDefinition = {
   icon: IconBell,
   name: "Beszel Alerts",
   description: "View Beszel alert configurations and history with triggered/ok status indicators.",
+  data: "Displays active and historical alerts for Beszel-monitored systems with metric type indicators and resolution status.",
   path: "../../widgets/beszel-alerts",
   configuration: {
     items: [

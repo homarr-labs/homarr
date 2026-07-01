@@ -5,6 +5,7 @@ export const immichAlbumCarouselWidget: WidgetDefinition = {
   icon: IconPhoto,
   name: "Immich Album",
   description: "Shows a slideshow of your album pictures from Immich",
+  data: "Displays a rotating photo slideshow from an Immich album with configurable interval.",
   path: "../../widgets/immich-album-carousel",
   configuration: {
     items: [

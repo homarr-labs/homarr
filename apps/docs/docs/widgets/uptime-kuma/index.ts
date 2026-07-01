@@ -5,6 +5,7 @@ export const uptimeKumaWidget: WidgetDefinition = {
   icon: IconHeartbeat,
   name: "Uptime Kuma",
   description: "Displays monitor uptime statistics, average uptime percentage, and service status counts.",
+  data: "Displays uptime monitoring status with average uptime, total monitors, and up/down/paused counts.",
   path: "../../widgets/uptime-kuma",
   configuration: {
     items: [

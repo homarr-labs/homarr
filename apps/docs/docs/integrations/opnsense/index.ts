@@ -4,4 +4,5 @@ export const opnsenseIntegration: IntegrationDefinition = {
   description: "OPNsense is an open-source, easy-to-use, and easy-to-build firewall and routing platform",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opnsense.svg",
   path: "../../integrations/opnsense",
+  data: "Fetches firewall summary data including version, interface traffic, memory, and CPU usage from OPNsense.",
 };

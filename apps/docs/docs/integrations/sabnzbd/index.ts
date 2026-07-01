@@ -4,4 +4,5 @@ export const sabnzbdIntegration: IntegrationDefinition = {
   description: "SABnzbd is an Open Source Binary Newsreader.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg",
   path: "../../integrations/sabnzbd",
+  data: "Manages and monitors SABnzbd usenet downloads including queue, history, and pause/resume/delete actions.",
 };

@@ -8,4 +8,5 @@ export const githubIntegration: IntegrationDefinition = {
     dark: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg",
   },
   path: "../../integrations/github",
+  data: "Fetches releases and repository metadata from GitHub using the Octokit API.",
 };

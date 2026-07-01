@@ -5,4 +5,5 @@ export const coolifyIntegration: IntegrationDefinition = {
   description: "Self-hosted PaaS and deployment platform",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
   path: "../../integrations/coolify",
+  data: "Fetches Coolify instance information including applications, services, servers, projects, and health status.",
 };

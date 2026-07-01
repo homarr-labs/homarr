@@ -4,6 +4,7 @@ description: "OPNsense is an open-source, easy-to-use, and easy-to-build firewal
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -17,6 +18,10 @@ import { firewallWidget } from '../../widgets/firewall';
   integration={opnsenseIntegration}
   categories={['Firewall']}
 />
+
+### Data
+
+<IntegrationData integration={opnsenseIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

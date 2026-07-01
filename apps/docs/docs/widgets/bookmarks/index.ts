@@ -5,6 +5,7 @@ export const bookmarksWidget: WidgetDefinition = {
   icon: IconBookmark,
   name: "Bookmarks",
   description: "Displays multiple app links",
+  data: "Displays a collection of application shortcuts in a grid or flex layout with icons and names.",
   path: "../../widgets/bookmarks",
   configuration: {
     items: [

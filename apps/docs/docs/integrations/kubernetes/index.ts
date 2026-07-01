@@ -6,4 +6,5 @@ export const kubernetesIntegration: IntegrationDefinition = {
     "Kubernetes is a powerful container orchestration platform that automates the deployment, scaling, and management of containerized applications.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kubernetes.svg",
   path: "../../integrations/kubernetes",
+  data: "Fetches Kubernetes cluster information including pods, deployments, and services.",
 };

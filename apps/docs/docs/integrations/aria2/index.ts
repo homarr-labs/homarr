@@ -6,4 +6,5 @@ export const aria2Integration: IntegrationDefinition = {
     "Lightweight multi-protocol & multi-source command-line download utility. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink",
   iconUrl: "https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons@latest/src/system_downloads_3.svg",
   path: "../../integrations/aria2",
+  data: "Manages and monitors Aria2 downloads including active, waiting, and stopped transfers.",
 };

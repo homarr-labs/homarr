@@ -5,6 +5,7 @@ export const notebookWidget: WidgetDefinition = {
   icon: IconNotes,
   name: "Notebook",
   description: "A simple notebook widget that supports markdown.",
+  data: "Displays a rich-text editor for note-taking directly on the dashboard (content stored locally).",
   path: "../../widgets/notebook",
   configuration: {
     items: [

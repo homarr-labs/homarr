@@ -5,6 +5,7 @@ export const weatherWidget: WidgetDefinition = {
   icon: IconCloud,
   name: "Weather",
   description: "Displays the current weather information of a set location.",
+  data: "Displays current weather conditions with temperature, wind speed, humidity, and optional multi-day forecast.",
   path: "../../widgets/weather",
   configuration: {
     items: [

@@ -4,6 +4,7 @@ description: "Lightweight multiprotocol & multi-source command-line download uti
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -15,6 +16,10 @@ import { downloadsWidget } from '@site/docs/widgets/downloads';
   integration={aria2Integration}
   categories={['Download', 'Multiprotocol', 'Multi-source']}
 />
+
+### Data
+
+<IntegrationData integration={aria2Integration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

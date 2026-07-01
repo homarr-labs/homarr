@@ -6,4 +6,5 @@ export const homeAssistantIntegration: IntegrationDefinition = {
     "Home Assistant is an open-source home automation platform that focuses on privacy and local control, allowing you to automate and control your smart home devices.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg",
   path: "../../integrations/home-assistant",
+  data: "Fetches entity states, triggers automations, toggles entities, and retrieves calendar events from Home Assistant.",
 };

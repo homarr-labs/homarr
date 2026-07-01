@@ -5,6 +5,7 @@ export const speedtestTrackerWidget: WidgetDefinition = {
   icon: IconSpeedboat,
   name: "Speedtest Tracker",
   description: "Displays speed test results from your Speedtest Tracker instance.",
+  data: "Displays internet speed test results including latest values, averages, and a history chart.",
   path: "../../widgets/speedtest-tracker",
   configuration: {
     items: [

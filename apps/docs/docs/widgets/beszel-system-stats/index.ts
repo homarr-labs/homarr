@@ -5,6 +5,7 @@ export const beszelSystemStatsWidget: WidgetDefinition = {
   icon: IconChartAreaLine,
   name: "Beszel System Stats",
   description: "Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel.",
+  data: "Displays detailed historical charts (CPU, memory, disk, network, Docker containers) for a single Beszel system.",
   path: "../../widgets/beszel-system-stats",
   configuration: {
     items: [

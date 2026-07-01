@@ -5,6 +5,7 @@ export const umamiWidget: WidgetDefinition = {
   icon: IconChartBar,
   name: "Umami Analytics",
   description: "Display visitor stats from your Umami analytics instance",
+  data: "Displays website analytics including pageviews, sessions, events, top pages, and referrers.",
   path: "../../widgets/umami",
   configuration: {
     items: [

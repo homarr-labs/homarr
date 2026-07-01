@@ -5,4 +5,5 @@ export const tdarrIntegration: IntegrationDefinition = {
     "Tdarr is a distributed media transcoding system that allows you to process and optimize your media files across multiple nodes.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tdarr.png",
   path: "../../integrations/tdarr",
+  data: "Fetches media transcoding statistics, workers, and queue from Tdarr.",
 };

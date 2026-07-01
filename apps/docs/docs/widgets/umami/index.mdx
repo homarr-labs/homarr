@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { umamiWidget } from '.';
 import { umamiIntegration } from '@site/docs/integrations/umami';
@@ -17,6 +18,10 @@ import { umamiIntegration } from '@site/docs/integrations/umami';
 />
 
 The Umami Analytics widget displays key visitor metrics from a website tracked by your [Umami](https://umami.is) instance - pageviews, unique visitors, visits, bounce rate, avg. visit duration, and real-time active visitor count. The widget body can be switched between a visitor/event chart, a multi-event chart, and ranked top pages or referrers lists.
+
+### Data
+
+<WidgetData widget={umamiWidget} />
 
 ### Supported Integrations
 

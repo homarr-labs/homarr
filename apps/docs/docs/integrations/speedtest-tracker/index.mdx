@@ -4,6 +4,7 @@ description: 'Speedtest Tracker is a self-hosted internet performance tracking a
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { speedtestTrackerWidget } from '@site/docs/widgets/speedtest-tracker';
     integration={speedtestTrackerIntegration}
     categories={['Speedtest']}
 />
+
+### Data
+
+<IntegrationData integration={speedtestTrackerIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

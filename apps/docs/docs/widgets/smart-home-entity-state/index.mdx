@@ -7,6 +7,7 @@ hide_title: true
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { IconAd } from "@tabler/icons-react";
 import Tabs from '@theme/Tabs';
@@ -23,6 +24,10 @@ import { homeAssistantIntegration } from '@site/docs/integrations/home-assistant
 The entity state enables you to display the current state of an entity.
 This works with most entities and enables you display almost any data. 
 It is recommended that you transform data on the integration as much as possible since Homarr's capabilities in transformation are very limited.
+
+### Data
+
+<WidgetData widget={smartHomeEntityStateWidget} />
 
 ### Screenshots
 

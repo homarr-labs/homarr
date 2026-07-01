@@ -5,6 +5,7 @@ export const beszelSystemGridWidget: WidgetDefinition = {
   icon: IconLayoutGrid,
   name: "Beszel Systems (Grid)",
   description: "Card grid view of all Beszel-monitored systems with real-time metrics.",
+  data: "Displays live system metrics (CPU, memory, disk, GPU, network) for all Beszel systems in a responsive card grid.",
   path: "../../widgets/beszel-system-grid",
   configuration: {
     items: [

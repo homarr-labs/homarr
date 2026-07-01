@@ -5,6 +5,7 @@ export const paperlessNgxWidget: WidgetDefinition = {
   icon: IconFileText,
   name: "Paperless-ngx",
   description: "Displays document management statistics including inbox ratio, document counts, and metadata.",
+  data: "Displays Paperless-ngx document statistics including total documents, inbox count, correspondents, and tags.",
   path: "../../widgets/paperless-ngx",
   configuration: {
     items: [

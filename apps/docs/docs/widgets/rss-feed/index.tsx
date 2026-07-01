@@ -5,6 +5,7 @@ export const rssFeedWidget: WidgetDefinition = {
   icon: IconRss,
   name: "RSS Feed",
   description: "Monitor and display one or more generic RSS, ATOM or JSON feeds.",
+  data: "Displays RSS/Atom feed entries with title, description, enclosure images, and published dates.",
   path: "../../widgets/rss-feed",
   configuration: {
     items: [

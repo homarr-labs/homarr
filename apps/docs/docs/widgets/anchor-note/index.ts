@@ -5,6 +5,7 @@ export const anchorNoteWidget: WidgetDefinition = {
   icon: IconNotes,
   name: "Anchor Note",
   description: "Display and edit a selected note from Anchor",
+  data: "Displays a collaborative rich-text note with real-time editing synced through the Anchor integration.",
   path: "../../widgets/anchor-note",
   configuration: {
     items: [

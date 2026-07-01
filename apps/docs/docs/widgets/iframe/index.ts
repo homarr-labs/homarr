@@ -5,6 +5,7 @@ export const iframeWidget: WidgetDefinition = {
   icon: IconBrowser,
   name: "iFrame",
   description: "Embed any content from the internet. Some websites may restrict access.",
+  data: "Embeds an external webpage via iframe with configurable sandbox permissions.",
   path: "../../widgets/iframe",
   configuration: {
     items: [

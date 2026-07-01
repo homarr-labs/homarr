@@ -5,4 +5,5 @@ export const radarrIntegration: IntegrationDefinition = {
     "Radarr is a movie management tool that automates the process of downloading, sorting, and renaming movies.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg",
   path: "../../integrations/radarr",
+  data: "Fetches movie release calendar events including in-cinemas, physical, and digital release dates.",
 };

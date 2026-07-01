@@ -4,6 +4,7 @@ description: "SABnzbd is an Open Source Binary Newsreader."
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { downloadsWidget } from '@site/docs/widgets/downloads';
   integration={sabnzbdIntegration}
   categories={['Usenet client']}
 />
+
+### Data
+
+<IntegrationData integration={sabnzbdIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

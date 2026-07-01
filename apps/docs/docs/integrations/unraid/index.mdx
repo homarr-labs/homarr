@@ -4,6 +4,7 @@ description: "Versatile operating system that lets you run applications, virtual
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -22,6 +23,10 @@ import imgSelectApikeyPreset from "./imgs/unraid-select-api-key-preset.png";
   integration={unraidIntegration}
   categories={['NAS', 'Hardware']}
 />
+
+### Data
+
+<IntegrationData integration={unraidIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

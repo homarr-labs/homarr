@@ -5,4 +5,5 @@ export const gitlabIntegration: IntegrationDefinition = {
   description: "GitLab is a web-based DevOps lifecycle tool that provides a Git repository manager.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gitlab.svg",
   path: "../../integrations/gitlab",
+  data: "Fetches releases and project metadata from a GitLab instance.",
 };

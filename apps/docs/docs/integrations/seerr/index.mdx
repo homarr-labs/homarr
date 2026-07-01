@@ -4,6 +4,7 @@ description: "Seerr is a self-hosted media request management system that integr
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { mediaRequestStatsWidget } from '@site/docs/widgets/media-request-stats'
   integration={seerrIntegration}
   categories={['Media requests']}
 />
+
+### Data
+
+<IntegrationData integration={seerrIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

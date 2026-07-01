@@ -8,4 +8,5 @@ export const glancesIntegration: IntegrationDefinition = {
     dark: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glances-light.svg",
   },
   path: "../../integrations/glances",
+  data: "Fetches system health data including CPU, RAM, disk, network, GPU, and sensors from Glances.",
 };

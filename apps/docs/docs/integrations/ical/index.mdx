@@ -4,6 +4,7 @@ description: "iCal is a standard for calendar data exchange, allowing users to s
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { calendarWidget } from '@site/docs/widgets/calendar';
   integration={icalIntegration}
   categories={['Calendar']}
 />
+
+### Data
+
+<IntegrationData integration={icalIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

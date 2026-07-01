@@ -5,4 +5,5 @@ export const peaNutIntegration: IntegrationDefinition = {
   description: "A tiny dashboard for Network UPS Tools (NUT) servers.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/peanut.svg",
   path: "../../integrations/peanut",
+  data: "Fetches UPS device summaries including battery charge, runtime, load, and voltage from PeaNut (NUT).",
 };

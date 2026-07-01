@@ -4,6 +4,7 @@ description: 'Displays data from a custom API endpoint using configurable displa
 hide_title: true
 ---
 
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { customApiWidget } from '.';
@@ -19,6 +20,10 @@ This widget fetches data from a custom API endpoint defined in [Custom Widgets m
 Custom API widgets are created and configured through the admin management page. Each widget definition specifies the API endpoint, authentication, display type, and refresh interval.
 
 See the [Custom Widgets documentation](/docs/management/custom-widgets) for full details on creating and configuring custom widgets.
+
+### Data
+
+<WidgetData widget={customApiWidget} />
 
 ### Adding the widget
 

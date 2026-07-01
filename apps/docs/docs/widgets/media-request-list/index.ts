@@ -5,6 +5,7 @@ export const mediaRequestListWidget: WidgetDefinition = {
   icon: IconZoomQuestion,
   name: "Media Request List",
   description: "See a list of all media requests from your integration",
+  data: "Displays pending and recent media requests with poster images, availability status, and approve/decline buttons.",
   path: "../../widgets/media-request-list",
   configuration: {
     items: [

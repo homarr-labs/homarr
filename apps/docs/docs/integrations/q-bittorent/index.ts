@@ -4,4 +4,5 @@ export const qBittorentIntegration: IntegrationDefinition = {
   description: "qBittorrent is a free and open-source BitTorrent client.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg",
   path: "../../integrations/q-bittorent",
+  data: "Manages and monitors qBittorrent torrents including progress, speeds, and pause/resume/delete actions.",
 };

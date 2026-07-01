@@ -4,6 +4,7 @@ description: "GitLab is a web-based DevOps lifecycle tool that provides a Git re
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -16,6 +17,10 @@ import { releasesWidget } from '@site/docs/widgets/releases';
     integration={gitlabIntegration}
     categories={['Version Control', 'Software']}
 />
+
+### Data
+
+<IntegrationData integration={gitlabIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

@@ -5,6 +5,7 @@ export const tracearrWidget: WidgetDefinition = {
   icon: IconActivity,
   name: "Tracearr",
   description: "Monitor media server streams, user activity, and policy violations.",
+  data: "Displays media server activity including active streams, users, violations, and recent session history.",
   path: "../../widgets/tracearr",
   configuration: {
     items: [

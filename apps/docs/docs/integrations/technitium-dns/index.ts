@@ -6,4 +6,5 @@ export const technitiumDnsIntegration: IntegrationDefinition = {
     "Technitium DNS Server is a self-hosted DNS server with ad-blocking and network-wide filtering capabilities.",
   iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg",
   path: "../../integrations/technitium-dns",
+  data: "Fetches DNS query statistics and blocking status from Technitium DNS with enable/disable support.",
 };

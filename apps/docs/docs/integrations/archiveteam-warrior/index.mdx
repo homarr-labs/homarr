@@ -4,6 +4,7 @@ description: "ArchiveTeam Warrior is an easy-to-run virtual machine that helps p
 hide_title: true
 ---
 
+import { IntegrationData } from "@site/src/components/integrations/data";
 import { IntegrationHeader } from "@site/src/components/integrations/header";
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
@@ -12,6 +13,10 @@ import { archiveTeamWarriorIntegration } from ".";
 <IntegrationHeader integration={archiveTeamWarriorIntegration} categories={["archiving"]} />
 
 The ArchiveTeam Warrior integration lets Homarr connect to your ArchiveTeam Warrior instance so you can manage and monitor your archiving tasks directly from your dashboard.
+
+### Data
+
+<IntegrationData integration={archiveTeamWarriorIntegration} />
 
 ### Adding the integration
 

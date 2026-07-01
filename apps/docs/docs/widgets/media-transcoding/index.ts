@@ -5,6 +5,7 @@ export const mediaTranscodingWidget: WidgetDefinition = {
   icon: IconTransform,
   name: "Media transcoding",
   description: "Statistics, current queue and worker status of your media transcoding",
+  data: "Displays media transcoding workers, queue, and statistics with tabbed worker/queue/statistics views.",
   path: "../../widgets/media-transcoding",
   configuration: {
     items: [

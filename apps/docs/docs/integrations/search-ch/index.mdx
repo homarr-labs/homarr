@@ -4,6 +4,7 @@ description: "Search.ch supports searching for timetables in Switzerland."
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { timetableWidget } from '@site/docs/widgets/timetable';
   integration={searchChIntegration}
   categories={['Timetable']}
 />
+
+### Data
+
+<IntegrationData integration={searchChIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

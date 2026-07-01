@@ -5,6 +5,7 @@ export const firewallWidget: WidgetDefinition = {
   icon: IconWall,
   name: "Firewall Monitoring",
   description: "Displays a summary of firewalls.",
+  data: "Displays firewall status including CPU, memory usage, version info, and per-interface bandwidth.",
   path: "../../widgets/firewall",
   configuration: {
     items: [],

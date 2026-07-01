@@ -4,6 +4,7 @@ description: "Uptime Kuma is a self-hosted monitoring tool that tracks the avail
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -18,6 +19,10 @@ import { uptimeKumaWidget } from '@site/docs/widgets/uptime-kuma';
 />
 
 Uptime Kuma monitors the availability of your services and provides uptime statistics through its status page API.
+
+### Data
+
+<IntegrationData integration={uptimeKumaIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

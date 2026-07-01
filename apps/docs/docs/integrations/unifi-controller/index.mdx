@@ -4,6 +4,7 @@ description: "Unifi Controller is a network management platform for Unifi device
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import { AddingIntegration } from '@site/src/components/integrations/adding';
@@ -21,6 +22,10 @@ import { networkControllerStatusWidget } from '@site/docs/widgets/network-contro
 
 This integration is using the [node-unifi](https://www.npmjs.com/package/node-unifi) library under the hood to connect to the Unifi Controller.
 Therfore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro controllers as well as self-hosted UniFi controllers.
+
+### Data
+
+<IntegrationData integration={unifiControllerIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

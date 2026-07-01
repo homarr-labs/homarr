@@ -4,6 +4,7 @@ description: "Docker is a platform where you can run your applications in contai
 hide_title: true
 ---
 
+import { IntegrationData } from '@site/src/components/integrations/data';
 import { IntegrationHeader } from '@site/src/components/integrations/header';
 import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
 import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
@@ -16,6 +17,10 @@ import { dockerContainersWidget } from '@site/docs/widgets/docker-containers';
   integration={dockerIntegration}
   categories={['Containers']}
 />
+
+### Data
+
+<IntegrationData integration={dockerIntegration} />
 
 ### Widgets & Capabilities
 <IntegrationCapabilites

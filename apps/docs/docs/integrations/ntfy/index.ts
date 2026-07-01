@@ -6,4 +6,5 @@ export const ntfyIntegration: IntegrationDefinition = {
     "Ntfy is a simple, open-source notification service that allows you to send and receive notifications across devices.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ntfy.svg",
   path: "../../integrations/ntfy",
+  data: "Fetches recent push notifications from an ntfy.sh topic.",
 };

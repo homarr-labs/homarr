@@ -5,4 +5,5 @@ export const readarrIntegration: IntegrationDefinition = {
     "Readarr is a book management tool that automates the process of downloading, sorting, and renaming books.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg",
   path: "../../integrations/readarr",
+  data: "Fetches book release calendar events from Readarr.",
 };

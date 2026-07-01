@@ -5,6 +5,7 @@ export const coolifyWidget: WidgetDefinition = {
   icon: IconCloud,
   name: "Coolify",
   description: "Overview of your Coolify instance with servers, applications, and services.",
+  data: "Displays Coolify instance overview including server resources, applications, and services.",
   path: "../../widgets/coolify",
   configuration: {
     items: [

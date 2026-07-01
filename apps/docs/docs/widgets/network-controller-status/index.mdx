@@ -7,6 +7,7 @@ hide_title: true
 import { unifiControllerIntegration } from '@site/docs/integrations/unifi-controller';
 import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetData } from '@site/src/components/widgets/data';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { IconAd } from "@tabler/icons-react";
@@ -21,6 +22,10 @@ import { networkControllerStatusWidget } from '.';
 />
 
 Shows connected users and connected guest devices on wired or wireless networks.
+
+### Data
+
+<WidgetData widget={networkControllerStatusWidget} />
 
 ### Screenshots
 

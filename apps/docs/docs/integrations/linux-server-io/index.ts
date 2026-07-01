@@ -5,4 +5,5 @@ export const linuxServerIoIntegration: IntegrationDefinition = {
   description: "LinuxServer.io is a platform for managing and deploying containerized applications.",
   iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg",
   path: "../../integrations/linux-server-io",
+  data: "Fetches Docker image versions and changelogs from LinuxServer.io.",
 };

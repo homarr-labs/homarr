@@ -5,6 +5,7 @@ export const smartHomeExecuteAutomationWidget: WidgetDefinition = {
   icon: IconBinaryTree,
   name: "Execute Automation",
   description: "Trigger an automation with one click",
+  data: "Displays a button to trigger a Home Assistant automation with success feedback.",
   path: "../../widgets/smart-home-execute-automation",
   configuration: {
     items: [
