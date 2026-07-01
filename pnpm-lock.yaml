@@ -448,8 +448,8 @@ catalogs:
       specifier: ^1.395.0
       version: 1.395.0
     posthog-node:
-      specifier: ^4.18.0
-      version: 4.18.0
+      specifier: ^5.38.6
+      version: 5.38.6
     prismjs:
       specifier: ^1.30.0
       version: 1.30.0
@@ -1240,7 +1240,7 @@ importers:
         version: link:../docker
       posthog-node:
         specifier: 'catalog:'
-        version: 4.18.0
+        version: 5.38.6(rxjs@7.8.2)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -13122,9 +13122,14 @@ packages:
   posthog-js@1.395.0:
     resolution: {integrity: sha512-5iTb00CGt2eQUUiBQysQiX89RAbCN6wK2sDNzvs9zv0alaY8mJ0ZySrUD3LQ+XyLhgM5pCpacBuUwChqiYDLDw==}
 
-  posthog-node@4.18.0:
-    resolution: {integrity: sha512-XROs1h+DNatgKh/AlIlCtDxWzwrKdYDb2mOs58n4yN8BkGN9ewqeQwG5ApS4/IzwCb7HPttUkOVulkYatd2PIw==}
-    engines: {node: '>=15.0.0'}
+  posthog-node@5.38.6:
+    resolution: {integrity: sha512-Sm2mCAa9/lTTYppnKyy0AhQrriq8fOd8B2vwd3EE/9uihyIx9qkJ1xGYbvADxQJlF7HqM1/TIFCKsI0JvF8gjQ==}
+    engines: {node: ^20.20.0 || >=22.22.0}
+    peerDependencies:
+      rxjs: ^7.0.0
+    peerDependenciesMeta:
+      rxjs:
+        optional: true
 
   preact-render-to-string@6.5.11:
     resolution: {integrity: sha512-ubnauqoGczeGISiOh6RjX0/cdaF8v/oDXIjO85XALCQjwQP+SB4RDXXtvZ6yTYSjG+PC1QRP2AhPgCEsM2EvUw==}
@@ -27446,11 +27451,11 @@ snapshots:
       query-selector-shadow-dom: 1.0.1
       web-vitals: 5.3.0
 
-  posthog-node@4.18.0:
+  posthog-node@5.38.6(rxjs@7.8.2):
     dependencies:
-      axios: 1.15.0
-    transitivePeerDependencies:
-      - debug
+      '@posthog/core': 1.38.0
+    optionalDependencies:
+      rxjs: 7.8.2
 
   preact-render-to-string@6.5.11(preact@10.24.3):
     dependencies:
