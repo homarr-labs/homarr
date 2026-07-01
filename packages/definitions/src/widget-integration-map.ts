@@ -40,6 +40,8 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   audioStats: ["navidrome", "audiobookshelf"],
   vpn: getIntegrationKindsByCategory("vpn"),
   anchorNote: ["anchor"],
+  dawarichStatistics: ["dawarich"],
+  dawarichPlaces: ["dawarich"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

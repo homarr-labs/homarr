@@ -3545,6 +3545,42 @@
       "executeSuccess": "Action executed successfully",
       "executeFailed": "Action failed. Check the widget configuration."
     },
+    "dawarichStatistics": {
+      "name": "Dawarich Statistics",
+      "description": "Display travel statistics from Dawarich",
+      "option": {
+        "showTotalDistance": {
+          "label": "Show total distance"
+        },
+        "showTotalPoints": {
+          "label": "Show total points tracked"
+        },
+        "showReverseGeocoded": {
+          "label": "Show reverse geocoded points"
+        },
+        "showCountries": {
+          "label": "Show countries visited"
+        },
+        "showCities": {
+          "label": "Show cities visited"
+        }
+      },
+      "totalDistance": "Total distance",
+      "totalPoints": "Points tracked",
+      "reverseGeocoded": "Reverse geocoded",
+      "countries": "Countries",
+      "cities": "Cities"
+    },
+    "dawarichPlaces": {
+      "name": "Dawarich Places",
+      "description": "Display recently visited places from Dawarich",
+      "option": {
+        "maxPlaces": {
+          "label": "Max places to show"
+        }
+      },
+      "visits": "visits"
+    },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
