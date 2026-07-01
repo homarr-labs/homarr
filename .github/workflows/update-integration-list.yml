@@ -28,7 +28,7 @@ jobs:
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
       - name: Setup

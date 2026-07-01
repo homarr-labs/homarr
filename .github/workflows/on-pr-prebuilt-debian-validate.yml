@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Validate prebuilt dependencies for amd64
         id: validate-amd64
         uses: ./.github/actions/prebuilt-debian
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Validate prebuilt dependencies for arm64
         id: validate-arm64
         uses: ./.github/actions/prebuilt-debian
