@@ -1,0 +1,36 @@
+---
+title: 'Bazarr'
+description: "Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { bazarrIntegration } from '.';
+import { bazarrWidget } from '@site/docs/widgets/bazarr';
+
+<IntegrationHeader
+  integration={bazarrIntegration}
+  categories={['Subtitles', 'Media']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{ widget: bazarrWidget }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+You can find your Bazarr API key under **Settings → General → Security**.
+
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+      "Open Bazarr and go to Settings → General → Security.",
+      "Copy the API key and paste it into Homarr when creating the integration.",
+    ],
+}]} />

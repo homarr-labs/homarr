@@ -12,6 +12,7 @@ import * as audioStats from "./audio-stats";
 import * as app from "./app";
 import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
+import * as bazarr from "./bazarr";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import * as coolify from "./coolify";
@@ -93,6 +94,7 @@ export const widgetImports = {
   networkControllerStatus,
   rssFeed,
   bookmarks,
+  bazarr,
   indexerManager,
   healthMonitoring,
   mediaTranscoding,

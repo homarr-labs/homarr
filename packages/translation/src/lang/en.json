@@ -1331,6 +1331,10 @@
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
     }
   },
   "media": {
@@ -2743,6 +2747,35 @@
       },
       "error": {
         "internalServerError": "Failed to fetch Paperless-ngx data"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Overview of missing subtitles and health status from your Bazarr instance",
+      "episodes": "Missing Episodes",
+      "movies": "Missing Movies",
+      "providers": "Provider Issues",
+      "status": "Health Issues",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Show missing episodes",
+          "description": "Display the number of episodes with missing subtitles"
+        },
+        "showMissingMovies": {
+          "label": "Show missing movies",
+          "description": "Display the number of movies with missing subtitles"
+        },
+        "showProviderIssues": {
+          "label": "Show provider issues",
+          "description": "Display the number of subtitle providers with issues"
+        },
+        "showHealthIssues": {
+          "label": "Show health issues",
+          "description": "Display the number of Bazarr health issues"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Bazarr data"
       }
     },
     "immich-serverStats": {
