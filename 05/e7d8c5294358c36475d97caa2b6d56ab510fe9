@@ -1,0 +1,102 @@
+packages/docker/src/discovery/parse-container-labels.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-110
+packages/docker/src/index.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 12
+packages/server-settings/src/index.ts
+  s_b0f9a549e10606::t_a3e689e12c7414 8
+  s_b0f9a549e10606::t_a89316c24ba7c2 34-41
+packages/db/migrations/postgresql/meta/_journal.json
+  s_b0f9a549e10606::t_b2b7439f407df0 60-66
+packages/db/migrations/mysql/0042_add_docker_app_source.sql
+  s_b0f9a549e10606::t_548c8bc74df972 1-17
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_b0f9a549e10606::t_7b95f0bf1b5052 1-54
+packages/db/schema/sqlite.ts
+  s_b0f9a549e10606::t_3d8487a2a5f876 845-863
+  s_b0f9a549e10606::t_43e2dcb3a80ffe 539-565
+packages/docker/src/discovery/__tests__/parse-container-labels.spec.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-469
+packages/db/migrations/sqlite/meta/_journal.json
+  s_b0f9a549e10606::t_625ac93dd8e9f2 284-290
+packages/db/migrations/sqlite/0040_add_docker_app_source.sql
+  s_b0f9a549e10606::t_ab6eb2694da058 1-17
+packages/db/schema/mysql.ts
+  s_b0f9a549e10606::t_fb0cca737d2687 856-874
+  s_b0f9a549e10606::t_53dc0ae9c90adb 550-576
+packages/docker/package.json
+  s_b0f9a549e10606::t_fb88da5e1b85ac 28-31,36-37
+packages/db/migrations/postgresql/0008_add_docker_app_source.sql
+  s_b0f9a549e10606::t_3d6f479c132ca2 1-17
+packages/docker/src/discovery/list-discovered-containers.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-45
+packages/docker/src/discovery/index.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-8
+packages/docker/src/discovery/types.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-16
+packages/docker/src/labels.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 3-20
+packages/db/schema/postgresql.ts
+  s_b0f9a549e10606::t_0fa2f133a31ae3 855-873
+  s_b0f9a549e10606::t_0bd3548f069e72 549-575
+packages/docker/src/discovery/sync-discovered-services.ts
+  s_b0f9a549e10606::t_fb88da5e1b85ac 1-183,202-203,205-219,223-239,243-454
+  s_b0f9a549e10606::t_2584bb440bdbc1 184-201
+  s_b0f9a549e10606::t_e1b23ad8f4f8c6 204,220,222
+  s_b0f9a549e10606::t_182d09aaad8b8a 221
+  s_b0f9a549e10606::t_261264fbe345d9 240,242
+  s_b0f9a549e10606::t_39149f4120a623 241
+packages/db/migrations/mysql/meta/_journal.json
+  s_b0f9a549e10606::t_5f6459243baa03 298-304
+packages/api/src/router/onboard/onboard-router.ts
+  s_b0f9a549e10606::t_1774ed89a693ed 372-377,380
+  s_b0f9a549e10606::t_6a7ba13e4fc900 241-251
+  s_b0f9a549e10606::t_2c017abd5bef9e 333
+  s_b0f9a549e10606::t_af8c4b66a4897b 39-40
+  s_b0f9a549e10606::t_1e151f7e35f391 12
+  s_b0f9a549e10606::t_6789bcde72b059 9
+  s_b0f9a549e10606::t_7b6a689cc13d0d 391,400-401,407-410
+  s_b0f9a549e10606::t_0b7c5bcbd37652 395-398
+  s_b0f9a549e10606::t_357fc354388eac 316-317
+  s_b0f9a549e10606::t_21140c9c9518a3 449
+  s_b0f9a549e10606::t_afc6a742d039e6 177-178,182-208,219,223-228,234-237,253,257-259,295,304-305,310,312,321-332,334-345,347-352,358
+  s_b0f9a549e10606::t_e0c814044e5151 6-7
+  s_b0f9a549e10606::t_52fa1b389a6fd6 51-74
+  s_b0f9a549e10606::t_adb50d846bc535 209-218
+  s_b0f9a549e10606::t_fc65f0786fd6ce 428-430,432-437
+  s_b0f9a549e10606::t_a43f44c282b5fe 346,353-357
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_b0f9a549e10606::t_269794d1319a63 162-163,165-170
+  s_b0f9a549e10606::t_e9b706fea4fba5 357-366
+  s_b0f9a549e10606::t_d44306e8af9d93 157-161,171-173,175,187
+  s_b0f9a549e10606::t_7fc4408326873d 164
+  s_b0f9a549e10606::t_1e3ceef34cd5f6 432-433
+  s_b0f9a549e10606::t_55852734046171 68
+  s_b0f9a549e10606::t_46969e67e8d896 53
+  s_b0f9a549e10606::t_95860458ecf43e 136-137
+  s_b0f9a549e10606::t_feb91353abecad 388
+  s_b0f9a549e10606::t_c9b4dcc54b8c87 102
+packages/db/schema/index.ts
+  s_b0f9a549e10606::t_c8a51a6ca1242f 54
+apps/docs/docs/integrations/docker-labels/index.ts
+  s_b0f9a549e10606::t_facbebc81af5b5 1-8
+apps/docs/docs/integrations/docker/index.mdx
+  s_b0f9a549e10606::t_73330a62d52359 96,98-100
+pnpm-lock.yaml
+  s_b0f9a549e10606::t_d194349115ff9a 1772-1777,1781-1783,1794-1796
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "05e7d8c5294358c36475d97caa2b6d56ab510fe9",
+  "prompts": {},
+  "sessions": {
+    "s_b0f9a549e10606": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e9604008-1773-4bb5-832a-18948694970f",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
