@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Settings"
+        "settings": "Settings",
+        "options": "Options",
+        "actions": "Actions"
       }
     },
     "create": {
@@ -4311,7 +4313,7 @@
                   "notStarted": "Not started"
                 },
                 "name": {
-"management": "Management",
+                  "management": "Management",
                   "dashboard": "Dashboard"
                 }
               }

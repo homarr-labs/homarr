@@ -61,7 +61,12 @@ import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
 
-export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
+export type {
+  WidgetDefinition,
+  WidgetContextMenuAction,
+  WidgetContextActionProps,
+  WidgetOptionsSettings,
+} from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 

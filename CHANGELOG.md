@@ -1,3 +1,10 @@
+## [1.68.1](https://github.com/homarr-labs/homarr/compare/v1.68.0...v1.68.1) (2026-06-30)
+
+### Bug Fixes
+
+* make source maps opt-in to restore v1.67.0 memory baseline ([57ef0af](https://github.com/homarr-labs/homarr/commit/57ef0af4a252ea39727caeba7e13587dabc6254e)), closes [#6123](https://github.com/homarr-labs/homarr/issues/6123)
+* revert production source maps to restore v1.67.0 memory baseline ([60a69e3](https://github.com/homarr-labs/homarr/commit/60a69e31efc7168b8f4309daf75954d7730d883b)), closes [#6123](https://github.com/homarr-labs/homarr/issues/6123)
+
 ## [1.68.0](https://github.com/homarr-labs/homarr/compare/v1.67.0...v1.68.0) (2026-06-26)
 
 ### Features
