@@ -209,6 +209,7 @@ export const integrations = mysqlTable(
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
+    creatorId: varchar({ length: 64 }).references(() => users.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -668,6 +669,10 @@ export const integrationRelations = relations(integrations, ({ one, many }) => (
   app: one(apps, {
     fields: [integrations.appId],
     references: [apps.id],
+  }),
+  creator: one(users, {
+    fields: [integrations.creatorId],
+    references: [users.id],
   }),
 }));
 

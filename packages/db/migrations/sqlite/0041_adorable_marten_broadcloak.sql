@@ -1,0 +1,1 @@
+ALTER TABLE `integration` ADD `creator_id` text REFERENCES user(id);

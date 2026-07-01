@@ -15,6 +15,7 @@ export const getIntegrationsWithPermissionsAsync = async (session: Session | nul
       name: true,
       url: true,
       kind: true,
+      creatorId: true,
     },
     with: {
       userPermissions: {

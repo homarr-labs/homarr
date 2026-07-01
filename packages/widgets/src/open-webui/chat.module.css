@@ -28,7 +28,7 @@
   right: 0;
   bottom: var(--mantine-spacing-xs);
   z-index: 3;
-  width: min(50vw, calc(100% - var(--mantine-spacing-md)));
+  width: calc(100% - var(--mantine-spacing-md));
   margin-inline: auto;
   box-shadow: var(--mantine-shadow-md);
 }

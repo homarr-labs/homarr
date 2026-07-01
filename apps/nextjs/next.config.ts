@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
     // Ship server source maps so production Node stack traces in logs reference original source, see https://github.com/homarr-labs/homarr/issues/5891
     serverSourceMaps: true,
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
-    turbopackFileSystemCacheForDev: true,
+    turbopackFileSystemCacheForDev: false,
     preloadEntriesOnStart: false,
     webpackMemoryOptimizations: true,
   },

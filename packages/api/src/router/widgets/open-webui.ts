@@ -1,4 +1,5 @@
 import { observable } from "@trpc/server/observable";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -18,6 +19,24 @@ import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "openWebUiRouter" });
+
+/**
+ * Open WebUI integrations hold a personal API key that grants access to a
+ * single user's data (chat history, files, notes, knowledge bases).  To prevent
+ * other Homarr users from reading that data, every procedure that touches the
+ * integration verifies that the caller is the integration's creator.
+ *
+ * The check is intentionally placed **after** the integration middleware (which
+ * already validates the caller's permission level) so the error message does
+ * not leak whether the integration exists.
+ */
+const throwIfNotCreator = (integration: { creatorId?: string | null }, userId: string | undefined) => {
+  // Existing integrations that predate the creatorId column have a null
+  // creatorId; we skip the check for backward compatibility.
+  if (integration.creatorId && integration.creatorId !== userId) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Only the integration creator can access this data" });
+  }
+};
 
 const messageSchema = z.object({
   role: z.enum(["system", "user", "assistant"]),
@@ -104,30 +123,39 @@ const groundMessagesAsync = async (
 
 export const openWebUiRouter = createTRPCRouter({
   getModels: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
     const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
     const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
     return data;
   }),
 
-  getChats: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
-    const handler = openWebUiChatsRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-    return data;
-  }),
+  // Chat history exposes private user data, so we require "interact" access
+  // (not just "query") and verify the caller is the integration's creator.
+  getChats: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .query(async ({ ctx }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
+      const handler = openWebUiChatsRequestHandler.handler(ctx.integration, {});
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
 
   getKnowledge: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
     const handler = openWebUiKnowledgeRequestHandler.handler(ctx.integration, {});
     const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
     return data;
   }),
 
   getFiles: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
     const handler = openWebUiFilesRequestHandler.handler(ctx.integration, {});
     const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
     return data;
   }),
 
   getNotes: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
     const handler = openWebUiNotesRequestHandler.handler(ctx.integration, {});
     const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
     return data;
@@ -137,6 +165,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ noteId: z.string() }))
     .concat(createOneIntegrationMiddleware("query", "openWebUi"))
     .query(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
       const handler = openWebUiNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
       const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
@@ -146,6 +175,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ knowledgeId: z.string() }))
     .concat(createOneIntegrationMiddleware("query", "openWebUi"))
     .query(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
       const handler = openWebUiKnowledgeFilesRequestHandler.handler(ctx.integration, {
         knowledgeId: input.knowledgeId,
       });
@@ -159,6 +189,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ url: z.string().url() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
       return await client.processWebAsync(input.url);
     }),
@@ -169,6 +200,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
       return await client.uploadFileAsync(input.filename, input.contentBase64, input.contentType);
     }),
@@ -178,15 +210,18 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
       const text = await client.transcribeAudioAsync(input.filename, input.contentBase64, input.contentType);
       return { text };
     }),
 
-  getChat: publicProcedure
+  // Full chat messages contain private user data; restrict to the creator.
+  getChat: protectedProcedure
     .input(z.object({ chatId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiChatRequestHandler.handler(ctx.integration, { chatId: input.chatId });
       const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
@@ -196,6 +231,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(chatPayloadSchema)
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
       const chat = await client.createChatAsync({
         title: input.title,
@@ -210,6 +246,7 @@ export const openWebUiRouter = createTRPCRouter({
     .input(z.object({ chatId: z.string(), chat: chatPayloadSchema }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
       const chat = await client.updateChatAsync(input.chatId, input.chat);
       await openWebUiChatsRequestHandler.handler(ctx.integration, {}).invalidateAsync();
@@ -237,6 +274,7 @@ export const openWebUiRouter = createTRPCRouter({
     )
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .subscription(({ ctx, input }) => {
+      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
       return observable<StreamEvent>((emit) => {
         const controller = new AbortController();
 
