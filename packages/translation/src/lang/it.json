@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Nessun Provider",
             "tooltip": "Impossibile analizzare il provider, impostarlo manualmente dopo aver importato le immagini"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Identificatore non valido",
           "noMatchingVersion": "Nessuna versione corrispondente trovata",
           "noReleasesFound": "Nessun rilascio trovato",
-          "noProviderResponse": "Nessuna risposta dal provider",
-          "noProviderSelected": "Nessun provider selezionato"
+          "noProviderSeleceted": "Nessun provider selezionato",
+          "noProviderResponse": "Nessuna risposta dal provider"
         }
       }
     },

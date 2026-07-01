@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Aucun fournisseur",
             "tooltip": "Le fournisseur n'a pas pu être analysé, veuillez le définir manuellement après l'importation des images"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Identifiant non valide",
           "noMatchingVersion": "Aucune version correspondante trouvée",
           "noReleasesFound": "Aucune publication trouvée",
-          "noProviderResponse": "Aucune réponse du fournisseur",
-          "noProviderSelected": "Aucun fournisseur sélectionné"
+          "noProviderSeleceted": "Aucun fournisseur sélectionné",
+          "noProviderResponse": "Aucune réponse du fournisseur"
         }
       }
     },

@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Brak dostawcy",
             "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Nieprawidłowy identyfikator",
           "noMatchingVersion": "Nie znaleziono pasującej wersji",
           "noReleasesFound": "Nie znaleziono wydań!",
-          "noProviderResponse": "Brak odpowiedzi od dostawcy",
-          "noProviderSelected": "Nie wybrano dostawcy"
+          "noProviderSeleceted": "Nie wybrano dostawcy",
+          "noProviderResponse": "Brak odpowiedzi od dostawcy"
         }
       }
     },

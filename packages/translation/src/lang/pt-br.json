@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Nenhum provedor",
             "tooltip": "O provedor não pôde ser analisado, defina-o manualmente após importar as imagens"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Identificador inválido",
           "noMatchingVersion": "Nenhuma versão correspondente encontrada",
           "noReleasesFound": "Nenhum lançamento encontrado",
-          "noProviderResponse": "Nenhuma resposta do provedor",
-          "noProviderSelected": "Nenhum provedor selecionado"
+          "noProviderSeleceted": "Nenhum provedor selecionado",
+          "noProviderResponse": "Nenhuma resposta do provedor"
         }
       }
     },

@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "没有提供者",
             "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "无效标识符",
           "noMatchingVersion": "没有找到匹配的版本",
           "noReleasesFound": "没有发现发布信息",
-          "noProviderResponse": "提供者没有响应",
-          "noProviderSelected": "没有选择提供者"
+          "noProviderSeleceted": "没有选择提供者",
+          "noProviderResponse": "提供者没有响应"
         }
       }
     },

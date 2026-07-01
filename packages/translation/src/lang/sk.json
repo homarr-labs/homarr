@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
           "noReleasesFound": "",
-          "noProviderResponse": "",
-          "noProviderSelected": ""
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },

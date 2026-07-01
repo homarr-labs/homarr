@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Нет провайдера",
             "tooltip": "Не удалось определить провайдер, укажите его вручную после импорта образов"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Неверный идентификатор",
           "noMatchingVersion": "Подходящая версия не найдена",
           "noReleasesFound": "Релизы не найдены",
-          "noProviderResponse": "Нет ответа от провайдера",
-          "noProviderSelected": "Провайдер не выбран"
+          "noProviderSeleceted": "Провайдер не выбран",
+          "noProviderResponse": "Нет ответа от провайдера"
         }
       }
     },

@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Sağlayıcı Bulunamadı",
             "tooltip": "Sağlayıcı çözümlenemedi, lütfen görselleri içe aktardıktan sonra elle ayarlayın"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Geçersiz tanımlayıcı",
           "noMatchingVersion": "Eşleşen sürüm bulunamadı",
           "noReleasesFound": "Hiçbir sürüm bulunamadı",
-          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı",
-          "noProviderSelected": "Hiçbir sağlayıcı seçilmedi"
+          "noProviderSeleceted": "Hiçbir sağlayıcı seçilmedi",
+          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı"
         }
       }
     },

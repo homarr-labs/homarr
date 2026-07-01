@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Ingen leverandør",
             "tooltip": "Leverandøren kunne ikke tolkes, sett den manuelt etter import av bildene"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen samsvarende versjon funnet",
           "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderResponse": "Ingen respons fra leverandør",
-          "noProviderSelected": "Ingen leverandør valgt"
+          "noProviderSeleceted": "Ingen leverandør valgt",
+          "noProviderResponse": "Ingen respons fra leverandør"
         }
       }
     },

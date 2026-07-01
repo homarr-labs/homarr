@@ -3194,9 +3194,6 @@
           "noProvider": {
             "label": "Nincs Szolgáltató",
             "tooltip": "A szolgáltató adatai nem értelmezhetők; kérjük, az importálás után állítsa be azokat manuálisan"
-          },
-          "providerUrl": {
-            "label": ""
           }
         }
       },
@@ -3219,8 +3216,8 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderResponse": "",
-          "noProviderSelected": ""
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
