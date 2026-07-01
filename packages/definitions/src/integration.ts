@@ -431,6 +431,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
     documentationUrl: null,
+    defaultUrl: "http://localhost:8001",
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {

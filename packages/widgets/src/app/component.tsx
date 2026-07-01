@@ -87,6 +87,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           justify="center"
           align="center"
           gap={isColumnLayout ? 0 : "sm"}
+          onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
         >
           <Stack gap={0}>
             {options.showTitle && (

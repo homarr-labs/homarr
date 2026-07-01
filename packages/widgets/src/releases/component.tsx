@@ -255,7 +255,7 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
                     !hasError &&
                     formatter.relativeTime(repository.latestReleaseAt, {
                       now,
-                      style: "narrow",
+                      style: "long",
                     })}
                 </Text>
                 {hasError ? (
@@ -567,7 +567,7 @@ const ExpandedDisplay = ({
             <Text className="releases-repository-expanded-createdAt-date" span fw={700}>
               {formatter.relativeTime(repository.createdAt, {
                 now,
-                style: "narrow",
+                style: "long",
               })}
             </Text>
           </Text>

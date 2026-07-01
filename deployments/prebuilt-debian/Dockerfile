@@ -1,4 +1,4 @@
-FROM node:24.17.0-trixie AS base
+FROM node:24.18.0-trixie AS base
 WORKDIR /app
 COPY package.json .
 COPY pnpm-lock.yaml .
