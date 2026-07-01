@@ -26,8 +26,7 @@ export const FloatingChatButton = () => {
   const myOpenWebUiIntegration = useMemo(() => {
     if (!session?.user?.id) return null;
     return integrations.find(
-      (integration) =>
-        integration.kind === "openWebUi" && integration.creatorId === session.user.id,
+      (integration) => integration.kind === "openWebUi" && integration.creatorId === session.user.id,
     );
   }, [integrations, session?.user?.id]);
 
