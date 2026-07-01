@@ -13,6 +13,7 @@ import type { ReleasesRepository } from "./releases/releases-repository";
 interface CommonInput<TType> {
   defaultValue?: TType;
   withDescription?: boolean;
+  skipContextMenu?: boolean;
 }
 
 interface TextInput extends CommonInput<string> {
@@ -91,6 +92,7 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    skipContextMenu: input?.skipContextMenu ?? false,
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,
