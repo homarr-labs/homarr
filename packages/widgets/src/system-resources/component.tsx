@@ -43,21 +43,21 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
   >(() => (data[0] ? [toChartItem(data[0].healthInfo)] : []));
 
-  const lastUpdatedAt = useRef(dataUpdatedAt);
   const prevIntegrationIds = useRef(integrationIds);
+  useEffect(() => {
+    if (prevIntegrationIds.current === integrationIds) return;
+    prevIntegrationIds.current = integrationIds;
+    setItems([]);
+  }, [integrationIds]);
+
+  const lastUpdatedAt = useRef(dataUpdatedAt);
   useEffect(() => {
     if (dataUpdatedAt === lastUpdatedAt.current) return;
     lastUpdatedAt.current = dataUpdatedAt;
     const firstItem = data[0];
     if (!firstItem) return;
-    const idsChanged = prevIntegrationIds.current !== integrationIds;
-    prevIntegrationIds.current = integrationIds;
-    setItems((prev) =>
-      idsChanged
-        ? [toChartItem(firstItem.healthInfo)]
-        : [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE),
-    );
-  }, [dataUpdatedAt, data, integrationIds]);
+    setItems((prev) => [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE));
+  }, [dataUpdatedAt, data]);
 
   const showNetwork =
     items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));

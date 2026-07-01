@@ -4,6 +4,7 @@ import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Menu, Switch, Text } from "@mantine/core";
 import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
+import type { QueryClient } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -50,12 +51,6 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
   const handleRefetch = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: [["widget"]] });
-  }, [queryClient]);
-
-  const dataUpdatedAt = useMemo(() => {
-    const queries = queryClient.getQueryCache().findAll({ queryKey: [["widget"]] });
-    if (queries.length === 0) return null;
-    return Math.max(...queries.map((q) => q.state.dataUpdatedAt).filter(Boolean));
   }, [queryClient]);
 
   const options = useMemo(
@@ -230,11 +225,9 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
           <Menu.Item closeMenuOnClick leftSection={<IconRefresh size={16} />} onClick={handleRefetch}>
             <Group justify="space-between" wrap="nowrap">
               {tMenu("refresh")}
-              {dataUpdatedAt && (
-                <Text size="xs" c="dimmed">
-                  <RelativeTimestamp timestamp={dataUpdatedAt} />
-                </Text>
-              )}
+              <Text size="xs" c="dimmed">
+                <WidgetCacheAge queryClient={queryClient} />
+              </Text>
             </Group>
           </Menu.Item>
           <Menu.Item
@@ -271,15 +264,22 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const RelativeTimestamp = ({ timestamp }: { timestamp: number }) => {
+const WidgetCacheAge = ({ queryClient }: { queryClient: QueryClient }) => {
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(id);
   }, []);
-  const seconds = Math.floor((Date.now() - timestamp) / 1000);
+
+  const timestamps = queryClient
+    .getQueryCache()
+    .findAll({ queryKey: [["widget"]] })
+    .map((q) => q.state.dataUpdatedAt)
+    .filter(Boolean);
+  if (timestamps.length === 0) return null;
+
+  const seconds = Math.floor((Date.now() - Math.max(...timestamps)) / 1000);
   if (seconds < 5) return "just now";
   if (seconds < 60) return `${seconds}s ago`;
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}m ago`;
+  return `${Math.floor(seconds / 60)}m ago`;
 };

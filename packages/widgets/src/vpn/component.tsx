@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Flex, ScrollArea, Stack } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
