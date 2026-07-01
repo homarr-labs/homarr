@@ -130,6 +130,9 @@ packages/integrations/src/paperless-ngx @ajnart
 # PatchMon - introduced in https://github.com/homarr-labs/homarr/pull/6119 by @mrjoshuap
 apps/docs/docs/integrations/patchmon @mrjoshuap
 packages/integrations/src/patchmon @mrjoshuap
+packages/widgets/src/patchmon @mrjoshuap
+packages/api/src/router/widgets/patchmon.ts @mrjoshuap
+packages/request-handler/src/patchmon.ts @mrjoshuap
 
 # PeaNUT - introduced in https://github.com/homarr-labs/homarr/pull/5862 by @afonsojramos
 apps/docs/docs/integrations/peanut @afonsojramos
