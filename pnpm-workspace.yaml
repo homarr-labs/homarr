@@ -18,7 +18,7 @@ catalog:
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
   "@homarr/node-unifi": ^2.6.0
-  "@immich/sdk": ^2.7.5
+  "@immich/sdk": ^3.0.0
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
   "@modelcontextprotocol/sdk": 1.29.0
@@ -199,6 +199,7 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  - "@immich/sdk@3.0.0"
   # Renovate security update: turbo@2.9.14
   - turbo@2.9.14
   # Renovate security update: form-data@4.0.6
