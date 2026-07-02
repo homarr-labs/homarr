@@ -48,6 +48,7 @@ import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { getResponsiveTableColumnSizes } from "../common/table-column-sizing";
 import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(relativeTime);
@@ -58,7 +59,7 @@ interface QuickFilter {
 }
 
 //Ratio table for relative width between columns
-const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
+const baseColumnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   actions: 2,
   added: 4,
   category: 1,
@@ -83,6 +84,7 @@ export default function DownloadClientsWidget({
   integrationIds,
   options,
   setOptions,
+  width,
 }: WidgetComponentProps<"downloads">) {
   const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
     integrationIds.includes(id) ? [id] : [],
@@ -104,6 +106,10 @@ export default function DownloadClientsWidget({
 
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
+  const columnsRatios = useMemo(
+    () => getResponsiveTableColumnSizes(baseColumnsRatios, width, { name: { maxSize: 32 } }),
+    [width],
+  );
 
   //Item modal state and selection
   const [clickedIndex, setClickedIndex] = useState<number>(0);
@@ -335,7 +341,7 @@ export default function DownloadClientsWidget({
           ) : null,
       };
     },
-    [t],
+    [columnsRatios, t],
   );
 
   //Make columns and cell elements, Memoized to data with deps on data and EditMode
