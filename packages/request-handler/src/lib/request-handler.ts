@@ -26,15 +26,18 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       const existing = inflight.get(key);
       if (existing) return existing as Promise<CacheEntry<TData>>;
 
-      const promise = options.requestAsync(input).then((data) => {
-        const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
-        cache.set(key, entry as CacheEntry<unknown>);
-        inflight.delete(key);
-        return entry;
-      }).catch((err) => {
-        inflight.delete(key);
-        throw err;
-      });
+      const promise = options
+        .requestAsync(input)
+        .then((data) => {
+          const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
+          cache.set(key, entry as CacheEntry<unknown>);
+          inflight.delete(key);
+          return entry;
+        })
+        .catch((err) => {
+          inflight.delete(key);
+          throw err;
+        });
 
       inflight.set(key, promise as Promise<CacheEntry<unknown>>);
       return promise;
