@@ -159,14 +159,21 @@ export const InitIntegrations = () => {
       const imageApps = selectedApps.filter((app) => app.source !== "label");
 
       if (labelApps.length > 0) {
-        const labelAppsWithHost = labelApps.filter((app): app is typeof app & { host: string } => Boolean(app.host));
+        const labelAppsWithHost = labelApps.filter((app): app is (typeof app & { host: string }) => Boolean(app.host));
+        const missingHostCount = labelApps.length - labelAppsWithHost.length;
+        if (missingHostCount > 0) {
+          throw new Error("Some selected Docker label apps are missing host metadata");
+        }
         if (labelAppsWithHost.length > 0) {
-          await syncLabelApps(
+          const syncResult = await syncLabelApps(
             labelAppsWithHost.map((app) => ({
               containerId: app.containerId,
               host: app.host,
             })),
           );
+          if (syncResult.notFound > 0) {
+            throw new Error("Some selected Docker label apps were not found");
+          }
         }
       }
 
@@ -384,7 +391,13 @@ export const InitIntegrations = () => {
             {t("action.skip")}
           </Button>
           <Button
-            onClick={handleContinueToConfig}
+            onClick={() => {
+              if (selectedKinds.length === 0) {
+                void finishSetupAsync();
+                return;
+              }
+              handleContinueToConfig();
+            }}
             disabled={(selectedKinds.length === 0 && selectedAppCount === 0) || undefined}
             rightSection={<IconArrowRight size={16} stroke={1.5} />}
             suppressHydrationWarning

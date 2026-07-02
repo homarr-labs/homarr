@@ -34,7 +34,13 @@ const homepageLabelKeys = {
 const integrationKindSet = new Set<string>(integrationKinds);
 const widgetKindSet = new Set<string>(widgetKinds);
 
-const readLabel = (labels: Record<string, string>, key: string) => labels[key]?.trim();
+const readLabel = (labels: Record<string, string>, key: string) => {
+  const value = labels[key]?.trim();
+  if (!value) {
+    return undefined;
+  }
+  return value;
+};
 
 const resolveLabelValue = (
   labels: Record<string, string>,

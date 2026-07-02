@@ -133,21 +133,20 @@ export const syncDiscoveredServicesAsync = async (
 
     if (!existingItem) {
       const newItemId = createId();
-      const yOffset = getNextItemYOffset(
-        board,
-        categorySection.id,
-        firstLayout.id,
-        itemYOffsetBySection,
-        pendingItemLayouts,
-        itemHeight,
-      );
 
       const newItemLayouts = board.layouts.map((layout) => ({
         itemId: newItemId,
         sectionId: categorySection.id,
         layoutId: layout.id,
         xOffset: 0,
-        yOffset,
+        yOffset: getNextItemYOffset(
+          board,
+          categorySection.id,
+          layout.id,
+          itemYOffsetBySection,
+          pendingItemLayouts,
+          itemHeight,
+        ),
         width: itemWidth,
         height: itemHeight,
       }));
@@ -232,7 +231,13 @@ export const syncDiscoveredServicesAsync = async (
         if (existing) {
           await innerDb
             .update(table)
-            .set({ appId: source.appId, boardId: source.boardId, itemId: source.itemId, externalId: source.externalId })
+            .set({
+              appId: source.appId,
+              boardId: source.boardId,
+              itemId: source.itemId,
+              externalId: source.externalId,
+              updatedAt: new Date(),
+            })
             .where(and(eq(dockerAppSources.host, source.host), eq(dockerAppSources.containerId, source.containerId)));
         } else {
           await innerDb.insert(table).values(source as never);
@@ -254,7 +259,13 @@ export const syncDiscoveredServicesAsync = async (
         } catch {
           innerDb
             .update(dockerAppSources)
-            .set({ appId: source.appId, boardId: source.boardId, itemId: source.itemId, externalId: source.externalId })
+            .set({
+              appId: source.appId,
+              boardId: source.boardId,
+              itemId: source.itemId,
+              externalId: source.externalId,
+              updatedAt: new Date(),
+            })
             .where(and(eq(dockerAppSources.host, source.host), eq(dockerAppSources.containerId, source.containerId)))
             .run();
         }
@@ -338,9 +349,9 @@ const buildAppItemOptions = (
   showTitle: true,
   descriptionDisplayMode: "hidden",
   layout: "column",
-  pingEnabled: service.pingUrl
-    ? true
-    : !(options.forceDisableStatus ?? false) && (options.enableStatusByDefault ?? true),
+  pingEnabled:
+    !(options.forceDisableStatus ?? false) &&
+    (Boolean(service.pingUrl) || (options.enableStatusByDefault ?? true)),
 });
 
 const findOrCreateCategorySection = (
