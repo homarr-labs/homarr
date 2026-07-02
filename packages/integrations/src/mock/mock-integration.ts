@@ -9,6 +9,7 @@ import type {
   ISystemHealthMonitoringIntegration,
 } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { IIndexerManagerIntegration } from "../interfaces/indexer-manager/indexer-manager-integration";
+import type { IMediaOrganizerIntegration } from "../interfaces/media-organizer/media-organizer-integration";
 import type { IMediaReleasesIntegration } from "../interfaces/media-releases";
 import type { IMediaRequestIntegration } from "../interfaces/media-requests/media-request-integration";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
@@ -21,6 +22,7 @@ import { ClusterHealthMonitoringMockService } from "./data/cluster-health-monito
 import { DnsHoleMockService } from "./data/dns-hole";
 import { DownloadClientMockService } from "./data/download";
 import { IndexerManagerMockService } from "./data/indexer-manager";
+import { MediaOrganizerMockService } from "./data/media-organizer";
 import { MediaReleasesMockService } from "./data/media-releases";
 import { MediaRequestMockService } from "./data/media-request";
 import { MediaServerMockService } from "./data/media-server";
@@ -41,6 +43,7 @@ export class MockIntegration
     IClusterHealthMonitoringIntegration,
     ISystemHealthMonitoringIntegration,
     IIndexerManagerIntegration,
+    IMediaOrganizerIntegration,
     IMediaReleasesIntegration,
     IMediaRequestIntegration,
     IMediaServerIntegration,
@@ -55,6 +58,7 @@ export class MockIntegration
   private static readonly clusterMonitoring = new ClusterHealthMonitoringMockService();
   private static readonly systemMonitoring = new SystemHealthMonitoringMockService();
   private static readonly indexerManager = new IndexerManagerMockService();
+  private static readonly mediaOrganizer = new MediaOrganizerMockService();
   private static readonly mediaReleases = new MediaReleasesMockService();
   private static readonly mediaRequest = new MediaRequestMockService();
   private static readonly mediaServer = new MediaServerMockService();
@@ -96,6 +100,10 @@ export class MockIntegration
   // IndexerManagerIntegration
   getIndexersAsync = MockIntegration.indexerManager.getIndexersAsync.bind(MockIntegration.indexerManager);
   testAllAsync = MockIntegration.indexerManager.testAllAsync.bind(MockIntegration.indexerManager);
+
+  // MediaOrganizerIntegration
+  getMissingAsync = MockIntegration.mediaOrganizer.getMissingAsync.bind(MockIntegration.mediaOrganizer);
+  getMediaQueueAsync = MockIntegration.mediaOrganizer.getMediaQueueAsync.bind(MockIntegration.mediaOrganizer);
 
   // MediaReleasesIntegration
   getMediaReleasesAsync = MockIntegration.mediaReleases.getMediaReleasesAsync.bind(MockIntegration.mediaReleases);

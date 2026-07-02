@@ -17,6 +17,7 @@ export const widgetKinds = [
   "mediaRequests-requestList",
   "mediaRequests-requestStats",
   "mediaTranscoding",
+  "mediaMissing",
   "minecraftServerStatus",
   "networkControllerSummary",
   "networkControllerStatus",
@@ -56,4 +57,5 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   uptimeKuma: { width: 2, height: 3 },
   audioStats: { width: 2, height: 2 },
   paperlessNgx: { width: 2, height: 2 },
+  mediaMissing: { width: 4, height: 3 },
 };

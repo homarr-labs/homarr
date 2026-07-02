@@ -20,6 +20,7 @@ export const widgetRouter = createTRPCRouter({
   calendar: lazy(() => import("./calendar").then((mod) => mod.calendarRouter)),
   downloads: lazy(() => import("./downloads").then((mod) => mod.downloadsRouter)),
   mediaRequests: lazy(() => import("./media-requests").then((mod) => mod.mediaRequestsRouter)),
+  mediaOrganizer: lazy(() => import("./media-organizer").then((mod) => mod.mediaOrganizerRouter)),
   rssFeed: lazy(() => import("./rssFeed").then((mod) => mod.rssFeedRouter)),
   indexerManager: lazy(() => import("./indexer-manager").then((mod) => mod.indexerManagerRouter)),
   healthMonitoring: lazy(() => import("./health-monitoring").then((mod) => mod.healthMonitoringRouter)),

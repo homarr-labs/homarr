@@ -35,6 +35,7 @@ import {
   everyoneGroup,
   getPermissionsWithChildren,
   getPermissionsWithParents,
+  widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
@@ -1445,14 +1446,15 @@ export const boardRouter = createTRPCRouter({
           if (!occupiedRow) continue;
           for (let x = 0; x < layout.columnCount && !placed; x++) {
             if (!occupiedRow[x]) {
+              const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
               layoutRows.push({
                 itemId,
                 sectionId: emptySection.id,
                 layoutId: layout.id,
                 xOffset: x,
                 yOffset: y,
-                width: 1,
-                height: 1,
+                width: defaultSize.width,
+                height: defaultSize.height,
               });
               placed = true;
             }

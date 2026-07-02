@@ -32,6 +32,7 @@ import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as mediaTranscoding from "./media-transcoding";
+import * as mediaMissing from "./media-missing";
 import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
@@ -89,6 +90,7 @@ export const widgetImports = {
   downloads,
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
+  mediaMissing,
   networkControllerSummary,
   networkControllerStatus,
   rssFeed,

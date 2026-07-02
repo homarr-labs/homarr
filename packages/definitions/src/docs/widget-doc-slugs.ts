@@ -19,6 +19,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   "mediaRequests-requestList": "media-request-list",
   "mediaRequests-requestStats": "media-request-stats",
   mediaTranscoding: "media-transcoding",
+  mediaMissing: "media-missing",
   minecraftServerStatus: "minecraft-server-status",
   networkControllerSummary: "network-controller-summary",
   networkControllerStatus: "network-controller-status",
