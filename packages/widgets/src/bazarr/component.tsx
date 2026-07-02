@@ -40,7 +40,7 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
   const t = useScopedI18n("widget.bazarr");
   const { data: badges } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
-    { staleTime: 5 * 60 * 1000 },
+    { staleTime: 5 * 60 * 1000, enabled: Boolean(integrationIds[0]) },
   );
 
   if (!badges) return <WidgetEmptyState />;

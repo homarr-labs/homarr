@@ -17,13 +17,14 @@ export class BazarrIntegration extends Integration {
       return TestConnectionError.StatusResult(response);
     }
 
-    await bazarrSystemStatusSchema.parseAsync(await response.json());
+    bazarrSystemStatusSchema.parse(await response.json());
     return { success: true };
   }
 
   public async getBadgesAsync(): Promise<BazarrBadges> {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/badges"), {
       headers: this.getAuthHeaders(),
+      timeout: 10000,
     });
 
     if (!response.ok) {
@@ -37,7 +38,7 @@ export class BazarrIntegration extends Integration {
 
   private getAuthHeaders(): Record<string, string> {
     return {
-      "X-API-KEY": super.getSecretValue("apiKey"),
+      "X-API-KEY": this.getSecretValue("apiKey"),
       Accept: "application/json",
     };
   }
