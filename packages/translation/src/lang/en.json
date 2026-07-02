@@ -3545,6 +3545,60 @@
       "executeSuccess": "Action executed successfully",
       "executeFailed": "Action failed. Check the widget configuration."
     },
+    "openWebUi": {
+      "name": "AI Chat",
+      "description": "Chat with AI models through Open WebUI, with model picking and history.",
+      "option": {
+        "systemPrompt": {
+          "label": "System prompt",
+          "description": "Optional instruction prepended to every conversation."
+        },
+        "showHistory": {
+          "label": "Show chat history",
+          "description": "Show a button to browse and reopen previous Open WebUI chats."
+        }
+      },
+      "selectModel": "Select a model",
+      "searchModel": "Search models…",
+      "noModels": "No models available",
+      "emptyState": "Start a conversation",
+      "messagePlaceholder": "Type a message…",
+      "newChat": "New chat",
+      "history": "History",
+      "back": "Back",
+      "send": "Send",
+      "stop": "Stop",
+      "retry": "Retry",
+      "visionWarning": "This model may not support images",
+      "attach": "Attach",
+      "uploadFiles": "Upload Files",
+      "capture": "Capture",
+      "attachImage": "Attach image",
+      "attachKnowledge": "Knowledge",
+      "noKnowledge": "No knowledge bases in Open WebUI",
+      "attachWebpage": "Webpage",
+      "attachFiles": "Files",
+      "attachNotes": "Notes",
+      "referenceChats": "Reference Chats",
+      "noFiles": "No files in Open WebUI",
+      "noNotes": "No notes in Open WebUI",
+      "noChats": "No previous chats",
+      "addUrl": "Add URL",
+      "removeAttachment": "Remove attachment",
+      "webError": "Could not load that web page",
+      "uploadError": "Could not upload the file",
+      "captureError": "Could not access the camera",
+      "chatError": "Could not load that chat",
+      "noteError": "Could not load that note",
+      "record": "Record voice message",
+      "stopRecording": "Stop recording",
+      "cancelRecording": "Cancel recording",
+      "micError": "Could not access the microphone",
+      "transcribeError": "Could not transcribe the recording",
+      "error": {
+        "internalServerError": "Failed to reach Open WebUI"
+      }
+    },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",

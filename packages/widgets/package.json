@@ -20,7 +20,8 @@
     "./errors/classes": "./src/errors/index.ts",
     "./widget-integration-select": "./src/widget-integration-select.tsx",
     "./modals": "./src/modals/index.ts",
-    "./prefetch": "./src/prefetch.ts"
+    "./prefetch": "./src/prefetch.ts",
+    "./_open-webui/chat": "./src/open-webui/chat.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

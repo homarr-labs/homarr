@@ -343,6 +343,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/gluetun"
   | "/docs/integrations/peanut"
   | "/docs/integrations/beszel"
+  | "/docs/integrations/open-webui"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/app"
@@ -390,4 +391,5 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/beszel-system-grid"
   | "/docs/widgets/beszel-alerts"
   | "/docs/widgets/beszel-system-stats"
-  | "/docs/widgets/custom-api";
+  | "/docs/widgets/custom-api"
+  | "/docs/widgets/open-webui";

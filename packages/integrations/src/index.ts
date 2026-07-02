@@ -41,6 +41,7 @@ export { NavidromeIntegration } from "./navidrome/navidrome-integration";
 export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
+export { OpenWebUiIntegration } from "./open-webui/open-webui-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

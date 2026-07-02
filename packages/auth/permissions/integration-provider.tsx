@@ -11,6 +11,7 @@ interface IntegrationContextProps {
     name: string;
     url: string;
     kind: IntegrationKind;
+    creatorId: string | null;
     permissions: {
       hasFullAccess: boolean;
       hasInteractAccess: boolean;

@@ -281,6 +281,20 @@
       "when": 1780764500000,
       "tag": "0039_merge_custom_widget_url",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "6",
+      "when": 1782836728121,
+      "tag": "0040_charming_tag",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "6",
+      "when": 1782837354691,
+      "tag": "0041_adorable_marten_broadcloak",
+      "breakpoints": true
     }
   ]
 }

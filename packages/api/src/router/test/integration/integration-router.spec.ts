@@ -301,6 +301,10 @@ describe("create should create a new integration", () => {
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
+
+    // The creator must exist in the DB for the creatorId foreign key
+    await db.insert(users).values({ id: defaultUserId });
+
     const input = {
       name: "Jellyfin",
       kind: "jellyfin" as const,
@@ -317,10 +321,18 @@ describe("create should create a new integration", () => {
 
     const dbIntegration = await db.query.integrations.findFirst();
     const dbSecret = await db.query.integrationSecrets.findFirst();
+    const dbPermission = await db.query.integrationUserPermissions.findFirst();
     expect(dbIntegration).toBeDefined();
     expect(dbIntegration!.name).toBe(input.name);
     expect(dbIntegration!.kind).toBe(input.kind);
     expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.creatorId).toBe(defaultUserId);
+
+    // Creator should be auto-granted "full" permission
+    expect(dbPermission).toBeDefined();
+    expect(dbPermission!.integrationId).toBe(dbIntegration!.id);
+    expect(dbPermission!.userId).toBe(defaultUserId);
+    expect(dbPermission!.permission).toBe("full");
 
     expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
     expect(dbSecret).toBeDefined();
@@ -336,6 +348,10 @@ describe("create should create a new integration", () => {
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
+
+    // The creator must exist in the DB for the creatorId foreign key
+    await db.insert(users).values({ id: defaultUserId });
+
     const input = {
       name: "Jellyseerr",
       kind: "jellyseerr" as const,
@@ -357,6 +373,7 @@ describe("create should create a new integration", () => {
     expect(dbIntegration!.name).toBe(input.name);
     expect(dbIntegration!.kind).toBe(input.kind);
     expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.creatorId).toBe(defaultUserId);
 
     expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
     expect(dbSecret).toBeDefined();
@@ -374,6 +391,10 @@ describe("create should create a new integration", () => {
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create", "app-create"]),
     });
+
+    // The creator must exist in the DB for the creatorId foreign key
+    await db.insert(users).values({ id: defaultUserId });
+
     const input = {
       name: "Jellyfin",
       kind: "jellyfin" as const,
@@ -405,6 +426,7 @@ describe("create should create a new integration", () => {
     expect(dbIntegration!.name).toBe(input.name);
     expect(dbIntegration!.kind).toBe(input.kind);
     expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.creatorId).toBe(defaultUserId);
     expect(dbIntegration!.app!.name).toBe(input.app.name);
     expect(dbIntegration!.app!.pingUrl).toBe(input.app.pingUrl);
     expect(dbIntegration!.app!.href).toBe(input.app.href);
@@ -431,6 +453,10 @@ describe("create should create a new integration", () => {
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
+
+    // The creator must exist in the DB for the creatorId foreign key
+    await db.insert(users).values({ id: defaultUserId });
+
     const input = {
       name: "Jellyfin",
       kind: "jellyfin" as const,
@@ -455,6 +481,7 @@ describe("create should create a new integration", () => {
     expect(dbIntegration!.kind).toBe(input.kind);
     expect(dbIntegration!.url).toBe(input.url);
     expect(dbIntegration!.appId).toBe(appId);
+    expect(dbIntegration!.creatorId).toBe(defaultUserId);
 
     expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
     expect(dbSecret).toBeDefined();

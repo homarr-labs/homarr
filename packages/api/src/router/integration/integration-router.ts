@@ -99,6 +99,7 @@ export const integrationRouter = createTRPCRouter({
             name: integration.name,
             kind: integration.kind,
             url: integration.url,
+            creatorId: integration.creatorId,
             permissions: {
               hasUseAccess:
                 permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
@@ -350,6 +351,15 @@ export const integrationRouter = createTRPCRouter({
         url: input.url,
         kind: input.kind,
         appId,
+        creatorId: ctx.session.user.id,
+      });
+
+      // Auto-grant the creator "full" permission so they can immediately use
+      // and manage the integration they just created.
+      await ctx.db.insert(integrationUserPermissions).values({
+        integrationId,
+        userId: ctx.session.user.id,
+        permission: "full",
       });
 
       if (input.secrets.length >= 1) {

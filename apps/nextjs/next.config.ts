@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
-    turbopackFileSystemCacheForDev: true,
+    turbopackFileSystemCacheForDev: false,
     preloadEntriesOnStart: false,
     webpackMemoryOptimizations: true,
   },

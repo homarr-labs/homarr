@@ -195,6 +195,7 @@ export const integrations = sqliteTable(
     url: text().notNull(),
     kind: text().$type<IntegrationKind>().notNull(),
     appId: text().references(() => apps.id, { onDelete: "set null" }),
+    creatorId: text().references(() => users.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -657,6 +658,10 @@ export const integrationRelations = relations(integrations, ({ one, many }) => (
   app: one(apps, {
     fields: [integrations.appId],
     references: [apps.id],
+  }),
+  creator: one(users, {
+    fields: [integrations.creatorId],
+    references: [users.id],
   }),
 }));
 

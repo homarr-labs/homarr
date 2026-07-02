@@ -60,6 +60,7 @@ import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
+import * as openWebUi from "./open-webui";
 
 export type {
   WidgetDefinition,
@@ -121,6 +122,7 @@ export const widgetImports = {
   beszelAlerts,
   beszelSystemStats,
   customApi,
+  openWebUi,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

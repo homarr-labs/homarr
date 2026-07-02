@@ -40,6 +40,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   audioStats: ["navidrome", "audiobookshelf"],
   vpn: getIntegrationKindsByCategory("vpn"),
   anchorNote: ["anchor"],
+  openWebUi: ["openWebUi"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
