@@ -1021,7 +1021,6 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
-      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1413,10 +1412,7 @@
     "here": "",
     "iconPicker": {
       "label": "",
-      "header": "",
-      "headerLoading": "",
-      "noResults": "",
-      "error": ""
+      "header": ""
     },
     "colorScheme": {
       "options": {
@@ -1468,7 +1464,6 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "",
-        "docker": "",
         "preferences": "",
         "logout": "",
         "login": "",
@@ -2357,9 +2352,6 @@
       "name": "",
       "description": "",
       "option": {
-        "columns": {
-          "label": ""
-        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2412,12 +2404,6 @@
       "instances": {
         "title": ""
       }
-    },
-    "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
-      "option": {}
     },
     "ups": {
       "name": "",
@@ -3653,9 +3639,6 @@
       "error": {
         "internalServerError": ""
       },
-      "empty": {
-        "noSystems": ""
-      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3729,9 +3712,6 @@
         }
       },
       "selectSystem": "",
-      "empty": {
-        "noSystems": ""
-      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4152,11 +4132,6 @@
     "notFound": {
       "title": "",
       "text": ""
-    },
-    "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4603,9 +4578,6 @@
               "label": ""
             },
             "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
               "label": ""
             }
           },
@@ -5099,8 +5071,7 @@
       }
     },
     "error": {
-      "internalServerError": "",
-      "noColumns": ""
+      "internalServerError": ""
     }
   },
   "kubernetes": {

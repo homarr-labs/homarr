@@ -1,26 +1,22 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Fragment, Suspense } from "react";
+import { Fragment } from "react";
 import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
-import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
-  const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
   const { data: app } = clientApi.app.byId.useQuery(
@@ -87,7 +83,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           justify="center"
           align="center"
           gap={isColumnLayout ? 0 : "sm"}
-          onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
         >
           <Stack gap={0}>
             {options.showTitle && (
@@ -132,9 +127,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
-        <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />}>
-          <PingIndicator appId={app.id} />
-        </Suspense>
+        <PingIndicator appId={app.id} />
       ) : null}
     </AppLink>
   );

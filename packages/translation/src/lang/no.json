@@ -1513,7 +1513,9 @@
           "invalidFileName": "Ugyldig filnavn",
           "fileTooLarge": "Filen er for stor, maks størrelse er {maxSize}",
           "invalidConfiguration": "Ugyldig konfigurasjon",
-          "groupNameTaken": "Gruppenavn allerede tatt"
+          "groupNameTaken": "Gruppenavn allerede tatt",
+          "appHrefInvalid": "Må være en absolutt URL (https://example.com) eller en sti som begynner med / (f.eks. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Stien kan ikke inneholde påfølgende skråstreker"
         }
       }
     },

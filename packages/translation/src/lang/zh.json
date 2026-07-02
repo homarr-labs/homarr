@@ -1513,7 +1513,9 @@
           "invalidFileName": "無效的檔案名稱",
           "fileTooLarge": "檔案太大，最大大小為 {maxSize}",
           "invalidConfiguration": "無效設定",
-          "groupNameTaken": "用戶組名稱已存在"
+          "groupNameTaken": "用戶組名稱已存在",
+          "appHrefInvalid": "必須為絕對網址（https://example.com）或以 / 開頭的路徑（例如 /cockpit/）",
+          "appHrefConsecutiveSlashes": "路徑不得包含連續斜線"
         }
       }
     },

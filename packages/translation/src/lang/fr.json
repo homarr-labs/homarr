@@ -1513,7 +1513,9 @@
           "invalidFileName": "Nom de fichier invalide",
           "fileTooLarge": "Le fichier est trop volumineux, la taille maximale est {maxSize}",
           "invalidConfiguration": "Configuration invalide",
-          "groupNameTaken": "Nom de groupe déjà utilisé"
+          "groupNameTaken": "Nom de groupe déjà utilisé",
+          "appHrefInvalid": "Doit être une URL absolue (https://example.com) ou un chemin commençant par / (par ex. /cockpit/)",
+          "appHrefConsecutiveSlashes": "Le chemin ne doit pas contenir de barres obliques consécutives"
         }
       }
     },

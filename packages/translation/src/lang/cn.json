@@ -1513,7 +1513,9 @@
           "invalidFileName": "文件名无效",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
-          "groupNameTaken": "用户组名称已存在"
+          "groupNameTaken": "用户组名称已存在",
+          "appHrefInvalid": "必须为绝对网址（https://example.com）或以 / 开头的路径（例如 /cockpit/）",
+          "appHrefConsecutiveSlashes": "路径不得包含连续的斜杠"
         }
       }
     },
