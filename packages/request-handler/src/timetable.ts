@@ -51,7 +51,7 @@ const buildUrl = (baseUrl: string, path: `/${string}`, queryParams: Record<strin
   for (const [key, value] of Object.entries(queryParams)) {
     url.searchParams.set(key, value.toString());
   }
-  return url;
+  return url.toString();
 };
 
 const searchStationsAsync = async (baseUrl: string, query: string): Promise<Station[]> => {
