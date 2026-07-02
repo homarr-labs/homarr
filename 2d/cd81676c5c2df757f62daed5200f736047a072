@@ -10,6 +10,7 @@ packages/docker/src/discovery/sync-discovered-services.ts
 apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
   s_b0f9a549e10606::t_5b30eb10881c49 163-166,168,174-176
   s_b0f9a549e10606::t_440e6ea6d7cf29 394-400
+  s_b0f9a549e10606::t_da344b6344eb50 162
 packages/definitions/src/docs/homarr-docs-sitemap.ts
   s_b0f9a549e10606::t_e6fdf0d3fc3464 178
 apps/docs/docs/integrations/docker/index.mdx
