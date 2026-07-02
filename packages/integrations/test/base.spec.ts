@@ -1,9 +1,10 @@
 import { describe, expect, test, vi } from "vitest";
 
+import type { Path, QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createDb } from "@homarr/db/test";
 
-import type { IntegrationTestingInput } from "../src/base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../src/base/integration";
 import { Integration } from "../src/base/integration";
 import type { TestingResult } from "../src/base/test-connection/test-connection-service";
 
@@ -42,20 +43,60 @@ describe("Base integration", () => {
     expect(result.error.data.url).toContain("https://example.com");
     expect(result.error.data.reason).toBe("internalServerError");
   });
+
+  describe("externalUrl should build correct url / path", () => {
+    test("with absolute externalUrl", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: new URL("https://example.com") });
+
+      const result = integration.buildExternalUrl("/items/42", { q: "search" });
+
+      expect(result).toBeInstanceOf(URL);
+      expect(result.toString()).toBe("https://example.com/items/42?q=search");
+    });
+    test("with path-only externalUrl", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/cockpit/" });
+      const result = integration.buildExternalUrl("/web/index.html", { id: "42" });
+      expect(result).toBe("/cockpit/web/index.html?id=42");
+    });
+    test("with path-only externalUrl with embedded query and extra queryParams", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/signalk-server/" });
+      const result = integration.buildExternalUrl("/items/42?width=100", { quality: "90" });
+      expect(result).toBe("/signalk-server/items/42?width=100&quality=90");
+    });
+    test("with path-only externalUrl preserves hash-bang fragment", () => {
+      const integration = new FakeIntegration(undefined, undefined, { externalUrl: "/jellyfin/" });
+      const result = integration.buildExternalUrl("/web/index.html#!/details?id=42&serverId=abc");
+      expect(result).toBe("/jellyfin/web/index.html#!/details?id=42&serverId=abc");
+    });
+    test("with null externalUrl should fallback to integration url", () => {
+      const integration = new FakeIntegration(undefined, undefined, {
+        externalUrl: null,
+        url: new URL("https://example.com"),
+      });
+      const result = integration.buildExternalUrl("/items/42", { q: "search" });
+      expect(result.toString()).toBe("https://example.com/items/42?q=search");
+    });
+  });
 });
 
 class FakeIntegration extends Integration {
   constructor(
     private testingResult?: TestingResult,
     private error?: Error,
+    overrides: Partial<IntegrationInput> = {},
   ) {
     super({
       id: "test",
       name: "Test",
-      url: "https://example.com",
+      url: new URL("https://example.com"),
       decryptedSecrets: [],
       externalUrl: null,
+      ...overrides,
     });
+  }
+
+  public buildExternalUrl(path: Path, queryParams?: QueryParams) {
+    return this.externalUrl(path, queryParams);
   }
 
   // eslint-disable-next-line no-restricted-syntax

@@ -1,5 +1,6 @@
 import type { fetch, RequestInit, Response } from "undici";
 
+import type { Path } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -90,7 +91,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
 
     const { owner, name } = parsedIdentifier;
 
-    const relativeUrl: `/${string}` = owner
+    const relativeUrl: Path = owner
       ? `/v2/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`
       : `/v2/repositories/library/${encodeURIComponent(name)}`;
 
@@ -129,16 +130,16 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     return { success: false, error: { code: "noMatchingVersion" } };
   }
 
-  private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {
+  private async getDetailsAsync(path: Path): Promise<DetailsProviderResponse | undefined> {
     const response = await this.withHeadersAsync(async (headers) => {
-      return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/`), {
+      return await fetchWithTrustedCertificatesAsync(this.url(`${path}/`), {
         headers,
       });
     });
 
     if (!response.ok) {
       logger.warn("Failed to get details response", {
-        relativeUrl,
+        path,
         error: response.statusText,
       });
 
@@ -150,7 +151,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
 
     if (!success) {
       logger.warn("Failed to parse details response", {
-        relativeUrl,
+        path,
         error,
       });
 

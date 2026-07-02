@@ -348,7 +348,7 @@ function createNextcloudIntegration(
       },
     ],
     name: "Nextcloud",
-    url: `http://${container.getHost()}:${container.getMappedPort(80)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(80)}`),
     externalUrl: null,
   });
 }

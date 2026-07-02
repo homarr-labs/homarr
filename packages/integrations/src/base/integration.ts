@@ -3,7 +3,8 @@ import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
 
-import { removeTrailingSlash } from "@homarr/common";
+import type { Path, QueryParams } from "@homarr/common";
+import { buildUrl, isPath } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
@@ -16,8 +17,8 @@ import type { IntegrationSecret } from "./types";
 export interface IntegrationInput {
   id: string;
   name: string;
-  url: string;
-  externalUrl: string | null;
+  url: URL;
+  externalUrl: URL | Path | null;
   decryptedSecrets: IntegrationSecret[];
 }
 
@@ -55,34 +56,20 @@ export abstract class Integration {
     return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }
 
-  private createUrl(
-    inputUrl: string,
-    path: `/${string}`,
-    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
-  ) {
-    const baseUrl = removeTrailingSlash(inputUrl);
-    const url = new URL(`${baseUrl}${path}`);
+  protected url(path: Path, queryParams?: QueryParams): URL {
+    return buildUrl(this.integration.url, path, queryParams);
+  }
 
-    if (queryParams) {
-      for (const [key, value] of Object.entries(queryParams)) {
-        if (value === null || value === undefined) {
-          continue;
-        }
-        url.searchParams.set(key, value instanceof Date ? value.toISOString() : value.toString());
-      }
+  protected externalUrl(path: Path, queryParams?: QueryParams): URL | Path {
+    if (!this.integration.externalUrl) {
+      return this.url(path, queryParams);
+    }
+    if (isPath(this.integration.externalUrl)) {
+      const result = buildUrl(new URL(`http://placeholder${this.integration.externalUrl}`), path, queryParams);
+      return `${result.pathname}${result.search}${result.hash}` as Path;
     }
 
-    return url;
-  }
-  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean | null | undefined>) {
-    return this.createUrl(this.integration.url, path, queryParams);
-  }
-
-  protected externalUrl(
-    path: `/${string}`,
-    queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
-  ) {
-    return this.createUrl(this.integration.externalUrl ?? this.integration.url, path, queryParams);
+    return buildUrl(this.integration.externalUrl, path, queryParams);
   }
 
   protected webSocketUrl(
@@ -97,8 +84,7 @@ export abstract class Integration {
 
   public async testConnectionAsync(): Promise<TestingResult> {
     try {
-      const url = new URL(this.integration.url);
-      return await new TestConnectionService(url).handleAsync(async ({ ca, checkServerIdentity }) => {
+      return await new TestConnectionService(this.integration.url).handleAsync(async ({ ca, checkServerIdentity }) => {
         const fetchDispatcher = await createCertificateAgentAsync({
           ca,
           checkServerIdentity,

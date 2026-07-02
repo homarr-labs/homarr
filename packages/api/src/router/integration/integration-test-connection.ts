@@ -78,10 +78,11 @@ export const testConnectionAsync = async (
     })
     .map(({ source: _, ...secret }) => secret);
 
-  const { secrets: _, ...baseIntegration } = integration;
+  const { secrets: _, url, ...baseIntegration } = integration;
 
   const integrationInstance = await createIntegrationAsync({
     ...baseIntegration,
+    url: new URL(url),
     decryptedSecrets,
     externalUrl: null,
   });

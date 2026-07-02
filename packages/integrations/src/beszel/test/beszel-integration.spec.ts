@@ -46,7 +46,7 @@ function createBeszelIntegration() {
   return new BeszelIntegration({
     id: "test-beszel",
     name: "Test Beszel",
-    url: BESZEL_URL,
+    url: new URL(BESZEL_URL),
     externalUrl: null,
     decryptedSecrets: [
       { kind: "username", value: BESZEL_EMAIL },
@@ -212,7 +212,7 @@ describe.skipIf(!shouldRun)("BeszelIntegration (real instance)", () => {
       const badIntegration = new BeszelIntegration({
         id: "test-bad",
         name: "Bad Beszel",
-        url: BESZEL_URL,
+        url: new URL(BESZEL_URL),
         externalUrl: null,
         decryptedSecrets: [
           { kind: "username", value: "wrong@example.com" },

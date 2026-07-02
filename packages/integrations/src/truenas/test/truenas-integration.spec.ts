@@ -164,7 +164,7 @@ const createIntegration = (decryptedSecrets: IntegrationSecret[]) =>
   new TrueNasIntegration({
     id: `truenas-${(integrationCounter += 1)}`,
     name: "TrueNAS Test",
-    url: "https://truenas.local",
+    url: new URL("https://truenas.local"),
     externalUrl: null,
     decryptedSecrets,
   });

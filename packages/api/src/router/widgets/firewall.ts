@@ -46,7 +46,7 @@ export const firewallRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall">; url: URL }>;
         summary: FirewallCpuSummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -94,7 +94,7 @@ export const firewallRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall">; url: URL }>;
         summary: FirewallInterfacesSummary[];
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -142,7 +142,7 @@ export const firewallRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall">; url: URL }>;
         summary: FirewallVersionSummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -190,7 +190,7 @@ export const firewallRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .subscription(({ ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall">; url: URL }>;
         summary: FirewallMemorySummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];

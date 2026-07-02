@@ -107,7 +107,7 @@ const createHomeAssistantIntegration = (container: StartedTestContainer, apiKeyO
       },
     ],
     name: "Home assistant",
-    url: `http://${container.getHost()}:${container.getMappedPort(8123)}`,
+    url: new URL(`http://${container.getHost()}:${container.getMappedPort(8123)}`),
     externalUrl: null,
   });
 };

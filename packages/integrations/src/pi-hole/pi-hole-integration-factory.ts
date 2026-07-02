@@ -1,4 +1,4 @@
-import { removeTrailingSlash } from "@homarr/common";
+import { buildUrl } from "@homarr/common";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationInput } from "../base/integration";
@@ -7,8 +7,7 @@ import { PiHoleIntegrationV6 } from "./v6/pi-hole-integration-v6";
 
 export const createPiHoleIntegrationAsync = async (input: IntegrationInput) => {
   try {
-    const baseUrl = removeTrailingSlash(input.url);
-    const url = new URL(`${baseUrl}/api/info/version`);
+    const url = buildUrl(input.url, "/api/info/version");
     const response = await fetchWithTrustedCertificatesAsync(url);
 
     /**

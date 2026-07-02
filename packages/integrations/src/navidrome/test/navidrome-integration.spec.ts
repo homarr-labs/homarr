@@ -24,7 +24,7 @@ const createIntegration = () =>
   new NavidromeIntegration({
     id: "test-navidrome",
     name: "Test Navidrome",
-    url: TEST_URL,
+    url: new URL(TEST_URL),
     externalUrl: null,
     decryptedSecrets: secrets,
   });

@@ -1,7 +1,7 @@
 export interface IntegrationErrorData {
   id: string;
   name: string;
-  url: string;
+  url: string | URL;
 }
 
 export abstract class IntegrationError extends Error {
@@ -13,6 +13,6 @@ export abstract class IntegrationError extends Error {
     super(message, { cause });
     this.integrationId = integration.id;
     this.integrationName = integration.name;
-    this.integrationUrl = integration.url;
+    this.integrationUrl = integration.url.toString();
   }
 }

@@ -1,3 +1,4 @@
+import type { Path } from "@homarr/common";
 import { isAbsoluteUrl } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -190,7 +191,7 @@ export class TracearrIntegration extends Integration {
     try {
       // ImageProxy doesn't support fallback urls so we need to remove them
       const cleanUrl = urlOrPath.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
-      const fullUrl = isAbsoluteUrl(urlOrPath) ? cleanUrl : this.url(cleanUrl as `/${string}`).toString();
+      const fullUrl = isAbsoluteUrl(urlOrPath) ? cleanUrl : this.url(cleanUrl as Path).toString();
 
       return await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
     } catch {

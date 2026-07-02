@@ -2677,6 +2677,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.7(react@19.2.7)
+      react-error-boundary:
+        specifier: 'catalog:'
+        version: 6.1.2(react@19.2.7)
       react-jsx-parser:
         specifier: 'catalog:'
         version: 2.4.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

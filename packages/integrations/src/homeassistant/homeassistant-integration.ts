@@ -1,5 +1,6 @@
 import z from "zod";
 
+import type { QueryParams } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -119,7 +120,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
    * @param path full path to the API endpoint
    * @returns the response from the API
    */
-  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+  private async getAsync(path: `/api/${string}`, queryParams?: QueryParams) {
     return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
       headers: this.getAuthHeaders(),
     });

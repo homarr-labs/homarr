@@ -47,7 +47,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
-      url: "http://pi.hole",
+      url: new URL("http://pi.hole"),
       kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
@@ -97,7 +97,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
-      url: "http://pi.hole",
+      url: new URL("http://pi.hole"),
       kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
@@ -147,7 +147,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
-      url: "http://pi.hole",
+      url: new URL("http://pi.hole"),
       kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
@@ -201,7 +201,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
-      url: "http://pi.hole",
+      url: new URL("http://pi.hole"),
       kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
@@ -255,7 +255,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
-      url: "http://pi.hole",
+      url: new URL("http://pi.hole"),
       kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
@@ -325,7 +325,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "GitHub",
-      url: "https://api.github.com",
+      url: new URL("https://api.github.com"),
       kind: "github" as const,
       decryptedSecrets: [
         expect.objectContaining({
