@@ -312,6 +312,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/dash-dot"
   | "/docs/integrations/glances"
   | "/docs/integrations/tdarr"
+  | "/docs/integrations/fileflows"
   | "/docs/integrations/proxmox"
   | "/docs/integrations/nextcloud"
   | "/docs/integrations/unifi-controller"

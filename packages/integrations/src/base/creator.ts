@@ -27,6 +27,7 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { FileFlowsIntegration } from "../media-transcoding/fileflows-integration";
 import { MockIntegration } from "../mock/mock-integration";
 import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
@@ -100,6 +101,7 @@ export const integrationCreators = {
   readarr: ReadarrIntegration,
   dashDot: DashDotIntegration,
   tdarr: TdarrIntegration,
+  fileFlows: FileFlowsIntegration,
   proxmox: ProxmoxIntegration,
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,

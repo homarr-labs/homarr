@@ -27,6 +27,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   dashDot: "dash-dot",
   glances: "glances",
   tdarr: "tdarr",
+  fileFlows: "fileflows",
   proxmox: "proxmox",
   nextcloud: "nextcloud",
   unifiController: "unifi-controller",
