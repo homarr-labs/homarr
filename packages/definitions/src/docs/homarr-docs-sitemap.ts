@@ -175,7 +175,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/deluge"
   | "/docs/integrations/docker-hub"
   | "/docs/integrations/docker"
-  | "/docs/integrations/docker-labels"
   | "/docs/integrations/emby"
   | "/docs/integrations/github-containerregistry"
   | "/docs/integrations/github"

@@ -159,7 +159,7 @@ export const InitIntegrations = () => {
       const imageApps = selectedApps.filter((app) => app.source !== "label");
 
       if (labelApps.length > 0) {
-        const labelAppsWithHost = labelApps.filter((app): app is (typeof app & { host: string }) => Boolean(app.host));
+        const labelAppsWithHost = labelApps.filter((app): app is typeof app & { host: string } => Boolean(app.host));
         const missingHostCount = labelApps.length - labelAppsWithHost.length;
         if (missingHostCount > 0) {
           throw new Error("Some selected Docker label apps are missing host metadata");

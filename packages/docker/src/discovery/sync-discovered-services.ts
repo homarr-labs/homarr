@@ -350,8 +350,7 @@ const buildAppItemOptions = (
   descriptionDisplayMode: "hidden",
   layout: "column",
   pingEnabled:
-    !(options.forceDisableStatus ?? false) &&
-    (Boolean(service.pingUrl) || (options.enableStatusByDefault ?? true)),
+    !(options.forceDisableStatus ?? false) && (Boolean(service.pingUrl) || (options.enableStatusByDefault ?? true)),
 });
 
 const findOrCreateCategorySection = (
