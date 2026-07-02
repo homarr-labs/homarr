@@ -5,7 +5,6 @@ interface Options<TData, TInput extends Record<string, unknown>> {
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
 
-// ponytail: module-level cache keyed by JSON(input). Ceiling: unbounded keys if inputs are high-cardinality; upgrade to LRU if needed.
 const cache = new Map<string, CacheEntry<unknown>>();
 const inflight = new Map<string, Promise<CacheEntry<unknown>>>();
 
