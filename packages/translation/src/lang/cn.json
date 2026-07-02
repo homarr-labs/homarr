@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "设置"
+        "settings": "设置",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

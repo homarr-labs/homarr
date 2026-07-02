@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "설정"
+        "settings": "설정",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

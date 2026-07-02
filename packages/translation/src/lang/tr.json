@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Ayarlar"
+        "settings": "Ayarlar",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Nustatymai"
+        "settings": "Nustatymai",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

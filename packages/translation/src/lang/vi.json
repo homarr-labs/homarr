@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Cài đặt"
+        "settings": "Cài đặt",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
