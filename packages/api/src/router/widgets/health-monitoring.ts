@@ -1,11 +1,23 @@
 import { observable } from "@trpc/server/observable";
 
+import { createIntegrationAsync } from "@homarr/integrations";
 import type { SystemHealthMonitoring } from "@homarr/integrations";
+import { SynologyIntegration } from "@homarr/integrations";
 import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const healthMonitoringIntegrationKinds = [
+  "openmediavault",
+  "dashDot",
+  "truenas",
+  "unraid",
+  "glances",
+  "synology",
+  "mock",
+] as const;
 
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
@@ -13,12 +25,10 @@ export const healthMonitoringRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Unraid/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
+          "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Synology/Unraid/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
       },
     })
-    .concat(
-      createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
-    )
+    .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -37,9 +47,7 @@ export const healthMonitoringRouter = createTRPCRouter({
       );
     }),
   subscribeSystemHealthStatus: publicProcedure
-    .concat(
-      createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "truenas", "unraid", "glances", "mock"),
-    )
+    .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .subscription(({ ctx }) => {
       return observable<{
         integrationId: string;
@@ -64,6 +72,23 @@ export const healthMonitoringRouter = createTRPCRouter({
           });
         };
       });
+    }),
+  listStorageVolumes: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List storage volumes from a Synology DiskStation integration for widget configuration. REQUIRED: integrationId from integration_all (Synology integration only)",
+      },
+    })
+    .concat(createOneIntegrationMiddleware("query", "synology"))
+    .query(async ({ ctx }) => {
+      const integrationInstance = await createIntegrationAsync(ctx.integration);
+      if (!(integrationInstance instanceof SynologyIntegration)) {
+        throw new Error("Expected Synology integration");
+      }
+
+      return await integrationInstance.listStorageVolumesAsync();
     }),
   getClusterHealthStatus: publicProcedure
     .meta({

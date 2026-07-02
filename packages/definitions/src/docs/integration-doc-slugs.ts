@@ -44,6 +44,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   ical: "ical",
   anchor: "anchor",
   truenas: "truenas",
+  synology: "synology",
   unraid: "unraid",
   coolify: "coolify",
   searchCh: "search-ch",

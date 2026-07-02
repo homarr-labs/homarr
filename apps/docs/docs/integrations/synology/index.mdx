@@ -1,0 +1,96 @@
+---
+title: "Synology DiskStation"
+description: "Monitor CPU, memory, storage volumes, and system health from Synology DSM."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { synologyIntegration } from ".";
+import { systemResourcesWidget } from "@site/docs/widgets/system-resources";
+import { systemDisksWidget } from "@site/docs/widgets/system-disks";
+import { healthMonitoringWidget } from "@site/docs/widgets/health-monitoring";
+import Alert from "@theme/Admonition";
+
+<IntegrationHeader integration={synologyIntegration} categories={["NAS", "Hardware"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites
+  items={[
+    { widget: healthMonitoringWidget },
+    { widget: systemResourcesWidget },
+    { widget: systemDisksWidget },
+  ]}
+/>
+
+### Supported metrics
+
+| Widget section               | DSM API source                                        | May be unavailable                                      |
+| ---------------------------- | ----------------------------------------------------- | ------------------------------------------------------- |
+| CPU ring / chart             | `SYNO.Core.System.Utilization`                        | —                                                       |
+| Memory ring / chart          | `SYNO.Core.System.Utilization`                        | —                                                       |
+| CPU temperature ring         | `SYNO.Core.System` system info                        | Models without a temperature sensor                     |
+| Network charts               | `SYNO.Core.System.Utilization` network totals         | Some DSM builds or permission configurations            |
+| Load average (info modal)    | `SYNO.Core.System.Utilization` CPU load fields        | —                                                       |
+| Storage volume usage         | `SYNO.Core.System` storage info / Storage Manager API | —                                                       |
+| SMART status and temperature | Storage Manager and SMART APIs                        | Disk-to-volume mapping may be incomplete on some setups |
+| Reboot / update indicator    | `SYNO.Core.System.Status` / upgrade APIs              | Permission-dependent                                    |
+| GPU                          | Not available                                         | Typical DiskStation models                              |
+
+### Adding the integration
+
+<AddingIntegration />
+
+<Alert type="info" title="Use the correct DSM URL">
+  Enter the HTTP or HTTPS URL of your Synology DSM web interface, for example <code>http://diskstation.local:5000</code>{" "}
+  or <code>https://diskstation.local:5001</code>. If DSM uses a self-signed certificate, add it under{" "}
+  <a href="/docs/management/certificates">Management &gt; Tools &gt; Certificates</a> so Homarr can connect securely.
+</Alert>
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Create a dedicated DSM user with a strong password for Homarr.",
+        "Add the user to the default Administrators group so Homarr can read `SYNO.Core.System` metrics.",
+        "Under User Groups and Permissions, deny access to shared folders and most applications.",
+        "Allow login to DSM only, optionally restricted by source IP address.",
+        "Log in once with the service account in DSM to accept terms and conditions.",
+      ],
+      body: (
+        <>
+          <Alert type="caution" title="Administrators group required">
+            Homarr reads system, storage, and utilization data from APIs that require membership in the default
+            Administrators group.
+          </Alert>
+          <Alert type="warning" title="Two-factor authentication is not supported">
+            Accounts with 2-step verification enabled cannot authenticate with this integration. Use a dedicated service
+            account without 2FA.
+          </Alert>
+          <Alert type="tip" title="First-time setup">
+            If login fails during testing, temporarily disable automatic blocking for invalid logins under Control Panel
+            &gt; Security &gt; Protection, then re-enable it after Homarr connects successfully.
+          </Alert>
+        </>
+      ),
+    },
+  ]}
+/>
+
+### Storage volume selection
+
+Health Monitoring and System Disks widgets can filter Synology storage volumes when **every** selected integration is a Synology DiskStation. Leave **Visible storage volumes** empty to show all volumes, or pick specific volumes from the list. When multiple Synology integrations are connected, volumes are labeled with the integration name.
+
+<Alert type="note" title="Synology-only option">
+  The volume filter is hidden when the widget also uses non-Synology integrations such as TrueNAS or Unraid.
+</Alert>
+
+<Alert type="note" title="Volume ordering">
+  When no volume filter is configured, the first volume returned by DSM is not guaranteed to be `volume_1`.
+</Alert>
