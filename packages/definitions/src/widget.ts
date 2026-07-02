@@ -49,6 +49,8 @@ export const widgetKinds = [
   "beszelAlerts",
   "beszelSystemStats",
   "customApi",
+  "dawarichStatistics",
+  "dawarichPlaces",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 

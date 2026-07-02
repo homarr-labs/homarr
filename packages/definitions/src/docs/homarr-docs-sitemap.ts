@@ -343,6 +343,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/gluetun"
   | "/docs/integrations/peanut"
   | "/docs/integrations/beszel"
+  | "/docs/integrations/dawarich"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/app"
