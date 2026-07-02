@@ -187,8 +187,8 @@ export const onboardRouter = createTRPCRouter({
       });
       const labeledContainerIds = new Set(labeledServices.map((service) => service.containerId));
       const seenKinds = new Set<IntegrationKind>();
-      const discoveredIntegrations = emptyResult.integrations;
-      const discoveredApps = emptyResult.apps;
+      const discoveredIntegrations: DiscoveredIntegration[] = [];
+      const discoveredApps: DiscoveredApp[] = [];
 
       for (const service of labeledServices) {
         if (service.integrationKind && !seenKinds.has(service.integrationKind)) {
