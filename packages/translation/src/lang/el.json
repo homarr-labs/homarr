@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Ρυθμίσεις"
+        "settings": "Ρυθμίσεις",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

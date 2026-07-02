@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "crwdns702:0crwdne702:0"
+        "settings": "crwdns702:0crwdne702:0",
+        "options": "crwdns5709:0crwdne5709:0",
+        "actions": "crwdns5711:0crwdne5711:0"
       }
     },
     "create": {

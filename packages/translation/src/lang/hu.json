@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Beállítások"
+        "settings": "Beállítások",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {

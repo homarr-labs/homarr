@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Налаштування"
+        "settings": "Налаштування",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -2715,7 +2717,7 @@
           "description": ""
         },
         "showInboxRing": {
-          "label": "",
+          "label": "Показувати кільце вхідних повідомлень",
           "description": ""
         },
         "showDocumentsTotal": {
@@ -2909,7 +2911,7 @@
         "failed": "Невдало",
         "processing": "В обробці",
         "leeching": "Завантажується",
-        "stalled": "",
+        "stalled": "Зупинено",
         "unknown": "Невідомо",
         "seeding": "Роздається"
       },

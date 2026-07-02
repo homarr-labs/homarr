@@ -1598,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Setări"
+        "settings": "Setări",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
