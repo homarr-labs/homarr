@@ -10,7 +10,9 @@ const logger = createLogger({ module: "releaseProviders" });
 
 const PROVIDER_TIMEOUT_MS = 10_000;
 const fetchProvider = (url: string, options?: RequestInit & { timeout?: number }) =>
-  fetchWithTrustedCertificatesAsync(url, { timeout: PROVIDER_TIMEOUT_MS, ...options } as Parameters<typeof fetchWithTrustedCertificatesAsync>[1]);
+  fetchWithTrustedCertificatesAsync(url, { timeout: PROVIDER_TIMEOUT_MS, ...options } as Parameters<
+    typeof fetchWithTrustedCertificatesAsync
+  >[1]);
 
 export interface ReleasesRepositoryRequest extends Record<string, unknown> {
   id: string;

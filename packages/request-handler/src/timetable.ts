@@ -32,14 +32,20 @@ export interface Timetable {
 
 const supportedStationTypes = ["bus", "tram", "train", "ship", "cablecar", "funicular", "chairlift"];
 
-export const timetableSearchStationsRequestHandler = createRequestHandler<Station[], { baseUrl: string; query: string }>({
+export const timetableSearchStationsRequestHandler = createRequestHandler<
+  Station[],
+  { baseUrl: string; query: string }
+>({
   async requestAsync(input) {
     return await searchStationsAsync(input.baseUrl, input.query);
   },
   cacheTtlMs: 24 * 60 * 60 * 1000,
 });
 
-export const timetableGetTimetableRequestHandler = createRequestHandler<Timetable, { baseUrl: string; stationId: string; limit: number }>({
+export const timetableGetTimetableRequestHandler = createRequestHandler<
+  Timetable,
+  { baseUrl: string; stationId: string; limit: number }
+>({
   async requestAsync(input) {
     return await getTimetableAsync(input.baseUrl, { stationId: input.stationId, limit: input.limit });
   },
