@@ -3111,7 +3111,8 @@
       },
       "empty": {
         "missing": "No missing items",
-        "queued": "No queued items"
+        "queued": "No queued items",
+        "noTabsEnabled": "Enable at least one tab in the widget settings"
       },
       "timeLeft": "Time left"
     },

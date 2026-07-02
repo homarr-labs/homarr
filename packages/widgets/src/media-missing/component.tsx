@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Badge, Box, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Stack, Tabs, Text, ThemeIcon } from "@mantine/core";
+import { Badge, Box, Center, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Stack, Tabs, Text, ThemeIcon } from "@mantine/core";
 import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -22,6 +22,14 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
 
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
+  if (!options.showMissing && !options.showQueued)
+    return (
+      <Center h="100%" p="sm">
+        <Text c="dimmed" size="sm" ta="center">
+          {t("empty.noTabsEnabled")}
+        </Text>
+      </Center>
+    );
 
   const missing = data.flatMap((entry) => entry.missing);
   const queued = data.flatMap((entry) => entry.queued);
