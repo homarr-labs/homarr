@@ -1,0 +1,33 @@
+packages/docker/src/discovery/parse-container-labels.ts
+  s_b0f9a549e10606::t_521668b0380387 37-43
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_b0f9a549e10606::t_39e4293f4e5214 34
+packages/docker/src/discovery/sync-discovered-services.ts
+  s_b0f9a549e10606::t_059858e8f58123 142-149
+  s_b0f9a549e10606::t_f5ad952310d856 234-240
+  s_b0f9a549e10606::t_15e4c79dba6eb7 262-268
+  s_b0f9a549e10606::t_46a65b07231904 352-354
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_b0f9a549e10606::t_5b30eb10881c49 163-166,168,174-176
+  s_b0f9a549e10606::t_440e6ea6d7cf29 394-400
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_b0f9a549e10606::t_e6fdf0d3fc3464 178
+apps/docs/docs/integrations/docker/index.mdx
+  s_b0f9a549e10606::t_fa310fa1effc47 96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "2dcd81676c5c2df757f62daed5200f736047a072",
+  "prompts": {},
+  "sessions": {
+    "s_b0f9a549e10606": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e9604008-1773-4bb5-832a-18948694970f",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
