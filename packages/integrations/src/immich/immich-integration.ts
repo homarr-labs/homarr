@@ -63,15 +63,16 @@ export class ImmichIntegration extends Integration {
 
   public async getAlbumAsync(albumId: string): Promise<ImmichAlbum> {
     this.initClient();
-    const [album, searchResult] = await Promise.all([
-      getAlbumInfo({ id: albumId }, this.getRequestOptions()),
-      searchAssets({ metadataSearchDto: { albumIds: [albumId] } }, this.getRequestOptions()),
+    const requestOptions = this.getRequestOptions();
+    const [album, albumAssets] = await Promise.all([
+      getAlbumInfo({ id: albumId }, requestOptions),
+      this.searchAlbumAssetsAsync(albumId),
     ]);
     const imageProxy = new ImageProxy();
     return {
       albumName: album.albumName,
       assets: await Promise.all(
-        searchResult.assets.items.map(async (asset) => {
+        albumAssets.map(async (asset) => {
           const publicLink = await imageProxy.createImageAsync(
             this.url(`/api/assets/${asset.id}/original`).toString(),
             {
@@ -111,6 +112,24 @@ export class ImmichIntegration extends Integration {
     const user = await getMyUser(this.getRequestOptions(input.fetchAsync));
     logger.debug(`Logged in as ${user.name} (${user.id})`);
     return { success: true };
+  }
+
+  private async searchAlbumAssetsAsync(albumId: string) {
+    const requestOptions = this.getRequestOptions();
+    const assets = [];
+    let nextPage: string | null = null;
+
+    do {
+      const metadataSearchDto: { albumIds: string[]; page?: number } = { albumIds: [albumId] };
+      if (nextPage !== null) {
+        metadataSearchDto.page = Number(nextPage);
+      }
+      const searchResult = await searchAssets({ metadataSearchDto }, requestOptions);
+      assets.push(...searchResult.assets.items);
+      nextPage = searchResult.assets.nextPage;
+    } while (nextPage !== null);
+
+    return assets;
   }
 
   private getRequestOptions(fetchAsync = fetchWithTrustedCertificatesAsync) {
