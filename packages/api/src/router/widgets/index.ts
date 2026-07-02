@@ -39,4 +39,5 @@ export const widgetRouter = createTRPCRouter({
   vpn: lazy(() => import("./vpn").then((mod) => mod.vpnRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
+  secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
 });

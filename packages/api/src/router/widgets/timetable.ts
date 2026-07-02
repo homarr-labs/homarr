@@ -1,21 +1,26 @@
 import z from "zod";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { timetableOptionsSchema } from "@homarr/integrations/types";
 import {
   timetableGetTimetableRequestHandler,
   timetableSearchStationsRequestHandler,
 } from "@homarr/request-handler/timetable";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const baseUrlSchema = z.string().url();
 
 export const timetableRouter = createTRPCRouter({
   getTimetable: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("timetable")))
-    .input(timetableOptionsSchema)
-    .query(async ({ input, ctx }) => {
-      const innerHandler = timetableGetTimetableRequestHandler.handler(ctx.integration, {
+    .input(
+      z.object({
+        baseUrl: baseUrlSchema,
+        stationId: z.string(),
+        limit: z.number().int().min(1).max(100),
+      }),
+    )
+    .query(async ({ input }) => {
+      const innerHandler = timetableGetTimetableRequestHandler.handler({
+        baseUrl: input.baseUrl,
         stationId: input.stationId,
         limit: input.limit,
       });
@@ -25,14 +30,15 @@ export const timetableRouter = createTRPCRouter({
       return data;
     }),
   searchStations: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("timetable")))
     .input(
       z.object({
+        baseUrl: baseUrlSchema,
         query: z.string(),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      const innerHandler = timetableSearchStationsRequestHandler.handler(ctx.integration, {
+    .query(async ({ input }) => {
+      const innerHandler = timetableSearchStationsRequestHandler.handler({
+        baseUrl: input.baseUrl,
         query: input.query,
       });
 

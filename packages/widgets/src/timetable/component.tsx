@@ -7,27 +7,24 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { DynamicSelectOption } from "../_inputs/widget-dynamic-select-input";
 import type { WidgetComponentProps } from "../definition";
 
-export default function TimetableWidget({ options, integrationIds }: WidgetComponentProps<"timetable">) {
-  // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const integrationId = integrationIds[0]!;
+export default function TimetableWidget({ options }: WidgetComponentProps<"timetable">) {
   const t = useScopedI18n("widget.timetable");
 
   if (!options.station) {
     return <Center h="100%">{t("noStation")}</Center>;
   }
 
-  return <TimetableWidgetInner station={options.station} integrationId={integrationId} />;
+  return <TimetableWidgetInner station={options.station} baseUrl={options.baseUrl} />;
 }
 
 interface TimetableWidgetInnerProps {
   station: DynamicSelectOption;
-  integrationId: string;
+  baseUrl: string;
 }
 
-const TimetableWidgetInner = ({ station, integrationId }: TimetableWidgetInnerProps) => {
+const TimetableWidgetInner = ({ station, baseUrl }: TimetableWidgetInnerProps) => {
   const { data: timetable } = clientApi.widget.timetable.getTimetable.useQuery({
-    integrationId,
+    baseUrl,
     stationId: station.value,
     limit: 10,
   });

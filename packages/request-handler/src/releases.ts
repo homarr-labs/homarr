@@ -1,16 +1,10 @@
-import type { IntegrationKindByCategory } from "@homarr/definitions";
-import type { ReleaseResponse, ReleasesRepository } from "@homarr/integrations";
-import { createIntegrationAsync } from "@homarr/integrations";
+import type { ReleaseResponse, ReleasesRepositoryRequest } from "./release-providers";
+import { getLatestMatchingReleaseAsync } from "./release-providers";
+import { createRequestHandler } from "./lib/request-handler";
 
-import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
-
-export const releasesRequestHandler = createIntegrationRequestHandler<
-  ReleaseResponse,
-  IntegrationKindByCategory<"releasesProvider">,
-  ReleasesRepository
->({
-  requestAsync: async (integration, input) => {
-    const instance = await createIntegrationAsync(integration);
-    return instance.getLatestMatchingReleaseAsync(input.identifier, input.versionRegex);
+export const releasesRequestHandler = createRequestHandler<ReleaseResponse, ReleasesRepositoryRequest>({
+  async requestAsync(input) {
+    return await getLatestMatchingReleaseAsync(input);
   },
+  cacheTtlMs: 5 * 60 * 1000,
 });
