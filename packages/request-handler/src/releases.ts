@@ -1,20 +1,19 @@
 import dayjs from "dayjs";
 
-import type { IntegrationKindByCategory } from "@homarr/definitions";
-import type { ReleaseResponse, ReleasesRepository } from "@homarr/integrations";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createWidgetOptionsChannel } from "@homarr/redis";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createCachedRequestHandler } from "./lib/cached-request-handler";
+import type { ReleaseResponse, ReleasesRepositoryRequest } from "./release-providers";
+import { getLatestMatchingReleaseAsync } from "./release-providers";
 
-export const releasesRequestHandler = createCachedIntegrationRequestHandler<
-  ReleaseResponse,
-  IntegrationKindByCategory<"releasesProvider">,
-  ReleasesRepository
->({
-  requestAsync: async (integration, input) => {
-    const instance = await createIntegrationAsync(integration);
-    return instance.getLatestMatchingReleaseAsync(input.identifier, input.versionRegex);
-  },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "repositoriesReleases",
-});
+export const releasesRequestHandler = {
+  handler: (itemOptions: ReleasesRepositoryRequest) =>
+    createCachedRequestHandler<ReleaseResponse, ReleasesRepositoryRequest>({
+      requestAsync: async (input) => await getLatestMatchingReleaseAsync(input),
+      cacheDuration: dayjs.duration(5, "minutes"),
+      queryKey: "repositoriesReleases",
+      createRedisChannel(input, handlerOptions) {
+        return createWidgetOptionsChannel<ReleaseResponse>("releases", handlerOptions.queryKey, input);
+      },
+    }).handler(itemOptions),
+};

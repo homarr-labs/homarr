@@ -9,6 +9,12 @@ export const timetableWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "Search.ch URL",
+        description: "Base URL for the Search.ch timetable API.",
+        values: "Any valid URL.",
+        defaultValue: "https://search.ch",
+      },
+      {
         name: "Station",
         description: "Select the station",
         values: "List of station names",

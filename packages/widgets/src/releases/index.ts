@@ -1,6 +1,9 @@
 import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { createId } from "@homarr/common";
+import { releaseProviderKinds } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -39,10 +42,20 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         validate: z.number().min(0),
       }),
       repositories: factory.multiReleasesRepositories({
-        defaultValue: [],
+        defaultValue: [
+          {
+            id: createId(),
+            provider: "github" as const,
+            identifier: "homarr-labs/homarr",
+            name: "Homarr",
+            iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homarr.png",
+            versionFilter: { prefix: "v", precision: 3 },
+          },
+        ],
         validate: z.array(
           z.object({
-            providerIntegrationId: z.string().optional(),
+            id: z.string().default(() => createId()),
+            provider: z.enum(releaseProviderKinds).optional(),
             identifier: z.string().min(1),
             name: z.string().optional(),
             versionFilter: z
@@ -53,6 +66,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
               })
               .optional(),
             iconUrl: z.string().optional(),
+            providerUrl: z.string().url().optional(),
           }),
         ),
       }),

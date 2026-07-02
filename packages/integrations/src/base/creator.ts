@@ -3,12 +3,9 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { BeszelIntegration } from "../beszel/beszel-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
-import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
-import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
-import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
 import { Aria2Integration } from "../download-client/aria2/aria2-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
@@ -17,17 +14,14 @@ import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integrati
 import { SlskdIntegration } from "../download-client/slskd/slskd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
-import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
-import { GithubIntegration } from "../github/github-integration";
-import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
 import { ImmichIntegration } from "../immich/immich-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
-import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
@@ -36,7 +30,6 @@ import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
 import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
-import { NPMIntegration } from "../npm/npm-integration";
 import { GotifyIntegration } from "../gotify/gotify-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
@@ -49,8 +42,6 @@ import { createTechnitiumDnsIntegrationAsync } from "../technitium/technitium-in
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
-import { QuayIntegration } from "../quay/quay-integration";
-import { SearchChIntegration } from "../search-ch/search-ch-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
 import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
@@ -114,15 +105,7 @@ export const integrationCreators = {
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
   opnsense: OPNsenseIntegration,
-  github: GithubIntegration,
-  dockerHub: DockerHubIntegration,
-  gitlab: GitlabIntegration,
-  npm: NPMIntegration,
-  codeberg: CodebergIntegration,
-  linuxServerIO: LinuxServerIOIntegration,
-  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
   ical: ICalIntegration,
-  quay: QuayIntegration,
   ntfy: NTFYIntegration,
   gotify: GotifyIntegration,
   mock: MockIntegration,
@@ -131,7 +114,6 @@ export const integrationCreators = {
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
-  searchCh: SearchChIntegration,
   immich: ImmichIntegration,
   paperlessNgx: PaperlessNgxIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,

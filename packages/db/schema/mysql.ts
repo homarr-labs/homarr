@@ -541,6 +541,25 @@ export const customWidgetSecrets = mysqlTable(
   }),
 );
 
+export const widgetSecrets = mysqlTable(
+  "widget_secret",
+  {
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    kind: varchar({ length: 64 }).notNull(),
+    value: text().$type<`${string}.${string}`>().notNull(),
+    updatedAt: timestamp()
+      .$onUpdateFn(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.itemId, table.kind],
+    }),
+  }),
+);
+
 export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
   name: varchar({ length: 256 }).notNull().primaryKey(),
   cronExpression: varchar({ length: 32 }).notNull(),
@@ -746,9 +765,17 @@ export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({
 export const itemRelations = relations(items, ({ one, many }) => ({
   integrations: many(integrationItems),
   layouts: many(itemLayouts),
+  secrets: many(widgetSecrets),
   board: one(boards, {
     fields: [items.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const widgetSecretRelations = relations(widgetSecrets, ({ one }) => ({
+  item: one(items, {
+    fields: [widgetSecrets.itemId],
+    references: [items.id],
   }),
 }));
 
