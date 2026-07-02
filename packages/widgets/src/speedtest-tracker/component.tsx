@@ -14,34 +14,9 @@ import { mergeStats } from "./helpers";
 import { LatestResultSection } from "./latest-result";
 import { RecentResultsSection } from "./recent-results";
 
-export default function SpeedtestTrackerWidget({
-  options,
-  integrationIds,
-  isEditMode,
-}: WidgetComponentProps<"speedtestTracker">) {
+export default function SpeedtestTrackerWidget({ options, integrationIds }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
-  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery(
-    { integrationIds },
-    { staleTime: 10 * 60 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.speedtestTracker.subscribeToDashboard.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.speedtestTracker.getDashboard.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) =>
-            instance.integrationId === newData.integrationId
-              ? { ...instance, dashboard: newData.dashboard, updatedAt: newData.timestamp }
-              : instance,
-          );
-        });
-      },
-    },
-  );
+  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
 
   const combined = useMemo(
     () =>

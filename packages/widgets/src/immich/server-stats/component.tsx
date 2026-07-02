@@ -17,12 +17,9 @@ export default function ImmichServerStatsWidget({
   options,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n();
-  const { data: stats } = clientApi.widget.immich.getServerStats.useQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-    },
-    { staleTime: 15 * 60 * 1000 },
-  );
+  const { data: stats } = clientApi.widget.immich.getServerStats.useQuery({
+    integrationId: integrationIds[0] ?? "",
+  });
 
   if (!stats) return <WidgetEmptyState />;
 

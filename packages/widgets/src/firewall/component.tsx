@@ -29,10 +29,16 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
     }
   }, []);
 
-  const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
-  const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
-  const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
-  const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
+  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
+  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
+    integrationIds,
+  });
+  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
+    integrationIds,
+  });
+  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
+    integrationIds,
+  });
 
   const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
   const isTiny = width < 256;
@@ -181,168 +187,6 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
     </ScrollArea>
   );
 }
-
-export const useUpdatingCpuStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallCpuStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallCpuStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-
-  return firewallsCpuData;
-};
-
-export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 15 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallMemoryStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallMemoryStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-
-  return firewallsMemoryData;
-};
-
-export const useUpdatingVersionStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 60 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallVersionStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallVersionStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-  return firewallsVersionData;
-};
-
-export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
-  const utils = clientApi.useUtils();
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 30 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallInterfacesStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallInterfacesStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-
-  return firewallsInterfacesData;
-};
 
 export function formatBitsPerSec(bytes: number, decimals: number): string {
   if (bytes === 0) return "0 b/s";

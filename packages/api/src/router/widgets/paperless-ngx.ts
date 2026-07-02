@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 export const paperlessNgxRouter = createTRPCRouter({
   getStats: publicProcedure.concat(createOneIntegrationMiddleware("query", "paperlessNgx")).query(async ({ ctx }) => {
     const innerHandler = paperlessNgxStatsRequestHandler.handler(ctx.integration, {});
-    const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    const data = await innerHandler.getDataAsync();
     return data.data;
   }),
 });

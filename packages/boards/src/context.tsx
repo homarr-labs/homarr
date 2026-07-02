@@ -20,16 +20,7 @@ export const BoardProvider = ({
 }: PropsWithChildren<{
   initialBoard: RouterOutputs["board"]["getBoardByName"];
 }>) => {
-  const { data } = clientApi.board.getBoardByName.useQuery(
-    { name: initialBoard.name },
-    {
-      initialData: initialBoard,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
-
-  setActiveQueryCacheBoardId(data.id);
+  const { data } = clientApi.board.getBoardByName.useQuery({ name: initialBoard.name }, { initialData: initialBoard });
 
   // Update the board name so it can be used within updateBoard method
   updateBoardName(initialBoard.name);

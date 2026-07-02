@@ -85,51 +85,23 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
-export default function UptimeKumaWidget({
-  integrationIds,
-  isEditMode,
-  options,
-  width,
-}: WidgetComponentProps<"uptimeKuma">) {
+export default function UptimeKumaWidget({ integrationIds, options, width }: WidgetComponentProps<"uptimeKuma">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <UptimeKumaContent integrationIds={integrationIds} isEditMode={isEditMode} options={options} width={width} />;
+  return <UptimeKumaContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface UptimeKumaContentProps {
   integrationIds: string[];
-  isEditMode: boolean;
   options: WidgetComponentProps<"uptimeKuma">["options"];
   width: number;
 }
 
-function UptimeKumaContent({ integrationIds, isEditMode, options, width }: UptimeKumaContentProps) {
+function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery(
-    { integrationIds },
-    { staleTime: 30 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.uptimeKuma.subscribeToDashboard.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.uptimeKuma.getDashboard.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) => {
-            if (instance.integrationId === newData.integrationId) {
-              return { ...instance, dashboard: newData.dashboard, updatedAt: newData.timestamp };
-            }
-            return instance;
-          });
-        });
-      },
-    },
-  );
+  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
 
   if (!dashboardData) return <WidgetEmptyState />;
 

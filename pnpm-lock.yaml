@@ -126,7 +126,7 @@ catalogs:
     '@tabler/icons-react':
       specifier: ^3.44.0
       version: 3.44.0
-    '@tanstack/query-persist-client-core':
+    '@tanstack/query-async-storage-persister':
       specifier: ^5.101.0
       version: 5.101.0
     '@tanstack/react-query':
@@ -136,6 +136,9 @@ catalogs:
       specifier: ^5.101.0
       version: 5.101.0
     '@tanstack/react-query-next-experimental':
+      specifier: ^5.101.0
+      version: 5.101.0
+    '@tanstack/react-query-persist-client':
       specifier: ^5.101.0
       version: 5.101.0
     '@testcontainers/mysql':
@@ -914,7 +917,7 @@ importers:
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
-      '@tanstack/query-persist-client-core':
+      '@tanstack/query-async-storage-persister':
         specifier: 'catalog:'
         version: 5.101.0
       '@tanstack/react-query':
@@ -926,6 +929,9 @@ importers:
       '@tanstack/react-query-next-experimental':
         specifier: 'catalog:'
         version: 5.101.0(@tanstack/react-query@5.101.0(react@19.2.7))(next@16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7)
+      '@tanstack/react-query-persist-client':
+        specifier: 'catalog:'
+        version: 5.101.0(@tanstack/react-query@5.101.0(react@19.2.7))(react@19.2.7)
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.17.0(@trpc/server@11.17.0(typescript@6.0.3))(typescript@6.0.3)
@@ -7265,6 +7271,9 @@ packages:
     resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
     engines: {node: '>=12'}
 
+  '@tanstack/query-async-storage-persister@5.101.0':
+    resolution: {integrity: sha512-8Y8pwMVPh4kqU9m+MhbDYBuub+i5T2M9P/0+Ae3KccX1BwMIp6AdFAx3zDgLoZcEVI830mbJYf0sjAgsawCWVw==}
+
   '@tanstack/query-core@5.101.0':
     resolution: {integrity: sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow==}
 
@@ -7285,6 +7294,12 @@ packages:
     peerDependencies:
       '@tanstack/react-query': ^5.101.0
       next: ^13 || ^14 || ^15 || ^16
+      react: ^18 || ^19
+
+  '@tanstack/react-query-persist-client@5.101.0':
+    resolution: {integrity: sha512-AUcdBgz8V6sM9axzdqkVmWjYSOETkhr6yAZSBnEFyZT2jo6vkFq3UrpRuxGs6fmhKMWv8FA+ZJGcbaKPaoAElQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.101.0
       react: ^18 || ^19
 
   '@tanstack/react-query@5.101.0':
@@ -20891,6 +20906,11 @@ snapshots:
     dependencies:
       remove-accents: 0.5.0
 
+  '@tanstack/query-async-storage-persister@5.101.0':
+    dependencies:
+      '@tanstack/query-core': 5.101.0
+      '@tanstack/query-persist-client-core': 5.101.0
+
   '@tanstack/query-core@5.101.0': {}
 
   '@tanstack/query-devtools@5.101.0': {}
@@ -20909,6 +20929,12 @@ snapshots:
     dependencies:
       '@tanstack/react-query': 5.101.0(react@19.2.7)
       next: 16.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      react: 19.2.7
+
+  '@tanstack/react-query-persist-client@5.101.0(@tanstack/react-query@5.101.0(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.101.0
+      '@tanstack/react-query': 5.101.0(react@19.2.7)
       react: 19.2.7
 
   '@tanstack/react-query@5.101.0(react@19.2.7)':
@@ -27403,7 +27429,7 @@ snapshots:
       '@posthog/core': 1.38.0
       '@posthog/types': 1.391.1
       core-js: 3.49.0
-      dompurify: 3.4.11
+      dompurify: 3.4.10
       fflate: 0.4.8
       preact: 10.29.2
       query-selector-shadow-dom: 1.0.1

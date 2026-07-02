@@ -13,50 +13,23 @@ import { StatsBar } from "./stats-section";
 import { StreamsList } from "./streams-section";
 import { ViolationsList } from "./violations-section";
 
-export default function TracearrWidget({
-  options,
-  integrationIds,
-  width,
-  isEditMode,
-}: WidgetComponentProps<"tracearr">) {
+export default function TracearrWidget({ options, integrationIds, width }: WidgetComponentProps<"tracearr">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <TracearrContent integrationIds={integrationIds} options={options} width={width} isEditMode={isEditMode} />;
+  return <TracearrContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface TracearrContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"tracearr">["options"];
   width: number;
-  isEditMode: boolean;
 }
 
-function TracearrContent({ integrationIds, options, width, isEditMode }: TracearrContentProps) {
+function TracearrContent({ integrationIds, options, width }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery(
-    { integrationIds },
-    { staleTime: 5 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.tracearr.subscribeToDashboard.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.tracearr.getDashboard.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) =>
-            instance.integrationId === newData.integrationId
-              ? { ...instance, dashboard: newData.dashboard, updatedAt: newData.timestamp }
-              : instance,
-          );
-        });
-      },
-    },
-  );
+  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
 
   // Merge data from all integrations
   const combined = dashboardData.reduce<TracearrDashboardData>(

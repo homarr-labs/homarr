@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { createWidgetOptionsChannel } from "@homarr/redis";
 
-import { createCachedRequestHandler } from "./lib/cached-request-handler";
+import { createRequestHandler } from "./lib/request-handler";
 
 export interface Station {
   id: string;
@@ -34,40 +32,32 @@ export interface Timetable {
 
 const supportedStationTypes = ["bus", "tram", "train", "ship", "cablecar", "funicular", "chairlift"];
 
-export const timetableSearchStationsRequestHandler = {
-  handler: (itemOptions: { baseUrl: string; query: string }) =>
-    createCachedRequestHandler<Station[], { baseUrl: string; query: string }>({
-      async requestAsync(input) {
-        return await searchStationsAsync(input.baseUrl, input.query);
-      },
-      queryKey: "timetableSearchStations",
-      cacheDuration: dayjs.duration(1, "day"),
-      createRedisChannel(input, handlerOptions) {
-        return createWidgetOptionsChannel<Station[]>("timetable", handlerOptions.queryKey, input);
-      },
-    }).handler(itemOptions),
-};
+export const timetableSearchStationsRequestHandler = createRequestHandler<
+  Station[],
+  { baseUrl: string; query: string }
+>({
+  async requestAsync(input) {
+    return await searchStationsAsync(input.baseUrl, input.query);
+  },
+  cacheTtlMs: 24 * 60 * 60 * 1000,
+});
 
-export const timetableGetTimetableRequestHandler = {
-  handler: (itemOptions: { baseUrl: string; stationId: string; limit: number }) =>
-    createCachedRequestHandler<Timetable, { baseUrl: string; stationId: string; limit: number }>({
-      async requestAsync(input) {
-        return await getTimetableAsync(input.baseUrl, { stationId: input.stationId, limit: input.limit });
-      },
-      queryKey: "timetableGetTimetable",
-      cacheDuration: dayjs.duration(1, "minute"),
-      createRedisChannel(input, handlerOptions) {
-        return createWidgetOptionsChannel<Timetable>("timetable", handlerOptions.queryKey, input);
-      },
-    }).handler(itemOptions),
-};
+export const timetableGetTimetableRequestHandler = createRequestHandler<
+  Timetable,
+  { baseUrl: string; stationId: string; limit: number }
+>({
+  async requestAsync(input) {
+    return await getTimetableAsync(input.baseUrl, { stationId: input.stationId, limit: input.limit });
+  },
+  cacheTtlMs: 60_000,
+});
 
 const buildUrl = (baseUrl: string, path: `/${string}`, queryParams: Record<string, string | number>) => {
   const url = new URL(`${baseUrl.replace(/\/$/, "")}${path}`);
   for (const [key, value] of Object.entries(queryParams)) {
     url.searchParams.set(key, value.toString());
   }
-  return url;
+  return url.toString();
 };
 
 const searchStationsAsync = async (baseUrl: string, query: string): Promise<Station[]> => {

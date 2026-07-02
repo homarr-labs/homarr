@@ -23,19 +23,12 @@ export default function SmartHomeEntityStateWidget({
     entityId: options.entityId,
     integrationId,
   };
-  const { data: entityState } = clientApi.widget.smartHome.entityState.useQuery(input, {
-    staleTime: 60 * 1000,
-  });
+  const { data: entityState } = clientApi.widget.smartHome.entityState.useQuery(input);
 
   const utils = clientApi.useUtils();
-
-  clientApi.widget.smartHome.subscribeEntityState.useSubscription(input, {
-    onData(data) {
-      utils.widget.smartHome.entityState.setData(input, data.state);
-    },
+  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation({
+    onSettled: () => void utils.widget.smartHome.entityState.invalidate(input),
   });
-
-  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation();
 
   const attribute = options.entityUnit.length > 0 ? " " + options.entityUnit : "";
 

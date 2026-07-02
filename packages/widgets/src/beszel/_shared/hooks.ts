@@ -2,29 +2,9 @@
 
 import { useMemo } from "react";
 
-import { clientApi } from "@homarr/api/client";
-
 import type { BeszelSystemRow } from "./types";
 
 type SystemRowWithKey = BeszelSystemRow & { _key: string };
-
-export const useBeszelSystemsSubscription = (integrationIds: string[], enabled = true) => {
-  const utils = clientApi.useUtils();
-  clientApi.widget.beszel.subscribeSystems.useSubscription(
-    { integrationIds },
-    {
-      enabled,
-      onData(data) {
-        utils.widget.beszel.getSystems.setData({ integrationIds }, (prev) => {
-          if (!prev) return prev;
-          return prev.map((r) =>
-            r.integrationId === data.integrationId ? { ...r, systems: data.systems, updatedAt: data.timestamp } : r,
-          );
-        });
-      },
-    },
-  );
-};
 
 export const useBeszelFilteredSystems = (
   results: { integrationId: string; systems: BeszelSystemRow[] }[],

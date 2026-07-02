@@ -13,13 +13,11 @@ import type {
   BeszelAlertHistory,
   BeszelAuthResponse,
   BeszelContainer,
-  BeszelContainerStats,
   BeszelContainerStatsRecord,
   BeszelSmartDevice,
   BeszelSystem,
   BeszelSystemDetails,
   BeszelSystemdService,
-  BeszelSystemStats,
   BeszelSystemStatsRecord,
   CreateAlertInput,
   PocketBaseListResponse,
@@ -284,111 +282,6 @@ export class BeszelIntegration extends Integration {
     await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
       method: "DELETE",
     });
-  }
-
-  public async subscribeRealtimeMetrics(
-    systemId: string,
-    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
-    signal: AbortSignal,
-  ): Promise<void> {
-    const session = await this.authenticateAsync();
-    const sseUrl = this.url("/api/realtime");
-    logger.debug("Opening Beszel SSE connection", { integrationId: this.integration.id, systemId });
-
-    const sseResponse = await fetchWithTrustedCertificatesAsync(sseUrl, {
-      headers: { Authorization: session.token },
-      signal,
-    });
-
-    if (!sseResponse.ok || !sseResponse.body) {
-      logger.warn("Beszel SSE connection failed", {
-        integrationId: this.integration.id,
-        systemId,
-        status: sseResponse.status,
-      });
-      throw new ResponseError(sseResponse);
-    }
-    logger.debug("Beszel SSE connection opened", { integrationId: this.integration.id, systemId });
-
-    const reader = sseResponse.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let clientId: string | null = null;
-
-    const processLine = (line: string) => {
-      if (!line.startsWith("data:")) return;
-      const jsonStr = line.slice(5).trim();
-      if (!jsonStr) return;
-
-      try {
-        const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
-
-        if (!clientId && typeof parsed.clientId === "string") {
-          clientId = parsed.clientId;
-          this.subscribeTopic(clientId, systemId, session.token).catch((err) => {
-            logger.warn("Failed to subscribe to rt_metrics topic, aborting SSE", { error: err });
-            reader.cancel().catch(() => {});
-          });
-          return;
-        }
-
-        if ("stats" in parsed) {
-          const now = new Date().toISOString();
-          const envelope = { id: "", system: systemId, type: "1m" as const, created: now, updated: now };
-          const stats: BeszelSystemStatsRecord = { ...envelope, stats: parsed.stats as BeszelSystemStats };
-
-          let containerStats: BeszelContainerStatsRecord | null = null;
-          const hasContainers =
-            parsed.container &&
-            Array.isArray(parsed.container) &&
-            (parsed.container as BeszelContainerStats[]).length > 0;
-          if (hasContainers) {
-            containerStats = { ...envelope, stats: parsed.container as BeszelContainerStats[] };
-          }
-          onMessage({ stats, containerStats });
-        }
-      } catch {
-        logger.debug("Failed to parse SSE message", { line });
-      }
-    };
-
-    try {
-      while (!signal.aborted) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-        for (const line of lines) {
-          processLine(line);
-        }
-      }
-      if (!signal.aborted) {
-        logger.warn("Beszel SSE stream ended unexpectedly", {
-          integrationId: this.integration.id,
-          systemId,
-        });
-        throw new Error("Beszel SSE stream ended unexpectedly");
-      }
-    } finally {
-      reader.cancel().catch(() => {});
-    }
-  }
-
-  private async subscribeTopic(clientId: string, systemId: string, token: string): Promise<void> {
-    const topic = `rt_metrics?options=${JSON.stringify({ query: { system: systemId } })}`;
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/realtime"), {
-      method: "POST",
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ clientId, subscriptions: [topic] }),
-    });
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

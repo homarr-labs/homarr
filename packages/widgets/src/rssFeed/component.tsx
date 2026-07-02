@@ -12,29 +12,7 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input, {
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.rssFeed.subscribeFeeds.useSubscription(input, {
-    onData(updatedData) {
-      utils.widget.rssFeed.getFeeds.setData(input, (oldData) => {
-        return oldData
-          ?.filter((entry) => entry.feedUrl !== updatedData.url)
-          .concat(updatedData.entries)
-          .toSorted((entryA, entryB) => {
-            return entryA.published && entryB.published
-              ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-              : 0;
-          })
-          .slice(0, input.maximumAmountPosts);
-      });
-    },
-  });
+  const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
 
   return feedEntries;
 };

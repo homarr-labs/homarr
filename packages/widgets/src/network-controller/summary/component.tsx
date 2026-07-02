@@ -20,44 +20,11 @@ dayjs.extend(duration);
 export default function NetworkControllerSummaryWidget({
   integrationIds,
 }: WidgetComponentProps<"networkControllerSummary">) {
-  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery({
+    integrationIds,
+  });
 
   const t = useI18n();
-
-  clientApi.widget.networkController.subscribeToSummary.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.networkController.summary.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 

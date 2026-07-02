@@ -52,38 +52,11 @@ export const SystemHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring">) => {
   const t = useI18n();
-  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+    integrationIds,
+  });
   const [opened, { open, close }] = useDisclosure(false);
-  const utils = clientApi.useUtils();
   const board = useRequiredBoard();
-
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
-    { integrationIds },
-    {
-      onData(data) {
-        utils.widget.healthMonitoring.getSystemHealthStatus.setData({ integrationIds }, (prevData) => {
-          if (!prevData) {
-            return undefined;
-          }
-          return prevData.map((item) =>
-            item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
-              : item,
-          );
-        });
-      },
-    },
-  );
 
   const isTiny = width < 256;
 

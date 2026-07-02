@@ -88,19 +88,10 @@ export default function DownloadClientsWidget({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
-    {
-      integrationIds,
-      limitPerIntegration: options.limitPerIntegration,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+    integrationIds,
+    limitPerIntegration: options.limitPerIntegration,
+  });
 
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
@@ -121,40 +112,13 @@ export default function DownloadClientsWidget({
     return statuses;
   }, [currentItems]);
 
-  //Get API mutation functions
-  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation();
-  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation();
-  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation();
+  const utils = clientApi.useUtils();
+  const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
+  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation(invalidateDownloads);
+  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation(invalidateDownloads);
+  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(invalidateDownloads);
 
-  //Subscribe to dynamic data changes
-  clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
-    {
-      integrationIds,
-      limitPerIntegration: options.limitPerIntegration,
-    },
-    {
-      onData: (data) => {
-        utils.widget.downloads.getJobsAndStatuses.setData(
-          { integrationIds, limitPerIntegration: options.limitPerIntegration },
-          (prevData) => {
-            return prevData?.map((item) => {
-              if (item.integration.id !== data.integration.id) return item;
-
-              return {
-                data: data.data,
-                integration: {
-                  ...data.integration,
-                  updatedAt: new Date(),
-                },
-              };
-            });
-          },
-        );
-      },
-    },
-  );
-
-  //Flatten Data array for which each element has it's integration, data (base + calculated) and actions. Memoized on data subscription
+  //Flatten Data array for which each element has its integration, data (base + calculated) and actions
   const data = useMemo<ExtendedDownloadClientItem[]>(
     () =>
       currentItems
@@ -785,8 +749,10 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
     "/s",
   );
 
-  const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
-  const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
+  const utils = clientApi.useUtils();
+  const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
+  const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation(invalidateDownloads);
+  const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(invalidateDownloads);
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads");
   return (

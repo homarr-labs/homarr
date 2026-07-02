@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type {
@@ -12,7 +10,7 @@ import type {
   BeszelSystemStatsRecord,
 } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
 const logger = createLogger({ module: "beszelRequestHandler" });
 
@@ -53,7 +51,7 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
   };
 }
 
-export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
   BeszelSystemRow[],
   "beszel" | "mock",
   Record<string, never>
@@ -64,7 +62,10 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
     const systems = await instance.getSystemsAsync();
     const enriched = await Promise.all(
       systems.map(async (system) => {
-        const details = await instance.getSystemDetailsAsync(system.id).catch(() => null);
+        const details = await instance.getSystemDetailsAsync(system.id).catch((error) => {
+          logger.warn("Failed to fetch Beszel system details", { systemId: system.id, error: String(error) });
+          return null;
+        });
         return mapToSystemRow(system, details);
       }),
     );
@@ -75,10 +76,6 @@ export const beszelSystemsRequestHandler = createCachedIntegrationRequestHandler
     });
     return enriched;
   },
-  cacheDuration: dayjs.duration(1, "second"),
-  fallbackToStaleOnError: true,
-  retry: { attempts: 2, delayMs: 500 },
-  queryKey: "beszelSystems",
 });
 
 export interface BeszelAlertsData {
@@ -86,7 +83,7 @@ export interface BeszelAlertsData {
   history: BeszelAlertHistory[];
 }
 
-export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
   BeszelAlertsData,
   "beszel" | "mock",
   { includeHistory: boolean; maxHistoryItems: number }
@@ -104,10 +101,6 @@ export const beszelAlertsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { alerts, history };
   },
-  cacheDuration: dayjs.duration(1, "second"),
-  fallbackToStaleOnError: true,
-  retry: { attempts: 2, delayMs: 500 },
-  queryKey: "beszelAlerts",
 });
 
 const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
@@ -124,7 +117,7 @@ export interface BeszelStatsData {
   containerStats: BeszelContainerStatsRecord[];
 }
 
-export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
+export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   BeszelStatsData,
   "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
@@ -135,7 +128,10 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
     const instance = await createIntegrationAsync(integration);
     const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     const containerStats = input.includeDocker
-      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch(() => [])
+      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch((error) => {
+          logger.warn("Failed to fetch Beszel container stats", { systemId: input.systemId, error: String(error) });
+          return [];
+        })
       : [];
     logger.debug("beszelStats fetch completed", {
       integrationId: integration.id,
@@ -147,8 +143,4 @@ export const beszelStatsRequestHandler = createCachedIntegrationRequestHandler<
     });
     return { systemStats, containerStats };
   },
-  cacheDuration: dayjs.duration(1, "second"),
-  fallbackToStaleOnError: true,
-  retry: { attempts: 2, delayMs: 500 },
-  queryKey: "beszelStats",
 });

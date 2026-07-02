@@ -36,15 +36,12 @@ export const BeszelSystemStatsModal = createModal<BeszelSystemStatsModalProps>((
   const t = useScopedI18n("widget.beszelSystemStats");
   const [timePeriod, setTimePeriod] = useState<BeszelTimePeriod>("1h");
 
-  const { data } = clientApi.widget.beszel.getSystemStats.useQuery(
-    {
-      integrationIds: [innerProps.integrationId],
-      systemId: innerProps.systemId,
-      timePeriod,
-      includeDocker: false,
-    },
-    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000 },
-  );
+  const { data } = clientApi.widget.beszel.getSystemStats.useQuery({
+    integrationIds: [innerProps.integrationId],
+    systemId: innerProps.systemId,
+    timePeriod,
+    includeDocker: false,
+  });
 
   const mappers = useMemo(
     () => ({

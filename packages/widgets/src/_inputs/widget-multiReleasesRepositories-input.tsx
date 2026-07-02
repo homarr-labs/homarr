@@ -709,8 +709,6 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
   const docker = clientApi.docker.getContainers.useQuery(undefined, {
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     enabled: innerProps.isAdmin,
   });
 

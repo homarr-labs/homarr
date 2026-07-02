@@ -1599,6 +1599,7 @@
     "menu": {
       "label": {
         "settings": "Settings",
+        "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
       }
@@ -4544,89 +4545,14 @@
             "disabled": "Disabled"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft server status"
-            },
-            "timetable": {
-              "label": "Timetable"
-            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Smart Home Entity State"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Media Server"
-            },
-            "mediaOrganizer": {
-              "label": "Media Organizers"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Media Request Stats"
-            },
-            "mediaRequestList": {
-              "label": "Media Request List"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indexer Manager"
-            },
-            "healthMonitoring": {
-              "label": "Health Monitoring"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Update checker"
-            },
-            "mediaTranscoding": {
-              "label": "Media transcoding"
-            },
-            "networkController": {
-              "label": "Network Controller"
-            },
-            "refreshNotifications": {
-              "label": "Notification Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Memory"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Interfaces"
-            },
-            "weather": {
-              "label": "Weather"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Active Visitors"
-            },
-            "vpn": {
-              "label": "VPN Status"
             }
           },
           "interval": {

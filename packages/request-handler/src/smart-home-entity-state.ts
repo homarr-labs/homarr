@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const smartHomeEntityStateRequestHandler = createCachedIntegrationRequestHandler<
+export const smartHomeEntityStateRequestHandler = createIntegrationRequestHandler<
   string,
   IntegrationKindByCategory<"smartHomeServer">,
   { entityId: string }
@@ -20,6 +18,4 @@ export const smartHomeEntityStateRequestHandler = createCachedIntegrationRequest
 
     return result.data.state;
   },
-  cacheDuration: dayjs.duration(1, "minute"),
-  queryKey: "smartHome-entityState",
 });

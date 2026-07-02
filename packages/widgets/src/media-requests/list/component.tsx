@@ -19,6 +19,7 @@ import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { toValidDate } from "@homarr/common";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
@@ -35,44 +36,9 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
-  const utils = clientApi.useUtils();
-  clientApi.widget.mediaRequests.subscribeToLatestRequests.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData(data) {
-        utils.widget.mediaRequests.getLatestRequests.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return [];
-
-          const filteredData = prevData.filter(({ integrationId }) => integrationId !== data.integrationId);
-          const newData = filteredData.concat(
-            data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
-          );
-          return newData.toSorted((dataA, dataB) => {
-            if (dataA.status === dataB.status) {
-              return dataB.createdAt.getTime() - dataA.createdAt.getTime();
-            }
-
-            return (
-              mediaRequestStatusConfiguration[dataA.status].position -
-              mediaRequestStatusConfiguration[dataB.status].position
-            );
-          });
-        });
-      },
-    },
-  );
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+    integrationIds,
+  });
 
   if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
@@ -169,7 +135,7 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
             <Group justify="space-between" gap="xs" className="mediaRequests-list-item-top-group">
               <Group gap="xs">
                 <Text className="mediaRequests-list-item-media-year" size="xs">
-                  {request.airDate?.getFullYear() ?? t("toBeDetermined")}
+                  {toValidDate(request.airDate)?.getFullYear() ?? t("toBeDetermined")}
                 </Text>
                 {!isTiny && (
                   <Badge
@@ -233,7 +199,10 @@ interface DecisionButtonsProps {
 }
 
 const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => {
-  const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
+  const utils = clientApi.useUtils();
+  const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation({
+    onSettled: () => void utils.widget.mediaRequests.invalidate(),
+  });
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const handleDecision = (answer: RouterInputs["widget"]["mediaRequests"]["answerRequest"]["answer"]) => {
     mutateRequestAnswer({

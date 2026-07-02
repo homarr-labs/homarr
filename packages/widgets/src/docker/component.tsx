@@ -184,19 +184,12 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
 
-  const utils = clientApi.useUtils();
   const { data } = clientApi.docker.getContainers.useQuery(undefined, {
-    staleTime: 20 * 1000,
+    refetchInterval: 30_000,
   });
   const containers = data?.containers ?? [];
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
-
-  clientApi.docker.subscribeContainers.useSubscription(undefined, {
-    onData(data) {
-      utils.docker.getContainers.setData(undefined, { containers: data, timestamp: new Date() });
-    },
-  });
 
   const totalContainers = containers.length;
 

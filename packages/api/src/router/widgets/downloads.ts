@@ -1,16 +1,12 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
@@ -28,52 +24,12 @@ export const downloadsRouter = createTRPCRouter({
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
-      return await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
-
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
-
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            data,
-          };
-        }),
-      );
-    }),
-  subscribeToJobsAndStatuses: publicProcedure
-    .concat(createDownloadClientIntegrationMiddleware("query"))
-    .input(z.object({ limitPerIntegration: z.number().default(50) }))
-    .subscription(({ ctx, input }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
-        data: DownloadClientJobsAndStatus;
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {
-            limit: input.limitPerIntegration,
-          });
-          const unsubscribe = innerHandler.subscribe((data) => {
-            emit.next({
-              integration,
-              data,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+        const { data, timestamp } = await innerHandler.getDataAsync();
+        return {
+          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+          data,
         };
       });
     }),

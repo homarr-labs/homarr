@@ -30,8 +30,6 @@ export const iconsRouter = createTRPCRouter({
               columns: { id: true, name: true, url: true },
               where: whereCondition,
               orderBy: (table, { asc, sql }) => {
-                // ponytail: SVG first, then alphabetical; with a search term,
-                // prepend a relevance tier (exact > prefix > substring).
                 const svgFirst = sql`CASE WHEN ${table.name} LIKE '%.svg' THEN 0 ELSE 1 END`;
                 const nameAsc = asc(table.name);
                 if (term.length === 0) {

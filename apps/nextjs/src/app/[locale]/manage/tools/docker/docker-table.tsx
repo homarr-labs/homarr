@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
@@ -156,29 +157,26 @@ interface DockerTableProps {
 export function DockerTable({ initialData }: DockerTableProps) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const { data, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {
+  const { data, isFetching, refetch } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
   const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
-  const utils = clientApi.useUtils();
-  const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
-    async onSuccess() {
-      await utils.docker.getContainers.invalidate();
-      showSuccessNotification({
-        title: tDocker("action.refresh.notification.success.title"),
-        message: tDocker("action.refresh.notification.success.message"),
-      });
-    },
-    onError() {
-      showErrorNotification({
-        title: tDocker("action.refresh.notification.error.title"),
-        message: tDocker("action.refresh.notification.error.message"),
-      });
-    },
-  });
+  const mutate = useCallback(() => {
+    void refetch().then((result) => {
+      if (result.isError) {
+        showErrorNotification({
+          title: tDocker("action.refresh.notification.error.title"),
+          message: tDocker("action.refresh.notification.error.message"),
+        });
+      } else {
+        showSuccessNotification({
+          title: tDocker("action.refresh.notification.success.title"),
+          message: tDocker("action.refresh.notification.success.message"),
+        });
+      }
+    });
+  }, [refetch, tDocker]);
 
   const containers = data?.containers ?? [];
 
@@ -207,7 +205,12 @@ export function DockerTable({ initialData }: DockerTableProps) {
     mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
-      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+      <Button
+        variant="default"
+        rightSection={<IconRefresh size="1rem" />}
+        onClick={() => mutate()}
+        loading={isFetching}
+      >
         {tDocker("action.refresh.label")}
       </Button>
     ),

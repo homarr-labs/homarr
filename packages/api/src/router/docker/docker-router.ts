@@ -25,9 +25,7 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .query(async () => {
       const innerHandler = dockerContainersRequestHandler.handler({});
-      const result = await innerHandler.getCachedOrUpdatedDataAsync({
-        forceUpdate: false,
-      });
+      const result = await innerHandler.getDataAsync();
 
       const { data, timestamp } = result;
 
@@ -35,26 +33,6 @@ export const dockerRouter = createTRPCRouter({
         containers: data satisfies DockerContainer[],
         timestamp,
       };
-    }),
-  subscribeContainers: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .concat(dockerMiddleware())
-    .subscription(() => {
-      return observable<DockerContainer[]>((emit) => {
-        const innerHandler = dockerContainersRequestHandler.handler({});
-        const unsubscribe = innerHandler.subscribe((data) => {
-          emit.next(data);
-        });
-
-        return unsubscribe;
-      });
-    }),
-  invalidate: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .concat(dockerMiddleware())
-    .mutation(async () => {
-      const innerHandler = dockerContainersRequestHandler.handler({});
-      await innerHandler.invalidateAsync();
     }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -73,9 +51,6 @@ export const dockerRouter = createTRPCRouter({
           await container.start();
         }),
       );
-
-      const innerHandler = dockerContainersRequestHandler.handler({});
-      await innerHandler.invalidateAsync();
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -94,9 +69,6 @@ export const dockerRouter = createTRPCRouter({
           await container.stop();
         }),
       );
-
-      const innerHandler = dockerContainersRequestHandler.handler({});
-      await innerHandler.invalidateAsync();
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -116,9 +88,6 @@ export const dockerRouter = createTRPCRouter({
           await container.restart();
         }),
       );
-
-      const innerHandler = dockerContainersRequestHandler.handler({});
-      await innerHandler.invalidateAsync();
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -138,9 +107,6 @@ export const dockerRouter = createTRPCRouter({
           await container.remove();
         }),
       );
-
-      const innerHandler = dockerContainersRequestHandler.handler({});
-      await innerHandler.invalidateAsync();
     }),
   logs: permissionRequiredProcedure
     .requiresPermission("admin")

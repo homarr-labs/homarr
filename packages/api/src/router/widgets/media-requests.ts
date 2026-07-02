@@ -1,14 +1,13 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
-import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const mediaRequestsRouter = createTRPCRouter({
@@ -22,22 +21,10 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-            },
-            data,
-          };
-        }),
-      );
+      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data } = await mediaRequestListRequestHandler.handler(integration, {}).getDataAsync();
+        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+      });
       return results
         .flatMap(({ data, integration }) =>
           data.map((request) => ({
@@ -56,32 +43,6 @@ export const mediaRequestsRouter = createTRPCRouter({
           );
         });
     }),
-  subscribeToLatestRequests: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integrationId: string;
-        requests: MediaRequest[];
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = mediaRequestListRequestHandler.handler(integrationWithSecrets, {});
-          const unsubscribe = innerHandler.subscribe((requests) => {
-            emit.next({
-              integrationId: integration.id,
-              requests,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
-    }),
   getStats: publicProcedure
     .meta({
       mcp: {
@@ -92,22 +53,10 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaRequestStatsRequestHandler.handler(integration, {});
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-            },
-            data,
-          };
-        }),
-      );
+      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
+        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+      });
       return {
         stats: results.flatMap((result) => result.data.stats),
         users: results
@@ -139,7 +88,6 @@ export const mediaRequestsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx: { integration }, input }) => {
       const integrationInstance = await createIntegrationAsync(integration);
-      const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
       const answerActions = {
         approve: (id: number) => integrationInstance.approveRequestAsync(id),
@@ -147,6 +95,5 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
-      await innerHandler.invalidateAsync();
     }),
 });

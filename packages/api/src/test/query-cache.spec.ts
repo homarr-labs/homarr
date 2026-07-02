@@ -10,59 +10,31 @@ import {
   isPersistableWidgetQueryKey,
   queryCacheDefaultStaleTimeMs,
   queryCacheMaxValueBytes,
-  queryCacheRetentionMs,
 } from "@homarr/api/query-cache";
 
 import { queryCacheRouter } from "../router/query-cache";
 
 const redisMock = vi.hoisted(() => {
-  const values = new Map<string, { value: string; expiresAt: number }>();
-  const calls: {
-    userId: string;
-    boardId: string;
-    key: string;
-    ttlMs: number;
-    maxValueBytes: number;
-  }[] = [];
+  const values = new Map<string, string>();
 
   return {
     values,
-    calls,
-    createQueryCacheChannel: vi.fn(
-      (options: { userId: string; boardId: string; key: string; ttlMs: number; maxValueBytes: number }) => {
-        calls.push(options);
-        const storageKey = `${options.userId}:${options.boardId}:${options.key}`;
-
-        return {
-          getAsync: async () => {
-            const item = values.get(storageKey);
-            if (!item) return null;
-            if (Date.now() > item.expiresAt) {
-              values.delete(storageKey);
-              return null;
-            }
-
-            return item.value;
-          },
-          setAsync: async (value: string) => {
-            if (Buffer.byteLength(value, "utf8") > options.maxValueBytes) {
-              return false;
-            }
-
-            values.set(storageKey, { value, expiresAt: Date.now() + options.ttlMs });
-            return true;
-          },
-          removeAsync: async () => {
-            values.delete(storageKey);
-          },
-        };
+    setQueryCacheAsync: vi.fn(
+      async (_userId: string, _boardId: string, value: string, _ttlMs: number, maxValueBytes: number) => {
+        if (Buffer.byteLength(value, "utf8") > maxValueBytes) return false;
+        values.set(`${_userId}:${_boardId}`, value);
+        return true;
       },
     ),
+    removeQueryCacheAsync: vi.fn(async (_userId: string, _boardId: string) => {
+      values.delete(`${_userId}:${_boardId}`);
+    }),
   };
 });
 
 vi.mock("@homarr/redis", () => ({
-  createQueryCacheChannel: redisMock.createQueryCacheChannel,
+  setQueryCacheAsync: redisMock.setQueryCacheAsync,
+  removeQueryCacheAsync: redisMock.removeQueryCacheAsync,
 }));
 
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
@@ -70,8 +42,8 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 afterEach(() => {
   vi.useRealTimers();
   redisMock.values.clear();
-  redisMock.calls.length = 0;
-  redisMock.createQueryCacheChannel.mockClear();
+  redisMock.setQueryCacheAsync.mockClear();
+  redisMock.removeQueryCacheAsync.mockClear();
 });
 
 const createSession = (userId = createId()): Session => ({
@@ -104,7 +76,7 @@ describe("isPersistableWidgetQueryKey", () => {
 });
 
 describe("queryCacheRouter", () => {
-  test("stores, reads, and removes data for a board viewer", async () => {
+  test("stores and removes data for a board viewer", async () => {
     const db = createDb();
     const session = createSession();
     await insertUserAsync(db, session.user.id);
@@ -112,14 +84,19 @@ describe("queryCacheRouter", () => {
 
     const caller = queryCacheRouter.createCaller({ db, deviceType: undefined, session });
 
-    await expect(caller.setItem({ boardId: "board-1", key: "query-key", value: "cached-value" })).resolves.toEqual({
+    await expect(caller.setItem({ boardId: "board-1", value: "cached-value" })).resolves.toEqual({
       stored: true,
     });
-    await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBe("cached-value");
+    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith(
+      session.user.id,
+      "board-1",
+      "cached-value",
+      expect.any(Number),
+      queryCacheMaxValueBytes,
+    );
 
-    await caller.removeItem({ boardId: "board-1", key: "query-key" });
-
-    await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBeNull();
+    await caller.removeItem({ boardId: "board-1" });
+    expect(redisMock.removeQueryCacheAsync).toHaveBeenCalledWith(session.user.id, "board-1");
   });
 
   test("does not touch Redis when board access is denied", async () => {
@@ -127,32 +104,32 @@ describe("queryCacheRouter", () => {
     await insertUserAsync(db, "owner");
     await db.insert(boards).values({ id: "board-1", name: "board", creatorId: "owner", isPublic: false });
 
-    redisMock.createQueryCacheChannel.mockClear();
+    redisMock.setQueryCacheAsync.mockClear();
     const caller = queryCacheRouter.createCaller({ db, deviceType: undefined, session: createSession("other-user") });
 
-    await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).rejects.toThrow("Board not found");
-    expect(redisMock.createQueryCacheChannel).not.toHaveBeenCalled();
+    await expect(caller.setItem({ boardId: "board-1", value: "cached-value" })).rejects.toThrow("Board not found");
+    expect(redisMock.setQueryCacheAsync).not.toHaveBeenCalled();
   });
 
-  test("scopes anonymous public-board cache entries by anonymous user and board", async () => {
+  test("scopes anonymous public-board cache entries by anonymous user", async () => {
     const db = createDb();
     await insertUserAsync(db, "owner");
     await db.insert(boards).values({ id: "board-1", name: "board", creatorId: "owner", isPublic: true });
 
     const caller = queryCacheRouter.createCaller({ db, deviceType: undefined, session: null });
 
-    await caller.setItem({ boardId: "board-1", key: "query-key", value: "cached-value" });
+    await caller.setItem({ boardId: "board-1", value: "cached-value" });
 
-    expect(redisMock.calls.at(-1)).toMatchObject({
-      userId: "anonymous",
-      boardId: "board-1",
-      key: "query-key",
-      ttlMs: queryCacheRetentionMs,
-      maxValueBytes: queryCacheMaxValueBytes,
-    });
+    expect(redisMock.setQueryCacheAsync).toHaveBeenCalledWith(
+      "anonymous",
+      "board-1",
+      "cached-value",
+      expect.any(Number),
+      queryCacheMaxValueBytes,
+    );
   });
 
-  test("scopes signed-in cache entries by user and rejects oversized values", async () => {
+  test("rejects oversized values", async () => {
     const db = createDb();
     const session = createSession("user-1");
     await insertUserAsync(db, session.user.id);
@@ -161,34 +138,9 @@ describe("queryCacheRouter", () => {
     const caller = queryCacheRouter.createCaller({ db, deviceType: undefined, session });
     const value = "x".repeat(queryCacheMaxValueBytes + 1);
 
-    await expect(caller.setItem({ boardId: "board-1", key: "query-key", value })).resolves.toEqual({
+    await expect(caller.setItem({ boardId: "board-1", value })).resolves.toEqual({
       stored: false,
     });
-    expect(redisMock.calls.at(-1)).toMatchObject({
-      userId: "user-1",
-      boardId: "board-1",
-      ttlMs: queryCacheRetentionMs,
-      maxValueBytes: queryCacheMaxValueBytes,
-    });
-  });
-
-  test("expires values through the Redis TTL path", async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-01-01T00:00:00.000Z"));
-
-    const db = createDb();
-    const session = createSession("user-1");
-    await insertUserAsync(db, session.user.id);
-    await db.insert(boards).values({ id: "board-1", name: "board", creatorId: session.user.id, isPublic: false });
-
-    const caller = queryCacheRouter.createCaller({ db, deviceType: undefined, session });
-
-    await caller.setItem({ boardId: "board-1", key: "query-key", value: "cached-value" });
-    await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBe("cached-value");
-
-    await vi.advanceTimersByTimeAsync(queryCacheRetentionMs + 1);
-
-    await expect(caller.getItem({ boardId: "board-1", key: "query-key" })).resolves.toBeNull();
   });
 });
 

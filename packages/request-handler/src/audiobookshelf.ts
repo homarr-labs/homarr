@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const audiobookshelfRequestHandler = createCachedIntegrationRequestHandler<
+export const audiobookshelfRequestHandler = createIntegrationRequestHandler<
   AudiobookshelfDashboardData,
   "audiobookshelf",
   Record<string, never>
@@ -14,6 +12,4 @@ export const audiobookshelfRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  cacheDuration: dayjs.duration(10, "minutes"),
-  queryKey: "audiobookshelfDashboard",
 });

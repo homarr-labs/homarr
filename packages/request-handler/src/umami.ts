@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const umamiRequestHandler = createCachedIntegrationRequestHandler<
+export const umamiRequestHandler = createIntegrationRequestHandler<
   UmamiVisitorStats,
   "umami",
   { websiteId: string; timeFrame: string; eventName?: string }
@@ -14,24 +12,16 @@ export const umamiRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getVisitorStatsAsync(input.websiteId, input.timeFrame, input.eventName);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "umamiVisitorStats",
 });
 
-export const umamiEventNamesRequestHandler = createCachedIntegrationRequestHandler<
-  string[],
-  "umami",
-  { websiteId: string }
->({
+export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<string[], "umami", { websiteId: string }>({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getEventNamesAsync(input.websiteId);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "umamiEventNames",
 });
 
-export const umamiTopPagesRequestHandler = createCachedIntegrationRequestHandler<
+export const umamiTopPagesRequestHandler = createIntegrationRequestHandler<
   UmamiMetricItem[],
   "umami",
   { websiteId: string; timeFrame: string; limit: number }
@@ -40,11 +30,9 @@ export const umamiTopPagesRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopPagesAsync(input.websiteId, input.timeFrame, input.limit);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "umamiTopPages",
 });
 
-export const umamiTopReferrersRequestHandler = createCachedIntegrationRequestHandler<
+export const umamiTopReferrersRequestHandler = createIntegrationRequestHandler<
   UmamiMetricItem[],
   "umami",
   { websiteId: string; timeFrame: string; limit: number }
@@ -53,11 +41,9 @@ export const umamiTopReferrersRequestHandler = createCachedIntegrationRequestHan
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopReferrersAsync(input.websiteId, input.timeFrame, input.limit);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "umamiTopReferrers",
 });
 
-export const umamiMultiEventRequestHandler = createCachedIntegrationRequestHandler<
+export const umamiMultiEventRequestHandler = createIntegrationRequestHandler<
   UmamiEventSeries[],
   "umami",
   { websiteId: string; timeFrame: string; eventNames: string[] }
@@ -66,11 +52,9 @@ export const umamiMultiEventRequestHandler = createCachedIntegrationRequestHandl
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getMultiEventTimeSeriesAsync(input.websiteId, input.timeFrame, input.eventNames);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "umamiMultiEvent",
 });
 
-export const umamiActiveVisitorsRequestHandler = createCachedIntegrationRequestHandler<
+export const umamiActiveVisitorsRequestHandler = createIntegrationRequestHandler<
   number,
   "umami",
   { websiteId: string }
@@ -79,6 +63,4 @@ export const umamiActiveVisitorsRequestHandler = createCachedIntegrationRequestH
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getActiveVisitorsAsync(input.websiteId);
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
-  queryKey: "umamiActiveVisitors",
 });

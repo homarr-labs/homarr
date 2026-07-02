@@ -55,8 +55,6 @@ export const IconPicker = ({
   const [value, setValue] = useUncontrolled({ value: propsValue, onChange });
   const [query, setQuery] = useState("");
 
-  // ponytail: reset the typed query when the committed value changes
-  // externally (form reset, parent re-render) so the input reverts to the URL.
   useEffect(() => {
     setQuery("");
   }, [value]);
@@ -65,13 +63,8 @@ export const IconPicker = ({
   const tCommon = useScopedI18n("common");
   const [debouncedQuery] = useDebouncedValue(query, 100);
 
-  // ponytail: only search when the typed query differs from the committed
-  // value. On mount the input shows the existing URL (edit mode), which
-  // would never match the bare filenames in the icon table.
   const searchText = (debouncedQuery !== (value ?? "") && debouncedQuery) || "";
 
-  // ponytail: not useSuspenseQuery — an above Suspense boundary would
-  // trigger on every keystroke and the dropdown flash is bad UX.
   const { data, isLoading, isError, refetch } = clientApi.icon.findIcons.useQuery(
     { searchText },
     { placeholderData: (prev) => prev },
@@ -123,11 +116,8 @@ export const IconPicker = ({
     );
   });
 
-  // ponytail: show the typed query if non-empty, else fall back to the URL.
   const inputValue = query || value || "";
-  // ponytail: show the existing icon as a left-section preview.
   const leftSection = shouldShowPreview(value) && <img src={value} alt="" style={{ width: 20, height: 20 }} />;
-  // ponytail: prop override -> real count -> loading text.
   const placeholderText =
     placeholder ||
     (data && tCommon("iconPicker.header", { countIcons: String(data.countIcons) })) ||

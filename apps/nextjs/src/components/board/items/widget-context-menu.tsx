@@ -1,9 +1,11 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useCallback, useMemo } from "react";
-import { Group, Menu, Switch } from "@mantine/core";
-import { IconCopy, IconLayoutKanban, IconSettings, IconTrash } from "@tabler/icons-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Group, Menu, Switch, Text } from "@mantine/core";
+import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
+import type { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -45,6 +47,11 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
+  const queryClient = useQueryClient();
+
+  const handleRefetch = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: [["widget"]] });
+  }, [queryClient]);
 
   const options = useMemo(
     () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
@@ -214,7 +221,15 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
         )}
 
         <>
-          {!isEditMode && (toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+          {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
+          <Menu.Item closeMenuOnClick leftSection={<IconRefresh size={16} />} onClick={handleRefetch}>
+            <Group justify="space-between" wrap="nowrap">
+              {tMenu("refresh")}
+              <Text size="xs" c="dimmed">
+                <WidgetCacheAge queryClient={queryClient} />
+              </Text>
+            </Group>
+          </Menu.Item>
           <Menu.Item
             closeMenuOnClick
             leftSection={<IconSettings size={16} />}
@@ -247,4 +262,24 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
       </Menu.Dropdown>
     </Menu>
   );
+};
+
+const WidgetCacheAge = ({ queryClient }: { queryClient: QueryClient }) => {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const timestamps = queryClient
+    .getQueryCache()
+    .findAll({ queryKey: [["widget"]] })
+    .map((q) => q.state.dataUpdatedAt)
+    .filter(Boolean);
+  if (timestamps.length === 0) return null;
+
+  const seconds = Math.floor((Date.now() - Math.max(...timestamps)) / 1000);
+  if (seconds < 5) return "just now";
+  if (seconds < 60) return `${seconds}s ago`;
+  return `${Math.floor(seconds / 60)}m ago`;
 };

@@ -35,27 +35,9 @@ export const ClusterHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
-  const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery(
-    {
-      integrationId,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.healthMonitoring.subscribeClusterHealthStatus.useSubscription(
-    { integrationId },
-    {
-      onData(data) {
-        utils.widget.healthMonitoring.getClusterHealthStatus.setData({ integrationId }, data);
-      },
-    },
-  );
+  const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({
+    integrationId,
+  });
 
   if (!healthData) return <WidgetEmptyState />;
 

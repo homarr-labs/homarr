@@ -28,20 +28,7 @@ const ArchiveTeamWarriorWidgetContent = ({
   integrationId: string;
   options: WidgetComponentProps<"archiveTeamWarrior">["options"];
 }) => {
-  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({
-    integrationId,
-  });
-
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.archiveTeamWarrior.subscribeStatus.useSubscription(
-    { integrationId },
-    {
-      onData: (next) => {
-        utils.widget.archiveTeamWarrior.getStatus.setData({ integrationId }, next);
-      },
-    },
-  );
+  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? "No project selected";

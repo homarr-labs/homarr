@@ -17,6 +17,12 @@ export function formatDuration(milliseconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+export const toValidDate = (value: unknown): Date | null => {
+  if (value == null || typeof value === "boolean") return null;
+  const date = value instanceof Date ? value : new Date(value as string | number);
+  return Number.isFinite(date.getTime()) ? date : null;
+};
+
 export const isDateWithin = (date: Date, relativeDate: string): boolean => {
   if (relativeDate.length < 2) {
     throw new Error("Relative date must be at least 2 characters long");
