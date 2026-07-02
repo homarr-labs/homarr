@@ -326,6 +326,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/quay"
   | "/docs/integrations/ntfy"
   | "/docs/integrations/gotify"
+  | "/docs/integrations/pushover"
   | "/docs/integrations/ical"
   | "/docs/integrations/anchor"
   | "/docs/integrations/truenas"

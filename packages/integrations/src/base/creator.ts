@@ -39,6 +39,7 @@ import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { GotifyIntegration } from "../gotify/gotify-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
+import { PushoverIntegration } from "../pushover/pushover-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -125,6 +126,7 @@ export const integrationCreators = {
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   gotify: GotifyIntegration,
+  pushover: PushoverIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
