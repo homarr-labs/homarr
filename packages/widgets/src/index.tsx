@@ -52,6 +52,7 @@ import * as timetable from "./timetable";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
+import * as vpn from "./vpn";
 import * as beszelSystemTable from "./beszel-system-table";
 import * as beszelSystemGrid from "./beszel-system-grid";
 import * as beszelAlerts from "./beszel-alerts";
@@ -60,7 +61,12 @@ import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
 
-export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
+export type {
+  WidgetDefinition,
+  WidgetContextMenuAction,
+  WidgetContextActionProps,
+  WidgetOptionsSettings,
+} from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 
@@ -108,6 +114,7 @@ export const widgetImports = {
   uptimeKuma,
   audioStats,
   umami,
+  vpn,
   ups,
   beszelSystemTable,
   beszelSystemGrid,

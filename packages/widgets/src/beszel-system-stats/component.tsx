@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { ActionIcon, Button, Center, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconPlugConnectedX, IconServer, IconQuestionMark } from "@tabler/icons-react";
+import { Button, Box, Center, Loader, Menu, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconPlugConnectedX, IconServer, IconQuestionMark, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -12,6 +15,7 @@ import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
 import { containerColors } from "../beszel/_shared/colors";
+import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import {
   BeszelChartPanel,
   CPU_Y_AXIS_DOMAIN,
@@ -26,6 +30,7 @@ import {
   formatPercent,
   formatStorageBytes,
 } from "../beszel/_shared/format";
+import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { makeTooltipProps } from "../beszel/_shared/tooltip";
 import { useLiveStats } from "../beszel/_shared/use-live-stats";
 
@@ -49,12 +54,22 @@ export default function BeszelSystemStatsWidget({
   integrationIds,
   isEditMode,
   width,
+  boardId,
+  itemId,
   setOptions,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
-  const { data: systemsResult = [], isPending: systemsPending } = clientApi.widget.beszel.getSystems.useQuery(
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
+  const {
+    data: systemsResult = [],
+    isPending: systemsPending,
+    error: systemsError,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 30 * 1000 },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, retry: false },
   );
 
   const systems = useMemo(
@@ -68,27 +83,38 @@ export default function BeszelSystemStatsWidget({
   const systemReady = !systemsPending && (selectedSystem === "" || systemExists);
 
   const handleSelectSystem = useCallback(
-    (value: string) => setOptions({ newOptions: { systemId: value } }),
-    [setOptions],
+    (value: string) => {
+      setOptions({ newOptions: { systemId: value } });
+      if (hasChangeAccess && boardId && itemId) {
+        saveItemOptions({ boardId, itemId, newOptions: { systemId: value } });
+      }
+    },
+    [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
   );
 
   const showDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
   const isLive = options.timePeriod === "1m";
 
-  const { data: statsResult } = clientApi.widget.beszel.getSystemStats.useQuery(
+  const { data: statsResult, error: statsError } = clientApi.widget.beszel.getSystemStats.useQuery(
     {
       integrationIds,
       systemId: selectedSystem,
       timePeriod: options.timePeriod as "1m" | "1h" | "12h" | "24h" | "1w" | "30d",
       includeDocker: showDocker,
     },
-    { staleTime: 30 * 1000, enabled: !isLive && systemReady && selectedSystem !== "" },
+    {
+      staleTime: 10_000,
+      gcTime: 48 * 60 * 60 * 1000,
+      refetchInterval: isLive ? false : 10_000,
+      enabled: !isLive && systemReady && selectedSystem !== "",
+      retry: false,
+    },
   );
 
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, selectedSystem, isLive && systemReady);
 
   let activeStats:
-    | { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] }
+    | { systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[]; error?: string }
     | null
     | undefined = statsResult;
   if (isLive) {
@@ -138,30 +164,31 @@ export default function BeszelSystemStatsWidget({
   const systemStats = activeStats?.systemStats;
   const containerStatsRaw = activeStats?.containerStats;
 
-  const cpuData = useSystemChartData(statsWhenShown(options.showCpu, systemStats), mappers.cpu, isLive);
-  const memoryData = useSystemChartData(statsWhenShown(options.showMemory, systemStats), mappers.memory, isLive);
-  const diskData = useSystemChartData(statsWhenShown(options.showDisk, systemStats), mappers.disk, isLive);
-  const diskIOData = useSystemChartData(statsWhenShown(options.showDiskIO, systemStats), mappers.diskIO, isLive);
-  const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, isLive);
+  const timePeriod = options.timePeriod as BeszelTimePeriod;
+  const cpuData = useSystemChartData(statsWhenShown(options.showCpu, systemStats), mappers.cpu, timePeriod);
+  const memoryData = useSystemChartData(statsWhenShown(options.showMemory, systemStats), mappers.memory, timePeriod);
+  const diskData = useSystemChartData(statsWhenShown(options.showDisk, systemStats), mappers.disk, timePeriod);
+  const diskIOData = useSystemChartData(statsWhenShown(options.showDiskIO, systemStats), mappers.diskIO, timePeriod);
+  const networkData = useSystemChartData(statsWhenShown(options.showNetwork, systemStats), mappers.network, timePeriod);
 
   const containerNames = useContainerNames(statsWhenShown(showDocker, containerStatsRaw));
   const dockerCpuData = useDockerChartData(
     statsWhenShown(options.showDockerCpu, containerStatsRaw),
     containerNames,
     "cpu",
-    isLive,
+    timePeriod,
   );
   const dockerMemData = useDockerChartData(
     statsWhenShown(options.showDockerMemory, containerStatsRaw),
     containerNames,
     "memory",
-    isLive,
+    timePeriod,
   );
   const dockerNetData = useDockerChartData(
     statsWhenShown(options.showDockerNetwork, containerStatsRaw),
     containerNames,
     "network",
-    isLive,
+    timePeriod,
   );
 
   const containerSeries = useMemo(
@@ -170,6 +197,33 @@ export default function BeszelSystemStatsWidget({
   );
 
   const cols = gridColumns[Number(width > 600)];
+
+  if (systemsError) throw systemsError;
+  if (!isLive && statsError) throw statsError;
+
+  if (systemsPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (systems.length === 0) {
+    return (
+      <Box h="100%" pos="relative">
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
+        <Center h="100%">
+          <Stack align="center" gap="xs">
+            <IconServerOff size={28} opacity={0.5} />
+            <Text size="sm" c="dimmed">
+              {t("empty.noSystems")}
+            </Text>
+          </Stack>
+        </Center>
+      </Box>
+    );
+  }
 
   if (!systemsPending && !systemExists && systems.length > 0) {
     return (
@@ -208,173 +262,186 @@ export default function BeszelSystemStatsWidget({
   }
 
   return (
-    <ScrollArea
-      h="100%"
-      className={classes.beszelStatsWrapper}
-      style={{ pointerEvents: (isEditMode && "none") || undefined }}
-    >
-      <Stack gap="md" p="sm">
-        {!isEditMode && systems.length > 1 && (
-          <Menu
-            trigger="click-hover"
-            openDelay={100}
-            closeDelay={300}
-            position="bottom-start"
-            withArrow
-            shadow="md"
-            withinPortal
-          >
-            <Menu.Target>
-              <ActionIcon
-                variant="subtle"
-                size="sm"
-                className={classes.beszelStatsSystemToggle}
-                style={{ position: "absolute", top: 6, left: 6, zIndex: 1 }}
-                title={selectedLabel}
-              >
-                <IconServer size={14} />
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {systems.map((s) => (
-                <Menu.Item
-                  key={s.value}
-                  fz="xs"
-                  fw={(s.value === selectedSystem && 600) || 400}
-                  c={(s.value !== selectedSystem && "dimmed") || undefined}
-                  onClick={() => handleSelectSystem(s.value)}
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
+      </Box>
+      <ScrollArea
+        h="100%"
+        className={classes.beszelStatsContainer}
+        style={{ pointerEvents: (isEditMode && "none") || undefined }}
+      >
+        <Stack gap="md" p="sm">
+          {!isEditMode && systems.length > 1 && (
+            <Menu position="bottom-start" withArrow shadow="md" withinPortal>
+              <Menu.Target>
+                <Button
+                  variant="default"
+                  size="compact-xs"
+                  leftSection={<IconServer size={14} />}
+                  className={classes.beszelStatsSystemToggle}
                 >
-                  {s.label}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
-        )}
+                  {selectedLabel}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {systems.map((s) => (
+                  <Menu.Item
+                    key={s.value}
+                    fz="xs"
+                    fw={s.value === selectedSystem ? 600 : 400}
+                    c={s.value !== selectedSystem ? "dimmed" : undefined}
+                    onClick={() => handleSelectSystem(s.value)}
+                  >
+                    {s.label}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          )}
 
-        {activeStats && (
-          <SimpleGrid cols={cols} spacing="md">
-            {options.showCpu && cpuData.length > 0 && (
-              <BeszelChartPanel
-                title={t("chart.cpu.title")}
-                subtitle={t("chart.cpu.subtitle")}
-                chartProps={{
-                  h: CHART_HEIGHT,
-                  data: cpuData,
-                  series: series.cpu,
-                  yAxisFormatter: chartAxisFormatters.percent,
-                  yAxisDomain: CPU_Y_AXIS_DOMAIN,
-                  tooltipProps: tooltipPercent,
-                }}
-              />
-            )}
+          {!isLive && !activeStats && systemReady && selectedSystem !== "" && (
+            <Center h={CHART_HEIGHT}>
+              <Loader size="sm" />
+            </Center>
+          )}
 
-            {options.showMemory && memoryData.length > 0 && (
-              <BeszelChartPanel
-                title={t("chart.memory.title")}
-                subtitle={t("chart.memory.subtitle")}
-                chartProps={{
-                  h: CHART_HEIGHT,
-                  data: memoryData,
-                  type: "stacked",
-                  series: series.memory,
-                  yAxisFormatter: chartAxisFormatters.gb,
-                  tooltipProps: tooltipGB,
-                }}
-              />
-            )}
+          {!isLive && activeStats && "error" in activeStats && activeStats.error && (
+            <Center h={CHART_HEIGHT}>
+              <Stack align="center" gap="xs">
+                <IconServerOff size={24} opacity={0.5} />
+                <Text size="sm" c="dimmed">
+                  {activeStats.error}
+                </Text>
+              </Stack>
+            </Center>
+          )}
 
-            {options.showDisk && diskData.length > 0 && (
-              <BeszelChartPanel
-                title={t("chart.disk.title")}
-                subtitle={t("chart.disk.subtitle")}
-                chartProps={{
-                  h: CHART_HEIGHT,
-                  data: diskData,
-                  series: series.disk,
-                  yAxisFormatter: chartAxisFormatters.gb,
-                  tooltipProps: tooltipGB,
-                }}
-              />
-            )}
+          {activeStats && (!("error" in activeStats) || !activeStats.error) && (
+            <SimpleGrid cols={cols} spacing="md">
+              {options.showCpu && cpuData.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.cpu.title")}
+                  subtitle={t("chart.cpu.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: cpuData,
+                    series: series.cpu,
+                    yAxisFormatter: chartAxisFormatters.percent,
+                    yAxisDomain: CPU_Y_AXIS_DOMAIN,
+                    tooltipProps: tooltipPercent,
+                  }}
+                />
+              )}
 
-            {options.showDiskIO && diskIOData.length > 0 && (
-              <BeszelChartPanel
-                title={t("chart.diskIO.title")}
-                subtitle={t("chart.diskIO.subtitle")}
-                chartProps={{
-                  h: CHART_HEIGHT,
-                  data: diskIOData,
-                  series: series.diskIO,
-                  yAxisFormatter: chartAxisFormatters.rate,
-                  tooltipProps: tooltipRate,
-                }}
-              />
-            )}
+              {options.showMemory && memoryData.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.memory.title")}
+                  subtitle={t("chart.memory.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: memoryData,
+                    type: "stacked",
+                    series: series.memory,
+                    yAxisFormatter: chartAxisFormatters.gb,
+                    tooltipProps: tooltipGB,
+                  }}
+                />
+              )}
 
-            {options.showNetwork && networkData.length > 0 && (
-              <BeszelChartPanel
-                title={t("chart.network.title")}
-                subtitle={t("chart.network.subtitle")}
-                chartProps={{
-                  h: CHART_HEIGHT,
-                  data: networkData,
-                  series: series.network,
-                  yAxisFormatter: chartAxisFormatters.rate,
-                  tooltipProps: tooltipRate,
-                }}
-              />
-            )}
+              {options.showDisk && diskData.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.disk.title")}
+                  subtitle={t("chart.disk.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: diskData,
+                    series: series.disk,
+                    yAxisFormatter: chartAxisFormatters.gb,
+                    tooltipProps: tooltipGB,
+                  }}
+                />
+              )}
 
-            {showDocker && containerSeries.length > 0 && (
-              <>
-                {options.showDockerCpu && dockerCpuData.length > 0 && (
-                  <BeszelChartPanel
-                    title={t("chart.dockerCpu.title")}
-                    subtitle={t("chart.dockerCpu.subtitle")}
-                    chartProps={{
-                      h: CHART_HEIGHT,
-                      data: dockerCpuData,
-                      type: "stacked",
-                      series: containerSeries,
-                      yAxisFormatter: chartAxisFormatters.percent,
-                      tooltipProps: tooltipPercentTotal,
-                    }}
-                  />
-                )}
+              {options.showDiskIO && diskIOData.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.diskIO.title")}
+                  subtitle={t("chart.diskIO.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: diskIOData,
+                    series: series.diskIO,
+                    yAxisFormatter: chartAxisFormatters.rate,
+                    tooltipProps: tooltipRate,
+                  }}
+                />
+              )}
 
-                {options.showDockerMemory && dockerMemData.length > 0 && (
-                  <BeszelChartPanel
-                    title={t("chart.dockerMemory.title")}
-                    subtitle={t("chart.dockerMemory.subtitle")}
-                    chartProps={{
-                      h: CHART_HEIGHT,
-                      data: dockerMemData,
-                      type: "stacked",
-                      series: containerSeries,
-                      yAxisFormatter: chartAxisFormatters.bytes,
-                      tooltipProps: tooltipBytesTotal,
-                    }}
-                  />
-                )}
+              {options.showNetwork && networkData.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.network.title")}
+                  subtitle={t("chart.network.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: networkData,
+                    series: series.network,
+                    yAxisFormatter: chartAxisFormatters.rate,
+                    tooltipProps: tooltipRate,
+                  }}
+                />
+              )}
 
-                {options.showDockerNetwork && dockerNetData.length > 0 && (
-                  <BeszelChartPanel
-                    title={t("chart.dockerNetwork.title")}
-                    subtitle={t("chart.dockerNetwork.subtitle")}
-                    chartProps={{
-                      h: CHART_HEIGHT,
-                      data: dockerNetData,
-                      series: containerSeries,
-                      yAxisFormatter: chartAxisFormatters.rate,
-                      tooltipProps: tooltipRate,
-                    }}
-                  />
-                )}
-              </>
-            )}
-          </SimpleGrid>
-        )}
-      </Stack>
-    </ScrollArea>
+              {showDocker && containerSeries.length > 0 && (
+                <>
+                  {options.showDockerCpu && dockerCpuData.length > 0 && (
+                    <BeszelChartPanel
+                      title={t("chart.dockerCpu.title")}
+                      subtitle={t("chart.dockerCpu.subtitle")}
+                      chartProps={{
+                        h: CHART_HEIGHT,
+                        data: dockerCpuData,
+                        type: "stacked",
+                        series: containerSeries,
+                        yAxisFormatter: chartAxisFormatters.percent,
+                        tooltipProps: tooltipPercentTotal,
+                      }}
+                    />
+                  )}
+
+                  {options.showDockerMemory && dockerMemData.length > 0 && (
+                    <BeszelChartPanel
+                      title={t("chart.dockerMemory.title")}
+                      subtitle={t("chart.dockerMemory.subtitle")}
+                      chartProps={{
+                        h: CHART_HEIGHT,
+                        data: dockerMemData,
+                        type: "stacked",
+                        series: containerSeries,
+                        yAxisFormatter: chartAxisFormatters.bytes,
+                        tooltipProps: tooltipBytesTotal,
+                      }}
+                    />
+                  )}
+
+                  {options.showDockerNetwork && dockerNetData.length > 0 && (
+                    <BeszelChartPanel
+                      title={t("chart.dockerNetwork.title")}
+                      subtitle={t("chart.dockerNetwork.subtitle")}
+                      chartProps={{
+                        h: CHART_HEIGHT,
+                        data: dockerNetData,
+                        series: containerSeries,
+                        yAxisFormatter: chartAxisFormatters.rate,
+                        tooltipProps: tooltipRate,
+                      }}
+                    />
+                  )}
+                </>
+              )}
+            </SimpleGrid>
+          )}
+        </Stack>
+      </ScrollArea>
+    </Box>
   );
 }

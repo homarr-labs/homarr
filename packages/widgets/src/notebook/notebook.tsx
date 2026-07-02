@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
@@ -263,8 +264,21 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
     setIsEditing(handleEditToggleCallback);
   }, [setIsEditing, handleEditToggleCallback]);
 
+  const handleDoubleClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (!canChange || isEditing) return;
+      // Ignore double-clicks bubbling up from interactive controls (e.g. the
+      // edit/save ActionIcon), which would otherwise toggle edit mode twice.
+      if (event.target instanceof Element && event.target.closest("button, a")) {
+        return;
+      }
+      setIsEditing(handleEditToggleCallback);
+    },
+    [canChange, isEditing, setIsEditing, handleEditToggleCallback],
+  );
+
   return (
-    <Box h="100%">
+    <Box h="100%" onDoubleClick={handleDoubleClick}>
       <RichTextEditor
         p={0}
         mt={0}

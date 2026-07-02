@@ -214,20 +214,20 @@
     "action": {
       "login": {
         "label": "로그인",
-        "labelWith": "",
+        "labelWith": "{provider}(으)로 로그인",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "로그인 성공",
+            "message": "현재 로그인되어 있음"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "로그인 실패",
+            "message": "당신의 로그인이 실패했습니다"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "비밀번호를 잊으셨습니까?",
+          "description": "관리자는 다음 명령을 사용해 비밀번호를 재설정할 수 있습니다:"
         }
       },
       "register": {
@@ -235,101 +235,101 @@
         "notification": {
           "success": {
             "title": "계정 생성",
-            "message": ""
+            "message": "계속하려면 로그인하십시오"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "계정 생성 실패",
+            "message": "당신의 계정을 생성하지 못했습니다"
           }
         }
       },
       "create": "사용자 만들기",
       "changePassword": {
-        "label": "",
+        "label": "패스워드 변경",
         "notification": {
           "success": {
-            "message": ""
+            "message": "패스워드 변경 완료"
           },
           "error": {
-            "message": ""
+            "message": "패스워드를 변경할 수 없습니다"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "홈 보드 변경 완료"
           },
           "error": {
-            "message": ""
+            "message": "홈 보드를 변경할 수 없습니다"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "검색 설정 변경 완료"
           },
           "error": {
-            "message": ""
+            "message": "검색 설정을 변경할 수 없습니다"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "주 시작 요일 변경 완료"
           },
           "error": {
-            "message": ""
+            "message": "주 시작 요일을 변경할 수 없습니다"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping 아이콘 전환 완료"
           },
           "error": {
-            "message": ""
+            "message": "Ping 아이콘을 전환할 수 없습니다"
           }
         }
       },
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs 전환 완료"
           },
           "error": {
-            "message": ""
+            "message": "DuckDuckGo bangs 전환 실패"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "이미지 변경",
           "notification": {
             "success": {
-              "message": ""
+              "message": "이미지 변경 완료"
             },
             "error": {
-              "message": ""
+              "message": "이미지를 변경할 수 없습니다"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "이미지가 너무 큽니다",
+              "message": "이미지 최대 크기는 {size}입니다"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "이미지 제거",
+          "confirm": "이미지를 제거하시겠습니까?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "이미지 제거 완료"
             },
             "error": {
-              "message": ""
+              "message": "이미지를 제거할 수 없습니다"
             }
           }
         }
@@ -337,7 +337,7 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "프로필 업데이트 완료"
           },
           "error": {
             "message": "프로필을 업데이트할 수 없습니다"
@@ -346,8 +346,8 @@
       },
       "delete": {
         "label": "사용자 영원히 삭제",
-        "description": "",
-        "confirm": ""
+        "description": "이 사용자와 설정을 삭제합니다. 보드는 삭제되지 않습니다. 사용자에게 알려지지 않습니다.",
+        "confirm": "사용자 {username}와(과) 설정을 삭제하시겠습니까?"
       },
       "select": {
         "label": "사용자 선택",
@@ -367,11 +367,11 @@
       "members": "멤버",
       "homeBoard": {
         "label": "홈 보드",
-        "description": ""
+        "description": "그룹이 접근할 수 있는 보드만 선택할 수 있습니다"
       },
       "mobileBoard": {
         "label": "모바일 보드",
-        "description": ""
+        "description": "그룹이 접근할 수 있는 보드만 선택할 수 있습니다"
       }
     },
     "permission": {
@@ -393,15 +393,15 @@
           },
           "use-all": {
             "label": "모든 앱 사용",
-            "description": ""
+            "description": "멤버가 보드에 앱을 추가할 수 있도록 허용"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 앱 수정",
+            "description": "멤버가 모든 앱을 수정할 수 있도록 허용"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "전체 앱 접근",
+            "description": "멤버가 모든 앱을 관리, 사용 및 삭제할 수 있도록 허용"
           }
         }
       },
@@ -409,20 +409,20 @@
         "title": "보드",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "보드 생성",
+            "description": "멤버가 보드를 생성할 수 있도록 허용"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 보드 보기",
+            "description": "멤버가 모든 보드를 볼 수 있도록 허용"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 보드 수정",
+            "description": "멤버가 모든 보드를 수정할 수 있도록 허용 (접근 제어 및 위험 항목은 포함되지 않음)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "전체 보드 접근",
+            "description": "멤버가 모든 보드를 열람, 수정 및 삭제할 수 있도록 허용 (접근 제어 및 위험 항목 포함)"
           }
         }
       },
@@ -438,147 +438,147 @@
             "description": "멤버의 보드에 통합을 추가하는 것을 허용합니다"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 통합과 상호작용",
+            "description": "멤버가 모든 통합과 상호작용할 수 있도록 허용합니다"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "전체 통합 접근",
+            "description": "멤버가 모든 통합을 관리, 사용 및 상호작용할 수 있도록 허용합니다"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "미디어",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "미디어 업로드",
+            "description": "멤버가 미디어 파일을 업로드할 수 있도록 허용합니다"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 미디어 열람",
+            "description": "멤버가 모든 미디어를 열람할 수 있도록 허용합니다"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "전체 미디어 접근",
+            "description": "멤버가 모든 미디어를 관리 및 삭제할 수 있도록 허용합니다"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "기타",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "로그 조회",
+            "description": "멤버가 로그를 조회할 수 있도록 허용합니다"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "검색 엔진",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "검색 엔진 생성",
+            "description": "멤버가 검색 엔진을 생성할 수 있도록 허용합니다"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "모든 검색 엔진 수정",
+            "description": "멤버가 모든 검색 엔진을 수정할 수 있도록 허용합니다"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "전체 검색 엔진 접근",
+            "description": "멤버가 모든 검색 엔진을 관리 및 삭제할 수 있도록 허용합니다"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "일부 멤버는 외부 제공자에서 유래하여 여기서 관리할 수 없습니다",
+      "external": "모든 멤버가 외부 제공자에서 유래하여 여기서 관리할 수 없습니다"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "이 그룹은 시스템 사용을 위해 예약되어 일부 작업을 제한합니다. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "새 그룹",
         "notification": {
           "success": {
-            "message": ""
+            "message": "그룹 생성이 완료되었습니다"
           },
           "error": {
-            "message": ""
+            "message": "그룹 생성에 실패했습니다"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "소유권 이전",
+        "description": "이 그룹의 소유권을 다른 사용자에게 이전합니다.",
+        "confirm": "{name} 그룹 소유권을 {username}에게 이전하시겠습니까?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "{user}에게 {group} 그룹 이전 완료"
           },
           "error": {
-            "message": ""
+            "message": "소유권을 이전할 수 없습니다"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "멤버 추가"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "멤버 제거",
+        "confirm": "{user} 사용자를 이 그룹에서 제거하시겠습니까?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "그룹 삭제",
+        "description": "그룹을 삭제하면 되돌릴 수 없습니다. 다시 한 번 확인해 주십시오.",
+        "confirm": "{name} 그룹을 삭제하시겠습니까?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "{name} 그룹 삭제 완료"
           },
           "error": {
-            "message": ""
+            "message": "{name} 그룹을 삭제할 수 없습니다"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "권한 저장됨",
+            "message": "권한 저장 완료"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "권한 저장되지 않음",
+            "message": "권한이 저장되지 않았습니다"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "{name} 그룹 저장 완료"
           },
           "error": {
-            "message": ""
+            "message": "{name} 그룹을 저장할 수 없습니다"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "그룹 선택",
+        "notFound": "그룹 없음"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "설정 저장됨",
+              "message": "보드 설정 저장 완료"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "설정 저장 실패",
+              "message": "보드 설정을 저장할 수 없습니다"
             }
           }
         }
@@ -586,66 +586,66 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "위치 변경 완료"
           },
           "error": {
-            "message": ""
+            "message": "위치를 변경할 수 없습니다"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "기본 그룹",
+      "description": "{name} - 모든 로그인 사용자"
     }
   },
   "app": {
-    "search": "",
+    "search": "앱 찾기",
     "page": {
       "list": {
         "title": "앱",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "아직 앱이 없습니다",
+          "action": "첫 번째 앱 만들기"
         }
       },
       "create": {
-        "title": "",
+        "title": "새 앱",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "생성 완료",
+            "message": "앱 생성이 완료되었습니다"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "생성 실패",
+            "message": "앱 생성에 실패했습니다"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "앱 편집",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항 적용 완료",
+            "message": "앱 설정 저장이 완료되었습니다"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항 적용 실패",
+            "message": "앱 설정 저장에 실패했습니다"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "앱 삭제",
+        "message": "{name} 앱을 삭제하시겠습니까?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "삭제 완료",
+            "message": "앱 삭제가 완료되었습니다"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "삭제 실패",
+            "message": "앱을 삭제할 수 없습니다"
           }
         }
       }
@@ -655,132 +655,132 @@
         "label": "이름"
       },
       "description": {
-        "label": ""
+        "label": "설명"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "다른 URL을 ping에 사용",
+          "description": "ISP 대역폭 사용을 피하기 위해 Homarr가 내부 호스트네임 또는 네트워크를 사용하여 직접 접근할 수 있는 경우에 유용합니다"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "label": "앱 선택",
+        "notFound": "앱 없음",
+        "search": "앱 검색",
+        "noResults": "결과 없음",
+        "action": "{app} 선택",
+        "title": "이 보드에 추가할 앱 선택"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "새 앱 생성",
+        "description": "새 앱 생성 ",
+        "action": "앱 생성 열기"
       },
-      "add": ""
+      "add": "앱 추가"
     }
   },
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "사용자 지정 위젯",
+        "noResults": "사용자 지정 위젯이 아직 없습니다. 첫 위젯을 만들어 보세요!",
+        "loading": "불러오는 중..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "사용자 지정 위젯 생성",
+        "subtitle": "API URL, 인증, 응답 데이터 표시 방식을 정의합니다."
       },
       "edit": {
-        "title": ""
+        "title": "사용자 지정 위젯 편집"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "create": "생성",
+      "import": "가져오기",
+      "save": "저장",
+      "delete": "사용자 지정 위젯 삭제",
+      "deleteConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "export": "내보내기",
+      "addMapping": "매핑 추가",
+      "addColumn": "열 추가",
+      "edit": "편집",
+      "removeMapping": "매핑 제거",
+      "removeColumn": "열 제거",
+      "addItem": "항목 추가",
+      "removeItem": "항목 제거",
+      "addBar": "바 추가",
+      "duplicate": "복사",
+      "copyAiPrompt": "AI 프롬프트 복사",
+      "enable": "활성화",
+      "disable": "비활성화",
+      "menu": "동작"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
+      "name": "이름",
+      "description": "설명",
+      "iconUrl": "아이콘 URL",
+      "url": "URL",
+      "authType": "인증 유형",
+      "headerName": "헤더/쿼리 파라미터 이름",
+      "method": "메서드",
+      "requestBody": "요청 본문",
+      "displayType": "표시 유형",
+      "jsonPath": "JSON 경로",
+      "jsonPathHint": "JSONPath 문법으로 값을 추출하십시오. 예: $.data.temperature 또는 $.items[0].name",
+      "label": "레이블",
+      "unit": "단위",
+      "mappings": "매핑",
+      "tablePath": "JSON 경로 배열",
+      "tablePathHint": "응답에서 배열이 위치한 경로입니다. 예: $.data.items",
+      "columns": "열",
+      "header": "헤더",
+      "items": "항목",
+      "gridColumns": "그리드 열 개수",
+      "cardStyle": "카드 스타일",
+      "bars": "바",
+      "valuePath": "JSON 경로 값",
+      "maxPath": "JSON 경로 최댓값",
+      "showPercentage": "백분율 표시",
+      "barSize": "바 크기",
+      "goodValues": "정상 값(쉼표로 구분)",
+      "dotSize": "점 크기",
+      "valueSize": "값 크기",
+      "labelPosition": "레이블 위치",
+      "kvLayout": "레이아웃",
       "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "compact": "컴팩트 모드",
+      "maxHeight": "최대 높이 (px)",
+      "color": "색상",
+      "buttonLabel": "버튼 명칭",
+      "buttonColor": "버튼 색상",
+      "confirmText": "확인 텍스트",
+      "confirmTextHint": "설정하면 요청을 실행하기 전에 확인 대화상자가 표시됩니다",
+      "successMessage": "성공 메세지",
+      "successMessageHint": "실행 성공 후 표시되는 메세지",
+      "enabled": "활성화됨",
       "template": {
-        "label": "",
+        "label": "JSX 템플릿",
         "description": ""
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
+      "exampleLabel": "CPU 온도",
+      "exampleLabelShort": "CPU 온도",
+      "exampleHeader": "이름",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
       "goodValues": "",
       "color": ""
     },
@@ -849,44 +849,44 @@
     "secret": {
       "apiKey": "",
       "username": "",
-      "password": "",
-      "savedPlaceholder": ""
+      "password": "비밀번호",
+      "savedPlaceholder": "••••••• (저장됨, 유지하려면 공백)"
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "title": "미리보기",
+      "test": "테스트",
+      "hint": "현재 설정으로 API 응답을 미리 보려면 테스트를 클릭하십시오.",
+      "rawResponse": "원본 JSON 응답"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "\"{name}\" 위젯 생성 완료.",
+      "updated": "\"{name}\" 위젯 업데이트 완료.",
+      "deleted": "\"{name}\" 위젯 삭제 완료.",
+      "imported": "위젯 가져오기 완료.",
+      "aiPromptCopied": "AI 프롬프트 클립보드에 복사됨",
+      "aiPromptDescription": "사전 제작된 프롬프트를 복사하여 AI 챗봇(ChatGPT, Claude, Gemini 등)에 붙여넣습니다. 전체 위젯 스키마 및 API 응답이 포함되어 있으므로 즉시 가져올 수 있는 JSON 설정을 AI가 생성할 수 있습니다.",
+      "aiPromptCopy": "클립보드에 복사",
+      "aiPromptNoResponse": "팁: 더 나은 결과를 얻기 위해 먼저 테스트로 프롬프트에 API 응답을 포함하십시오.",
+      "aiPromptCopyError": "프롬프트 클립보드 복사 실패. 브라우저에서 이 기능을 지원하지 않을 수도 있습니다.",
+      "createError": "위젯 생성 실패. API 엔드포인트에 도달할 수 있는지 확인해 보십시오.",
+      "updateError": "위젯 업데이트 실패. 변경 사항이 저장되지 않습니다.",
+      "importError": "위젯 가져오기 실패. 파일이 올바른 사용자 지정 위젯 JSON 내보내기 형식인지 확인해 주십시오.",
+      "exportError": "위젯 내보내기 실패.",
+      "duplicated": "\"{name}\" 위젯 복사됨.",
+      "duplicateError": "위젯 복사 실패.",
+      "toggleError": "위젯 상태 전환 실패.",
+      "deleteError": "위젯 삭제 실패.",
+      "previewError": "미리보기 가져오기 실패. URL을 확인한 후 다시 시도해 주십시오.",
+      "executed": "작업 실행 완료.",
+      "executeError": "작업 실패: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "이름",
+      "url": "URL",
+      "display": "표시"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "위젯 비활성화됨"
     }
   },
   "integration": {
@@ -995,34 +995,35 @@
       "detected": ""
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
+      "dnsHole": "DNS",
+      "mediaService": "미디어",
+      "calendar": "달력",
+      "mediaSearch": "검색",
+      "mediaRelease": "릴리즈",
+      "mediaRequest": "요청",
       "downloadClient": "",
       "usenet": "",
       "torrent": "",
       "miscellaneous": "",
       "smartHomeServer": "",
       "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "healthMonitoring": "건강",
+      "search": "검색",
+      "mediaTranscoding": "트랜스코딩",
+      "networkController": "네트워크",
+      "releasesProvider": "릴리즈",
+      "notifications": "알림",
+      "firewall": "방화벽",
+      "timetable": "시간표",
+      "photoService": "사진",
+      "documents": "문서",
+      "notes": "메모",
+      "mediaMonitoring": "모니터링",
+      "speedtest": "속도 테스트",
+      "analytics": "분석",
+      "vpn": "",
+      "mediaLibrary": "미디어 라이브러리",
+      "uptimeMonitoring": "업타임 모니터링"
     },
     "testConnection": {
       "action": {
@@ -1333,8 +1334,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "미디어",
+    "search": "미디어 찾기",
     "field": {
       "name": "이름",
       "size": "크기",
@@ -1342,26 +1343,26 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "미디어 업로드",
+        "file": "파일 선택",
         "notification": {
           "success": {
-            "message": ""
+            "message": "미디어 업로드 완료"
           },
           "error": {
-            "message": ""
+            "message": "미디어를 업로드할 수 없습니다"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "미디어 삭제",
+        "description": "<bName></bName> 미디어를 삭제하시겠습니까?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "미디어 삭제 완료"
           },
           "error": {
-            "message": ""
+            "message": "미디어를 삭제할 수 없습니다"
           }
         }
       },
@@ -1389,65 +1390,68 @@
       "create": "만들기",
       "createAnother": "",
       "edit": "수정",
-      "import": "",
-      "insert": "",
+      "import": "가져오기",
+      "insert": "삽입",
       "remove": "제거",
       "save": "저장",
       "saveChanges": "변경 사항 저장",
       "cancel": "취소",
       "delete": "삭제",
-      "discard": "",
-      "close": "",
+      "discard": "버리기",
+      "close": "닫기",
       "confirm": "확인",
-      "continue": "",
+      "continue": "계속",
       "previous": "이전",
       "next": "다음",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "문서 읽기",
+      "checkLogs": "로그에서 상세 정보 확인",
       "tryAgain": "다시 시도",
-      "loading": "",
-      "show": "",
-      "hide": ""
+      "loading": "불러오는 중",
+      "show": "표시",
+      "hide": "숨기기"
     },
-    "here": "",
+    "here": "여기",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "아이콘 URL",
+      "header": "이름 또는 주제를 입력해 아이콘을 필터링하세요... Homarr가 {countIcons}에서 아이콘을 검색합니다.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
-        "auto": "",
-        "light": "",
-        "dark": ""
+        "auto": "자동",
+        "light": "라이트",
+        "dark": "다크"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "최소",
+      "max": "최대",
+      "days": "일",
+      "hours": "시간",
+      "minutes": "분"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "생성 완료",
+        "error": "생성 실패"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "삭제 완료",
+        "error": "삭제 실패"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "변경 사항 적용 완료",
+        "error": "변경 사항 적용 실패"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "전송 완료",
+        "error": "전송 실패"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "하나 이상의 값 선택"
     },
     "multiText": {
       "placeholder": "",
@@ -1456,31 +1460,32 @@
     "select": {
       "placeholder": "",
       "badge": {
-        "recommended": ""
+        "recommended": "추천"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "다크 모드로 전환",
+        "switchToLightMode": "라이트 모드로 전환",
+        "management": "관리",
+        "docker": "",
         "preferences": "기본 설정",
-        "logout": "",
+        "logout": "로그아웃",
         "login": "로그인",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "당신의 홈 보드",
+        "loggedOut": "로그아웃됨",
+        "updateAvailable": "{countUpdates} 업데이트 가능: {tag}"
       }
     },
     "dangerZone": "위험한 설정",
     "noResults": "결과를 찾을 수 없습니다.",
-    "unsavedChanges": "",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "unsavedChanges": "저장하지 않은 변경 사항이 있습니다!",
+    "servers": "서버",
+    "applications": "앱",
+    "services": "서비스",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "미리보기 표시",
+      "hide": "미리보기 숨기기"
     },
     "zod": {
       "errors": {
@@ -1490,7 +1495,7 @@
           "startsWith": "이 필드는 {startsWith}로 시작해야 합니다.",
           "endsWith": "이 필드는 {endsWith}으로 끝나야 합니다.",
           "includes": "이 필드에는 {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "이 입력란은 유효한 이메일이어야 합니다"
         },
         "tooSmall": {
           "string": "이 필드는 {minimum} 자 이상이어야 합니다.",
@@ -1501,8 +1506,8 @@
           "number": "이 필드는 {maximum}보다 작거나 같아야 합니다."
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
+          "passwordsDoNotMatch": "패스워드가 일치하지 않습니다",
+          "passwordRequirements": "패스워드가 요구사항을 충족하지 않습니다",
           "boardAlreadyExists": "",
           "invalidFileType": "",
           "invalidFileName": "",
@@ -1628,78 +1633,85 @@
         "propagationNotice": ""
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "고급 옵션",
+        "title": "고급 항목 옵션"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "통합"
         },
         "title": {
-          "label": ""
+          "label": "제목"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "사용자 지정 css 클래스"
         },
         "borderColor": {
-          "label": ""
+          "label": "테두리 색상"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "항목 제거",
+      "message": "이 항목을 제거하시겠습니까?"
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "먼저 통합에 연결하십시오",
+      "loading": "불러오는 중...",
+      "placeholder": "옵션 선택",
+      "noResults": "결과 없음",
+      "loadError": "옵션 불러오기 실패"
+    },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "앱",
+      "description": "모드에 앱을 내장합니다.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "앱 선택"
         },
         "openInNewTab": {
           "label": "새 탭에서 열기"
         },
         "showTitle": {
-          "label": ""
+          "label": "앱 이름 표시"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "상태 체크 활성화"
         },
         "layout": {
-          "label": "",
+          "label": "레이아웃",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "가로",
+            "row-reverse": "가로(역방향)",
+            "column": "세로",
+            "column-reverse": "세로(역방향)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "설명 표시 모드",
+          "description": "앱 설명 표시 방법 선택",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "위젯 내부",
+            "tooltip": "툴팁 사용",
+            "hidden": "숨김"
           }
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "앱 없음",
+          "tooltip": "올바른 앱을 선택하지 않았습니다"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "북마크",
+      "description": "여러 앱 링크 표시",
       "option": {
         "title": {
-          "label": ""
+          "label": "제목"
         },
         "layout": {
           "label": "레이아웃",
@@ -1711,31 +1723,40 @@
               "label": "세로"
             },
             "grid": {
-              "label": ""
+              "label": "그리드"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "가로 그리드"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "제목 숨기기"
         },
         "hideIcon": {
-          "label": ""
+          "label": "아이콘 숨기기"
         },
         "hideHostname": {
-          "label": ""
+          "label": "호스트네임 숨기기"
         },
         "openNewTab": {
-          "label": ""
+          "label": "새 탭에서 열기"
         },
         "withBorder": {
-          "label": ""
+          "label": "테두리 표시"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "북마크",
+          "add": "북마크 추가"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -3739,86 +3794,86 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "보드 복사",
+        "message": "{name} 보드 및 모든 컨텐츠를 복사합니다. 사용할 수 없는 통합을 참조하는 위젯일 경우 제거됩니다.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "보드 복사됨",
+            "message": "보드 복사 완료"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "보드를 복사할 수 없습니다",
+            "message": "보드를 복사할 수 없었습니다"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항 적용 완료",
+            "message": "보드 저장이 완료되었습니다"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항 적용 실패",
+            "message": "보드를 저장할 수 없었습니다"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "저장되지 않은 변경 사항",
+          "message": "저장되지 않은 변경 사항이 있습니다. 나가시겠습니까?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "1.0.0 이전의 Homarr에서 가져오기",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "가져오기 완료",
+            "message": "보드 가져오기가 완료되었습니다"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "가져오기 실패",
+            "message": "보드를 가져올 수 없었습니다, 상세 내용은 로그를 확인해 주십시오"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "JSON 파일 선택",
+            "invalidError": "올바르지 않은 설정 파일"
           },
           "apps": {
             "label": "앱",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "중복 방지",
+              "description": "동일한 href를 가진 앱에서는 가져오기 내용을 무시합니다"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "앱만 가져오기",
+              "description": "앱만 추가합니다. 보드는 수동으로 다시 생성해야 합니다"
             }
           },
           "name": {
-            "label": ""
+            "label": "보드 이름"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "화면 크기",
+            "description": "1.0 이전 버전에서는 세 가지의 다른 모드가 존재했으므로 각 화면 크기에 맞는 열 수를 선택할 수 있었습니다.",
             "option": {
-              "sm": "",
-              "md": "",
-              "lg": ""
+              "sm": "작음",
+              "md": "중간",
+              "lg": "큼"
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "사이드바 행동",
+            "description": "사이드바는 1.0에서 제거되었으며, 그 안에 있던 항목을 어떻게 처리할지 선택할 수 있습니다.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "마지막 섹션",
+                "description": "마지막 섹션 아래에 사이드바를 표시합니다"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "항목 제거",
+                "description": "사이드바 내에 있는 항목을 제거합니다"
               }
             }
           }
@@ -3826,29 +3881,29 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "즉석 앱 생성",
+          "createAndUse": "생성 및 사용"
         }
       }
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "페이지 제목"
       },
       "metaTitle": {
-        "label": ""
+        "label": "메타 제목"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "로고 이미지 URL"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "파비콘 이미지 URL"
       },
       "backgroundImageUrl": {
-        "label": "",
-        "placeholder": "",
+        "label": "배경 이미지 URL",
+        "placeholder": "로컬 이미지 검색을 위한 타이핑 시작",
         "group": {
-          "your": "",
+          "your": "내 이미지",
           "other": ""
         }
       },
@@ -3977,20 +4032,20 @@
           "title": ""
         },
         "behavior": {
-          "title": ""
+          "title": "동작"
         },
         "access": {
-          "title": "",
+          "title": "접근 제어",
           "permission": {
             "item": {
               "view": {
                 "label": "게시판 보기"
               },
               "modify": {
-                "label": ""
+                "label": "보드 수정"
               },
               "full": {
-                "label": ""
+                "label": "전체 권한"
               }
             }
           }
@@ -3999,41 +4054,41 @@
           "title": "위험한 설정",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "보드 이름 변경",
+              "description": "이름을 변경하면 이 보드에 대한 링크가 끊어집니다.",
+              "button": "이름 변경",
               "modal": {
-                "title": ""
+                "title": "보드 이름 변경"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "보드 표시 변경",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "현재 이 보드는 공개되어 있습니다.",
+                "private": "현재 이 보드는 비공개입니다."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "비공개로 설정",
+                "private": "공개로 설정"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "보드 비공개",
+                  "description": "이 보드를 비공개하시겠습니까? 보드가 공개되지 않으며 게스트 사용자용 링크가 끊어집니다."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "보드 공개",
+                  "description": "이 보드를 공개하시겠습니까? 모든 사람이 보드에 접근할 수 있습니다."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "이 보드 삭제",
+              "description": "보드를 삭제하면 되돌릴 수 없습니다. 다시 한 번 확인해 주십시오.",
+              "button": "이 보드 삭제",
               "confirm": {
                 "title": "게시판 삭제",
-                "description": ""
+                "description": "이 보드를 삭제하시겠습니까? 보드 및 모든 컨텐츠가 영구적으로 삭제됩니다."
               }
             }
           }
@@ -4042,33 +4097,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Homarr에 오신 것을 환영합니다",
+        "description": "모든 앱과 서비스를 손끝에서 바로 이용할 수 있는, 세련되고 현대적인 대시보드.",
+        "link": "첫 번째 보드 만들기",
+        "notice": "이 페이지를 사라지게 하려면 보드를 만들어 홈 보드로 설정하십시오"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "보드 없음",
+        "description": "지정된 보드를 찾을 수 없거나 액세스할 수 없습니다.",
+        "link": "모든 보드 보기",
+        "notice": "링크를 확인하거나, 접근 가능하다고 생각되면 관리자에게 문의하십시오"
       },
       "homeBoard": {
-        "title": "",
+        "title": "홈 보드 없음",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "서버의 홈 보드를 아직 설정하지 않았습니다.",
+          "link": "서버 전체 홈 보드 구성",
+          "notice": "모든 사용자에게 이 페이지를 사라지게 하려면 서버 홈 보드를 설정하십시오"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "아직 홈 보드를 설정하지 않았습니다.",
+          "link": "홈 보드 구성하기",
+          "notice": "이 페이지를 사라지게 하려면 설정에서 홈 보드를 지정하십시오"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "서버 관리자가 홈 보드를 아직 설정하지 않았습니다.",
+          "link": "공개 보드 보기",
+          "notice": "이 페이지를 사라지게 하려면 관리자에게 서버 홈 보드를 설정을 문의하십시오"
         }
       }
     }
@@ -4076,34 +4131,39 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "이름"
       },
       "columnCount": {
-        "label": ""
+        "label": "열 개수"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "중단점",
+        "description": "레이아웃은 이 중단점보다 크고 다음 중단점보다 작은 경우 사용됩니다."
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "관리",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "좋은 아침입니다, {username}",
+      "afternoon": "좋은 오후입니다, {username}",
+      "evening": "좋은 저녁입니다, {username}"
     },
     "notFound": {
+      "title": "찾을 수 없음",
+      "text": "요청한 리소스를 찾을 수 없습니다"
+    },
+    "error": {
       "title": "",
-      "text": ""
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
         "home": "홈",
         "boards": "보드",
         "apps": "앱",
-        "integrations": "",
+        "integrations": "통합",
         "customWidgets": "",
         "searchEngies": "",
         "medias": "",
@@ -4252,13 +4312,13 @@
                 },
                 "name": {
                   "management": "",
-                  "dashboard": ""
+                  "dashboard": "대시보드"
                 }
               }
             }
           },
           "security": {
-            "title": ""
+            "title": "보안"
           },
           "board": {
             "title": "보드"
@@ -4269,50 +4329,50 @@
           "title": "사용자"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "사용자 {username} 편집"
         },
         "create": {
           "metaTitle": "사용자 만들기",
-          "title": "",
+          "title": "신규 사용자 생성",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "개인 정보"
             },
             "security": {
-              "label": ""
+              "label": "보안"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "그룹",
+              "title": "기본 그룹 선택",
+              "description": "{everyoneGroup} 그룹은 모든 사용자에게 할당되며 제거할 수 없습니다."
             },
             "review": {
-              "label": ""
+              "label": "리뷰"
             },
             "completed": {
-              "title": ""
+              "title": "사용자 생성됨"
             },
             "error": {
-              "title": ""
+              "title": "사용자 생성 실패"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "다른 사용자 생성",
+            "back": "사용자 목록으로 돌아가기"
           }
         },
         "invite": {
           "title": "사용자 초대 관리",
           "action": {
             "new": {
-              "title": "",
+              "title": "새 초대",
               "description": "만료 후에는 초대가 더 이상 유효하지 않으며 초대를 받은 사람은 계정을 만들 수 없습니다."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "초대 복사",
+              "description": "초대장이 생성되었습니다. 이 창이 닫히면 <b>이 링크를 더 이상 복사할 수 없습니다.</b> 해당 사용자를 초대하고 싶지 않다면 언제든지 이 초대장을 삭제할 수 있습니다.",
               "link": "초대 링크",
-              "button": ""
+              "button": "복사 후 닫기"
             },
             "delete": {
               "title": "초대 삭제",
@@ -4321,7 +4381,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "크리에이터"
@@ -4336,30 +4396,30 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "그룹 목록으로 돌아가기",
         "setting": {
           "general": {
             "title": "일반",
-            "owner": "",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "owner": "소유자",
+            "ownerOfGroup": "이 그룹의 소유자",
+            "ownerOfGroupDeleted": "이 그룹의 소유자가 삭제되었습니다. 현재 소유자가 없습니다."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "설정",
+            "alert": "그룹 설정은 목록의 그룹 순서에 따라 우선순위가 매겨집니다. 상위 설정은 하위 설정을 덮어씁니다.",
             "board": {
-              "title": ""
+              "title": "보드"
             }
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "멤버",
+            "search": "멤버 찾기",
+            "notFound": "멤버 없음"
           },
           "permissions": {
-            "title": "",
+            "title": "권한",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "저장하지 않은 변경 사항이 있습니다!"
             }
           }
         }
@@ -4368,61 +4428,49 @@
         "title": "설정",
         "notification": {
           "success": {
-            "message": ""
+            "message": "설정 저장 완료"
           },
           "error": {
-            "message": ""
+            "message": "설정 저장 실패"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "분석",
             "general": {
-              "title": "",
-              "text": ""
-            },
-            "widgetData": {
-              "title": "",
-              "text": ""
-            },
-            "integrationData": {
-              "title": "",
-              "text": ""
-            },
-            "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Homarr 개선 돕기",
+              "text": "사람들이 실제로 어떤 기능을 사용하는지 파악하여 개발 우선순위에 참고할 수 있습니다. 위젯 및 통합 개수, Homarr 버전, 데이터베이스 종류 등을 확인할 수 있습니다. 개인 정보, URL, 이름, 사용자 또는 설정 내용을 식별할 수 있는 사항은 수집되지 않습니다."
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "크롤링 및 인덱싱",
+            "warning": "이곳의 설정을 활성화/비활성화하면 검색 엔진이 페이지를 인덱싱 및 크롤링하는 방식에 큰 영향을 미칩니다. 모든 설정은 요청이며 설정을 적용하는 것은 크롤러의 권한입니다. 수정 사항은 적용되는 데에 며칠 또는 몇 주가 소요될 수 있습니다. 일부 설정은 검색 엔진에 따라 달라질 수 있습니다.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "인덱싱 거부",
+              "text": "검색 엔진이 웹사이트를 인덱싱하고 검색 결과에 표시하지 않도록 요청합니다"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "팔로우 거부",
+              "text": "인덱싱하는 동안 링크를 팔로우하지 않도록 요청합니다. 비활성화하면 크롤러가 Homarr 내 모든 링크에 대한 팔로우를 시도합니다."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "번역 없음",
+              "text": "사이트 언어가 사용자가 읽고 싶어하지 않을 가능성이 높을 경우 Google은 검색 결과에 번역 링크를 표시합니다"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "사이트 링크 검색창 없음",
+              "text": "Google은 크롤링된 링크 및 다른 직접 연결 링크로 검색 상자를 만듭니다. 이 설정을 활성화하면 Google에 해당 검색창을 비활성화하도록 요청합니다."
             }
           },
           "board": {
             "title": "보드",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "글로벌 홈 보드",
+              "mobileLabel": "글로벌 모바일 보드",
+              "description": "공개 보드만 선택할 수 있습니다"
             },
             "status": {
-              "title": "",
+              "title": "앱 상태",
               "enableStatusByDefault": {
                 "label": "",
                 "description": ""
@@ -4556,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": ""
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -4566,77 +4617,77 @@
             "weeklyMonday": "",
             "update": {
               "success": {
-                "message": ""
+                "message": "간격 업데이트 완료"
               },
               "error": {
-                "message": ""
+                "message": "간격 업데이트 실패"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "{jobName} 작업 설정"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "이름"
             },
             "interval": {
-              "label": ""
+              "label": "스케줄 간격"
             },
             "lastExecution": {
-              "label": ""
+              "label": "최근 실행"
             },
             "actions": {
-              "label": ""
+              "label": "동작"
             }
           },
           "table": {
-            "search": ""
+            "search": "{count}개 작업 검색..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "새로고침"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "작업 새로고침 완료"
             },
             "error": {
-              "message": ""
+              "message": "작업 새로고침 실패"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "작업 트리거 성공"
             },
             "error": {
-              "message": ""
+              "message": "작업 트리거 실패"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "작업 활성화 완료"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "작업 활성화 실패"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "작업 상태 전환 실패"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API 토큰 생성됨",
+              "description": "API 토큰이 생성되었습니다. 이 토큰은 데이터베이스에서 암호화되어 다시는 전송되지 않습니다. 이 토큰을 분실하면 더 이상 이 토큰을 복원할 수 없습니다.",
+              "button": "복사 및 닫기"
             }
           },
           "tab": {
@@ -4644,56 +4695,56 @@
               "label": "문서"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "인증",
+              "title": "API 키",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "API 토큰 생성"
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "API 토큰 삭제",
+                  "text": "API 토큰을 영구적으로 삭제합니다. 이 토큰을 사용하는 API 클라이언트는 더 이상 API 요청을 인증 및 수행할 수 없습니다. 이 작업은 되돌릴 수 없습니다."
                 }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": "",
-                  "actions": ""
+                  "id": "ID",
+                  "createdBy": "생성자",
+                  "actions": "동작"
                 }
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "AI 통합",
+              "subtitle": "모델 컨텍스트 프로토콜(MCP) 서버",
+              "description": "AI 어시스턴스를 Homarr 인스턴스에 연결하여 자연어로 홈랩 전체를 제어합니다. AI 어시스턴트를 통해 Overseerr 미디어 검색 및 요청, Docker 컨테이너 관리, Pi-hole 전환, 서버 상태 확인, Home Assistant 기기 제어 등의 기능을 수행할 수 있습니다.",
+              "noApiKey": "MCP 서버에서 인증하려면 API 키가 필요합니다.",
+              "createApiKeyButton": "API 키 생성",
               "endpoint": {
-                "title": ""
+                "title": "MCP 엔드포인트"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "인증",
+                "intro": "MCP 서버는 API 키 또는 OAuth를 사용해 인증할 수 있습니다. 두 방법 모두 동일한 수준의 접근 권한을 부여합니다.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API 키(수동)",
+                  "description": "MCP 클라이언트 설정에서 전체 API 키와 함께 APIKey 헤더를 전달합니다."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth(브라우저 로그인)",
+                  "description": "OAuth를 지원하는 클라이언트(Claude Code, opencode, Cursor 등)는 브라우저 창을 열어 인증할 수 있습니다. 클라이언트에서 인증 명령을 실행하고 브라우저에서 Homarr에 로그인하면 연결됩니다. API 키가 자동으로 생성됩니다.",
+                  "hint": "OAuth 토큰은 인증 탭에 일반 API 키로 표시됩니다. 언제든지 철회할 수 있습니다."
                 },
-                "permissions": ""
+                "permissions": "API 키는 AI가 사용할 수 있는 권한을 결정하며, 키 소유자와 동일한 접근 수준에서 작동합니다."
               },
               "clientConfig": {
-                "title": "",
+                "title": "클라이언트 설정",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
+                  "recommended": "권장",
+                  "title": "스트리밍 가능한 HTTP",
+                  "worksWith": "작동: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "MCP 클라이언트 설정 파일에 추가:",
                   "cursor": "",
                   "claudeDesktop": "",
                   "claudeCode": "",
@@ -4776,70 +4827,70 @@
             "description": "",
             "warning": "",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "백업 ZIP을 여기에 놓거나 클릭하여 탐색",
+              "description": "Homarr SQLite 백업에서는 .zip 파일만 허용됩니다"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "파일 변경",
+            "button": "데이터베이스 복원",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "복원 완료",
+              "message": "데이터베이스 복원 완료. 앱이 재시작됩니다..."
             },
-            "error": ""
+            "error": "가져오기 실패"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "컨텐츠 백업",
+            "exported": "{date}에 내보냄",
+            "loading": "백업 파일 분석 중...",
+            "errorTitle": "미리보기 오류",
+            "entity": "엔티티",
+            "count": "수량",
+            "boards": "보드",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "보드",
+              "user": "사용자",
+              "app": "앱",
+              "integration": "통합",
+              "item": "위젯",
+              "media": "미디어",
+              "search_engine": "검색 엔진"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "백업 파일 분석 실패",
+            "invalidMissingMetadata": "올바르지 않은 백업: metadata.json 없음",
+            "invalidMissingDb": "올바르지 않은 백업: db.sqlite 없음"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "여기에 백업 ZIP 놓기",
+              "description": "Homarr SQLite 백업에서는 .zip 파일을 허용합니다(최대 256MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "백업 분석 중...",
+            "changeFile": "파일 변경",
+            "continueToRestore": "복원하려면 계속",
+            "tryAgain": "다시 시도",
+            "analysisError": "분석 오류",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "컨텐츠 백업",
+              "exported": "{date}에 내보냄",
+              "entity": "엔티티",
+              "count": "수량",
+              "boards": "보드",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "보드",
+                "user": "사용자",
+                "app": "앱",
+                "integration": "통합",
+                "item": "위젯",
+                "media": "미디어",
+                "search_engine": "검색 엔진"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count}개 마이그레이션 적용",
+              "migrationsAppliedPlural": "{count}개 마이그레이션 적용",
+              "migrationsOlderVersion": "이 백업은 이전 Homarr 버전에서 가져온 것입니다. {count}개의 스키마 마이그레이션이 최신 상태로 적용되었습니다.",
+              "migrationsOlderVersionPlural": "이 백업은 이전 Homarr 버전에서 가져온 것입니다. {count}개의 스키마 마이그레이션이 최신 상태로 적용되었습니다.",
+              "migrationsUpToDate": "데이터베이스 스키마가 최신 상태입니다({count}개 마이그레이션 적용)",
+              "upToDate": "최신",
+              "migrationsPending": "{count}개 대기 중"
             },
             "migration": {
               "title": "",
@@ -4919,7 +4970,9 @@
       "updated": "",
       "search": "",
       "selected": "",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {
@@ -5290,32 +5344,32 @@
     }
   },
   "permission": {
-    "title": "",
+    "title": "권한",
     "userSelect": {
-      "title": ""
+      "title": "사용자 권한 추가"
     },
     "groupSelect": {
-      "title": ""
+      "title": "그룹 권한 추가"
     },
     "tab": {
       "user": "사용자",
-      "group": "",
-      "inherited": ""
+      "group": "그룹",
+      "inherited": "하위 그룹"
     },
     "field": {
       "user": {
         "label": "사용자"
       },
       "group": {
-        "label": ""
+        "label": "그룹"
       },
       "permission": {
-        "label": ""
+        "label": "권한"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "사용자 권한 저장",
+      "saveGroup": "그룹 권한 저장"
     }
   },
   "navigationStructure": {
@@ -5325,44 +5379,44 @@
         "label": "보드"
       },
       "integrations": {
-        "label": "",
+        "label": "통합",
         "edit": {
           "label": "수정"
         },
         "new": {
-          "label": ""
+          "label": "신규"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "검색 엔진",
         "new": {
-          "label": ""
+          "label": "신규"
         },
         "edit": {
           "label": "수정"
         }
       },
       "medias": {
-        "label": ""
+        "label": "미디어"
       },
       "apps": {
         "label": "앱",
         "new": {
-          "label": ""
+          "label": "신규"
         },
         "edit": {
           "label": "수정"
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "사용자 지정 위젯",
         "new": {
-          "label": ""
+          "label": "신규"
         },
         "edit": {
-          "label": "",
+          "label": "편집",
           "flow": {
-            "label": ""
+            "label": "플로우"
           }
         }
       },
@@ -5372,10 +5426,10 @@
           "label": "만들기"
         },
         "general": "일반",
-        "security": "",
+        "security": "보안",
         "board": "보드",
         "groups": {
-          "label": ""
+          "label": "그룹"
         },
         "invites": {
           "label": "초대"
@@ -5384,16 +5438,16 @@
       "tools": {
         "label": "도구",
         "tasks": {
-          "label": ""
+          "label": "작업"
         },
         "docker": {
-          "label": "",
+          "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "로그"
           }
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
             "label": ""
           },
@@ -5420,12 +5474,12 @@
           }
         },
         "logs": {
-          "label": ""
+          "label": "로그"
         },
         "certificates": {
-          "label": "",
+          "label": "인증서",
           "hostnames": {
-            "label": ""
+            "label": "호스트네임"
           }
         }
       },
@@ -5438,28 +5492,28 @@
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "무엇이든 검색",
+    "nothingFound": "결과 없음",
     "error": {
-      "fetch": ""
+      "fetch": "데이터를 가져오는 중 오류가 발생했습니다"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "앱, 통합, 보드 검색",
         "group": {
           "app": {
             "title": "앱",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "앱 URL 열기"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "앱 편집"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "앱 동작 선택"
               }
             }
           },
@@ -5468,55 +5522,55 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "보드 열기"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "홈 보드로 설정"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "모바일 보드로 설정"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "설정 열기"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "보드 동작 선택"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "통합"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "커맨드 모드 활성화",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "로컬 커맨드"
           },
           "globalCommand": {
-            "title": "",
+            "title": "글로벌 커맨드",
             "option": {
               "colorScheme": {
-                "auto": "",
-                "light": "",
-                "dark": ""
+                "auto": "외형 모드 전환",
+                "light": "라이트 모드로 전환",
+                "dark": "다크 모드로 전환"
               },
               "language": {
-                "label": "",
+                "label": "언어 변경",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "선호하는 언어를 선택하십시오"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "새 보드 생성"
               },
               "importBoard": {
-                "label": ""
+                "label": "보드 가져오기"
               },
               "newApp": {
                 "label": ""
@@ -5603,34 +5657,34 @@
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "DuckDuckGo bangs 활성화",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "DuckDuckGo bangs 활성화"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "주 시작 요일",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "한 주의 시작 요일을 선택하십시오"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "홈 보드",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "홈 보드를 선택하십시오"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "모바일 홈 보드",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "모바일 홈 보드를 선택하십시오"
                   }
                 }
               },
@@ -5643,7 +5697,7 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "전체 설정 페이지 열기"
               }
             }
           }
@@ -5679,11 +5733,11 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "검색 엔진",
             "tipDdgBangs": "",
             "bang": {
               "searchWithQuery": "",
-              "pressEnterToOpen": "",
+              "pressEnterToOpen": "Enter 키로 열기",
               "engineSelected": "",
               "typeQueryToContinue": "",
               "emptyBangHint": ""
@@ -5695,7 +5749,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "검색 엔진 동작 선택"
               },
               "searchResults": {
                 "title": ""
@@ -5703,24 +5757,24 @@
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Google 웹 검색"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Bing 웹 검색"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "DuckDuckGo 웹 검색"
               },
               "torrent": {
                 "name": "토렌트",
-                "description": ""
+                "description": "torrentdownloads.pro에서 토렌트 검색"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "YouTube에서 비디오 검색"
               }
             }
           }
@@ -5729,7 +5783,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "모드"
           },
           "help": {
             "title": "도움말",
@@ -5738,7 +5792,7 @@
                 "label": "문서"
               },
               "submitIssue": {
-                "label": ""
+                "label": "문제 보고"
               },
               "discord": {
                 "label": "커뮤니티 불화"
@@ -5750,13 +5804,13 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "검색",
             "option": {
               "other": {
-                "label": ""
+                "label": "다른 검색 엔진으로 검색"
               },
               "no-default": {
-                "label": "",
+                "label": "기본 검색 엔진 없음",
                 "description": ""
               },
               "search": {
@@ -5860,11 +5914,11 @@
                   "label": ""
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "권한 관리"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "그룹 동작 선택"
               }
             }
           }
@@ -5872,7 +5926,7 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "검색 엔진 찾기",
       "field": {
         "name": {
           "label": "이름"
@@ -5881,63 +5935,63 @@
           "label": ""
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL 검색 템플릿"
         },
         "description": {
-          "label": ""
+          "label": "설명"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "검색 엔진",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "아직 검색 엔진이 없습니다",
+            "action": "첫 검색 엔진을 생성"
           },
           "interactive": ""
         },
         "create": {
-          "title": "",
+          "title": "새 검색 엔진",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "검색 엔진 생성됨",
+              "message": "검색 엔진 생성 완료"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "검색 엔진 생성되지 않음",
+              "message": "검색 엔진 생성에 실패했습니다"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "검색 엔진 편집",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "변경 사항 적용 완료",
+              "message": "검색 엔진 저장 완료"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "변경 사항 적용 실패",
+              "message": "검색 엔진 저장에 실패했습니다"
             }
           },
-          "configControl": "",
+          "configControl": "설정",
           "searchEngineType": {
             "generic": "",
             "fromIntegration": ""
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "검색 엔진 삭제",
+          "message": "{name} 검색 엔진을 삭제하시겠습니까?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "검색 엔지 삭제됨",
+              "message": "검색 엔진 삭제 완료"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "검색 엔진 삭제되지 않음",
+              "message": "검색 엔진 삭제에 실패했습니다"
             }
           }
         }
@@ -5967,43 +6021,43 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "호스트네임"
       },
       "subject": {
-        "label": ""
+        "label": "주체"
       },
       "issuer": {
-        "label": ""
+        "label": "발급자"
       },
       "validFrom": {
-        "label": ""
+        "label": "시작일"
       },
       "validTo": {
-        "label": ""
+        "label": "만료일"
       },
       "serialNumber": {
-        "label": ""
+        "label": "일련번호"
       },
       "fingerprint": {
-        "label": ""
+        "label": "핑거프린트"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "신뢰할 수 있는 인증서",
+        "description": "Homarr가 통합에서 데이터를 요청하는 데에 사용됩니다.",
         "noResults": {
-          "title": ""
+          "title": "아직 인증서가 없습니다"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "유효하지 않은 인증서",
+          "description": "인증서 파싱 실패"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "{when}에 만료",
+        "toHostnames": "신뢰할 수 있는 호스트네임"
       },
       "hostnames": {
-        "title": "",
+        "title": "신뢰할 수 있는 인증서 호스트네임",
         "description": "",
         "noResults": {
           "title": ""
@@ -6094,41 +6148,41 @@
       },
       "integrationsList": {
         "title": "",
-        "description": ""
+        "description": "Homarr에 연결된 서비스는 Sonarr, Radarr, Plex, Jellyfin 등 50개 이상입니다. 모든 자격증명은 정지 상태에서 암호화됩니다."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "통합 추가",
+        "description": "여기에서 새 서비스를 연결합니다. 유형을 선택하고, URL및 API 키를 입력합니다. Homarr가 저장하기 전에 연결을 검증합니다."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "사용자",
+        "description": "접근 권한이 있는 사용자를 확인합니다. 사용자를 그룹으로 구성하여 각 보드를 보거나 편집할 수 있는 사용자를 제어할 수 있습니다."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "사용자 생성",
+        "description": "여기에서 새 사용자를 생성합니다. 초대 링크를 사용해 쉽게 온보딩할 수도 있습니다. 이것이 바로 그 투어이며 모든 것이 준비되었습니다!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "이것이 당신의 보드입니다",
+        "description": "앱과 위젯을 배열할 수 있는 드래그 앤 드롭 대시보드입니다. 언제든지 Ctrl+K 키로 앱, 보드 및 작업을 검색할 수 있습니다."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "편집 모드",
+        "description": "편집 모드로 들어가려면 여기를 클릭하십시오. 그 후 위젯, 앱, 섹션을 추가할 수 있습니다. 드래그하여 재배치하고 모서리 손잡이로 크기를 조절할 수 있습니다. 변경 사항을 저장하려면 다시 클릭하십시오."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "보드 설정",
+        "description": "이 보드의 이름, 열, 배경, 색상, 접근할 수 있는 사용자를 변경합니다. 각 보드는 공개 또는 비공개로 설정할 수 있습니다."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "보드 전환",
+        "description": "보드를 이동합니다. 미디어, 네트워킹, 사용자별 또는 원하는 용도로 별도의 대시보드를 생성할 수 있습니다."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "당신의 프로필",
+        "description": "색상 구성표, 언어, 홈 보드, 설정을 변경할 수 있습니다. 여기에서 관리 영역으로 이동할 수도 있습니다."
       }
     }
   }

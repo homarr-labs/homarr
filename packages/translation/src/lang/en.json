@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -1412,7 +1413,10 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you."
+      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+      "headerLoading": "Type to search icons…",
+      "noResults": "No icons match \"{search}\".",
+      "error": "Couldn't load icons."
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -1593,7 +1598,9 @@
     },
     "menu": {
       "label": {
-        "settings": "Settings"
+        "settings": "Settings",
+        "options": "Options",
+        "actions": "Actions"
       }
     },
     "create": {
@@ -1895,6 +1902,9 @@
       "title": "Departures {station}",
       "noStation": "No station selected",
       "option": {
+        "baseUrl": {
+          "label": "Search.ch URL"
+        },
         "station": {
           "label": "Station"
         }
@@ -2352,6 +2362,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": "Columns to show"
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2404,6 +2417,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -2759,8 +2778,8 @@
       "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "Album ID",
-          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "label": "Album",
+          "description": "Select the Immich album to show in the slideshow."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -2769,6 +2788,10 @@
         "showPhotoInfo": {
           "label": "Show photo info",
           "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        },
+        "randomizePhotos": {
+          "label": "Randomize photos",
+          "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
       "description": "Slideshow of pictures in your Immich album",
@@ -3133,6 +3156,9 @@
           "provider": {
             "label": "Provider"
           },
+          "providerUrl": {
+            "label": "Provider URL"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -3180,6 +3206,13 @@
           "noProvider": {
             "label": "No Provider",
             "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          },
+          "tokens": {
+            "label": "Provider Tokens",
+            "token": "Token",
+            "configured": "Token configured",
+            "notConfigured": "No token set",
+            "save": "Save"
           }
         }
       },
@@ -3202,8 +3235,9 @@
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found",
-          "noProviderSeleceted": "No provider selected",
-          "noProviderResponse": "No response from provider"
+          "noProviderSelected": "No provider selected",
+          "noProviderResponse": "No response from provider",
+          "unexpected": "Unexpected provider error"
         }
       }
     },
@@ -3639,6 +3673,9 @@
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memory",
@@ -3712,6 +3749,9 @@
         }
       },
       "selectSystem": "Select system",
+      "empty": {
+        "noSystems": "No systems found"
+      },
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
@@ -4133,6 +4173,11 @@
       "title": "Not Found",
       "text": "Could not find requested resource"
     },
+    "error": {
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4413,20 +4458,8 @@
           "analytics": {
             "title": "Analytics",
             "general": {
-              "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "integrationData": {
-              "title": "Integration data",
-              "text": "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data."
-            },
-            "usersData": {
-              "title": "Users data",
-              "text": "Send the amount of users and whether you've activated SSO"
+              "title": "Help us improve Homarr",
+              "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
           "crawlingAndIndexing": {
@@ -4591,6 +4624,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Active Visitors"
+            },
+            "vpn": {
+              "label": "VPN Status"
             }
           },
           "interval": {
@@ -4954,7 +4990,9 @@
       "updated": "Updated {when}",
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
-      "footer": "Total {count} containers"
+      "footer": "Total {count} containers",
+      "totalCpu": "Total CPU: {cpu}%",
+      "totalMemory": "Total Mem: {memory}"
     },
     "field": {
       "name": {
@@ -5081,7 +5119,8 @@
       }
     },
     "error": {
-      "internalServerError": "Failed to fetch Docker containers"
+      "internalServerError": "Failed to fetch Docker containers",
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {

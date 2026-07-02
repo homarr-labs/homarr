@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "此處",
     "iconPicker": {
       "label": "Icon 網址",
-      "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}"
+      "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "切換至暗黑模式",
         "switchToLightMode": "切換至日間模式",
         "management": "管理中心",
+        "docker": "",
         "preferences": "偏好設定",
         "logout": "登出",
         "login": "登入",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "應用程式",
       "description": "將應用程式新增至面板中",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "書籤",
           "add": "新增書籤"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "不存在",
       "text": "找不到請求的資源"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "首頁",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "發送匿名分析",
               "text": "Homarr 使用開源軟體 Umami 發送匿名分析，他從不收集任何個人資料，因此完全符合 GDPR 和 CCPA 要求，我們鼓勵啟用分析，因為可以幫助我們的團隊識別問題，並確認待辦事項的優先級別"
-            },
-            "widgetData": {
-              "title": "小工具數據",
-              "text": "發送已設定的小工具 (及其數量)，不包括網址、名稱或任何其他數據"
-            },
-            "integrationData": {
-              "title": "集成數據",
-              "text": "發送已設定的集成 (及其數量)，不包括網址、名稱或任何其他數據"
-            },
-            "usersData": {
-              "title": "使用者資料",
-              "text": "發送使用者數量以及是否激活了 SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "已更新於 {when}",
       "search": "搜尋 {count} 容器",
       "selected": "{totalCount} 容器的 {selectCount}",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "取得 Docker 容器失敗"
+      "internalServerError": "取得 Docker 容器失敗",
+      "noColumns": ""
     }
   },
   "kubernetes": {

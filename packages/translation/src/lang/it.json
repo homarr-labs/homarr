@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoraggio",
       "speedtest": "Speed test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -1412,7 +1413,10 @@
     "here": "qui",
     "iconPicker": {
       "label": "Icona URL",
-      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te."
+      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te.",
+      "headerLoading": "Digita per cercare icone…",
+      "noResults": "Nessuna icona corrisponde a \"{search}\".",
+      "error": "Impossibile caricare le icone."
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Passa alla modalità scura",
         "switchToLightMode": "Passa al tema chiaro",
         "management": "Gestione",
+        "docker": "Docker",
         "preferences": "Le tue impostazioni",
         "logout": "Disconnettiti",
         "login": "Accedi",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "Connetti prima un'integrazione",
+      "loading": "Caricamento...",
+      "placeholder": "Seleziona un'opzione",
+      "noResults": "Nessun risultato trovato",
+      "loadError": "Impossibile caricare le opzioni"
+    },
     "app": {
       "name": "App",
       "description": "Incorpora un'app nella board.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Segnalibri",
           "add": "Aggiungi segnalibro"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "ArchiveTeam Warrior",
+      "description": "Monitora lo stato di ArchiveTeam Warrior e i lavori di archiviazione attivi.",
+      "option": {
+        "showBroadcastMessage": {
+          "label": "Mostra messaggi broadcast"
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Statistiche del docker",
       "description": "Statistiche dei tuoi contenitori (questo widget può essere aggiunto solo con privilegi di amministratore)",
       "option": {
+        "columns": {
+          "label": "Colonne da mostrare"
+        },
         "enableRowSorting": {
           "label": "Abilita l'ordinamento degli elementi"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Istanze"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Panoramica delle tue connessioni VPN",
+      "serviceUnavailable": "VPN non disponibile",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "Nessun sistema trovato",
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
       "column": {
         "system": "Sistema",
         "cpu": "CPU",
@@ -3617,6 +3650,12 @@
           "label": "Mostra versione agente"
         }
       },
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
+      "empty": {
+        "noSystems": "Nessun sistema trovato"
+      },
       "metric": {
         "cpu": "CPU",
         "memory": "Memoria",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "Nessun avviso configurato",
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+      },
       "history": "Cronologia",
       "resolved": "Risolto",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "Statistiche Sistema Beszel",
       "description": "Grafici a serie temporali per CPU, memoria, disco, rete e metriche dei container Docker",
       "option": {
+        "systemId": {
+          "label": "Sistema",
+          "description": "Seleziona un sistema Beszel per visualizzare le statistiche per"
+        },
         "timePeriod": {
           "label": "Periodo di tempo"
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "Seleziona sistema",
+      "empty": {
+        "noSystems": "Nessun sistema trovato"
+      },
+      "error": {
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione.",
+        "liveConnectionFailed": "Connessione Live non riuscita. L'istanza di Beszel potrebbe non supportare lo streaming in tempo reale.",
+        "switchToHistorical": "Passa alla visualizzazione storica",
+        "systemNotFound": "Il sistema selezionato non è stato trovato. Scegli un sistema diverso."
+      },
       "chart": {
         "cpu": {
           "title": "Utilizzo CPU",
@@ -4098,6 +4153,11 @@
       "title": "Non trovato",
       "text": "Impossibile trovare la risorsa richiesta"
     },
+    "error": {
+      "title": "Questa pagina non può essere caricata",
+      "text": "Si è verificato un errore inatteso durante il caricamento di questa pagina. La navigazione è ancora disponibile: prova a ricaricare o usa un'altra sezione dalla barra laterale.",
+      "digest": "Riferimento errore: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Invia analytics anonimi",
               "text": "Homarr invierà analisi anonime utilizzando il software open source Umami. Non raccoglie mai informazioni personali ed è quindi pienamente conforme al GDPR e al CCPA. Ti invitiamo ad abilitare l'analisi perché aiuta il nostro team open source a identificare i problemi e a dare priorità al nostro arretrato."
-            },
-            "widgetData": {
-              "title": "Dati widget",
-              "text": "Invia quali widget (e la loro quantità) hai configurato. Non include URL, nomi o altri dati."
-            },
-            "integrationData": {
-              "title": "Dati di integrazione",
-              "text": "Invia quali integrazioni (e la loro quantità) hai configurato. Non include URL, nomi o altri dati."
-            },
-            "usersData": {
-              "title": "Dati utenti",
-              "text": "Invia il numero di utenti e se hai attivato SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4556,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Visitatori Attivi Umami"
+            },
+            "vpn": {
+              "label": "Stato VPN"
             }
           },
           "interval": {
@@ -4919,7 +4970,9 @@
       "updated": "Aggiornato {when}",
       "search": "Cerca {count} container",
       "selected": "{selectCount} di {totalCount} containers selezionati",
-      "footer": "Totale container {count}"
+      "footer": "Totale container {count}",
+      "totalCpu": "CPU Totale: {cpu}%",
+      "totalMemory": "Mem Totale: {memory}"
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Recupero dei container Docker non riuscito"
+      "internalServerError": "Recupero dei container Docker non riuscito",
+      "noColumns": "Seleziona almeno una colonna nelle impostazioni dei widget"
     }
   },
   "kubernetes": {

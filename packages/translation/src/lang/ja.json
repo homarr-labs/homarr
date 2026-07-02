@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "こちら",
     "iconPicker": {
       "label": "アイコン URL",
-      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。"
+      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "ダークモードに切り替え",
         "switchToLightMode": "ライトモードに切り替え",
         "management": "管理",
+        "docker": "",
         "preferences": "個人設定",
         "logout": "ログアウト",
         "login": "ログイン",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "アプリ",
       "description": "アプリをボードに埋め込みます。",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "ブックマーク",
           "add": "ブックマークに追加"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Dockerのステータス",
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "アイテムの並び替えを有効にする"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "インスタンス"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "見つかりません",
       "text": "要求されたリソースが見つかりませんでした"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "ホーム",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "匿名の解析を送信",
               "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(MySQL/PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
-            },
-            "widgetData": {
-              "title": "ウィジェットのデータ",
-              "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
-            },
-            "integrationData": {
-              "title": "連携情報",
-              "text": "あなたが設定した連携機能（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
-            },
-            "usersData": {
-              "title": "ユーザー情報",
-              "text": "SSOをアクティベートしたユーザーの数を送信します"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "{when} に更新しました",
       "search": "{count} 個のコンテナを検索",
       "selected": "{totalCount} 個のうち、{selectCount} 個のコンテナが選択されています",
-      "footer": "合計 {count} 個のコンテナ"
+      "footer": "合計 {count} 個のコンテナ",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker コンテナの取得に失敗しました"
+      "internalServerError": "Docker コンテナの取得に失敗しました",
+      "noColumns": ""
     }
   },
   "kubernetes": {

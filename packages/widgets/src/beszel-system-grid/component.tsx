@@ -1,7 +1,7 @@
 "use client";
 
 import type { MantineSize } from "@mantine/core";
-import { Badge, Box, Card, Group, Progress, Text, Stack, useComputedColorScheme } from "@mantine/core";
+import { Badge, Box, Card, Center, Group, Loader, Progress, Text, Stack } from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -15,16 +15,22 @@ import {
   Thermometer,
   Wifi,
 } from "lucide-react";
+import { IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 
 interface SizeConfig {
   iconSize: number;
@@ -153,8 +159,8 @@ interface SystemCardProps {
   t: ReturnType<typeof useScopedI18n<"widget.beszelSystemGrid">>;
   size: SizeConfig;
   maxMetrics: number;
-  backgroundColor: string;
   itemRadius: MantineSize;
+  onClick?: () => void;
 }
 
 const metricRenderers = [
@@ -311,20 +317,23 @@ const metricRenderers = [
   },
 ] as const;
 
-const SystemCard = ({ system, options, t, size, maxMetrics, backgroundColor, itemRadius }: SystemCardProps) => {
+const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick }: SystemCardProps) => {
   const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
 
   return (
     <Card
       padding={size.cardPadding}
       radius={itemRadius}
-      bg={backgroundColor}
+      bg="transparent"
       h="100%"
+      onClick={onClick}
+      className={onClick ? classes.clickableCard : undefined}
       style={{
         overflow: "hidden",
         display: "flex",
         flexDirection: "column" as const,
         border: "0.0625rem solid var(--border-color)",
+        cursor: onClick ? "pointer" : undefined,
       }}
     >
       <Group gap="xs" mb={2}>
@@ -354,18 +363,45 @@ export default function BeszelSystemGridWidget({
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
   const board = useRequiredBoard();
-  const colorScheme = useComputedColorScheme("light");
-  const opacity = board.opacity / 100;
-  const bgBase: Record<"light" | "dark", string> = { dark: "57, 57, 57", light: "246, 247, 248" };
-  const backgroundColor = `rgba(${bgBase[colorScheme]}, ${opacity})`;
+  const { openModal } = useModalAction(BeszelSystemStatsModal);
 
-  const { data: results = [] } = clientApi.widget.beszel.getSystems.useQuery(
+  const {
+    data: results = [],
+    error: systemsError,
+    isPending,
+  } = clientApi.widget.beszel.getSystems.useQuery(
     { integrationIds },
-    { staleTime: 5_000, refetchInterval: 5_000, retry: false },
+    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
   );
 
   useBeszelSystemsSubscription(integrationIds, !isEditMode);
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
+
+  if (systemsError) throw systemsError;
+
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (filteredSystems.length === 0) {
+    return (
+      <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
+        <BeszelIntegrationErrorIndicator results={results} />
+        <Center h="100%">
+          <Stack align="center" gap="xs">
+            <IconServerOff size={28} opacity={0.5} />
+            <Text size="sm" c="dimmed">
+              {t("empty.noSystems")}
+            </Text>
+          </Stack>
+        </Center>
+      </Box>
+    );
+  }
 
   const cols = getColCount(width, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
@@ -377,29 +413,37 @@ export default function BeszelSystemGridWidget({
   const maxMetrics = getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
-    <Box
-      h="100%"
-      style={{
-        pointerEvents: isEditMode ? "none" : undefined,
-        display: "grid",
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-        gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${MIN_CELL_HEIGHT}px)` : `repeat(${rows}, 1fr)`,
-        gap: size.gap,
-        overflow: scrollEnabled ? "auto" : "hidden",
-      }}
-    >
-      {filteredSystems.map((system) => (
-        <SystemCard
-          key={system._key}
-          system={system}
-          options={options}
-          t={t}
-          size={size}
-          maxMetrics={maxMetrics}
-          backgroundColor={backgroundColor}
-          itemRadius={board.itemRadius}
-        />
-      ))}
+    <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
+      <BeszelIntegrationErrorIndicator results={results} />
+      <Box
+        h="100%"
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${MIN_CELL_HEIGHT}px)` : `repeat(${rows}, 1fr)`,
+          gap: size.gap,
+          overflow: scrollEnabled ? "auto" : "hidden",
+        }}
+      >
+        {filteredSystems.map((system) => {
+          const integrationId = system._key.split(":")[0] ?? "";
+          const handleClick = isEditMode
+            ? undefined
+            : () => openModal({ integrationId, systemId: system.id }, { title: system.name });
+          return (
+            <SystemCard
+              key={system._key}
+              system={system}
+              options={options}
+              t={t}
+              size={size}
+              maxMetrics={maxMetrics}
+              itemRadius={board.itemRadius}
+              onClick={handleClick}
+            />
+          );
+        })}
+      </Box>
     </Box>
   );
 }

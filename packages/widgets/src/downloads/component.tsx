@@ -1,6 +1,7 @@
 "use client";
 
 import "../widgets-common.css";
+import "./styles.css";
 
 import { useCallback, useMemo, useState } from "react";
 import type { MantineStyleProp } from "@mantine/core";
@@ -529,6 +530,16 @@ export default function DownloadClientsWidget({
       },
       {
         ...columnsDefBase({ key: "time", showHeader: true }),
+        sortingFn: (rowA, rowB) => {
+          const timeA = rowA.getValue<ExtendedDownloadClientItem["time"]>("time");
+          const timeB = rowB.getValue<ExtendedDownloadClientItem["time"]>("time");
+          // Map time values to canonical sort keys:
+          // positive = ETA in ms (sort as-is, smaller = sooner)
+          // 0 = stalled/infinite (sort last in ascending = Infinity)
+          // negative = time since completion in ms (sort first in ascending = very negative)
+          const toSortKey = (time: number) => (time === 0 ? Infinity : time);
+          return toSortKey(timeA) - toSortKey(timeB);
+        },
         Cell: ({ cell }) => {
           const time = cell.getValue<ExtendedDownloadClientItem["time"]>();
           return time === 0 ? <IconInfinity size={16} /> : <Text size="xs">{dayjs().add(time).fromNow()}</Text>;
@@ -567,7 +578,7 @@ export default function DownloadClientsWidget({
     enableColumnOrdering: isEditMode,
     enableRowVirtualization: true,
     rowVirtualizerOptions: { overscan: 5 },
-    mantinePaperProps: { flex: 1, withBorder: false, shadow: undefined },
+    mantinePaperProps: { flex: 1, withBorder: false, shadow: undefined, bg: "transparent" },
     mantineTableContainerProps: { style: { height: "100%" } },
     mantineTableProps: {
       className: "downloads-widget-table",

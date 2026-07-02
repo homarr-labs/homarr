@@ -13,6 +13,7 @@ import type { ReleasesRepository } from "./releases/releases-repository";
 interface CommonInput<TType> {
   defaultValue?: TType;
   withDescription?: boolean;
+  skipContextMenu?: boolean;
 }
 
 interface TextInput extends CommonInput<string> {
@@ -54,6 +55,7 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   useOptions: (
     query: string,
     integrationIds: string[],
+    options: Record<string, unknown>,
   ) => {
     isPending: boolean;
     options: DynamicSelectOption[];
@@ -91,6 +93,7 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    skipContextMenu: input?.skipContextMenu ?? false,
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,

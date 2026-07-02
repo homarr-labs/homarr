@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig."
+      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Skift til mørk tilstand",
         "switchToLightMode": "Skift til lys tilstand",
         "management": "Håndtering",
+        "docker": "",
         "preferences": "Dine indstillinger",
         "logout": "Log ud",
         "login": "Log ind",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Indlejrer en app i tavlen.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Bogmærker",
           "add": "Tilføj bogmærke"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker statistik",
       "description": "Statistik for dine containere (Denne widget kan kun tilføjes med administratorrettigheder)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Aktiver sortering"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instanser"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Ikke Fundet",
       "text": "Kunne ikke finde den anmodede ressource"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Hjem",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Indsend anonyme analysedata",
               "text": "Homarr vil sende anonymiserede analyser ved hjælp af open source-softwaren Umami. Den indsamler aldrig personlige oplysninger og er derfor fuldt ud GDPR & CCPA kompatibel. Vi opfordrer dig til at aktivere analyser, fordi det hjælper vores open source-team til at identificere problemer og prioritere vores backlog."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send hvilke widgets (og deres antal) du har konfigureret. Indeholder ikke URL'er, navne eller andre data."
-            },
-            "integrationData": {
-              "title": "Integrationsdata",
-              "text": "Send hvilke integrationer (og deres antal) du har konfigureret. Indeholder ikke URL'er, navne eller andre data."
-            },
-            "usersData": {
-              "title": "Brugerdata",
-              "text": "Send mængden af brugere, og om du har aktiveret SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "Opdateret {when}",
       "search": "Søg {count} containere",
       "selected": "{selectCount} af {totalCount} containere valgt",
-      "footer": "Total {count} containere"
+      "footer": "Total {count} containere",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Kunne ikke hente Docker-containere"
+      "internalServerError": "Kunne ikke hente Docker-containere",
+      "noColumns": ""
     }
   },
   "kubernetes": {

@@ -5,7 +5,15 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
-import { IconCheck, IconHome, IconLogin, IconLogout, IconSettings, IconTool } from "@tabler/icons-react";
+import {
+  IconBrandDocker,
+  IconCheck,
+  IconHome,
+  IconLogin,
+  IconLogout,
+  IconSettings,
+  IconTool,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
@@ -17,14 +25,16 @@ import { Link } from "@homarr/ui";
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
+import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-modal";
 import { AvailableUpdatesMenuItem } from "./layout/header/update";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
   availableUpdatesPromise?: Promise<RouterOutputs["updateChecker"]["getAvailableUpdates"]>;
+  isDockerEnabled?: boolean;
 }
 
-export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnabled }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { toggleColorScheme } = useMantineColorScheme();
   useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
@@ -34,6 +44,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
 
   const { logoutUrl } = useAuthContext();
   const { openModal } = useModalAction(LogoutModal);
+  const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
 
   const handleSignout = useCallback(async () => {
     await signOut({
@@ -80,6 +91,11 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
             <Menu.Item component={Link} href="/manage" leftSection={<IconTool size="1rem" />}>
               {t("management")}
             </Menu.Item>
+            {isDockerEnabled && (
+              <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
+                {t("docker")}
+              </Menu.Item>
+            )}
           </>
         )}
         <Menu.Divider />

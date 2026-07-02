@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "buraya",
     "iconPicker": {
       "label": "Simge URL'si",
-      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır."
+      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Koyu Temaya Geç",
         "switchToLightMode": "Aydınlık Temaya Geç",
         "management": "Yönetim",
+        "docker": "",
         "preferences": "Tercihleriniz",
         "logout": "Oturumu kapat",
         "login": "Giriş",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "Uygulama",
       "description": "Panelin içine uygulama yerleştirir.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Yer İmleri",
           "add": "Yer imi ekle"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker istatistikleri",
       "description": "Konteynerlerinizin istatistikleri (Bu widget yalnızca yönetici ayrıcalıklarıyla eklenebilir)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Bulunamadı",
       "text": "İstenen kaynak bulunamadı"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Ana Sayfa",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Anonim analizler gönder",
               "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
-            },
-            "widgetData": {
-              "title": "Araç verileri",
-              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
-            },
-            "integrationData": {
-              "title": "Entegrasyon verileri",
-              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
-            },
-            "usersData": {
-              "title": "Kullanıcı verileri",
-              "text": "Kullanıcı sayısını ve SSO etkinleştirme verilerini gönder"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "{when} Güncellendi",
       "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi",
-      "footer": "Toplam {count} konteyner"
+      "footer": "Toplam {count} konteyner",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker konteynerlerları getirilemedi"
+      "internalServerError": "Docker konteynerlerları getirilemedi",
+      "noColumns": ""
     }
   },
   "kubernetes": {

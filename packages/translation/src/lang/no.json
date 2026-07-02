@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg."
+      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Bytt til mørk modus",
         "switchToLightMode": "Bytt til lys modus",
         "management": "Administrasjon",
+        "docker": "",
         "preferences": "Dine innstillinger",
         "logout": "Logg ut",
         "login": "Logg Inn",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "App",
       "description": "Bygger inn en app i tavlen.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Bokmerke",
           "add": "Legg til bokmerke"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "Docker status",
       "description": "Statistikk over containerne dine (denne widgeten kan bare legges til med administratorrettigheter)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Aktiver sortering av elementer"
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": "Instanser"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Ikke funnet",
       "text": "Fant ikke den forespurte ressursen"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Hjem",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Send anonym brukerdata",
               "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
-            },
-            "widgetData": {
-              "title": "Widget data",
-              "text": "Send hvilke widgeter (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
-            },
-            "integrationData": {
-              "title": "Integrasjonsdata",
-              "text": "Send hvilke integrasjoner (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
-            },
-            "usersData": {
-              "title": "Brukeres data",
-              "text": "Send antall brukere og om du har aktivert SSO"
             }
           },
           "crawlingAndIndexing": {
@@ -4556,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Aktive Besøkende"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -4919,7 +4970,9 @@
       "updated": "Oppdatert {when}",
       "search": "Søk {count} containere",
       "selected": "{selectCount} av {totalCount} containere valgt",
-      "footer": "Totalt {count} containere"
+      "footer": "Totalt {count} containere",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Klarte ikke hente Docker-containere"
+      "internalServerError": "Klarte ikke hente Docker-containere",
+      "noColumns": ""
     }
   },
   "kubernetes": {

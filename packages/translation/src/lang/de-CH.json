@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "Hier",
     "iconPicker": {
       "label": "",
-      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
+      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
+        "docker": "",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -1652,6 +1657,13 @@
     }
   },
   "widget": {
+    "integrationSelect": {
+      "configureIntegrationFirst": "",
+      "loading": "",
+      "placeholder": "",
+      "noResults": "",
+      "loadError": ""
+    },
     "app": {
       "name": "",
       "description": "Bettet eine App in das Board ein.",
@@ -1736,6 +1748,15 @@
         "items": {
           "label": "Lesezeichen",
           "add": "Lesezeichen hinzufügen"
+        }
+      }
+    },
+    "archiveTeamWarrior": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showBroadcastMessage": {
+          "label": ""
         }
       }
     },
@@ -2336,6 +2357,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2388,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3561,6 +3591,9 @@
         }
       },
       "noRecords": "",
+      "error": {
+        "internalServerError": ""
+      },
       "column": {
         "system": "",
         "cpu": "",
@@ -3617,6 +3650,12 @@
           "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3643,6 +3682,9 @@
         }
       },
       "empty": "",
+      "error": {
+        "internalServerError": ""
+      },
       "history": "",
       "resolved": "",
       "status": {
@@ -3654,6 +3696,10 @@
       "name": "",
       "description": "",
       "option": {
+        "systemId": {
+          "label": "",
+          "description": ""
+        },
         "timePeriod": {
           "label": ""
         },
@@ -3683,6 +3729,15 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
+      "error": {
+        "internalServerError": "",
+        "liveConnectionFailed": "",
+        "switchToHistorical": "",
+        "systemNotFound": ""
+      },
       "chart": {
         "cpu": {
           "title": "",
@@ -4098,6 +4153,11 @@
       "title": "Nicht gefunden",
       "text": "Konnte die angeforderte Ressource nicht finden"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Startseite",
@@ -4380,18 +4440,6 @@
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
               "text": "Homarr schickt anonymisierte Nutzungsdaten mit der Open-Source-Software Umami. Es sammelt zu keinem Zeitpunkt personenbezogene Daten und ist daher vollständig DPR & CCPA konform. Wir empfehlen diese Nutzungsdaten zu aktivieren, da es unserem Open-Source-Team hilft Probleme zu identifizieren und unserem Backlog ermöglicht Priorität einzuräumen."
-            },
-            "widgetData": {
-              "title": "Widget Daten",
-              "text": "Senden Sie die Widgets (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "integrationData": {
-              "title": "Integrationsdaten",
-              "text": "Senden Sie die Intregrationen (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
-            },
-            "usersData": {
-              "title": "Benutzerdaten",
-              "text": "Senden Sie die Anzahl der Benutzer und ob Sie SSO aktiviert haben"
             }
           },
           "crawlingAndIndexing": {
@@ -4555,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -4919,7 +4970,9 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": ""
+      "footer": "",
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "name": {
@@ -5046,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fehler beim Abrufen der Docker Container"
+      "internalServerError": "Fehler beim Abrufen der Docker Container",
+      "noColumns": ""
     }
   },
   "kubernetes": {
