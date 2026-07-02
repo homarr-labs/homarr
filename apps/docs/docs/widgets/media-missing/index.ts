@@ -23,7 +23,7 @@ export const mediaMissingWidget: WidgetDefinition = {
       {
         name: "Page Size",
         description: "Maximum number of items to fetch per integration",
-        values: { type: "number" },
+        values: { type: "string" },
         defaultValue: "10",
       },
     ],
