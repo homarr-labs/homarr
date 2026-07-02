@@ -41,6 +41,7 @@ export { NavidromeIntegration } from "./navidrome/navidrome-integration";
 export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
+export { BazarrIntegration } from "./bazarr/bazarr-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -86,6 +87,7 @@ export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshel
 export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
 export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
+export type { BazarrBadges } from "./bazarr/bazarr-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

@@ -38,6 +38,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   "immich-serverStats": "immich-server-stats",
   "immich-albumCarousel": "immich-album-carousel",
   paperlessNgx: "paperless-ngx",
+  bazarr: "bazarr",
   tracearr: "tracearr",
   speedtestTracker: "speedtest-tracker",
   uptimeKuma: "uptime-kuma",

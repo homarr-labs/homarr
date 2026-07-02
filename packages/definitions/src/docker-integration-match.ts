@@ -36,6 +36,7 @@ const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = 
   linuxServerIO: ["linuxserver"],
   coolify: ["coolify"],
   truenas: ["truenas"],
+  bazarr: ["bazarr"],
 };
 
 export const matchIntegrationKind = (search: string): IntegrationKind | null => {
