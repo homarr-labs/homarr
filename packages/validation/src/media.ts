@@ -3,13 +3,16 @@ import { zfd } from "zod-form-data";
 
 import { createCustomErrorParams } from "./form/i18n";
 
-export const supportedMediaUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+export const supportedImageUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+export const supportedVideoUploadFormats = ["video/mp4", "video/webm"];
+export const supportedMediaUploadFormats = [...supportedImageUploadFormats, ...supportedVideoUploadFormats];
+const supportedMediaUploadFormatSet = new Set<string>(supportedMediaUploadFormats);
 
 export const mediaUploadSchema = zfd.formData({
   files: zfd.repeatable(
     z.array(
       zfd.file().check((context) => {
-        if (!supportedMediaUploadFormats.includes(context.value.type)) {
+        if (!supportedMediaUploadFormatSet.has(context.value.type)) {
           context.issues.push({
             code: "custom",
             params: createCustomErrorParams({

@@ -20,7 +20,6 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { humanFileSize } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
@@ -111,18 +110,30 @@ const Row = async ({ media }: RowProps) => {
   const session = await auth();
   const t = await getI18n();
   const canDelete = media.creatorId === session?.user.id || session?.user.permissions.includes("media-full-all");
+  const mediaUrl = createLocalMediaUrl(media);
 
   return (
     <TableTr>
       <TableTd w={64}>
-        <Image
-          // Switched to mantine image because next/image doesn't support svgs
-          src={createLocalImageUrl(media.id)}
-          alt={media.name}
-          w={64}
-          h={64}
-          fit="contain"
-        />
+        {media.contentType.startsWith("video/") ? (
+          <video
+            src={mediaUrl}
+            aria-label={media.name}
+            muted
+            playsInline
+            preload="metadata"
+            style={{ width: 64, height: 64, objectFit: "contain" }}
+          />
+        ) : (
+          <Image
+            // Switched to mantine image because next/image doesn't support svgs
+            src={mediaUrl}
+            alt={media.name}
+            w={64}
+            h={64}
+            fit="contain"
+          />
+        )}
       </TableTd>
       <TableTd>{media.name}</TableTd>
       <TableTd>{humanFileSize(media.size)}</TableTd>
@@ -142,13 +153,7 @@ const Row = async ({ media }: RowProps) => {
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
           <Tooltip label={t("media.action.open.label")} openDelay={500}>
-            <ActionIcon
-              component="a"
-              href={createLocalImageUrl(media.id)}
-              target="_blank"
-              color="gray"
-              variant="subtle"
-            >
+            <ActionIcon component="a" href={mediaUrl} target="_blank" color="gray" variant="subtle">
               <IconExternalLink size={16} stroke={1.5} />
             </ActionIcon>
           </Tooltip>
@@ -157,4 +162,9 @@ const Row = async ({ media }: RowProps) => {
       </TableTd>
     </TableTr>
   );
+};
+
+const createLocalMediaUrl = (media: { id: string; name: string }) => {
+  const extension = media.name.match(/\.[^./\\]+$/)?.[0].toLowerCase() ?? "";
+  return `/api/user-medias/${media.id}${extension}`;
 };

@@ -82,8 +82,9 @@ export const mediaRouter = createTRPCRouter({
       const ids = files.map((file) => file.id);
       if (!localIconRepository) return ids;
 
-      await ctx.db.insert(icons).values(
-        insertMedias.map((media) => {
+      const insertIcons = insertMedias
+        .filter((media) => media.contentType.startsWith("image/"))
+        .map((media) => {
           const icon = mapMediaToIcon(media);
 
           return {
@@ -93,8 +94,10 @@ export const mediaRouter = createTRPCRouter({
             url: icon.imageUrl,
             iconRepositoryId: localIconRepository.id,
           };
-        }),
-      );
+        });
+      if (insertIcons.length > 0) {
+        await ctx.db.insert(icons).values(insertIcons);
+      }
 
       return ids;
     }),
