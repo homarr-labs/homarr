@@ -25,11 +25,15 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
-    "dockerode": "catalog:"
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "dockerode": "catalog:",
+    "superjson": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -1,0 +1,54 @@
+---
+title: 'Docker labels'
+description: 'Configure Homarr apps automatically using Docker container labels during onboarding.'
+hide_title: true
+---
+
+# Docker label discovery
+
+Homarr can read `homarr.*` labels on your containers to pre-populate apps during onboarding. Homepage-style `homepage.*` labels are supported as a fallback when no `homarr.name` label is set.
+
+## Required labels
+
+| Label | Description |
+| --- | --- |
+| `homarr.name` | Display name for the app |
+| `homarr.group` | Category section name on the board |
+| `homarr.href` | URL opened when clicking the app |
+
+## Optional labels
+
+| Label | Description |
+| --- | --- |
+| `homarr.icon` | Icon URL |
+| `homarr.description` | App description |
+| `homarr.ping` | Ping URL for status checks |
+| `homarr.id` | Stable external ID (defaults to container ID) |
+| `homarr.board` | Target board name |
+| `homarr.integration` | Integration kind (e.g. `sonarr`) for onboarding integration setup |
+| `homarr.widget` | Widget kind hint (parsed, not auto-placed yet) |
+| `homarr.hide` | Hide container from discovery |
+
+## Homepage fallback
+
+When `homarr.name` is absent, Homarr reads `homepage.name`, `homepage.group`, `homepage.href`, `homepage.icon`, and `homepage.description` if homepage label reading is enabled (default: on).
+
+## Example
+
+```yaml
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    labels:
+      homarr.name: "Sonarr"
+      homarr.group: "Media"
+      homarr.href: "http://sonarr:8989"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg"
+      homarr.integration: "sonarr"
+```
+
+## Onboarding behavior
+
+During the integrations step, Homarr scans labeled containers first. Labeled services appear with their configured name, group, and URL. Unlabeled running containers still use image-based discovery as a fallback.
+
+When you finish onboarding, selected label-based apps are synced into category sections on your board. Integration widgets are placed separately in the default section.

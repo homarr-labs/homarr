@@ -93,9 +93,11 @@ They are then available in the app list and can be used as normally added apps.
 
 ### Configuration
 
-Currently Homarr supports one label for configuration of the containers:
+Homarr supports Docker labels for automatic app discovery during onboarding. See [Docker labels](../docker-labels/index.mdx) for the full reference.
 
-- **homarr.hide:** If set to any value, the container will be hidden from the Docker Containers widget and tools page.
+Currently Homarr supports one label for hiding containers:
+
+- **homarr.hide:** If set to any value, the container will be hidden from the Docker Containers widget, tools page, and label discovery.
 
 ### Security
 Mounting docker sockets can be risky, as they permit full control over your docker service.

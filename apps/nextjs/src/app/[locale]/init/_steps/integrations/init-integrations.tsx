@@ -50,7 +50,7 @@ interface IntegrationDraft {
   initialUrl: string;
   initialName?: string;
   dockerPort?: number | null;
-  source: "manual" | "docker";
+  source: "manual" | "docker" | "label";
 }
 
 export const InitIntegrations = () => {
@@ -65,6 +65,7 @@ export const InitIntegrations = () => {
 
   const { mutateAsync: setupIntegrations } = clientApi.onboard.setupIntegrations.useMutation();
   const { mutateAsync: createApps } = clientApi.onboard.createAppsFromDiscovery.useMutation();
+  const { mutateAsync: syncLabelApps } = clientApi.onboard.syncDockerLabelApps.useMutation();
 
   const { data: dockerData, isPending: isDockerLoading } = clientApi.onboard.discoverDockerServices.useQuery(
     undefined,
@@ -98,7 +99,7 @@ export const InitIntegrations = () => {
           initialUrl: item.suggestedUrl,
           initialName: item.containerName,
           dockerPort: item.publishedPort,
-          source: "docker",
+          source: item.source,
         });
       }
       newKinds.add(item.kind);
@@ -132,7 +133,8 @@ export const InitIntegrations = () => {
     const newDrafts = new Map(drafts);
     for (const kind of selectedKinds) {
       const existing = newDrafts.get(kind);
-      if (baseHost) {
+      const useUrlTemplate = baseHost && existing?.source !== "label";
+      if (useUrlTemplate) {
         newDrafts.set(kind, {
           kind,
           initialUrl: buildIntegrationUrl(kind, baseHost, urlMode, existing?.dockerPort ?? undefined),
@@ -152,10 +154,32 @@ export const InitIntegrations = () => {
   const finishSetupAsync = async () => {
     setPhase("done");
     try {
-      const appsToCreate = dockerApps.filter((app) => selectedAppIds.has(app.containerId));
-      if (appsToCreate.length > 0) {
+      const selectedApps = dockerApps.filter((app) => selectedAppIds.has(app.containerId));
+      const labelApps = selectedApps.filter((app) => app.source === "label");
+      const imageApps = selectedApps.filter((app) => app.source !== "label");
+
+      if (labelApps.length > 0) {
+        const labelAppsWithHost = labelApps.filter((app): app is typeof app & { host: string } => Boolean(app.host));
+        const missingHostCount = labelApps.length - labelAppsWithHost.length;
+        if (missingHostCount > 0) {
+          throw new Error("Some selected Docker label apps are missing host metadata");
+        }
+        if (labelAppsWithHost.length > 0) {
+          const syncResult = await syncLabelApps(
+            labelAppsWithHost.map((app) => ({
+              containerId: app.containerId,
+              host: app.host,
+            })),
+          );
+          if (syncResult.notFound > 0) {
+            throw new Error("Some selected Docker label apps were not found");
+          }
+        }
+      }
+
+      if (imageApps.length > 0) {
         await createApps(
-          appsToCreate.map((app) => {
+          imageApps.map((app) => {
             const href = baseHost
               ? buildAppUrl(app.containerName, baseHost, urlMode, app.publishedPort ?? undefined)
               : app.suggestedUrl;
@@ -167,6 +191,7 @@ export const InitIntegrations = () => {
           }),
         );
       }
+
       await setupIntegrations();
       router.refresh();
     } catch {
@@ -336,9 +361,16 @@ export const InitIntegrations = () => {
                       >
                         <Stack justify="space-between" h="100%" gap={4} align="center">
                           <Group justify="space-between" w="100%" wrap="nowrap">
-                            <Text size="xs" fw={500} lineClamp={1} style={{ flex: 1, minWidth: 0 }}>
-                              {app.containerName}
-                            </Text>
+                            <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
+                              <Text size="xs" fw={500} lineClamp={1}>
+                                {app.containerName}
+                              </Text>
+                              {app.group && (
+                                <Text size="xs" c="dimmed" lineClamp={1}>
+                                  {app.group}
+                                </Text>
+                              )}
+                            </Stack>
                             {isSelected && <IconCheck size={14} color="var(--mantine-color-blue-6)" />}
                           </Group>
                           <Avatar size="sm" radius="sm" src={app.iconUrl} styles={{ image: { objectFit: "contain" } }}>
@@ -359,8 +391,14 @@ export const InitIntegrations = () => {
             {t("action.skip")}
           </Button>
           <Button
-            onClick={handleContinueToConfig}
-            disabled={selectedKinds.length === 0 || undefined}
+            onClick={() => {
+              if (selectedKinds.length === 0) {
+                void finishSetupAsync();
+                return;
+              }
+              handleContinueToConfig();
+            }}
+            disabled={(selectedKinds.length === 0 && selectedAppCount === 0) || undefined}
             rightSection={<IconArrowRight size={16} stroke={1.5} />}
             suppressHydrationWarning
           >
@@ -404,7 +442,8 @@ const ConfigurePhase = ({
   const currentKind = selectedKinds[currentIndex]!;
   const draft = drafts.get(currentKind);
   const progress = ((currentIndex + 1) / selectedKinds.length) * 100;
-  const computedUrl = baseHost
+  const useUrlTemplate = baseHost && draft?.source !== "label";
+  const computedUrl = useUrlTemplate
     ? buildIntegrationUrl(currentKind, baseHost, urlMode, draft?.dockerPort ?? undefined)
     : draft?.initialUrl;
 

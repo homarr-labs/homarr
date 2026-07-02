@@ -547,6 +547,33 @@ export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
   isEnabled: boolean().default(true).notNull(),
 });
 
+export const dockerAppSources = mysqlTable(
+  "docker_app_source",
+  {
+    host: varchar({ length: 512 }).notNull(),
+    containerId: varchar({ length: 128 }).notNull(),
+    externalId: varchar({ length: 512 }).notNull(),
+    appId: varchar({ length: 64 })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    boardId: varchar({ length: 64 })
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    itemId: varchar({ length: 64 }).references(() => items.id, { onDelete: "set null" }),
+    integrationId: varchar({ length: 64 }).references(() => integrations.id, { onDelete: "set null" }),
+    updatedAt: timestamp()
+      .notNull()
+      .$onUpdateFn(() => new Date())
+      .$defaultFn(() => new Date()),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.host, table.containerId],
+    }),
+    externalIdIdx: index("docker_app_source__external_id_idx").on(table.host, table.externalId),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -824,5 +851,24 @@ export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one
   definition: one(customWidgetDefinitions, {
     fields: [customWidgetSecrets.definitionId],
     references: [customWidgetDefinitions.id],
+  }),
+}));
+
+export const dockerAppSourceRelations = relations(dockerAppSources, ({ one }) => ({
+  app: one(apps, {
+    fields: [dockerAppSources.appId],
+    references: [apps.id],
+  }),
+  board: one(boards, {
+    fields: [dockerAppSources.boardId],
+    references: [boards.id],
+  }),
+  item: one(items, {
+    fields: [dockerAppSources.itemId],
+    references: [items.id],
+  }),
+  integration: one(integrations, {
+    fields: [dockerAppSources.integrationId],
+    references: [integrations.id],
   }),
 }));
