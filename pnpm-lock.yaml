@@ -49,8 +49,8 @@ catalogs:
       specifier: ^2.6.0
       version: 2.6.0
     '@immich/sdk':
-      specifier: ^2.7.5
-      version: 2.7.5
+      specifier: ^3.0.0
+      version: 3.0.0
     '@jellyfin/sdk':
       specifier: ^0.13.0
       version: 0.13.0
@@ -1929,7 +1929,7 @@ importers:
         version: link:../validation
       '@immich/sdk':
         specifier: 'catalog:'
-        version: 2.7.5
+        version: 3.0.0
       '@jellyfin/sdk':
         specifier: 'catalog:'
         version: 0.13.0(axios@1.15.0)
@@ -4230,9 +4230,6 @@ packages:
   '@drizzle-team/brocli@0.12.0':
     resolution: {integrity: sha512-mlUE+rZ8CatQekLhnaiN91Iemdd+e2gFKooGlnRB3oPTL3VghLfX24dx7HrzMNeC1JrIB/0kpsfyty3f5HNfxQ==}
 
-  '@emnapi/core@1.11.0':
-    resolution: {integrity: sha512-l9Oo58x0HOP5znGzVhYW9U3e5wVuA4LAZU2AGezTmkhO1CgQRFDhDg4nneHsu/t3WniXg9QrG2nIXL/ZS8ln8Q==}
-
   '@emnapi/core@1.11.1':
     resolution: {integrity: sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==}
 
@@ -5174,8 +5171,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@immich/sdk@2.7.5':
-    resolution: {integrity: sha512-gCTpFAWlFF+1Sx0jbqPVmwN+0JD+eZEHzhf3q+BbxuQF+ORpNqT0D453mOyonogvy17nJF1jGA2PtT6vOQiSnA==}
+  '@immich/sdk@3.0.0':
+    resolution: {integrity: sha512-HUT+L5LEIRsW65GtGj1hLqv9XQzIWzEyaAnAUsVVYHAc3hs+bD8p+KV9Km6Yw8Kg5eOqt+pDcp0peHYkgwnZJQ==}
 
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
@@ -7625,9 +7622,6 @@ packages:
     resolution: {integrity: sha512-dVHGaf9F8twzgibcBqKoADT/LLqf9++jDb+hq/LPWWaOmRpp4M+/pVOm7vy4z9D++xg8eaxWLT0+wQxFwhYu9A==}
     cpu: [arm64]
     os: [win32]
-
-  '@tybys/wasm-util@0.10.2':
-    resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -17909,12 +17903,6 @@ snapshots:
 
   '@drizzle-team/brocli@0.12.0': {}
 
-  '@emnapi/core@1.11.0':
-    dependencies:
-      '@emnapi/wasi-threads': 1.2.2
-      tslib: 2.8.1
-    optional: true
-
   '@emnapi/core@1.11.1':
     dependencies:
       '@emnapi/wasi-threads': 1.2.2
@@ -18538,7 +18526,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@immich/sdk@2.7.5':
+  '@immich/sdk@3.0.0':
     dependencies:
       '@oazapfts/runtime': 1.2.0
 
@@ -19201,9 +19189,9 @@ snapshots:
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
-      '@emnapi/core': 1.11.0
-      '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.2
+      '@emnapi/core': 1.11.1
+      '@emnapi/runtime': 1.11.1
+      '@tybys/wasm-util': 0.10.3
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
@@ -21243,11 +21231,6 @@ snapshots:
     optional: true
 
   '@turbo/windows-arm64@2.10.0':
-    optional: true
-
-  '@tybys/wasm-util@0.10.2':
-    dependencies:
-      tslib: 2.8.1
     optional: true
 
   '@tybys/wasm-util@0.10.3':
@@ -26271,7 +26254,7 @@ snapshots:
       statuses: 2.0.2
       strict-event-emitter: 0.5.1
       tough-cookie: 6.0.1
-      type-fest: 5.6.0
+      type-fest: 5.7.0
       until-async: 3.0.2
       yargs: 17.7.2
     optionalDependencies:
