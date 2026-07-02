@@ -49,6 +49,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   searchCh: "search-ch",
   immich: "immich",
   paperlessNgx: "paperless-ngx",
+  patchmon: "patchmon",
   tracearr: "tracearr",
   speedtestTracker: "speedtest-tracker",
   uptimeKuma: "uptime-kuma",
