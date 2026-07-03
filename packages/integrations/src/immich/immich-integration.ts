@@ -6,9 +6,8 @@ import {
   init,
   searchAssets,
   searchUsers,
-  type AssetResponseDto,
-  type MetadataSearchDto,
 } from "@immich/sdk";
+import type { AssetResponseDto, MetadataSearchDto } from "@immich/sdk";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
