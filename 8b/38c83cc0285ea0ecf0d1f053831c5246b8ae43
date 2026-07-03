@@ -1,0 +1,37 @@
+mise.toml
+  s_3dcc22b87e2334::t_7b033b4eeae3cc 1-2
+packages/api/src/router/widgets/releases.ts
+  s_14efc6824a860a::t_42a817cd315bc2 80,82,85,95,102
+packages/integrations/src/immich/immich-integration.ts
+  s_3dcc22b87e2334::t_22c9ab53d9c6e4 1-10,67-71,76,118-135
+pnpm-lock.yaml
+  s_3dcc22b87e2334::t_af26989f3ad56b 52-53,1938,5180-5181,18544,19207-19209,26283
+pnpm-workspace.yaml
+  s_3dcc22b87e2334::t_a834802fbd5d47 21,203
+static-data/contributors.json
+  s_3dcc22b87e2334::t_7990058120148f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8b38c83cc0285ea0ecf0d1f053831c5246b8ae43",
+  "prompts": {},
+  "sessions": {
+    "s_14efc6824a860a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "594347b1-7e7c-4a9b-8e5c-453bfc40bcff",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
