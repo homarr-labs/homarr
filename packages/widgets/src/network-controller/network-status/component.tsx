@@ -21,48 +21,9 @@ export default function NetworkControllerNetworkStatusWidget({
   options,
   integrationIds,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.networkController.subscribeToSummary.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.networkController.summary.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id
-                ? {
-                    ...item,
-                    summary: data.summary,
-                    updatedAt: new Date(),
-                  }
-                : item,
-            );
-          },
-        );
-      },
-    },
-  );
+  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery({
+    integrationIds,
+  });
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 

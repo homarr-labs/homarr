@@ -9,9 +9,8 @@ export const immichAlbumCarouselWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
-        name: "Album ID",
-        description:
-          "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'",
+        name: "Album",
+        description: "Select the Immich album to show in the slideshow.",
         values: { type: "string" },
         defaultValue: "",
       },
@@ -25,7 +24,13 @@ export const immichAlbumCarouselWidget: WidgetDefinition = {
         name: "Show photo info",
         description: "Display date of the picture and the current index at the bottom of the slideshow",
         values: { type: "boolean" },
-        defaultValue: "yes",
+        defaultValue: "no",
+      },
+      {
+        name: "Randomize photos",
+        description: "Show photos in a random order instead of always starting with the same album order.",
+        values: { type: "boolean" },
+        defaultValue: "no",
       },
     ],
   },

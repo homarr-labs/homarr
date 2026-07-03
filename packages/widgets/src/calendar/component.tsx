@@ -16,15 +16,11 @@ import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget(
-  props: WidgetComponentProps<"calendar">,
-) {
+export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
 
   if (props.integrationIds.length === 0) {
-    return (
-      <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />
-    );
+    return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;
   }
 
   return <FetchCalendar month={month} setMonth={setMonth} {...props} />;
@@ -35,13 +31,7 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const FetchCalendar = ({
-  month,
-  setMonth,
-  isEditMode,
-  integrationIds,
-  options,
-}: FetchCalendarProps) => {
+const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }: FetchCalendarProps) => {
   const input = {
     integrationIds,
     month: month.getMonth(),
@@ -49,42 +39,11 @@ const FetchCalendar = ({
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
-  const utils = clientApi.useUtils();
-  clientApi.widget.calendar.subscribeToEvents.useSubscription(input, {
-    onData(data) {
-      utils.widget.calendar.findAllEvents.setData(input, (old) => {
-        return old?.map((item) => {
-          if (item.integration.id !== data.integration.id) return item;
-          return {
-            ...item,
-            events: data.events,
-          };
-        });
-      });
-    },
-  });
+  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
-  const events = useMemo(
-    () => data?.flatMap((item) => item.events) ?? [],
-    [data],
-  );
-
-  return (
-    <CalendarBase
-      isEditMode={isEditMode}
-      events={events}
-      month={month}
-      setMonth={setMonth}
-      options={options}
-    />
-  );
+  return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} />;
 };
 
 interface CalendarBaseProps {
@@ -95,13 +54,7 @@ interface CalendarBaseProps {
   options: WidgetComponentProps<"calendar">["options"];
 }
 
-const CalendarBase = ({
-  isEditMode,
-  events,
-  month,
-  setMonth,
-  options,
-}: CalendarBaseProps) => {
+const CalendarBase = ({ isEditMode, events, month, setMonth, options }: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
@@ -182,14 +135,9 @@ const CalendarBase = ({
         const eventsForDate = normalizedEvents
           .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
           .filter(
-            (event) =>
-              event.metadata?.type !== "radarr" ||
-              options.releaseType.includes(event.metadata.releaseType),
+            (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
           )
-          .toSorted(
-            (eventA, eventB) =>
-              eventA.startDate.getTime() - eventB.startDate.getTime(),
-          );
+          .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
         return (
           <CalendarDay
@@ -236,9 +184,7 @@ export const splitEvents = (events: CalendarEvent[]): CalendarEvent[] => {
       splitEvents.push({
         ...event,
         startDate: currentStart.toDate(),
-        endDate: currentStart.endOf("day").isAfter(event.endDate)
-          ? event.endDate
-          : currentStart.endOf("day").toDate(),
+        endDate: currentStart.endOf("day").isAfter(event.endDate) ? event.endDate : currentStart.endOf("day").toDate(),
       });
 
       currentStart = currentStart.add(1, "day").startOf("day");

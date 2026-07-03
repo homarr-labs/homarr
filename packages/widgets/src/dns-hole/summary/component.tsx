@@ -20,46 +20,11 @@ import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
-  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchInterval: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
+  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery({
+    integrationIds,
+  });
 
   const t = useI18n();
-
-  clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.dnsHole.summary.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            const newData = prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-            return newData;
-          },
-        );
-      },
-    },
-  );
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 

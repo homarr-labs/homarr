@@ -64,19 +64,7 @@ export const matchIntegrationKind = (search: string): IntegrationKind | null => 
   return null;
 };
 
-const notDockerDiscoverable = new Set<IntegrationKind>([
-  "dockerHub",
-  "github",
-  "gitlab",
-  "npm",
-  "codeberg",
-  "linuxServerIO",
-  "gitHubContainerRegistry",
-  "quay",
-  "ical",
-  "searchCh",
-  "mock",
-]);
+const notDockerDiscoverable = new Set<IntegrationKind>(["ical", "mock"]);
 
 interface ContainerMatchInput {
   image: string;

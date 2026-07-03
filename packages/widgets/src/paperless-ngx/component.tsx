@@ -72,10 +72,9 @@ const heroPartVisibility = {
 
 export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
-  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery(
-    { integrationId: integrationIds[0] ?? "" },
-    { staleTime: 5 * 60 * 1000 },
-  );
+  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery({
+    integrationId: integrationIds[0] ?? "",
+  });
 
   if (!stats) return <WidgetEmptyState />;
 

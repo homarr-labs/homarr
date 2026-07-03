@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { UpsSummary } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const upsSummariesRequestHandler = createCachedIntegrationRequestHandler<
+export const upsSummariesRequestHandler = createIntegrationRequestHandler<
   UpsSummary[],
   IntegrationKindByCategory<"ups">,
   Record<string, never>
@@ -15,6 +13,4 @@ export const upsSummariesRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getUpsSummariesAsync();
   },
-  cacheDuration: dayjs.duration(1, "minute"),
-  queryKey: "upsSummaries",
 });

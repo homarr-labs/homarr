@@ -1,8 +1,7 @@
 import superjson from "superjson";
 
-import { createId, hashObjectBase64 } from "@homarr/common";
+import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { WidgetKind } from "@homarr/definitions";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
@@ -129,218 +128,38 @@ export const createGetSetChannel = <TData>(name: string) => {
   };
 };
 
-interface QueryCacheChannelOptions {
-  userId: string;
-  boardId: string;
-  key: string;
-  ttlMs: number;
-  maxValueBytes: number;
-}
+const queryCacheKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
 
-const queryCacheHashKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
-
-export const createQueryCacheChannel = ({ userId, boardId, key, ttlMs, maxValueBytes }: QueryCacheChannelOptions) => {
-  const hkey = queryCacheHashKey(userId, boardId);
-
-  return {
-    name: `${hkey}:${key}`,
-    getAsync: async () => {
-      return await getSetClient.hget(hkey, key);
-    },
-    setAsync: async (value: string) => {
-      if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
-        logger.warn("Query cache value exceeded maximum size", {
-          channel: hkey,
-          valueBytes: Buffer.byteLength(value, "utf8"),
-          maxValueBytes,
-        });
-        return false;
-      }
-
-      await getSetClient.hset(hkey, key, value);
-      await getSetClient.pexpire(hkey, ttlMs);
-      return true;
-    },
-    removeAsync: async () => {
-      await getSetClient.hdel(hkey, key);
-    },
-  };
-};
-
-export const getAllQueryCacheAsync = async (userId: string, boardId: string): Promise<Record<string, string>> => {
-  const hkey = queryCacheHashKey(userId, boardId);
-  return await getSetClient.hgetall(hkey);
-};
-
-/**
- * Creates a new cache channel.
- * @param name name of the channel
- * @param cacheDurationMs duration in milliseconds to cache
- * @returns cache channel object
- */
-export const createCacheChannel = <TData>(name: string, cacheDurationMs: number = 5 * 60 * 1000) => {
-  const cacheChannelName = `cache:${name}`;
-
-  return {
-    /**
-     * Get the data from the cache channel.
-     * @returns data or null if not found or expired
-     */
-    getAsync: async () => {
-      const data = await getSetClient.get(cacheChannelName);
-      if (!data) return null;
-
-      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
-      const now = new Date();
-      const diff = now.getTime() - parsedData.timestamp.getTime();
-      if (diff > cacheDurationMs) return null;
-
-      return parsedData;
-    },
-    /**
-     * Consume the data from the cache channel, if not present or expired, it will call the callback to get new data.
-     * @param callback callback function to get new data if not present or expired
-     * @returns data or new data if not present or expired
-     */
-    consumeAsync: async (callback: () => Promise<TData>) => {
-      const data = await getSetClient.get(cacheChannelName);
-
-      const getNewDataAsync = async () => {
-        logger.debug(`Cache miss for channel '${cacheChannelName}'`);
-        const newData = await callback();
-        const result = { data: newData, timestamp: new Date() };
-        await getSetClient.set(cacheChannelName, superjson.stringify(result));
-        logger.debug(`Cache updated for channel '${cacheChannelName}'`);
-        return result;
-      };
-
-      if (!data) {
-        return await getNewDataAsync();
-      }
-
-      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
-      const now = new Date();
-      const diff = now.getTime() - parsedData.timestamp.getTime();
-
-      if (diff > cacheDurationMs) {
-        return await getNewDataAsync();
-      }
-
-      logger.debug(`Cache hit for channel '${cacheChannelName}'`);
-
-      return parsedData;
-    },
-    /**
-     * Invalidate the cache channels data.
-     */
-    invalidateAsync: async () => {
-      await getSetClient.del(cacheChannelName);
-    },
-    /**
-     * Set the data in the cache channel.
-     * @param data data to be stored in the cache channel
-     */
-    setAsync: async (data: TData) => {
-      await getSetClient.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
-    },
-  };
-};
-
-export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
-  const channelName = `item:${kind}:integration:${integrationId}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
-};
-
-export const createIntegrationOptionsChannel = <TData>(
-  integrationId: string,
-  queryKey: string,
-  options: Record<string, unknown>,
+export const setQueryCacheAsync = async (
+  userId: string,
+  boardId: string,
+  value: string,
+  ttlMs: number,
+  maxValueBytes: number,
 ) => {
-  const optionsKey = hashObjectBase64(options);
-  const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
+  if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
+    logger.warn("Query cache value exceeded maximum size", {
+      key: queryCacheKey(userId, boardId),
+      valueBytes: Buffer.byteLength(value, "utf8"),
+      maxValueBytes,
+    });
+    return false;
+  }
+  await getSetClient.set(queryCacheKey(userId, boardId), value, "PX", ttlMs);
+  return true;
 };
 
-/**
- * Invalidates all cached data for a given integration by deleting every Redis key
- * that starts with `integration:${integrationId}:` as well as the integration's
- * session store entry. This ensures that stale data from a misconfigured or
- * updated integration is never served from cache.
- */
+export const getQueryCacheAsync = async (userId: string, boardId: string) =>
+  await getSetClient.get(queryCacheKey(userId, boardId));
+
+export const removeQueryCacheAsync = async (userId: string, boardId: string) => {
+  await getSetClient.del(queryCacheKey(userId, boardId));
+};
+
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
   const client = getSetClient as typeof getSetClient | null;
-  if (!client) {
-    return;
-  }
-
-  const patterns = [`integration:${integrationId}:*`, `session-store:${integrationId}`];
-  let deletedCount = 0;
-  for (const pattern of patterns) {
-    let cursor = "0";
-    do {
-      const [nextCursor, keys] = await client.scan(cursor, "MATCH", pattern, "COUNT", 200);
-      cursor = nextCursor;
-      if (keys.length > 0) {
-        await client.del(...keys);
-        deletedCount += keys.length;
-      }
-    } while (cursor !== "0");
-  }
-  if (deletedCount > 0) {
-    logger.info("Invalidated integration cache", { integrationId, deletedKeys: deletedCount });
-  }
-};
-
-export const createWidgetOptionsChannel = <TData>(
-  widgetKind: WidgetKind,
-  queryKey: string,
-  options: Record<string, unknown>,
-) => {
-  const optionsKey = hashObjectBase64(options);
-  const channelName = `widget:${widgetKind}:${queryKey}:options:${optionsKey}`;
-  return createChannelWithLatestAndEvents<TData>(channelName);
-};
-
-export const createItemChannel = <TData>(itemId: string) => {
-  return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
-};
-
-export const createChannelEventHistory = <TData>(channelName: string, maxElements = 32) => {
-  return {
-    subscribe: (callback: (data: TData) => void) => {
-      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
-        callback(superjson.parse(message));
-      });
-    },
-    pushAsync: async (data: TData, options = { publish: false }) => {
-      if (options.publish) await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
-      await getSetClient.ltrim(channelName, 0, maxElements);
-    },
-    clearAsync: async () => {
-      await getSetClient.del(channelName);
-    },
-    /**
-     * Returns a slice of the available data in the channel.
-     * If any of the indexes are out of range (or -range), returned data will be clamped.
-     * @param startIndex Start index of the slice, negative values are counted from the end, defaults at beginning of range.
-     * @param endIndex End index of the slice, negative values are counted from the end, defaults at end of range.
-     */
-    getSliceAsync: async (startIndex = 0, endIndex = -1) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
-      return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
-    },
-    getSliceUntilTimeAsync: async (time: Date) => {
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, -1);
-      return itemsInCollection
-        .map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item))
-        .filter((item) => item.timestamp < time);
-    },
-    getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
-    },
-    name: channelName,
-  };
+  if (!client) return;
+  await client.del(`session-store:${integrationId}`);
 };
 
 /**
@@ -402,40 +221,6 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
     },
     getLengthAsync: async () => {
       return await getSetClient.llen(channelName);
-    },
-    name: channelName,
-  };
-};
-
-export const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
-  return {
-    subscribe: (callback: (data: TData) => void) => {
-      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
-        callback(superjson.parse(message));
-      });
-    },
-    publishAndUpdateLastStateAsync: async (data: TData) => {
-      // Set first, then publish. If publish fails the storage is still consistent
-      // and subscribers will catch up on the next event.
-      const payload = superjson.stringify({ data, timestamp: new Date() });
-      await getSetClient.set(channelName, payload);
-      try {
-        await publisher.publish(channelName, superjson.stringify(data));
-      } catch (error) {
-        logger.warn("Failed to publish cache update (storage is correct, subscribers will catch up)", {
-          channel: channelName,
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-    },
-    setAsync: async (data: TData) => {
-      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
-    },
-    getAsync: async () => {
-      const data = await getSetClient.get(channelName);
-      if (!data) return null;
-
-      return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
     name: channelName,
   };

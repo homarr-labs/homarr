@@ -11,20 +11,7 @@ interface PingIndicatorProps {
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
   const t = useI18n();
-  const { data: pingResult } = clientApi.widget.app.ping.useQuery(
-    { id: appId },
-    { refetchOnMount: false, refetchOnWindowFocus: false },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.app.updatedPing.useSubscription(
-    { id: appId },
-    {
-      onData(data) {
-        utils.widget.app.ping.setData({ id: appId }, data);
-      },
-    },
-  );
+  const { data: pingResult } = clientApi.widget.app.ping.useQuery({ id: appId }, { refetchOnMount: false });
 
   if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />;
 

@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type {
@@ -9,9 +7,9 @@ import type {
   FirewallVersionSummary,
 } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const firewallCpuRequestHandler = createCachedIntegrationRequestHandler<
+export const firewallCpuRequestHandler = createIntegrationRequestHandler<
   FirewallCpuSummary,
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
@@ -20,11 +18,9 @@ export const firewallCpuRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return integrationInstance.getFirewallCpuAsync();
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
-  queryKey: "firewallCpuSummary",
 });
 
-export const firewallMemoryRequestHandler = createCachedIntegrationRequestHandler<
+export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
   FirewallMemorySummary,
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
@@ -33,11 +29,9 @@ export const firewallMemoryRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallMemoryAsync();
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
-  queryKey: "firewallMemorySummary",
 });
 
-export const firewallInterfacesRequestHandler = createCachedIntegrationRequestHandler<
+export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
   FirewallInterfacesSummary[],
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
@@ -46,11 +40,9 @@ export const firewallInterfacesRequestHandler = createCachedIntegrationRequestHa
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallInterfacesAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
-  queryKey: "firewallInterfacesSummary",
 });
 
-export const firewallVersionRequestHandler = createCachedIntegrationRequestHandler<
+export const firewallVersionRequestHandler = createIntegrationRequestHandler<
   FirewallVersionSummary,
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
@@ -59,6 +51,4 @@ export const firewallVersionRequestHandler = createCachedIntegrationRequestHandl
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallVersionAsync();
   },
-  cacheDuration: dayjs.duration(1, "hour"),
-  queryKey: "firewallVersionSummary",
 });

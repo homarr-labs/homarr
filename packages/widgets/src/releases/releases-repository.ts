@@ -1,3 +1,5 @@
+import type { ReleaseProviderKind } from "@homarr/definitions";
+
 export interface ReleasesVersionFilter {
   prefix?: string;
   precision: number;
@@ -6,11 +8,12 @@ export interface ReleasesVersionFilter {
 
 export interface ReleasesRepository {
   id: string;
-  providerIntegrationId?: string;
+  provider?: ReleaseProviderKind;
   identifier: string;
   name?: string;
   versionFilter?: ReleasesVersionFilter;
   iconUrl?: string;
+  providerUrl?: string;
 }
 
 export interface ReleasesRepositoryResponse extends ReleasesRepository {
@@ -32,7 +35,7 @@ export interface ReleasesRepositoryResponse extends ReleasesRepository {
   forksCount?: number;
   openIssues?: number;
 
-  integration?: {
+  providerMetadata?: {
     name: string;
     iconUrl?: string;
   };
