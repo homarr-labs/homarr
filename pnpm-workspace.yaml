@@ -127,7 +127,7 @@ catalog:
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
   fast-xml-parser: ^5.9.3
-  fastify: ^5.8.5
+  fastify: ^5.9.0
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
