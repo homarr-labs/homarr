@@ -6,6 +6,8 @@ import {
   init,
   searchAssets,
   searchUsers,
+  type AssetResponseDto,
+  type MetadataSearchDto,
 } from "@immich/sdk";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -114,13 +116,13 @@ export class ImmichIntegration extends Integration {
     return { success: true };
   }
 
-  private async searchAlbumAssetsAsync(albumId: string) {
+  private async searchAlbumAssetsAsync(albumId: string): Promise<AssetResponseDto[]> {
     const requestOptions = this.getRequestOptions();
-    const assets = [];
+    const assets: AssetResponseDto[] = [];
     let nextPage: string | null = null;
 
     do {
-      const metadataSearchDto: { albumIds: string[]; page?: number } = { albumIds: [albumId] };
+      const metadataSearchDto: MetadataSearchDto = { albumIds: [albumId] };
       if (nextPage !== null) {
         metadataSearchDto.page = Number(nextPage);
       }
