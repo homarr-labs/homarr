@@ -25,6 +25,19 @@ describe("validateSubmissionContent", () => {
     expect(result.success).toBe(false);
   });
 
+  it("rejects widgets without a schema version", () => {
+    const widgetWithoutSchema = {
+      name: validWidget.name,
+      url: validWidget.url,
+      authType: validWidget.authType,
+      method: validWidget.method,
+      displayType: validWidget.displayType,
+      displayConfig: validWidget.displayConfig,
+    };
+
+    expect(validateSubmissionContent("widget", JSON.stringify(widgetWithoutSchema)).success).toBe(false);
+  });
+
   it("rejects malformed widget JSON", () => {
     expect(validateSubmissionContent("widget", "{ not json").success).toBe(false);
   });

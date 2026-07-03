@@ -26,7 +26,7 @@ const displayTypes = [
 
 const widgetSchema = z
   .object({
-    $schema: z.literal(WIDGET_SCHEMA_VERSION).optional(),
+    $schema: z.literal(WIDGET_SCHEMA_VERSION),
     name: z.string().min(1).max(128),
     url: z.string().min(1),
     authType: z.enum(authTypes),

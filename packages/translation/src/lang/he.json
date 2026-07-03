@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "כאן",
     "iconPicker": {
       "label": "קישור של הסמל",
-      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} ."
+      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} .",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "עבור למצב כהה",
         "switchToLightMode": "עבור למצב בהיר",
         "management": "ניהול",
+        "docker": "",
         "preferences": "העדפות שלך",
         "logout": "התנתק/י",
         "login": "התחבר/י",
@@ -2352,6 +2357,9 @@
       "name": "סטטיסטיקות דוקר",
       "description": "סטטיסטיקות של המכולות שלך (ניתן להוסיף ווידג'ט זה רק עם הרשאות מנהל)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "אפשר מיון פריטים"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "לא נמצא",
       "text": "לא ניתן לאתר את המשאב המבוקש"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "נכשל בקבלת קונטיינרי דוקר"
+      "internalServerError": "נכשל בקבלת קונטיינרי דוקר",
+      "noColumns": ""
     }
   },
   "kubernetes": {

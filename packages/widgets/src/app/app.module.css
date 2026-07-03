@@ -8,6 +8,8 @@
   transition: scale 0.2s ease-in-out;
   user-select: none;
   -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  touch-action: manipulation;
 }
 
 .appWithUrl:hover > .appIcon {

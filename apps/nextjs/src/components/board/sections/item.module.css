@@ -10,3 +10,8 @@
   background-color: var(--background-color) !important;
   border-color: var(--border-color) !important;
 }
+
+.itemCard:global(.iframe-wrapper) {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}

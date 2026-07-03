@@ -1,7 +1,8 @@
 import type { QueryKey } from "@tanstack/react-query";
 
-export const queryCacheRetentionMs = 1000 * 60 * 60 * 24;
-export const queryCacheDefaultStaleTimeMs = 1000 * 60 * 5;
+export const queryCacheDefaultStaleTimeMs = 0;
+export const queryCacheDefaultRefetchIntervalMs = 30_000;
+export const queryCacheDefaultGcTimeMs = 1000 * 60 * 60 * 24;
 export const queryCacheMaxValueBytes = 1024 * 1024;
 export const queryCacheStoragePrefix = "homarr-widget-query";
 

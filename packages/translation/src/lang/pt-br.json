@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Monitoramento",
       "speedtest": "Teste de Velocidade",
       "analytics": "Análises",
+      "vpn": "",
       "mediaLibrary": "Biblioteca de mídia",
       "uptimeMonitoring": "Monitoramento do Uptime"
     },
@@ -1412,7 +1413,10 @@
     "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
-      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você."
+      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Alternar para o modo escuro",
         "switchToLightMode": "Alternar para o modo claro",
         "management": "Gerenciamento",
+        "docker": "",
         "preferences": "Suas preferências",
         "logout": "Sair",
         "login": "“Login”",
@@ -2352,6 +2357,9 @@
       "name": "Estatísticas do Docker",
       "description": "Estatísticas dos seus contêineres (Esse widget só pode ser adicionado com privilégios de administrador)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Ativar ordenação de itens"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "Instâncias"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Não encontrado",
       "text": "Não foi possível encontrar o recurso solicitado"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4579,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Visitantes Ativos do Umami"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Falha ao buscar contêineres Docker"
+      "internalServerError": "Falha ao buscar contêineres Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

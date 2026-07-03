@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { SpeedtestTrackerDashboardData } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const speedtestTrackerRequestHandler = createCachedIntegrationRequestHandler<
+export const speedtestTrackerRequestHandler = createIntegrationRequestHandler<
   SpeedtestTrackerDashboardData,
   "speedtestTracker",
   Record<string, never>
@@ -14,6 +12,4 @@ export const speedtestTrackerRequestHandler = createCachedIntegrationRequestHand
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  cacheDuration: dayjs.duration(10, "minutes"),
-  queryKey: "speedtestTrackerDashboard",
 });

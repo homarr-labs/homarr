@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
 import { z } from "zod";
 
 import { env } from "@homarr/common/env";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
-import { createChannelWithLatestAndEvents } from "@homarr/redis";
-import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
+import { createRequestHandler } from "@homarr/request-handler/lib/request-handler";
 
 export type DuckDuckGoBang = z.infer<typeof duckDuckGoBangSchema>;
 
@@ -38,9 +36,7 @@ const normalizeBangToken = (token: string) => token.toLowerCase().trim();
 
 const compareBangTokenAsc = (left: DuckDuckGoBang, right: DuckDuckGoBang) => left.t.localeCompare(right.t);
 
-export const duckDuckGoBangsRequestHandler = createCachedRequestHandler({
-  queryKey: "duckduckgo-bangs",
-  cacheDuration: dayjs.duration(1, "day"),
+export const duckDuckGoBangsRequestHandler = createRequestHandler({
   async requestAsync(_) {
     if (env.NO_EXTERNAL_CONNECTION) {
       return [];
@@ -72,8 +68,5 @@ export const duckDuckGoBangsRequestHandler = createCachedRequestHandler({
     normalized.sort(compareBangTokenAsc);
 
     return normalized;
-  },
-  createRedisChannel() {
-    return createChannelWithLatestAndEvents<DuckDuckGoBang[]>("homarr:duckduckgo-bangs");
   },
 });

@@ -23,7 +23,7 @@ export default async function DockerPage() {
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tDocker("title")}</Title>
-        <DockerTable containers={containers} timestamp={timestamp} />
+        <DockerTable initialData={{ containers, timestamp }} />
       </Stack>
     </>
   );

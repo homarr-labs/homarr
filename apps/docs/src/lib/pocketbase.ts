@@ -12,7 +12,7 @@ export const getPocketBase = (url: string): PocketBase => {
 };
 
 export const getSubmissionFileUrl = (baseUrl: string, submissionId: string, filename: string) =>
-  `${baseUrl}/api/files/submissions/${submissionId}/${filename}`;
+  `${baseUrl}/api/files/submissions/${submissionId}/${encodeURIComponent(filename)}`;
 
 export interface StoreSubmission {
   id: string;

@@ -127,11 +127,18 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
 
     const media =
       data.MediaContainer.Metadata?.filter((item) => item.Image).map((item) => {
+        const title =
+          item.type === "episode"
+            ? (item.grandparentTitle ?? item.title)
+            : item.type === "season"
+              ? (item.parentTitle ?? item.title)
+              : item.title;
+
         return {
           id: item.Media?.at(0)?.id.toString() ?? item.key,
           type: mapType(item.type),
-          title: item.title,
-          subtitle: item.tagline,
+          title,
+          subtitle: title === item.title ? item.tagline : item.title,
           description: item.summary,
           releaseDate: item.originallyAvailableAt
             ? new Date(item.originallyAvailableAt)
@@ -222,6 +229,8 @@ const recentlyAddedSchema = z.object({
           studio: z.string().optional(),
           type: z.string(), // For example "movie", "album"
           title: z.string(),
+          parentTitle: z.string().optional(),
+          grandparentTitle: z.string().optional(),
           summary: z.string().optional(),
           duration: z.number().optional(),
           addedAt: z.number(),

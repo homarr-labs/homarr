@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const downloadClientRequestHandler = createCachedIntegrationRequestHandler<
+export const downloadClientRequestHandler = createIntegrationRequestHandler<
   DownloadClientJobsAndStatus,
   IntegrationKindByCategory<"downloadClient">,
   { limit: number }
@@ -15,6 +13,4 @@ export const downloadClientRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getClientJobsAndStatusAsync(input);
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
-  queryKey: "downloadClientJobStatus",
 });

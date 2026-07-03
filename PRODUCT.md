@@ -2,7 +2,7 @@
 
 ## Register
 
-product
+GitHub OAuth is used for workshop accounts so community members can submit, vote on, comment on, and report shared widgets or CSS themes without creating a separate Homarr-specific identity.
 
 ## Users
 

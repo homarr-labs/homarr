@@ -15,9 +15,9 @@ export class GotifyIntegration extends Integration implements INotificationsInte
   }
 
   private getHeaders() {
-    const credentials = Buffer.from(
-      `${super.getSecretValue("username")}:${super.getSecretValue("password")}`,
-    ).toString("base64");
+    const credentials = Buffer.from(`${super.getSecretValue("username")}:${super.getSecretValue("password")}`).toString(
+      "base64",
+    );
     return { Authorization: `Basic ${credentials}` };
   }
 
@@ -31,11 +31,13 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     if (!result.success) throw new Error(`Failed to parse Gotify response: ${result.error.message}`);
     const parsed = result.data;
 
-    return parsed.messages.map((message): Notification => ({
-      id: String(message.id),
-      time: new Date(message.date),
-      title: message.title,
-      body: message.message,
-    }));
+    return parsed.messages.map(
+      (message): Notification => ({
+        id: String(message.id),
+        time: new Date(message.date),
+        title: message.title,
+        body: message.message,
+      }),
+    );
   }
 }

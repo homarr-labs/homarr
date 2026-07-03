@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg."
+      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Bytt til mørk modus",
         "switchToLightMode": "Bytt til lys modus",
         "management": "Administrasjon",
+        "docker": "",
         "preferences": "Dine innstillinger",
         "logout": "Logg ut",
         "login": "Logg Inn",
@@ -2352,6 +2357,9 @@
       "name": "Docker status",
       "description": "Statistikk over containerne dine (denne widgeten kan bare legges til med administratorrettigheter)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Aktiver sortering av elementer"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "Instanser"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Ikke funnet",
       "text": "Fant ikke den forespurte ressursen"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4579,6 +4604,9 @@
             },
             "umamiActiveVisitors": {
               "label": "Umami Aktive Besøkende"
+            },
+            "vpn": {
+              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Klarte ikke hente Docker-containere"
+      "internalServerError": "Klarte ikke hente Docker-containere",
+      "noColumns": ""
     }
   },
   "kubernetes": {

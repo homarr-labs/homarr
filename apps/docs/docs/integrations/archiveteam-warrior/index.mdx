@@ -1,0 +1,35 @@
+---
+title: "ArchiveTeam Warrior"
+description: "ArchiveTeam Warrior is an easy-to-run virtual machine that helps preserve websites by using some of your bandwidth and disk space to download and upload content to ArchiveTeam’s archive."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { archiveTeamWarriorIntegration } from ".";
+
+<IntegrationHeader integration={archiveTeamWarriorIntegration} categories={["archiving"]} />
+
+The ArchiveTeam Warrior integration lets Homarr connect to your ArchiveTeam Warrior instance so you can manage and monitor your archiving tasks directly from your dashboard.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+ArchiveTeam Warrior does not require authentication by default. If your instance is protected with basic authentication, you can provide a username and password.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [],
+    },
+    {
+      credentials: ["username", "password"],
+      steps: [],
+    },
+  ]}
+/>

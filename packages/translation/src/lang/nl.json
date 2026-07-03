@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je."
+      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Schakel naar donkere modus",
         "switchToLightMode": "Schakel naar lichte modus",
         "management": "Beheer",
+        "docker": "",
         "preferences": "Jouw voorkeuren",
         "logout": "Uitloggen",
         "login": "Inloggen",
@@ -2352,6 +2357,9 @@
       "name": "Docker statistieken",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "Niet gevonden",
       "text": "Kon de aangevraagde bron niet vinden"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker-containers zijn niet opgehaald"
+      "internalServerError": "Docker-containers zijn niet opgehaald",
+      "noColumns": ""
     }
   },
   "kubernetes": {

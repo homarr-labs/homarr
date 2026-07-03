@@ -35,7 +35,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
 
     if (session == null) throw new Error("Session was unexpectitly null");
 
-    const stats = await this.getAllStatsAsync();
+    const [stats, cpuTemp] = await Promise.all([this.getAllStatsAsync(), this.getCpuTempAsync()]);
 
     return {
       cpuUtilization: stats.cpu.total,
@@ -58,7 +58,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       cpuModelName: stats.quicklook?.cpu_name ?? "Unknown",
       loadAverage: null,
       smart: [],
-      cpuTemp: undefined,
+      cpuTemp,
       gpu: stats.gpu.map((gpu) => ({
         gpuId: gpu.gpu_id,
         name: gpu.name,
@@ -78,6 +78,23 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
     }
 
     return await response.text();
+  }
+
+  private async getCpuTempAsync(): Promise<number | undefined> {
+    // CPU temperature is optional data, so a transport error or payload drift on
+    // /api/4/sensors must not fail the whole getSystemInfoAsync() call.
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/sensors"));
+
+      if (!response.ok) {
+        return undefined;
+      }
+
+      const sensors = await sensorsSchema.parseAsync(await response.json());
+      return parseGlancesCpuTempFromSensors(sensors);
+    } catch {
+      return undefined;
+    }
   }
 
   private async getAllStatsAsync() {
@@ -173,3 +190,33 @@ const allSchema = z.object({
     )
     .default([]),
 });
+
+const sensorsSchema = z.array(
+  z.object({
+    label: z.string(),
+    value: z.number(),
+    type: z.string().optional(),
+  }),
+);
+
+const cpuTempLabelPriority = ["CPU", "Package id 0"] as const;
+
+export const parseGlancesCpuTempFromSensors = (sensors: z.infer<typeof sensorsSchema>): number | undefined => {
+  const temperatureSensors = sensors.filter(
+    (sensor) => sensor.type === "temperature_core" || sensor.type === "temperature",
+  );
+
+  for (const label of cpuTempLabelPriority) {
+    const match = temperatureSensors.find((sensor) => sensor.label === label);
+    if (match) {
+      return match.value;
+    }
+  }
+
+  const firstCore = temperatureSensors[0];
+  if (firstCore) {
+    return firstCore.value;
+  }
+
+  return undefined;
+};

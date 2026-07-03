@@ -1,43 +1,36 @@
 import z from "zod";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { timetableOptionsSchema } from "@homarr/integrations/types";
 import {
   timetableGetTimetableRequestHandler,
   timetableSearchStationsRequestHandler,
 } from "@homarr/request-handler/timetable";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const baseUrlSchema = z.string().url();
 
 export const timetableRouter = createTRPCRouter({
   getTimetable: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("timetable")))
-    .input(timetableOptionsSchema)
-    .query(async ({ input, ctx }) => {
-      const innerHandler = timetableGetTimetableRequestHandler.handler(ctx.integration, {
-        stationId: input.stationId,
-        limit: input.limit,
-      });
-
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-
+    .input(
+      z.object({
+        baseUrl: baseUrlSchema,
+        stationId: z.string(),
+        limit: z.number().int().min(1).max(100),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { data } = await timetableGetTimetableRequestHandler.handler(input).getDataAsync();
       return data;
     }),
   searchStations: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("timetable")))
     .input(
       z.object({
+        baseUrl: baseUrlSchema,
         query: z.string(),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      const innerHandler = timetableSearchStationsRequestHandler.handler(ctx.integration, {
-        query: input.query,
-      });
-
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-
+    .query(async ({ input }) => {
+      const { data } = await timetableSearchStationsRequestHandler.handler(input).getDataAsync();
       return data;
     }),
 });

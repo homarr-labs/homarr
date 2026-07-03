@@ -2,9 +2,9 @@
 
 <img src="https://raw.githubusercontent.com/homarr-labs/charts/refs/heads/main/charts/homarr/icon.svg" align="right" width="92" alt="homarr logo">
 
-![Version: 8.19.0](https://img.shields.io/badge/Version-8.19.0-informational?style=flat)
+![Version: 8.20.0](https://img.shields.io/badge/Version-8.20.0-informational?style=flat)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat)
-![AppVersion: v1.60.0](https://img.shields.io/badge/AppVersion-v1.60.0-informational?style=flat)
+![AppVersion: v1.68.0](https://img.shields.io/badge/AppVersion-v1.68.0-informational?style=flat)
 
 A Helm chart to deploy homarr for Kubernetes
 
@@ -383,6 +383,7 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | containerPorts | object | `{"http":{"port":7575,"protocol":"TCP"}}` | containerPorts defines the ports to open on the container. It is a map where each entry specifies:    - `port`     (int)    (required): The port number to expose inside the container.    - `protocol` (string) (required): The network protocol (TCP or UDP) used for the port.    - `disabled` (bool)              : Optional flag to disable this port (defaults to false). Can be overridden via Helm values.  By default, this configuration exposes TCP port 7575 with the name `http`. |
 | database.migrationEnabled | bool | `true` | Database migration configuration. DB_MIGRATIONS_DISABLED Set to `true` to disable database migrations. Migrations are enabled by default (`false`). |
 | database.type | string | `"sqlite"` | Database type: sqlite, mysql or postgresql |
+| env.AUTH_COOKIE_PREFIX | string | `"homarr"` | Prefix used for all authentication cookies. Change if you run another Auth.js/NextAuth app on the same hostname to avoid cookie name collisions. Only letters, numbers, hyphens and underscores. |
 | env.AUTH_LDAP_BASE | string | `nil` | Base dn of your LDAP server |
 | env.AUTH_LDAP_BIND_DN | string | `nil` | User used for finding users and groups |
 | env.AUTH_LDAP_GROUP_CLASS | string | `"groupOfUniqueNames"` | Class used for querying groups |
@@ -395,7 +396,6 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG | string | `nil` | Extra arguments for user search filter (& based) |
 | env.AUTH_LDAP_USER_MAIL_ATTRIBUTE | string | `"mail"` | Attribute used for mail field |
 | env.AUTH_LOGOUT_REDIRECT_URL | string | `nil` | URL to redirect to after clicking logging out. |
-| env.AUTH_COOKIE_PREFIX | string | `"homarr"` | Prefix used for all authentication cookies. Change if you run another Auth.js/NextAuth app on the same hostname to avoid cookie name collisions. Only letters, numbers, hyphens and underscores. |
 | env.AUTH_OIDC_AUTO_LOGIN | string | `"false"` | Automatically redirect to OIDC login |
 | env.AUTH_OIDC_CLIENT_NAME | string | `"OIDC"` | Display name of provider (in login screen) |
 | env.AUTH_OIDC_GROUPS_ATTRIBUTE | string | `"groups"` | Attribute used for groups (roles) claim |

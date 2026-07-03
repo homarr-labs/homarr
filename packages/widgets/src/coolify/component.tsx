@@ -31,27 +31,7 @@ interface CoolifyContentProps {
 }
 
 function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
-  const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery(
-    { integrationIds },
-    { staleTime: 30 * 1000 },
-  );
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.coolify.subscribeInstancesInfo.useSubscription(
-    { integrationIds },
-    {
-      onData(newData) {
-        utils.widget.coolify.getInstancesInfo.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) =>
-            instance.integrationId === newData.integrationId
-              ? { ...instance, instanceInfo: newData.instanceInfo, updatedAt: newData.timestamp }
-              : instance,
-          );
-        });
-      },
-    },
-  );
+  const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
 
   const isTiny = width < 256;
   const [firstInstance] = instancesData;

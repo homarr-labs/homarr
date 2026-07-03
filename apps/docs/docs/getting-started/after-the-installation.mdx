@@ -28,6 +28,7 @@ Read our [glossary](/docs/getting-started/glossary) if you are new to Homarr.
 Congratulations on installing Homarr. Now it's time to get yourself familiar with the concepts of Homarr and how to use it.
 
 ## Onboarding
+
 The onboard will show the first time you start Homarr.
 This process will help you with your first steps and adding some initial data, such as the administrator account.
 
@@ -45,50 +46,68 @@ You can either import a previous dashboard using the ZIP archive or start from s
 You may refresh anytime and continue from a different device - the onboarding is saved immediately on the server for your convenience.
 
 ### Starting from scratch
-Depending on your auth provider configuration you will either first see the admin user creation form or the external group creation form.
-If credentials provider was selected, you'll be prompted to create an admin user for Homarr.
-This user cannot be deleted and has full control over Homarr and all of it's boards.
-You must choose an username and password (both can later be changed).
-We enforce strict password requirements, when you enter your password, to protect your instance if you accidentially
-expose it to the Internet.
 
-<img src={imageStartFromScratchStepAdminUser} alt={"Screenshot form to create admin user"} width={300} />
+Depending on your auth provider configuration you will either first see the admin user creation form or the external group creation form.
+If the credentials provider was selected, you'll be prompted to create an admin user for Homarr.
+This user cannot be deleted and has full control over Homarr and all of its boards.
+You must choose a username and password (both can later be changed).
+We enforce strict password requirements when you enter your password to protect your instance if you accidentally
+expose it to the internet.
+
+<img
+  src={imageStartFromScratchStepAdminUser}
+  alt={"Screenshot form to create admin user"}
+  width={300}
+/>
 
 If you selected external providers (such as LDAP or OIDC), you'll be prompted to create an admin group.
-This group will be used to synchronize users from your provider to Homarr. 
-When a user is logged in through the provider the groups of him that match groups with any in Homarr will be added to the user.
-The name of the group has to match exactly the name of the group in the provider.
+This group will be used to synchronize users from your provider to Homarr.
+When a user logs in through the provider, any of their groups that match groups in Homarr will be assigned to the user.
+The name of the group must match exactly the name of the group in the provider.
 
-<img src={imageStartFromScratchStepExternalAdminGroup} alt={"Screenshot form to create external admin group"} width={300} />
+<img
+  src={imageStartFromScratchStepExternalAdminGroup}
+  alt={"Screenshot form to create external admin group"}
+  width={300}
+/>
 
 Next, you can configure some basic settings for Homarr. We recommend to leave all settings at default for most users.
 Here you can also disable analytics. Please note that our analytics are completly anonymous and is fully compliant with GDPR and PECR.
 
-<img src={imageStartFromScratchStepServerSettings} alt={"Screenshot of analytics and indexing settings in the onboarding"} width={300} />
+<img
+  src={imageStartFromScratchStepServerSettings}
+  alt={"Screenshot of analytics and indexing settings in the onboarding"}
+  width={300}
+/>
 
 ### Setting up integrations
 
 After configuring server settings, the onboarding guides you through setting up your integrations.
 
 #### Docker service discovery
+
 If Docker is available (socket mounted), Homarr automatically detects running containers and matches them to known integration types.
 Matching integrations are pre-selected in the integration list, saving you from manually picking each one.
 
 #### URL templating
+
 You can define a base URL template to auto-fill integration URLs in bulk.
 Two modes are supported:
+
 - **Subdomain mode** - e.g. `{app}.example.com` where `{app}` is replaced with the integration name
 - **Port mode** - e.g. `192.168.1.1:{port}` where `{port}` is replaced with the integration's default port
 
 #### API key helper links
+
 For integrations that require API keys (such as Sonarr, Radarr, SABnzbd, or Seerr), a helper link opens the relevant settings page in the target application so you can quickly copy your key.
 
 #### Creating apps from Docker containers
+
 You can optionally auto-create bookmark apps for all discovered Docker containers, making them immediately available on your board.
 
 :::note
 
-Some niche and registry integrations (GitHub, npm, Docker Hub, GitLab, Codeberg, LinuxServer.io, GHCR, Quay, Search.ch) are hidden from the onboarding selection grid but remain available on the manage integrations page.
+Release providers and Search.ch are configured directly in their widgets instead of the integrations page.
 
 :::
 
@@ -97,30 +116,41 @@ The onboarding can no longer be started again.
 From here you can click on one of the provided links to continue your journey.
 We recommend you to continue with the section [creating your first board on this page](#creating-your-first-board).
 
-<img src={imageStartFromScratchStepFinish} alt={"Screenshot of the finish onboarding process with links"} width={300} />
+<img
+  src={imageStartFromScratchStepFinish}
+  alt={"Screenshot of the finish onboarding process with links"}
+  width={300}
+/>
 
 ### Importing a ZIP from version before 1.0.0
+
 This is recommended when you used Homarr before and want to re-import your data.
 It is important that you first migrate correctly using [the list of breaking changes for 1.0](/blog/2024/09/23/version-1.0).
 
-<img src={manageExportOldHomarr} alt="Export from old Homarr" style={{ maxWidth: 500 }} />
+<img
+  src={manageExportOldHomarr}
+  alt="Export from old Homarr"
+  style={{ maxWidth: 500 }}
+/>
 
 **How to export and import data**
-1. Navigate to your old Homarr, open your management pages, open the tools submenu and open ``Migrate to 1.0``.
+
+1. Navigate to your old Homarr, open your management pages, open the tools submenu and open `Migrate to 1.0`.
 2. Check the contents that you want to export. We recommend you to export all data.
 3. Click on the export data button
 4. Save the ZIP file, that is being downloaded, on your device. If you selected "integrations" or "users", you also get an encryption / decryption key.
-Copy it and do not loose it!
-5. Go to your new >1.0.0 Homarr instance and start the onboarding. Choose ``Import from Homarr before 1.0``
+   Copy it and do not loose it!
+5. Go to your new >1.0.0 Homarr instance and start the onboarding. Choose `Import from Homarr before 1.0`
 6. Drag and drop your previously downloaded ZIP archive into the file upload: <br/><img src={manageImportOldHomarrDropzone} style={{ maxWidth: 500 }} />
 7. Next, choose the data that you want to import and how to import it. Since screen sizes were removed in 1.0, we create a new board for every screen size by default. We recommend you to only keep the best layout and adjust it later in 1.0.0 - but you can also import all of them and pick later.<br/><img src={manageImportOldHomarrChooseData} style={{ maxWidth: 500 }} />
 8. If you previously exported integrations or users, you will be asked to decrypt the data safely using your obtained encryption token. Paste into the modal and confirm your action.<br/><img src={manageImportDecryptionToken} style={{ maxWidth: 500 }} />
 9. Next, you can [follow the same setup as when starting from scratch](#starting-from-scratch). After you completed the onboarding, all of your data will be migrated and available.
 
 ## Creating your first board
+
 In Homarr, you organize your apps and widgets on boards.
 Boards can be organized using the interactive drag and drop.
-Let's create your first board by navigating here: ``Manage`` > ``Boards`` > ``New board``:
+Let's create your first board by navigating here: `Manage` > `Boards` > `New board`:
 ![](./img/manage-create-board-button.png)
 
 A board must always have a name and can either be public or private.
@@ -133,12 +163,13 @@ Congratulations - you've just created your first board. You can see boards, that
 ![](./img/manage-view-board.png)
 
 ## Add your first app to Homarr
+
 To add links to your dashboard, you must first add them as an "app".
 Navigate to this page to add an app:
 
 ![](./img/manage-navigate-apps.png)
 
-Next, click on the ``New app`` button. You'll need to provide a name and an icon to create an app.
+Next, click on the `New app` button. You'll need to provide a name and an icon to create an app.
 The name must be at least one character long but you can provide any image URL for the icon.
 Homarr ships with over 11K icons - so you can just search by entering a search text instead.
 
@@ -149,8 +180,9 @@ After you created the app, you'll see in on the apps page:
 ![](./img/manage-created-app.png)
 
 ## Arrange and organize your board
+
 Let's add your freshly created app, from the previous step, to the board.
-To do this, edit your previously created board by clicking on the big ``Open board`` button:
+To do this, edit your previously created board by clicking on the big `Open board` button:
 
 ![](./img/manage-view-board.png)
 
@@ -165,23 +197,38 @@ Here you have the following options in the header:
 
 When entering the edit mode, you'll get some additional buttons to work with:
 
-<img src={manageBoardHeaderEditMode} alt={"Screenshot of buttons in the edit mode"} width={200} />
+<img
+  src={manageBoardHeaderEditMode}
+  alt={"Screenshot of buttons in the edit mode"}
+  width={200}
+/>
 
 - **Add item**: Click this button to add new elements to your page.
 - **Exit edit mode**: Click this btuton to save your changes and exit edit mode.
 
 To continue, click the option "New Item":
 
-<img src={manageBoardHeaderAddItem} alt={"Screenshot of the add item menu"} width={200} />
+<img
+  src={manageBoardHeaderAddItem}
+  alt={"Screenshot of the add item menu"}
+  width={200}
+/>
 
 Next, you can choose what item you'd like to add.
 We will discuss the other options in the following sections - for now choose "App" to continue.
 
-<img src={manageBoardHeaderChooseItem} alt={"Screenshot of choosing the app item in the modal"} width={300} />
+<img
+  src={manageBoardHeaderChooseItem}
+  alt={"Screenshot of choosing the app item in the modal"}
+  width={300}
+/>
 
 As soon as you chose the app, the modal will close and you'll get the following item on your board:
 
-<img src={manageBoardNoApp} alt="Screenshot of the No app element on the board" />
+<img
+  src={manageBoardNoApp}
+  alt="Screenshot of the No app element on the board"
+/>
 
 This is expected, because you haven't told Homarr what app it should show in this item.
 To configure this, click on the small 3 dots at the top of the item in the edit mode and choose "Edit item" in the menu.
@@ -228,17 +275,18 @@ Be sure to save your changes by exiting edit mode!
 ![](./img/exit-edit-mode.png)
 
 ## Adding your first integration
+
 Now it's time to integrate some basic data into your board.
 To do this, we first need to create an integration.
 An integration is a connection between Homarr and a third party application - usually something that you run and deploy yourself.
 
-Navigate to ``Manage`` > ``Integrations`` (for example via your user menu).
+Navigate to `Manage` > `Integrations` (for example via your user menu).
 As an example, we are going to use the public demo instance of **Dash.** - a popular application to monitor CPU / hardware usage.
 Choose the **Dash.** integration from the list of available integrations:
 
 ![](./img/choose-integration.gif)
 
-Next, choose a name (or leave it at default), enter ``https://dash.mauz.dev/`` as the URL in the form and click on ``Test connection and create``.
+Next, choose a name (or leave it at default), enter `https://dash.mauz.dev/` as the URL in the form and click on `Test connection and create`.
 Pressing the save button will perform a test request to the integration, to confirm that the networking setup is working as expected.
 Sometimes invalid configurations, firewalls and other mistakes can lead to connectivity problems - [follow this guide here](/docs/management/integrations/#troubleshooting-connection) if you experience issues.
 
@@ -254,13 +302,14 @@ the target application or your router.
 :::
 
 ## Embed integration data using widgets
+
 Let's add your integration, that you have configured in the section above, as a widget to your board.
 First, navigate back to your board that you want to add it to.
 Next, enter edit mode again and add another item to your board:
 
 ![](./img/manage-board-header-add-item-menu.png)
 
-Instead of choosing an app, let's choose ``System Health Monitoring`` this time.
+Instead of choosing an app, let's choose `System Health Monitoring` this time.
 Click on "Add to board":
 
 ![](./img/manage-board-header-choose-system-health.png)
@@ -290,10 +339,12 @@ As with every change, don't forget to save your changes using the exit edit mode
 ![](./img/exit-edit-mode.png)
 
 ## Grouping your items
+
 As the last step, let's organize your freshly created items using two different options.
 You can choose either or both of them on your boards.
 
 ### Using dynamic sections
+
 Dynamic sections are a simple, resizable visual group to group items.
 
 ![](./img/create-dynamic-section.png)
@@ -303,6 +354,7 @@ After adding a dynamic section, you can simply drag and drop items into the sect
 ![](./img/dynamic-section.gif)
 
 ### Using categories
+
 Categories are more advanced and complicated than dynamic sections.
 To create a category, open the add item modal and choose "new category":
 
@@ -329,22 +381,27 @@ You cannot reduce their horizontal width.
 After completing the onboarding, Homarr provides interactive guided tours to help you discover key features.
 
 ### Management tour
+
 When you first visit the management area (`/manage`), Homarr walks you through the main pages: boards, apps, integrations, and users (admin only).
 Each page highlights the list view and the create action so you know where to find and add things.
 
 ### Board tour
+
 When you first open a board, a tour highlights the board header elements: search, edit mode, settings, board switcher, and user menu.
 
 ### Tour controls
+
 - Press **Enter** (or click **Next**) to advance through tour steps
 - Tours auto-start on first visit and do not repeat once completed
 - Tours are skipped on mobile screens (below `sm` breakpoint)
 - You can **reset tours** from the user settings page under **Manage > Users > [Your user] > General**
 
 ## Next steps
+
 You're done with the basic setup 🔥. Now it's time to organize and customize even more.
 We highly recommend you to experiment with different options, styles and configurations.
 See these curated pages for your next steps:
+
 - Create new apps using the [apps management](/docs/management/apps/)
 - Customize your board or add more boards using the [boards management](/docs/management/boards/)
 - Integrate software that you use using the [integrations management](/docs/management/integrations/)

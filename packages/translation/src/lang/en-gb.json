@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one."
+      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "",
         "preferences": "Your preferences",
         "logout": "Log-out",
         "login": "Log-in",
@@ -2352,6 +2357,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "",
       "text": ""
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": ""
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

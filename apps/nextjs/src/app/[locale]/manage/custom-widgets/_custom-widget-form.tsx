@@ -786,7 +786,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       form.clearErrors();
       showSuccessNotification({
         title: t("action.paste"),
-        message: t("notification.imported" as never, { name: result.data.name }),
+        message: t("notification.imported", { name: result.data.name }),
       });
     };
     document.addEventListener("paste", onPaste);

@@ -40,7 +40,7 @@
     "docusaurus-plugin-image-zoom": "^3.0.1",
     "leader-line-new": "^1.1.9",
     "pocketbase": "catalog:",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.16",
     "posthog-docusaurus": "^2.0.5",
     "prism-react-renderer": "^2.4.1",
     "random-word-slugs": "^0.1.7",

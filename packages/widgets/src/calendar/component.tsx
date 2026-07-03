@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
@@ -39,27 +39,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input, {
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.calendar.subscribeToEvents.useSubscription(input, {
-    onData(data) {
-      utils.widget.calendar.findAllEvents.setData(input, (old) => {
-        return old?.map((item) => {
-          if (item.integration.id !== data.integration.id) return item;
-          return {
-            ...item,
-            events: data.events,
-          };
-        });
-      });
-    },
-  });
+  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
@@ -85,6 +65,11 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const isSmall = width < 256;
 
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
+  const activeCloseRef = useRef<(() => void) | null>(null);
+  const onDayOpen = useCallback((close: () => void) => {
+    activeCloseRef.current?.();
+    activeCloseRef.current = close;
+  }, []);
 
   return (
     <Calendar
@@ -161,6 +146,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
             disabled={isEditMode || eventsForDate.length === 0}
             rootWidth={width}
             rootHeight={height}
+            onOpen={onDayOpen}
           />
         );
       }}

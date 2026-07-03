@@ -8,6 +8,7 @@ import { IconBuildingStore } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
 import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -28,19 +29,20 @@ function parseWidgetContent(content: string) {
 }
 
 export const InstallWidgetFromStoreButton = () => {
+  const t = useScopedI18n("customWidget.workshop");
   const [opened, { open, close }] = useDisclosure(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const utils = clientApi.useUtils();
   const importMutation = clientApi.customWidget.import.useMutation({
     onSuccess: () => {
-      showSuccessNotification({ title: "Workshop", message: "Custom widget installed" });
+      showSuccessNotification({ title: t("title"), message: t("notification.widgetInstalled") });
       void utils.customWidget.all.invalidate();
       void revalidatePathActionAsync("/manage/custom-widgets");
       setPendingId(null);
       close();
     },
     onError: (err) => {
-      showErrorNotification({ title: "Workshop", message: err.message || "Failed to install the custom widget" });
+      showErrorNotification({ title: t("title"), message: err.message || t("notification.widgetInstallFailed") });
       setPendingId(null);
     },
   });
@@ -48,7 +50,7 @@ export const InstallWidgetFromStoreButton = () => {
   const handleSelect = (submission: { id: string; content: string }) => {
     const parsed = parseWidgetContent(submission.content);
     if (!parsed.ok) {
-      showErrorNotification({ title: "Workshop", message: parsed.message });
+      showErrorNotification({ title: t("title"), message: parsed.message });
       return;
     }
     setPendingId(submission.id);
@@ -58,13 +60,13 @@ export const InstallWidgetFromStoreButton = () => {
   return (
     <>
       <MobileAffixButton variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
-        Install from Workshop
+        {t("action.installFromWorkshop")}
       </MobileAffixButton>
       <StoreBrowserModal
         type="widget"
         opened={opened}
         onClose={close}
-        actionLabel="Install"
+        actionLabel={t("action.install")}
         pendingId={pendingId}
         onSelect={handleSelect}
       />
@@ -73,18 +75,19 @@ export const InstallWidgetFromStoreButton = () => {
 };
 
 export const InstallCssFromStoreButton = ({ onSelect }: { onSelect: (css: string) => void }) => {
+  const t = useScopedI18n("customWidget.workshop");
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <>
       <Button variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
-        Install from Workshop
+        {t("action.installFromWorkshop")}
       </Button>
       <StoreBrowserModal
         type="css"
         opened={opened}
         onClose={close}
-        actionLabel="Use"
+        actionLabel={t("action.use")}
         onSelect={(submission) => {
           onSelect(submission.content);
           close();

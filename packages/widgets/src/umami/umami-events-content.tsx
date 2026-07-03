@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { EVENT_COLORS, formatXLabel } from "./umami-utils";
+import { EVENT_COLORS, formatXLabel, umamiQueryOptions } from "./umami-utils";
 
 interface UmamiEventsContentProps {
   integrationIds: string[];
@@ -29,13 +29,8 @@ export function UmamiEventsContent({
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
   const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-      websiteId,
-      timeFrame,
-      eventNames: [...eventNames].toSorted(),
-    },
-    { staleTime: 5 * 60 * 1000 },
+    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
+    umamiQueryOptions,
   );
 
   if (eventNames.length === 0) {

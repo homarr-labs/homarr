@@ -21,7 +21,7 @@ migrate(
           s.author,
           s.created,
           s.updated,
-          COALESCE(u.name, u.email, 'unknown') as authorName,
+          COALESCE(NULLIF(u.name, ''), 'unknown') as authorName,
           COALESCE(SUM(CASE WHEN v.value = 1 THEN 1 ELSE 0 END), 0) as upvotes,
           COALESCE(SUM(CASE WHEN v.value = -1 THEN 1 ELSE 0 END), 0) as downvotes,
           (SELECT COUNT(*) FROM comments c WHERE c.submission = s.id) as commentCount

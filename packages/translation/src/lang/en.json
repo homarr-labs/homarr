@@ -699,6 +699,18 @@
         "title": "Edit Custom Widget"
       }
     },
+    "workshop": {
+      "title": "Workshop",
+      "action": {
+        "installFromWorkshop": "Install from Workshop",
+        "install": "Install",
+        "use": "Use"
+      },
+      "notification": {
+        "widgetInstalled": "Custom widget installed",
+        "widgetInstallFailed": "Failed to install the custom widget"
+      }
+    },
     "action": {
       "create": "Create",
       "import": "Import",
@@ -1025,6 +1037,7 @@
       "mediaMonitoring": "Monitoring",
       "speedtest": "Speed Test",
       "analytics": "Analytics",
+      "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring"
     },
@@ -1471,6 +1484,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -1600,7 +1614,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Settings"
+        "settings": "Settings",
+        "refresh": "Refresh",
+        "options": "Options",
+        "actions": "Actions"
       }
     },
     "create": {
@@ -1902,6 +1919,9 @@
       "title": "Departures {station}",
       "noStation": "No station selected",
       "option": {
+        "baseUrl": {
+          "label": "Search.ch URL"
+        },
         "station": {
           "label": "Station"
         }
@@ -2359,6 +2379,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": "Columns to show"
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2411,6 +2434,12 @@
       "instances": {
         "title": "Instances"
       }
+    },
+    "vpn": {
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -2766,8 +2795,8 @@
       "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "Album ID",
-          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "label": "Album",
+          "description": "Select the Immich album to show in the slideshow."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -2776,6 +2805,10 @@
         "showPhotoInfo": {
           "label": "Show photo info",
           "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        },
+        "randomizePhotos": {
+          "label": "Randomize photos",
+          "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
       "description": "Slideshow of pictures in your Immich album",
@@ -3140,6 +3173,9 @@
           "provider": {
             "label": "Provider"
           },
+          "providerUrl": {
+            "label": "Provider URL"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -3187,6 +3223,13 @@
           "noProvider": {
             "label": "No Provider",
             "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          },
+          "tokens": {
+            "label": "Provider Tokens",
+            "token": "Token",
+            "configured": "Token configured",
+            "notConfigured": "No token set",
+            "save": "Save"
           }
         }
       },
@@ -3209,8 +3252,9 @@
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found",
-          "noProviderSeleceted": "No provider selected",
-          "noProviderResponse": "No response from provider"
+          "noProviderSelected": "No provider selected",
+          "noProviderResponse": "No response from provider",
+          "unexpected": "Unexpected provider error"
         }
       }
     },
@@ -4146,6 +4190,11 @@
       "title": "Not Found",
       "text": "Could not find requested resource"
     },
+    "error": {
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4512,86 +4561,14 @@
             "disabled": "Disabled"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft server status"
-            },
-            "timetable": {
-              "label": "Timetable"
-            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Smart Home Entity State"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Media Server"
-            },
-            "mediaOrganizer": {
-              "label": "Media Organizers"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Media Request Stats"
-            },
-            "mediaRequestList": {
-              "label": "Media Request List"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indexer Manager"
-            },
-            "healthMonitoring": {
-              "label": "Health Monitoring"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Update checker"
-            },
-            "mediaTranscoding": {
-              "label": "Media transcoding"
-            },
-            "networkController": {
-              "label": "Network Controller"
-            },
-            "refreshNotifications": {
-              "label": "Notification Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Memory"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Interfaces"
-            },
-            "weather": {
-              "label": "Weather"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Active Visitors"
             }
           },
           "interval": {
@@ -5084,7 +5061,8 @@
       }
     },
     "error": {
-      "internalServerError": "Failed to fetch Docker containers"
+      "internalServerError": "Failed to fetch Docker containers",
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {

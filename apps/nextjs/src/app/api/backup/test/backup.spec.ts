@@ -211,7 +211,17 @@ describe("SQLite backup", () => {
       const decryptedAfter = decryptWithKey(updatedRow.value as `${string}.${string}`, newKey);
       expect(decryptedAfter).toBe(plaintext);
 
-      expect(() => decryptWithKey(updatedRow.value as `${string}.${string}`, oldKey)).toThrow();
+      // The old key must no longer recover the plaintext. With AES-256-CBC this
+      // usually fails PKCS7 padding validation (throws), but ~1/256 of the time the
+      // wrong key yields valid padding and returns garbage instead of throwing, so
+      // assert on the actual property (plaintext is unrecoverable) rather than throwing.
+      let decryptedWithOldKey: string | null = null;
+      try {
+        decryptedWithOldKey = decryptWithKey(updatedRow.value as `${string}.${string}`, oldKey);
+      } catch {
+        // Expected for most wrong keys: padding validation fails.
+      }
+      expect(decryptedWithOldKey).not.toBe(plaintext);
 
       sqlite.close();
     });

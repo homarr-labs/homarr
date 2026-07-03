@@ -24,7 +24,11 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
   const inputProps = form.getInputProps(`options.${property}`);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 300);
-  const { isPending, options: selectOptions } = options.useOptions(debouncedSearch, form.values.integrationIds);
+  const { isPending, options: selectOptions } = options.useOptions(
+    debouncedSearch,
+    form.values.integrationIds,
+    form.values.options,
+  );
   const currentOption = inputProps.value as DynamicSelectOption | null;
   const onChange = inputProps.onChange as (value: DynamicSelectOption | null) => void;
 

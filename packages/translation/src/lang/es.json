@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
-      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti."
+      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Cambiar a modo oscuro",
         "switchToLightMode": "Cambiar a modo claro",
         "management": "Administración",
+        "docker": "",
         "preferences": "Tus preferencias",
         "logout": "Cerrar sesión",
         "login": "Iniciar sesión",
@@ -2352,6 +2357,9 @@
       "name": "Estadísticas de Docker",
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Habilitar ordenar elementos"
         },
@@ -2404,6 +2412,12 @@
       "instances": {
         "title": "Instancias"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -3639,6 +3653,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3729,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4132,6 +4152,11 @@
     "notFound": {
       "title": "No Encontrado",
       "text": "No se pudo encontrar el recurso solicitado"
+    },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -4578,6 +4603,9 @@
               "label": "Tracearr"
             },
             "umamiActiveVisitors": {
+              "label": ""
+            },
+            "vpn": {
               "label": ""
             }
           },
@@ -5071,7 +5099,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fallo al obtener los contenedores de Docker"
+      "internalServerError": "Fallo al obtener los contenedores de Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

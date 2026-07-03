@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
@@ -149,35 +150,39 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
 ];
 
-export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
+interface DockerTableProps {
+  initialData?: RouterOutputs["docker"]["getContainers"];
+}
+
+export function DockerTable({ initialData }: DockerTableProps) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
-    initialData: { containers, timestamp },
+  const { data, isFetching, refetch } = clientApi.docker.getContainers.useQuery(undefined, {
+    initialData,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
-  const relativeTime = useTimeAgo(data.timestamp);
-  const utils = clientApi.useUtils();
-  const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
-    async onSuccess() {
-      await utils.docker.getContainers.invalidate();
-      showSuccessNotification({
-        title: tDocker("action.refresh.notification.success.title"),
-        message: tDocker("action.refresh.notification.success.message"),
-      });
-    },
-    onError() {
-      showErrorNotification({
-        title: tDocker("action.refresh.notification.error.title"),
-        message: tDocker("action.refresh.notification.error.message"),
-      });
-    },
-  });
+  const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
+  const mutate = useCallback(() => {
+    void refetch().then((result) => {
+      if (result.isError) {
+        showErrorNotification({
+          title: tDocker("action.refresh.notification.error.title"),
+          message: tDocker("action.refresh.notification.error.message"),
+        });
+      } else {
+        showSuccessNotification({
+          title: tDocker("action.refresh.notification.success.title"),
+          message: tDocker("action.refresh.notification.success.message"),
+        });
+      }
+    });
+  }, [refetch, tDocker]);
+
+  const containers = data?.containers ?? [];
 
   const table = useTranslatedMantineReactTable({
-    data: data.containers,
+    data: containers,
+    state: { isLoading: isFetching },
     enableDensityToggle: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -190,7 +195,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     enableBottomToolbar: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: tDocker("table.search", { count: String(data.containers.length) }),
+      placeholder: tDocker("table.search", { count: String(containers.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
@@ -200,7 +205,12 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
     renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
     renderTopToolbarCustomActions: () => (
-      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+      <Button
+        variant="default"
+        rightSection={<IconRefresh size="1rem" />}
+        onClick={() => mutate()}
+        loading={isFetching}
+      >
         {tDocker("action.refresh.label")}
       </Button>
     ),

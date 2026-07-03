@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -13,10 +13,12 @@ interface CalendarDayProps {
   disabled: boolean;
   rootWidth: number;
   rootHeight: number;
+  onOpen: (close: () => void) => void;
 }
 
-export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
+export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onOpen }: CalendarDayProps) => {
   const [opened, setOpened] = useState(false);
+  const [pinned, setPinned] = useState(false);
   const { primaryColor } = useMantineTheme();
   const { ref, height } = useElementSize();
   const board = useRequiredBoard();
@@ -29,6 +31,19 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
   const isTooSmallForIndicators = height < 30;
 
+  const handleMouseEnter = useCallback(() => {
+    if (disabled) return;
+    onOpen(() => {
+      setOpened(false);
+      setPinned(false);
+    });
+    setOpened(true);
+  }, [disabled, onOpen]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!pinned) setOpened(false);
+  }, [pinned]);
+
   return (
     <Popover
       position="bottom"
@@ -39,7 +54,10 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       transitionProps={{
         transition: "pop",
       }}
-      onChange={setOpened}
+      onChange={(value) => {
+        setOpened(value);
+        if (!value) setPinned(false);
+      }}
       opened={opened}
       disabled={disabled}
     >
@@ -59,10 +77,10 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
             cursor: disabled ? "default" : "pointer",
           }}
           onClick={() => {
-            if (disabled) return;
-
-            setOpened((prev) => !prev);
+            if (!disabled) setPinned((prev) => !prev);
           }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
@@ -71,7 +89,15 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
         </Container>
       </Popover.Target>
       {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
-      <Popover.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+      <Popover.Dropdown
+        maw="calc(100vw - 24px)"
+        w={512}
+        pe={4}
+        pb={0}
+        style={{ overflow: "hidden" }}
+        onMouseEnter={() => setOpened(true)}
+        onMouseLeave={handleMouseLeave}
+      >
         <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>

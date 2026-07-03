@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -15,56 +15,49 @@ import { NetworkTrafficChart } from "./chart/network-traffic";
 
 const MAX_QUEUE_SIZE = 15;
 
+const toChartItem = (healthInfo: {
+  cpuUtilization: number;
+  memUsedInBytes: number;
+  gpu: { processorUtilization: number }[];
+  network: { up: number; down: number } | null;
+}) => ({
+  cpu: healthInfo.cpuUtilization,
+  memory: healthInfo.memUsedInBytes,
+  gpu:
+    healthInfo.gpu.length > 0
+      ? healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / healthInfo.gpu.length
+      : 0,
+  network: healthInfo.network,
+});
+
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemResources">) {
   const { ref, width } = useElementSize();
 
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-    },
-  );
+  const { data = [], dataUpdatedAt } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+    integrationIds,
+  });
   const memoryCapacityInBytes =
     (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
 
   const [items, setItems] = useState<
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
-  >(
-    data.map((item) => ({
-      cpu: item.healthInfo.cpuUtilization,
-      memory: item.healthInfo.memUsedInBytes,
-      gpu:
-        item.healthInfo.gpu.length > 0
-          ? item.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / item.healthInfo.gpu.length
-          : 0,
-      network: item.healthInfo.network,
-    })),
-  );
+  >(() => (data[0] ? [toChartItem(data[0].healthInfo)] : []));
 
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData(data) {
-        setItems((previousItems) => {
-          const next = {
-            cpu: data.healthInfo.cpuUtilization,
-            memory: data.healthInfo.memUsedInBytes,
-            gpu:
-              data.healthInfo.gpu.length > 0
-                ? data.healthInfo.gpu.reduce((acc, g) => acc + g.processorUtilization, 0) / data.healthInfo.gpu.length
-                : 0,
-            network: data.healthInfo.network,
-          };
+  const prevIntegrationIds = useRef(integrationIds);
+  useEffect(() => {
+    if (prevIntegrationIds.current === integrationIds) return;
+    prevIntegrationIds.current = integrationIds;
+    setItems([]);
+  }, [integrationIds]);
 
-          return [...previousItems, next].slice(-MAX_QUEUE_SIZE);
-        });
-      },
-    },
-  );
+  const lastUpdatedAt = useRef(dataUpdatedAt);
+  useEffect(() => {
+    if (dataUpdatedAt === lastUpdatedAt.current) return;
+    lastUpdatedAt.current = dataUpdatedAt;
+    const firstItem = data[0];
+    if (!firstItem) return;
+    setItems((prev) => [...prev, toChartItem(firstItem.healthInfo)].slice(-MAX_QUEUE_SIZE));
+  }, [dataUpdatedAt, data]);
 
   const showNetwork =
     items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));

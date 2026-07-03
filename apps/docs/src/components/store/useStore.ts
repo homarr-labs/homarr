@@ -29,6 +29,9 @@ const sorters: Record<SortKey, (a: StoreSubmission, b: StoreSubmission) => numbe
   new: (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
 };
 
+const isNotFoundError = (error: unknown) =>
+  typeof error === "object" && error !== null && "status" in error && error.status === 404;
+
 export const useStore = (storeUrl: string) => {
   const pb = useMemo(() => getPocketBase(storeUrl), [storeUrl]);
   const [submissions, setSubmissions] = useState<StoreSubmission[]>([]);
@@ -134,7 +137,6 @@ export const useStore = (storeUrl: string) => {
       const isToggleOff = prev?.value === value;
       const [upD, downD] = voteDelta(prev?.value, value);
 
-      // Optimistic update — instant UI feedback
       setVotes((v) => {
         const next = { ...v };
         if (isToggleOff) delete next[submissionId];
@@ -151,27 +153,32 @@ export const useStore = (storeUrl: string) => {
         ),
       );
 
-      // Server validates in background
       try {
         const existing = prev?.id ? prev : undefined;
         if (!existing) {
-          await pb.collection("votes").create({ submission: submissionId, value, user: userId });
+          const created = await pb
+            .collection("votes")
+            .create<StoreVote>({ submission: submissionId, value, user: userId });
+          setVotes((current) => ({ ...current, [submissionId]: created }));
         } else if (isToggleOff) {
           try {
             await pb.collection("votes").delete(existing.id);
-          } catch {
-            // Already deleted server-side — fine
+          } catch (caught) {
+            if (!isNotFoundError(caught)) throw caught;
           }
         } else {
           try {
-            await pb.collection("votes").update(existing.id, { value });
-          } catch {
-            // Record gone server-side — recreate
-            await pb.collection("votes").create({ submission: submissionId, value, user: userId });
+            const updated = await pb.collection("votes").update<StoreVote>(existing.id, { value });
+            setVotes((current) => ({ ...current, [submissionId]: updated }));
+          } catch (caught) {
+            if (!isNotFoundError(caught)) throw caught;
+            const created = await pb
+              .collection("votes")
+              .create<StoreVote>({ submission: submissionId, value, user: userId });
+            setVotes((current) => ({ ...current, [submissionId]: created }));
           }
         }
       } catch (caught) {
-        // Revert optimistic state
         setVotes((v) => {
           const next = { ...v };
           if (prev) next[submissionId] = prev;
