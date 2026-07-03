@@ -49,9 +49,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
+  const widgetQueryKey = useMemo(() => [["widget", item.kind]], [item.kind]);
   const handleRefetch = useCallback(() => {
-    void queryClient.invalidateQueries({ queryKey: [["widget"]] });
-  }, [queryClient]);
+    void queryClient.invalidateQueries({ queryKey: widgetQueryKey });
+  }, [queryClient, widgetQueryKey]);
 
   const options = useMemo(
     () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
@@ -226,7 +227,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
             <Group justify="space-between" wrap="nowrap">
               {tMenu("refresh")}
               <Text size="xs" c="dimmed">
-                <WidgetCacheAge queryClient={queryClient} />
+                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} />
               </Text>
             </Group>
           </Menu.Item>
@@ -264,7 +265,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const WidgetCacheAge = ({ queryClient }: { queryClient: QueryClient }) => {
+const WidgetCacheAge = ({ queryClient, queryKey }: { queryClient: QueryClient; queryKey: unknown[] }) => {
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 1000);
@@ -273,12 +274,13 @@ const WidgetCacheAge = ({ queryClient }: { queryClient: QueryClient }) => {
 
   const timestamps = queryClient
     .getQueryCache()
-    .findAll({ queryKey: [["widget"]] })
+    .findAll({ queryKey })
     .map((q) => q.state.dataUpdatedAt)
     .filter(Boolean);
   if (timestamps.length === 0) return null;
 
-  const seconds = Math.floor((Date.now() - Math.max(...timestamps)) / 1000);
+  const oldest = Math.min(...timestamps);
+  const seconds = Math.floor((Date.now() - oldest) / 1000);
   if (seconds < 5) return "just now";
   if (seconds < 60) return `${seconds}s ago`;
   return `${Math.floor(seconds / 60)}m ago`;

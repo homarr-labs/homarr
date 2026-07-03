@@ -21,8 +21,10 @@ export const createIntegrationRequestHandler = <
 >(
   options: Options<TData, TKind, TInput>,
 ) => ({
-  handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
-    createRequestHandler<TData, { options: TInput; integration: IntegrationOfKind<TKind> }>({
-      requestAsync: async (input) => options.requestAsync(input.integration, input.options),
-    }).handler({ options: itemOptions, integration }),
+  handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) => {
+    const inner = createRequestHandler<TData, { integrationId: string; options: TInput }>({
+      requestAsync: async (input) => options.requestAsync(integration, input.options),
+    });
+    return inner.handler({ integrationId: integration.id, options: itemOptions });
+  },
 });

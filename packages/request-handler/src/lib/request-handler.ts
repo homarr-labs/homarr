@@ -5,10 +5,18 @@ interface Options<TData, TInput extends Record<string, unknown>> {
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
 
+const MAX_CACHE_SIZE = 1000;
 const cache = new Map<string, CacheEntry<unknown>>();
 const inflight = new Map<string, Promise<CacheEntry<unknown>>>();
 
 const DEFAULT_TTL_MS = 10_000;
+
+const evictExpired = () => {
+  const now = Date.now();
+  for (const [key, entry] of cache) {
+    if (now >= entry.expiresAt) cache.delete(key);
+  }
+};
 
 export const createRequestHandler = <TData, TInput extends Record<string, unknown>>(
   options: Options<TData, TInput>,
@@ -22,6 +30,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       if (cached && Date.now() < cached.expiresAt) {
         return { data: cached.data, timestamp: cached.timestamp };
       }
+      if (cached) cache.delete(key);
 
       const existing = inflight.get(key);
       if (existing) return existing as Promise<CacheEntry<TData>>;
@@ -29,6 +38,11 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       const promise = options
         .requestAsync(input)
         .then((data) => {
+          if (cache.size >= MAX_CACHE_SIZE) evictExpired();
+          if (cache.size >= MAX_CACHE_SIZE) {
+            const oldest = cache.keys().next().value;
+            if (oldest) cache.delete(oldest);
+          }
           const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
           cache.set(key, entry as CacheEntry<unknown>);
           inflight.delete(key);
