@@ -66,15 +66,28 @@ export const useStore = (storeUrl: string) => {
   }, [pb, refreshVotes]);
 
   useEffect(() => {
-    if (pb.authStore.isValid)
-      pb.collection("users")
-        .authRefresh()
-        .catch(() => pb.authStore.clear());
-    void refresh();
-    return pb.authStore.onChange(() => {
+    let cancelled = false;
+    const unsubscribe = pb.authStore.onChange(() => {
       setUser(pb.authStore.record);
       if (!pb.authStore.isValid) setVotes({});
     });
+
+    const load = async () => {
+      if (pb.authStore.isValid) {
+        try {
+          await pb.collection("users").authRefresh();
+        } catch {
+          pb.authStore.clear();
+        }
+      }
+      if (!cancelled) await refresh();
+    };
+
+    void load();
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, [pb, refresh]);
 
   const ensureAuth = useCallback(async () => {
@@ -93,7 +106,15 @@ export const useStore = (storeUrl: string) => {
 
   const requireUserId = useCallback(
     async (action: string) => {
-      if (!(await ensureAuth())) {
+      let authenticated = false;
+      try {
+        authenticated = await ensureAuth();
+      } catch (caught) {
+        setError(errorMessage(caught, `Sign in to ${action}`));
+        return null;
+      }
+
+      if (!authenticated) {
         setError(`Sign in to ${action}`);
         return null;
       }
