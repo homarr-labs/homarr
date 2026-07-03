@@ -76,7 +76,6 @@ function shuffle<T>(items: T[]) {
 interface CarouselProps {
   assets: {
     id: string;
-    deviceAssetId: string;
     originalPath: string;
     fileModifiedAt: string;
     publicLink: string;

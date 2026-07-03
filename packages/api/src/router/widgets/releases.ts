@@ -77,12 +77,12 @@ export const releasesRouter = createTRPCRouter({
 
       return await Promise.all(
         input.repositories.map(async (repository) => {
+          const repositoryId = repository.id ?? repository.identifier;
           try {
-            const repoId = repository.id ?? repository.identifier;
-            const useToken = allowedRepoIds === null || allowedRepoIds.has(repoId);
+            const useToken = allowedRepoIds === null || allowedRepoIds.has(repositoryId);
             const response = await releasesRequestHandler
               .handler({
-                id: repoId,
+                id: repositoryId,
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
@@ -92,14 +92,14 @@ export const releasesRouter = createTRPCRouter({
               .getDataAsync();
 
             return {
-              id: repository.id,
+              id: repositoryId,
               provider: repository.provider,
               timestamp: response.timestamp,
               ...response.data,
             };
           } catch (error) {
             return {
-              id: repository.id,
+              id: repositoryId,
               provider: repository.provider,
               timestamp: new Date(),
               success: false as const,
