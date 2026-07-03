@@ -9,7 +9,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 const logger = createLogger({ module: "releaseProviders" });
 
 const PROVIDER_TIMEOUT_MS = 10_000;
-const fetchProvider = (url: URL | RequestInfo, options?: RequestInit & { timeout?: number }) =>
+const fetchProvider: typeof fetchWithTrustedCertificatesAsync = (url, options) =>
   fetchWithTrustedCertificatesAsync(url, { timeout: PROVIDER_TIMEOUT_MS, ...options });
 
 export interface ReleasesRepositoryRequest extends Record<string, unknown> {
