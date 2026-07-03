@@ -1,6 +1,6 @@
 services:
   pocketbase:
-    image: ghcr.io/muchobien/pocketbase:latest
+    image: ghcr.io/muchobien/pocketbase:0.26.2
     container_name: homarr-store
     restart: unless-stopped
     environment:

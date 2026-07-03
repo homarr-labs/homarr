@@ -6,8 +6,8 @@ migrate(
 
     const githubClientId = $os.getenv("GITHUB_CLIENT_ID");
     const githubClientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
-    users.oauth2.enabled = true;
     if (githubClientId && githubClientSecret) {
+      users.oauth2.enabled = true;
       users.oauth2.providers = [
         {
           name: "github",
@@ -123,6 +123,7 @@ migrate(
         { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
       ],
     });
+    comments.addIndex("idx_comments_submission", false, "submission", "");
     app.save(comments);
   },
   (app) => {

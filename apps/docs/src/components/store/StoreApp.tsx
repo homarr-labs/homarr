@@ -87,6 +87,11 @@ const downloadJson = (s: StoreSubmission) => {
   URL.revokeObjectURL(url);
 };
 
+const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+
 export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
   const store = useStore(storeUrl);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -496,14 +501,20 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
         <>
           <button
             className="absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
-            onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
+            onClick={(event) => {
+              stopCardNavigation(event);
+              setIdx((i) => (i - 1 + urls.length) % urls.length);
+            }}
             aria-label="Previous screenshot"
           >
             <IconChevronLeft size={14} />
           </button>
           <button
             className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
-            onClick={() => setIdx((i) => (i + 1) % urls.length)}
+            onClick={(event) => {
+              stopCardNavigation(event);
+              setIdx((i) => (i + 1) % urls.length);
+            }}
             aria-label="Next screenshot"
           >
             <IconChevronRight size={14} />
@@ -512,7 +523,10 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
             {urls.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setIdx(i)}
+                onClick={(event) => {
+                  stopCardNavigation(event);
+                  setIdx(i);
+                }}
                 aria-label={`Screenshot ${i + 1}`}
                 className={cn("size-1.5 rounded-full transition-all", dotClass[Number(i === idx)])}
               />

@@ -29,7 +29,7 @@ import type { SubmissionType } from "@site/src/lib/store-schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn, errorMessage } from "@/lib/utils";
+import { cn, errorMessage } from "@site/src/lib/utils";
 
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
 const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
@@ -284,6 +284,7 @@ const CommentsSection = ({
                   <div className="ml-auto flex gap-0.5">
                     <button
                       className="rounded p-1 hover:bg-accent"
+                      aria-label="Edit comment"
                       onClick={() => {
                         setEditingId(comment.id);
                         setEditContent(comment.content);
@@ -293,6 +294,7 @@ const CommentsSection = ({
                     </button>
                     <button
                       className="rounded p-1 hover:bg-destructive/20 hover:text-destructive"
+                      aria-label="Delete comment"
                       onClick={() => void handleDelete(comment.id)}
                     >
                       <IconTrash size={12} />
@@ -311,10 +313,10 @@ const CommentsSection = ({
                       if (e.key === "Enter") void handleUpdate(comment.id);
                     }}
                   />
-                  <Button size="icon-sm" onClick={() => void handleUpdate(comment.id)}>
+                  <Button size="icon-sm" aria-label="Save comment" onClick={() => void handleUpdate(comment.id)}>
                     <IconCheck size={12} />
                   </Button>
-                  <Button variant="ghost" size="icon-sm" onClick={() => setEditingId(null)}>
+                  <Button variant="ghost" size="icon-sm" aria-label="Cancel editing" onClick={() => setEditingId(null)}>
                     <IconX size={12} />
                   </Button>
                 </div>
@@ -378,6 +380,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout>>(null);
+  const copyFailedTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const voting = useRef(false);
 
   const requireUserId = useCallback(
@@ -411,6 +414,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
   useEffect(
     () => () => {
       if (copyTimer.current) clearTimeout(copyTimer.current);
+      if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
     },
     [],
   );
@@ -485,11 +489,10 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
     try {
       if (!prev) {
-        await pb.collection("votes").create({ submission: submission.id, value, user: userId });
-        const votes = await pb.collection("votes").getFullList<StoreVote>({
-          filter: pb.filter("user = {:uid} && submission = {:sid}", { uid: userId, sid: submission.id }),
-        });
-        setUserVote(votes[0]);
+        const created = await pb
+          .collection("votes")
+          .create<StoreVote>({ submission: submission.id, value, user: userId });
+        setUserVote(created);
       } else if (isToggleOff) {
         await pb.collection("votes").delete(prev.id);
       } else {
@@ -521,10 +524,12 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
       setCopied(true);
       setCopyFailed(false);
       if (copyTimer.current) clearTimeout(copyTimer.current);
+      if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);
     } catch {
       setCopyFailed(true);
-      setTimeout(() => setCopyFailed(false), 2000);
+      if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
+      copyFailedTimer.current = setTimeout(() => setCopyFailed(false), 2000);
     }
   };
 

@@ -4,7 +4,7 @@ import type { StoreComment, StoreSubmission, StoreVote } from "@site/src/lib/poc
 import { getPocketBase } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/store-schema";
 import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/store-schema";
-import { errorMessage } from "@/lib/utils";
+import { errorMessage } from "@site/src/lib/utils";
 
 export type SortKey = "top" | "new";
 export type TypeFilter = "all" | "yours" | SubmissionType;

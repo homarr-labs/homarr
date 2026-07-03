@@ -22,14 +22,13 @@ docker compose up
    - Homepage URL: `https://store.homarr.dev` (or `http://localhost:8090` in dev)
    - Authorization callback URL: `https://store.homarr.dev/api/oauth2-redirect`
      (dev: `http://localhost:8090/api/oauth2-redirect`)
-2. Provide the credentials before the first run so the init migration wires them up:
+2. Provide the GitHub credentials and initial admin credentials before the first run so the init migration wires them up and the PocketBase dashboard can be accessed:
 
 ```bash
-GITHUB_CLIENT_ID=xxx GITHUB_CLIENT_SECRET=yyy docker compose up
+GITHUB_CLIENT_ID=xxx GITHUB_CLIENT_SECRET=yyy PB_ADMIN_EMAIL=admin@example.com PB_ADMIN_PASSWORD=change-me docker compose up
 ```
 
-If you start without them, GitHub OAuth is left disabled — enable it later from the admin
-UI under **Collections -> users -> Options -> OAuth2**.
+If you start without the GitHub credentials, GitHub OAuth is left disabled — enable it later from the admin UI under **Collections -> users -> Options -> OAuth2**. `PB_ADMIN_EMAIL` and `PB_ADMIN_PASSWORD` are used by the PocketBase image to bootstrap the first superuser for the admin UI.
 
 ## Collections
 
