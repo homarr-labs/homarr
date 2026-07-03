@@ -14,6 +14,6 @@ export const patchmonStatsRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatsAsync();
   },
-  cacheDuration: dayjs.duration(15, "minute"),
+  cacheDuration: dayjs.duration(2, "minute"),
   queryKey: "patchmon-stats",
 });

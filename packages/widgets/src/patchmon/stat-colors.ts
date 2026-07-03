@@ -203,3 +203,13 @@ export const resolveStatColor = (
 
 export const severityToMantineColor = (severity: StatSeverity): string =>
   severity === "neutral" ? "var(--mantine-primary-color-filled)" : severity;
+
+export const severityToMantineBgColor = (severity: StatSeverity): string => {
+  if (severity === "neutral") return "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))";
+  return `var(--mantine-color-${severity}-light)`;
+};
+
+export const severityToIconColor = (severity: StatSeverity): string => {
+  if (severity === "neutral") return "var(--mantine-color-dimmed)";
+  return `var(--mantine-color-${severity}-6)`;
+};

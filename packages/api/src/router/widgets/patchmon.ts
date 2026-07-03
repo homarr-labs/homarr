@@ -1,7 +1,7 @@
 import { patchmonStatsRequestHandler } from "@homarr/request-handler/patchmon";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const patchmonRouter = createTRPCRouter({
   getStats: publicProcedure
@@ -17,5 +17,11 @@ export const patchmonRouter = createTRPCRouter({
       const innerHandler = patchmonStatsRequestHandler.handler(ctx.integration, {});
       const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data.data;
+    }),
+  refresh: protectedProcedure
+    .concat(createOneIntegrationMiddleware("query", "patchmon"))
+    .mutation(async ({ ctx }) => {
+      const innerHandler = patchmonStatsRequestHandler.handler(ctx.integration, {});
+      await innerHandler.invalidateAsync();
     }),
 });

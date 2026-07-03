@@ -15,7 +15,7 @@ const defaultOptions = {
   showTotalOutdatedPackages: false,
   showTotalRepos: false,
   showOsDistribution: false,
-  osDistributionLimit: "5",
+  osDistributionLimit: "0",
   showOsVersion: true,
   hostsNeedingUpdatesThresholdMode: "absolute",
   hostsNeedingUpdatesWarningAt: 1,
@@ -32,6 +32,8 @@ const defaultOptions = {
   totalOutdatedPackagesThresholdMode: "absolute",
   totalOutdatedPackagesWarningAt: 1,
   totalOutdatedPackagesCriticalAt: 50,
+  showComplianceHero: true,
+  osDisplayMode: "bars",
 } satisfies WidgetComponentProps<"patchmon">["options"];
 
 const context = { totalHosts: 100 };

@@ -2774,6 +2774,9 @@
       "totalOutdatedPackages": "Outdated Packages",
       "totalRepos": "Repositories",
       "osDistribution": "OS Distribution",
+      "compliance": "Patch Compliance",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Updated {time}",
       "option": {
         "showTotalHosts": {
           "label": "Show total hosts",
@@ -2898,7 +2901,22 @@
         "showOsVersion": {
           "label": "Show OS version",
           "description": "Append the OS version to each distribution label when available"
+        },
+        "showComplianceHero": {
+          "label": "Show compliance hero",
+          "description": "Display a compliance ring showing the percentage of up-to-date hosts"
+        },
+        "osDisplayMode": {
+          "label": "OS display mode",
+          "description": "Choose how to display the operating system distribution",
+          "option": {
+            "bars": "Horizontal bars",
+            "donut": "Donut chart"
+          }
         }
+      },
+      "action": {
+        "refresh": "Refresh data"
       },
       "error": {
         "internalServerError": "Failed to fetch PatchMon data"

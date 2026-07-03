@@ -10,6 +10,12 @@ export const patchmonWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "Show compliance hero",
+        description: "Display a compliance ring showing the percentage of up-to-date hosts",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
         name: "Show total hosts",
         description: "Displays the total number of monitored hosts",
         values: { type: "boolean" },
@@ -171,10 +177,17 @@ export const patchmonWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "OS display mode",
+        description:
+          "Choose how to display the operating system distribution. Shown when Show OS distribution is enabled.",
+        values: { type: "select", options: ["Horizontal bars", "Donut chart"] },
+        defaultValue: "Horizontal bars",
+      },
+      {
         name: "OS distribution limit",
         description: "Maximum number of operating systems to display in the distribution section",
         values: { type: "select", options: ["Top 3", "Top 5", "Top 10", "All"] },
-        defaultValue: "Top 5",
+        defaultValue: "All",
       },
       {
         name: "Show OS version",

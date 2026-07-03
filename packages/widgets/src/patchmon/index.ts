@@ -1,4 +1,4 @@
-import { IconServerOff, IconShieldCheck } from "@tabler/icons-react";
+import { IconRefresh, IconServerOff, IconShieldCheck } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
@@ -13,6 +13,10 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        showComplianceHero: factory.switch({
+          defaultValue: true,
+          withDescription: true,
+        }),
         showTotalHosts: factory.switch({
           defaultValue: true,
           withDescription: true,
@@ -157,8 +161,16 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
           defaultValue: false,
           withDescription: true,
         }),
+        osDisplayMode: factory.select({
+          defaultValue: "bars",
+          withDescription: true,
+          options: [
+            { value: "bars", label: (t) => t("widget.patchmon.option.osDisplayMode.option.bars") },
+            { value: "donut", label: (t) => t("widget.patchmon.option.osDisplayMode.option.donut") },
+          ] as const,
+        }),
         osDistributionLimit: factory.select({
-          defaultValue: "5",
+          defaultValue: "0",
           withDescription: true,
           options: [
             { value: "3", label: (t) => t("widget.patchmon.option.osDistributionLimit.option.3") },
@@ -200,6 +212,9 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
           shouldHide: (options) =>
             !options.enableThresholdColors || !options.useCustomThresholds || !options.showTotalOutdatedPackages,
         },
+        osDisplayMode: {
+          shouldHide: (options) => !options.showOsDistribution,
+        },
         osDistributionLimit: {
           shouldHide: (options) => !options.showOsDistribution,
         },
@@ -210,6 +225,17 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
       patchmonOptionsSuperRefine,
     );
   },
+  contextActions: ({ widgetStateRef }) => [
+    {
+      key: "refresh",
+      label: (t) => t("widget.patchmon.action.refresh"),
+      icon: IconRefresh,
+      onClick: () => {
+        const refetchFn = widgetStateRef.current?.refetch;
+        if (typeof refetchFn === "function") (refetchFn as () => void)();
+      },
+    },
+  ],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
