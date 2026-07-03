@@ -61,37 +61,37 @@ catalogs:
       specifier: ^1.4.0
       version: 1.4.0
     '@mantine/charts':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/colors-generator':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/core':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/dates':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/dropzone':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/form':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/hooks':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/modals':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/notifications':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/spotlight':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@mantine/tiptap':
-      specifier: ^9.4.0
+      specifier: ^9.4.1
       version: 9.4.1
     '@modelcontextprotocol/sdk':
       specifier: 1.29.0
@@ -364,7 +364,7 @@ catalogs:
       specifier: ^5.9.3
       version: 5.9.3
     fastify:
-      specifier: ^5.8.5
+      specifier: ^5.9.0
       version: 5.9.0
     flag-icons:
       specifier: ^7.5.0
@@ -403,7 +403,7 @@ catalogs:
       specifier: ^4.5.0
       version: 4.5.0
     lucide-react:
-      specifier: ^1.21.0
+      specifier: ^1.22.0
       version: 1.22.0
     mantine-datatable:
       specifier: ^9.3.1
@@ -17872,7 +17872,7 @@ snapshots:
   '@floating-ui/vue@1.1.9(vue@3.5.39(typescript@6.0.3))':
     dependencies:
       '@floating-ui/dom': 1.7.6
-      '@floating-ui/utils': 0.2.10
+      '@floating-ui/utils': 0.2.11
       vue-demi: 0.14.10(vue@3.5.39(typescript@6.0.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -20738,7 +20738,7 @@ snapshots:
 
   '@types/adm-zip@0.5.8':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 26.0.1
 
   '@types/aws-lambda@8.10.162': {}
 
@@ -20748,7 +20748,7 @@ snapshots:
 
   '@types/better-sqlite3@7.6.13':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 26.0.1
 
   '@types/body-parser@1.19.6':
     dependencies:
@@ -20768,7 +20768,7 @@ snapshots:
 
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
-      '@types/express-serve-static-core': 4.19.8
+      '@types/express-serve-static-core': 5.1.1
       '@types/node': 26.0.1
 
   '@types/connect@3.4.38':
@@ -21011,7 +21011,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 26.0.1
       form-data: 4.0.6
 
   '@types/node-unifi@2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)':
@@ -21089,7 +21089,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 26.0.1
 
   '@types/send@0.17.6':
     dependencies:
@@ -21102,7 +21102,7 @@ snapshots:
 
   '@types/serve-index@1.9.4':
     dependencies:
-      '@types/express': 4.17.25
+      '@types/express': 5.0.6
 
   '@types/serve-static@1.15.10':
     dependencies:
@@ -21134,7 +21134,7 @@ snapshots:
 
   '@types/stream-buffers@3.0.8':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 26.0.1
 
   '@types/triple-beam@1.3.5': {}
 
@@ -21184,7 +21184,7 @@ snapshots:
 
   '@videojs/http-streaming@3.17.5(video.js@8.23.9)':
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       '@videojs/vhs-utils': 4.1.2
       aes-decrypter: 4.0.2
       global: 4.4.0
@@ -21195,12 +21195,12 @@ snapshots:
 
   '@videojs/vhs-utils@4.1.2':
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       global: 4.4.0
 
   '@videojs/xhr@2.7.0':
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       global: 4.4.0
       is-function: 1.0.2
 
@@ -21509,7 +21509,7 @@ snapshots:
 
   aes-decrypter@4.0.2:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       '@videojs/vhs-utils': 4.1.2
       global: 4.4.0
       pkcs7: 1.0.4
@@ -24981,7 +24981,7 @@ snapshots:
 
   m3u8-parser@7.2.0:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       '@videojs/vhs-utils': 4.1.2
       global: 4.4.0
 
@@ -25737,7 +25737,7 @@ snapshots:
 
   mpd-parser@1.4.0:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       '@videojs/vhs-utils': 4.1.2
       '@xmldom/xmldom': 0.8.13
       global: 4.4.0
@@ -25757,7 +25757,7 @@ snapshots:
 
   mux.js@7.1.0:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
       global: 4.4.0
 
   mysql2@3.22.5(@types/node@24.13.2):
@@ -26350,7 +26350,7 @@ snapshots:
 
   pkcs7@1.0.4:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.0
 
   pkg-conf@2.1.0:
     dependencies:
