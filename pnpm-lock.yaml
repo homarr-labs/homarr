@@ -142,14 +142,14 @@ catalogs:
       specifier: ^5.101.0
       version: 5.101.0
     '@testcontainers/mysql':
-      specifier: ^12.0.3
-      version: 12.0.3
+      specifier: ^12.0.4
+      version: 12.0.4
     '@testcontainers/postgresql':
-      specifier: ^12.0.3
-      version: 12.0.3
+      specifier: ^12.0.4
+      version: 12.0.4
     '@testcontainers/redis':
-      specifier: ^12.0.3
-      version: 12.0.3
+      specifier: ^12.0.4
+      version: 12.0.4
     '@tiptap/extension-color':
       specifier: 3.27.1
       version: 3.27.1
@@ -496,8 +496,8 @@ catalogs:
       specifier: ^5.3.1
       version: 5.3.1
     testcontainers:
-      specifier: ^12.0.3
-      version: 12.0.3
+      specifier: ^12.0.4
+      version: 12.0.4
     timezones-ical-library:
       specifier: ^2.2.1
       version: 2.2.1
@@ -615,7 +615,7 @@ importers:
         version: 14.1.1(semantic-release@25.0.5(typescript@6.0.3))
       '@testcontainers/redis':
         specifier: 'catalog:'
-        version: 12.0.3
+        version: 12.0.4
       '@turbo/gen':
         specifier: 'catalog:'
         version: 2.10.0(@types/node@24.13.2)
@@ -651,7 +651,7 @@ importers:
         version: 25.0.5(typescript@6.0.3)
       testcontainers:
         specifier: 'catalog:'
-        version: 12.0.3
+        version: 12.0.4
       turbo:
         specifier: 'catalog:'
         version: 2.10.0
@@ -1688,10 +1688,10 @@ importers:
         version: 3.3.0
       '@testcontainers/mysql':
         specifier: 'catalog:'
-        version: 12.0.3
+        version: 12.0.4
       '@testcontainers/postgresql':
         specifier: 'catalog:'
-        version: 12.0.3
+        version: 12.0.4
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.10.0
@@ -7332,14 +7332,14 @@ packages:
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
 
-  '@testcontainers/mysql@12.0.3':
-    resolution: {integrity: sha512-xaub3gaAQKR4Q2/9d8B+81XM8LLTQHPOncCL3Ved04JUUIeTobMt3J36JXv/rvEpnrMpphlKYlmQU0aq48HeZA==}
+  '@testcontainers/mysql@12.0.4':
+    resolution: {integrity: sha512-XZWh/L6EN8XQa5lsBdESDolDmyUA56bDgYh5SicLzzC2b4jho4lc0yA0GOOVX/bd0zK6VQK6hmDDJE+T3rFrdA==}
 
-  '@testcontainers/postgresql@12.0.3':
-    resolution: {integrity: sha512-y0l/ItWxNfdMU783EOZ66lMq90uuuXPqE+fo1jNSRfMbtfUq/9Ez/wluDxxaS+D/i3I0juep+jmz/WVuip8i9Q==}
+  '@testcontainers/postgresql@12.0.4':
+    resolution: {integrity: sha512-a/pLU6j5lpKKAlUTPwqweqMGhOSjgTSb6HBX69TOrXn32ifU37nnQDmNFTj8ddOAw+BQL9oTRkeOxVbZkqhgZA==}
 
-  '@testcontainers/redis@12.0.3':
-    resolution: {integrity: sha512-hN3YedOSb6quFzG1IM4j/r/M635GcaYOxzbTuiSN7676BZHrx1VPl+xll3ojk8ds6TvenrfO37lrEVJYN2URlA==}
+  '@testcontainers/redis@12.0.4':
+    resolution: {integrity: sha512-44Ov3Lcptb3KqljcCy6xIJ2VxNsN+3Kw/YpBiotZpOcI4iLgLNmcOgvCFPVo+vDoh4rCfgtNUEbIpL5Mu7oRuw==}
 
   '@tiptap/core@3.27.1':
     resolution: {integrity: sha512-rV6Qn4wmC6BxfF+4mu6bqGWj9vA4oXXhsrpXaJL2uhjxeHAGofjwcHof2X84VYzeyXgdlsGmqKie4TAppVXZUQ==}
@@ -9673,10 +9673,6 @@ packages:
     resolution: {integrity: sha512-XJgGhoR/CLpqshm4d3L7rzH6t8NgDFUIIpztYlLHIApeJjMZKYJMz2zxPsYxnejq5h3ELYSw/RBsi3t5h7gNTA==}
     engines: {node: '>= 8.0'}
 
-  dockerode@5.0.0:
-    resolution: {integrity: sha512-C52mvJ+7lcyhWNfrzVfFsbTrBfy/ezE9FGEYLpu17FUeBcCkxERk9nN7uDl/478ynDiQ4U+5DbQC2vENHkVEtQ==}
-    engines: {node: '>= 14.17'}
-
   dockerode@5.0.1:
     resolution: {integrity: sha512-avsq/xk4YPIrn0CgleX5bjT9Y8IT1p9PxrNQ++RBQ2WEyFfHCTDsT9kmyxz+H/axnjAwg8wJWEIuPGOUuNupiA==}
     engines: {node: '>= 14.17'}
@@ -10424,9 +10420,9 @@ packages:
   get-own-enumerable-property-symbols@3.0.2:
     resolution: {integrity: sha512-I0UBV/XOz1XkIJHEUDMZAbzCThU/H8DxmSfmdGcKPnVhu2VfFqr34jr9777IyaTYvxjedWhqVIilEDsCdP5G6g==}
 
-  get-port@7.2.0:
-    resolution: {integrity: sha512-afP4W205ONCuMoPBqcR6PSXnzX35KTcJygfJfcp+QY+uwm3p20p1YczWXhlICIzGMCxYBQcySEcOgsJcrkyobg==}
-    engines: {node: '>=16'}
+  get-port@5.1.1:
+    resolution: {integrity: sha512-g/Q1aTSDOxFpchXC4i8ZWvxA1lnPqx/JHqcpIw0/LX9T8x/GBbi6YnlN5nhaKIFkT8oFsscUKgDJYxfwfS6QsQ==}
+    engines: {node: '>=8'}
 
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
@@ -14372,8 +14368,8 @@ packages:
     resolution: {integrity: sha512-vzCjQO/rgUuK9sf8VJZvjqiqiHFaZLnOiimmUuOKODxWL8mm/xua7viT7aqX7dgPY60otQjUotzFMmCB4VdmqQ==}
     engines: {node: '>=10'}
 
-  testcontainers@12.0.3:
-    resolution: {integrity: sha512-6vfiL9CWIX0rWhTJitzrzHcv4Q/sUfUdBV12jMz6HZ58Lz6ZtXVecO6jljd1O3ookEWQHNICiYoYNEPpDLzuRw==}
+  testcontainers@12.0.4:
+    resolution: {integrity: sha512-QIR/8xF1+F/26cIM+9B4yyxNTbKJxAv3hygZyhPRgZ8Q2AhlPZjDdpXRuk16V37X4bgJRI3hXFhoEICMBA7Adg==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -14665,8 +14661,8 @@ packages:
     resolution: {integrity: sha512-uZsKNuzQxDMUY6M3pIMvy5tvlGmtq8XJ2oLAkfRKGNu+1VQAIvLy2xIVG5ATZl5wDXl/tddByAWCizRbOme+TA==}
     engines: {node: '>=20.18.1'}
 
-  undici@8.4.1:
-    resolution: {integrity: sha512-RNHlB4fxZK0IrkhBsxhlbx7s8kFWwr7rzzOqj5nvZugw3ig3RsB7KW3zVlV0eu8POl+rx5d1hmL7rRg0z1owow==}
+  undici@8.5.0:
+    resolution: {integrity: sha512-xamtWoB1EshgjpmlXd7GGm2VfdDtw1+rD8uhry8pSNW3If6S8E0m2T2+orSKeZXEn/aPJMviCpDBA65WJt8zhg==}
     engines: {node: '>=22.19.0'}
 
   unhead@2.1.15:
@@ -20957,23 +20953,23 @@ snapshots:
       '@tanstack/virtual-core': 3.17.0
       vue: 3.5.35(typescript@6.0.3)
 
-  '@testcontainers/mysql@12.0.3':
+  '@testcontainers/mysql@12.0.4':
     dependencies:
-      testcontainers: 12.0.3
+      testcontainers: 12.0.4
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/postgresql@12.0.3':
+  '@testcontainers/postgresql@12.0.4':
     dependencies:
-      testcontainers: 12.0.3
+      testcontainers: 12.0.4
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/redis@12.0.3':
+  '@testcontainers/redis@12.0.4':
     dependencies:
-      testcontainers: 12.0.3
+      testcontainers: 12.0.4
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -23469,17 +23465,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@5.0.0:
-    dependencies:
-      '@balena/dockerignore': 1.0.2
-      '@grpc/grpc-js': 1.12.5
-      '@grpc/proto-loader': 0.7.13
-      docker-modem: 5.0.7
-      protobufjs: 7.4.0
-      tar-fs: 2.1.4
-    transitivePeerDependencies:
-      - supports-color
-
   dockerode@5.0.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
@@ -24337,7 +24322,7 @@ snapshots:
 
   get-own-enumerable-property-symbols@3.0.2: {}
 
-  get-port@7.2.0: {}
+  get-port@5.1.1: {}
 
   get-proto@1.0.1:
     dependencies:
@@ -29049,7 +29034,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testcontainers@12.0.3:
+  testcontainers@12.0.4:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 4.0.1
@@ -29058,14 +29043,14 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.3
       docker-compose: 1.4.2
-      dockerode: 5.0.0
-      get-port: 7.2.0
+      dockerode: 5.0.1
+      get-port: 5.1.1
       proper-lockfile: 4.1.2
       properties-reader: 3.0.1
       ssh-remote-port-forward: 1.0.4
-      tar-fs: 3.1.2
+      tar-fs: 3.1.3
       tmp: 0.2.7
-      undici: 8.4.1
+      undici: 8.5.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -29324,7 +29309,7 @@ snapshots:
 
   undici@7.27.2: {}
 
-  undici@8.4.1: {}
+  undici@8.5.0: {}
 
   unhead@2.1.15:
     dependencies:
