@@ -26,7 +26,7 @@ interface WorkersPanelProps {
 export function WorkersPanel(props: WorkersPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.workers");
 
-  if (props.workers.length === 0) {
+  if ((props.workers ?? []).length === 0) {
     return (
       <Center style={{ flex: "1" }}>
         <Title order={6}>{t("empty")}</Title>

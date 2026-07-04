@@ -35,8 +35,9 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
     calculateChangePercentage(data.priceHistory.at(-1) ?? 0, data.previousClose),
   );
 
-  const stockValuesMin = Math.min(...data.priceHistory);
-  const stockGraphValues = data.priceHistory.map((value) => value - stockValuesMin + 50);
+  const priceHistory = data.priceHistory ?? [];
+  const stockValuesMin = priceHistory.length > 0 ? Math.min(...priceHistory) : 0;
+  const stockGraphValues = priceHistory.map((value) => value - stockValuesMin + 50);
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
 
   return (

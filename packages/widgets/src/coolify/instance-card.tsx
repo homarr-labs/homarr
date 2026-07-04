@@ -32,22 +32,18 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
     defaultValue: ["applications"],
   });
 
-  const serverResourceCounts = buildServerResourceCounts(
-    instance.instanceInfo.servers,
-    instance.instanceInfo.applications,
-    instance.instanceInfo.services,
-  );
+  const servers = instance.instanceInfo.servers ?? [];
+  const applications = instance.instanceInfo.applications ?? [];
+  const services = instance.instanceInfo.services ?? [];
+
+  const serverResourceCounts = buildServerResourceCounts(servers, applications, services);
 
   const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
   const relativeTime = useTimeAgo(instance.updatedAt);
 
-  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
-  const runningApps = instance.instanceInfo.applications.filter(
-    (a) => parseStatus(a.status ?? "") === "running",
-  ).length;
-  const runningServices = instance.instanceInfo.services.filter(
-    (s) => parseStatus(s.status ?? "") === "running",
-  ).length;
+  const onlineServers = servers.filter((s) => s.is_reachable !== false).length;
+  const runningApps = applications.filter((a) => parseStatus(a.status ?? "") === "running").length;
+  const runningServices = services.filter((s) => parseStatus(s.status ?? "") === "running").length;
 
   return (
     <Card p={0} radius="sm">
@@ -65,26 +61,26 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
         </Group>
         <Group gap={4} wrap="nowrap">
           {options.showServers && (
-            <Badge variant="dot" color={getBadgeColor(onlineServers, instance.instanceInfo.servers.length)} size="xs">
-              {onlineServers}/{instance.instanceInfo.servers.length}
+            <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
+              {onlineServers}/{servers.length}
             </Badge>
           )}
           {options.showApplications && (
             <Badge
               variant="dot"
-              color={getBadgeColor(runningApps, instance.instanceInfo.applications.length)}
+              color={getBadgeColor(runningApps, applications.length)}
               size="xs"
             >
-              {runningApps}/{instance.instanceInfo.applications.length}
+              {runningApps}/{applications.length}
             </Badge>
           )}
           {options.showServices && (
             <Badge
               variant="dot"
-              color={getBadgeColor(runningServices, instance.instanceInfo.services.length)}
+              color={getBadgeColor(runningServices, services.length)}
               size="xs"
             >
-              {runningServices}/{instance.instanceInfo.services.length}
+              {runningServices}/{services.length}
             </Badge>
           )}
         </Group>
@@ -93,7 +89,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
       <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
         {options.showServers && (
           <ServersSection
-            servers={instance.instanceInfo.servers}
+            servers={servers}
             serverResourceCounts={serverResourceCounts}
             baseUrl={baseUrl}
             isTiny={isTiny}
@@ -102,10 +98,10 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
           />
         )}
         {options.showApplications && (
-          <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
+          <ApplicationsSection applications={applications} baseUrl={baseUrl} isTiny={isTiny} />
         )}
         {options.showServices && (
-          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+          <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />
         )}
       </Accordion>
 

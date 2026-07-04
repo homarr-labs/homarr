@@ -43,48 +43,48 @@ export default function MediaServerWidget({
   const board = useRequiredBoard();
 
   if (!requestStats) return <WidgetEmptyState />;
-  if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
+  if ((requestStats.users ?? []).length === 0 && (requestStats.stats ?? []).length === 0) throw new NoIntegrationDataError();
 
   const data = [
     {
       name: "approved",
       icon: IconThumbUp,
-      number: requestStats.stats.reduce((count, { approved }) => count + approved, 0),
+      number: (requestStats.stats ?? []).reduce((count, { approved }) => count + approved, 0),
     },
     {
       name: "pending",
       icon: IconHourglass,
-      number: requestStats.stats.reduce((count, { pending }) => count + pending, 0),
+      number: (requestStats.stats ?? []).reduce((count, { pending }) => count + pending, 0),
     },
     {
       name: "processing",
       icon: IconLoaderQuarter,
-      number: requestStats.stats.reduce((count, { processing }) => count + processing, 0),
+      number: (requestStats.stats ?? []).reduce((count, { processing }) => count + processing, 0),
     },
     {
       name: "declined",
       icon: IconThumbDown,
-      number: requestStats.stats.reduce((count, { declined }) => count + declined, 0),
+      number: (requestStats.stats ?? []).reduce((count, { declined }) => count + declined, 0),
     },
     {
       name: "available",
       icon: IconPlayerPlay,
-      number: requestStats.stats.reduce((count, { available }) => count + available, 0),
+      number: (requestStats.stats ?? []).reduce((count, { available }) => count + available, 0),
     },
     {
       name: "tv",
       icon: IconDeviceTv,
-      number: requestStats.stats.reduce((count, { tv }) => count + tv, 0),
+      number: (requestStats.stats ?? []).reduce((count, { tv }) => count + tv, 0),
     },
     {
       name: "movie",
       icon: IconMovie,
-      number: requestStats.stats.reduce((count, { movie }) => count + movie, 0),
+      number: (requestStats.stats ?? []).reduce((count, { movie }) => count + movie, 0),
     },
     {
       name: "total",
       icon: IconReceipt,
-      number: requestStats.stats.reduce((count, { total }) => count + total, 0),
+      number: (requestStats.stats ?? []).reduce((count, { total }) => count + total, 0),
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
@@ -132,7 +132,7 @@ export default function MediaServerWidget({
             {t("titles.users.main")} ({t("titles.users.requests")})
           </Text>
           <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
-            {requestStats.users.slice(0, 10).map((user) => (
+            {(requestStats.users ?? []).slice(0, 10).map((user) => (
               <Card
                 component="a"
                 href={user.link}

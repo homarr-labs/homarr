@@ -65,7 +65,7 @@ export default function IndexerManagerWidget({
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
           {indexersData.map(({ integrationId, indexers }) => (
             <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
-              {indexers.map((indexer) => (
+              {(indexers ?? []).map((indexer) => (
                 <Group
                   className={`indexer-manager-line indexer-manager-${indexer.name}`}
                   key={indexer.id}

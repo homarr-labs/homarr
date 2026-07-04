@@ -41,19 +41,24 @@ export const ClusterHealthMonitoring = ({
 
   if (!healthData) return <WidgetEmptyState />;
 
-  const activeNodes = healthData.nodes.reduce(running, 0);
-  const activeVMs = healthData.vms.reduce(running, 0);
-  const activeLXCs = healthData.lxcs.reduce(running, 0);
-  const activeStorage = healthData.storages.reduce(running, 0);
+  const nodes = healthData.nodes ?? [];
+  const vms = healthData.vms ?? [];
+  const lxcs = healthData.lxcs ?? [];
+  const storages = healthData.storages ?? [];
 
-  const usedMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.used + sum : sum), 0);
-  const maxMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.total + sum : sum), 0);
-  const maxCpu = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.cpu.cores + sum : sum), 0);
-  const usedCpu = healthData.nodes.reduce(
+  const activeNodes = nodes.reduce(running, 0);
+  const activeVMs = vms.reduce(running, 0);
+  const activeLXCs = lxcs.reduce(running, 0);
+  const activeStorage = storages.reduce(running, 0);
+
+  const usedMem = nodes.reduce((sum, item) => (item.isRunning ? item.memory.used + sum : sum), 0);
+  const maxMem = nodes.reduce((sum, item) => (item.isRunning ? item.memory.total + sum : sum), 0);
+  const maxCpu = nodes.reduce((sum, item) => (item.isRunning ? item.cpu.cores + sum : sum), 0);
+  const usedCpu = nodes.reduce(
     (sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum),
     0,
   );
-  const uptime = healthData.nodes.reduce((sum, { uptime }) => (sum > uptime ? sum : uptime), 0);
+  const uptime = nodes.reduce((sum, { uptime }) => (sum > uptime ? sum : uptime), 0);
 
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
@@ -89,12 +94,12 @@ export const ClusterHealthMonitoring = ({
               icon={IconServer}
               badge={addBadgeColor({
                 activeCount: activeNodes,
-                totalCount: healthData.nodes.length,
+                totalCount: nodes.length,
                 sectionIndicatorRequirement: options.sectionIndicatorRequirement,
               })}
               isTiny={isTiny}
             >
-              <ResourceTable type="node" data={healthData.nodes} isTiny={isTiny} />
+              <ResourceTable type="node" data={nodes} isTiny={isTiny} />
             </ResourceAccordionItem>
           )}
 
@@ -105,12 +110,12 @@ export const ClusterHealthMonitoring = ({
               icon={IconDeviceLaptop}
               badge={addBadgeColor({
                 activeCount: activeVMs,
-                totalCount: healthData.vms.length,
+                totalCount: vms.length,
                 sectionIndicatorRequirement: options.sectionIndicatorRequirement,
               })}
               isTiny={isTiny}
             >
-              <ResourceTable type="qemu" data={healthData.vms} isTiny={isTiny} />
+              <ResourceTable type="qemu" data={vms} isTiny={isTiny} />
             </ResourceAccordionItem>
           )}
 
@@ -121,12 +126,12 @@ export const ClusterHealthMonitoring = ({
               icon={IconCube}
               badge={addBadgeColor({
                 activeCount: activeLXCs,
-                totalCount: healthData.lxcs.length,
+                totalCount: lxcs.length,
                 sectionIndicatorRequirement: options.sectionIndicatorRequirement,
               })}
               isTiny={isTiny}
             >
-              <ResourceTable type="lxc" data={healthData.lxcs} isTiny={isTiny} />
+              <ResourceTable type="lxc" data={lxcs} isTiny={isTiny} />
             </ResourceAccordionItem>
           )}
 
@@ -137,12 +142,12 @@ export const ClusterHealthMonitoring = ({
               icon={IconDatabase}
               badge={addBadgeColor({
                 activeCount: activeStorage,
-                totalCount: healthData.storages.length,
+                totalCount: storages.length,
                 sectionIndicatorRequirement: options.sectionIndicatorRequirement,
               })}
               isTiny={isTiny}
             >
-              <ResourceTable type="storage" data={healthData.storages} isTiny={isTiny} />
+              <ResourceTable type="storage" data={storages} isTiny={isTiny} />
             </ResourceAccordionItem>
           )}
         </Accordion>

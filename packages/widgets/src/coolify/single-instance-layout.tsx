@@ -31,11 +31,11 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
     defaultValue: ["applications"],
   });
 
-  const serverResourceCounts = buildServerResourceCounts(
-    instance.instanceInfo.servers,
-    instance.instanceInfo.applications,
-    instance.instanceInfo.services,
-  );
+  const servers = instance.instanceInfo.servers ?? [];
+  const applications = instance.instanceInfo.applications ?? [];
+  const services = instance.instanceInfo.services ?? [];
+
+  const serverResourceCounts = buildServerResourceCounts(servers, applications, services);
 
   const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
   const displayUrl = baseUrl.replace(/^https?:\/\//, "");
@@ -59,7 +59,7 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
         <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
-              servers={instance.instanceInfo.servers}
+              servers={servers}
               serverResourceCounts={serverResourceCounts}
               baseUrl={baseUrl}
               isTiny={isTiny}
@@ -68,10 +68,10 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
             />
           )}
           {options.showApplications && (
-            <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
+            <ApplicationsSection applications={applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+            <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />
           )}
         </Accordion>
 

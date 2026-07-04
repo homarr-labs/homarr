@@ -104,7 +104,7 @@ export default function DownloadClientsWidget({
   const [quickFilters, setQuickFilters] = useState<QuickFilter>({ integrationKinds: [], statuses: [] });
   const availableStatuses = useMemo<QuickFilter["statuses"]>(() => {
     //Redefine list of available statuses from current items
-    const statuses = Array.from(new Set(currentItems.flatMap(({ data }) => data.items.map(({ state }) => state))));
+    const statuses = Array.from(new Set(currentItems.flatMap(({ data }) => (data.items ?? []).map(({ state }) => state))));
     //Reset user filters accordingly to remove unavailable statuses
     setQuickFilters(({ integrationKinds: names, statuses: prevStatuses }) => {
       return { integrationKinds: names, statuses: prevStatuses.filter((status) => statuses.includes(status)) };
@@ -127,7 +127,7 @@ export default function DownloadClientsWidget({
         //Construct normalized items list
         .flatMap((pair) =>
           //Apply user white/black list
-          pair.data.items
+          (pair.data.items ?? [])
             .filter(
               ({ category }) =>
                 options.filterIsWhitelist ===
@@ -202,7 +202,7 @@ export default function DownloadClientsWidget({
           const interact = integrationsWithInteractions.includes(integration.id);
           const isTorrent = getIntegrationKindsByCategory("torrent").some((kind) => kind === integration.kind);
           /** Derived from current items */
-          const { totalUp, totalDown } = data.items
+          const { totalUp, totalDown } = (data.items ?? [])
             .filter(
               ({ category }) =>
                 !options.applyFilterToRatio ||

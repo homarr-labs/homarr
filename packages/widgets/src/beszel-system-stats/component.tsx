@@ -70,7 +70,7 @@ export default function BeszelSystemStatsWidget({
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
   const systems = useMemo(
-    () => systemsResult.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name }))),
+    () => systemsResult.flatMap((r) => (r.systems ?? []).map((s) => ({ value: s.id, label: s.name }))),
     [systemsResult],
   );
 

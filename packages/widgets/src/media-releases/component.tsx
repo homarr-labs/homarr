@@ -80,7 +80,7 @@ const Item = ({ item, options }: ItemProps) => {
             top={0}
             left={0}
             style={{
-              backgroundImage: `url(${item.imageUrls.backdrop})`,
+              backgroundImage: `url(${item.imageUrls?.backdrop})`,
               borderRadius: 8,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
@@ -91,7 +91,7 @@ const Item = ({ item, options }: ItemProps) => {
         )}
         <Group justify="space-between" h="100%" wrap="nowrap">
           <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
-            {options.layout === "poster" && <Image w={60} src={item.imageUrls.poster} alt={item.title} />}
+            {options.layout === "poster" && <Image w={60} src={item.imageUrls?.poster} alt={item.title} />}
             <Stack gap={4}>
               <Stack gap={0}>
                 <Text size="sm" fw="bold" lineClamp={2}>
@@ -130,7 +130,7 @@ const Item = ({ item, options }: ItemProps) => {
                   </>
                 )}
               </Group>
-              {item.tags.length > 0 && (
+              {(item.tags ?? []).length > 0 && (
                 <OverflowBadge
                   size="xs"
                   groupGap={4}

@@ -37,24 +37,25 @@ function TracearrContent({ integrationIds, options, width }: TracearrContentProp
       const { stats, streams, violations, recentActivity } = item.dashboard;
       const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
       const aData = recentActivity ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
+      const sData = streams ?? { data: [], summary: { total: 0, transcodes: 0, directStreams: 0, directPlays: 0, totalBitrate: "0", byServer: [] } };
 
       return {
         stats: {
-          activeStreams: acc.stats.activeStreams + stats.activeStreams,
-          totalUsers: acc.stats.totalUsers + stats.totalUsers,
-          totalSessions: acc.stats.totalSessions + stats.totalSessions,
-          recentViolations: acc.stats.recentViolations + stats.recentViolations,
-          timestamp: stats.timestamp,
+          activeStreams: acc.stats.activeStreams + (stats?.activeStreams ?? 0),
+          totalUsers: acc.stats.totalUsers + (stats?.totalUsers ?? 0),
+          totalSessions: acc.stats.totalSessions + (stats?.totalSessions ?? 0),
+          recentViolations: acc.stats.recentViolations + (stats?.recentViolations ?? 0),
+          timestamp: stats?.timestamp ?? "",
         },
         streams: {
-          data: [...acc.streams.data, ...streams.data],
+          data: [...acc.streams.data, ...(sData.data ?? [])],
           summary: {
-            total: acc.streams.summary.total + streams.summary.total,
-            transcodes: acc.streams.summary.transcodes + streams.summary.transcodes,
-            directStreams: acc.streams.summary.directStreams + streams.summary.directStreams,
-            directPlays: acc.streams.summary.directPlays + streams.summary.directPlays,
-            totalBitrate: streams.summary.totalBitrate,
-            byServer: [...acc.streams.summary.byServer, ...streams.summary.byServer],
+            total: acc.streams.summary.total + (sData.summary?.total ?? 0),
+            transcodes: acc.streams.summary.transcodes + (sData.summary?.transcodes ?? 0),
+            directStreams: acc.streams.summary.directStreams + (sData.summary?.directStreams ?? 0),
+            directPlays: acc.streams.summary.directPlays + (sData.summary?.directPlays ?? 0),
+            totalBitrate: sData.summary?.totalBitrate ?? "0",
+            byServer: [...acc.streams.summary.byServer, ...(sData.summary?.byServer ?? [])],
           },
         },
         violations: {

@@ -25,19 +25,19 @@ export default function NetworkControllerNetworkStatusWidget({
     integrationIds,
   });
 
-  const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
+  const data = useMemo(() => summaries.flatMap(({ summary }) => (summary ? [summary] : [])), [summaries]);
 
   return (
     <Box p={"sm"}>
       {options.content === "wifi" ? (
         <WifiVariant
-          countGuests={data.reduce((sum, summary) => sum + summary.wifi.guests, 0)}
-          countUsers={data.reduce((sum, summary) => sum + summary.wifi.users, 0)}
+          countGuests={data.reduce((sum, summary) => sum + (summary.wifi?.guests ?? 0), 0)}
+          countUsers={data.reduce((sum, summary) => sum + (summary.wifi?.users ?? 0), 0)}
         />
       ) : (
         <WiredVariant
-          countGuests={data.reduce((sum, summary) => sum + summary.lan.guests, 0)}
-          countUsers={data.reduce((sum, summary) => sum + summary.lan.users, 0)}
+          countGuests={data.reduce((sum, summary) => sum + (summary.lan?.guests ?? 0), 0)}
+          countUsers={data.reduce((sum, summary) => sum + (summary.lan?.users ?? 0), 0)}
         />
       )}
     </Box>

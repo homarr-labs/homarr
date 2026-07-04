@@ -46,7 +46,7 @@ export function AudioStatsContent({ backend, stats, options, width }: AudioStats
   };
   const navidromeStats = navidromeStatsByBackend[backend];
   const showNowPlayingSection =
-    navidromeStats !== null && Boolean(options.showNowPlaying) && navidromeStats.nowPlaying.length > 0;
+    navidromeStats !== null && Boolean(options.showNowPlaying) && (navidromeStats.nowPlaying ?? []).length > 0;
 
   const nowPlayingLimitByListVisibility = {
     true: options.maxNowPlayingItems ?? 3,
@@ -54,7 +54,7 @@ export function AudioStatsContent({ backend, stats, options, width }: AudioStats
   } as const;
 
   const nowPlayingTracks =
-    navidromeStats?.nowPlaying.slice(
+    (navidromeStats?.nowPlaying ?? []).slice(
       0,
       nowPlayingLimitByListVisibility[
         String(options.showNowPlayingList) as keyof typeof nowPlayingLimitByListVisibility

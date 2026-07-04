@@ -76,7 +76,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
   const flatSessions = useMemo(
     () =>
       currentStreams.flatMap((pair) =>
-        pair.sessions.map((session) => ({
+        (pair.sessions ?? []).map((session) => ({
           ...session,
           integrationKind: pair.integrationKind,
           integrationName: integrationDefs[pair.integrationKind].name,

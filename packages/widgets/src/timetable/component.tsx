@@ -34,7 +34,7 @@ const TimetableWidgetInner = ({ station, baseUrl }: TimetableWidgetInnerProps) =
     <Stack w="100%" gap="xs" p="sm">
       <Text fw="bold">{t("title", { station: station.label })}</Text>
       {(timetable?.entries ?? []).map((entry) => (
-        <Group key={`${entry.timestamp.toISOString()}-${entry.location}`} justify="space-between" w="100%">
+        <Group key={`${new Date(entry.timestamp).toISOString()}-${entry.location}`} justify="space-between" w="100%">
           <Group gap="sm">
             {entry.line && (
               <Badge

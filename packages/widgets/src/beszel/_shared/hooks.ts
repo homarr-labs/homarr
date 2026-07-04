@@ -13,8 +13,8 @@ export const useBeszelFilteredSystems = (
   const allSystems = useMemo(
     () =>
       results
-        .flatMap((r) => r.systems.map((s) => ({ ...s, _key: `${r.integrationId}:${s.id}` })))
-        .toSorted((a, b) => a.name.localeCompare(b.name)),
+        .flatMap((r) => (r.systems ?? []).map((s) => ({ ...s, _key: `${r.integrationId}:${s.id}` })))
+        .toSorted((a, b) => (a.name ?? "").localeCompare(b.name ?? "")),
     [results],
   );
 

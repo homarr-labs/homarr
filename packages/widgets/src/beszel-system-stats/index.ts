@@ -29,7 +29,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
             isPending,
             isError,
           } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
-          const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
+          const selectData = data.flatMap((r) => (r.systems ?? []).map((s) => ({ value: s.id, label: s.name })));
           return { data: selectData, isPending, isError };
         },
       }),

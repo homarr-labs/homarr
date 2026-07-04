@@ -65,7 +65,7 @@ export const SystemHealthMonitoring = ({
   return (
     <Stack h="100%" gap="sm" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-        const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
+        const disksData = matchFileSystemAndSmart(healthInfo.fileSystem ?? [], healthInfo.smart ?? []);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
         return (
           <Stack
@@ -165,7 +165,7 @@ export const SystemHealthMonitoring = ({
                 />
               )}
               {options.gpu &&
-                healthInfo.gpu.map((gpu) => (
+                (healthInfo.gpu ?? []).map((gpu) => (
                   <GpuRing key={gpu.gpuId} gpu={gpu} isTiny={isTiny} fahrenheit={options.fahrenheit} />
                 ))}
             </Flex>
@@ -301,5 +301,5 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
         overallStatus: smartDisk?.overallStatus ?? "",
       };
     })
-    .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
+    .toSorted((fileSystemA, fileSystemB) => (fileSystemA.deviceName ?? "").localeCompare(fileSystemB.deviceName ?? ""));
 };

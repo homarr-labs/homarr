@@ -45,14 +45,14 @@ export function UmamiEventsContent({
 
   // Collect all unique timestamps across all series
   const allTimestamps = Array.from(
-    new Set(series.flatMap(({ dataPoints }) => dataPoints.map(({ x: xPoint }) => xPoint))),
+    new Set(series.flatMap(({ dataPoints }) => (dataPoints ?? []).map(({ x: xPoint }) => xPoint))),
   ).toSorted();
 
   // Build per-event lookup by timestamp string
   const byEvent = new Map(
     series.map((serie: UmamiEventSeries) => [
       serie.eventName,
-      new Map(serie.dataPoints.map((point) => [point.x, point.y])),
+      new Map((serie.dataPoints ?? []).map((point) => [point.x, point.y])),
     ]),
   );
 

@@ -112,7 +112,7 @@ function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContent
       downCount: acc.downCount + item.dashboard.downCount,
       pausedCount: acc.pausedCount + item.dashboard.pausedCount,
       averageUptimePercent: acc.averageUptimePercent + item.dashboard.averageUptimePercent,
-      monitors: [...acc.monitors, ...item.dashboard.monitors],
+      monitors: [...acc.monitors, ...(item.dashboard.monitors ?? [])],
     }),
     emptyDashboard,
   );

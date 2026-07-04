@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 
 export default function ArchiveTeamWarriorWidget({
@@ -28,7 +29,9 @@ const ArchiveTeamWarriorWidgetContent = ({
   integrationId: string;
   options: WidgetComponentProps<"archiveTeamWarrior">["options"];
 }) => {
-  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
+  const { data } = clientApi.widget.archiveTeamWarrior.getStatus.useQuery({ integrationId });
+
+  if (!data) return <WidgetEmptyState />;
 
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? "No project selected";

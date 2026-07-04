@@ -54,12 +54,12 @@ export default function BeszelAlertsWidget({
   }, [results]);
 
   const alerts = useMemo(
-    () => results.flatMap((r) => r.alerts.map((a) => ({ ...a, _key: `${r.integrationId}:${a.id}` }))),
+    () => results.flatMap((r) => (r.alerts ?? []).map((a) => ({ ...a, _key: `${r.integrationId}:${a.id}` }))),
     [results],
   );
 
   const history = useMemo(() => {
-    const all = results.flatMap((r) => r.history.map((h) => ({ ...h, _key: `${r.integrationId}:${h.id}` })));
+    const all = results.flatMap((r) => (r.history ?? []).map((h) => ({ ...h, _key: `${r.integrationId}:${h.id}` })));
     return all
       .toSorted((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
       .slice(0, options.maxHistoryItems);

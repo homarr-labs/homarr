@@ -27,7 +27,7 @@ export function QueuePanel(props: QueuePanelProps) {
 
   const t = useI18n("widget.mediaTranscoding.panel.queue");
 
-  if (queue.array.length === 0) {
+  if ((queue.array ?? []).length === 0) {
     return (
       <Center style={{ flex: "1" }}>
         <Title order={6}>{t("empty")}</Title>
@@ -53,7 +53,7 @@ export function QueuePanel(props: QueuePanelProps) {
           </TableTr>
         </TableThead>
         <TableTbody>
-          {queue.array.map((item) => (
+          {(queue.array ?? []).map((item) => (
             <TableTr key={item.id}>
               <TableTd py={2}>
                 <Group gap={4} wrap="nowrap">

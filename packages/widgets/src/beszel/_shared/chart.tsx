@@ -187,7 +187,7 @@ export const useDockerChartData = (
     const { fmt, ordered } = prepareRecords(containerStats, timePeriod);
     const mapped = ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
-      const byName = new Map(record.stats.map((c) => [c.n, c]));
+      const byName = new Map((record.stats ?? []).map((c) => [c.n, c]));
       for (const name of containerNames) {
         point[name] = extract(byName.get(name));
       }

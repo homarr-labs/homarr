@@ -57,7 +57,7 @@ export function UmamiContent({
   );
 
   const multiEventTotal = multiEventSeries
-    ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints).reduce((sum, { y }) => sum + y, 0)
+    ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints ?? []).reduce((sum, { y }) => sum + y, 0)
     : undefined;
 
   const firstResult = results[0];
@@ -73,13 +73,13 @@ export function UmamiContent({
 
   const { visitorStats } = firstResult;
 
-  const chartData = visitorStats.dataPoints.map((point: UmamiVisitorStats["dataPoints"][number]) => ({
+  const chartData = (visitorStats.dataPoints ?? []).map((point: UmamiVisitorStats["dataPoints"][number]) => ({
     label: formatXLabel(point.timestamp, timeFrame),
     visitors: point.visitors,
     ...(point.events !== undefined ? { events: point.events } : {}),
   }));
 
-  const hasEventSeries = visitorStats.dataPoints.some(({ events }) => events !== undefined);
+  const hasEventSeries = (visitorStats.dataPoints ?? []).some(({ events }) => events !== undefined);
   const series = [
     { name: "visitors", color: "blue.5" },
     ...(hasEventSeries ? [{ name: "events", color: "orange.5" }] : []),

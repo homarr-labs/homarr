@@ -24,8 +24,8 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
   const sortedNotifications = useMemo(
     () =>
       notificationIntegrations
-        .flatMap((integration) => integration.data)
-        .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
+        .flatMap((integration) => integration.data ?? [])
+        .sort((a, b) => (b.time?.getTime?.() ?? 0) - (a.time?.getTime?.() ?? 0)),
     [notificationIntegrations],
   );
 

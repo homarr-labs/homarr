@@ -44,7 +44,7 @@ function UpsContent({ integrationIds, options, width }: UpsContentProps) {
   if (!data) return <WidgetEmptyState />;
 
   const devices = data.flatMap((instance) =>
-    instance.summaries.map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),
+    (instance.summaries ?? []).map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),
   );
 
   if (devices.length === 0) {
