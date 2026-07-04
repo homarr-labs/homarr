@@ -1,6 +1,13 @@
 interface Options<TData, TInput extends Record<string, unknown>> {
   requestAsync: (input: TInput) => Promise<TData>;
   cacheTtlMs?: number;
+  /**
+   * Namespace for cache entries of this handler. Defaults to a unique id per
+   * createRequestHandler call. Callers that re-create handlers per request
+   * (e.g. createIntegrationRequestHandler) must pass a stable key themselves,
+   * otherwise the cache never hits.
+   */
+  cacheKey?: string;
 }
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
@@ -18,43 +25,52 @@ const evictExpired = () => {
   }
 };
 
+let autoCacheKeyCounter = 0;
+
 export const createRequestHandler = <TData, TInput extends Record<string, unknown>>(
   options: Options<TData, TInput>,
-) => ({
-  handler: (input: TInput) => ({
-    async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
-      const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
-      const key = JSON.stringify(input);
+) => {
+  // The cache map is shared between all handlers, so entries have to be namespaced
+  // per handler — otherwise handlers receiving the same input (e.g. the same
+  // integrationId with empty options) would read each other's data.
+  const cacheKey = options.cacheKey ?? `handler-${autoCacheKeyCounter++}`;
 
-      const cached = cache.get(key) as CacheEntry<TData> | undefined;
-      if (cached && Date.now() < cached.expiresAt) {
-        return { data: cached.data, timestamp: cached.timestamp };
-      }
-      if (cached) cache.delete(key);
+  return {
+    handler: (input: TInput) => ({
+      async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+        const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
+        const key = `${cacheKey}:${JSON.stringify(input)}`;
 
-      const existing = inflight.get(key);
-      if (existing) return existing as Promise<CacheEntry<TData>>;
+        const cached = cache.get(key) as CacheEntry<TData> | undefined;
+        if (cached && Date.now() < cached.expiresAt) {
+          return { data: cached.data, timestamp: cached.timestamp };
+        }
+        if (cached) cache.delete(key);
 
-      const promise = options
-        .requestAsync(input)
-        .then((data) => {
-          if (cache.size >= MAX_CACHE_SIZE) evictExpired();
-          if (cache.size >= MAX_CACHE_SIZE) {
-            const oldest = cache.keys().next().value;
-            if (oldest) cache.delete(oldest);
-          }
-          const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
-          cache.set(key, entry as CacheEntry<unknown>);
-          inflight.delete(key);
-          return entry;
-        })
-        .catch((err) => {
-          inflight.delete(key);
-          throw err;
-        });
+        const existing = inflight.get(key);
+        if (existing) return existing as Promise<CacheEntry<TData>>;
 
-      inflight.set(key, promise as Promise<CacheEntry<unknown>>);
-      return promise;
-    },
-  }),
-});
+        const promise = options
+          .requestAsync(input)
+          .then((data) => {
+            if (cache.size >= MAX_CACHE_SIZE) evictExpired();
+            if (cache.size >= MAX_CACHE_SIZE) {
+              const oldest = cache.keys().next().value;
+              if (oldest) cache.delete(oldest);
+            }
+            const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
+            cache.set(key, entry as CacheEntry<unknown>);
+            inflight.delete(key);
+            return entry;
+          })
+          .catch((err) => {
+            inflight.delete(key);
+            throw err;
+          });
+
+        inflight.set(key, promise as Promise<CacheEntry<unknown>>);
+        return promise;
+      },
+    }),
+  };
+};
