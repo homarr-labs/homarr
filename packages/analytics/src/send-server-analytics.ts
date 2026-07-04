@@ -36,8 +36,6 @@ const logger = createLogger({ module: "analytics" });
 
 type AnalyticsResult = "sent" | "disabled" | "failed";
 
-// ponytail: no DB-level lock; concurrent calls may both generate an ID, but the last write wins
-// and the ID stabilizes after the first successful run. Upgrade path: use DB upsert with WHERE instanceId IS NULL.
 const getOrCreateInstanceId = async (
   analyticsSettings: Awaited<ReturnType<typeof getServerSettingByKeyAsync<"analytics">>>,
 ): Promise<string> => {

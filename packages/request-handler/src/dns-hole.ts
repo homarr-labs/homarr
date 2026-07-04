@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const dnsHoleRequestHandler = createCachedIntegrationRequestHandler<
+export const dnsHoleRequestHandler = createIntegrationRequestHandler<
   DnsHoleSummary,
   IntegrationKindByCategory<"dnsHole">,
   Record<string, never>
@@ -15,6 +13,4 @@ export const dnsHoleRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getSummaryAsync();
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
-  queryKey: "dnsHoleSummary",
 });

@@ -38,6 +38,7 @@ interface ModalProps<TSort extends WidgetKind> {
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
+  itemId?: string;
   appId?: string;
 }
 
@@ -146,6 +147,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             property={key}
             options={value as never}
             initialOptions={innerProps.value.options}
+            itemId={innerProps.itemId}
           />
         );
       })}

@@ -118,18 +118,7 @@ const SystemDiskCard = ({
 
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput, {
-    staleTime: 5 * 1000,
-  });
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(queryInput, {
-    onData(data) {
-      utils.widget.healthMonitoring.getSystemHealthStatus.setData(queryInput, (oldData) =>
-        oldData?.map((item) => (item.integrationId === data.integrationId ? { ...item, ...data } : item)),
-      );
-    },
-  });
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
 
   const lastItem = data.at(-1);
 

@@ -1,4 +1,5 @@
 import { IconBusStop } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 
@@ -7,20 +8,18 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
-  supportedIntegrations: ["searchCh"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      baseUrl: factory.text({
+        defaultValue: "https://search.ch",
+        validate: z.string().url(),
+      }),
       station: factory.dynamicSelect({
-        useOptions(query, integrationIds) {
-          const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery(
-            {
-              integrationId: integrationIds[0] ?? "",
-              query,
-            },
-            {
-              enabled: integrationIds.length > 0,
-            },
-          );
+        useOptions(query, _integrationIds, options) {
+          const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery({
+            baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
+            query,
+          });
 
           return {
             isPending,

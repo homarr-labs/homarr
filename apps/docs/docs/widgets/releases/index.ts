@@ -54,15 +54,22 @@ export const releasesWidget: WidgetDefinition = {
             items: [
               {
                 name: "Provider",
-                description: "Integration to fetch the repository from.",
-                values: "Select from the available integrations.",
+                description: "Provider to fetch the repository or package releases from.",
+                values: "Select from the available providers.",
                 defaultValue: "-",
               },
               {
                 name: "Identifier",
-                description: 'The identifier of the repository, e.g. "homarr-labs/homarr".',
-                values: "Any valid repository identifier.",
+                description: 'The identifier of the repository or package, e.g. "homarr-labs/homarr".',
+                values:
+                  'Any valid provider identifier. GHCR also accepts full image refs like "ghcr.io/owner/package:tag".',
                 defaultValue: "-",
+              },
+              {
+                name: "Provider URL",
+                description: "Base URL for the provider.",
+                values: "Any valid URL.",
+                defaultValue: "Provider default",
               },
               {
                 name: "Name",

@@ -28,7 +28,7 @@ import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
-import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 
@@ -369,12 +369,8 @@ export default function BeszelSystemGridWidget({
     data: results = [],
     error: systemsError,
     isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery(
-    { integrationIds },
-    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
-  );
+  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
-  useBeszelSystemsSubscription(integrationIds, !isEditMode);
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
   if (systemsError) throw systemsError;

@@ -41,36 +41,7 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const {
-    data: results = [],
-    error: alertsError,
-    isPending,
-  } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput, {
-    staleTime: 10_000,
-    gcTime: 48 * 60 * 60 * 1000,
-    refetchInterval: 10_000,
-    retry: false,
-  });
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.beszel.subscribeAlerts.useSubscription(alertsInput, {
-    enabled: !isEditMode,
-    onData(data) {
-      utils.widget.beszel.getAlerts.setData(alertsInput, (prev) => {
-        if (!prev) return prev;
-        return prev.map((r) =>
-          r.integrationId === data.integrationId
-            ? {
-                ...r,
-                alerts: data.alerts.alerts,
-                history: data.alerts.history,
-                updatedAt: data.timestamp,
-              }
-            : r,
-        );
-      });
-    },
-  });
+  const { data: results = [], error: alertsError, isPending } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};

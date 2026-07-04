@@ -39,7 +39,7 @@ export const searchDuckDuckGoBangsAsync = async (input: {
   const queryTokenPrefix = normalizeBangToken(input.query);
   if (!queryTokenPrefix) return [];
 
-  const { data: allBangs } = await duckDuckGoBangsRequestHandler.handler({}).getCachedOrUpdatedDataAsync({});
+  const { data: allBangs } = await duckDuckGoBangsRequestHandler.handler({}).getDataAsync();
   const startIndex = lowerBound(allBangs, queryTokenPrefix);
   const matches: DuckDuckGoBang[] = [];
 

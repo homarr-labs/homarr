@@ -15,7 +15,7 @@ export const bazarrRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "bazarr"))
     .query(async ({ ctx }) => {
       const innerHandler = bazarrBadgesRequestHandler.handler(ctx.integration, {});
-      const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const data = await innerHandler.getDataAsync();
       return data.data;
     }),
 });

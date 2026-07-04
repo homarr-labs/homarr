@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Center, Group, Image, Stack, Text } from "@mantine/core";
 import { IconAlertCircle, IconCalendar } from "@tabler/icons-react";
 
@@ -23,8 +23,17 @@ export default function ImmichAlbumCarouselWidget({
       integrationId: integrationIds[0] ?? "",
       albumId: options.albumId ?? "",
     },
-    { enabled: Boolean(options.albumId), staleTime: 15 * 60 * 1000 },
+    { enabled: Boolean(options.albumId) },
   );
+
+  const photoAssets = useMemo(() => {
+    const assets = album?.assets.filter((asset) => asset.type === "IMAGE") ?? [];
+    return options.randomizePhotos ? shuffle(assets) : assets;
+  }, [album?.assets, options.randomizePhotos]);
+
+  useEffect(() => {
+    setCurrentPhotoIndex(0);
+  }, [photoAssets]);
 
   if (!options.albumId) {
     return <NoAlbumSelected />;
@@ -35,8 +44,6 @@ export default function ImmichAlbumCarouselWidget({
   if (album.assets.length === 0) {
     return <NoPhotosInAlbum />;
   }
-
-  const photoAssets = album.assets.filter((asset) => asset.type === "IMAGE");
 
   if (photoAssets.length === 0) {
     return <NoPhotosInAlbum />;
@@ -53,10 +60,22 @@ export default function ImmichAlbumCarouselWidget({
   );
 }
 
+function shuffle<T>(items: T[]) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    const current = shuffled[index];
+    const random = shuffled[randomIndex];
+    if (current === undefined || random === undefined) continue;
+    shuffled[index] = random;
+    shuffled[randomIndex] = current;
+  }
+  return shuffled;
+}
+
 interface CarouselProps {
   assets: {
     id: string;
-    deviceAssetId: string;
     originalPath: string;
     fileModifiedAt: string;
     publicLink: string;
