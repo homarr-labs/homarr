@@ -2,7 +2,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import superjson from "superjson";
 
 import { fetchApi } from "@homarr/api/client";
-import { getActiveQueryCacheBoardId, queryCacheBuster, queryCacheStoragePrefix } from "@homarr/api/query-cache";
+import { getActiveQueryCacheBoardId, queryCacheStoragePrefix } from "@homarr/api/query-cache";
 
 const queryCacheStorage = {
   getItem: (_key: string) => null as string | null,
@@ -27,7 +27,6 @@ export const createWidgetQueryPersister = () =>
     storage: typeof window === "undefined" ? undefined : queryCacheStorage,
     key: queryCacheStoragePrefix,
     throttleTime: 2000,
-    buster: queryCacheBuster,
     serialize: (data) => superjson.stringify(data),
     deserialize: (data) => superjson.parse(data),
   });
