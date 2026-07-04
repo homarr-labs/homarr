@@ -207,6 +207,8 @@ minimumReleaseAgeExclude:
   - form-data@4.0.6
   # Renovate security update: undici@7.28.0
   - undici@7.28.0
+  # Renovate security update: esbuild@0.28.1
+  - esbuild@0.28.1
 overrides:
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
