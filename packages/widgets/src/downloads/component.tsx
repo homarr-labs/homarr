@@ -104,7 +104,9 @@ export default function DownloadClientsWidget({
   const [quickFilters, setQuickFilters] = useState<QuickFilter>({ integrationKinds: [], statuses: [] });
   const availableStatuses = useMemo<QuickFilter["statuses"]>(() => {
     //Redefine list of available statuses from current items
-    const statuses = Array.from(new Set(currentItems.flatMap(({ data }) => (data.items ?? []).map(({ state }) => state))));
+    const statuses = Array.from(
+      new Set(currentItems.flatMap(({ data }) => (data.items ?? []).map(({ state }) => state))),
+    );
     //Reset user filters accordingly to remove unavailable statuses
     setQuickFilters(({ integrationKinds: names, statuses: prevStatuses }) => {
       return { integrationKinds: names, statuses: prevStatuses.filter((status) => statuses.includes(status)) };

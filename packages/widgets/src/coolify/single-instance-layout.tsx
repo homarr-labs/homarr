@@ -70,9 +70,7 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
           {options.showApplications && (
             <ApplicationsSection applications={applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
-          {options.showServices && (
-            <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />
-          )}
+          {options.showServices && <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />}
         </Accordion>
 
         <Group

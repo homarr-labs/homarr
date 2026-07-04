@@ -54,10 +54,7 @@ export const ClusterHealthMonitoring = ({
   const usedMem = nodes.reduce((sum, item) => (item.isRunning ? item.memory.used + sum : sum), 0);
   const maxMem = nodes.reduce((sum, item) => (item.isRunning ? item.memory.total + sum : sum), 0);
   const maxCpu = nodes.reduce((sum, item) => (item.isRunning ? item.cpu.cores + sum : sum), 0);
-  const usedCpu = nodes.reduce(
-    (sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum),
-    0,
-  );
+  const usedCpu = nodes.reduce((sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum), 0);
   const uptime = nodes.reduce((sum, { uptime }) => (sum > uptime ? sum : uptime), 0);
 
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;

@@ -66,20 +66,12 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
             </Badge>
           )}
           {options.showApplications && (
-            <Badge
-              variant="dot"
-              color={getBadgeColor(runningApps, applications.length)}
-              size="xs"
-            >
+            <Badge variant="dot" color={getBadgeColor(runningApps, applications.length)} size="xs">
               {runningApps}/{applications.length}
             </Badge>
           )}
           {options.showServices && (
-            <Badge
-              variant="dot"
-              color={getBadgeColor(runningServices, services.length)}
-              size="xs"
-            >
+            <Badge variant="dot" color={getBadgeColor(runningServices, services.length)} size="xs">
               {runningServices}/{services.length}
             </Badge>
           )}
@@ -100,9 +92,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
         {options.showApplications && (
           <ApplicationsSection applications={applications} baseUrl={baseUrl} isTiny={isTiny} />
         )}
-        {options.showServices && (
-          <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />
-        )}
+        {options.showServices && <ServicesSection services={services} baseUrl={baseUrl} isTiny={isTiny} />}
       </Accordion>
 
       <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>

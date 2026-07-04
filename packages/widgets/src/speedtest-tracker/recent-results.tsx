@@ -40,7 +40,7 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
 
   return {
     midnightTs: foundMidnight,
-    xTicks: Array.from(tickSet).sort((tsA, tsB) => tsA - tsB),
+    xTicks: Array.from(tickSet).toSorted((tsA, tsB) => tsA - tsB),
     topDateTicks: topTicks,
   };
 }
@@ -161,7 +161,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const data = useMemo(
     () =>
       [...results]
-        .sort((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
+        .toSorted((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
         .filter((result) => (result.download_bits ?? 0) > 0)
         .map((result) => ({
           ts: new Date(result.created_at).getTime(),
@@ -273,7 +273,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
   const data = useMemo(
     () =>
       [...results]
-        .sort((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
+        .toSorted((resultA, resultB) => new Date(resultA.created_at).getTime() - new Date(resultB.created_at).getTime())
         .map((result) =>
           result.ping === null
             ? null

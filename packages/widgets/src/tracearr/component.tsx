@@ -37,7 +37,10 @@ function TracearrContent({ integrationIds, options, width }: TracearrContentProp
       const { stats, streams, violations, recentActivity } = item.dashboard;
       const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
       const aData = recentActivity ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
-      const sData = streams ?? { data: [], summary: { total: 0, transcodes: 0, directStreams: 0, directPlays: 0, totalBitrate: "0", byServer: [] } };
+      const sData = streams ?? {
+        data: [],
+        summary: { total: 0, transcodes: 0, directStreams: 0, directPlays: 0, totalBitrate: "0", byServer: [] },
+      };
 
       return {
         stats: {

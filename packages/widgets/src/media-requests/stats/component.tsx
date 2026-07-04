@@ -43,7 +43,8 @@ export default function MediaServerWidget({
   const board = useRequiredBoard();
 
   if (!requestStats) return <WidgetEmptyState />;
-  if ((requestStats.users ?? []).length === 0 && (requestStats.stats ?? []).length === 0) throw new NoIntegrationDataError();
+  if ((requestStats.users ?? []).length === 0 && (requestStats.stats ?? []).length === 0)
+    throw new NoIntegrationDataError();
 
   const data = [
     {
