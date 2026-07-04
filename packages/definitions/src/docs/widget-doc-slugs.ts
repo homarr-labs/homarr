@@ -50,5 +50,6 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   beszelSystemGrid: "beszel-system-grid",
   beszelAlerts: "beszel-alerts",
   beszelSystemStats: "beszel-system-stats",
+  traefik: "traefik",
   customApi: "custom-api",
 };

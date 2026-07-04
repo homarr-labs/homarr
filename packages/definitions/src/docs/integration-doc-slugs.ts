@@ -49,6 +49,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   gluetun: "gluetun",
   peaNut: "peanut",
   beszel: "beszel",
+  traefik: "traefik",
   archiveTeamWarrior: null,
   mock: null,
 };

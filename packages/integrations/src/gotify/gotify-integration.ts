@@ -6,7 +6,7 @@ import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
-import { gotifyMessagesResponseSchema } from "./gotify-schema";
+import { gotifyApplicationsResponseSchema, gotifyMessagesResponseSchema } from "./gotify-schema";
 
 export class GotifyIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -21,23 +21,47 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     return { Authorization: `Basic ${credentials}` };
   }
 
+  private getMessagesUrl(applicationId: number) {
+    const url = this.externalUrl("/");
+    url.hash = `/messages/${applicationId}`;
+    return url.toString();
+  }
+
   public async getNotificationsAsync(): Promise<Notification[]> {
-    const url = this.url("/message", { limit: 100 });
-    const response = await fetchWithTrustedCertificatesAsync(url, { headers: this.getHeaders() });
+    const [messagesResponse, applicationsResponse] = await Promise.all([
+      fetchWithTrustedCertificatesAsync(this.url("/message", { limit: 100 }), { headers: this.getHeaders() }),
+      fetchWithTrustedCertificatesAsync(this.url("/application"), { headers: this.getHeaders() }),
+    ]);
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!messagesResponse.ok) throw new ResponseError(messagesResponse);
+    if (!applicationsResponse.ok) throw new ResponseError(applicationsResponse);
 
-    const result = await gotifyMessagesResponseSchema.safeParseAsync(await response.json());
-    if (!result.success) throw new Error(`Failed to parse Gotify response: ${result.error.message}`);
-    const parsed = result.data;
+    const messagesResult = await gotifyMessagesResponseSchema.safeParseAsync(await messagesResponse.json());
+    if (!messagesResult.success) throw new Error(`Failed to parse Gotify response: ${messagesResult.error.message}`);
 
-    return parsed.messages.map(
-      (message): Notification => ({
+    const applicationsResult = await gotifyApplicationsResponseSchema.safeParseAsync(await applicationsResponse.json());
+    if (!applicationsResult.success)
+      throw new Error(`Failed to parse Gotify applications response: ${applicationsResult.error.message}`);
+
+    const applicationsById = new Map(applicationsResult.data.map((application) => [application.id, application]));
+
+    return messagesResult.data.messages.map((message): Notification => {
+      const application = applicationsById.get(message.appid);
+      const imagePath = application?.image?.trim();
+
+      return {
         id: String(message.id),
         time: new Date(message.date),
         title: message.title,
         body: message.message,
-      }),
-    );
+        href: this.getMessagesUrl(message.appid),
+        source: application
+          ? {
+              name: application.name,
+              iconUrl: imagePath ? this.externalUrl(`/${imagePath}`).toString() : undefined,
+            }
+          : undefined,
+      };
+    });
   }
 }

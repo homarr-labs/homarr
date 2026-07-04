@@ -38,6 +38,7 @@ export const widgetRouter = createTRPCRouter({
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
   vpn: lazy(() => import("./vpn").then((mod) => mod.vpnRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
+  traefik: lazy(() => import("./traefik").then((mod) => mod.traefikRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
 });

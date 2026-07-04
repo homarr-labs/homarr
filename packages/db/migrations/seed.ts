@@ -271,12 +271,13 @@ const seedServerSettingsAsync = async (db: Database) => {
 };
 
 const seedDefaultIntegrationsAsync = async (db: Database) => {
+  const skippedDefaultIntegrations = new Set(["archiveTeamWarrior"]);
   const defaultIntegrations = integrationKinds.reduce<Integration[]>((acc, kind) => {
     const name = getIntegrationName(kind);
     const defaultUrl = getIntegrationDefaultUrl(kind);
     const hasNoAuthOption = integrationDefs[kind].secretKinds.some((kinds) => kinds.length === 0);
 
-    if (defaultUrl !== undefined && hasNoAuthOption) {
+    if (defaultUrl !== undefined && hasNoAuthOption && !skippedDefaultIntegrations.has(kind)) {
       acc.push({
         id: "new",
         name: `${name} Default`,
