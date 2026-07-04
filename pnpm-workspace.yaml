@@ -14,7 +14,7 @@ catalog:
   "@dnd-kit/utilities": ^3.2.2
   "@drizzle-team/brocli": ^0.12.0
   "@extractus/feed-extractor": 7.2.1
-  '@gfazioli/mantine-onboarding-tour': ^4.0.6
+  "@gfazioli/mantine-onboarding-tour": ^4.0.6
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
   "@homarr/node-unifi": ^2.6.0
@@ -195,7 +195,7 @@ catalog:
   class-variance-authority: ^0.7.1
   tailwind-merge: ^3.6.0
   framer-motion: ^12.40.0
-  '@base-ui/react': ^1.5.0
+  "@base-ui/react": ^1.5.0
 catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false
@@ -251,4 +251,4 @@ allowBuilds:
   msw: false
   protobufjs: false
   vue-demi: false
-  '@parcel/watcher': set this to true or false
+  "@parcel/watcher": true
