@@ -1,0 +1,26 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_3415d9eaee7972::t_d4ab088fcf1f46 28-29,32-42
+  s_3415d9eaee7972::t_0e1c454cf3712a 44-76
+  s_3415d9eaee7972::t_81bfe18b0eda71 4-10
+  s_3415d9eaee7972::t_5e4e22cc16031a 43
+packages/request-handler/src/lib/integration-request-handler.ts
+  s_3415d9eaee7972::t_d286e3bf069e5b 17-18,25-41
+apps/nextjs/src/app/[locale]/_client-providers/query-cache-persister.ts
+  s_3415d9eaee7972::t_cb1c860ee5fc23 2,8-13,17,21-24,29,33-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d0709a684cbef991fddd6d87e3aa21ce159306ac",
+  "prompts": {},
+  "sessions": {
+    "s_3415d9eaee7972": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0a2bbac-97b0-4257-8c35-8822d9ebc072",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
