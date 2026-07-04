@@ -187,6 +187,10 @@ packages/integrations/src/unraid @manuel-rw
 apps/docs/docs/integrations/uptime-kuma @ajnart
 packages/integrations/src/uptime-kuma @ajnart
 
+# Traefik - Introduced in https://github.com/homarr-labs/homarr/pull/6191 by @Nerdy-Technician
+apps/docs/docs/integrations/traefik @Nerdy-Technician
+packages/integrations/src/traefik @Nerdy-Technician
+
 # Exempt Renovate-managed files (no owners)
 package.json
 **/package.json

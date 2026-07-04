@@ -1,5 +1,6 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { ImageProxy } from "@homarr/image-proxy";
 
 import { Integration } from "../base/integration";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -27,7 +28,7 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     return url.toString();
   }
 
-  private async getApplicationsByIdAsync(): Promise<Map<number, { name: string; image?: string }>> {
+  private async getApplicationsByIdAsync(): Promise<Map<number, { name: string; image?: string | null }>> {
     try {
       const response = await fetchWithTrustedCertificatesAsync(this.url("/application"), {
         headers: this.getHeaders(),
@@ -43,6 +44,30 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     }
   }
 
+  private async getApplicationIconUrlAsync(
+    imageProxy: ImageProxy,
+    imagePath: string | null | undefined,
+  ): Promise<string | undefined> {
+    const trimmedImagePath = imagePath?.trim();
+    if (!trimmedImagePath) return undefined;
+
+    try {
+      const imageUrl = this.getApplicationImageUrl(trimmedImagePath);
+      return await imageProxy.createImageAsync(imageUrl, this.getHeaders()).catch(() => imageUrl);
+    } catch {
+      return undefined;
+    }
+  }
+
+  private getApplicationImageUrl(imagePath: string) {
+    try {
+      return new URL(imagePath).toString();
+    } catch {
+      const path = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+      return this.url(path as `/${string}`).toString();
+    }
+  }
+
   public async getNotificationsAsync(): Promise<Notification[]> {
     const [messagesResponse, applicationsById] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/message", { limit: 100 }), { headers: this.getHeaders() }),
@@ -54,9 +79,19 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     const messagesResult = await gotifyMessagesResponseSchema.safeParseAsync(await messagesResponse.json());
     if (!messagesResult.success) throw new Error(`Failed to parse Gotify response: ${messagesResult.error.message}`);
 
+    const imageProxy = new ImageProxy();
+    const iconUrlsByApplicationId = new Map<number, string | undefined>();
+    await Promise.all(
+      [...applicationsById.entries()].map(async ([applicationId, application]) => {
+        iconUrlsByApplicationId.set(
+          applicationId,
+          await this.getApplicationIconUrlAsync(imageProxy, application.image),
+        );
+      }),
+    );
+
     return messagesResult.data.messages.map((message): Notification => {
       const application = applicationsById.get(message.appid);
-      const imagePath = application?.image?.trim();
 
       return {
         id: String(message.id),
@@ -67,7 +102,7 @@ export class GotifyIntegration extends Integration implements INotificationsInte
         source: application
           ? {
               name: application.name,
-              iconUrl: imagePath ? this.externalUrl(`/${imagePath}`).toString() : undefined,
+              iconUrl: iconUrlsByApplicationId.get(message.appid),
             }
           : undefined,
       };

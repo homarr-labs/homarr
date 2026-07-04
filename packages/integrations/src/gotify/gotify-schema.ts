@@ -17,7 +17,7 @@ export const gotifyMessagesResponseSchema = z.object({
 export const gotifyApplicationSchema = z.object({
   id: z.number(),
   name: z.string(),
-  image: z.string().optional(),
+  image: z.string().nullable().optional(),
 });
 
 export const gotifyApplicationsResponseSchema = z.array(gotifyApplicationSchema);
