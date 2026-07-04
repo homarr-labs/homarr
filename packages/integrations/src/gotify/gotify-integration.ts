@@ -27,23 +27,32 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     return url.toString();
   }
 
+  private async getApplicationsByIdAsync(): Promise<Map<number, { name: string; image?: string }>> {
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/application"), {
+        headers: this.getHeaders(),
+      });
+      if (!response.ok) throw new ResponseError(response);
+
+      const result = await gotifyApplicationsResponseSchema.safeParseAsync(await response.json());
+      if (!result.success) return new Map();
+
+      return new Map(result.data.map((application) => [application.id, application]));
+    } catch {
+      return new Map();
+    }
+  }
+
   public async getNotificationsAsync(): Promise<Notification[]> {
-    const [messagesResponse, applicationsResponse] = await Promise.all([
+    const [messagesResponse, applicationsById] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/message", { limit: 100 }), { headers: this.getHeaders() }),
-      fetchWithTrustedCertificatesAsync(this.url("/application"), { headers: this.getHeaders() }),
+      this.getApplicationsByIdAsync(),
     ]);
 
     if (!messagesResponse.ok) throw new ResponseError(messagesResponse);
-    if (!applicationsResponse.ok) throw new ResponseError(applicationsResponse);
 
     const messagesResult = await gotifyMessagesResponseSchema.safeParseAsync(await messagesResponse.json());
     if (!messagesResult.success) throw new Error(`Failed to parse Gotify response: ${messagesResult.error.message}`);
-
-    const applicationsResult = await gotifyApplicationsResponseSchema.safeParseAsync(await applicationsResponse.json());
-    if (!applicationsResult.success)
-      throw new Error(`Failed to parse Gotify applications response: ${applicationsResult.error.message}`);
-
-    const applicationsById = new Map(applicationsResult.data.map((application) => [application.id, application]));
 
     return messagesResult.data.messages.map((message): Notification => {
       const application = applicationsById.get(message.appid);

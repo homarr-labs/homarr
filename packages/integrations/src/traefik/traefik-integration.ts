@@ -124,7 +124,10 @@ export class TraefikIntegration extends Integration {
   }
 
   private async fetchOkAsync(path: ResourcePath | "/api/version") {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(path), { headers: this.getAuthHeaders() });
+    const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
+      headers: this.getAuthHeaders(),
+      timeout: 10_000,
+    });
 
     if (!response.ok) {
       throw new ResponseError(response);
