@@ -1,0 +1,19 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_c7e7ee8a76120e::t_68e9b560f0f0f4 11,20-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c70811b1796fa5449605b3cf768aa7b5a5aba577",
+  "prompts": {},
+  "sessions": {
+    "s_c7e7ee8a76120e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cc68c1df-119c-4aa1-973f-0c6a5a42ade8",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
