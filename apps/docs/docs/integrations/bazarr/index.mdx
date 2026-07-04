@@ -16,6 +16,24 @@ import { bazarrWidget } from '@site/docs/widgets/bazarr';
   categories={['Subtitles', 'Media']}
 />
 
+Bazarr complements Sonarr and Radarr by managing subtitle downloads. The Homarr integration uses your Bazarr API key to fetch missing subtitle counts and health badges.
+
+### Screenshots
+
+import apiKeySettings from './img/api-key-settings.png';
+import widgetOverview from '@site/docs/widgets/bazarr/img/widget-overview.png';
+
+<div className="flex flex-col gap-4">
+  <div>
+    <p>API key location in Bazarr (<strong>Settings → General → Security</strong>):</p>
+    <img src={apiKeySettings} alt="bazarr-api-key-settings" width={128 * 4} />
+  </div>
+  <div>
+    <p>Bazarr widget on a Homarr board:</p>
+    <img src={widgetOverview} alt="bazarr-widget-on-board" width={128 * 4} />
+  </div>
+</div>
+
 ### Widgets & Capabilities
 <IntegrationCapabilites
     items={[{ widget: bazarrWidget }]}
