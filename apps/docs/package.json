@@ -43,7 +43,7 @@
     "random-word-slugs": "^0.1.7",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "swiper": "^12.2.0",
+    "swiper": "^14.0.1",
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
