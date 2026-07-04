@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Ustawienia"
+        "settings": "Ustawienia",
+        "refresh": "",
+        "options": "Opcje",
+        "actions": "Akcje"
       }
     },
     "create": {
@@ -1761,8 +1764,8 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "Podsumowanie Hole DNS",
-      "description": "Wyświetla podsumowanie Twojego hosta DNS",
+      "name": "Podsumowanie DNS Hole",
+      "description": "Wyświetla podsumowanie Twojego DNS Hole",
       "option": {
         "layout": {
           "label": "Układ",
@@ -1783,7 +1786,7 @@
         }
       },
       "error": {
-        "internalServerError": "Nie udało się pobrać podsumowanie Hole DNS",
+        "internalServerError": "Nie udało się pobrać podsumowanie DNS Hole",
         "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje odłączone"
       },
       "data": {
@@ -1795,7 +1798,7 @@
       "domainsTooltip": "Ze względu na wiele integracji, Homarr nie może obliczyć dokładnej liczby zablokowanych domen"
     },
     "dnsHoleControls": {
-      "name": "Kontrola luk DNS",
+      "name": "Kontrola DNS Hole",
       "description": "Kontroluj PiHole lub AdGuard ze swojego pulpitu",
       "option": {
         "layout": {
@@ -1895,11 +1898,14 @@
       }
     },
     "timetable": {
-      "name": "Rozkład",
+      "name": "Harmonogram",
       "description": "Wyświetla czas odjazdu dla stacji",
       "title": "Odjazdy {station}",
       "noStation": "Nie wybrano stacji",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Stacja"
         }
@@ -2088,34 +2094,34 @@
           "label": "Zakres czasu",
           "option": {
             "1d": {
-              "label": "1 dzień"
+              "label": "1 Dzień"
             },
             "5d": {
-              "label": "5 dni"
+              "label": "5 Dni"
             },
             "1mo": {
-              "label": "1 miesiąc"
+              "label": "1 Miesiąc"
             },
             "3mo": {
-              "label": "3 miesiące"
+              "label": "3 Miesiące"
             },
             "6mo": {
-              "label": "6 miesięcy"
+              "label": "6 Miesięcy"
             },
             "ytd": {
               "label": "Od początku roku"
             },
             "1y": {
-              "label": "1 rok"
+              "label": "1 Rok"
             },
             "2y": {
-              "label": "2 lata"
+              "label": "2 Lata"
             },
             "5y": {
-              "label": "5 lat"
+              "label": "5 Lat"
             },
             "10y": {
-              "label": "10 lat"
+              "label": "10 Lat"
             },
             "max": {
               "label": "Maks"
@@ -2123,31 +2129,31 @@
           }
         },
         "timeInterval": {
-          "label": "Interwał czasu",
+          "label": "Interwał Czasu",
           "option": {
             "5m": {
-              "label": "5 minut"
+              "label": "5 Minut"
             },
             "15m": {
-              "label": "15 minut"
+              "label": "15 Minut"
             },
             "30m": {
-              "label": "30 minut"
+              "label": "30 Minut"
             },
             "1h": {
-              "label": "1 godzina"
+              "label": "1 Godzina"
             },
             "1d": {
-              "label": "1 dzień"
+              "label": "1 Dzień"
             },
             "5d": {
-              "label": "5 dni"
+              "label": "5 Dni"
             },
             "1wk": {
-              "label": "1 tydzień"
+              "label": "1 Tydzień"
             },
             "1mo": {
-              "label": "1 miesiąc"
+              "label": "1 Miesiąc"
             }
           }
         }
@@ -2194,7 +2200,7 @@
           "description": "Tylko dla bieżącej pogody"
         },
         "useImperialSpeed": {
-          "label": "Prędkość wiatru w mph"
+          "label": "Użyj mph dla prędkości wiatru"
         },
         "location": {
           "label": "Lokalizacja pogody"
@@ -2203,7 +2209,7 @@
           "label": "Pokaż miasto"
         },
         "hasForecast": {
-          "label": "Pokaż Prognozę"
+          "label": "Pokaż prognozę"
         },
         "forecastDayCount": {
           "label": "Liczba dni prognozy",
@@ -2214,7 +2220,7 @@
           "description": "Jak powinna wyglądać data"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Wschód słońca",
         "sunset": "Zachód słońca",
@@ -2358,7 +2364,7 @@
       "description": "Statystyki Twoich kontenerów (ten widżet można dodać tylko z uprawnieniami administratora)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Kolumny do pokazania"
         },
         "enableRowSorting": {
           "label": "Włącz sortowanie elementów"
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Pokaż informacje o zdjęciu",
           "description": "Wyświetl datę zdjęcia oraz bieżący indeks na dole pokazu slajdów"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Pokaz slajdów zdjęć z Twojego albumu w Immich",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Dostawca"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identyfikator",
             "placeholder": "Nazwa lub Właściciel/Nazwa"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Brak dostawcy",
             "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Nieprawidłowy identyfikator",
           "noMatchingVersion": "Nie znaleziono pasującej wersji",
           "noReleasesFound": "Nie znaleziono wydań!",
-          "noProviderSeleceted": "Nie wybrano dostawcy",
-          "noProviderResponse": "Brak odpowiedzi od dostawcy"
+          "noProviderSelected": "",
+          "noProviderResponse": "Brak odpowiedzi od dostawcy",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Wyłączone"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Status serwera Minecraft"
-            },
-            "timetable": {
-              "label": "Harmonogram"
-            },
             "iconsUpdater": {
               "label": "Aktualizator ikon"
             },
             "analytics": {
               "label": "Analityka"
             },
-            "smartHomeEntityState": {
-              "label": "Stan jednostki Smart Home"
-            },
             "ping": {
               "label": "Pingi"
-            },
-            "mediaServer": {
-              "label": "Serwery mediów"
-            },
-            "mediaOrganizer": {
-              "label": "Organizatory mediów"
-            },
-            "downloads": {
-              "label": "Pobrane "
-            },
-            "mediaRequestStats": {
-              "label": "Statystyki żądań mediów"
-            },
-            "mediaRequestList": {
-              "label": "Lista żądań mediów"
-            },
-            "rssFeeds": {
-              "label": "Kanały RSS"
-            },
-            "indexerManager": {
-              "label": "Menedżer indeksowania"
-            },
-            "healthMonitoring": {
-              "label": "Monitorowanie zdrowia systemu"
-            },
-            "dnsHole": {
-              "label": "Dane DNS Hole"
-            },
-            "updateChecker": {
-              "label": "Sprawdzanie aktualizacji"
-            },
-            "mediaTranscoding": {
-              "label": "Transkodowanie mediów"
-            },
-            "networkController": {
-              "label": "Kontroler sieci"
-            },
-            "refreshNotifications": {
-              "label": "Aktualizacje powiadomień"
-            },
-            "dockerContainers": {
-              "label": "Kontenery Dockera"
-            },
-            "firewallCpu": {
-              "label": "Procesor firewalla"
-            },
-            "firewallMemory": {
-              "label": "Pamięć firewalla"
-            },
-            "firewallVersion": {
-              "label": "Wersja firewalla"
-            },
-            "firewallInterfaces": {
-              "label": "Interfejsy firewalla"
-            },
-            "weather": {
-              "label": "Pogoda"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Aktywni odwiedzający Umami"
-            },
-            "vpn": {
-              "label": "Status VPN"
             }
           },
           "interval": {
@@ -5100,7 +5046,7 @@
     },
     "error": {
       "internalServerError": "Nie udało się pobrać kontenerów Dockera",
-      "noColumns": ""
+      "noColumns": "Wybierz co najmniej jedną kolumnę w ustawieniach widżetu"
     }
   },
   "kubernetes": {

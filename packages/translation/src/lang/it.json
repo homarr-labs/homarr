@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Impostazioni"
+        "settings": "Impostazioni",
+        "refresh": "",
+        "options": "Opzioni",
+        "actions": "Azioni"
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "Partenze {station}",
       "noStation": "Nessuna stazione selezionata",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Stazione"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Mostra informazioni foto",
           "description": "Visualizza la data dell'immagine e l'indice corrente nella parte inferiore della presentazione"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Presentazione delle immagini nel tuo album Immich",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Provider"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identificatore",
             "placeholder": "Nome o Proprietario/Nome"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Nessun Provider",
             "tooltip": "Impossibile analizzare il provider, impostarlo manualmente dopo aver importato le immagini"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": "Salva"
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Identificatore non valido",
           "noMatchingVersion": "Nessuna versione corrispondente trovata",
           "noReleasesFound": "Nessun rilascio trovato",
-          "noProviderSeleceted": "Nessun provider selezionato",
-          "noProviderResponse": "Nessuna risposta dal provider"
+          "noProviderSelected": "",
+          "noProviderResponse": "Nessuna risposta dal provider",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Disabilitato"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Stato del server Minecraft"
-            },
-            "timetable": {
-              "label": "Orario"
-            },
             "iconsUpdater": {
               "label": "Aggiornatore Icone"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Stato dell'entità Smart Home"
-            },
             "ping": {
               "label": "Ping"
-            },
-            "mediaServer": {
-              "label": "Media Server"
-            },
-            "mediaOrganizer": {
-              "label": "Organizzatori Media"
-            },
-            "downloads": {
-              "label": "Scaricamenti"
-            },
-            "mediaRequestStats": {
-              "label": "Statistiche richieste media"
-            },
-            "mediaRequestList": {
-              "label": "Elenco richieste media"
-            },
-            "rssFeeds": {
-              "label": "Feeds RSS"
-            },
-            "indexerManager": {
-              "label": "Gestione Indicizzatori"
-            },
-            "healthMonitoring": {
-              "label": "Monitoraggio integrità del sistema"
-            },
-            "dnsHole": {
-              "label": "Dati di filtraggio DNS"
-            },
-            "updateChecker": {
-              "label": "Controllo aggiornamenti"
-            },
-            "mediaTranscoding": {
-              "label": "Transcodifica del media"
-            },
-            "networkController": {
-              "label": "Controller di rete"
-            },
-            "refreshNotifications": {
-              "label": "Aggiornamento Notifiche"
-            },
-            "dockerContainers": {
-              "label": "Containers docker"
-            },
-            "firewallCpu": {
-              "label": "CPU Firewall"
-            },
-            "firewallMemory": {
-              "label": "Memoria Firewall"
-            },
-            "firewallVersion": {
-              "label": "Versione Firewall"
-            },
-            "firewallInterfaces": {
-              "label": "Interfacce Firewall"
-            },
-            "weather": {
-              "label": "Meteo"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Visitatori Attivi Umami"
-            },
-            "vpn": {
-              "label": "Stato VPN"
             }
           },
           "interval": {

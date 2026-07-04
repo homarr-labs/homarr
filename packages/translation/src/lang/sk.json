@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Nastavenia"
+        "settings": "Nastavenia",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "",
           "description": ""
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Poskytovateľ"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Meno alebo vlastník/meno"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft Server Stav"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
             },
             "analytics": {
               "label": "Analytika"
             },
-            "smartHomeEntityState": {
-              "label": "Stav entity inteligentnej domácnosti"
-            },
             "ping": {
               "label": "Pingy"
-            },
-            "mediaServer": {
-              "label": "Multimediálny Server"
-            },
-            "mediaOrganizer": {
-              "label": "Organizátori médií"
-            },
-            "downloads": {
-              "label": "Na stiahnutie"
-            },
-            "mediaRequestStats": {
-              "label": "Štatistiky mediálnych požiadaviek"
-            },
-            "mediaRequestList": {
-              "label": "Zoznam mediálnych požiadaviek"
-            },
-            "rssFeeds": {
-              "label": "RSS kanály"
-            },
-            "indexerManager": {
-              "label": "Správca indexovania"
-            },
-            "healthMonitoring": {
-              "label": "Monitorovanie zdravia"
-            },
-            "dnsHole": {
-              "label": "Údaje o dierach DNS"
-            },
-            "updateChecker": {
-              "label": "Kontrola aktualizácií"
-            },
-            "mediaTranscoding": {
-              "label": "Prekódovanie médií"
-            },
-            "networkController": {
-              "label": "Sieťový ovládač"
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": "Docker kontajnery"
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

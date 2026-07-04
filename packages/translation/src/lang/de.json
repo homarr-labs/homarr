@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Einstellungen"
+        "settings": "Einstellungen",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "{station} Abfahrt",
       "noStation": "Keine Station ausgewählt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Station"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Foto Infos anzeigen",
           "description": "Datum des Bildes und des aktuellen Indexes am unteren Rand der Diashow anzeigen"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Diashow der Bilder in Ihrem Immich Album",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Anbieter"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name oder Eigentümer/Name"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Keine Anbieter",
             "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Ungültige Kennung",
           "noMatchingVersion": "Keine passende Version gefunden",
           "noReleasesFound": "Keine Veröffentlichungen gefunden",
-          "noProviderSeleceted": "Kein Anbieter ausgewählt",
-          "noProviderResponse": "Keine Antwort vom Anbieter"
+          "noProviderSelected": "",
+          "noProviderResponse": "Keine Antwort vom Anbieter",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Deaktiviert"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Status des Minecraft Servers"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Symbol Updater"
             },
             "analytics": {
               "label": "Nutzungsdaten"
             },
-            "smartHomeEntityState": {
-              "label": "Status der Smart Home Entitäten"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Medien Server"
-            },
-            "mediaOrganizer": {
-              "label": "Medienorganisatoren"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Statistik der Medienanfragen"
-            },
-            "mediaRequestList": {
-              "label": "Liste der Medienanfragen"
-            },
-            "rssFeeds": {
-              "label": "RSS Feeds"
-            },
-            "indexerManager": {
-              "label": "Index Manager"
-            },
-            "healthMonitoring": {
-              "label": "Überwachung des Zustandes"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Daten"
-            },
-            "updateChecker": {
-              "label": "Updateprüfer"
-            },
-            "mediaTranscoding": {
-              "label": "Medien Transkodierung"
-            },
-            "networkController": {
-              "label": "Netzwerk Controller"
-            },
-            "refreshNotifications": {
-              "label": "Benachrichtigungs Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker Container"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Speicher"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Schnittstellen"
-            },
-            "weather": {
-              "label": "Wetter"
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {
