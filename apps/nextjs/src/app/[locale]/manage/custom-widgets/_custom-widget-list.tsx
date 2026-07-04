@@ -65,7 +65,7 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
     };
     document.addEventListener("paste", onPaste);
     return () => document.removeEventListener("paste", onPaste);
-  }, [importMutation]);
+  }, [importMutation.mutate]);
 
   if (definitions.length === 0) {
     return (

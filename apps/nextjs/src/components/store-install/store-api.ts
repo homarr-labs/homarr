@@ -28,7 +28,7 @@ interface PBListResponse {
 }
 
 export const getStoreFileUrl = (submission: StoreSubmission, filename: string) =>
-  `${STORE_URL}/api/files/submissions/${submission.id}/${filename}`;
+  `${STORE_URL}/api/files/submissions/${submission.id}/${encodeURIComponent(filename)}`;
 
 export const fetchStoreSubmissions = async (
   type: "css" | "widget",
