@@ -732,8 +732,8 @@
       "displayType": "",
       "jsonPath": "",
       "jsonPathHint": "",
-      "label": "",
-      "unit": "",
+      "label": "Étiquette",
+      "unit": "Unité",
       "mappings": "",
       "tablePath": "",
       "tablePathHint": "",
@@ -755,14 +755,14 @@
       "striped": "",
       "compact": "",
       "maxHeight": "",
-      "color": "",
+      "color": "Couleur",
       "buttonLabel": "",
       "buttonColor": "",
-      "confirmText": "",
+      "confirmText": "Texte de confirmation",
       "confirmTextHint": "",
-      "successMessage": "",
+      "successMessage": "Message de réussite",
       "successMessageHint": "",
-      "enabled": "",
+      "enabled": "Activé",
       "template": {
         "label": "",
         "description": ""
@@ -1017,13 +1017,13 @@
       "timetable": "",
       "photoService": "",
       "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
+      "notes": "Notes",
+      "mediaMonitoring": "Supervision",
+      "speedtest": "Test de débit",
       "analytics": "",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Bibliothèque de médias",
+      "uptimeMonitoring": "Surveillance des disponibilités"
     },
     "testConnection": {
       "action": {
@@ -1298,7 +1298,7 @@
           "newLabel": "Nouvelle clé privée"
         },
         "slug": {
-          "label": "",
+          "label": "Slug de la page de statut",
           "newLabel": ""
         }
       }
