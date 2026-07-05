@@ -40,6 +40,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   vpn: getIntegrationKindsByCategory("vpn"),
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
+  traefik: ["traefik"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

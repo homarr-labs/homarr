@@ -425,6 +425,14 @@ export const integrationDefs = {
     category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
   },
+  traefik: {
+    name: "Traefik",
+    secretKinds: [[], ["username", "password"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
+    category: ["reverseProxy"],
+    documentationUrl: createDocumentationLink("/docs/integrations/traefik"),
+    defaultPort: 8080,
+  },
   archiveTeamWarrior: {
     name: "ArchiveTeam Warrior",
     secretKinds: [[], ["username", "password"]],
@@ -545,6 +553,7 @@ export const integrationCategories = [
   "documents",
   "mediaLibrary",
   "uptimeMonitoring",
+  "reverseProxy",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

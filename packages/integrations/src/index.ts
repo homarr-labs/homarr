@@ -41,6 +41,7 @@ export { NavidromeIntegration } from "./navidrome/navidrome-integration";
 export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
+export { TraefikIntegration } from "./traefik/traefik-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -80,6 +81,7 @@ export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshel
 export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
 export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
+export type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "./traefik/traefik-types";
 export type {
   ArchiveTeamWarriorBandwidth,
   ArchiveTeamWarriorItem,

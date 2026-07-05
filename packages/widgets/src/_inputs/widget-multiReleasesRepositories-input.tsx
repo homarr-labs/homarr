@@ -50,7 +50,6 @@ import {
 } from "@homarr/definitions";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
-import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedImage } from "@homarr/ui";
 
@@ -270,24 +269,8 @@ const providersWithAuth: ReleaseProviderKind[] = [
 const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repositories: ReleasesRepository[] }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
-  const setSecret = clientApi.widget.secrets.setSecret.useMutation({
-    onSuccess: () => refetch(),
-    onError: (error) => {
-      showErrorNotification({
-        title: "Failed to save token",
-        message: error.message,
-      });
-    },
-  });
-  const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({
-    onSuccess: () => refetch(),
-    onError: (error) => {
-      showErrorNotification({
-        title: "Failed to delete token",
-        message: error.message,
-      });
-    },
-  });
+  const setSecret = clientApi.widget.secrets.setSecret.useMutation({ onSuccess: () => refetch() });
+  const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({ onSuccess: () => refetch() });
 
   const authProviders = useMemo(() => {
     const usedProviders = repositories.map((r) => r.provider).filter((p): p is ReleaseProviderKind => p !== undefined);
