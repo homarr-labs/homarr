@@ -53,7 +53,7 @@ export class GotifyIntegration extends Integration implements INotificationsInte
 
     try {
       const imageUrl = this.getApplicationImageUrl(trimmedImagePath);
-      return await imageProxy.createImageAsync(imageUrl, this.getHeaders()).catch(() => imageUrl);
+      return await imageProxy.createImageAsync(imageUrl, this.getHeaders());
     } catch {
       return undefined;
     }

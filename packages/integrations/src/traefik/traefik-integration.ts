@@ -38,17 +38,17 @@ export class TraefikIntegration extends Integration {
 
   public async getDashboardDataAsync(): Promise<TraefikDashboardData> {
     const [
-      version,
-      entryPoints,
-      httpRouters,
-      httpServices,
-      httpMiddlewares,
-      tcpRouters,
-      tcpServices,
-      tcpMiddlewares,
-      udpRouters,
-      udpServices,
-    ] = await Promise.all([
+      versionResult,
+      entryPointsResult,
+      httpRoutersResult,
+      httpServicesResult,
+      httpMiddlewaresResult,
+      tcpRoutersResult,
+      tcpServicesResult,
+      tcpMiddlewaresResult,
+      udpRoutersResult,
+      udpServicesResult,
+    ] = await Promise.allSettled([
       this.getVersionAsync(),
       this.getResourcesAsync("/api/entrypoints"),
       this.getResourcesAsync("/api/http/routers"),
@@ -60,6 +60,16 @@ export class TraefikIntegration extends Integration {
       this.getResourcesAsync("/api/udp/routers"),
       this.getResourcesAsync("/api/udp/services"),
     ]);
+    const version = versionResult.status === "fulfilled" ? versionResult.value : null;
+    const entryPoints = entryPointsResult.status === "fulfilled" ? entryPointsResult.value : [];
+    const httpRouters = httpRoutersResult.status === "fulfilled" ? httpRoutersResult.value : [];
+    const httpServices = httpServicesResult.status === "fulfilled" ? httpServicesResult.value : [];
+    const httpMiddlewares = httpMiddlewaresResult.status === "fulfilled" ? httpMiddlewaresResult.value : [];
+    const tcpRouters = tcpRoutersResult.status === "fulfilled" ? tcpRoutersResult.value : [];
+    const tcpServices = tcpServicesResult.status === "fulfilled" ? tcpServicesResult.value : [];
+    const tcpMiddlewares = tcpMiddlewaresResult.status === "fulfilled" ? tcpMiddlewaresResult.value : [];
+    const udpRouters = udpRoutersResult.status === "fulfilled" ? udpRoutersResult.value : [];
+    const udpServices = udpServicesResult.status === "fulfilled" ? udpServicesResult.value : [];
 
     return {
       version,
