@@ -3747,6 +3747,9 @@
         },
         "showDockerNetwork": {
           "label": "Show Docker network chart"
+        },
+        "showStorage": {
+          "label": "Show storage chart"
         }
       },
       "selectSystem": "Select system",
@@ -3781,6 +3784,11 @@
           "subtitle": "Throughput of root filesystem",
           "read": "Read",
           "write": "Write"
+        },
+        "storage": {
+          "title": "Storage",
+          "subtitle": "Per-filesystem disk usage",
+          "series": "Used"
         },
         "network": {
           "title": "Bandwidth",
