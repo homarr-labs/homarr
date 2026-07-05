@@ -199,11 +199,7 @@ export default function BeszelSystemStatsWidget({
     return [...paths];
   }, [systemStats]);
 
-  const storageData = useEfsChartData(
-    statsWhenShown(options.showStorage, systemStats),
-    efsPaths,
-    timePeriod,
-  );
+  const storageData = useEfsChartData(statsWhenShown(options.showStorage, systemStats), efsPaths, timePeriod);
 
   const containerSeries = useMemo(
     () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
