@@ -9,6 +9,7 @@ import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { serverSettingsRouter } from "./router/serverSettings";
 import { beszelRouter } from "./router/widgets/beszel";
 import { calendarRouter } from "./router/widgets/calendar";
 import { dnsHoleRouter } from "./router/widgets/dns-hole";
@@ -28,6 +29,7 @@ export const mcpRouter = createTRPCRouter({
   info: infoRouter,
   integration: integrationRouter,
   invite: inviteRouter,
+  serverSettings: serverSettingsRouter,
   beszel: beszelRouter,
   calendar: calendarRouter,
   dnsHole: dnsHoleRouter,
