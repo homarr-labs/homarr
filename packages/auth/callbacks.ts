@@ -47,8 +47,13 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
       where: eq(users.id, user.id),
       columns: {
         colorScheme: true,
+        disabled: true,
       },
     });
+
+    if (additionalProperties?.disabled) {
+      return null;
+    }
 
     return {
       ...session,

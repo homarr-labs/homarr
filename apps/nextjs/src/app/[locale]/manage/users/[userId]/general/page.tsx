@@ -11,6 +11,7 @@ import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
+import { DisableUserButton } from "./_components/_disable-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
@@ -96,6 +97,15 @@ export default async function EditUserPage(props: Props) {
       )}
 
       <DangerZoneRoot>
+        <DangerZoneItem
+          label={user.disabled ? t("user.action.enable.label") : t("user.action.disable.label")}
+          description={
+            user.disabled
+              ? t("management.page.user.action.enable.description", { defaultValue: "Re-enable access for this user" })
+              : t("management.page.user.action.disable.description", { defaultValue: "Prevent this user from logging in" })
+          }
+          action={<DisableUserButton user={user} />}
+        />
         <DangerZoneItem
           label={t("user.action.delete.label")}
           description={t("user.action.delete.description")}
