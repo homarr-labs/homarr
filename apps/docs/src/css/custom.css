@@ -1,4 +1,4 @@
-@import url(https://api.fontshare.com/v2/css?f[]=work-sans@2,1&display=swap);
+@import url("https://api.fontshare.com/v2/css?f[]=work-sans@2,1&display=swap");
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
 
