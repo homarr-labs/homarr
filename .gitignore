@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules
+.pnpm-store/
 .pnp
 .pnp.js
 .idea/
@@ -70,7 +71,10 @@ apps/nextjs/public/images/background.png
 
 # personal agent config
 .opencode
+.agents/
+skills-lock.json
 
 # docusaurus
 apps/docs/.docusaurus
 apps/docs/build
+.pnpm-store

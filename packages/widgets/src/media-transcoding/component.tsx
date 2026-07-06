@@ -38,18 +38,7 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     page: queuePage,
   };
-  const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input, {
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.mediaTranscoding.subscribeData.useSubscription(input, {
-    onData(data) {
-      utils.widget.mediaTranscoding.getDataAsync.setData(input, data);
-    },
-  });
+  const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
 
   const [view, setView] = useState<View>(options.defaultView);
   const t = useI18n("widget.mediaTranscoding");

@@ -19,16 +19,7 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
     latitude: options.location.latitude,
     longitude: options.location.longitude,
   };
-  const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input, {
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.weather.subscribeAtLocation.useSubscription(input, {
-    onData: (data) => utils.widget.weather.atLocation.setData(input, data),
-  });
+  const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input);
 
   if (!weather) return <WidgetEmptyState />;
 

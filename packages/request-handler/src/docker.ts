@@ -1,5 +1,4 @@
 import type { Readable } from "node:stream";
-import dayjs from "dayjs";
 import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
@@ -13,7 +12,7 @@ import type { ContainerState, Port } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
 
@@ -171,16 +170,13 @@ const mockContainers: {
   },
 ];
 
-export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
-  queryKey: "dockerContainersResult",
-  widgetKind: "dockerContainers",
+export const dockerContainersRequestHandler = createWidgetRequestHandler({
   async requestAsync() {
     if (isDemoMode) {
       return mockContainers;
     }
     return await getContainersWithStatsAsync();
   },
-  cacheDuration: dayjs.duration(20, "seconds"),
 });
 
 const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);

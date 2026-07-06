@@ -13,14 +13,14 @@ export const audioStatsRouter = createTRPCRouter({
       const fetchByKind = {
         navidrome: async () => {
           const handler = navidromeRequestHandler.handler({ ...ctx.integration, kind: "navidrome" as const }, {});
-          return (await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false })).data;
+          return (await handler.getDataAsync()).data;
         },
         audiobookshelf: async () => {
           const handler = audiobookshelfRequestHandler.handler(
             { ...ctx.integration, kind: "audiobookshelf" as const },
             {},
           );
-          return (await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false })).data;
+          return (await handler.getDataAsync()).data;
         },
       } as const;
 

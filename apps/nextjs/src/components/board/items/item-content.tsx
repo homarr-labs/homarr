@@ -2,7 +2,7 @@ import type { MutableRefObject } from "react";
 import { useRef } from "react";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import { ErrorBoundary } from "react-error-boundary";
@@ -105,12 +105,16 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
+  const queryClient = useQueryClient();
 
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
-          onReset={reset}
+          onReset={() => {
+            void queryClient.invalidateQueries({ queryKey: [["widget"]] });
+            reset();
+          }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />

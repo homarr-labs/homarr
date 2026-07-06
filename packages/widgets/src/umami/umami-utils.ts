@@ -2,6 +2,8 @@ import type { useScopedI18n } from "@homarr/translation/client";
 
 import { timeFrameValues } from "./index";
 
+export const umamiQueryOptions = { refetchInterval: 60_000 } as const;
+
 export const EVENT_COLORS = ["blue.5", "orange.5", "green.5", "red.5", "violet.5", "teal.5", "yellow.5", "pink.5"];
 
 export function formatXLabel(timestamp: string, timeFrame: string): string {

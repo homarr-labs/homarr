@@ -23,42 +23,23 @@ const statusColors: Record<UpsStatus, string> = {
 
 type UpsLayout = "mini" | "compact" | "full";
 
-export default function UpsWidget({ options, integrationIds, isEditMode, width }: WidgetComponentProps<"ups">) {
+export default function UpsWidget({ options, integrationIds, width }: WidgetComponentProps<"ups">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }
 
-  return <UpsContent integrationIds={integrationIds} options={options} isEditMode={isEditMode} width={width} />;
+  return <UpsContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface UpsContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"ups">["options"];
-  isEditMode: boolean;
   width: number;
 }
 
-function UpsContent({ integrationIds, options, isEditMode, width }: UpsContentProps) {
+function UpsContent({ integrationIds, options, width }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
-  const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds }, { staleTime: 30 * 1000 });
-
-  const utils = clientApi.useUtils();
-  clientApi.widget.ups.subscribeSummaries.useSubscription(
-    { integrationIds },
-    {
-      enabled: !isEditMode,
-      onData(newData) {
-        utils.widget.ups.getSummaries.setData({ integrationIds }, (prevData) => {
-          if (!prevData) return prevData;
-          return prevData.map((instance) =>
-            instance.integrationId === newData.integrationId
-              ? { ...instance, summaries: newData.summaries, updatedAt: newData.timestamp }
-              : instance,
-          );
-        });
-      },
-    },
-  );
+  const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
 
   if (!data) return <WidgetEmptyState />;
 

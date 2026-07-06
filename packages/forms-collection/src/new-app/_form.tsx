@@ -72,7 +72,14 @@ export const AppForm = ({
     }
 
     form.initialize(toFormValues(initialValues));
-  }, [initialValuesKey, form, initialValues]);
+    // `form` is a new object every render (Mantine useForm returns a fresh literal),
+    // so it must not be a dep here — it would re-run every render and, since
+    // form.initialize() always calls clearErrors() (new {} object) internally,
+    // trigger an infinite update loop. initialValuesKey (a primitive string)
+    // already captures the only case this effect exists for: re-initializing
+    // when initialValues actually changes (e.g. navigating between edit pages).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValuesKey]);
 
   // Debounce the name value with 200ms delay
   const [debouncedName] = useDebouncedValue(form.values.name, 200);

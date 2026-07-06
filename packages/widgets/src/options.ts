@@ -55,6 +55,7 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   useOptions: (
     query: string,
     integrationIds: string[],
+    options: Record<string, unknown>,
   ) => {
     isPending: boolean;
     options: DynamicSelectOption[];

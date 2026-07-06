@@ -7,10 +7,9 @@ import type { WidgetComponentProps } from "../definition";
 import { AudioStatsContent } from "./audio-stats-content";
 
 export default function AudioStatsWidget({ integrationIds, options, width }: WidgetComponentProps<"audioStats">) {
-  const { data: response } = clientApi.widget.audioStats.getStats.useQuery(
-    { integrationId: integrationIds[0] ?? "" },
-    { staleTime: 5 * 60 * 1000 },
-  );
+  const { data: response } = clientApi.widget.audioStats.getStats.useQuery({
+    integrationId: integrationIds[0] ?? "",
+  });
 
   if (!response) return <WidgetEmptyState />;
 
