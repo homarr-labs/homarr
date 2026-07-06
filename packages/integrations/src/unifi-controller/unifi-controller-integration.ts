@@ -2,7 +2,6 @@ import type tls from "node:tls";
 import axios from "axios";
 import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
-import { getPortFromUrl } from "@homarr/common";
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
@@ -62,6 +61,10 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     checkServerIdentity: typeof tls.checkServerIdentity;
   }) {
     const url = new URL(this.integration.url);
+    // ponytail: node-unifi hardcodes https:// in its base URL and never serves HTTP.
+    // Respect the user's explicit port; fall back to 8443 (the integration's defaultPort)
+    // so a bare "http://192.168.1.1" maps to https://192.168.1.1:8443 instead of 80.
+    const port = url.port ? Number(url.port) : 8443;
     const certificateOptions = options ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
@@ -69,7 +72,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
 
     const client = new Unifi.Controller({
       host: url.hostname,
-      port: getPortFromUrl(url),
+      port,
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
       createAxiosInstance({ cookies }) {
