@@ -27,7 +27,9 @@ export const openAppsInNewTabs = async (
 
   const apps = await fetchAppsByIds(distinctAppIds);
   const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
-  const tabsToClose = openedWindows.slice(appsWithUrls.length).filter((openedWindow): openedWindow is Window => Boolean(openedWindow));
+  const tabsToClose = openedWindows
+    .slice(appsWithUrls.length)
+    .filter((openedWindow): openedWindow is Window => Boolean(openedWindow));
   for (const tabToClose of tabsToClose) {
     tabToClose.close();
   }

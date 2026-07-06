@@ -7,7 +7,11 @@ describe("openAppsInNewTabs", () => {
     const openedWindowOne = { opener: null, location: { href: "" }, close: vi.fn() } as unknown as Window;
     const openedWindowTwo = { opener: null, location: { href: "" }, close: vi.fn() } as unknown as Window;
     const openedWindowThree = { opener: null, location: { href: "" }, close: vi.fn() } as unknown as Window;
-    const open = vi.spyOn(window, "open").mockReturnValueOnce(openedWindowOne).mockReturnValueOnce(openedWindowTwo).mockReturnValueOnce(openedWindowThree);
+    const open = vi
+      .spyOn(window, "open")
+      .mockReturnValueOnce(openedWindowOne)
+      .mockReturnValueOnce(openedWindowTwo)
+      .mockReturnValueOnce(openedWindowThree);
     const fetchAppsByIds = vi
       .fn()
       .mockResolvedValue([{ href: "https://example.com/one" }, { href: null }, { href: "https://example.com/two" }]);
