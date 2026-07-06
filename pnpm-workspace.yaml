@@ -139,7 +139,7 @@ catalog:
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
-  lucide-react: ^1.22.0
+  lucide-react: ^1.23.0
   "mantine-contextmenu": ^9.3.1
   mantine-datatable: ^9.3.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
