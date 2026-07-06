@@ -110,7 +110,7 @@ catalog:
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   concurrently: ^10.0.3
-  conventional-changelog-conventionalcommits: ^10.0.0
+  conventional-changelog-conventionalcommits: ^10.2.0
   cookie: 2.0.0
   cookies: ^0.9.1
   croner: 10.0.1
