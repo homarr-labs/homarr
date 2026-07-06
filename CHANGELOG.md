@@ -1,3 +1,42 @@
+## [1.69.1](https://github.com/homarr-labs/homarr/compare/v1.69.0...v1.69.1) (2026-07-04)
+
+### Bug Fixes
+
+* unblock query cache mutations in demo mode and add cache buster ([#6176](https://github.com/homarr-labs/homarr/issues/6176)) ([a382c75](https://github.com/homarr-labs/homarr/commit/a382c75968e73bafff55b5890b1e95f0779b50d3))
+
+## [1.69.0](https://github.com/homarr-labs/homarr/compare/v1.68.1...v1.69.0) (2026-07-03)
+
+### Features
+
+* add per-widget secret storage for release provider authentication ([77884a3](https://github.com/homarr-labs/homarr/commit/77884a31794e12a6f7bc59d96c8f61aa429ca68d))
+* **config:** enable pnpm global virtual store for worktree support ([#6098](https://github.com/homarr-labs/homarr/issues/6098)) ([3864727](https://github.com/homarr-labs/homarr/commit/3864727502a64052c4e3838468094b30bf04a133))
+* **docker-widget:** add per-column visibility toggle ([#6093](https://github.com/homarr-labs/homarr/issues/6093)) ([0765262](https://github.com/homarr-labs/homarr/commit/076526293d13379004461633d7ba4c2e83bd5ffe))
+* **docs:** addd in documentation for archiveteam warrior ([f66469d](https://github.com/homarr-labs/homarr/commit/f66469d79797a2da214588f4e8253b03633c59a5))
+* simplify caching — TanStack Query as single source of truth ([#6075](https://github.com/homarr-labs/homarr/issues/6075)) ([f19033e](https://github.com/homarr-labs/homarr/commit/f19033e0d53d248aed678737f3d04d5d8c7815b5))
+* **widgets:** right-click context menu with auto-generated toggle actions ([#6126](https://github.com/homarr-labs/homarr/issues/6126)) ([7e58858](https://github.com/homarr-labs/homarr/commit/7e58858353ae866efd657270d4bb16d2c7d3e551))
+* **widgets:** show calendar events on hover with pin on click ([#2637](https://github.com/homarr-labs/homarr/issues/2637)) ([#6081](https://github.com/homarr-labs/homarr/issues/6081)) ([db3d588](https://github.com/homarr-labs/homarr/commit/db3d58821e4de8d46b110125d0fa36919765248f))
+
+### Bug Fixes
+
+* add id to repository schema and handle missing ids gracefully ([8747d5f](https://github.com/homarr-labs/homarr/commit/8747d5f93ee9a295aad3c7035e8c6c7080bf5ee6))
+* address PR review - atomic upsert, MCP metadata, stale tokens, save UX ([757d598](https://github.com/homarr-labs/homarr/commit/757d59854e5ec82d91c053b8bc3d7eaf2e70efc4))
+* address PR review findings for widget-only integration refactor ([c892731](https://github.com/homarr-labs/homarr/commit/c892731479b47fab6218bd1f52fa6eccbdaa371e))
+* address review - paginate GH releases, GitLab tag_name, docs, test ([e687bc8](https://github.com/homarr-labs/homarr/commit/e687bc8c9277797acaa164a09c74b3808a2cb346))
+* apply version filter to LinuxServer.io provider ([34d976e](https://github.com/homarr-labs/homarr/commit/34d976eeea09e396334ce8fce5c492c07e7dd32b))
+* catch individual repo fetch failures to prevent batch crashes ([d893515](https://github.com/homarr-labs/homarr/commit/d893515b932608ea08c9c6e90b83f340e40f6f8e))
+* compile versionRegex once and add fetch timeouts ([64c7512](https://github.com/homarr-labs/homarr/commit/64c75122833981a49e9c8bf1789d501faff6d62d))
+* **deps:** update dependency postcss to ^8.5.16 ([#6169](https://github.com/homarr-labs/homarr/issues/6169)) ([9252fdc](https://github.com/homarr-labs/homarr/commit/9252fdc13971bd982224a31d7be577112f99ec45))
+* dns-hole widgets showing stale disconnected state ([#6096](https://github.com/homarr-labs/homarr/issues/6096)) ([2443f1c](https://github.com/homarr-labs/homarr/commit/2443f1cd3ff6765a91783d60d42aa03d9ba63fcd))
+* gracefully degrade when widget_secret table is missing or access denied ([30107e4](https://github.com/homarr-labs/homarr/commit/30107e4e76a454ff7402de9a8bc2e0dd6f422aa8))
+* handle missing widgetSecrets table and add default releases repo ([af35a50](https://github.com/homarr-labs/homarr/commit/af35a50fa05fee2f0118e98727eb108b0200f762))
+* **immich:** v3 API compatibility — use searchAssets for album assets, drop deviceAssetId ([#5977](https://github.com/homarr-labs/homarr/issues/5977)) ([a5ec880](https://github.com/homarr-labs/homarr/commit/a5ec880eec276e0814d2ab3ed7f9bc0b804d0465))
+* quick wins — calendar, about, glances, admin UX, releases, iframe, notes ([#6116](https://github.com/homarr-labs/homarr/issues/6116)) ([f9da71a](https://github.com/homarr-labs/homarr/commit/f9da71a19bdfa589aafe26b164d0e0782208ac0a))
+* restore ArchiveTeam Warrior as a proper integration ([8a5ad58](https://github.com/homarr-labs/homarr/commit/8a5ad5861ba4c2d0978f1fa3f6115a1c5974f8a2))
+* **timetable:** restore station search by removing disabled query guard ([d670b69](https://github.com/homarr-labs/homarr/commit/d670b6939672932c1a3d17ab9913901491cb46e3))
+* update CHANGES.md for ArchiveTeam Warrior restoration, remove typo translation key ([62baaf7](https://github.com/homarr-labs/homarr/commit/62baaf78130c4b74e899a948cee17097d8c02593))
+* verbose error messages in all release providers ([2155f13](https://github.com/homarr-labs/homarr/commit/2155f13f245f601b99458e227b6e058fbfa44cd9))
+* **widgets:** make downloads widget table background transparent ([#6025](https://github.com/homarr-labs/homarr/issues/6025)) ([73bed51](https://github.com/homarr-labs/homarr/commit/73bed51df895250f415efd7a87e721e403b3fd99))
+
 ## [1.68.1](https://github.com/homarr-labs/homarr/compare/v1.68.0...v1.68.1) (2026-06-30)
 
 ### Bug Fixes

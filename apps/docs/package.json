@@ -33,7 +33,7 @@
     "@scalar/api-reference-react": "catalog:",
     "@signalwire/docusaurus-plugin-llms-txt": "^1.2.2",
     "@tabler/icons-react": "catalog:",
-    "@tailwindcss/postcss": "^4.3.1",
+    "@tailwindcss/postcss": "^4.3.2",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
@@ -48,7 +48,7 @@
     "react-dom": "catalog:",
     "swiper": "^12.2.0",
     "tailwind-merge": "catalog:",
-    "tailwindcss": "^4.3.1",
+    "tailwindcss": "^4.3.2",
     "zod": "catalog:"
   },
   "devDependencies": {

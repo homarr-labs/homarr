@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Indstillinger"
+        "settings": "Indstillinger",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "Afgange {station}",
       "noStation": "Ingen station valgt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Station"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Vis billedinfo",
           "description": "Vis dato for billedet og det aktuelle indeks i bunden af diasshowet"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Diasshow af billeder i dit Immich album",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Udbyder"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Ingen Udbyder",
             "tooltip": "Udbyderen kunne ikke fortolkes, angiv venligst det manuelt efter import af billederne"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen matchende version fundet",
           "noReleasesFound": "Ingen udgivelser fundet",
-          "noProviderSeleceted": "Ingen udbyder valgt",
-          "noProviderResponse": "Intet svar fra udbyder"
+          "noProviderSelected": "",
+          "noProviderResponse": "Intet svar fra udbyder",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Deaktiveret"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Status for Minecraft server"
-            },
-            "timetable": {
-              "label": "Tidsskema"
-            },
             "iconsUpdater": {
               "label": "Opdatering Af Ikoner"
             },
             "analytics": {
               "label": "Analyser"
             },
-            "smartHomeEntityState": {
-              "label": "Smarthjem ententitets tilstand"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Medieserver"
-            },
-            "mediaOrganizer": {
-              "label": "Medieorganisatorer"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Statistik For Medieforespørgsel"
-            },
-            "mediaRequestList": {
-              "label": "Liste Over Medieforespørgsler"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indekser Manager"
-            },
-            "healthMonitoring": {
-              "label": "Helbredsovervågning"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Opdaterings checker"
-            },
-            "mediaTranscoding": {
-              "label": "Omkodning af medier"
-            },
-            "networkController": {
-              "label": "Netværkskontroller"
-            },
-            "refreshNotifications": {
-              "label": "Notifikations opdaterer"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Hukommelse"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Grænseflader"
-            },
-            "weather": {
-              "label": "Vejr"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Cài đặt"
+        "settings": "Cài đặt",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "",
           "description": ""
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": ""
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -4524,88 +4545,13 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": ""
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
               "label": ""
             },
-            "smartHomeEntityState": {
-              "label": ""
-            },
             "ping": {
-              "label": ""
-            },
-            "mediaServer": {
-              "label": "Máy chủ đa phương tiện"
-            },
-            "mediaOrganizer": {
-              "label": ""
-            },
-            "downloads": {
-              "label": ""
-            },
-            "mediaRequestStats": {
-              "label": ""
-            },
-            "mediaRequestList": {
-              "label": ""
-            },
-            "rssFeeds": {
-              "label": ""
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": ""
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": ""
-            },
-            "mediaTranscoding": {
-              "label": ""
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
               "label": ""
             }
           },

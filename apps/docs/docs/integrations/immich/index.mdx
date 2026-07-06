@@ -39,13 +39,26 @@ import { immichServerStatsWidget } from '../../widgets/immich-server-stats';
     'Scroll down to "API Keys"', 
     'Click "New API Key"', 
     'Enter a name, e.g. "Homarr"', 
-    (<span>
-      Select the following permissions:{" "}
-      <code>album.read</code>,{" "}
-      <code>user.read</code>,{" "}
-      <code>server.statistics</code>,{" "}
-      <code>asset.download</code>
-    </span>), 
+(
+
+  <span>
+
+    Select the following permissions:{" "}
+    <code>album.statistics</code>,{" "}
+    <code>album.read</code>,{" "}
+    <code>album.create</code>,{" "}
+    <code>user.read</code>,{" "}
+    <code>user.update</code>,{" "}
+    <code>asset.read</code>,{" "}
+    <code>asset.download</code>,{" "}
+    <code>asset.statistics</code>,{" "}
+    <code>server.statistics</code>,{" "}
+    <code>server.about</code>.
+    <br />
+    Additional permissions may be required depending on your Immich version. If you encounter authorization errors, grant any missing permissions requested by the server.
+  </span>
+
+),Ï
     'Create the integration in Homarr and copy the API key to there'
     ]
 }]} />

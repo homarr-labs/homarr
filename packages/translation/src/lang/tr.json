@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Ayarlar"
+        "settings": "Ayarlar",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "{station} kalkışları",
       "noStation": "İstasyon seçilmedi",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "İstasyon"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Show photo info",
           "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Slideshow of pictures in your Immich album",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Sağlayıcı"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Sağlayıcı Bulunamadı",
             "tooltip": "Sağlayıcı çözümlenemedi, lütfen görselleri içe aktardıktan sonra elle ayarlayın"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Geçersiz tanımlayıcı",
           "noMatchingVersion": "Eşleşen sürüm bulunamadı",
           "noReleasesFound": "Hiçbir sürüm bulunamadı",
-          "noProviderSeleceted": "Hiçbir sağlayıcı seçilmedi",
-          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı"
+          "noProviderSelected": "",
+          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Pasif"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft sunucu durumu"
-            },
-            "timetable": {
-              "label": "Zaman Çizelgesi"
-            },
             "iconsUpdater": {
               "label": "Simge Güncelleme"
             },
             "analytics": {
               "label": "Analiz"
             },
-            "smartHomeEntityState": {
-              "label": "Akıllı Ev Varlık Durumu"
-            },
             "ping": {
               "label": "Pingler"
-            },
-            "mediaServer": {
-              "label": "Medya Sunucusu"
-            },
-            "mediaOrganizer": {
-              "label": "Medya Düzenleyicileri"
-            },
-            "downloads": {
-              "label": "İndirmeler"
-            },
-            "mediaRequestStats": {
-              "label": "Medya Talep İstatistikleri"
-            },
-            "mediaRequestList": {
-              "label": "Medya Talep Listesi"
-            },
-            "rssFeeds": {
-              "label": "RSS Beslemeleri"
-            },
-            "indexerManager": {
-              "label": "İndeksleyici Yöneticisi"
-            },
-            "healthMonitoring": {
-              "label": "Sağlık İzleme"
-            },
-            "dnsHole": {
-              "label": "DNS Çözümleyici Verileri"
-            },
-            "updateChecker": {
-              "label": "Güncelleme denetleyicisi"
-            },
-            "mediaTranscoding": {
-              "label": "Medya Kod Dönüştürme"
-            },
-            "networkController": {
-              "label": "Ağ Denetleyicisi"
-            },
-            "refreshNotifications": {
-              "label": "Bildirim Güncelleyici"
-            },
-            "dockerContainers": {
-              "label": "Docker konteynerleri"
-            },
-            "firewallCpu": {
-              "label": "Güvenlik Duvarı İşlemcisi"
-            },
-            "firewallMemory": {
-              "label": "Güvenlik Duvarı Belleği"
-            },
-            "firewallVersion": {
-              "label": "Güvenlik Duvarı Sürümü"
-            },
-            "firewallInterfaces": {
-              "label": "Güvenlik Duvarı Arayüzleri"
-            },
-            "weather": {
-              "label": "Hava Durumu"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

@@ -5,7 +5,7 @@ import { boards } from "@homarr/db/schema";
 import { removeQueryCacheAsync, setQueryCacheAsync } from "@homarr/redis";
 
 import { queryCacheDefaultGcTimeMs, queryCacheMaxValueBytes } from "../query-cache";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, internalProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 const queryCacheBoardInput = z.object({
@@ -21,7 +21,7 @@ const validateBoardAccessAsync = async (ctx: Parameters<typeof throwIfActionForb
 };
 
 export const queryCacheRouter = createTRPCRouter({
-  setItem: publicProcedure.input(queryCacheSetInput).mutation(async ({ ctx, input }) => {
+  setItem: internalProcedure.input(queryCacheSetInput).mutation(async ({ ctx, input }) => {
     await validateBoardAccessAsync(ctx, input.boardId);
     const userId = ctx.session?.user.id ?? "anonymous";
     return {
@@ -34,7 +34,7 @@ export const queryCacheRouter = createTRPCRouter({
       ),
     };
   }),
-  removeItem: publicProcedure.input(queryCacheBoardInput).mutation(async ({ ctx, input }) => {
+  removeItem: internalProcedure.input(queryCacheBoardInput).mutation(async ({ ctx, input }) => {
     await validateBoardAccessAsync(ctx, input.boardId);
     const userId = ctx.session?.user.id ?? "anonymous";
     await removeQueryCacheAsync(userId, input.boardId);
