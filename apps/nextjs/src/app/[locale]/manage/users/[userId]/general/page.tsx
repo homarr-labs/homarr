@@ -102,7 +102,9 @@ export default async function EditUserPage(props: Props) {
           description={
             user.disabled
               ? t("management.page.user.action.enable.description", { defaultValue: "Re-enable access for this user" })
-              : t("management.page.user.action.disable.description", { defaultValue: "Prevent this user from logging in" })
+              : t("management.page.user.action.disable.description", {
+                  defaultValue: "Prevent this user from logging in",
+                })
           }
           action={<DisableUserButton user={user} />}
         />
