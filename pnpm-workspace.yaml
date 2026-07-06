@@ -177,7 +177,7 @@ catalog:
   tsdav: ^2.3.0
   tsx: 4.20.4
   turbo: ^2.10.2
-  typescript: ^7.0.1-rc
+  typescript: 7.0.1-rc
   vite: ^8.1.2
   undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
