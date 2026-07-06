@@ -124,8 +124,8 @@ async function QueryCacheHydration({ userId, boardId }: { userId: string; boardI
     if (!serialized) return null;
 
     const persisted = superjson.parse<PersistedClient>(serialized);
-    if (persisted.buster !== queryCacheBuster) return null;
-    if (!persisted?.clientState?.queries?.length) return null;
+    if (!persisted || persisted.buster !== queryCacheBuster) return null;
+    if (!persisted.clientState?.queries?.length) return null;
 
     return <HydrationBoundary state={persisted.clientState} />;
   } catch (error) {
