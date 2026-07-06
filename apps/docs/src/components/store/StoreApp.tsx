@@ -37,6 +37,8 @@ import {
 import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
+import { formatRelativeTime } from "./format";
+import { downloadSubmissionJson } from "./store-utils";
 import type { SortKey, TypeFilter } from "./useStore";
 import { useStore } from "./useStore";
 
@@ -68,24 +70,6 @@ const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
   { value: "new", label: "Newest" },
 ];
-
-const relativeTime = (date: string) => {
-  const minutes = Math.floor((Date.now() - new Date(date).getTime()) / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
-};
-
-const downloadJson = (s: StoreSubmission) => {
-  const url = URL.createObjectURL(new Blob([s.content], { type: "application/json" }));
-  Object.assign(document.createElement("a"), {
-    href: url,
-    download: `${s.title.replace(/[^a-z0-9-_]+/gi, "-").toLowerCase()}.json`,
-  }).click();
-  URL.revokeObjectURL(url);
-};
 
 const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
   event.preventDefault();
@@ -348,7 +332,7 @@ const SubmissionCard = ({
           )}
         </div>
         <CardDescription className="text-xs">
-          {submission.authorName} · v{submission.version} · {relativeTime(submission.created)}
+          {submission.authorName} · v{submission.version} · {formatRelativeTime(submission.created)}
         </CardDescription>
         <CardAction>
           <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
@@ -413,7 +397,7 @@ const SubmissionCard = ({
             <Button
               variant="ghost"
               size="xs"
-              onClick={() => downloadJson(submission)}
+              onClick={() => downloadSubmissionJson(submission)}
               className="text-muted-foreground hover:text-foreground"
             >
               <IconDownload size={13} /> Download

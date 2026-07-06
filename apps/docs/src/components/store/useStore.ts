@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import dayjs from "dayjs";
 
 import type { StoreComment, StoreSubmission, StoreVote } from "@site/src/lib/pocketbase";
 import { getPocketBase } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/store-schema";
 import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/store-schema";
 import { errorMessage } from "@site/src/lib/utils";
+
+import { voteDelta } from "./store-utils";
 
 export type SortKey = "top" | "new";
 export type TypeFilter = "all" | "yours" | SubmissionType;
@@ -26,7 +29,7 @@ export interface CommentActions {
 
 const sorters: Record<SortKey, (a: StoreSubmission, b: StoreSubmission) => number> = {
   top: (a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes),
-  new: (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+  new: (a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
 };
 
 const isNotFoundError = (error: unknown) =>
@@ -136,12 +139,6 @@ export const useStore = (storeUrl: string) => {
       setError(errorMessage(caught, "Sign in failed"));
     }
   }, [ensureAuth]);
-
-  const voteDelta = (prev: 1 | -1 | undefined, next: 1 | -1): [up: number, down: number] => {
-    if (!prev) return next === 1 ? [1, 0] : [0, 1];
-    if (prev === next) return next === 1 ? [-1, 0] : [0, -1];
-    return next === 1 ? [1, -1] : [-1, 1];
-  };
 
   const vote = useCallback(
     async (submissionId: string, value: 1 | -1) => {
