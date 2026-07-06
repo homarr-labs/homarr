@@ -45,7 +45,7 @@ export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
-  const { data: demoMode, isLoading } = clientApi.info.isDemoMode.useQuery();
+  const { data: demoReadOnly, isLoading } = clientApi.info.isDemoReadOnly.useQuery();
 
   if (!hasChangeAccess || isLoading) {
     return <SelectBoardsMenu />;
@@ -55,9 +55,9 @@ export const BoardContentHeaderActions = () => {
     <>
       {isEditMode && <AddMenu />}
 
-      <EditModeMenu demoMode={demoMode ?? false} />
+      <EditModeMenu demoReadOnly={demoReadOnly ?? false} />
 
-      {!demoMode && (
+      {!demoReadOnly && (
         <OnboardingTour.Target id="board-settings">
           <HeaderButton href={`/boards/${board.name}/settings`}>
             <IconSettings stroke={1.5} />
@@ -158,7 +158,7 @@ const AddMenu = () => {
   );
 };
 
-const EditModeMenu = ({ demoMode }: { demoMode: boolean }) => {
+const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
@@ -188,11 +188,11 @@ const EditModeMenu = ({ demoMode }: { demoMode: boolean }) => {
 
   const toggle = useCallback(() => {
     if (isEditMode) {
-      if (demoMode) return discardDemoChanges();
+      if (demoReadOnly) return discardDemoChanges();
       return saveBoard(board);
     }
     open();
-  }, [board, isEditMode, demoMode, saveBoard, open, discardDemoChanges]);
+  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
