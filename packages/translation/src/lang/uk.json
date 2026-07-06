@@ -3437,7 +3437,7 @@
           "description": ""
         },
         "maxNowPlayingItems": {
-          "label": "",
+          "label": "Максимум елементів для відтворення",
           "description": ""
         },
         "showLibraryCount": {
