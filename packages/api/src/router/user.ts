@@ -23,6 +23,7 @@ import {
   userCreateSchema,
   userDdgBangsSchema,
   userEditProfileSchema,
+  userEnableRightClickOnWidgetsSchema,
   userFirstDayOfWeekSchema,
   userInitSchema,
   userPingIconsEnabledSchema,
@@ -345,6 +346,7 @@ export const userRouter = createTRPCRouter({
         mobileHomeBoardId: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
+        enableRightClickOnWidgets: true,
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
         ddgBangs: true,
@@ -381,6 +383,7 @@ export const userRouter = createTRPCRouter({
           mobileHomeBoardId: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
+          enableRightClickOnWidgets: true,
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
           ddgBangs: true,
@@ -666,6 +669,23 @@ export const userRouter = createTRPCRouter({
         .update(users)
         .set({
           pingIconsEnabled: input.pingIconsEnabled,
+        })
+        .where(eq(users.id, input.id));
+    }),
+  changeEnableRightClickOnWidgets: protectedProcedure
+    .input(userEnableRightClickOnWidgetsSchema.and(byIdSchema))
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          enableRightClickOnWidgets: input.enableRightClickOnWidgets,
         })
         .where(eq(users.id, input.id));
     }),

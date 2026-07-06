@@ -198,6 +198,9 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Enable right click on widgets"
+      },
       "defaultSearchEngine": {
         "label": "Default search engine"
       },
@@ -5639,6 +5642,14 @@
                 "children": {
                   "detail": {
                     "title": "Use icons for pings"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "Enable right click on widgets",
+                "children": {
+                  "detail": {
+                    "title": "Enable right click on widgets"
                   }
                 }
               },

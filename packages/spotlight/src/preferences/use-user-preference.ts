@@ -93,6 +93,7 @@ export const useUserPreferences = () => {
   const homeBoardsMutation = clientApi.user.changeHomeBoards.useMutation({ onSuccess: refresh });
   const firstDayMutation = clientApi.user.changeFirstDayOfWeek.useMutation({ onSuccess: refresh });
   const pingMutation = clientApi.user.changePingIconsEnabled.useMutation({ onSuccess: refresh });
+  const rightClickMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation({ onSuccess: refresh });
 
   const getEffective = (key: UserPreferenceKey): unknown =>
     key in optimisticRef.current ? optimisticRef.current[key] : settingsRef.current[key as keyof SettingsContextProps];
@@ -116,6 +117,8 @@ export const useUserPreferences = () => {
       }),
     firstDayOfWeek: (uid, _key, value) => firstDayMutation.mutateAsync({ id: uid, firstDayOfWeek: value as DayOfWeek }),
     pingIconsEnabled: (uid, _key, value) => pingMutation.mutateAsync({ id: uid, pingIconsEnabled: value as boolean }),
+    enableRightClickOnWidgets: (uid, _key, value) =>
+      rightClickMutation.mutateAsync({ id: uid, enableRightClickOnWidgets: value as boolean }),
   };
 
   const groupPending: Record<string, boolean> = {
@@ -123,6 +126,7 @@ export const useUserPreferences = () => {
     homeBoards: homeBoardsMutation.isPending,
     firstDayOfWeek: firstDayMutation.isPending,
     pingIconsEnabled: pingMutation.isPending,
+    enableRightClickOnWidgets: rightClickMutation.isPending,
   };
 
   const persistedValues = useMemo<Record<UserPreferenceKey, unknown>>(() => {
