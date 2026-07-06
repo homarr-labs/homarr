@@ -251,6 +251,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/tdarr"),
     defaultPort: 8265,
   },
+  fileFlows: {
+    name: "FileFlows",
+    secretKinds: [[], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/fileflows.png",
+    category: ["mediaTranscoding"],
+    documentationUrl: createDocumentationLink("/docs/integrations/fileflows"),
+    defaultPort: 5000,
+  },
   proxmox: {
     name: "Proxmox",
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
