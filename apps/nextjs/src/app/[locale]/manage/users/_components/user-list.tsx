@@ -56,10 +56,10 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
         accessorKey: "disabled",
         header: t("user.field.status.label", { defaultValue: "Status" }),
         size: 100,
-        Cell: ({ row }) =>
-          row.original.disabled ? (
-            <Badge color="red">{t("user.field.status.disabled", { defaultValue: "Disabled" })}</Badge>
-          ) : null,
+        Cell: ({ row }) => {
+          if (!row.original.disabled) return null;
+          return <Badge color="red">{t("user.field.status.disabled", { defaultValue: "Disabled" })}</Badge>;
+        },
       },
     ],
     [t],

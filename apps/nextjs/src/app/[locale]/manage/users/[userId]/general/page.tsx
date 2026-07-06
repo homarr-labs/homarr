@@ -62,6 +62,19 @@ export default async function EditUserPage(props: Props) {
   const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
   const isCredentialsUser = user.provider === "credentials";
+  const isDisabled = user.disabled;
+
+  const getDisableItemLabel = () => {
+    if (isDisabled) return t("user.action.enable.label");
+    return t("user.action.disable.label");
+  };
+
+  const getDisableItemDescription = () => {
+    if (isDisabled) {
+      return t("management.page.user.action.enable.description", { defaultValue: "Re-enable access for this user" });
+    }
+    return t("management.page.user.action.disable.description", { defaultValue: "Prevent this user from logging in" });
+  };
 
   return (
     <Stack>
@@ -98,14 +111,8 @@ export default async function EditUserPage(props: Props) {
 
       <DangerZoneRoot>
         <DangerZoneItem
-          label={user.disabled ? t("user.action.enable.label") : t("user.action.disable.label")}
-          description={
-            user.disabled
-              ? t("management.page.user.action.enable.description", { defaultValue: "Re-enable access for this user" })
-              : t("management.page.user.action.disable.description", {
-                  defaultValue: "Prevent this user from logging in",
-                })
-          }
+          label={getDisableItemLabel()}
+          description={getDisableItemDescription()}
           action={<DisableUserButton user={user} />}
         />
         <DangerZoneItem

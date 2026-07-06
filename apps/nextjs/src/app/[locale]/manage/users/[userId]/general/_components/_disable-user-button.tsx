@@ -16,22 +16,29 @@ export const DisableUserButton = ({ user }: DisableUserButtonProps) => {
   const t = useI18n();
   const [isPending, startTransition] = useTransition();
   const changeDisabledMutation = clientApi.user.changeDisabled.useMutation();
+  const isDisabled = user.disabled;
+
+  const getSuccessMessage = () => {
+    if (isDisabled) {
+      return {
+        title: t("user.action.enable.success", { defaultValue: "User enabled" }),
+        message: t("user.action.enable.successDescription", { defaultValue: "User has been enabled" }),
+      };
+    }
+    return {
+      title: t("user.action.disable.success", { defaultValue: "User disabled" }),
+      message: t("user.action.disable.successDescription", { defaultValue: "User has been disabled" }),
+    };
+  };
 
   const handleToggle = () => {
     startTransition(async () => {
       try {
         await changeDisabledMutation.mutateAsync({
           userId: user.id,
-          disabled: !user.disabled,
+          disabled: !isDisabled,
         });
-        showSuccessNotification({
-          title: user.disabled
-            ? t("user.action.enable.success", { defaultValue: "User enabled" })
-            : t("user.action.disable.success", { defaultValue: "User disabled" }),
-          message: user.disabled
-            ? t("user.action.enable.successDescription", { defaultValue: "User has been enabled" })
-            : t("user.action.disable.successDescription", { defaultValue: "User has been disabled" }),
-        });
+        showSuccessNotification(getSuccessMessage());
       } catch {
         showErrorNotification({
           title: t("common.notification.update.error"),
@@ -41,21 +48,31 @@ export const DisableUserButton = ({ user }: DisableUserButtonProps) => {
     });
   };
 
-  const tooltipLabel = user.disabled
-    ? t("user.action.enable.description", { defaultValue: "Enable this user" })
-    : t("user.action.disable.description", { defaultValue: "Disable this user" });
+  const getTooltipLabel = () => {
+    if (isDisabled) {
+      return t("user.action.enable.description", { defaultValue: "Enable this user" });
+    }
+    return t("user.action.disable.description", { defaultValue: "Disable this user" });
+  };
+
+  const getButtonLabel = () => {
+    if (isDisabled) {
+      return t("user.action.enable.label", { defaultValue: "Enable user" });
+    }
+    return t("user.action.disable.label", { defaultValue: "Disable user" });
+  };
+
+  const getButtonColor = () => (isDisabled ? "green" : "yellow");
 
   return (
-    <Tooltip label={tooltipLabel} position="top">
+    <Tooltip label={getTooltipLabel()} position="top">
       <Button
         onClick={handleToggle}
         loading={isPending || changeDisabledMutation.isPending}
-        color={user.disabled ? "green" : "yellow"}
+        color={getButtonColor()}
         variant="light"
       >
-        {user.disabled
-          ? t("user.action.enable.label", { defaultValue: "Enable user" })
-          : t("user.action.disable.label", { defaultValue: "Disable user" })}
+        {getButtonLabel()}
       </Button>
     </Tooltip>
   );
