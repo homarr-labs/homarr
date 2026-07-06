@@ -310,8 +310,8 @@ catalogs:
       specifier: ^10.2.0
       version: 10.2.0
     cookie:
-      specifier: 2.0.0
-      version: 2.0.0
+      specifier: 2.0.1
+      version: 2.0.1
     cookies:
       specifier: ^0.9.1
       version: 0.9.1
@@ -1482,7 +1482,7 @@ importers:
         version: 3.3.0
       cookie:
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.1
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
@@ -9133,8 +9133,8 @@ packages:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
     engines: {node: '>=18'}
 
-  cookie@2.0.0:
-    resolution: {integrity: sha512-hRSFuKJ6SYHrFVNltQdagQFMk7e0Q/VrORTGqZGyUAmmhA3EwPeldHCTg0HqUaDodQOfQDe7qXuOtpf4lwCsaA==}
+  cookie@2.0.1:
+    resolution: {integrity: sha512-yuToqVvRrj6pfDXREyQAAv8SkAEk/8GS3jQRTiUMm66TVtBYmqQeoEjL2Lmq8Rpo6271vH76InTChTitEAm65w==}
     engines: {node: '>=22'}
 
   cookies@0.9.1:
@@ -22931,7 +22931,7 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cookie@2.0.0: {}
+  cookie@2.0.1: {}
 
   cookies@0.9.1:
     dependencies:

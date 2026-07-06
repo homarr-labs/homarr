@@ -111,7 +111,7 @@ catalog:
   clsx: ^2.1.1
   concurrently: ^10.0.3
   conventional-changelog-conventionalcommits: ^10.2.0
-  cookie: 2.0.0
+  cookie: 2.0.1
   cookies: ^0.9.1
   croner: 10.0.1
   cross-env: ^10.1.0
