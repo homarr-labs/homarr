@@ -19,13 +19,23 @@ export const openAppsInNewTabs = async (
   if (appIds.length === 0) return;
 
   const distinctAppIds = [...new Set(appIds)];
+  const openedWindows = distinctAppIds.map(() => window.open("", "_blank", "noopener,noreferrer"));
+  for (const openedWindow of openedWindows) {
+    if (!openedWindow) continue;
+    openedWindow.opener = null;
+  }
+
   const apps = await fetchAppsByIds(distinctAppIds);
   const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
+  const tabsToClose = openedWindows.slice(appsWithUrls.length).filter((openedWindow): openedWindow is Window => Boolean(openedWindow));
+  for (const tabToClose of tabsToClose) {
+    tabToClose.close();
+  }
 
-  for (const app of appsWithUrls) {
-    const openedWindow = window.open(app.href ?? undefined, "_blank", "noopener,noreferrer");
+  for (const [index, app] of appsWithUrls.entries()) {
+    const openedWindow = openedWindows[index];
     if (openedWindow) {
-      openedWindow.opener = null;
+      openedWindow.location.href = app.href;
       continue;
     }
 
