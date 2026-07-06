@@ -80,35 +80,27 @@ describe("UnifiControllerIntegration port resolution", () => {
     controllerCtor.mockClear();
     await createIntegration("http://192.168.1.1").getNetworkSummaryAsync();
 
-    expect(controllerCtor).toHaveBeenCalledWith(
-      expect.objectContaining({ host: "192.168.1.1", port: 8443 }),
-    );
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 8443 }));
   });
 
   test("https://controller.lan:8443 keeps the user-specified port", async () => {
     controllerCtor.mockClear();
     await createIntegration("https://controller.lan:8443").getNetworkSummaryAsync();
 
-    expect(controllerCtor).toHaveBeenCalledWith(
-      expect.objectContaining({ host: "controller.lan", port: 8443 }),
-    );
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "controller.lan", port: 8443 }));
   });
 
   test("https://192.168.1.1:8443 keeps the user-specified port", async () => {
     controllerCtor.mockClear();
     await createIntegration("https://192.168.1.1:8443").getNetworkSummaryAsync();
 
-    expect(controllerCtor).toHaveBeenCalledWith(
-      expect.objectContaining({ host: "192.168.1.1", port: 8443 }),
-    );
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 8443 }));
   });
 
   test("an unusual port like 10443 is honored verbatim", async () => {
     controllerCtor.mockClear();
     await createIntegration("https://192.168.1.1:10443").getNetworkSummaryAsync();
 
-    expect(controllerCtor).toHaveBeenCalledWith(
-      expect.objectContaining({ host: "192.168.1.1", port: 10443 }),
-    );
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 10443 }));
   });
 });
