@@ -445,7 +445,7 @@ catalogs:
       specifier: ^1.396.3
       version: 1.396.5
     posthog-node:
-      specifier: ^5.39.1
+      specifier: ^5.39.2
       version: 5.39.4
     prismjs:
       specifier: ^1.30.0
