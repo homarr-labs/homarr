@@ -37,8 +37,8 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   const currentDefinition = useMemo(() => widgetImports[kind].definition, [kind]);
   const [editMode, setEditMode] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({
-    width: 128,
-    height: 128,
+    width: 960,
+    height: 640,
   });
   const [state, setState] = useState<{
     options: Record<string, unknown>;
