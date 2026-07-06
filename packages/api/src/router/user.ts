@@ -673,21 +673,14 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.id));
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
-    .input(userEnableRightClickOnWidgetsSchema.and(byIdSchema))
+    .input(userEnableRightClickOnWidgetsSchema)
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
       await ctx.db
         .update(users)
         .set({
           enableRightClickOnWidgets: input.enableRightClickOnWidgets,
         })
-        .where(eq(users.id, input.id));
+        .where(eq(users.id, ctx.session.user.id));
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))

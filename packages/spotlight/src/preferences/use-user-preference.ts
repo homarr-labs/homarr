@@ -117,8 +117,8 @@ export const useUserPreferences = () => {
       }),
     firstDayOfWeek: (uid, _key, value) => firstDayMutation.mutateAsync({ id: uid, firstDayOfWeek: value as DayOfWeek }),
     pingIconsEnabled: (uid, _key, value) => pingMutation.mutateAsync({ id: uid, pingIconsEnabled: value as boolean }),
-    enableRightClickOnWidgets: (uid, _key, value) =>
-      rightClickMutation.mutateAsync({ id: uid, enableRightClickOnWidgets: value as boolean }),
+    enableRightClickOnWidgets: (_uid, _key, value) =>
+      rightClickMutation.mutateAsync({ enableRightClickOnWidgets: value as boolean }),
   };
 
   const groupPending: Record<string, boolean> = {
