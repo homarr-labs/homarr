@@ -21,7 +21,7 @@ const boardServerSettingsSchema = z.object({
   mobileHomeBoardId: z.string().nullable(),
   enableStatusByDefault: z.boolean(),
   forceDisableStatus: z.boolean(),
-});
+}) satisfies z.ZodType<ServerSettings["board"]>;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
 

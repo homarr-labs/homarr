@@ -132,6 +132,37 @@ describe("board settings API", () => {
     ]);
   });
 
+  test("updateBoardSettings should update existing settings", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "default", isPublic: true });
+
+    await caller.updateBoardSettings({ homeBoardId: boardId });
+    const result = await caller.updateBoardSettings({
+      mobileHomeBoardId: boardId,
+      enableStatusByDefault: false,
+    });
+
+    expect(result).toStrictEqual({
+      ...defaultServerSettings.board,
+      homeBoardId: boardId,
+      mobileHomeBoardId: boardId,
+      enableStatusByDefault: false,
+    });
+    const dbSettings = await db.select().from(serverSettings);
+    expect(dbSettings).toStrictEqual([
+      {
+        settingKey: "board",
+        value: stringify(result),
+      },
+    ]);
+  });
+
   test("updateBoardSettings should reject private home boards", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
