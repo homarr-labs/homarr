@@ -1,11 +1,13 @@
 import fs from "fs";
 import path from "path";
 
-const migrationsFolderCandidates = [
-  path.join(process.cwd(), "db/migrations/sqlite"),
-  path.join(process.cwd(), "packages/db/migrations/sqlite"),
-  path.resolve(process.cwd(), "../../db/migrations/sqlite"),
-  "/app/db/migrations/sqlite",
-];
-
-export const findMigrationsFolder = () => migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));
+export const findMigrationsFolder = () => {
+  const cwd = process.cwd();
+  const migrationsFolderCandidates = [
+    path.join(cwd, "db/migrations/sqlite"),
+    path.join(cwd, "packages/db/migrations/sqlite"),
+    path.resolve(cwd, "../../db/migrations/sqlite"),
+    "/app/db/migrations/sqlite",
+  ];
+  return migrationsFolderCandidates.find((candidate) => fs.existsSync(candidate));
+};
