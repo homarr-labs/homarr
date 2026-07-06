@@ -60,7 +60,9 @@ export const serverSettingsRouter = createTRPCRouter({
     .input(boardServerSettingsUpdateSchema)
     .output(boardServerSettingsSchema)
     .mutation(async ({ ctx, input }) => {
-      const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter((id) => id !== undefined && id !== null);
+      const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter(
+        (id) => id !== undefined && id !== null,
+      );
 
       if (inputBoardIds.length > 0) {
         const publicBoards = await ctx.db.query.boards.findMany({
