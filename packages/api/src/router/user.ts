@@ -674,6 +674,13 @@ export const userRouter = createTRPCRouter({
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .input(userEnableRightClickOnWidgetsSchema.and(byIdSchema))
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Toggle the right-click context menu on widgets for a user by user ID. REQUIRED: id (user ID), enableRightClickOnWidgets (boolean)",
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
         throw new TRPCError({
