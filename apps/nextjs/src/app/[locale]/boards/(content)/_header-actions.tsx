@@ -45,7 +45,9 @@ export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
-  const { data: demoReadOnly, isLoading } = clientApi.info.isDemoReadOnly.useQuery();
+  // Fall back to read-only if the query has no data (e.g. errored) so we never expose
+  // edit/save/settings UI that would then fail server-side.
+  const { data: demoReadOnly = true, isLoading } = clientApi.info.isDemoReadOnly.useQuery();
 
   if (!hasChangeAccess || isLoading) {
     return <SelectBoardsMenu />;
@@ -55,7 +57,7 @@ export const BoardContentHeaderActions = () => {
     <>
       {isEditMode && <AddMenu />}
 
-      <EditModeMenu demoReadOnly={demoReadOnly ?? false} />
+      <EditModeMenu demoReadOnly={demoReadOnly} />
 
       {!demoReadOnly && (
         <OnboardingTour.Target id="board-settings">

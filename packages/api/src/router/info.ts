@@ -20,5 +20,12 @@ export const infoRouter = createTRPCRouter({
       };
     }),
   isDemoMode: publicProcedure.query(() => isDemoMode),
-  isDemoReadOnly: publicProcedure.query(() => isDemoReadOnly),
+  isDemoReadOnly: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Returns whether demo mode is read-only, i.e. whether mutations are blocked for this deployment",
+      },
+    })
+    .query(() => isDemoReadOnly),
 });
