@@ -110,11 +110,13 @@ export default async function EditUserPage(props: Props) {
       )}
 
       <DangerZoneRoot>
-        <DangerZoneItem
-          label={getDisableItemLabel()}
-          description={getDisableItemDescription()}
-          action={<DisableUserButton user={user} />}
-        />
+        {!isSelf && (
+          <DangerZoneItem
+            label={getDisableItemLabel()}
+            description={getDisableItemDescription()}
+            action={<DisableUserButton user={user} isSelf={isSelf} />}
+          />
+        )}
         <DangerZoneItem
           label={t("user.action.delete.label")}
           description={t("user.action.delete.description")}

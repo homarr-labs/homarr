@@ -10,9 +10,10 @@ import { useI18n } from "@homarr/translation/client";
 
 interface DisableUserButtonProps {
   user: RouterOutputs["user"]["getById"];
+  isSelf?: boolean;
 }
 
-export const DisableUserButton = ({ user }: DisableUserButtonProps) => {
+export const DisableUserButton = ({ user, isSelf = false }: DisableUserButtonProps) => {
   const t = useI18n();
   const [isPending, startTransition] = useTransition();
   const changeDisabledMutation = clientApi.user.changeDisabled.useMutation();
@@ -32,6 +33,8 @@ export const DisableUserButton = ({ user }: DisableUserButtonProps) => {
   };
 
   const handleToggle = () => {
+    if (isSelf) return;
+
     startTransition(async () => {
       try {
         await changeDisabledMutation.mutateAsync({
@@ -65,12 +68,13 @@ export const DisableUserButton = ({ user }: DisableUserButtonProps) => {
   const getButtonColor = () => (isDisabled ? "green" : "yellow");
 
   return (
-    <Tooltip label={getTooltipLabel()} position="top">
+    <Tooltip label={isSelf ? t("user.action.disableSelf.disabled", { defaultValue: "Cannot disable your own account" }) : getTooltipLabel()} position="top">
       <Button
         onClick={handleToggle}
         loading={isPending || changeDisabledMutation.isPending}
         color={getButtonColor()}
         variant="light"
+        disabled={isSelf}
       >
         {getButtonLabel()}
       </Button>
