@@ -125,6 +125,8 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         return "seeding";
       case "pausedDL":
       case "pausedUP":
+      case "stoppedDL":
+      case "stoppedUP":
         return "paused";
       case "stalledDL":
         return "stalled";
