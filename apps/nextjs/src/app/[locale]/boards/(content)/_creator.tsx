@@ -123,7 +123,7 @@ async function QueryCacheHydration({ userId, boardId }: { userId: string; boardI
     const serialized = await getQueryCacheAsync(userId, boardId);
     if (!serialized) return null;
 
-    const persisted = superjson.parse<PersistedClient>(serialized);
+    const persisted = superjson.parse<PersistedClient | undefined>(serialized);
     if (!persisted || persisted.buster !== queryCacheBuster) return null;
     if (!persisted.clientState?.queries?.length) return null;
 
