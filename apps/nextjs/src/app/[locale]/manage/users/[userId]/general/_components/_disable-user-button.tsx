@@ -68,7 +68,14 @@ export const DisableUserButton = ({ user, isSelf = false }: DisableUserButtonPro
   const getButtonColor = () => (isDisabled ? "green" : "yellow");
 
   return (
-    <Tooltip label={isSelf ? t("user.action.disableSelf.disabled", { defaultValue: "Cannot disable your own account" }) : getTooltipLabel()} position="top">
+    <Tooltip
+      label={
+        isSelf
+          ? t("user.action.disableSelf.disabled", { defaultValue: "Cannot disable your own account" })
+          : getTooltipLabel()
+      }
+      position="top"
+    >
       <Button
         onClick={handleToggle}
         loading={isPending || changeDisabledMutation.isPending}
