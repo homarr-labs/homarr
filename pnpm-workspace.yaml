@@ -33,7 +33,7 @@ catalog:
   "@mantine/notifications": ^9.4.1
   "@mantine/spotlight": ^9.4.1
   "@mantine/tiptap": ^9.4.1
-  "@next/eslint-plugin-next": 16.2.9
+  "@next/eslint-plugin-next": 16.2.10
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
   "@playwright/test": ^1.61.1
@@ -146,7 +146,7 @@ catalog:
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
   mysql2: 3.22.5
-  next: 16.2.9
+  next: 16.2.10
   next-auth: 5.0.0-beta.31
   next-intl: 4.13.1
   node-loader: ^2.1.0
