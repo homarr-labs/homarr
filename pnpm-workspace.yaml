@@ -174,7 +174,7 @@ catalog:
   timezones-ical-library: ^2.2.1
   trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
-  tsdav: ^2.2.2
+  tsdav: ^2.3.0
   tsx: 4.20.4
   turbo: ^2.10.2
   typescript: ^6.0.3

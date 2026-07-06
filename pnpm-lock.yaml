@@ -508,8 +508,8 @@ catalogs:
       specifier: ^3.3.0
       version: 3.3.0
     tsdav:
-      specifier: ^2.2.2
-      version: 2.2.2
+      specifier: ^2.3.0
+      version: 2.3.0
     tsx:
       specifier: 4.20.4
       version: 4.20.4
@@ -1956,7 +1956,7 @@ importers:
         version: 2.2.1
       tsdav:
         specifier: 'catalog:'
-        version: 2.2.2
+        version: 2.3.0
       undici:
         specifier: 'catalog:'
         version: 7.28.0
@@ -8569,9 +8569,6 @@ packages:
       bare-events:
         optional: true
 
-  base-64@1.0.0:
-    resolution: {integrity: sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==}
-
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -14544,8 +14541,8 @@ packages:
       typescript:
         optional: true
 
-  tsdav@2.2.2:
-    resolution: {integrity: sha512-/uC/RItcdYVxUj8b2gT4CorAkUmDFUuzhgS4XVT+OVzGRE80hH5ldubcWH13dHa2T9rNaXu6UIEWHlQ1UL7H1Q==}
+  tsdav@2.3.0:
+    resolution: {integrity: sha512-1zxaMcHw/ISDZc+owPykCZqXtJjZSWZr1Vz1ycw/X+8h48pYbUVmTFLl5hRKFx+pMWSYpCsq8rxdYdlpRep7Mw==}
     engines: {node: '>=18'}
 
   tslib@1.14.1:
@@ -22322,8 +22319,6 @@ snapshots:
       bare-events: 2.5.4
     optional: true
 
-  base-64@1.0.0: {}
-
   base64-js@1.5.1: {}
 
   baseline-browser-mapping@2.10.31: {}
@@ -29198,9 +29193,8 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  tsdav@2.2.2:
+  tsdav@2.3.0:
     dependencies:
-      base-64: 1.0.0
       debug: 4.4.3
       xml-js: 1.6.11
     transitivePeerDependencies:
