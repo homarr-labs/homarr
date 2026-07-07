@@ -1,4 +1,5 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import superjson from "superjson";
 
 import { fetchApi } from "@homarr/api/client";
 import { getActiveQueryCacheBoardId, queryCacheStoragePrefix } from "@homarr/api/query-cache";
@@ -26,4 +27,6 @@ export const createWidgetQueryPersister = () =>
     storage: typeof window === "undefined" ? undefined : queryCacheStorage,
     key: queryCacheStoragePrefix,
     throttleTime: 2000,
+    serialize: (data) => superjson.stringify(data),
+    deserialize: (data) => superjson.parse(data),
   });

@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Asetukset"
+        "settings": "Asetukset",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "",
           "description": ""
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": ""
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "Toimittajaa ei ole valittu",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Ei käytössä"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft-palvelimen tila"
-            },
-            "timetable": {
-              "label": "Aikataulu"
-            },
             "iconsUpdater": {
               "label": "Kuvakepäivitykset"
             },
             "analytics": {
               "label": "Analytiikka"
             },
-            "smartHomeEntityState": {
-              "label": "Älykodin entiteettitila"
-            },
             "ping": {
               "label": "Ping-koestukset"
-            },
-            "mediaServer": {
-              "label": "Mediapalvelimet"
-            },
-            "mediaOrganizer": {
-              "label": "Median hallintatyökalut"
-            },
-            "downloads": {
-              "label": "Lataukset"
-            },
-            "mediaRequestStats": {
-              "label": "Mediapyyntöjen tilastot"
-            },
-            "mediaRequestList": {
-              "label": "Mediapyyntöjen listaus"
-            },
-            "rssFeeds": {
-              "label": "RSS-syötteet"
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": "Terveydentilan valvonta"
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": "Päivitystarkistus"
-            },
-            "mediaTranscoding": {
-              "label": "Median transkoodaus"
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": "Ilmoituspäivitykset"
-            },
-            "dockerContainers": {
-              "label": "Docker-kontit"
-            },
-            "firewallCpu": {
-              "label": "Palomuurin suoritin"
-            },
-            "firewallMemory": {
-              "label": "Palomuurin muisti"
-            },
-            "firewallVersion": {
-              "label": "Palomuurin versio"
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": "Sää"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umamin aktiiviset käyttäjät"
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

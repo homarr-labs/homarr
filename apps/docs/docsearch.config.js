@@ -1,18 +1,25 @@
 // Algolia DocSearch crawler for homarr.dev
 // Crawler ID: cd77a285-2756-4557-bf21-ee703748df15
-// DocSearch-managed crawlers: paste this in the Algolia crawler editor or send to DocSearch support.
-// Template: https://docsearch.algolia.com/docs/templates/#docusaurus-v3-template
-// Markdown indexing: https://www.algolia.com/doc/guides/algolia-ai/askai/guides/markdown-indexing
+// Paste this in the Algolia crawler editor.
 
 new Crawler({
   appId: "N69WSPZTID",
   apiKey: "YOUR_CRAWLER_ADMIN_API_KEY",
-  rateLimit: 8,
-  maxDepth: 10,
+  indexPrefix: "",
+  rateLimit: 32,
+  maxDepth: 4,
   startUrls: ["https://homarr.dev/"],
   sitemaps: ["https://homarr.dev/sitemap.xml"],
   ignoreCanonicalTo: true,
   discoveryPatterns: ["https://homarr.dev/**"],
+  exclusionPatterns: [
+    "https://homarr.dev/docs/tags/**",
+    "https://homarr.dev/blog/tags/**",
+    "https://homarr.dev/blog/authors/**",
+    "https://homarr.dev/blog/archive/**",
+    "https://homarr.dev/search/**",
+    "https://homarr.dev/docs/category/**",
+  ],
   actions: [
     {
       indexName: "Docusaurus",
@@ -105,7 +112,6 @@ new Crawler({
       advancedSyntax: true,
       attributeCriteriaComputedByMinProximity: true,
       removeWordsIfNoResults: "allOptional",
-      separatorsToIndex: "_",
     },
     markdown: {
       attributesForFaceting: ["lang", "language", "version", "docusaurus_tag"],
@@ -119,4 +125,10 @@ new Crawler({
       advancedSyntax: false,
     },
   },
+  apiKey: "YOUR_CRAWLER_ADMIN_API_KEY",
+  schedule: "on saturday",
+  renderJavaScript: false,
+  maxUrls: null,
+  cache: { enabled: false },
+  safetyChecks: { beforeIndexPublishing: { maxLostRecordsPercentage: 99 } },
 });

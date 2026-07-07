@@ -5,6 +5,7 @@ export const queryCacheDefaultRefetchIntervalMs = 30_000;
 export const queryCacheDefaultGcTimeMs = 1000 * 60 * 60 * 24;
 export const queryCacheMaxValueBytes = 1024 * 1024;
 export const queryCacheStoragePrefix = "homarr-widget-query";
+export const queryCacheBuster = "v2-superjson";
 
 let activeQueryCacheBoardId: string | null = null;
 

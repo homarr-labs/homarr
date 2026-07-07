@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "设置"
+        "settings": "设置",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "出发时间 {station}",
       "noStation": "未选择车站",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "车站"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "显示图片信息",
           "description": "在幻灯片底部显示图片日期和当前索引"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Immich 相册图片幻灯片",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "提供者"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "标识符",
             "placeholder": "姓名或所有者名称"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "没有提供者",
             "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "无效标识符",
           "noMatchingVersion": "没有找到匹配的版本",
           "noReleasesFound": "没有发现发布信息",
-          "noProviderSeleceted": "没有选择提供者",
-          "noProviderResponse": "提供者没有响应"
+          "noProviderSelected": "",
+          "noProviderResponse": "提供者没有响应",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "禁用"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft 服务状态"
-            },
-            "timetable": {
-              "label": "时刻表"
-            },
             "iconsUpdater": {
               "label": "图标更新"
             },
             "analytics": {
               "label": "分析"
             },
-            "smartHomeEntityState": {
-              "label": "智能家居实体状态"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "媒体服务"
-            },
-            "mediaOrganizer": {
-              "label": "媒体组织者"
-            },
-            "downloads": {
-              "label": "正在下载"
-            },
-            "mediaRequestStats": {
-              "label": "媒体请求统计"
-            },
-            "mediaRequestList": {
-              "label": "媒体请求列表"
-            },
-            "rssFeeds": {
-              "label": "RSS订阅"
-            },
-            "indexerManager": {
-              "label": "索引器管理"
-            },
-            "healthMonitoring": {
-              "label": "健康监测"
-            },
-            "dnsHole": {
-              "label": "DNS Hole 数据"
-            },
-            "updateChecker": {
-              "label": "更新检查"
-            },
-            "mediaTranscoding": {
-              "label": "媒体转码"
-            },
-            "networkController": {
-              "label": "网络控制器"
-            },
-            "refreshNotifications": {
-              "label": "更新通知"
-            },
-            "dockerContainers": {
-              "label": "Docker 容器"
-            },
-            "firewallCpu": {
-              "label": "防火墙 CPU"
-            },
-            "firewallMemory": {
-              "label": "防火墙内存"
-            },
-            "firewallVersion": {
-              "label": "防火墙版本"
-            },
-            "firewallInterfaces": {
-              "label": "防火墙接口"
-            },
-            "weather": {
-              "label": "天气"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami 活跃访客"
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {
