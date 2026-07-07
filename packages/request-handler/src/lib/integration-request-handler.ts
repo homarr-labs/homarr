@@ -24,7 +24,10 @@ export const createIntegrationRequestHandler = <
   const integrationMap = new Map<string, IntegrationOfKind<TKind>>();
   const inner = createRequestHandler<TData, { integrationId: string; options: TInput }>({
     requestAsync: async (input) => {
-      const integration = integrationMap.get(input.integrationId)!;
+      const integration = integrationMap.get(input.integrationId);
+      if (!integration) {
+        throw new Error(`Integration ${input.integrationId} not found in cache`);
+      }
       return options.requestAsync(integration, input.options);
     },
   });
