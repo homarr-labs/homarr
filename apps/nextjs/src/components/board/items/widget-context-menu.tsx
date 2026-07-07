@@ -232,7 +232,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
             <Group justify="space-between" wrap="nowrap">
               {tMenu("refresh")}
               <Text size="xs" c="dimmed">
-                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} />
+                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} isFetching={isWidgetFetching} />
               </Text>
             </Group>
           </Menu.Item>
@@ -270,9 +270,16 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const WidgetCacheAge = ({ queryClient, queryKey }: { queryClient: QueryClient; queryKey: unknown[] }) => {
-  const isFetching = useIsFetching({ queryKey }) > 0;
-  // ponytail: 1s tick for "just now" → "1s ago" transition; useIsFetching handles refetch reactivity
+const WidgetCacheAge = ({
+  queryClient,
+  queryKey,
+  isFetching,
+}: {
+  queryClient: QueryClient;
+  queryKey: unknown[];
+  isFetching: boolean;
+}) => {
+  // 1s tick for "just now" → "1s ago" label transition; isFetching prop handles refetch reactivity
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 1000);
