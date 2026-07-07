@@ -1,0 +1,19 @@
+apps/docs/docsearch.config.js
+  s_5f1fe4cd971115::t_67fa95382cc2c3 3,8-10,15-22,128-133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fcaecba4fadac2a3a42dc8c38e656a4ac4f3e487",
+  "prompts": {},
+  "sessions": {
+    "s_5f1fe4cd971115": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0c484b39dffeKD4kAo0OVMUEHZ",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
