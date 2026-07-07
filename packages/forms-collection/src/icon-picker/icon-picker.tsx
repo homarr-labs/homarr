@@ -42,6 +42,12 @@ interface IconPickerProps {
   withAsterisk?: boolean;
 }
 
+// The number of icons initially shown per repository, and how far each "show
+// more" click extends it. The final step reaches the router's maximum so the
+// user can always page through to every icon of a repository.
+const initialLimitPerGroup = 12;
+const limitPerGroupSteps = [initialLimitPerGroup, 48, 192, 500];
+
 export const IconPicker = ({
   value: propsValue,
   onChange,
@@ -54,6 +60,7 @@ export const IconPicker = ({
 }: IconPickerProps) => {
   const [value, setValue] = useUncontrolled({ value: propsValue, onChange });
   const [query, setQuery] = useState("");
+  const [limitPerGroup, setLimitPerGroup] = useState(initialLimitPerGroup);
 
   useEffect(() => {
     setQuery("");
@@ -65,10 +72,24 @@ export const IconPicker = ({
 
   const searchText = (debouncedQuery !== (value ?? "") && debouncedQuery) || "";
 
+  // Start each new search compact again; the user extends it deliberately.
+  useEffect(() => {
+    setLimitPerGroup(initialLimitPerGroup);
+  }, [searchText]);
+
   const { data, isLoading, isError, refetch } = clientApi.icon.findIcons.useQuery(
-    { searchText },
+    { searchText, limitPerGroup },
     { placeholderData: (prev) => prev },
   );
+
+  // A repository whose returned icon count equals the current limit was very
+  // likely truncated, so more icons remain to be revealed.
+  const hasMoreIcons =
+    limitPerGroup < 500 && (data?.icons.some((group) => group.icons.length >= limitPerGroup) ?? false);
+
+  const showMoreIcons = () => {
+    setLimitPerGroup((current) => limitPerGroupSteps.find((step) => step > current) ?? 500);
+  };
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -145,7 +166,23 @@ export const IconPicker = ({
         ));
     }
     if (totalOptions > 0) {
-      return <Stack gap={4}>{groups}</Stack>;
+      return (
+        <Stack gap={4}>
+          {groups}
+          {hasMoreIcons && (
+            <Button
+              size="xs"
+              variant="subtle"
+              // Keep the input focused so its blur handler does not close the
+              // dropdown before this click is handled.
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={showMoreIcons}
+            >
+              {tCommon("iconPicker.showMore")}
+            </Button>
+          )}
+        </Stack>
+      );
     }
     return (
       <Stack align="center" gap="xs" p="md">

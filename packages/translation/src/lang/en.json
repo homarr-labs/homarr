@@ -1416,7 +1416,8 @@
       "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
       "headerLoading": "Type to search icons…",
       "noResults": "No icons match \"{search}\".",
-      "error": "Couldn't load icons."
+      "error": "Couldn't load icons.",
+      "showMore": "Show more icons"
     },
     "colorScheme": {
       "options": {
