@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { PatchMonStats } from "@homarr/integrations";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const patchmonStatsRequestHandler = createCachedIntegrationRequestHandler<
+export const patchmonStatsRequestHandler = createIntegrationRequestHandler<
   PatchMonStats,
   "patchmon",
   Record<string, never>
@@ -14,6 +12,4 @@ export const patchmonStatsRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatsAsync();
   },
-  cacheDuration: dayjs.duration(2, "minute"),
-  queryKey: "patchmon-stats",
 });

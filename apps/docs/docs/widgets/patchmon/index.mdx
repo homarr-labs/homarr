@@ -19,6 +19,14 @@ import { patchmonIntegration } from '@site/docs/integrations/patchmon';
 
 This widget displays patch statistics from your PatchMon instance, including total hosts, hosts needing updates, and security update counts. Each stat is shown with a dedicated icon and severity-tinted card background for quick visual scanning.
 
+### Authentication
+
+:::note
+This widget requires a **signed-in Homarr session**. Anonymous visitors cannot load PatchMon data, even when the board is [public](/docs/management/boards#access-control). Placing this widget on a public board does not expose patch or security statistics to guests.
+
+Stat visibility toggles in the widget settings control **display only**. Authenticated users with integration query access still receive the full API payload regardless of which stats are hidden in the UI.
+:::
+
 ### Compliance hero
 
 When **Show compliance hero** is enabled (default), the widget displays a ring showing the percentage of hosts that are fully up to date. The ring color follows the same threshold rules as the "Up-to-Date Hosts" stat. Below the ring, the widget shows the exact host count (e.g. "27 / 42").

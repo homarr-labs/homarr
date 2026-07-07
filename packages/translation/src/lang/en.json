@@ -2915,9 +2915,6 @@
           }
         }
       },
-      "action": {
-        "refresh": "Refresh data"
-      },
       "error": {
         "internalServerError": "Failed to fetch PatchMon data"
       }

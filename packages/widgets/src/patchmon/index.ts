@@ -1,4 +1,4 @@
-import { IconRefresh, IconServerOff, IconShieldCheck } from "@tabler/icons-react";
+import { IconServerOff, IconShieldCheck } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
@@ -225,17 +225,6 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
       patchmonOptionsSuperRefine,
     );
   },
-  contextActions: ({ widgetStateRef }) => [
-    {
-      key: "refresh",
-      label: (t) => t("widget.patchmon.action.refresh"),
-      icon: IconRefresh,
-      onClick: () => {
-        const refetchFn = widgetStateRef.current?.refetch;
-        if (typeof refetchFn === "function") (refetchFn as () => void)();
-      },
-    },
-  ],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

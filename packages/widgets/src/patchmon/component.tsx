@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect } from "react";
+import { type CSSProperties } from "react";
 import { RingProgress, ScrollArea, Text, Tooltip } from "@mantine/core";
 import {
   IconCircleCheck,
@@ -86,25 +86,13 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
   return "comfortable";
 };
 
-export default function PatchMonWidget({ integrationIds, options, width, height, widgetStateRef }: WidgetComponentProps<"patchmon">) {
+export default function PatchMonWidget({ integrationIds, options, width, height }: WidgetComponentProps<"patchmon">) {
   const t = useScopedI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
-  const { data: stats, refetch } = clientApi.widget.patchmon.getStats.useQuery(
+  const { data: stats } = clientApi.widget.patchmon.getStats.useQuery(
     { integrationId },
     { staleTime: 60 * 1000 },
   );
-  const { mutateAsync: refreshCache } = clientApi.widget.patchmon.refresh.useMutation();
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      refetch: async () => {
-        await refreshCache({ integrationId });
-        await refetch();
-      },
-    };
-  }, [widgetStateRef, refreshCache, refetch, integrationId]);
 
   if (!stats) return <WidgetEmptyState />;
 
