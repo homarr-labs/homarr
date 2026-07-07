@@ -95,8 +95,12 @@ export const createTRPCRouter = t.router;
 
 export const isDemoMode = env.DEMO_MODE;
 
+// The public "real demo" (demo + mock integrations) stays read-only, while preview
+// deployments run with DEMO_MODE + DEMO_READ_ONLY=false to allow mutations.
+export const isDemoReadOnly = env.DEMO_MODE && env.DEMO_READ_ONLY;
+
 const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
-  if (env.DEMO_MODE && type === "mutation") {
+  if (isDemoReadOnly && type === "mutation") {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Mutations are disabled in demo mode",
@@ -105,7 +109,7 @@ const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
   return next({ ctx });
 });
 
-const baseProcedure = env.DEMO_MODE ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
+const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
 
 /**
  * Public (unauthed) procedure
