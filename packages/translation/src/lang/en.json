@@ -3440,11 +3440,6 @@
         "routers": "Routers",
         "entryPoints": "Entry points"
       },
-      "protocol": {
-        "http": "HTTP",
-        "tcp": "TCP",
-        "udp": "UDP"
-      },
       "resource": {
         "routers": "Routers",
         "services": "Services",
