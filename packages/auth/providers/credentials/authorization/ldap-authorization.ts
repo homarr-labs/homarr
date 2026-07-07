@@ -53,9 +53,7 @@ export const authorizeWithLdapCredentialsAsync = async (
     throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
   }
 
-  const mailResult = await utf8EmailSchema.safeParseAsync(
-    ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
-  );
+  const mailResult = await utf8EmailSchema.safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
 
   if (!mailResult.success) {
     logger.error("User found in LDAP but with invalid or non-existing Email", {
