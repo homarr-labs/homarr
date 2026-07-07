@@ -33,6 +33,7 @@ body:
       options:
         # The below comment is used to insert a new version with on-release.yml
         #NEXT_VERSION#
+        - 1.69.2
         - 1.69.0
         - 1.68.0
         - 1.67.0

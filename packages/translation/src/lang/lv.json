@@ -6,9 +6,9 @@
         "subtitle": "",
         "description": "",
         "action": {
-          "scratch": "",
+          "scratch": "Sākt no jauna",
           "importOldmarr": "",
-          "restoreSqlite": "",
+          "restoreSqlite": "SQLite rezerves kopija",
           "restoreSqliteDescription": "",
           "backToOptions": ""
         }
@@ -26,19 +26,19 @@
           }
         },
         "importSettings": {
-          "title": "",
+          "title": "Importēt iestatījumus",
           "description": ""
         },
         "boardSelection": {
           "title": "",
           "description": "",
           "action": {
-            "selectAll": "",
+            "selectAll": "Atzīmēt visu",
             "unselectAll": ""
           }
         },
         "summary": {
-          "title": "",
+          "title": "Importēšanas kopsavilkums",
           "description": "",
           "action": {
             "import": ""
@@ -46,7 +46,7 @@
           "entities": {
             "apps": "Lietotnes",
             "boards": "Dēļi",
-            "integrations": "",
+            "integrations": "Integrācijas",
             "credentialUsers": ""
           }
         },
@@ -67,15 +67,15 @@
         }
       },
       "user": {
-        "title": "",
+        "title": "Administratora lietotājs",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Lietotājs izveidots",
             "message": ""
           },
           "error": {
-            "title": ""
+            "title": "Lietotāja izveide neizdevās"
           }
         }
       },
@@ -94,19 +94,19 @@
         "subtitle": ""
       },
       "integrations": {
-        "title": "",
+        "title": "Integrācijas",
         "subtitle": "",
         "description": "",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Turpināt",
+          "skip": "Pagaidām izlaist šo soli"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
+          "progress": "{current} no {total}",
+          "skip": "Izlaist šo integrāciju",
           "finishing": "",
           "error": {
-            "title": "",
+            "title": "Neizdevās iestatīt!",
             "message": ""
           },
           "helpers": {
@@ -115,7 +115,7 @@
           }
         },
         "urlTemplate": {
-          "label": "",
+          "label": "Bāzes URL",
           "placeholder": "",
           "hint": "",
           "warning": "",
@@ -136,14 +136,14 @@
         }
       },
       "finish": {
-        "title": "",
+        "title": "Pabeigt Iestatīšanu",
         "subtitle": "",
         "description": "",
         "action": {
           "goToBoard": "",
           "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "inviteUser": "Ielūgt citus lietotājus",
+          "docs": "Lasīt dokumentāciju"
         }
       }
     },
@@ -158,7 +158,7 @@
         "subtitle": ""
       },
       "invite": {
-        "title": "",
+        "title": "Pievienoties Homarr",
         "subtitle": "",
         "description": ""
       },
@@ -177,20 +177,20 @@
       },
       "password": {
         "label": "Parole",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Paroles ieteikumi",
         "suggestion": {
-          "length": "",
+          "length": "Vismaz 8 rakstzīmes",
           "lowercase": "Ietver mazo burtu",
           "uppercase": "Ietver lielo burtu",
           "number": "Ietver numuru",
-          "special": ""
+          "special": "Iekļauj speciālo simbolu"
         }
       },
       "passwordConfirm": {
         "label": "Apstipriniet paroli"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Iepriekšējā parole"
       },
       "homeBoard": {
         "label": ""
@@ -218,10 +218,10 @@
         "notification": {
           "success": {
             "title": "",
-            "message": ""
+            "message": "Jūs esat veiksmīgi pieteicies"
           },
           "error": {
-            "title": "",
+            "title": "Pieteikšanās neizdevās",
             "message": ""
           }
         },
@@ -245,13 +245,13 @@
       },
       "create": "Izveidot lietotāju",
       "changePassword": {
-        "label": "",
+        "label": "Mainīt paroli",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Parole veiksmīgi nomainīta."
           },
           "error": {
-            "message": ""
+            "message": "Nav iespējams nomainīt paroli"
           }
         }
       },
@@ -595,12 +595,12 @@
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Noklusētā grupa",
       "description": ""
     }
   },
   "app": {
-    "search": "",
+    "search": "Atrast aplikāciju",
     "page": {
       "list": {
         "title": "Lietotnes",
@@ -689,7 +689,7 @@
       "list": {
         "title": "",
         "noResults": "",
-        "loading": ""
+        "loading": "Notiek ielāde..."
       },
       "create": {
         "title": "",
@@ -700,7 +700,7 @@
       }
     },
     "action": {
-      "create": "",
+      "create": "Izveidot",
       "import": "",
       "save": "",
       "delete": "",

@@ -46,7 +46,7 @@ const gluetunServerSelectionSchema = z.object({
   isps: z.array(z.string()).nullable(),
   names: z.array(z.string()).nullable(),
   numbers: z.array(z.number()).nullable(),
-  hostnames: z.array(z.string()),
+  hostnames: z.array(z.string()).nullable(),
   owned_only: z.boolean(),
   free_only: z.boolean(),
   premium_only: z.boolean(),
@@ -65,7 +65,7 @@ const gluetunPortForwardingSchema = z.object({
   status_file_path: z.string(),
   up_command: z.string(),
   down_command: z.string(),
-  listening_port: z.number(),
+  listening_port: z.union([z.number(), z.array(z.number())]),
   username: z.string(),
   password: z.string(),
 });
@@ -98,7 +98,7 @@ const gluetunOpenvpnSettingsSchema = z.object({
 const gluetunWireguardSettingsSchema = z.object({
   private_key: z.string(),
   pre_shared_key: z.string(),
-  addresses: z.array(z.string()),
+  addresses: z.array(z.string()).nullable(),
   allowed_ips: z.array(z.string()),
   interface: z.string(),
   persistent_keep_alive_interval: z.number(),

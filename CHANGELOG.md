@@ -1,3 +1,9 @@
+## [1.69.2](https://github.com/homarr-labs/homarr/compare/v1.69.1...v1.69.2) (2026-07-06)
+
+### Bug Fixes
+
+* **layout:** raise AppShellHeader z-index above Indicator dots ([687edb9](https://github.com/homarr-labs/homarr/commit/687edb9226307cb83986097abb24fe7f672e1778)), closes [#6194](https://github.com/homarr-labs/homarr/issues/6194)
+
 ## [1.69.1](https://github.com/homarr-labs/homarr/compare/v1.69.0...v1.69.1) (2026-07-04)
 
 ### Bug Fixes
