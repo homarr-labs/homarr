@@ -99,11 +99,14 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
           password: this.getSecretValue("password"),
         };
 
-    return new QBittorrent({
+    const client = new QBittorrent({
       ...credentials,
       baseUrl: this.url("/").toString(),
       dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
+    // Populate version state so the library uses correct v5 endpoints (stop/start vs pause/resume)
+    await client.getAppVersion();
+    return client;
   }
 
   private static getTorrentState(state: string): DownloadClientItem["state"] {
