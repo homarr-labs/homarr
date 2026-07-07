@@ -49,6 +49,7 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseQueueAsync();
         }),
       );
+      downloadClientRequestHandler.invalidateCache();
     }),
   pauseItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
@@ -60,6 +61,7 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseItemAsync(input.item);
         }),
       );
+      downloadClientRequestHandler.invalidateCache();
     }),
   resume: protectedProcedure
     .meta({
@@ -77,6 +79,7 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeQueueAsync();
         }),
       );
+      downloadClientRequestHandler.invalidateCache();
     }),
   resumeItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
@@ -88,6 +91,7 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
       );
+      downloadClientRequestHandler.invalidateCache();
     }),
   deleteItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
@@ -99,5 +103,6 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );
+      downloadClientRequestHandler.invalidateCache();
     }),
 });
