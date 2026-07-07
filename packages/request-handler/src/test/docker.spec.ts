@@ -75,6 +75,26 @@ describe("calculateCpuUsage", () => {
     // (500 / 100000) * 2 * 100 = 1
     expect(calculateCpuUsage(stats)).toBe(1);
   });
+
+  test("should use the delta against precpu_stats for the current usage", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 1_002_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 10_000 },
+    });
+    // Despite a large lifetime total_usage, only the recent delta counts:
+    // (2000 / 10000) * 4 * 100 = 80
+    expect(calculateCpuUsage(stats)).toBe(80);
+  });
+
+  test("should report 0 for a container that was busy over its lifetime but is idle now", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 10_000 },
+    });
+    // No CPU delta since the last reading -> current usage is 0, even though the
+    // lifetime average would be high. This is the regression the fix addresses.
+    expect(calculateCpuUsage(stats)).toBe(0);
+  });
 });
 
 describe("calculateMemoryUsage", () => {
