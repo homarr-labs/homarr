@@ -8,7 +8,7 @@ const config: Config = {
   tagline: "A simple yet powerful dashboard for your server.",
   url: "https://homarr.dev",
   baseUrl: "/",
-  trailingSlash: true,
+  trailingSlash: undefined,
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
@@ -79,8 +79,27 @@ const config: Config = {
         sitemap: {
           changefreq: "weekly",
           priority: 0.5,
-          ignorePatterns: ["/tags/**"],
+          ignorePatterns: ["/tags/**", "/docs/category/**"],
           filename: "sitemap.xml",
+          createSitemapItems: async ({ routes, siteConfig, defaultCreateSitemapItems }) => {
+            const items = await defaultCreateSitemapItems({ routes, siteConfig });
+            return items.map((item) => {
+              const path = new URL(item.url).pathname;
+              if (path === "/" || path === "") {
+                return { ...item, priority: 1.0, changefreq: "weekly" };
+              }
+              if (path.startsWith("/docs/")) {
+                return { ...item, priority: 0.7, changefreq: "monthly" };
+              }
+              if (path.startsWith("/blog/")) {
+                return { ...item, priority: 0.3, changefreq: "never" };
+              }
+              if (path.startsWith("/about-us")) {
+                return { ...item, priority: 0.4, changefreq: "yearly" };
+              }
+              return item;
+            });
+          },
         },
       } satisfies Preset.Options,
     ],

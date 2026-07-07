@@ -18,7 +18,7 @@ interface Props {
 
 export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
   return (
-    <AppShellHeader maw="100vw" style={{ overflowX: "hidden" }}>
+    <AppShellHeader maw="100vw" zIndex={201} style={{ overflowX: "hidden" }}>
       <Group h="100%" gap="xl" px="md" justify="apart" wrap="nowrap">
         <Group h="100%" align="center" style={{ flex: 1 }} wrap="nowrap">
           {hasNavigation && <ClientBurger />}

@@ -24,6 +24,7 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   isPersistableWidgetQueryKey,
+  queryCacheBuster,
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
@@ -136,6 +137,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         client={queryClient}
         persistOptions={{
           persister,
+          buster: queryCacheBuster,
           maxAge: queryCacheDefaultGcTimeMs,
           dehydrateOptions: {
             shouldDehydrateQuery: (query) =>

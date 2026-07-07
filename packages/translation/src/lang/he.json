@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "הגדרות"
+        "settings": "הגדרות",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "",
           "description": ""
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "ספק"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "ללא ספק",
             "tooltip": "לא ניתן היה לנתח את הספק, אנא הגדר אותו ידנית לאחר ייבוא ​​התמונות"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "מזהה לא חוקי",
           "noMatchingVersion": "לא נמצאה גרסה תואמת",
           "noReleasesFound": "לא נמצאו שיחרורים",
-          "noProviderSeleceted": "לא נבחר ספק",
-          "noProviderResponse": "אין תשובה מהספק"
+          "noProviderSelected": "",
+          "noProviderResponse": "אין תשובה מהספק",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "מושבת"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "סטטוס שרת מיינקראפט"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "עדכון אייקונים"
             },
             "analytics": {
               "label": "ניתוחים"
             },
-            "smartHomeEntityState": {
-              "label": "סטטוס יישות בית חכם"
-            },
             "ping": {
               "label": "פינגים"
-            },
-            "mediaServer": {
-              "label": "שרת מדיה"
-            },
-            "mediaOrganizer": {
-              "label": "מארגני מדיה"
-            },
-            "downloads": {
-              "label": "הורדות"
-            },
-            "mediaRequestStats": {
-              "label": "סטטוס בקשות מדיה"
-            },
-            "mediaRequestList": {
-              "label": "רשימת בקשות מדיה"
-            },
-            "rssFeeds": {
-              "label": "הזנות RSS"
-            },
-            "indexerManager": {
-              "label": "מנהל אינדקסים"
-            },
-            "healthMonitoring": {
-              "label": "ניטור בריאות המערכת"
-            },
-            "dnsHole": {
-              "label": "נתוני חור DNS"
-            },
-            "updateChecker": {
-              "label": "בודק עדכונים"
-            },
-            "mediaTranscoding": {
-              "label": "המרת קידוד מדיה"
-            },
-            "networkController": {
-              "label": "בקר רשת"
-            },
-            "refreshNotifications": {
-              "label": "עדכון התראות"
-            },
-            "dockerContainers": {
-              "label": "מכולות דוקר"
-            },
-            "firewallCpu": {
-              "label": "מעבד חומת האש"
-            },
-            "firewallMemory": {
-              "label": "זיכרון חומת אש"
-            },
-            "firewallVersion": {
-              "label": "גרסת חומת אש"
-            },
-            "firewallInterfaces": {
-              "label": "ממשקי חומת אש"
-            },
-            "weather": {
-              "label": "מזג אוויר"
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {
