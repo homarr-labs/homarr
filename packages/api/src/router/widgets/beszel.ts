@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { createIntegrationAsync } from "@homarr/integrations";
+import type { LiveStatsEvent } from "@homarr/integrations/types";
 import {
   beszelAlertsRequestHandler,
   beszelStatsRequestHandler,
@@ -200,5 +203,74 @@ export const beszelRouter = createTRPCRouter({
           error: error instanceof Error ? error.message : String(error),
         };
       }
+    }),
+
+  subscribeSystemStats: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Subscribe to real-time Beszel system and container stats via SSE from PocketBase. Use for live charts — lower latency than polling. REQUIRED: integrationIds (array of Beszel integration IDs), systemId",
+      },
+    })
+    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .input(
+      z.object({
+        systemId: z.string(),
+      }),
+    )
+    .subscription(({ ctx, input }) => {
+      return observable<LiveStatsEvent>((emit) => {
+        const controller = new AbortController();
+        let isActive = true;
+
+        void (async () => {
+          const integration = ctx.integrations[0];
+          if (!integration) {
+            emit.error(new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" }));
+            return;
+          }
+
+          try {
+            const instance = await createIntegrationAsync(integration);
+            if (typeof instance.subscribeRealtimeMetrics === "function") {
+              await instance.subscribeRealtimeMetrics(
+                input.systemId,
+                (event) => {
+                  if (isActive) emit.next(event);
+                },
+                controller.signal,
+              );
+            } else {
+              emit.error(
+                new TRPCError({
+                  code: "METHOD_NOT_SUPPORTED",
+                  message: `Integration ${integration.kind} does not support realtime metrics`,
+                }),
+              );
+            }
+          } catch (error) {
+            if (isActive) {
+              emit.error(
+                error instanceof TRPCError
+                  ? error
+                  : new TRPCError({
+                      code: "INTERNAL_SERVER_ERROR",
+                      message: error instanceof Error ? error.message : String(error),
+                    }),
+              );
+            }
+          }
+
+          if (isActive) {
+            emit.complete();
+          }
+        })();
+
+        return () => {
+          isActive = false;
+          controller.abort();
+        };
+      });
     }),
 });

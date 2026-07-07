@@ -343,6 +343,22 @@ export interface UpdateAlertInput {
   min?: number;
 }
 
+/**
+ * Live SSE subscription event types for real-time Beszel metrics.
+ * Discriminated union — clients accumulate each type into its own buffer.
+ */
+export interface LiveSystemStatsEvent {
+  type: "system_stats";
+  record: BeszelSystemStatsRecord;
+}
+
+export interface LiveContainerStatsEvent {
+  type: "container_stats";
+  record: BeszelContainerStatsRecord;
+}
+
+export type LiveStatsEvent = LiveSystemStatsEvent | LiveContainerStatsEvent;
+
 export interface PocketBaseListResponse<T> {
   page: number;
   perPage: number;

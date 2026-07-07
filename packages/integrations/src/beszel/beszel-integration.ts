@@ -20,6 +20,7 @@ import type {
   BeszelSystemdService,
   BeszelSystemStatsRecord,
   CreateAlertInput,
+  LiveStatsEvent,
   PocketBaseListResponse,
   UpdateAlertInput,
 } from "./beszel-types";
@@ -282,6 +283,96 @@ export class BeszelIntegration extends Integration {
     await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
       method: "DELETE",
     });
+  }
+
+  /**
+   * Subscribe to real-time system and container stats via PocketBase SSE.
+   * Connects to the PocketBase Realtime API and parses incoming SSE events,
+   * filtering by systemId. This provides live-updating metrics (≤1s latency
+   * from agent) instead of polling the REST API every 5s.
+   */
+  public async subscribeRealtimeMetrics(
+    systemId: string,
+    onMessage: (event: LiveStatsEvent) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const session = await this.authenticateAsync();
+    const realtimeUrl = this.url("/api/realtime", { collections: "system_stats,container_stats" });
+
+    logger.debug("Opening Beszel SSE connection for realtime metrics", {
+      integrationId: this.integration.id,
+      systemId,
+      url: realtimeUrl.pathname + realtimeUrl.search,
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
+      headers: { Authorization: session.token },
+      signal,
+    });
+
+    if (!response.ok) {
+      logger.warn("Beszel SSE connection failed", {
+        integrationId: this.integration.id,
+        systemId,
+        status: response.status,
+      });
+      throw new ResponseError(response);
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error("No response body in SSE stream");
+
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    // ponytail: simple line-by-line SSE parser; no EventSource polyfill needed
+    const processLine = (line: string) => {
+      if (line.startsWith("data: ")) {
+        try {
+          const parsed = JSON.parse(line.slice(6)) as {
+            action: string;
+            record: Record<string, unknown>;
+          };
+          const record = parsed.record;
+          if (!record || record.system !== systemId) return;
+
+          // Distinguish collection by shape: system_stats has stats as object,
+          // container_stats has stats as array
+          if (Array.isArray(record.stats)) {
+            onMessage({
+              type: "container_stats",
+              record: record as unknown as BeszelContainerStatsRecord,
+            });
+          } else if (record.stats && typeof record.stats === "object") {
+            onMessage({
+              type: "system_stats",
+              record: record as unknown as BeszelSystemStatsRecord,
+            });
+          }
+        } catch {
+          // skip malformed SSE data lines
+        }
+      }
+    };
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        // Last element is either incomplete or empty after trailing newline
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          processLine(line);
+        }
+      }
+    } finally {
+      reader.releaseLock();
+      logger.debug("Beszel SSE connection closed", { integrationId: this.integration.id, systemId });
+    }
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
