@@ -100,7 +100,7 @@ catalogs:
       specifier: ^1.61.1
       version: 1.61.1
     '@scalar/api-reference-react':
-      specifier: ^0.9.50
+      specifier: ^0.9.51
       version: 0.9.52
     '@semantic-release/changelog':
       specifier: ^6.0.3
@@ -12026,11 +12026,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.1.11:
-    resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-
   nanoid@5.1.16:
     resolution: {integrity: sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ==}
     engines: {node: ^18 || >=20}
@@ -20247,7 +20242,7 @@ snapshots:
       '@vueuse/core': 13.9.0(vue@3.5.35(typescript@6.0.3))
       fuse.js: 7.4.2
       microdiff: 1.5.0
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       vue: 3.5.35(typescript@6.0.3)
       yaml: 2.9.0
     transitivePeerDependencies:
@@ -20402,8 +20397,8 @@ snapshots:
   '@scalar/types@0.16.1':
     dependencies:
       '@scalar/helpers': 0.9.0
-      nanoid: 5.1.11
-      type-fest: 5.6.0
+      nanoid: 5.1.16
+      type-fest: 5.7.0
       zod: 4.4.3
 
   '@scalar/use-codemirror@0.14.12(typescript@6.0.3)':
@@ -20458,7 +20453,7 @@ snapshots:
       '@scalar/types': 0.16.1
       '@scalar/validation': 0.6.0
       js-base64: 3.7.8
-      type-fest: 5.6.0
+      type-fest: 5.7.0
       vue: 3.5.35(typescript@6.0.3)
       yaml: 2.9.0
     transitivePeerDependencies:
@@ -26372,8 +26367,6 @@ snapshots:
     optional: true
 
   nanoid@3.3.12: {}
-
-  nanoid@5.1.11: {}
 
   nanoid@5.1.16: {}
 

@@ -89,7 +89,7 @@ catalog:
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
-  "@scalar/api-reference-react": ^0.9.50
+  "@scalar/api-reference-react": ^0.9.51
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
