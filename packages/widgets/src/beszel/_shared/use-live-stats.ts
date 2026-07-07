@@ -58,10 +58,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
     }
   }, [currentKey]);
 
-  const data =
-    systemStats.length > 0 || containerStats.length > 0
-      ? { systemStats, containerStats }
-      : null;
+  const data = systemStats.length > 0 || containerStats.length > 0 ? { systemStats, containerStats } : null;
 
   return { data, error };
 };

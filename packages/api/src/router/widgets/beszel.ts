@@ -227,7 +227,9 @@ export const beszelRouter = createTRPCRouter({
         void (async () => {
           const integration = ctx.integrations[0];
           if (!integration) {
-            emit.error(new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" }));
+            emit.error(
+              new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" }),
+            );
             return;
           }
 
