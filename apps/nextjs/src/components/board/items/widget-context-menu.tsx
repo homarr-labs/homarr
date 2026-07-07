@@ -224,7 +224,11 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
         <>
           {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
-          <Menu.Item leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />} onClick={handleRefetch} disabled={isWidgetFetching}>
+          <Menu.Item
+            leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+            onClick={handleRefetch}
+            disabled={isWidgetFetching}
+          >
             <Group justify="space-between" wrap="nowrap">
               {tMenu("refresh")}
               <Text size="xs" c="dimmed">
