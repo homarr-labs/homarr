@@ -22,6 +22,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
+import { getGridCols, shouldShowComplianceHeroText } from "./layout-utils";
 import { OsDistributionSection } from "./os-distribution-section";
 import {
   resolveStatColor,
@@ -54,13 +55,6 @@ const statIcons: Record<PatchMonStatKey, TablerIcon> = {
   totalOutdatedPackages: IconPackages,
   totalRepos: IconDatabase,
 };
-
-const gridColsByWidth = [
-  { minWidth: 500, cols: 4 },
-  { minWidth: 380, cols: 3 },
-  { minWidth: 220, cols: 2 },
-  { minWidth: 0, cols: 1 },
-] as const;
 
 const iconSizeByWidth = [
   { minWidth: 320, size: 22 },
@@ -121,12 +115,11 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
   const osDisplayMode = options.osDisplayMode as "bars" | "donut";
   const showOsData = options.showOsDistribution && stats.osDistribution.length > 0;
 
-  const showTitle = layout !== "mini";
   const showIcons = layout !== "mini";
   const showLabels = layout !== "mini";
   const showHero = options.showComplianceHero && (!isLandscape || isCompactSurface) && width >= 90 && height >= 90;
-  const showHeroRingOnly = showHero && (isCompactSurface || layout === "mini" || layout === "compact" || isNarrow || height < 250);
-  const showHeroText = showHero && !showHeroRingOnly;
+  const showHeroText = showHero && shouldShowComplianceHeroText(width);
+  const showHeroRingOnly = showHero && !showHeroText;
   const compactPrimaryContent = isCompactSurface
     ? getCompactPrimaryContent({
         showHero,
@@ -153,9 +146,6 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
   const complianceSeverity = resolveStatColor("upToDateHosts", stats.upToDateHosts, colorContext, options);
   const complianceColor = complianceSeverity === "neutral" ? "blue" : complianceSeverity;
 
-  const heroExpandedClass =
-    !showStats && !showOsSection ? classes.heroExpanded : "";
-
   const timeAgo = dayjs(stats.lastUpdated).fromNow();
   const compactTimeAgo = getCompactTimeAgo(stats.lastUpdated);
   const footerText = isNarrow ? compactTimeAgo : t("lastUpdated", { time: timeAgo });
@@ -166,20 +156,17 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     const compactStatKeys = visibleStatKeys.slice(0, Math.min(visibleStatKeys.length, compactStatCols * 2));
     const compactContent =
       compactPrimaryContent === "hero" ? (
-        <div className={`${classes.compactPrimary} ${classes.heroRingOnly}`}>
-          <RingProgress
-            className={classes.ring}
-            size={getRingSize(width, compactContentHeight, true)}
-            thickness={Math.max(4, Math.round(getRingSize(width, compactContentHeight, true) / 10))}
-            roundCaps
-            sections={[{ value: compliancePercent, color: complianceColor }]}
-            label={
-              <Text ta="center" size="xs" fw={700}>
-                {compliancePercent}%
-              </Text>
-            }
-          />
-        </div>
+        <ComplianceHero
+          compliancePercent={compliancePercent}
+          complianceColor={complianceColor}
+          upToDateHosts={stats.upToDateHosts}
+          totalHosts={stats.totalHosts}
+          ringSize={getRingSize(width, compactContentHeight, showHeroRingOnly)}
+          showText={showHeroText}
+          expanded
+          compact
+          getLabel={t}
+        />
       ) : compactPrimaryContent === "os" ? (
         <div className={classes.compactPrimary}>
           <OsDistributionSection
@@ -232,11 +219,6 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
   if (!hasContent) {
     return (
       <div className={classes.root}>
-        {showTitle && (
-          <Text size={layout === "compact" ? "xs" : "sm"} fw={600} className={classes.title}>
-            {t("title")}
-          </Text>
-        )}
         <div className={classes.emptyState}>
           <Text size="sm" c="dimmed">
             —
@@ -308,35 +290,17 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
 
   return (
     <div className={classes.root}>
-      {showTitle && (
-        <Text size={layout === "compact" ? "xs" : "sm"} fw={600} className={classes.title}>
-          {t("title")}
-        </Text>
-      )}
-
       {showHero && (
-        <div className={`${classes.hero} ${heroExpandedClass} ${showHeroRingOnly ? classes.heroRingOnly : ""}`}>
-          {showHeroText && (
-            <div className={classes.heroText}>
-              <span className={classes.heroLabel}>{t("compliance")}</span>
-              <span className={classes.heroValue}>
-                {t("complianceRatio", { upToDate: stats.upToDateHosts, total: stats.totalHosts })}
-              </span>
-            </div>
-          )}
-          <RingProgress
-            className={classes.ring}
-            size={ringSize}
-            thickness={Math.max(4, Math.round(ringSize / 10))}
-            roundCaps
-            sections={[{ value: compliancePercent, color: complianceColor }]}
-            label={
-              <Text ta="center" size="xs" fw={700}>
-                {compliancePercent}%
-              </Text>
-            }
-          />
-        </div>
+        <ComplianceHero
+          compliancePercent={compliancePercent}
+          complianceColor={complianceColor}
+          upToDateHosts={stats.upToDateHosts}
+          totalHosts={stats.totalHosts}
+          ringSize={ringSize}
+          showText={showHeroText}
+          expanded={!showStats && !showOsSection}
+          getLabel={t}
+        />
       )}
 
       {(statGridContent || osContent) &&
@@ -363,9 +327,60 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
   );
 }
 
-function getGridCols(width: number): number {
-  const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+function ComplianceHero({
+  compliancePercent,
+  complianceColor,
+  upToDateHosts,
+  totalHosts,
+  ringSize,
+  showText,
+  expanded = false,
+  compact = false,
+  getLabel,
+}: {
+  compliancePercent: number;
+  complianceColor: string;
+  upToDateHosts: number;
+  totalHosts: number;
+  ringSize: number;
+  showText: boolean;
+  expanded?: boolean;
+  compact?: boolean;
+  getLabel: (key: "compliance" | "complianceRatio", params?: { upToDate: number; total: number }) => string;
+}) {
+  const heroClasses = [
+    compact && classes.compactPrimary,
+    classes.hero,
+    expanded && classes.heroExpanded,
+    showText ? classes.heroWithText : classes.heroRingOnly,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <div className={heroClasses}>
+      {showText && (
+        <div className={classes.heroText}>
+          <span className={classes.heroLabel}>{getLabel("compliance")}</span>
+          <span className={classes.heroValue}>
+            {getLabel("complianceRatio", { upToDate: upToDateHosts, total: totalHosts })}
+          </span>
+        </div>
+      )}
+      <RingProgress
+        className={classes.ring}
+        size={ringSize}
+        thickness={Math.max(4, Math.round(ringSize / 10))}
+        roundCaps
+        sections={[{ value: compliancePercent, color: complianceColor }]}
+        label={
+          <Text ta="center" size="xs" fw={700}>
+            {compliancePercent}%
+          </Text>
+        }
+      />
+    </div>
+  );
 }
 
 function getIconSize(width: number): number {

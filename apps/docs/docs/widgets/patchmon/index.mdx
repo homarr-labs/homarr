@@ -19,6 +19,8 @@ import { patchmonIntegration } from '@site/docs/integrations/patchmon';
 
 This widget displays patch statistics from your PatchMon instance, including total hosts, hosts needing updates, and security update counts. Each stat is shown with a dedicated icon and severity-tinted card background for quick visual scanning.
 
+PatchMon does not render a built-in widget title. To add a label on your board, open **Edit item → Advanced options → Title** — the same optional overlay badge used by other Homarr widgets.
+
 ### Authentication
 
 :::note
@@ -29,9 +31,9 @@ Stat visibility toggles in the widget settings control **display only**. Authent
 
 ### Compliance hero
 
-When **Show compliance hero** is enabled (default), the widget displays a ring showing the percentage of hosts that are fully up to date. The ring color follows the same threshold rules as the "Up-to-Date Hosts" stat. Below the ring, the widget shows the exact host count (e.g. "27 / 42").
+When **Show compliance hero** is enabled (default), the widget displays a ring showing the percentage of hosts that are fully up to date. The ring color follows the same threshold rules as the "Up-to-Date Hosts" stat. When the widget is **2 or more columns wide**, the hero also shows the "Patch Compliance" label and exact host count (e.g. "27 / 42") beside the ring.
 
-In compact layouts, the compliance hero switches to a ring-only view so useful compliance data remains visible. If the compliance hero is disabled, compact widgets fall back to the next selected content: OS distribution when enabled, then the first enabled stat.
+In **1-column-wide** layouts (such as 1×1), the compliance hero switches to a ring-only view so useful compliance data remains visible in tight spaces. If the compliance hero is disabled, compact widgets fall back to the next selected content: OS distribution when enabled, then the first enabled stat.
 
 ### Threshold colors
 
@@ -62,8 +64,8 @@ The widget adapts its layout based on the available space:
 
 | Widget size | Layout |
 |-------------|--------|
-| **1×1** | Primary selected content: compliance ring, compact OS distribution, or up to two enabled stats |
-| **2×1** / **1×2** | Compact primary content with a shortened "last updated" timestamp when space allows |
+| **1×1** | Primary selected content: compliance ring (no label), compact OS distribution, or up to two enabled stats |
+| **2×1** / **1×2** | Compact primary content; **2×1** shows compliance label and host ratio beside the ring; **1×2** uses ring-only hero |
 | **2×2** (default) | Compliance hero, stat grid with icons, and tinted cards |
 | **2×3** / **3×2** | Hero, stats, OS distribution, and "last updated" footer |
 | **3×3** or larger | Full layout with up to 4-column stat grid, donut chart, and optional OS legend |

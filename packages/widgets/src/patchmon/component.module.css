@@ -22,11 +22,6 @@
   gap: clamp(4px, 2cqi, 8px);
 }
 
-.title {
-  flex-shrink: 0;
-  line-height: 1.2;
-}
-
 .hero {
   display: flex;
   align-items: center;
@@ -52,6 +47,15 @@
   justify-content: center;
   padding-bottom: 0;
   border-bottom: none;
+}
+
+.heroWithText {
+  justify-content: center;
+  width: 100%;
+}
+
+.heroWithText .heroText {
+  flex: 0 1 auto;
 }
 
 .heroExpanded.heroRingOnly {
