@@ -49,7 +49,7 @@ catalogs:
       specifier: ^2.6.0
       version: 2.6.0
     '@immich/sdk':
-      specifier: ^3.0.0
+      specifier: ^3.0.1
       version: 3.0.1
     '@jellyfin/sdk':
       specifier: ^0.13.0

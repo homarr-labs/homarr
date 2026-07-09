@@ -2296,6 +2296,11 @@
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
+        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -3708,6 +3713,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
         }
       },
       "status": {
