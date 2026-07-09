@@ -33,7 +33,12 @@ export const InheritAccessTable = <TPermission extends string>({
           {Array.from(
             accessQueryData.inherited
               .reduce((map, entry) => {
-                if (!map.has(entry.group.id)) map.set(entry.group.id, entry);
+                const existing = map.get(entry.group.id);
+                if (!existing) {
+                  map.set(entry.group.id, entry);
+                } else if (getPermissionsWithChildren([entry.permission]).includes(existing.permission)) {
+                  map.set(entry.group.id, entry);
+                }
                 return map;
               }, new Map<string, (typeof accessQueryData.inherited)[number]>())
               .values(),

@@ -107,9 +107,9 @@ export class MediaOrganizerMockService implements IMediaOrganizerIntegration {
     };
   }
 
-  async getMediaQueueAsync() {
+  async getMediaQueueAsync(pageSize = 10) {
     return {
-      items: queuedItems,
+      items: queuedItems.slice(0, pageSize),
       totalCount: queuedItems.length,
     };
   }

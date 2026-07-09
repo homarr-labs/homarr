@@ -1,7 +1,7 @@
 .card {
   position: relative;
   overflow: hidden;
-  display: block;
+  display: flex;
   text-decoration: none;
   color: inherit;
   border: 1px solid var(--border-color);
@@ -24,8 +24,6 @@
   }
 }
 
-/* Poster art bled behind the card for ambient colour, mirroring the backdrop
-   treatment used by the media releases widget. */
 .backdrop {
   position: absolute;
   inset: 0;
@@ -40,25 +38,12 @@
 .content {
   position: relative;
   z-index: 1;
+  flex: 1;
+  min-width: 0;
 }
 
 .poster {
   flex-shrink: 0;
   object-fit: cover;
   box-shadow: var(--mantine-shadow-sm);
-}
-
-.dot {
-  flex-shrink: 0;
-  animation: mm-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes mm-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
 }

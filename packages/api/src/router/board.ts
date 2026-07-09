@@ -1439,14 +1439,25 @@ export const boardRouter = createTRPCRouter({
           }
         }
 
+        const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+
+        const fitsAt = (x: number, y: number) => {
+          if (x + defaultSize.width > layout.columnCount) return false;
+          for (let dy = 0; dy < defaultSize.height; dy++) {
+            const row = occupied[y + dy];
+            if (!row) continue;
+            for (let dx = 0; dx < defaultSize.width; dx++) {
+              if (row[x + dx]) return false;
+            }
+          }
+          return true;
+        };
+
         let placed = false;
         for (let y = 0; y < 9999 && !placed; y++) {
           if (!occupied[y]) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
-          const occupiedRow = occupied[y];
-          if (!occupiedRow) continue;
           for (let x = 0; x < layout.columnCount && !placed; x++) {
-            if (!occupiedRow[x]) {
-              const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+            if (fitsAt(x, y)) {
               layoutRows.push({
                 itemId,
                 sectionId: emptySection.id,

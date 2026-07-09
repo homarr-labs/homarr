@@ -16,13 +16,13 @@ interface MediaOrganizerData {
 export const mediaOrganizerRequestHandler = createCachedIntegrationRequestHandler<
   MediaOrganizerData,
   IntegrationKindByCategory<"mediaOrganizer">,
-  Record<string, never>
+  { pageSize: number }
 >({
-  async requestAsync(integration, _input) {
+  async requestAsync(integration, input) {
     const integrationInstance = (await createIntegrationAsync(integration)) as unknown as IMediaOrganizerIntegration;
     const [missingResult, queueResult] = await Promise.all([
-      integrationInstance.getMissingAsync(10),
-      integrationInstance.getMediaQueueAsync(),
+      integrationInstance.getMissingAsync(input.pageSize),
+      integrationInstance.getMediaQueueAsync(input.pageSize),
     ]);
     return {
       missing: missingResult.items,

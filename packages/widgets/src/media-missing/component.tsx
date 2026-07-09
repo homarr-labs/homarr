@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Badge, Box, Center, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Stack, Tabs, Text, ThemeIcon } from "@mantine/core";
+import { Badge, Box, Center, Group, Image, Paper, RingProgress, ScrollArea, SimpleGrid, Stack, Tabs, Text, ThemeIcon } from "@mantine/core";
 import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -15,8 +15,9 @@ import classes from "./component.module.css";
 
 export default function MediaMissingWidget({ integrationIds, options, width, height }: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
+  const pageSize = Number(options.pageSize);
   const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(
-    { integrationIds },
+    { integrationIds, pageSize },
     { staleTime: 60 * 1000, refetchOnWindowFocus: false, refetchOnReconnect: false },
   );
 
@@ -31,38 +32,36 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
       </Center>
     );
 
-  const missing = data.flatMap((entry) => entry.missing);
-  const queued = data.flatMap((entry) => entry.queued);
+  const missing = data.flatMap((entry) =>
+    entry.missing.map((item) => ({ item, integrationId: entry.integrationId })),
+  );
+  const queued = data.flatMap((entry) =>
+    entry.queued.map((item) => ({ item, integrationId: entry.integrationId })),
+  );
   const missingCount = data.reduce((sum, entry) => sum + entry.missingCount, 0);
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
 
-  // width/height are the item's pixel size, provided by the board. The layout
-  // adapts to them so the widget stays useful at any grid size: it fits as many
-  // readable columns as the width allows (filling big screens instead of
-  // stretching one column), packs tighter when short, and drops to a condensed
-  // style with count-only tabs when very thin.
   const isThin = width > 0 && width < 160;
   const isShort = height > 0 && height < 180;
   const targetCardWidth = isShort ? 130 : 200;
   const columns = width > 0 ? Math.max(1, Math.min(Math.floor(width / targetCardWidth), 4)) : 1;
-  const density = isThin ? "thin" : width > 0 && width / columns < 180 ? "compact" : "comfortable";
+  const density: Density = isThin ? "thin" : width > 0 && width / columns < 180 ? "compact" : "comfortable";
 
-  const renderPanel = (items: (MissingMediaItem | QueuedMediaItem)[], emptyLabel: string) => (
+  const tabLabel = (label: string, shown: number, total: number) =>
+    isThin ? total : `${label} (${shown}/${total})`;
+
+  const renderPanel = (entries: { item: MissingMediaItem | QueuedMediaItem; integrationId: string }[], emptyLabel: string) => (
     <ScrollArea h="100%" scrollbarSize={4}>
       <Box p="xs">
-        {items.length === 0 ? (
+        {entries.length === 0 ? (
           <Text size="sm" c="dimmed" ta="center" py="md">
             {emptyLabel}
           </Text>
         ) : (
           <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
-            {items.map((item) =>
-              "percentComplete" in item ? (
-                <QueuedCard key={`${item.type}-${item.id}`} item={item} density={density} />
-              ) : (
-                <MissingCard key={`${item.type}-${item.id}`} item={item} density={density} />
-              ),
-            )}
+            {entries.map(({ item, integrationId }) => (
+              <MediaCard key={`${integrationId}-${item.type}-${item.id}`} item={item} density={density} />
+            ))}
           </SimpleGrid>
         )}
       </Box>
@@ -78,12 +77,12 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
       <Tabs.List grow>
         {options.showMissing && (
           <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
-            {isThin ? missingCount : `${t("tab.missing")} (${missingCount})`}
+            {tabLabel(t("tab.missing"), missing.length, missingCount)}
           </Tabs.Tab>
         )}
         {options.showQueued && (
           <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
-            {isThin ? queuedCount : `${t("tab.queued")} (${queuedCount})`}
+            {tabLabel(t("tab.queued"), queued.length, queuedCount)}
           </Tabs.Tab>
         )}
       </Tabs.List>
@@ -104,18 +103,20 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
 
 type Density = "thin" | "compact" | "comfortable";
 
+const CARD_HEIGHT: Record<Density, number> = { thin: 52, compact: 56, comfortable: 68 };
+
 const posterSizes: Record<Density, number> = { thin: 34, compact: 40, comfortable: 52 };
 
 const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "episode"; density: Density }) => {
   const size = posterSizes[density];
-  const width = Math.round(size * 0.68);
+  const w = Math.round(size * 0.68);
 
   if (src) {
-    return <Image className={classes.poster} src={src} h={size} w={width} radius="sm" alt="" />;
+    return <Image className={classes.poster} src={src} h={size} w={w} radius="sm" alt="" />;
   }
 
   return (
-    <ThemeIcon className={classes.poster} h={size} w={width} radius="sm" variant="light" color={type === "movie" ? "yellow" : "blue"}>
+    <ThemeIcon className={classes.poster} h={size} w={w} radius="sm" variant="light" color={type === "movie" ? "yellow" : "blue"}>
       {type === "movie" ? <IconMovie size={size * 0.5} /> : <IconVideo size={size * 0.5} />}
     </ThemeIcon>
   );
@@ -131,8 +132,6 @@ const TypeBadge = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem
   const color = item.type === "movie" ? "yellow" : "blue";
   const code = episodeCode(item);
 
-  // Tight layouts only have room for one badge, so show the most identifying
-  // one: the episode code when available, otherwise the media type.
   if (density !== "comfortable") {
     return (
       <Badge size="xs" variant="light" color={color}>
@@ -158,8 +157,34 @@ const TypeBadge = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem
 const primaryTitle = (item: MissingMediaItem | QueuedMediaItem) =>
   item.type === "episode" ? (item.seriesTitle ?? item.title) : item.title;
 
-const CardShell = ({ item, children }: { item: MissingMediaItem | QueuedMediaItem; children: ReactNode }) => (
-  <Paper className={classes.card} component="a" href={item.link} target="_blank" rel="noreferrer" radius="sm" p="xs">
+const progressColor = (percent: number) => (percent >= 90 ? "green" : percent >= 40 ? "cyan" : "orange");
+
+const ringSizes: Record<Density, { size: number; thickness: number; fz: string }> = {
+  thin: { size: 30, thickness: 3, fz: "8px" },
+  compact: { size: 34, thickness: 3, fz: "9px" },
+  comfortable: { size: 40, thickness: 4, fz: "10px" },
+};
+
+const ProgressRing = ({ percent, density }: { percent: number; density: Density }) => {
+  const color = progressColor(percent);
+  const ring = ringSizes[density];
+  return (
+    <RingProgress
+      size={ring.size}
+      thickness={ring.thickness}
+      roundCaps
+      sections={[{ value: percent, color }]}
+      label={
+        <Text ta="center" fw={700} fz={ring.fz} lh={1}>
+          {percent}
+        </Text>
+      }
+    />
+  );
+};
+
+const CardShell = ({ item, density, children }: { item: MissingMediaItem | QueuedMediaItem; density: Density; children: ReactNode }) => (
+  <Paper className={classes.card} component="a" href={item.link} target="_blank" rel="noreferrer" radius="sm" p="xs" h={CARD_HEIGHT[density]}>
     {item.imageUrl && (
       <span className={classes.backdrop} style={{ backgroundImage: `url("${item.imageUrl}")` }} aria-hidden />
     )}
@@ -167,61 +192,26 @@ const CardShell = ({ item, children }: { item: MissingMediaItem | QueuedMediaIte
   </Paper>
 );
 
-const CardHeader = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => (
-  <Group gap="xs" wrap="nowrap" align="flex-start">
-    <Poster src={item.imageUrl} type={item.type} density={density} />
-    <Stack gap={3} style={{ minWidth: 0 }}>
-      <TypeBadge item={item} density={density} />
-      <Text fz="xs" fw={600} lineClamp={2} lh={1.25}>
-        {primaryTitle(item)}
-      </Text>
-      {density === "comfortable" && (
-        <Text fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
-          {item.type === "episode" ? item.title : item.year}
-        </Text>
-      )}
-    </Stack>
-  </Group>
-);
-
-const MissingCard = ({ item, density }: { item: MissingMediaItem; density: Density }) => (
-  <CardShell item={item}>
-    <CardHeader item={item} density={density} />
-  </CardShell>
-);
-
-const progressColor = (percent: number) => (percent >= 90 ? "green" : percent >= 40 ? "cyan" : "orange");
-
-const QueuedCard = ({ item, density }: { item: QueuedMediaItem; density: Density }) => {
-  const color = progressColor(item.percentComplete);
-  const isDownloading = item.percentComplete < 100;
+const MediaCard = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
+  const isQueued = "percentComplete" in item;
 
   return (
-    <CardShell item={item}>
-      <Stack gap={6}>
-        <CardHeader item={item} density={density} />
-        <Stack gap={3}>
-          <Progress
-            value={item.percentComplete}
-            size="sm"
-            radius="xl"
-            color={color}
-            striped={isDownloading}
-            animated={isDownloading}
-          />
-          <Group justify="space-between" gap="xs" wrap="nowrap">
-            <Group gap={5} wrap="nowrap" style={{ minWidth: 0 }}>
-              {isDownloading && <Box className={classes.dot} w={6} h={6} bg={`var(--mantine-color-${color}-5)`} style={{ borderRadius: "50%" }} />}
-              <Text fz="xs" c="dimmed" lineClamp={1}>
-                {item.timeLeft ?? item.status}
-              </Text>
-            </Group>
-            <Text fz="xs" fw={600} c={`var(--mantine-color-${color}-4)`} style={{ flexShrink: 0 }}>
-              {item.percentComplete}%
+    <CardShell item={item} density={density}>
+      <Group gap="xs" wrap="nowrap" align="center" h="100%">
+        <Poster src={item.imageUrl} type={item.type} density={density} />
+        <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
+          <TypeBadge item={item} density={density} />
+          <Text fz="xs" fw={600} lineClamp={1} lh={1.25}>
+            {primaryTitle(item)}
+          </Text>
+          {density === "comfortable" && (
+            <Text fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
+              {item.type === "episode" ? item.title : item.year}
             </Text>
-          </Group>
+          )}
         </Stack>
-      </Stack>
+        {isQueued && <ProgressRing percent={Math.min(100, Math.max(0, item.percentComplete))} density={density} />}
+      </Group>
     </CardShell>
   );
 };
