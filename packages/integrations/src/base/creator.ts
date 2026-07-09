@@ -55,84 +55,86 @@ import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
-) => {
+): Promise<IntegrationInstanceByKind[TKind]> => {
   if (!(integration.kind in integrationCreators)) {
     throw new Error(
       `Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`,
     );
   }
 
-  const creator = integrationCreators[integration.kind];
-
-  // factories are an array, to differentiate in js between class constructors and functions
-  if (Array.isArray(creator)) {
-    return (await creator[0](integration)) as IntegrationInstanceOfKind<TKind>;
-  }
-
-  return new creator(integration) as IntegrationInstanceOfKind<TKind>;
+  return (await integrationCreators[integration.kind].create(integration)) as IntegrationInstanceByKind[TKind];
 };
 
-type IntegrationInstance = new (integration: IntegrationInput) => Integration;
+type IntegrationConstructor<TIntegration extends Integration = Integration> = new (
+  integration: IntegrationInput,
+) => TIntegration;
+type IntegrationFactory<TIntegration extends Integration = Integration> = (
+  input: IntegrationInput,
+) => Promise<TIntegration>;
+type IntegrationCreator<TIntegration extends Integration = Integration> = {
+  create: (input: IntegrationInput) => TIntegration | Promise<TIntegration>;
+};
 
-// factories are an array, to differentiate in js between class constructors and functions
+const fromClass = <TIntegration extends Integration>(Constructor: IntegrationConstructor<TIntegration>) => ({
+  create: (input: IntegrationInput) => new Constructor(input),
+});
+
+const fromFactory = <TIntegration extends Integration>(create: IntegrationFactory<TIntegration>) => ({ create });
+
 export const integrationCreators = {
-  anchor: AnchorIntegration,
-  piHole: [createPiHoleIntegrationAsync],
-  adGuardHome: AdGuardHomeIntegration,
-  technitiumDns: [createTechnitiumDnsIntegrationAsync],
-  homeAssistant: HomeAssistantIntegration,
-  jellyfin: JellyfinIntegration,
-  plex: PlexIntegration,
-  sonarr: SonarrIntegration,
-  radarr: RadarrIntegration,
-  sabNzbd: SabnzbdIntegration,
-  nzbGet: NzbGetIntegration,
-  qBittorrent: QBitTorrentIntegration,
-  deluge: DelugeIntegration,
-  transmission: TransmissionIntegration,
-  slskd: SlskdIntegration,
-  aria2: Aria2Integration,
-  jellyseerr: JellyseerrIntegration,
-  seerr: SeerrIntegration,
-  overseerr: OverseerrIntegration,
-  prowlarr: ProwlarrIntegration,
-  openmediavault: OpenMediaVaultIntegration,
-  lidarr: LidarrIntegration,
-  readarr: ReadarrIntegration,
-  dashDot: DashDotIntegration,
-  tdarr: TdarrIntegration,
-  proxmox: ProxmoxIntegration,
-  emby: EmbyIntegration,
-  nextcloud: NextcloudIntegration,
-  unifiController: UnifiControllerIntegration,
-  opnsense: OPNsenseIntegration,
-  ical: ICalIntegration,
-  ntfy: NTFYIntegration,
-  gotify: GotifyIntegration,
-  mock: MockIntegration,
-  truenas: TrueNasIntegration,
-  synology: SynologyIntegration,
-  unraid: UnraidIntegration,
-  coolify: CoolifyIntegration,
-  tracearr: TracearrIntegration,
-  glances: GlancesIntegration,
-  immich: ImmichIntegration,
-  paperlessNgx: PaperlessNgxIntegration,
-  speedtestTracker: SpeedtestTrackerIntegration,
-  audiobookshelf: AudiobookshelfIntegration,
-  navidrome: NavidromeIntegration,
-  umami: UmamiIntegration,
-  gluetun: GluetunIntegration,
-  archiveTeamWarrior: ArchiveTeamWarriorIntegration,
-  uptimeKuma: UptimeKumaIntegration,
-  peaNut: PeaNutIntegration,
-  beszel: BeszelIntegration,
-} satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
+  anchor: fromClass(AnchorIntegration),
+  piHole: fromFactory(createPiHoleIntegrationAsync),
+  adGuardHome: fromClass(AdGuardHomeIntegration),
+  technitiumDns: fromFactory(createTechnitiumDnsIntegrationAsync),
+  homeAssistant: fromClass(HomeAssistantIntegration),
+  jellyfin: fromClass(JellyfinIntegration),
+  plex: fromClass(PlexIntegration),
+  sonarr: fromClass(SonarrIntegration),
+  radarr: fromClass(RadarrIntegration),
+  sabNzbd: fromClass(SabnzbdIntegration),
+  nzbGet: fromClass(NzbGetIntegration),
+  qBittorrent: fromClass(QBitTorrentIntegration),
+  deluge: fromClass(DelugeIntegration),
+  transmission: fromClass(TransmissionIntegration),
+  slskd: fromClass(SlskdIntegration),
+  aria2: fromClass(Aria2Integration),
+  jellyseerr: fromClass(JellyseerrIntegration),
+  seerr: fromClass(SeerrIntegration),
+  overseerr: fromClass(OverseerrIntegration),
+  prowlarr: fromClass(ProwlarrIntegration),
+  openmediavault: fromClass(OpenMediaVaultIntegration),
+  lidarr: fromClass(LidarrIntegration),
+  readarr: fromClass(ReadarrIntegration),
+  dashDot: fromClass(DashDotIntegration),
+  tdarr: fromClass(TdarrIntegration),
+  proxmox: fromClass(ProxmoxIntegration),
+  emby: fromClass(EmbyIntegration),
+  nextcloud: fromClass(NextcloudIntegration),
+  unifiController: fromClass(UnifiControllerIntegration),
+  opnsense: fromClass(OPNsenseIntegration),
+  ical: fromClass(ICalIntegration),
+  ntfy: fromClass(NTFYIntegration),
+  gotify: fromClass(GotifyIntegration),
+  mock: fromClass(MockIntegration),
+  truenas: fromClass(TrueNasIntegration),
+  synology: fromClass(SynologyIntegration),
+  unraid: fromClass(UnraidIntegration),
+  coolify: fromClass(CoolifyIntegration),
+  tracearr: fromClass(TracearrIntegration),
+  glances: fromClass(GlancesIntegration),
+  immich: fromClass(ImmichIntegration),
+  paperlessNgx: fromClass(PaperlessNgxIntegration),
+  speedtestTracker: fromClass(SpeedtestTrackerIntegration),
+  audiobookshelf: fromClass(AudiobookshelfIntegration),
+  navidrome: fromClass(NavidromeIntegration),
+  umami: fromClass(UmamiIntegration),
+  gluetun: fromClass(GluetunIntegration),
+  archiveTeamWarrior: fromClass(ArchiveTeamWarriorIntegration),
+  uptimeKuma: fromClass(UptimeKumaIntegration),
+  peaNut: fromClass(PeaNutIntegration),
+  beszel: fromClass(BeszelIntegration),
+} satisfies Record<IntegrationKind, IntegrationCreator>;
 
-type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
-  [kind in TKind]: (typeof integrationCreators)[kind] extends [(input: IntegrationInput) => Promise<Integration>]
-    ? Awaited<ReturnType<(typeof integrationCreators)[kind][0]>>
-    : (typeof integrationCreators)[kind] extends IntegrationInstance
-      ? InstanceType<(typeof integrationCreators)[kind]>
-      : never;
-}[TKind];
+type IntegrationInstanceByKind = {
+  [TKind in keyof typeof integrationCreators]: Awaited<ReturnType<(typeof integrationCreators)[TKind]["create"]>>;
+};
