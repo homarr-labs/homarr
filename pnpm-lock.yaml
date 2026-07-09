@@ -553,8 +553,8 @@ catalogs:
       specifier: ^4.4.3
       version: 4.4.3
     zod-form-data:
-      specifier: ^3.0.2
-      version: 3.0.2
+      specifier: ^3.0.3
+      version: 3.0.3
     zod-validation-error:
       specifier: ^5.0.0
       version: 5.0.0
@@ -2155,7 +2155,7 @@ importers:
         version: 4.4.3
       zod-form-data:
         specifier: 'catalog:'
-        version: 3.0.2(zod@4.4.3)
+        version: 3.0.3(zod@4.4.3)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -2501,7 +2501,7 @@ importers:
         version: 4.4.3
       zod-form-data:
         specifier: 'catalog:'
-        version: 3.0.2(zod@4.4.3)
+        version: 3.0.3(zod@4.4.3)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -6690,8 +6690,8 @@ packages:
   '@rspack/lite-tapable@1.1.0':
     resolution: {integrity: sha512-E2B0JhYFmVAwdDiG14+DW0Di4Ze4Jg10Pc4/lILUrd5DRCaklduz2OvJ5HYQ6G+hd+WTzqQb3QnDNfK4yvAFYw==}
 
-  '@rvf/set-get@7.0.1':
-    resolution: {integrity: sha512-GkTSn9K1GrTYoTUqlUs36k6nJnzjQaFBTTEIqUYmzBcsGsoJM8xG7EAx2WLHWAA4QzFjcwWUSHQ3vM3Fbw50Tg==}
+  '@rvf/set-get@7.0.3':
+    resolution: {integrity: sha512-Ky2uOJ5WpgqVev4W+dNlOIJ2R9b6heHD4PHx7NGI98XanfeH8Pl/m5wE0aZU3d/nD79iOUlZHBn0uxJU/DJF7g==}
 
   '@scalar/agent-chat@0.12.16':
     resolution: {integrity: sha512-YETdit7xhWpqdu4PMDM6AVQXID6GtJ1MSS0pmdyUFpR1xG02ABFWPsZHJ8+LQvFQXTC9ZOowtjgP8G9gTKA+KQ==}
@@ -15309,8 +15309,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@3.0.2:
-    resolution: {integrity: sha512-iN8oSINKqNHJ90T+SHUvHg2gfvF+gyVvg4nK1RYYhMUDUpUWaqwqawLbJNDxxrM59pgE0kdcMfqKVwK55Bm5cw==}
+  zod-form-data@3.0.3:
+    resolution: {integrity: sha512-1qXJ6hayyUr3TqxfXqmm5qwCa8f/mnG/o8Itcny03iFyrwX/dZkCwfCcYoJDyQP8RxEkycw0c/ldCJXBeaCstg==}
     peerDependencies:
       zod: '>= 3.25.0'
 
@@ -20108,7 +20108,7 @@ snapshots:
 
   '@rspack/lite-tapable@1.1.0': {}
 
-  '@rvf/set-get@7.0.1': {}
+  '@rvf/set-get@7.0.3': {}
 
   '@scalar/agent-chat@0.12.16(nprogress@0.2.0)(tailwindcss@4.3.2)(typescript@6.0.3)(zod@4.4.3)':
     dependencies:
@@ -30113,9 +30113,9 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@3.0.2(zod@4.4.3):
+  zod-form-data@3.0.3(zod@4.4.3):
     dependencies:
-      '@rvf/set-get': 7.0.1
+      '@rvf/set-get': 7.0.3
       zod: 4.4.3
 
   zod-openapi@5.3.0(zod@4.4.3):
