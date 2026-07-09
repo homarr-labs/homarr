@@ -132,7 +132,7 @@ export class OverseerrIntegration
       },
     );
 
-    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
+    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20, sort: "modified" }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
