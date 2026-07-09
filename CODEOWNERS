@@ -159,6 +159,10 @@ packages/integrations/src/search-ch @Meierschlumpf
 apps/docs/docs/integrations/speedtest-tracker @kylegrieder
 packages/integrations/src/speedtest-tracker @kylegrieder
 
+# Synology - introduced in https://github.com/homarr-labs/homarr/pull/6121 by @mrjoshuap
+apps/docs/docs/integrations/synology @mrjoshuap
+packages/integrations/src/synology @mrjoshuap
+
 # Technitium DNS - introduced in https://github.com/homarr-labs/homarr/pull/5832 by @lopsch
 apps/docs/docs/integrations/technitium-dns @lopsch
 packages/integrations/src/technitium @lopsch
