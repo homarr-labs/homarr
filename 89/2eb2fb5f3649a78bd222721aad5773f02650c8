@@ -1,0 +1,42 @@
+packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts
+  s_3ef3a459636da2::t_ae506f47a77894 151,154
+packages/integrations/src/interfaces/media-organizer/media-organizer-integration.ts
+  s_3ef3a459636da2::t_b8833e7e684d0c 5
+packages/widgets/src/media-missing/index.ts
+  s_3ef3a459636da2::t_740bc785f5a36f 8-9,16-22
+packages/integrations/src/media-organizer/radarr/radarr-integration.ts
+  s_3ef3a459636da2::t_8c817eeb34e064 149,152
+packages/integrations/src/mock/data/media-organizer.ts
+  s_3ef3a459636da2::t_86ea63a79312cd 110,112
+packages/widgets/src/media-missing/component.module.css
+  s_3ef3a459636da2::t_959c9f5b13da0e 4,41-42
+packages/api/src/router/widgets/media-organizer.ts
+  s_3ef3a459636da2::t_638933e187b191 1-2,15,19-20,23
+packages/request-handler/src/media-organizer.ts
+  s_3ef3a459636da2::t_8be62ad513c417 19,21,24-25
+apps/nextjs/src/components/access/inherit-access-table.tsx
+  s_3ef3a459636da2::t_b75fff28dad9b2 36-41
+packages/widgets/src/media-missing/component.tsx
+  s_3ef3a459636da2::t_43f92b9c7e485c 35-40
+  s_3ef3a459636da2::t_83774d1c9f645f 213
+  s_3ef3a459636da2::t_08375929cef164 53,56
+  s_3ef3a459636da2::t_a5849ac44f4ea4 4,18,20,48-51,62-64,80,85,106-107,112,115,119,160-187,195-196,199-209,211,214
+packages/api/src/router/board.ts
+  s_3ef3a459636da2::t_cc017b0afabb1a 1442-1455,1460
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "892eb2fb5f3649a78bd222721aad5773f02650c8",
+  "prompts": {},
+  "sessions": {
+    "s_3ef3a459636da2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f883aac-b5d0-4698-aa1b-6c45a6e45cdf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
