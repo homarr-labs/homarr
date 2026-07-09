@@ -1,0 +1,19 @@
+packages/widgets/src/media-missing/component.tsx
+  s_3ef3a459636da2::t_aee4b0d6fa40d9 71-78,81,86-91,94-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "76cc64232026148e3646f16e1705e810aaf348f5",
+  "prompts": {},
+  "sessions": {
+    "s_3ef3a459636da2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f883aac-b5d0-4698-aa1b-6c45a6e45cdf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
