@@ -4,13 +4,10 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
-
-const logger = createLogger({ module: "downloadsRouter" });
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
   createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("downloadClient"));
@@ -46,33 +43,23 @@ export const downloadsRouter = createTRPCRouter({
     })
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
-      const settled = await Promise.allSettled(
+      await Promise.all(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseQueueAsync();
         }),
       );
-      for (const result of settled) {
-        if (result.status === "rejected") {
-          logger.warn("Download pause integration failed", { error: result.reason });
-        }
-      }
     }),
   pauseItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
-      const settled = await Promise.allSettled(
+      await Promise.all(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseItemAsync(input.item);
         }),
       );
-      for (const result of settled) {
-        if (result.status === "rejected") {
-          logger.warn("Download pause item integration failed", { error: result.reason });
-        }
-      }
     }),
   resume: protectedProcedure
     .meta({
@@ -84,48 +71,33 @@ export const downloadsRouter = createTRPCRouter({
     })
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
-      const settled = await Promise.allSettled(
+      await Promise.all(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeQueueAsync();
         }),
       );
-      for (const result of settled) {
-        if (result.status === "rejected") {
-          logger.warn("Download resume integration failed", { error: result.reason });
-        }
-      }
     }),
   resumeItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
-      const settled = await Promise.allSettled(
+      await Promise.all(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeItemAsync(input.item);
         }),
       );
-      for (const result of settled) {
-        if (result.status === "rejected") {
-          logger.warn("Download resume item integration failed", { error: result.reason });
-        }
-      }
     }),
   deleteItem: protectedProcedure
     .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const settled = await Promise.allSettled(
+      await Promise.all(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );
-      for (const result of settled) {
-        if (result.status === "rejected") {
-          logger.warn("Download delete item integration failed", { error: result.reason });
-        }
-      }
     }),
 });
