@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "設定"
+        "settings": "設定",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "{station} 出発時刻",
       "noStation": "駅が選択されていません",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "駅"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "写真情報を表示",
           "description": "スライドショーの下部に画像の日付と現在の索引を表示します"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Immichアルバムの写真のスライド",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "プロバイダー"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別名",
             "placeholder": "名前、または所有者名"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "プロバイダーがありません",
             "tooltip": "プロバイダーを解析できませんでした。画像をインポートしたあとで、手動で設定してください"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "無効な識別子",
           "noMatchingVersion": "一致するバージョンが見つかりません",
           "noReleasesFound": "リリースが見つかりませんでした",
-          "noProviderSeleceted": "プロバイダーが選択されていません",
-          "noProviderResponse": "プロバイダーからの応答がありません"
+          "noProviderSelected": "",
+          "noProviderResponse": "プロバイダーからの応答がありません",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "無効"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft サーバーの状態"
-            },
-            "timetable": {
-              "label": "タイムテーブル"
-            },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
             },
             "analytics": {
               "label": "統計情報"
             },
-            "smartHomeEntityState": {
-              "label": "スマートホームエンティティの状態"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "メディアサーバー"
-            },
-            "mediaOrganizer": {
-              "label": "メディアオーガナイザー"
-            },
-            "downloads": {
-              "label": "ダウンロード"
-            },
-            "mediaRequestStats": {
-              "label": "メディアリクエストの統計情報"
-            },
-            "mediaRequestList": {
-              "label": "メディアリクエストのリスト"
-            },
-            "rssFeeds": {
-              "label": "RSS フィード"
-            },
-            "indexerManager": {
-              "label": "インデクサーマネージャー"
-            },
-            "healthMonitoring": {
-              "label": "ヘルスモニタ"
-            },
-            "dnsHole": {
-              "label": "DNS Holeデータ"
-            },
-            "updateChecker": {
-              "label": "アップデートチェッカー"
-            },
-            "mediaTranscoding": {
-              "label": "メディアのトランスコーディング"
-            },
-            "networkController": {
-              "label": "ネットワークコントローラ"
-            },
-            "refreshNotifications": {
-              "label": "通知アップデーター"
-            },
-            "dockerContainers": {
-              "label": "Docker コンテナ"
-            },
-            "firewallCpu": {
-              "label": "ファイアウォールの CPU"
-            },
-            "firewallMemory": {
-              "label": "ファイアウォールのメモリ"
-            },
-            "firewallVersion": {
-              "label": "ファイアウォールのバージョン"
-            },
-            "firewallInterfaces": {
-              "label": "ファイアウォールのインターフェース"
-            },
-            "weather": {
-              "label": "天気"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

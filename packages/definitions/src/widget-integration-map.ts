@@ -27,8 +27,8 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
   mediaReleases: ["emby", "jellyfin", "plex"],
-  systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances"],
-  systemDisks: ["dashDot", "openmediavault", "truenas", "unraid"],
+  systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   coolify: ["coolify"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
@@ -41,6 +41,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   vpn: getIntegrationKindsByCategory("vpn"),
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
+  traefik: ["traefik"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

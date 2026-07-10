@@ -21,6 +21,7 @@ import {
   CPU_Y_AXIS_DOMAIN,
   useContainerNames,
   useDockerChartData,
+  useEfsChartData,
   useSystemChartData,
 } from "../beszel/_shared/chart";
 import {
@@ -185,9 +186,29 @@ export default function BeszelSystemStatsWidget({
     timePeriod,
   );
 
+  const efsPaths = useMemo(() => {
+    if (!systemStats) return [];
+    const paths = new Set<string>();
+    for (const record of systemStats) {
+      if (record.stats.efs) {
+        for (const path of Object.keys(record.stats.efs)) {
+          paths.add(path);
+        }
+      }
+    }
+    return [...paths];
+  }, [systemStats]);
+
+  const storageData = useEfsChartData(statsWhenShown(options.showStorage, systemStats), efsPaths, timePeriod);
+
   const containerSeries = useMemo(
     () => containerNames.map((name, i) => ({ name, color: containerColors[i % containerColors.length] as string })),
     [containerNames],
+  );
+
+  const storageSeries = useMemo(
+    () => efsPaths.map((path, i) => ({ name: path, color: containerColors[i % containerColors.length] as string })),
+    [efsPaths],
   );
 
   const cols = gridColumns[Number(width > 600)];
@@ -381,6 +402,21 @@ export default function BeszelSystemStatsWidget({
                     series: series.network,
                     yAxisFormatter: chartAxisFormatters.rate,
                     tooltipProps: tooltipRate,
+                  }}
+                />
+              )}
+
+              {options.showStorage && storageData.length > 0 && storageSeries.length > 0 && (
+                <BeszelChartPanel
+                  title={t("chart.storage.title")}
+                  subtitle={t("chart.storage.subtitle")}
+                  chartProps={{
+                    h: CHART_HEIGHT,
+                    data: storageData,
+                    type: "stacked",
+                    series: storageSeries,
+                    yAxisFormatter: chartAxisFormatters.bytes,
+                    tooltipProps: tooltipBytesTotal,
                   }}
                 />
               )}

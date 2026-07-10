@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "設定"
+        "settings": "設定",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "",
           "description": ""
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "提供者"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "找不到匹配的版本",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft 伺服器狀態"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "icon 上傳器"
             },
             "analytics": {
               "label": "分析"
             },
-            "smartHomeEntityState": {
-              "label": "智能居家狀態"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "多媒體伺服器"
-            },
-            "mediaOrganizer": {
-              "label": "多媒體組織者"
-            },
-            "downloads": {
-              "label": "正在下載"
-            },
-            "mediaRequestStats": {
-              "label": "多媒體請求狀態"
-            },
-            "mediaRequestList": {
-              "label": "多媒體請求列表"
-            },
-            "rssFeeds": {
-              "label": "RSS 訂閱"
-            },
-            "indexerManager": {
-              "label": "索引器管理"
-            },
-            "healthMonitoring": {
-              "label": "健康監測"
-            },
-            "dnsHole": {
-              "label": "DNS Hole 數據"
-            },
-            "updateChecker": {
-              "label": "更新檢查"
-            },
-            "mediaTranscoding": {
-              "label": "多媒體轉碼中"
-            },
-            "networkController": {
-              "label": "網路控制"
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

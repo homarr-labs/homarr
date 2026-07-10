@@ -50,6 +50,7 @@ import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
+import * as traefik from "./traefik";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
@@ -122,6 +123,7 @@ export const widgetImports = {
   beszelSystemGrid,
   beszelAlerts,
   beszelSystemStats,
+  traefik,
   customApi,
 } satisfies WidgetImportRecord;
 

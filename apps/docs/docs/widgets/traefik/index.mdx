@@ -1,0 +1,35 @@
+---
+title: "Traefik"
+description: "Displays Traefik router, service, middleware, and entry point counts."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { traefikWidget } from ".";
+import { traefikIntegration } from "@site/docs/integrations/traefik";
+
+<WidgetHeader widget={traefikWidget} categories={["Monitoring", "Reverse proxy"]} />
+
+This widget displays a compact overview of your Traefik instance, including total routers, entry points, protocol-specific router/service/middleware counts, and warning or error totals when Traefik reports them.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: traefikIntegration,
+      note: "Reads data from Traefik's dashboard/API endpoints",
+    },
+  ]}
+/>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={traefikWidget.configuration} />

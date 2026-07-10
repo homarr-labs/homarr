@@ -8,8 +8,8 @@
         "action": {
           "scratch": "Start fra begynnelsen",
           "importOldmarr": "Importer fra Homarr før 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
+          "restoreSqlite": "Gjenopprett fra SQLite sikkerhetskopi",
+          "restoreSqliteDescription": "Last opp en full SQLite database sikkerhetskopi fra en tidligere Homarr instans. Dette vil gjenopprette alle tavler, brukere, apper, integrasjoner og innstillinger.",
           "backToOptions": ""
         }
       },
@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Innstillinger"
+        "settings": "Innstillinger",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "Avganger {station}",
       "noStation": "Ingen stasjon valgt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Stasjon"
         }
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "Vis bildeinformasjon",
           "description": "Vis datoen for bildet og gjeldende indeks nederst i lysbildeserien"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Lysbildefremvisning av bilder i ditt Immich-album",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "Leverandør"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller Eier/Navn"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "Ingen leverandør",
             "tooltip": "Leverandøren kunne ikke tolkes, sett den manuelt etter import av bildene"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen samsvarende versjon funnet",
           "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSeleceted": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør"
+          "noProviderSelected": "",
+          "noProviderResponse": "Ingen respons fra leverandør",
+          "unexpected": ""
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "Deaktivert"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft serverstatus"
-            },
-            "timetable": {
-              "label": "Timeplan"
-            },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
             },
             "analytics": {
               "label": "Statistikk"
             },
-            "smartHomeEntityState": {
-              "label": "Smart hjem enhets tilstand"
-            },
             "ping": {
               "label": "Pinger"
-            },
-            "mediaServer": {
-              "label": "Medieserver"
-            },
-            "mediaOrganizer": {
-              "label": "Media organisatorer"
-            },
-            "downloads": {
-              "label": "Nedlastinger"
-            },
-            "mediaRequestStats": {
-              "label": "Statistikk for mediaforespørsler"
-            },
-            "mediaRequestList": {
-              "label": "Liste over mediaspillforespørsler"
-            },
-            "rssFeeds": {
-              "label": "RSS feed"
-            },
-            "indexerManager": {
-              "label": "Indekserings-behandler"
-            },
-            "healthMonitoring": {
-              "label": "Systemhelseovervåking"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Oppdateringssjekk"
-            },
-            "mediaTranscoding": {
-              "label": "Media transkoding"
-            },
-            "networkController": {
-              "label": "Nettverkskontroller"
-            },
-            "refreshNotifications": {
-              "label": "Varseloppdaterer"
-            },
-            "dockerContainers": {
-              "label": "Docker-beholdere"
-            },
-            "firewallCpu": {
-              "label": "Brannmur-CPU"
-            },
-            "firewallMemory": {
-              "label": "Brannmur-minne"
-            },
-            "firewallVersion": {
-              "label": "Brannmur-versjon"
-            },
-            "firewallInterfaces": {
-              "label": "Brannmur-grensesnitt"
-            },
-            "weather": {
-              "label": "Vær"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Aktive Besøkende"
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {

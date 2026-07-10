@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "crwdns702:0crwdne702:0"
+        "settings": "crwdns702:0crwdne702:0",
+        "refresh": "crwdns5739:0crwdne5739:0",
+        "options": "crwdns5709:0crwdne5709:0",
+        "actions": "crwdns5711:0crwdne5711:0"
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "crwdns4004:0{station}crwdne4004:0",
       "noStation": "crwdns4006:0crwdne4006:0",
       "option": {
+        "baseUrl": {
+          "label": "crwdns5713:0crwdne5713:0"
+        },
         "station": {
           "label": "crwdns4008:0crwdne4008:0"
         }
@@ -2773,8 +2779,8 @@
       "name": "crwdns3908:0crwdne3908:0",
       "option": {
         "albumId": {
-          "label": "crwdns3910:0crwdne3910:0",
-          "description": "crwdns3912:0crwdne3912:0"
+          "label": "crwdns5715:0crwdne5715:0",
+          "description": "crwdns5717:0crwdne5717:0"
         },
         "rotationIntervalSeconds": {
           "label": "crwdns3914:0crwdne3914:0",
@@ -2783,6 +2789,10 @@
         "showPhotoInfo": {
           "label": "crwdns3918:0crwdne3918:0",
           "description": "crwdns3920:0crwdne3920:0"
+        },
+        "randomizePhotos": {
+          "label": "crwdns5719:0crwdne5719:0",
+          "description": "crwdns5721:0crwdne5721:0"
         }
       },
       "description": "crwdns3922:0crwdne3922:0",
@@ -3147,6 +3157,9 @@
           "provider": {
             "label": "crwdns3204:0crwdne3204:0"
           },
+          "providerUrl": {
+            "label": "crwdns5723:0crwdne5723:0"
+          },
           "identifier": {
             "label": "crwdns3206:0crwdne3206:0",
             "placeholder": "crwdns3208:0crwdne3208:0"
@@ -3194,6 +3207,13 @@
           "noProvider": {
             "label": "crwdns3508:0crwdne3508:0",
             "tooltip": "crwdns3510:0crwdne3510:0"
+          },
+          "tokens": {
+            "label": "crwdns5725:0crwdne5725:0",
+            "token": "crwdns5727:0crwdne5727:0",
+            "configured": "crwdns5729:0crwdne5729:0",
+            "notConfigured": "crwdns5731:0crwdne5731:0",
+            "save": "crwdns5733:0crwdne5733:0"
           }
         }
       },
@@ -3216,8 +3236,9 @@
           "invalidIdentifier": "crwdns3512:0crwdne3512:0",
           "noMatchingVersion": "crwdns3514:0crwdne3514:0",
           "noReleasesFound": "crwdns3516:0crwdne3516:0",
-          "noProviderSeleceted": "crwdns3518:0crwdne3518:0",
-          "noProviderResponse": "crwdns3520:0crwdne3520:0"
+          "noProviderSelected": "crwdns5735:0crwdne5735:0",
+          "noProviderResponse": "crwdns3520:0crwdne3520:0",
+          "unexpected": "crwdns5737:0crwdne5737:0"
         }
       }
     },
@@ -4524,89 +4545,14 @@
             "disabled": "crwdns3484:0crwdne3484:0"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "crwdns2496:0crwdne2496:0"
-            },
-            "timetable": {
-              "label": "crwdns4010:0crwdne4010:0"
-            },
             "iconsUpdater": {
               "label": "crwdns1828:0crwdne1828:0"
             },
             "analytics": {
               "label": "crwdns1830:0crwdne1830:0"
             },
-            "smartHomeEntityState": {
-              "label": "crwdns1832:0crwdne1832:0"
-            },
             "ping": {
               "label": "crwdns1834:0crwdne1834:0"
-            },
-            "mediaServer": {
-              "label": "crwdns1836:0crwdne1836:0"
-            },
-            "mediaOrganizer": {
-              "label": "crwdns1838:0crwdne1838:0"
-            },
-            "downloads": {
-              "label": "crwdns1840:0crwdne1840:0"
-            },
-            "mediaRequestStats": {
-              "label": "crwdns1842:0crwdne1842:0"
-            },
-            "mediaRequestList": {
-              "label": "crwdns1844:0crwdne1844:0"
-            },
-            "rssFeeds": {
-              "label": "crwdns1846:0crwdne1846:0"
-            },
-            "indexerManager": {
-              "label": "crwdns1848:0crwdne1848:0"
-            },
-            "healthMonitoring": {
-              "label": "crwdns1850:0crwdne1850:0"
-            },
-            "dnsHole": {
-              "label": "crwdns1852:0crwdne1852:0"
-            },
-            "updateChecker": {
-              "label": "crwdns2258:0crwdne2258:0"
-            },
-            "mediaTranscoding": {
-              "label": "crwdns2436:0crwdne2436:0"
-            },
-            "networkController": {
-              "label": "crwdns3153:0crwdne3153:0"
-            },
-            "refreshNotifications": {
-              "label": "crwdns3482:0crwdne3482:0"
-            },
-            "dockerContainers": {
-              "label": "crwdns3430:0crwdne3430:0"
-            },
-            "firewallCpu": {
-              "label": "crwdns3592:0crwdne3592:0"
-            },
-            "firewallMemory": {
-              "label": "crwdns3594:0crwdne3594:0"
-            },
-            "firewallVersion": {
-              "label": "crwdns3596:0crwdne3596:0"
-            },
-            "firewallInterfaces": {
-              "label": "crwdns3598:0crwdne3598:0"
-            },
-            "weather": {
-              "label": "crwdns3724:0crwdne3724:0"
-            },
-            "tracearr": {
-              "label": "crwdns3990:0crwdne3990:0"
-            },
-            "umamiActiveVisitors": {
-              "label": "crwdns4223:0crwdne4223:0"
-            },
-            "vpn": {
-              "label": "crwdns5695:0crwdne5695:0"
             }
           },
           "interval": {

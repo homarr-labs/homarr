@@ -6,5 +6,5 @@ export function parseCookies(cookieString: string) {
 }
 
 export function setClientCookie(name: string, value: string, options: SerializeOptions = {}) {
-  document.cookie = stringifySetCookie(name, value, options);
+  document.cookie = stringifySetCookie({ name, value, ...options });
 }
