@@ -38,7 +38,7 @@ import { IntegrationResponseError } from "../../base/errors/http/integration-res
 
 import type { IntegrationSecret } from "../../base/types";
 import { SynologyIntegration } from "../synology-integration";
-import { synologyStorageV2DataSchema, synologyUtilizationDataSchema } from "../synology-types";
+import type { synologyStorageV2DataSchema, synologyUtilizationDataSchema } from "../synology-types";
 
 const TEST_URL = "https://synology.example.com:5001";
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
