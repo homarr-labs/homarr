@@ -10,7 +10,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
 const statusColors: Record<UpsStatus, string> = {
@@ -48,7 +47,7 @@ function UpsContent({ integrationIds, options, width }: UpsContentProps) {
   );
 
   if (devices.length === 0) {
-    throw new NoIntegrationDataError();
+    return <WidgetEmptyState />;
   }
 
   // Pick a layout from the available width so the widget stays useful at any size. The surrounding

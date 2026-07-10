@@ -12,6 +12,7 @@ type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"
 
 interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
+  cacheTtlMs?: number;
 }
 
 export const createIntegrationRequestHandler = <
@@ -30,6 +31,7 @@ export const createIntegrationRequestHandler = <
       }
       return options.requestAsync(integration, input.options);
     },
+    cacheTtlMs: options.cacheTtlMs,
   });
 
   return {

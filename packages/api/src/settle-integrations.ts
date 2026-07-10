@@ -9,9 +9,14 @@ interface IntegrationLike {
   kind: string;
 }
 
+interface Options<TIntegration extends IntegrationLike, TResult> {
+  fallback?: (integration: TIntegration, error: unknown) => TResult;
+}
+
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
+  options?: Options<TIntegration, TResult>,
 ): Promise<TResult[]> {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
   return settled.flatMap((result, index) => {
@@ -24,6 +29,7 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
         { cause: result.reason },
       ),
     );
+    if (options?.fallback && integration) return [options.fallback(integration, result.reason)];
     return [];
   });
 }

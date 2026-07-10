@@ -122,6 +122,9 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
+  // No cache — the widget polls every 5s for live updates;
+  // a TTL here would serve stale records between polls.
+  cacheTtlMs: 0,
   async requestAsync(integration, input) {
     const start = performance.now();
     const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
