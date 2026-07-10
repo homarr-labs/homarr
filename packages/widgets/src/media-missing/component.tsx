@@ -68,35 +68,35 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
     </ScrollArea>
   );
 
-  const singleTab = options.showMissing !== options.showQueued;
-
-  if (singleTab) {
-    const entries = options.showMissing ? missing : queued;
-    const emptyLabel = options.showMissing ? t("empty.missing") : t("empty.queued");
-    return <Box h="100%">{renderPanel(entries, emptyLabel)}</Box>;
-  }
-
   return (
     <Tabs
-      defaultValue="missing"
+      defaultValue={options.showMissing ? "missing" : "queued"}
       h="100%"
       style={{ display: "flex", flexDirection: "column" }}
     >
       <Tabs.List grow>
-        <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
-          {tabLabel(t("tab.missing"), missing.length, missingCount)}
-        </Tabs.Tab>
-        <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
-          {tabLabel(t("tab.queued"), queued.length, queuedCount)}
-        </Tabs.Tab>
+        {options.showMissing && (
+          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
+            {tabLabel(t("tab.missing"), missing.length, missingCount)}
+          </Tabs.Tab>
+        )}
+        {options.showQueued && (
+          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
+            {tabLabel(t("tab.queued"), queued.length, queuedCount)}
+          </Tabs.Tab>
+        )}
       </Tabs.List>
 
-      <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
-        {renderPanel(missing, t("empty.missing"))}
-      </Tabs.Panel>
-      <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
-        {renderPanel(queued, t("empty.queued"))}
-      </Tabs.Panel>
+      {options.showMissing && (
+        <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
+          {renderPanel(missing, t("empty.missing"))}
+        </Tabs.Panel>
+      )}
+      {options.showQueued && (
+        <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
+          {renderPanel(queued, t("empty.queued"))}
+        </Tabs.Panel>
+      )}
     </Tabs>
   );
 }
