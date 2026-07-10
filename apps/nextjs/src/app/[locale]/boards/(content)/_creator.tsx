@@ -79,14 +79,16 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const userId = session?.user.id ?? "anonymous";
 
       return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <IntegrationProvider integrations={integrations}>
-            <Suspense>
-              <QueryCacheHydration userId={userId} boardId={board.id} />
-            </Suspense>
-            <DynamicClientBoard />
-          </IntegrationProvider>
-        </HydrationBoundary>
+        <>
+          <Suspense>
+            <QueryCacheHydration userId={userId} boardId={board.id} />
+          </Suspense>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <IntegrationProvider integrations={integrations}>
+              <DynamicClientBoard />
+            </IntegrationProvider>
+          </HydrationBoundary>
+        </>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {

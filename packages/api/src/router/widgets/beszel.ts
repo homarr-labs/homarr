@@ -8,10 +8,13 @@ import {
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
 
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "beszelRouter" });
+
+const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
@@ -26,8 +29,9 @@ export const beszelRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const integrationIds = ctx.integrations.map((i) => i.id);
       logger.debug("getSystems called", { userId: ctx.session?.user?.id, integrationIds });
-      const settled = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
           const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getDataAsync();
           return {
@@ -37,25 +41,18 @@ export const beszelRouter = createTRPCRouter({
             systems: data,
             updatedAt: timestamp,
           };
-        }),
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            systems: [],
+            updatedAt: new Date(0),
+            error: errorMessage(error),
+          }),
+        },
       );
-      const results = settled.map((result, index) => {
-        if (result.status === "fulfilled") return result.value;
-        const integration = ctx.integrations[index];
-        logger.warn("getSystems integration failed", {
-          userId: ctx.session?.user?.id,
-          integrationId: integration?.id,
-          error: result.reason,
-        });
-        return {
-          integrationId: integration?.id ?? "unknown",
-          integrationName: integration?.name ?? "unknown",
-          integrationUrl: integration?.url ?? "",
-          systems: [],
-          updatedAt: new Date(0),
-          error: result.reason instanceof Error ? result.reason.message : String(result.reason),
-        };
-      });
       logger.debug("getSystems completed", {
         userId: ctx.session?.user?.id,
         integrationIds,
@@ -88,8 +85,9 @@ export const beszelRouter = createTRPCRouter({
         includeHistory: input.includeHistory,
         maxHistoryItems: input.maxHistoryItems,
       });
-      const settled = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
           const alertsHandler = beszelAlertsRequestHandler.handler(integration, {
             includeHistory: input.includeHistory,
             maxHistoryItems: input.maxHistoryItems,
@@ -115,26 +113,19 @@ export const beszelRouter = createTRPCRouter({
             systemNameMap,
             updatedAt: alertsResult.timestamp,
           };
-        }),
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            alerts: [],
+            history: [],
+            systemNameMap: {},
+            updatedAt: new Date(0),
+            error: errorMessage(error),
+          }),
+        },
       );
-      const results = settled.map((result, index) => {
-        if (result.status === "fulfilled") return result.value;
-        const integration = ctx.integrations[index];
-        logger.warn("getAlerts integration failed", {
-          userId: ctx.session?.user?.id,
-          integrationId: integration?.id,
-          error: result.reason,
-        });
-        return {
-          integrationId: integration?.id ?? "unknown",
-          integrationName: integration?.name ?? "unknown",
-          alerts: [],
-          history: [],
-          systemNameMap: {},
-          updatedAt: new Date(0),
-          error: result.reason instanceof Error ? result.reason.message : String(result.reason),
-        };
-      });
       logger.debug("getAlerts completed", {
         userId: ctx.session?.user?.id,
         integrationIds,
@@ -197,7 +188,7 @@ export const beszelRouter = createTRPCRouter({
           systemStats: [],
           containerStats: [],
           updatedAt: new Date(0),
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage(error),
         };
       }
     }),
