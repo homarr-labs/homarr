@@ -19,6 +19,14 @@ packages/integrations/src/anchor @ohmzi
 apps/docs/docs/integrations/archive-team-warrior @darbyjack
 packages/integrations/src/archive-team-warrior @darbyjack
 
+# Bazarr - introduced in https://github.com/homarr-labs/homarr/pull/6156 by @Ayush7614
+apps/docs/docs/integrations/bazarr @Ayush7614
+apps/docs/docs/widgets/bazarr @Ayush7614
+packages/api/src/router/widgets/bazarr.ts @Ayush7614
+packages/integrations/src/bazarr @Ayush7614
+packages/request-handler/src/bazarr.ts @Ayush7614
+packages/widgets/src/bazarr @Ayush7614
+
 # Audiobookshelf - introduced in https://github.com/homarr-labs/homarr/pull/5910 by @ajnart
 apps/docs/docs/integrations/audiobookshelf @ajnart
 packages/integrations/src/audiobookshelf @ajnart
