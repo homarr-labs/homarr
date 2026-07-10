@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Mostrar informações do sistema de arquivos"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Aba padrão"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Exibir barra de uso em segundo plano"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

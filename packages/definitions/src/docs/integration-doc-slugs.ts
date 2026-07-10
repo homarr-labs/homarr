@@ -13,6 +13,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   lidarr: "lidarr",
   readarr: "readarr",
   prowlarr: "prowlarr",
+  bazarr: "bazarr",
   jellyfin: "jellyfin",
   emby: "emby",
   plex: "plex",

@@ -35,6 +35,7 @@ import {
   everyoneGroup,
   getPermissionsWithChildren,
   getPermissionsWithParents,
+  widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
@@ -330,7 +331,16 @@ export const boardRouter = createTRPCRouter({
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
+    .meta({
+      openapi: { method: "POST", path: "/api/boards/{id}/duplicate", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Duplicate an existing board into a new board. Requires board-create permission and view permission on the source board. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
+      },
+    })
     .input(boardDuplicateSchema)
+    .output(z.object({ boardId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
       await noBoardWithSimilarNameAsync(ctx.db, input.name);
@@ -544,33 +554,57 @@ export const boardRouter = createTRPCRouter({
           });
         },
       });
+
+      return { boardId: newBoardId };
     }),
-  renameBoard: protectedProcedure.input(boardRenameSchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+  renameBoard: protectedProcedure
+    .meta({
+      openapi: { method: "PATCH", path: "/api/boards/{id}/name", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Rename a board by ID. Requires full permission on the board. REQUIRED: id (board ID), name (new unique board name)",
+      },
+    })
+    .input(boardRenameSchema)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
-    await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
+      await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
-    await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
-  }),
-  changeBoardVisibility: protectedProcedure.input(boardChangeVisibilitySchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
-    const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+      await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
+    }),
+  changeBoardVisibility: protectedProcedure
+    .meta({
+      openapi: { method: "PATCH", path: "/api/boards/{id}/visibility", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Change board visibility. Requires full permission on the board. REQUIRED: id (board ID), visibility ('public' or 'private'). Home boards cannot be made private",
+      },
+    })
+    .input(boardChangeVisibilitySchema)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
 
-    if (
-      input.visibility !== "public" &&
-      (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
-    ) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Cannot make home board private",
-      });
-    }
+      if (
+        input.visibility !== "public" &&
+        (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot make home board private",
+        });
+      }
 
-    await ctx.db
-      .update(boards)
-      .set({ isPublic: input.visibility === "public" })
-      .where(eq(boards.id, input.id));
-  }),
+      await ctx.db
+        .update(boards)
+        .set({ isPublic: input.visibility === "public" })
+        .where(eq(boards.id, input.id));
+    }),
   deleteBoard: protectedProcedure
     .meta({
       openapi: { method: "DELETE", path: "/api/boards/{id}", tags: ["boards"], protect: true },
@@ -587,16 +621,38 @@ export const boardRouter = createTRPCRouter({
 
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
-  setHomeBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+  setHomeBoard: protectedProcedure
+    .meta({
+      openapi: { method: "PATCH", path: "/api/boards/{id}/home", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Set the current user's desktop home board. Requires view permission on the board. REQUIRED: id (board ID)",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
-    await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
-  }),
-  setMobileHomeBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+      await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+    }),
+  setMobileHomeBoard: protectedProcedure
+    .meta({
+      openapi: { method: "PATCH", path: "/api/boards/{id}/mobile-home", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Set the current user's mobile home board. Requires view permission on the board. REQUIRED: id (board ID)",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
-    await ctx.db.update(users).set({ mobileHomeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
-  }),
+      await ctx.db.update(users).set({ mobileHomeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+    }),
   getHomeBoard: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const user = userId
@@ -752,7 +808,16 @@ export const boardRouter = createTRPCRouter({
     }
   }),
   savePartialBoardSettings: protectedProcedure
-    .input(boardSavePartialSettingsSchema.and(z.object({ id: z.string() })))
+    .meta({
+      openapi: { method: "PATCH", path: "/api/boards/{id}/settings", tags: ["boards"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus",
+      },
+    })
+    .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
+    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
@@ -1438,21 +1503,33 @@ export const boardRouter = createTRPCRouter({
           }
         }
 
+        const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+
+        const fitsAt = (x: number, y: number) => {
+          if (x + defaultSize.width > layout.columnCount) return false;
+          for (let dy = 0; dy < defaultSize.height; dy++) {
+            const row = occupied[y + dy];
+            if (!row) continue;
+            for (let dx = 0; dx < defaultSize.width; dx++) {
+              if (row[x + dx]) return false;
+            }
+          }
+          return true;
+        };
+
         let placed = false;
         for (let y = 0; y < 9999 && !placed; y++) {
           if (!occupied[y]) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
-          const occupiedRow = occupied[y];
-          if (!occupiedRow) continue;
           for (let x = 0; x < layout.columnCount && !placed; x++) {
-            if (!occupiedRow[x]) {
+            if (fitsAt(x, y)) {
               layoutRows.push({
                 itemId,
                 sectionId: emptySection.id,
                 layoutId: layout.id,
                 xOffset: x,
                 yOffset: y,
-                width: 1,
-                height: 1,
+                width: defaultSize.width,
+                height: defaultSize.height,
               });
               placed = true;
             }

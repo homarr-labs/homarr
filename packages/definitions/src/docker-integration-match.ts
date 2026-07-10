@@ -37,6 +37,7 @@ const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = 
   linuxServerIO: ["linuxserver"],
   coolify: ["coolify"],
   truenas: ["truenas"],
+  bazarr: ["bazarr"],
   synology: ["synology", "diskstation"],
 };
 

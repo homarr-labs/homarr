@@ -12,6 +12,7 @@ import * as audioStats from "./audio-stats";
 import * as app from "./app";
 import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
+import * as bazarr from "./bazarr";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import * as coolify from "./coolify";
@@ -32,6 +33,7 @@ import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as mediaTranscoding from "./media-transcoding";
+import * as mediaMissing from "./media-missing";
 import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
@@ -91,10 +93,12 @@ export const widgetImports = {
   downloads,
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
+  mediaMissing,
   networkControllerSummary,
   networkControllerStatus,
   rssFeed,
   bookmarks,
+  bazarr,
   indexerManager,
   healthMonitoring,
   mediaTranscoding,

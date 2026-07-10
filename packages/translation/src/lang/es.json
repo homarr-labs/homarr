@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Mostrar información del sistema de archivos"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Seleccionar pestaña predeterminada"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Mostrar la barra de uso en segundo plano"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

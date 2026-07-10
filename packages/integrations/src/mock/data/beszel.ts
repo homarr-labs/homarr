@@ -7,6 +7,7 @@ import type {
   BeszelSystemDetails,
   BeszelSystemStats,
   BeszelSystemStatsRecord,
+  LiveStatsEvent,
 } from "../../beszel/beszel-types";
 
 const GB = 1024 * 1024 * 1024;
@@ -332,7 +333,7 @@ export class BeszelMockService {
 
   public async subscribeRealtimeMetrics(
     systemId: string,
-    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
+    onMessage: (event: LiveStatsEvent) => void,
     signal: AbortSignal,
   ): Promise<void> {
     const sys = resolveSystem(systemId);
@@ -348,7 +349,7 @@ export class BeszelMockService {
         created: new Date().toISOString(),
         updated: new Date().toISOString(),
       };
-      onMessage({ stats: record, containerStats: null });
+      onMessage({ type: "system_stats", record });
     };
     if (signal.aborted) return;
     await new Promise<void>((resolve) => {

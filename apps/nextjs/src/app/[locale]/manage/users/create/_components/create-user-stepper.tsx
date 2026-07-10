@@ -17,6 +17,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
+import { optionalEmailSchema } from "@homarr/validation/email";
 import { userPasswordSchema } from "@homarr/validation/user";
 
 import { GroupSelectModal } from "~/components/access/group-select-modal";
@@ -60,7 +61,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
   const generalForm = useZodForm(
     z.object({
       username: z.string().min(1),
-      email: z.string().email().or(z.string().length(0).optional()),
+      email: optionalEmailSchema,
     }),
     {
       initialValues: {

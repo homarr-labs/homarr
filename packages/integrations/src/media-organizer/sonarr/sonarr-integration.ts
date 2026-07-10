@@ -9,11 +9,13 @@ import { TestConnectionError } from "../../base/test-connection/test-connection-
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
+import type { IMediaOrganizerIntegration } from "../../interfaces/media-organizer/media-organizer-integration";
+import type { MissingMediaItem, QueuedMediaItem } from "../../interfaces/media-organizer/media-organizer-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 const logger = createLogger({ module: "sonarrIntegration" });
 
-export class SonarrIntegration extends Integration implements ICalendarIntegration {
+export class SonarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
   /**
    * Gets the events in the Sonarr calendar between two dates.
    * @param start The start date
@@ -107,6 +109,88 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return bestImage.remoteUrl;
   };
 
+  async getMissingAsync(pageSize = 10): Promise<{ items: MissingMediaItem[]; totalCount: number }> {
+    const url = this.url("/api/v3/wanted/missing", {
+      page: 1,
+      pageSize,
+      sortKey: "airDateUtc",
+      sortDirection: "ascending",
+      includeSeries: true,
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+    });
+    const data = await z
+      .object({
+        totalRecords: z.number(),
+        records: z.array(sonarrMissingEpisodeSchema),
+      })
+      .parseAsync(await response.json());
+
+    return {
+      totalCount: data.totalRecords,
+      items: data.records.map(
+        (episode): MissingMediaItem => ({
+          id: episode.id,
+          title: episode.title,
+          type: "episode",
+          seasonNumber: episode.seasonNumber,
+          episodeNumber: episode.episodeNumber,
+          seriesTitle: episode.series?.title,
+          year: episode.series?.year,
+          imageUrl: episode.series?.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
+          link: episode.series?.titleSlug
+            ? this.externalUrl(`/series/${episode.series.titleSlug}`).toString()
+            : this.externalUrl("/wanted/missing").toString(),
+        }),
+      ),
+    };
+  }
+
+  async getMediaQueueAsync(pageSize = 10): Promise<{ items: QueuedMediaItem[]; totalCount: number }> {
+    const url = this.url("/api/v3/queue", {
+      page: 1,
+      pageSize,
+      includeSeries: true,
+      includeEpisode: true,
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+    });
+    const data = await z
+      .object({
+        totalRecords: z.number(),
+        records: z.array(sonarrQueueItemSchema),
+      })
+      .parseAsync(await response.json());
+
+    return {
+      totalCount: data.totalRecords,
+      items: data.records.map((item): QueuedMediaItem => {
+        const sizeLeft = item.sizeleft ?? 0;
+        const sizeTotal = item.size ?? 0;
+        const percentComplete = sizeTotal > 0 ? Math.round(((sizeTotal - sizeLeft) / sizeTotal) * 100) : 0;
+        return {
+          id: item.id,
+          title: item.episode?.title ?? item.title,
+          type: "episode",
+          status: item.status,
+          timeLeft: item.timeleft ?? null,
+          percentComplete,
+          seasonNumber: item.episode?.seasonNumber,
+          episodeNumber: item.episode?.episodeNumber,
+          seriesTitle: item.series?.title,
+          imageUrl: item.series?.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
+          link: item.series?.titleSlug
+            ? this.externalUrl(`/series/${item.series.titleSlug}`).toString()
+            : this.externalUrl("/activity/queue").toString(),
+        };
+      }),
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
@@ -118,6 +202,54 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return { success: true };
   }
 }
+
+const sonarrMissingEpisodeSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  seasonNumber: z.number(),
+  episodeNumber: z.number(),
+  series: z
+    .object({
+      title: z.string(),
+      year: z.number().optional(),
+      titleSlug: z.string(),
+      images: z.array(
+        z.object({
+          coverType: z.string(),
+          remoteUrl: z.string().url(),
+        }),
+      ),
+    })
+    .optional(),
+});
+
+const sonarrQueueItemSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  status: z.string(),
+  timeleft: z.string().optional(),
+  size: z.number().optional(),
+  sizeleft: z.number().optional(),
+  series: z
+    .object({
+      title: z.string(),
+      titleSlug: z.string(),
+      images: z.array(
+        z.object({
+          coverType: z.string(),
+          remoteUrl: z.string().url(),
+        }),
+      ),
+    })
+    .optional(),
+  episode: z
+    .object({
+      title: z.string(),
+      seasonNumber: z.number(),
+      episodeNumber: z.number(),
+    })
+    .optional(),
+});
 
 const sonarrCalendarEventImageSchema = z.array(
   z.object({

@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "显示文件系统信息"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "默认标签"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "显示背景使用栏"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

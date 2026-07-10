@@ -782,22 +782,22 @@
       "valuePath": "$.data.used",
       "maxPath": "$.data.total",
       "goodValues": "",
-      "color": ""
+      "color": "파랑"
     },
     "cardStyleOption": {
-      "filled": "",
+      "filled": "채워짐",
       "outline": "",
       "subtle": ""
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "리스트",
+      "grid": "그리드"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "작음",
+      "md": "중간",
+      "lg": "큼",
+      "xl": "매우 큼"
     },
     "labelPositionOption": {
       "above": "",
@@ -805,8 +805,8 @@
     },
     "fieldset": {
       "general": "",
-      "connection": "",
-      "display": ""
+      "connection": "API 연결",
+      "display": "표시 설정"
     },
     "displayTypeDescription": {
       "singleValue": "",
@@ -821,34 +821,34 @@
       "customJsx": ""
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "없음",
+      "bearer": "Bearer 토큰",
+      "basic": "기본 인증",
+      "apiKeyHeader": "API 키(헤더)",
+      "apiKeyQuery": "API 키(쿼리)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "단일 값",
+      "keyValue": "키-값",
+      "table": "테이블",
+      "statGrid": "스택 그리드",
+      "progressBars": "진행 바",
+      "statusIndicator": "상태 인디케이터",
+      "countGrid": "카운트 그리드",
+      "raw": "원시 JSON",
+      "actionButton": "동작 버튼",
+      "customJsx": "사용자 지정 JSX"
     },
     "secret": {
-      "apiKey": "",
-      "username": "",
+      "apiKey": "API 키/토큰",
+      "username": "사용자명",
       "password": "비밀번호",
       "savedPlaceholder": "••••••• (저장됨, 유지하려면 공백)"
     },
@@ -892,14 +892,14 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "통합",
         "search": "",
         "noResults": {
           "title": ""
         }
       },
       "create": {
-        "title": "",
+        "title": "새 {name} 통합",
         "notification": {
           "success": {
             "title": "",
@@ -917,9 +917,9 @@
               "label": ""
             },
             "new": {
-              "title": "",
+              "title": "신규",
               "url": {
-                "label": "",
+                "label": "앱 URL",
                 "description": ""
               }
             }
@@ -927,7 +927,7 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "{name} 통합 편집",
         "notification": {
           "success": {
             "title": "",
@@ -940,8 +940,8 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
+            "add": "앱 연결",
+            "remove": "연결 해제",
             "select": ""
           }
         }
@@ -951,11 +951,11 @@
         "message": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "삭제 성공",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "삭제 실패",
             "message": ""
           }
         }
@@ -987,7 +987,7 @@
       }
     },
     "action": {
-      "create": ""
+      "create": "새 통합"
     },
     "grid": {
       "widgetCount": "",
@@ -1004,9 +1004,9 @@
       "downloadClient": "",
       "usenet": "",
       "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
+      "miscellaneous": "기타",
+      "smartHomeServer": "스마트 홈",
+      "indexerManager": "인덱서",
       "healthMonitoring": "건강",
       "search": "검색",
       "mediaTranscoding": "트랜스코딩",
@@ -1021,14 +1021,14 @@
       "mediaMonitoring": "모니터링",
       "speedtest": "속도 테스트",
       "analytics": "분석",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "미디어 라이브러리",
       "uptimeMonitoring": "업타임 모니터링"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "연결 테스트 및 생성",
+        "edit": "연결 테스트 및 저장"
       },
       "error": {
         "common": {
@@ -1037,45 +1037,45 @@
           }
         },
         "unknown": {
-          "title": "",
+          "title": "알 수 없는 오류",
           "description": ""
         },
         "parse": {
-          "title": "",
+          "title": "파싱 오류",
           "description": ""
         },
         "authorization": {
-          "title": "",
+          "title": "인증 오류",
           "description": ""
         },
         "statusCode": {
-          "title": "",
+          "title": "응답 오류",
           "description": "",
           "otherDescription": "",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "잘못된 요청",
+            "notFound": "찾을 수 없음",
+            "tooManyRequests": "요청이 너무 많음",
+            "internalServerError": "내부 서버 오류",
+            "serviceUnavailable": "서비스 사용 불가",
+            "gatewayTimeout": "게이트웨이 시간 초과"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "인증서 오류",
           "description": {
-            "expired": "",
+            "expired": "인증서가 만료되었습니다.",
             "notYetValid": "",
             "untrusted": "",
             "hostnameMismatch": ""
           },
           "alert": {
             "permission": {
-              "title": "",
+              "title": "권한 부족",
               "message": ""
             },
             "hostnameMismatch": {
-              "title": "",
+              "title": "호스트 이름이 불일치함",
               "message": ""
             },
             "extract": {
@@ -1101,7 +1101,7 @@
             },
             "notification": {
               "success": {
-                "title": "",
+                "title": "신뢰하는 인증서",
                 "message": ""
               },
               "error": {
@@ -1127,16 +1127,16 @@
             }
           },
           "details": {
-            "title": "",
+            "title": "세부 사항",
             "description": "",
             "content": {
-              "action": "",
+              "action": "항목 보기",
               "title": ""
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "요청 오류",
           "description": {
             "connection": {
               "hostUnreachable": "",
@@ -1175,7 +1175,7 @@
           "message": ""
         },
         "commonError": {
-          "title": "",
+          "title": "연결 실패",
           "message": ""
         },
         "badRequest": {
@@ -1229,7 +1229,7 @@
       }
     },
     "secrets": {
-      "title": "",
+      "title": "비밀 구문",
       "lastUpdated": "",
       "notSet": {
         "label": "",
@@ -1247,19 +1247,19 @@
       "kind": {
         "username": {
           "label": "사용자 이름",
-          "newLabel": ""
+          "newLabel": "새 사용자 이름"
         },
         "apiKey": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 API 키"
         },
         "password": {
           "label": "비밀번호",
-          "newLabel": ""
+          "newLabel": "새 패스워드"
         },
         "tokenId": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 토큰 ID"
         },
         "realm": {
           "label": "",
@@ -1267,35 +1267,35 @@
         },
         "personalAccessToken": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 개인 액세스 토큰(PAT)"
         },
         "topic": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 주제"
         },
         "url": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 URL"
         },
         "opnsenseApiKey": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 API 키(Key)"
         },
         "opnsenseApiSecret": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 API 키(Secret)"
         },
         "githubAppId": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 앱 ID"
         },
         "githubInstallationId": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 설치 ID"
         },
         "privateKey": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "새 개인 키"
         },
         "slug": {
           "label": "",
@@ -1527,7 +1527,7 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
+        "create": "새 동적 섹션",
         "remove": ""
       },
       "option": {
@@ -1553,17 +1553,17 @@
         }
       },
       "action": {
-        "create": "",
+        "create": "새 카테고리",
         "edit": "",
         "remove": "",
         "moveUp": "위로 이동",
         "moveDown": "아래로 이동",
         "createAbove": "",
         "createBelow": "",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "탭에서 모두 열기"
       },
       "create": {
-        "title": "",
+        "title": "새 카테고리",
         "submit": ""
       },
       "remove": {
@@ -1576,32 +1576,32 @@
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "새 카테고리",
           "changePosition": "위치 변경",
           "settings": ""
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "탭에서 모두 열기",
+        "text": "일부 브라우저는 보안상의 이유로 탭의 대량 열기를 차단할 수 있습니다. 브라우저가 이 작업을 차단했기 때문에 Homarr가 모든 창을 열지 못했습니다. \"팝업 창 열기\"를 허용한 후 다시 시도해 주십시오."
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "새 항목",
+      "import": "항목 가져오기",
+      "edit": "항목 편집",
+      "moveResize": "항목 이동 / 크기변경",
+      "duplicate": "항목 복사",
+      "remove": "항목 제거"
     },
     "menu": {
       "label": {
         "settings": "설정",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "새로고침",
+        "options": "옵션",
+        "actions": "동작"
       }
     },
     "create": {
@@ -1610,7 +1610,7 @@
       "addToBoard": ""
     },
     "moveResize": {
-      "title": "",
+      "title": "항목 이동 / 크기변경",
       "field": {
         "width": {
           "label": "너비"
@@ -1619,21 +1619,21 @@
           "label": "높이"
         },
         "xOffset": {
-          "label": ""
+          "label": "X 오프셋"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y 오프셋"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "항목 편집",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "위젯 편집",
+        "app": "앱 편집"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "이 앱의 변경 사항은 전체 대시보드에 적용됩니다."
       },
       "advancedOptions": {
         "label": "고급 옵션",
@@ -1837,44 +1837,44 @@
       }
     },
     "clock": {
-      "name": "",
+      "name": "날짜 및 시간",
       "description": "현재 날짜와 시간을 표시합니다.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "커스텀 제목/도시 표시",
+          "description": "시계 위에 커스텀 제목 또는 도시/국가 이름 표시."
         },
         "customTitle": {
-          "label": ""
+          "label": "제목"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24시간 형식",
+          "description": "12시간 형식 대신 24시간 형식 사용"
         },
         "showSeconds": {
-          "label": ""
+          "label": "초 단위 표시"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "고정 시간대 사용"
         },
         "timezone": {
-          "label": "",
-          "description": ""
+          "label": "시간대",
+          "description": "IANA 표준 시간대 선택"
         },
         "showDate": {
-          "label": ""
+          "label": "날짜 표시"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "날짜 형식",
+          "description": "날짜를 표시하는 형식"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "커스텀 시간 형식",
+          "description": "ISO 8601을 사용하여 시간 형식 지정 (다른 옵션 무시)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "커스텀 날짜 형식",
+          "description": "ISO 8601을 사용하여 날짜 형식 지정 (다른 옵션 무시)"
         }
       }
     },
@@ -1913,71 +1913,71 @@
     },
     "notebook": {
       "name": "노트북",
-      "description": "",
+      "description": "마크다운을 지원하는 간단한 노트북 위젯",
       "option": {
         "showToolbar": {
           "label": "마크다운 작성에 도움이 되는 도구 모음 표시"
         },
         "allowReadOnlyCheck": {
-          "label": ""
+          "label": "읽기 전용 모드에서 체크인 허용"
         },
         "content": {
           "label": "노트북의 콘텐츠"
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
-        "strikethrough": "",
-        "underline": "",
-        "colorText": "",
-        "colorHighlight": "",
-        "code": "",
-        "clear": "",
-        "heading": "",
-        "align": "",
-        "blockquote": "",
-        "horizontalLine": "",
-        "bulletList": "",
-        "orderedList": "",
-        "checkList": "",
-        "increaseIndent": "",
-        "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
-        "image": "",
-        "addTable": "",
-        "deleteTable": "",
-        "colorCell": "",
-        "mergeCell": "",
-        "addColumnLeft": "",
-        "addColumnRight": "",
-        "deleteColumn": "",
-        "addRowTop": "",
-        "addRowBelow": "",
-        "deleteRow": ""
+        "bold": "진하게",
+        "italic": "이탤릭",
+        "strikethrough": "취소선",
+        "underline": "밑줄",
+        "colorText": "글자 색상",
+        "colorHighlight": "하이라이트 색상",
+        "code": "코드",
+        "clear": "서식 초기화",
+        "heading": "제목 레벨 {level}",
+        "align": "텍스트 정렬: {position}",
+        "blockquote": "인용문",
+        "horizontalLine": "가로선",
+        "bulletList": "글머리 기호 목록",
+        "orderedList": "번호순 목록",
+        "checkList": "체크리스트",
+        "increaseIndent": "들여쓰기 늘리기",
+        "decreaseIndent": "들여쓰기 줄이기",
+        "link": "링크",
+        "unlink": "링크 제거",
+        "image": "이미지 삽입",
+        "addTable": "표 추가",
+        "deleteTable": "표 삭제",
+        "colorCell": "셀 색상",
+        "mergeCell": "셀 병합 토글",
+        "addColumnLeft": "앞에 열 추가",
+        "addColumnRight": "뒤에 열 추가",
+        "deleteColumn": "열 삭제",
+        "addRowTop": "앞 행 추가",
+        "addRowBelow": "뒤 행 추가",
+        "deleteRow": "행 삭제"
       },
       "align": {
         "left": "왼쪽",
-        "center": "",
+        "center": "가운데",
         "right": "오른쪽"
       },
       "popover": {
-        "clearColor": "",
-        "source": "",
-        "widthPlaceholder": "",
-        "columns": "",
-        "rows": "",
+        "clearColor": "색상 제거",
+        "source": "소스",
+        "widthPlaceholder": "% 또는 픽셀 값",
+        "columns": "열",
+        "rows": "행",
         "width": "너비",
         "height": "높이"
       },
-      "placeholder": "",
+      "placeholder": "노트 작성 시작",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "변경사항 삭제",
+        "message": "노트북에 저장되지 않은 변경 사항이 있습니다. 삭제하시겠습니까?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "저장하지 않음",
+          "keepEditing": "계속 편집"
         }
       }
     },
@@ -2010,7 +2010,7 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "인터넷에서 콘텐츠를 퍼옵니다. 일부 웹사이트는 액세스를 제한할 수 있습니다.",
       "option": {
         "embedUrl": {
@@ -2041,12 +2041,12 @@
           "label": "지리적 위치 허용"
         },
         "allowModals": {
-          "label": ""
+          "label": "모달 허용"
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
+        "noUrl": "iFrame URL 없음",
+        "unsupportedProtocol": "URL이 지원되지 않는 프로토콜을 사용합니다. ({supportedProtocols}) 중 하나를 사용하십시오",
         "noBrowerSupport": "브라우저가 iframe을 지원하지 않습니다. 브라우저를 업데이트하세요."
       }
     },
@@ -2161,27 +2161,27 @@
     },
     "calendar": {
       "name": "캘린더",
-      "description": "",
+      "description": "일정 기간 내에 캘린더 보기에 통합된 이벤트를 표시합니다",
       "duration": {
-        "allDay": ""
+        "allDay": "하루 종일"
       },
       "option": {
         "releaseType": {
-          "label": "레이더 릴리스 유형",
+          "label": "Radarr 릴리즈 유형",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "극장 상영",
+            "digitalRelease": "디지털 출시",
+            "physicalRelease": "실물 출시"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "과거 이벤트 표시 개월수"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "미래 이벤트 표시 개월수"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "모니터링되지 않음 표시"
         }
       }
     },
@@ -2190,42 +2190,42 @@
       "description": "설정한 위치의 현재 날씨 정보를 표시합니다.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "화씨 온도"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "온도 소수점 비활성화"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "현재 풍속 표시",
+          "description": "현재 날씨 기준으로만 표시됩니다"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "mph 풍속 사용"
         },
         "location": {
           "label": "날씨 위치"
         },
         "showCity": {
-          "label": ""
+          "label": "도시 표시"
         },
         "hasForecast": {
-          "label": ""
+          "label": "예보 표시"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "예보 일수",
+          "description": "위젯이 충분히 넓지 않으면 표시되는 일수가 줄어듭니다"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "날짜 형식",
+          "description": "날짜를 표시하는 형식"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed}{unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "일출",
+        "sunset": "일몰",
+        "maxWindSpeed": "최대 풍속: {maxWindSpeed}{unit}",
+        "maxWindGusts": "최대 순간 풍속: {maxWindGusts}{unit}"
       },
       "kind": {
         "clear": "맑음",
@@ -2259,102 +2259,107 @@
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "시스템 상태 모니터링",
+      "description": "시스템의 상태 정보를 표시합니다.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "시스템",
+        "cluster": "클러스터"
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "CPU 온도 화씨 표시"
         },
         "cpu": {
-          "label": ""
+          "label": "CPU 정보 표시"
         },
         "memory": {
-          "label": ""
+          "label": "메모리 정보 표시"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU 정보 표시"
         },
         "showUptime": {
-          "label": ""
+          "label": "작동 시간 표시"
         },
         "fileSystem": {
-          "label": ""
+          "label": "파일시스템 정보 표시"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
-          "label": ""
+          "label": "기본 탭"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "클러스터 섹션 시각화"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "섹션 표시기 요구사항"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "information": "정보",
+        "processor": "프로세서: {cpuModelName}",
+        "memory": "메모리: {memory}GiB",
+        "memoryAvailable": "사용 가능: {memoryAvailable}GiB ({percent}%)",
+        "version": "버전: {version}",
+        "uptime": "작동 시간: {months}개월 {days}일 {hours}시간 {minutes}분",
+        "loadAverage": "평균 부하량:",
+        "minute": "1분",
+        "minutes": "{count}분",
+        "used": "사용중",
+        "available": "사용 가능",
+        "lastSeen": "마지막 상태 업데이트: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "상태 불러오기 실패"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "노드"
           },
           "qemu": {
-            "name": ""
+            "name": "가상머신"
           },
           "lxc": {
-            "name": ""
+            "name": "LXC"
           },
           "storage": {
-            "name": ""
+            "name": "저장 공간"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "노드",
+            "vmId": "가상머신 ID",
+            "plugin": "플러그인"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "코어",
+            "memory": "메모리",
+            "storage": "저장 공간",
+            "uptime": "작동 시간",
+            "haState": "HA 상태",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "로컬 저장소",
+              "shared": "공유 저장소"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "이름",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "노드"
           }
         }
       }
@@ -2420,9 +2425,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "VPN 연결 개요",
+      "serviceUnavailable": "VPN 연결되지 않음",
       "option": {}
     },
     "ups": {
@@ -2671,35 +2676,35 @@
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "현재 미디어 서버 스트림",
+      "description": "미디어 서버의 현재 스트림 표시",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "현재 재생 중 항목만 표시",
+          "description": "비활성화 옵션은 plex에서는 지원되지 않음"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
+        "currentlyPlaying": "현재 재생 중",
+        "user": "사용자",
+        "name": "이름",
+        "id": "아이디",
         "metadata": {
-          "title": "",
+          "title": "너드 통계",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "동영상",
+            "resolution": "해상도"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "오디오",
+            "channelCount": "오디오 채널",
+            "codec": "오디오 코덱"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "트랜스코딩",
+            "container": "컨테이너",
+            "resolution": "해상도",
+            "target": "목표 코덱"
           }
         }
       }
@@ -2800,133 +2805,133 @@
       "noPhotos": ""
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "다운로드 클라이언트",
+      "description": "Torrent 및 Usenet 클라이언트 다운로드를 확인 및 관리할 수 있습니다.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "표시할 열"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "항목 정렬 활성화"
         },
         "defaultSort": {
-          "label": ""
+          "label": "정렬 기준 열 기본값"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "역순 정렬"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "완료된 usenet 항목 표시"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "완료된 torrent 항목 표시"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "완료된 기타 항목 표시"
         },
         "activeTorrentThreshold": {
           "label": ""
         },
         "categoryFilter": {
-          "label": ""
+          "label": "필터링할 카테고리/라벨"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "화이트리스트로 필터링"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "필터를 사용해 비율 계산"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "통합당 항목 수 제한",
+          "description": "통합당 표시되는 항목 수를 제한하여 전체 항목이 표시되지 않습니다"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "항목에서 열 선택",
+        "noCommunications": "통합에서 데이터를 불러올 수 없습니다"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "제어"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "추가됨",
+          "detailsTitle": "추가된 날짜"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "기타",
+          "detailsTitle": "카테고리 (또는 기타 정보)"
         },
         "downSpeed": {
           "columnTitle": "다운로드",
           "detailsTitle": "다운로드 속도"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "클라이언트 내 현재 인덱스"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "아이디"
         },
         "integration": {
           "columnTitle": "통합"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "작업 이름"
         },
         "progress": {
           "columnTitle": "진행률",
-          "detailsTitle": ""
+          "detailsTitle": "다운로드 진행률"
         },
         "ratio": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "비율",
+          "detailsTitle": "Torrent 비율 (수신/송신)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "총 다운로드",
+          "detailsTitle": "전체 다운로드 용량"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "총 업로드",
+          "detailsTitle": "전체 업로드 용량"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "파일 크기",
+          "detailsTitle": "선택/파일 총 크기"
         },
         "state": {
           "columnTitle": "상태",
-          "detailsTitle": ""
+          "detailsTitle": "직업 상태"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "완료 시간",
+          "detailsTitle": "완료/완료 후 경과 시간"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "유형",
+          "detailsTitle": "다운로드 클라이언트 유형"
         },
         "upSpeed": {
           "columnTitle": "업로드",
-          "detailsTitle": ""
+          "detailsTitle": "업로드 속도"
         }
       },
       "states": {
-        "downloading": "",
-        "queued": "",
+        "downloading": "다운로드 중",
+        "queued": "대기 중",
         "paused": "일시 중지됨",
         "completed": "완료됨",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "실패",
+        "processing": "처리 중",
+        "leeching": "미완료",
+        "stalled": "정지됨",
         "unknown": "알 수 없음",
-        "seeding": ""
+        "seeding": "전송 중"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
+          "modalTitle": "다운로드 클라이언트 목록",
+          "pause": "모든 클라이언트/항목 정지",
           "resume": ""
         },
         "client": {
@@ -3246,7 +3251,7 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count}개 연결"
         }
       },
       "error": {
@@ -3328,9 +3333,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "알림",
+      "description": "통합에서 알림 기록 표시",
+      "noItems": "표시할 알림이 없습니다.",
       "option": {}
     },
     "speedtestTracker": {
@@ -3373,11 +3378,11 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Uptime Kuma 상태 페이지에서 업타임 통계를 모니터링합니다",
       "option": {
         "showAverageUptime": {
-          "label": "",
+          "label": "평균 업타임 표시",
           "description": ""
         },
         "showUptimeRing": {
@@ -3480,68 +3485,73 @@
       }
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "시스템 리소스",
+      "description": "시스템의 CPU, 메모리, 디스크 및 기타 하드웨어 사용량",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "차트 음영 사용"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "표시할 차트",
+          "description": "표시할 차트를 선택합니다.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "gpu": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "메모리",
+            "gpu": "GPU",
+            "network": "네트워크"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "라벨 표시 모드",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "텍스트 및 아이콘 표시",
+            "text": "텍스트만 표시",
+            "icon": "아이콘만 표시",
+            "hidden": "라벨 숨기기"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "gpu": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "메모리",
+        "gpu": "GPU",
+        "network": "네트워크",
+        "up": "업로드",
+        "down": "다운로드"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "시스템 디스크",
+      "description": "시스템의 디스크 사용량",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "가능한 경우 온도 표시"
         },
         "displayMode": {
-          "label": "",
+          "label": "디스플레이 모드",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "퍼센트 (예: 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "절대값 (예: 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "여유 공간 퍼센트 (예: 24% 남음)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "백그라운드 사용량 바 표시"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "비정상"
       }
     },
     "customApi": {
@@ -3925,7 +3935,7 @@
         "placeholder": "로컬 이미지 검색을 위한 타이핑 시작",
         "group": {
           "your": "내 이미지",
-          "other": ""
+          "other": "기타 이미지"
         }
       },
       "backgroundImageAttachment": {
@@ -3963,7 +3973,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "",
+        "label": "배경 이미지 크기",
         "option": {
           "cover": {
             "label": "",
@@ -3982,38 +3992,38 @@
         "label": "보조 색상"
       },
       "opacity": {
-        "label": ""
+        "label": "불투명도"
       },
       "iconColor": {
-        "label": ""
+        "label": "아이콘 색상"
       },
       "clearColor": {
-        "label": ""
+        "label": "색상 제거"
       },
       "customCss": {
-        "label": "",
+        "label": "이 보드에 적용할 사용자 지정 css",
         "description": "또한 숙련된 사용자에게만 권장되는 CSS를 사용하여 대시보드를 사용자 지정할 수 있습니다.",
         "customClassesAlert": {
-          "title": "",
+          "title": "사용자 지정 클래스",
           "description": ""
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "앱 상태 비활성화",
+        "description": "이 보드의 모든 앱에 대한 상태 확인을 비활성화합니다"
       },
       "columnCount": {
-        "label": ""
+        "label": "열 개수"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "항목 둥글기",
+        "description": "보드에 있는 타일의 모서리 둥글기를 변경합니다",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "매우 작게",
+          "sm": "작게",
+          "md": "보통",
+          "lg": "크게",
+          "xl": "매우 크게"
         }
       },
       "name": {
@@ -4021,25 +4031,25 @@
       },
       "isPublic": {
         "label": "공개",
-        "description": ""
+        "description": "공개 게시판은 계정이 없어도 누구나 접근할 수 있습니다."
       }
     },
     "content": {
       "metaTitle": ""
     },
     "setting": {
-      "title": "",
+      "title": "{boardName} 보드 설정",
       "section": {
         "general": {
           "title": "일반",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "제공된 링크가 인식되지 않아 미리보기할 수 없습니다, 다만 작동할 수도 있습니다."
         },
         "layout": {
           "title": "레이아웃",
           "responsive": {
-            "title": "",
+            "title": "반응형 레이아웃",
             "action": {
-              "add": ""
+              "add": "레이아웃 추가"
             }
           }
         },
@@ -4047,10 +4057,10 @@
           "title": "배경"
         },
         "appearance": {
-          "title": ""
+          "title": "모양"
         },
         "customCss": {
-          "title": ""
+          "title": "사용자 지정 css"
         },
         "behavior": {
           "title": "동작"
@@ -5015,7 +5025,7 @@
         }
       },
       "refresh": {
-        "label": "",
+        "label": "새로고침",
         "notification": {
           "success": {
             "title": "",

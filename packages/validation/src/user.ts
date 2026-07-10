@@ -6,6 +6,7 @@ import type { TranslationObject } from "@homarr/translation";
 
 import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
+import { nullableEmailSchema, optionalEmailSchema } from "./email";
 
 // We always want the lowercase version of the username to compare it in a case-insensitive way
 export const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
@@ -42,7 +43,7 @@ export const userBaseCreateSchema = z.object({
   username: usernameSchema,
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  email: z.string().email().or(z.string().length(0)).optional(),
+  email: optionalEmailSchema,
 });
 
 export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema).and(
@@ -85,13 +86,7 @@ export const userRegistrationApiSchema = userRegistrationSchema.and(
 export const userEditProfileSchema = z.object({
   id: z.string(),
   name: usernameSchema,
-  email: z
-    .string()
-    .email()
-    .or(z.literal(""))
-    .transform((value) => (value === "" ? null : value))
-    .optional()
-    .nullable(),
+  email: nullableEmailSchema,
 });
 
 const baseChangePasswordSchema = z.object({

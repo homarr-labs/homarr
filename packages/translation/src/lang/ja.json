@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "デフォルトのタブ"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "バックグラウンドの使用状況バーを表示"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { BeszelIntegration } from "../beszel/beszel-integration";
+import { BazarrIntegration } from "../bazarr/bazarr-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
 import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
@@ -130,6 +131,7 @@ export const integrationCreators = {
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,
+  bazarr: BazarrIntegration,
   traefik: TraefikIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
