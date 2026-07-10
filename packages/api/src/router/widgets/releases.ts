@@ -1,3 +1,4 @@
+import SuperJSON from "superjson";
 import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
@@ -44,12 +45,23 @@ export const releasesRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const tokensByProvider = new Map<string, string>();
+      const savedRepos = new Map<string, { providerUrl?: string }>();
 
       if (input.itemId) {
         try {
           const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
           if (item && item.kind === "releases") {
             await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+
+            const options = SuperJSON.parse<Record<string, unknown>>(item.options);
+            const repos = options.repositories as Array<{ provider?: string; identifier: string; providerUrl?: string }> | undefined;
+            if (repos) {
+              for (const repo of repos) {
+                if (repo.provider && repo.identifier) {
+                  savedRepos.set(`${repo.provider}:${repo.identifier}`, { providerUrl: repo.providerUrl });
+                }
+              }
+            }
 
             const secrets = await ctx.db.query.widgetSecrets.findMany({
               where: eq(widgetSecrets.itemId, input.itemId),
@@ -70,6 +82,7 @@ export const releasesRouter = createTRPCRouter({
       return await Promise.all(
         input.repositories.map(async (repository) => {
           const repositoryId = repository.id ?? repository.identifier;
+          const savedRepo = savedRepos.get(`${repository.provider}:${repository.identifier}`);
           try {
             const response = await releasesRequestHandler
               .handler({
@@ -77,8 +90,8 @@ export const releasesRouter = createTRPCRouter({
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
-                providerUrl: repository.providerUrl,
-                token: tokensByProvider.get(repository.provider),
+                providerUrl: savedRepo?.providerUrl ?? repository.providerUrl,
+                token: savedRepo ? tokensByProvider.get(repository.provider) : undefined,
               })
               .getDataAsync();
 
