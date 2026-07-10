@@ -122,7 +122,7 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
-  // ponytail: no cache — the widget polls every 5s for live updates;
+  // No cache — the widget polls every 5s for live updates;
   // a TTL here would serve stale records between polls.
   cacheTtlMs: 0,
   async requestAsync(integration, input) {

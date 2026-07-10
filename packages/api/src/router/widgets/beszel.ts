@@ -206,13 +206,6 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   subscribeSystemStats: publicProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Subscribe to real-time Beszel system and container stats via SSE from PocketBase. Use for live charts — lower latency than polling. REQUIRED: integrationIds (array of Beszel integration IDs), systemId",
-      },
-    })
     .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
     .input(
       z.object({

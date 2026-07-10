@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-// ponytail: 120 records at ~1 per second = 2 minutes of rolling data for charts
+// 120 records at ~1 per second = 2 minutes of rolling data for charts
 const MAX_BUFFER = 120;
 
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {

@@ -297,12 +297,12 @@ export class BeszelIntegration extends Integration {
     signal: AbortSignal,
   ): Promise<void> {
     const session = await this.authenticateAsync();
-    const realtimeUrl = this.url("/api/realtime", { collections: "system_stats,container_stats" });
+    const realtimeUrl = this.url("/api/realtime");
 
     logger.debug("Opening Beszel SSE connection for realtime metrics", {
       integrationId: this.integration.id,
       systemId,
-      url: realtimeUrl.pathname + realtimeUrl.search,
+      url: realtimeUrl.pathname,
     });
 
     const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
@@ -324,34 +324,64 @@ export class BeszelIntegration extends Integration {
 
     const decoder = new TextDecoder();
     let buffer = "";
+    let subscribed = false;
 
-    // ponytail: simple line-by-line SSE parser; no EventSource polyfill needed
-    const processLine = (line: string) => {
-      if (line.startsWith("data: ")) {
-        try {
-          const parsed = JSON.parse(line.slice(6)) as {
-            action: string;
-            record: Record<string, unknown>;
-          };
-          const record = parsed.record;
-          if (!record || record.system !== systemId) return;
+    const processLine = async (line: string) => {
+      if (!line.startsWith("data: ")) return;
 
-          // Distinguish collection by shape: system_stats has stats as object,
-          // container_stats has stats as array
-          if (Array.isArray(record.stats)) {
-            onMessage({
-              type: "container_stats",
-              record: record as unknown as BeszelContainerStatsRecord,
+      try {
+        const parsed = JSON.parse(line.slice(6)) as Record<string, unknown>;
+
+        // PB_CONNECT delivers the clientId — use it to POST our subscriptions
+        if (!subscribed && typeof parsed.clientId === "string") {
+          subscribed = true;
+          const subscribeResponse = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
+            method: "POST",
+            headers: {
+              Authorization: session.token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              clientId: parsed.clientId,
+              subscriptions: ["system_stats", "container_stats"],
+            }),
+            signal,
+          });
+
+          if (!subscribeResponse.ok) {
+            logger.warn("Beszel SSE subscription POST failed", {
+              integrationId: this.integration.id,
+              systemId,
+              status: subscribeResponse.status,
             });
-          } else if (record.stats && typeof record.stats === "object") {
-            onMessage({
-              type: "system_stats",
-              record: record as unknown as BeszelSystemStatsRecord,
-            });
+            throw new ResponseError(subscribeResponse);
           }
-        } catch {
-          // skip malformed SSE data lines
+
+          logger.debug("Beszel SSE subscribed to collections", {
+            integrationId: this.integration.id,
+            systemId,
+            clientId: parsed.clientId,
+          });
+          return;
         }
+
+        const record = parsed.record as Record<string, unknown> | undefined;
+        if (!record || record.system !== systemId) return;
+
+        if (Array.isArray(record.stats)) {
+          onMessage({
+            type: "container_stats",
+            record: record as unknown as BeszelContainerStatsRecord,
+          });
+        } else if (record.stats && typeof record.stats === "object") {
+          onMessage({
+            type: "system_stats",
+            record: record as unknown as BeszelSystemStatsRecord,
+          });
+        }
+      } catch (error) {
+        if (error instanceof ResponseError) throw error;
+        // skip malformed SSE data lines
       }
     };
 
@@ -362,11 +392,10 @@ export class BeszelIntegration extends Integration {
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
-        // Last element is either incomplete or empty after trailing newline
         buffer = lines.pop() ?? "";
 
         for (const line of lines) {
-          processLine(line);
+          await processLine(line);
         }
       }
     } finally {
