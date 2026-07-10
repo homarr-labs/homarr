@@ -54,7 +54,9 @@ export const releasesRouter = createTRPCRouter({
             await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
 
             const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-            const repos = options.repositories as Array<{ provider?: string; identifier: string; providerUrl?: string }> | undefined;
+            const repos = options.repositories as
+              | Array<{ provider?: string; identifier: string; providerUrl?: string }>
+              | undefined;
             if (repos) {
               for (const repo of repos) {
                 if (repo.provider && repo.identifier) {
