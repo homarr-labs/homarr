@@ -134,7 +134,7 @@ const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
     baseUrl,
     auth: token,
     request: { fetch: fetchWithTrustedCertificatesAsync },
-    throttle: { enabled: false },
+    throttle: { enabled: true },
     userAgent,
   });
 

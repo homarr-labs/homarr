@@ -1,4 +1,3 @@
-import SuperJSON from "superjson";
 import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
@@ -45,19 +44,12 @@ export const releasesRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const tokensByProvider = new Map<string, string>();
-      let allowedRepoIds: Set<string> | null = null;
 
       if (input.itemId) {
         try {
           const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
           if (item && item.kind === "releases") {
             await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
-
-            const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-            const repos = options.repositories as Array<{ id?: string }> | undefined;
-            if (repos) {
-              allowedRepoIds = new Set(repos.map((r) => r.id).filter((id): id is string => Boolean(id)));
-            }
 
             const secrets = await ctx.db.query.widgetSecrets.findMany({
               where: eq(widgetSecrets.itemId, input.itemId),
@@ -79,7 +71,6 @@ export const releasesRouter = createTRPCRouter({
         input.repositories.map(async (repository) => {
           const repositoryId = repository.id ?? repository.identifier;
           try {
-            const useToken = allowedRepoIds === null || allowedRepoIds.has(repositoryId);
             const response = await releasesRequestHandler
               .handler({
                 id: repositoryId,
@@ -87,7 +78,7 @@ export const releasesRouter = createTRPCRouter({
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
                 providerUrl: repository.providerUrl,
-                token: useToken ? tokensByProvider.get(repository.provider) : undefined,
+                token: tokensByProvider.get(repository.provider),
               })
               .getDataAsync();
 
