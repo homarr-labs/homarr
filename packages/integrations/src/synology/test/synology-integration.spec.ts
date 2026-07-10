@@ -2,6 +2,7 @@
 
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import type { z } from "zod";
 
 vi.hoisted(() => {
   process.env.CI = "true";
@@ -37,6 +38,7 @@ import { IntegrationResponseError } from "../../base/errors/http/integration-res
 
 import type { IntegrationSecret } from "../../base/types";
 import { SynologyIntegration } from "../synology-integration";
+import { synologyStorageV2DataSchema, synologyUtilizationDataSchema } from "../synology-types";
 
 const TEST_URL = "https://synology.example.com:5001";
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
@@ -202,8 +204,8 @@ const mockSuccessfulFlow = (options?: {
     success: boolean;
     data: Record<string, unknown>;
   };
-  utilization?: typeof utilizationResponse;
-  storageV2?: typeof storageV2Response;
+  utilization?: { success: boolean; data: z.input<typeof synologyUtilizationDataSchema> };
+  storageV2?: { success: boolean; data: z.input<typeof synologyStorageV2DataSchema> };
   storageLoadInfo?: typeof storageLoadInfoResponse;
 }) => {
   mockFetch.mockImplementation((url) => {
@@ -241,9 +243,9 @@ const mockSuccessfulFlow = (options?: {
           new Response(JSON.stringify({ success: false, error: { code: 103 } }), { status: 200 }),
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
-      return Promise.resolve(new Response(JSON.stringify(options?.storageV2 ?? storageV2Response), { status: 200 })) as unknown as ReturnType<
-        typeof fetchWithTrustedCertificatesAsync
-      >;
+      return Promise.resolve(
+        new Response(JSON.stringify(options?.storageV2 ?? storageV2Response), { status: 200 }),
+      ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
     }
 
     if (apiName === "SYNO.Core.System" && method === "info" && type === "storage") {

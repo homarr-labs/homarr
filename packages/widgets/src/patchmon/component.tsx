@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { RingProgress, ScrollArea, Text, Tooltip } from "@mantine/core";
 import {
   IconCircleCheck,
@@ -24,13 +24,8 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 import { getGridCols, shouldShowComplianceHeroText } from "./layout-utils";
 import { OsDistributionSection } from "./os-distribution-section";
-import {
-  resolveStatColor,
-  severityToIconColor,
-  severityToMantineBgColor,
-  severityToMantineColor,
-  type PatchMonStatKey,
-} from "./stat-colors";
+import type { PatchMonStatKey } from "./stat-colors";
+import { resolveStatColor, severityToIconColor, severityToMantineBgColor, severityToMantineColor } from "./stat-colors";
 
 dayjs.extend(relativeTime);
 
@@ -83,10 +78,7 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
 export default function PatchMonWidget({ integrationIds, options, width, height }: WidgetComponentProps<"patchmon">) {
   const t = useScopedI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
-  const { data: stats } = clientApi.widget.patchmon.getStats.useQuery(
-    { integrationId },
-    { staleTime: 60 * 1000 },
-  );
+  const { data: stats } = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
 
   if (!stats) return <WidgetEmptyState />;
 
@@ -141,8 +133,7 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
   const iconSize = getIconSize(width);
   const ringSize = getRingSize(width, height, showHeroRingOnly);
 
-  const compliancePercent =
-    stats.totalHosts > 0 ? Math.round((stats.upToDateHosts / stats.totalHosts) * 100) : 100;
+  const compliancePercent = stats.totalHosts > 0 ? Math.round((stats.upToDateHosts / stats.totalHosts) * 100) : 100;
   const complianceSeverity = resolveStatColor("upToDateHosts", stats.upToDateHosts, colorContext, options);
   const complianceColor = complianceSeverity === "neutral" ? "blue" : complianceSeverity;
 
@@ -242,12 +233,7 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
               style={{ "--stat-bg": severityToMantineBgColor(severity) } as CSSProperties}
             >
               {showIcons && (
-                <Icon
-                  className={classes.statIcon}
-                  size={iconSize}
-                  stroke={1.5}
-                  color={severityToIconColor(severity)}
-                />
+                <Icon className={classes.statIcon} size={iconSize} stroke={1.5} color={severityToIconColor(severity)} />
               )}
               <span className={classes.statValue}>
                 <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>

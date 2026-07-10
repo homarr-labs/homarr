@@ -21,7 +21,7 @@ export const mediaOrganizerRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaOrganizerRequestHandler.handler(integration, { pageSize: input.pageSize });
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getDataAsync();
           return {
             integrationId: integration.id,
             ...data,

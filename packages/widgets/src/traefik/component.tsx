@@ -137,7 +137,7 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
 
   return (
     <div className={classes.protocolCard}>
-      <Text className={classes.protocolTitle}>{t(`protocol.${protocol}`)}</Text>
+      <Text className={classes.protocolTitle}>{protocol.toUpperCase()}</Text>
       <div className={classes.protocolRows}>
         {rows.map(({ key, icon: Icon, summary }) => (
           <div key={key} className={classes.protocolRow}>

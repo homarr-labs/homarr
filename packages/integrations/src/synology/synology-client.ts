@@ -6,6 +6,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { SessionStore } from "../base/session-store";
+import type { SynologyDiskRecord, SynologyVolumeRecord } from "./synology-types";
 import {
   AUTH_API_NAME,
   INFO_API_NAME,
@@ -23,8 +24,6 @@ import {
   synologyUpgradeCheckDataSchema,
   synologyUpgradeStatusDataSchema,
   synologyUtilizationDataSchema,
-  type SynologyDiskRecord,
-  type SynologyVolumeRecord,
 } from "./synology-types";
 
 const logger = createLogger({ module: "synologyClient" });
@@ -158,13 +157,7 @@ export class SynologyClient {
         if (!name) {
           return null;
         }
-        return this.mapVolumeRecord(
-          name,
-          volume.size?.used,
-          volume.size?.total,
-          volume.status,
-          volume.display_name,
-        );
+        return this.mapVolumeRecord(name, volume.size?.used, volume.size?.total, volume.status, volume.display_name);
       })
       .filter((volume): volume is SynologyVolumeRecord => volume !== null);
   }
