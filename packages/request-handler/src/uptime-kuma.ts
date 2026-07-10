@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { UptimeKumaDashboardData } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const uptimeKumaRequestHandler = createCachedIntegrationRequestHandler<
+export const uptimeKumaRequestHandler = createIntegrationRequestHandler<
   UptimeKumaDashboardData,
   "uptimeKuma",
   Record<string, never>
@@ -14,6 +12,4 @@ export const uptimeKumaRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
-  cacheDuration: dayjs.duration(1, "minute"),
-  queryKey: "uptimeKumaDashboard",
 });

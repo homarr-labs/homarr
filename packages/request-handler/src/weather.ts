@@ -1,14 +1,11 @@
-import dayjs from "dayjs";
 import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
-export const weatherRequestHandler = createCachedWidgetRequestHandler({
-  queryKey: "weatherAtLocation",
-  widgetKind: "weather",
+export const weatherRequestHandler = createWidgetRequestHandler({
   async requestAsync(input: { latitude: number; longitude: number }) {
     const res = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -34,7 +31,6 @@ export const weatherRequestHandler = createCachedWidgetRequestHandler({
       }),
     } satisfies Weather;
   },
-  cacheDuration: dayjs.duration(1, "minute"),
 });
 
 const atLocationOutput = z.object({

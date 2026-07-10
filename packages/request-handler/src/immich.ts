@@ -1,12 +1,10 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { ImmichAlbum, ImmichServerStats } from "@homarr/integrations";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const immichStatsRequestHandler = createCachedIntegrationRequestHandler<
+export const immichStatsRequestHandler = createIntegrationRequestHandler<
   ImmichServerStats,
   IntegrationKindByCategory<"photoService">,
   Record<string, never>
@@ -15,11 +13,9 @@ export const immichStatsRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getServerStatsAsync();
   },
-  cacheDuration: dayjs.duration(15, "minute"),
-  queryKey: "immich-server-stats",
 });
 
-export const immichAlbumsRequestHandler = createCachedIntegrationRequestHandler<
+export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
   {
     id: string;
     albumName: string;
@@ -32,11 +28,9 @@ export const immichAlbumsRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumsAsync();
   },
-  cacheDuration: dayjs.duration(15, "minute"),
-  queryKey: "immich-albums",
 });
 
-export const immichAlbumRequestHandler = createCachedIntegrationRequestHandler<
+export const immichAlbumRequestHandler = createIntegrationRequestHandler<
   ImmichAlbum,
   IntegrationKindByCategory<"photoService">,
   { albumId: string }
@@ -45,6 +39,4 @@ export const immichAlbumRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumAsync(input.albumId);
   },
-  cacheDuration: dayjs.duration(15, "minute"),
-  queryKey: "immich-album",
 });

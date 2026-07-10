@@ -2,11 +2,11 @@
   "name": "homarr-prebuilt-debian",
   "private": true,
   "dependencies": {
-    "better-sqlite3": "^12.10.0"
+    "better-sqlite3": "^12.11.1"
   },
   "engines": {
     "node": ">=24.18.0",
-    "pnpm": ">=11.9.0"
+    "pnpm": ">=11.10.0"
   },
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@11.10.0"
 }

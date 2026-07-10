@@ -13,6 +13,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   lidarr: "lidarr",
   readarr: "readarr",
   prowlarr: "prowlarr",
+  bazarr: "bazarr",
   jellyfin: "jellyfin",
   emby: "emby",
   plex: "plex",
@@ -36,6 +37,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   ical: "ical",
   anchor: "anchor",
   truenas: "truenas",
+  synology: "synology",
   unraid: "unraid",
   coolify: "coolify",
   immich: "immich",
@@ -49,6 +51,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   gluetun: "gluetun",
   peaNut: "peanut",
   beszel: "beszel",
+  traefik: "traefik",
   archiveTeamWarrior: null,
   mock: null,
 };

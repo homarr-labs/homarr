@@ -9,7 +9,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 const logger = createLogger({ module: "releaseProviders" });
 
 const PROVIDER_TIMEOUT_MS = 10_000;
-const fetchProvider = (url: URL | RequestInfo, options?: RequestInit & { timeout?: number }) =>
+const fetchProvider: typeof fetchWithTrustedCertificatesAsync = (url, options) =>
   fetchWithTrustedCertificatesAsync(url, { timeout: PROVIDER_TIMEOUT_MS, ...options });
 
 export interface ReleasesRepositoryRequest extends Record<string, unknown> {
@@ -127,7 +127,7 @@ const parseOwnerPackageName = (identifier: string) => {
 
 const removeTrailingSlash = (url: string) => url.replace(/\/$/, "");
 
-const buildUrl = (baseUrl: string, path: `/${string}`) => new URL(`${baseUrl}${path}`);
+const buildUrl = (baseUrl: string, path: `/${string}`) => new URL(`${baseUrl}${path}`).toString();
 
 const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
   new Octokit({

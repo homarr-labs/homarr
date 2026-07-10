@@ -9,6 +9,7 @@ export const widgetRouter = createTRPCRouter({
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
   immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
   paperlessNgx: lazy(() => import("./paperless-ngx").then((mod) => mod.paperlessNgxRouter)),
+  bazarr: lazy(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
   weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
   app: lazy(() => import("./app").then((mod) => mod.appRouter)),
@@ -39,6 +40,7 @@ export const widgetRouter = createTRPCRouter({
   umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
   vpn: lazy(() => import("./vpn").then((mod) => mod.vpnRouter)),
   ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
+  traefik: lazy(() => import("./traefik").then((mod) => mod.traefikRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
 });

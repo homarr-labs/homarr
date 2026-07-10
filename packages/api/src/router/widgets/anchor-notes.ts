@@ -45,9 +45,7 @@ export const anchorNotesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const handler = anchorNotesListRequestHandler.handler(ctx.integration, { ...input, limit: input.limit ?? 50 });
 
-      const { data } = await handler.getCachedOrUpdatedDataAsync({
-        forceUpdate: false,
-      });
+      const { data } = await handler.getDataAsync();
 
       return data;
     }),
@@ -57,9 +55,7 @@ export const anchorNotesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const handler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
 
-      const { data } = await handler.getCachedOrUpdatedDataAsync({
-        forceUpdate: false,
-      });
+      const { data } = await handler.getDataAsync();
 
       return data;
     }),
@@ -78,9 +74,6 @@ export const anchorNotesRouter = createTRPCRouter({
           ...(input.title !== undefined ? { title: input.title } : {}),
           ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
         });
-
-        const noteHandler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
-        await noteHandler.invalidateAsync();
 
         return updatedNote;
       } catch (error) {

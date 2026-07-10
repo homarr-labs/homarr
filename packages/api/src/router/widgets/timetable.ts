@@ -19,14 +19,7 @@ export const timetableRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const innerHandler = timetableGetTimetableRequestHandler.handler({
-        baseUrl: input.baseUrl,
-        stationId: input.stationId,
-        limit: input.limit,
-      });
-
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-
+      const { data } = await timetableGetTimetableRequestHandler.handler(input).getDataAsync();
       return data;
     }),
   searchStations: publicProcedure
@@ -37,13 +30,7 @@ export const timetableRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const innerHandler = timetableSearchStationsRequestHandler.handler({
-        baseUrl: input.baseUrl,
-        query: input.query,
-      });
-
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-
+      const { data } = await timetableSearchStationsRequestHandler.handler(input).getDataAsync();
       return data;
     }),
 });

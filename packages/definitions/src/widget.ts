@@ -37,6 +37,7 @@ export const widgetKinds = [
   "immich-serverStats",
   "immich-albumCarousel",
   "paperlessNgx",
+  "bazarr",
   "tracearr",
   "speedtestTracker",
   "uptimeKuma",
@@ -49,6 +50,7 @@ export const widgetKinds = [
   "beszelSystemGrid",
   "beszelAlerts",
   "beszelSystemStats",
+  "traefik",
   "customApi",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
@@ -58,4 +60,5 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   audioStats: { width: 2, height: 2 },
   paperlessNgx: { width: 2, height: 2 },
   mediaMissing: { width: 4, height: 3 },
+  bazarr: { width: 2, height: 2 },
 };

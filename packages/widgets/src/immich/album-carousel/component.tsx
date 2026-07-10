@@ -23,7 +23,7 @@ export default function ImmichAlbumCarouselWidget({
       integrationId: integrationIds[0] ?? "",
       albumId: options.albumId ?? "",
     },
-    { enabled: Boolean(options.albumId), staleTime: 15 * 60 * 1000 },
+    { enabled: Boolean(options.albumId) },
   );
 
   const photoAssets = useMemo(() => {
@@ -76,7 +76,6 @@ function shuffle<T>(items: T[]) {
 interface CarouselProps {
   assets: {
     id: string;
-    deviceAssetId: string;
     originalPath: string;
     fileModifiedAt: string;
     publicLink: string;

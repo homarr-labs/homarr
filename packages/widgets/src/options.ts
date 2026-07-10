@@ -72,6 +72,15 @@ interface IntegrationSelectInput extends CommonInput<string> {
   };
 }
 
+interface IntegrationMultiSelectInput extends CommonInput<string[]> {
+  withDescription?: boolean;
+  useOptions: (integrationIds: string[]) => {
+    data: { value: string; label: string }[];
+    isPending: boolean;
+    isError: boolean;
+  };
+}
+
 interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
@@ -194,6 +203,12 @@ const optionsFactory = {
     withDescription: input.withDescription ?? false,
     clearable: input.clearable ?? false,
     searchable: input.searchable ?? true,
+    useOptions: input.useOptions,
+  }),
+  integrationMultiSelect: (input: IntegrationMultiSelectInput) => ({
+    type: "integrationMultiSelect" as const,
+    defaultValue: input.defaultValue ?? [],
+    withDescription: input.withDescription ?? false,
     useOptions: input.useOptions,
   }),
   customWidgetSelect: (input?: CommonInput<string>) => ({

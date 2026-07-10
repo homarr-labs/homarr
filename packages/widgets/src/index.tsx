@@ -12,6 +12,7 @@ import * as audioStats from "./audio-stats";
 import * as app from "./app";
 import * as archiveTeamWarrior from "./archive-team-warrior";
 import * as bookmarks from "./bookmarks";
+import * as bazarr from "./bazarr";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import * as coolify from "./coolify";
@@ -50,6 +51,7 @@ import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as timetable from "./timetable";
+import * as traefik from "./traefik";
 import * as tracearr from "./tracearr";
 import * as umami from "./umami";
 import * as ups from "./ups";
@@ -95,6 +97,7 @@ export const widgetImports = {
   networkControllerStatus,
   rssFeed,
   bookmarks,
+  bazarr,
   indexerManager,
   healthMonitoring,
   mediaTranscoding,
@@ -122,6 +125,7 @@ export const widgetImports = {
   beszelSystemGrid,
   beszelAlerts,
   beszelSystemStats,
+  traefik,
   customApi,
 } satisfies WidgetImportRecord;
 

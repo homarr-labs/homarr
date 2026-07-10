@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Beállítások"
+        "settings": "Beállítások",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "Indulások {station}",
       "noStation": "Nincs kiválasztott állomás",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Állomás"
         }
@@ -2277,6 +2283,11 @@
         },
         "fileSystem": {
           "label": "Fájlrendszer-információk megjelenítése"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": "Alapértelmezett fül"
@@ -2783,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Fotóadatok megjelenítése",
           "description": "Kép dátumának és az aktuális indexszámnak a megjelenítése a diavetítés alján"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Képek diavetítése az Immich-albumodból",
@@ -3147,6 +3162,9 @@
           "provider": {
             "label": "Szolgáltató"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Azonosító",
             "placeholder": "Név vagy tulajdonos/név"
@@ -3194,6 +3212,13 @@
           "noProvider": {
             "label": "Nincs Szolgáltató",
             "tooltip": "A szolgáltató adatai nem értelmezhetők; kérjük, az importálás után állítsa be azokat manuálisan"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3216,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3517,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Háttérhasználati sáv megjelenítése"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -4524,88 +4555,13 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": ""
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
               "label": ""
             },
-            "smartHomeEntityState": {
-              "label": ""
-            },
             "ping": {
-              "label": ""
-            },
-            "mediaServer": {
-              "label": "Médiakiszolgáló"
-            },
-            "mediaOrganizer": {
-              "label": ""
-            },
-            "downloads": {
-              "label": "Letöltések"
-            },
-            "mediaRequestStats": {
-              "label": ""
-            },
-            "mediaRequestList": {
-              "label": ""
-            },
-            "rssFeeds": {
-              "label": ""
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": ""
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": ""
-            },
-            "mediaTranscoding": {
-              "label": ""
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": "Tűzfal CPU"
-            },
-            "firewallMemory": {
-              "label": "Tűzfal Memória"
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
               "label": ""
             }
           },

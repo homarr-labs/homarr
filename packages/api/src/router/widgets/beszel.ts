@@ -4,18 +4,20 @@ import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations";
-import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
+import type { LiveStatsEvent } from "@homarr/integrations/types";
 import {
   beszelAlertsRequestHandler,
   beszelStatsRequestHandler,
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
-import type { BeszelAlertsData, BeszelSystemRow } from "@homarr/request-handler/beszel";
 
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "beszelRouter" });
+
+const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
@@ -30,12 +32,11 @@ export const beszelRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const integrationIds = ctx.integrations.map((i) => i.id);
       logger.debug("getSystems called", { userId: ctx.session?.user?.id, integrationIds });
-      const settled = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
           const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data, timestamp } = await innerHandler.getDataAsync();
           return {
             integrationId: integration.id,
             integrationName: integration.name,
@@ -43,25 +44,18 @@ export const beszelRouter = createTRPCRouter({
             systems: data,
             updatedAt: timestamp,
           };
-        }),
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            systems: [],
+            updatedAt: new Date(0),
+            error: errorMessage(error),
+          }),
+        },
       );
-      const results = settled.map((result, index) => {
-        if (result.status === "fulfilled") return result.value;
-        const integration = ctx.integrations[index];
-        logger.warn("getSystems integration failed", {
-          userId: ctx.session?.user?.id,
-          integrationId: integration?.id,
-          error: result.reason,
-        });
-        return {
-          integrationId: integration?.id ?? "unknown",
-          integrationName: integration?.name ?? "unknown",
-          integrationUrl: integration?.url ?? "",
-          systems: [],
-          updatedAt: new Date(0),
-          error: result.reason instanceof Error ? result.reason.message : String(result.reason),
-        };
-      });
       logger.debug("getSystems completed", {
         userId: ctx.session?.user?.id,
         integrationIds,
@@ -69,30 +63,6 @@ export const beszelRouter = createTRPCRouter({
         errorCount: results.filter((r) => "error" in r).length,
       });
       return results;
-    }),
-
-  subscribeSystems: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
-    .subscription(({ ctx }) => {
-      return observable<{
-        integrationId: string;
-        systems: BeszelSystemRow[];
-        timestamp: Date;
-      }>((emit) => {
-        const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
-          return innerHandler.subscribe((systems) => {
-            emit.next({
-              integrationId: integration.id,
-              systems,
-              timestamp: new Date(),
-            });
-          });
-        });
-        return () => {
-          unsubscribes.forEach((fn) => fn());
-        };
-      });
     }),
 
   getAlerts: publicProcedure
@@ -118,20 +88,25 @@ export const beszelRouter = createTRPCRouter({
         includeHistory: input.includeHistory,
         maxHistoryItems: input.maxHistoryItems,
       });
-      const settled = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
           const alertsHandler = beszelAlertsRequestHandler.handler(integration, {
             includeHistory: input.includeHistory,
             maxHistoryItems: input.maxHistoryItems,
           });
           const systemsHandler = beszelSystemsRequestHandler.handler(integration, {});
-          const [alertsResult, systemsResult] = await Promise.all([
-            alertsHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
-            systemsHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
+          const [alertsSettled, systemsSettled] = await Promise.allSettled([
+            alertsHandler.getDataAsync(),
+            systemsHandler.getDataAsync(),
           ]);
+          if (alertsSettled.status === "rejected") throw alertsSettled.reason;
+          const alertsResult = alertsSettled.value;
           const systemNameMap: Record<string, string> = {};
-          for (const system of systemsResult.data) {
-            systemNameMap[system.id] = system.name;
+          if (systemsSettled.status === "fulfilled") {
+            for (const system of systemsSettled.value.data) {
+              systemNameMap[system.id] = system.name;
+            }
           }
           return {
             integrationId: integration.id,
@@ -141,26 +116,19 @@ export const beszelRouter = createTRPCRouter({
             systemNameMap,
             updatedAt: alertsResult.timestamp,
           };
-        }),
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            alerts: [],
+            history: [],
+            systemNameMap: {},
+            updatedAt: new Date(0),
+            error: errorMessage(error),
+          }),
+        },
       );
-      const results = settled.map((result, index) => {
-        if (result.status === "fulfilled") return result.value;
-        const integration = ctx.integrations[index];
-        logger.warn("getAlerts integration failed", {
-          userId: ctx.session?.user?.id,
-          integrationId: integration?.id,
-          error: result.reason,
-        });
-        return {
-          integrationId: integration?.id ?? "unknown",
-          integrationName: integration?.name ?? "unknown",
-          alerts: [],
-          history: [],
-          systemNameMap: {},
-          updatedAt: new Date(0),
-          error: result.reason instanceof Error ? result.reason.message : String(result.reason),
-        };
-      });
       logger.debug("getAlerts completed", {
         userId: ctx.session?.user?.id,
         integrationIds,
@@ -168,39 +136,6 @@ export const beszelRouter = createTRPCRouter({
         errorCount: results.filter((r) => "error" in r).length,
       });
       return results;
-    }),
-
-  subscribeAlerts: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
-    .input(
-      z.object({
-        includeHistory: z.boolean().default(true),
-        maxHistoryItems: z.number().min(1).max(100).default(10),
-      }),
-    )
-    .subscription(({ ctx, input }) => {
-      return observable<{
-        integrationId: string;
-        alerts: BeszelAlertsData;
-        timestamp: Date;
-      }>((emit) => {
-        const unsubscribes = ctx.integrations.map((integration) => {
-          const innerHandler = beszelAlertsRequestHandler.handler(integration, {
-            includeHistory: input.includeHistory,
-            maxHistoryItems: input.maxHistoryItems,
-          });
-          return innerHandler.subscribe((data) => {
-            emit.next({
-              integrationId: integration.id,
-              alerts: data,
-              timestamp: new Date(),
-            });
-          });
-        });
-        return () => {
-          unsubscribes.forEach((fn) => fn());
-        };
-      });
     }),
 
   getSystemStats: publicProcedure
@@ -237,7 +172,7 @@ export const beszelRouter = createTRPCRouter({
           timePeriod: input.timePeriod,
           includeDocker: input.includeDocker,
         });
-        const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        const { data, timestamp } = await innerHandler.getDataAsync();
         logger.debug("getSystemStats completed", {
           userId: ctx.session?.user?.id,
           integrationId: integration.id,
@@ -256,7 +191,7 @@ export const beszelRouter = createTRPCRouter({
           systemStats: [],
           containerStats: [],
           updatedAt: new Date(0),
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage(error),
         };
       }
     }),
@@ -269,51 +204,58 @@ export const beszelRouter = createTRPCRouter({
       }),
     )
     .subscription(({ ctx, input }) => {
-      return observable<{
-        stats: BeszelSystemStatsRecord;
-        containerStats: BeszelContainerStatsRecord | null;
-      }>((emit) => {
-        const integration = ctx.integrations[0];
-        if (!integration) {
-          emit.error(new Error("No Beszel integration configured"));
-          return () => {};
-        }
-        logger.debug("subscribeSystemStats opened", {
-          userId: ctx.session?.user?.id,
-          integrationId: integration.id,
-          systemId: input.systemId,
-        });
-
-        const abortController = new AbortController();
+      return observable<LiveStatsEvent>((emit) => {
+        const controller = new AbortController();
+        let isActive = true;
 
         void (async () => {
+          const integration = ctx.integrations[0];
+          if (!integration) {
+            emit.error(
+              new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" }),
+            );
+            return;
+          }
+
           try {
             const instance = await createIntegrationAsync(integration);
-            await instance.subscribeRealtimeMetrics(input.systemId, (data) => emit.next(data), abortController.signal);
-          } catch (error) {
-            if (!abortController.signal.aborted) {
-              logger.warn("subscribeSystemStats error", {
-                userId: ctx.session?.user?.id,
-                integrationId: integration.id,
-                systemId: input.systemId,
-                error,
-              });
-              if (error instanceof Error) {
-                emit.error(error);
-              } else {
-                emit.error(new Error(String(error)));
-              }
+            if (typeof instance.subscribeRealtimeMetrics === "function") {
+              await instance.subscribeRealtimeMetrics(
+                input.systemId,
+                (event) => {
+                  if (isActive) emit.next(event);
+                },
+                controller.signal,
+              );
+            } else {
+              emit.error(
+                new TRPCError({
+                  code: "METHOD_NOT_SUPPORTED",
+                  message: `Integration ${integration.kind} does not support realtime metrics`,
+                }),
+              );
             }
+          } catch (error) {
+            if (isActive) {
+              emit.error(
+                error instanceof TRPCError
+                  ? error
+                  : new TRPCError({
+                      code: "INTERNAL_SERVER_ERROR",
+                      message: error instanceof Error ? error.message : String(error),
+                    }),
+              );
+            }
+          }
+
+          if (isActive) {
+            emit.complete();
           }
         })();
 
         return () => {
-          abortController.abort();
-          logger.debug("subscribeSystemStats closed", {
-            userId: ctx.session?.user?.id,
-            integrationId: integration.id,
-            systemId: input.systemId,
-          });
+          isActive = false;
+          controller.abort();
         };
       });
     }),

@@ -1328,9 +1328,17 @@
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Cloud-native reverse proxy and load balancer"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
     }
   },
   "media": {
@@ -1599,6 +1607,7 @@
     "menu": {
       "label": {
         "settings": "Settings",
+        "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
       }
@@ -2283,6 +2292,11 @@
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
+        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -2746,6 +2760,35 @@
       },
       "error": {
         "internalServerError": "Failed to fetch Paperless-ngx data"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Overview of missing subtitles and health status from your Bazarr instance",
+      "episodes": "Missing Episodes",
+      "movies": "Missing Movies",
+      "providers": "Provider Issues",
+      "status": "Health Issues",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Show missing episodes",
+          "description": "Display the number of episodes with missing subtitles"
+        },
+        "showMissingMovies": {
+          "label": "Show missing movies",
+          "description": "Display the number of movies with missing subtitles"
+        },
+        "showProviderIssues": {
+          "label": "Show provider issues",
+          "description": "Display the number of subtitle providers with issues"
+        },
+        "showHealthIssues": {
+          "label": "Show health issues",
+          "description": "Display the number of Bazarr health issues"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Bazarr data"
       }
     },
     "immich-serverStats": {
@@ -3359,7 +3402,11 @@
       "name": "Notifications",
       "description": "Display notification history from an integration",
       "noItems": "No notifications to display.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Hide logos"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3438,6 +3485,40 @@
       },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
+      }
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Overview of Traefik routers, services, middlewares, and entry points",
+      "option": {
+        "showTcp": {
+          "label": "Show TCP"
+        },
+        "showUdp": {
+          "label": "Show UDP"
+        },
+        "showEntryPoints": {
+          "label": "Show entry points"
+        }
+      },
+      "instances": "Traefik instances",
+      "versionUnknown": "Version unknown",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Entry points"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Services",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "errors": "{count} errors",
+        "warnings": "{count} warnings"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Traefik data"
       }
     },
     "audioStats": {
@@ -3566,6 +3647,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
         }
       },
       "status": {
@@ -3775,6 +3861,9 @@
         },
         "showDockerNetwork": {
           "label": "Show Docker network chart"
+        },
+        "showStorage": {
+          "label": "Show storage chart"
         }
       },
       "selectSystem": "Select system",
@@ -3809,6 +3898,11 @@
           "subtitle": "Throughput of root filesystem",
           "read": "Read",
           "write": "Write"
+        },
+        "storage": {
+          "title": "Storage",
+          "subtitle": "Per-filesystem disk usage",
+          "series": "Used"
         },
         "network": {
           "title": "Bandwidth",
@@ -4573,89 +4667,14 @@
             "disabled": "Disabled"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft server status"
-            },
-            "timetable": {
-              "label": "Timetable"
-            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Smart Home Entity State"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Media Server"
-            },
-            "mediaOrganizer": {
-              "label": "Media Organizers"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Media Request Stats"
-            },
-            "mediaRequestList": {
-              "label": "Media Request List"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indexer Manager"
-            },
-            "healthMonitoring": {
-              "label": "Health Monitoring"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Update checker"
-            },
-            "mediaTranscoding": {
-              "label": "Media transcoding"
-            },
-            "networkController": {
-              "label": "Network Controller"
-            },
-            "refreshNotifications": {
-              "label": "Notification Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Memory"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Interfaces"
-            },
-            "weather": {
-              "label": "Weather"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Active Visitors"
-            },
-            "vpn": {
-              "label": "VPN Status"
             }
           },
           "interval": {

@@ -18,6 +18,6 @@ export const stockPriceRouter = createTRPCRouter({
       timeRange: input.timeRange,
       timeInterval: input.timeInterval,
     });
-    return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return await innerHandler.getDataAsync();
   }),
 });

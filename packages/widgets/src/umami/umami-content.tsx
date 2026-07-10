@@ -10,7 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { UmamiEventsContent } from "./umami-events-content";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
-import { formatTimeFrameLabel, formatXLabel } from "./umami-utils";
+import { formatTimeFrameLabel, formatXLabel, umamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
 
 interface UmamiContentProps {
@@ -41,29 +41,19 @@ export function UmamiContent({
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
   const { data: results = [] } = clientApi.widget.umami.getVisitorStats.useQuery(
-    {
-      integrationIds,
-      websiteId,
-      timeFrame,
-      eventName,
-    },
-    { staleTime: 5 * 60 * 1000 },
+    { integrationIds, websiteId, timeFrame, eventName },
+    umamiQueryOptions,
   );
 
   const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
-  const { data: activeVisitors = 0 } = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput, {
-    staleTime: 30 * 1000,
-  });
-  const utils = clientApi.useUtils();
-  clientApi.widget.umami.subscribeActiveVisitors.useSubscription(activeVisitorsInput, {
-    onData(count) {
-      utils.widget.umami.getActiveVisitors.setData(activeVisitorsInput, () => count);
-    },
-  });
+  const { data: activeVisitors = 0 } = clientApi.widget.umami.getActiveVisitors.useQuery(
+    activeVisitorsInput,
+    umamiQueryOptions,
+  );
 
   const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
     { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
-    { enabled: viewMode === "events" && eventNames.length > 0, staleTime: 5 * 60 * 1000 },
+    { enabled: viewMode === "events" && eventNames.length > 0, ...umamiQueryOptions },
   );
 
   const multiEventTotal = multiEventSeries

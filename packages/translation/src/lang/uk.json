@@ -1598,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Налаштування"
+        "settings": "Налаштування",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1900,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2277,6 +2283,11 @@
         },
         "fileSystem": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": ""
@@ -2715,7 +2726,7 @@
           "description": ""
         },
         "showInboxRing": {
-          "label": "",
+          "label": "Показувати кільце вхідних повідомлень",
           "description": ""
         },
         "showDocumentsTotal": {
@@ -2781,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -2909,7 +2924,7 @@
         "failed": "Невдало",
         "processing": "В обробці",
         "leeching": "Завантажується",
-        "stalled": "",
+        "stalled": "Зупинено",
         "unknown": "Невідомо",
         "seeding": "Роздається"
       },
@@ -3122,7 +3137,7 @@
           "label": ""
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Показати тільки іконку"
         },
         "topReleases": {
           "label": "",
@@ -3145,6 +3160,9 @@
             "deselectAll": ""
           },
           "provider": {
+            "label": ""
+          },
+          "providerUrl": {
             "label": ""
           },
           "identifier": {
@@ -3194,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3209,15 +3234,16 @@
       "openReleasePage": "",
       "releaseDescription": "",
       "projectDescription": "",
-      "created": "",
+      "created": "Створено",
       "error": {
         "label": "",
         "messages": {
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3329,7 +3355,7 @@
           "label": ""
         }
       },
-      "latestResult": "",
+      "latestResult": "Останній результат",
       "averages": "",
       "tests": "",
       "recentResults": "",
@@ -3416,7 +3442,7 @@
           "description": ""
         },
         "maxNowPlayingItems": {
-          "label": "",
+          "label": "Максимум елементів для відтворення",
           "description": ""
         },
         "showLibraryCount": {
@@ -3511,12 +3537,17 @@
               "label": ""
             },
             "free": {
-              "label": ""
+              "label": "Відсоток вільного простору (напр., 24% вільно)"
             }
           }
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3566,19 +3597,19 @@
           "label": ""
         },
         "showGpu": {
-          "label": ""
+          "label": "Показати графічний процесор"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Показати середній рівень навантаження"
         },
         "showNet": {
-          "label": ""
+          "label": "Показати мережу"
         },
         "showTemp": {
-          "label": ""
+          "label": "Показувати температуру"
         },
         "showBattery": {
-          "label": ""
+          "label": "Показувати заряд батереї"
         },
         "showServices": {
           "label": ""
@@ -3592,7 +3623,7 @@
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не вдається підключитися до Beszel. Перевірте параметри інтеграції."
       },
       "column": {
         "system": "",
@@ -3644,7 +3675,7 @@
           "label": ""
         },
         "showUptime": {
-          "label": ""
+          "label": "Показати час роботи"
         },
         "showAgent": {
           "label": ""
@@ -3665,7 +3696,7 @@
         "net": "",
         "temp": "",
         "battery": "",
-        "services": "",
+        "services": "Служби",
         "uptime": "",
         "agent": ""
       }
@@ -3748,12 +3779,12 @@
           "title": "",
           "subtitle": "",
           "series": "",
-          "cache": ""
+          "cache": "Кеш/Баффери"
         },
         "disk": {
           "title": "",
           "subtitle": "",
-          "series": ""
+          "series": "Використано"
         },
         "diskIO": {
           "title": "",
@@ -3950,7 +3981,7 @@
           },
           "contain": {
             "label": "",
-            "description": ""
+            "description": "Масштабує зображення максимально великою в межах контейнера без обрізання або розтягування зображення."
           }
         }
       },
@@ -4265,7 +4296,7 @@
           "private": "Ця дошка є приватною"
         },
         "noResults": {
-          "title": ""
+          "title": "У вас ще немає дошок"
         },
         "modal": {
           "createBoard": {
@@ -4524,89 +4555,14 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Статус сервера Minecraft"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
               "label": "Аналітика"
             },
-            "smartHomeEntityState": {
-              "label": ""
-            },
             "ping": {
               "label": "Пінги"
-            },
-            "mediaServer": {
-              "label": "Медіа сервер"
-            },
-            "mediaOrganizer": {
-              "label": ""
-            },
-            "downloads": {
-              "label": "Завантаження"
-            },
-            "mediaRequestStats": {
-              "label": ""
-            },
-            "mediaRequestList": {
-              "label": ""
-            },
-            "rssFeeds": {
-              "label": ""
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": ""
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": ""
-            },
-            "mediaTranscoding": {
-              "label": ""
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
-            },
-            "vpn": {
-              "label": ""
             }
           },
           "interval": {
@@ -4709,7 +4665,7 @@
               "table": {
                 "header": {
                   "id": "ІДЕНТИФІКАТОР",
-                  "createdBy": "",
+                  "createdBy": "Створено",
                   "actions": ""
                 }
               }

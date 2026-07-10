@@ -77,3 +77,4 @@ skills-lock.json
 # docusaurus
 apps/docs/.docusaurus
 apps/docs/build
+.pnpm-store

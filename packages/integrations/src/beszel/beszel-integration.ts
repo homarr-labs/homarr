@@ -13,15 +13,14 @@ import type {
   BeszelAlertHistory,
   BeszelAuthResponse,
   BeszelContainer,
-  BeszelContainerStats,
   BeszelContainerStatsRecord,
   BeszelSmartDevice,
   BeszelSystem,
   BeszelSystemDetails,
   BeszelSystemdService,
-  BeszelSystemStats,
   BeszelSystemStatsRecord,
   CreateAlertInput,
+  LiveStatsEvent,
   PocketBaseListResponse,
   UpdateAlertInput,
 } from "./beszel-types";
@@ -286,108 +285,122 @@ export class BeszelIntegration extends Integration {
     });
   }
 
+  /**
+   * Subscribe to real-time system and container stats via PocketBase SSE.
+   * Connects to the PocketBase Realtime API and parses incoming SSE events,
+   * filtering by systemId. This provides live-updating metrics (≤1s latency
+   * from agent) instead of polling the REST API every 5s.
+   */
   public async subscribeRealtimeMetrics(
     systemId: string,
-    onMessage: (data: { stats: BeszelSystemStatsRecord; containerStats: BeszelContainerStatsRecord | null }) => void,
+    onMessage: (event: LiveStatsEvent) => void,
     signal: AbortSignal,
   ): Promise<void> {
     const session = await this.authenticateAsync();
-    const sseUrl = this.url("/api/realtime");
-    logger.debug("Opening Beszel SSE connection", { integrationId: this.integration.id, systemId });
+    const realtimeUrl = this.url("/api/realtime");
 
-    const sseResponse = await fetchWithTrustedCertificatesAsync(sseUrl, {
+    logger.debug("Opening Beszel SSE connection for realtime metrics", {
+      integrationId: this.integration.id,
+      systemId,
+      url: realtimeUrl.pathname,
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
       headers: { Authorization: session.token },
       signal,
     });
 
-    if (!sseResponse.ok || !sseResponse.body) {
+    if (!response.ok) {
       logger.warn("Beszel SSE connection failed", {
         integrationId: this.integration.id,
         systemId,
-        status: sseResponse.status,
+        status: response.status,
       });
-      throw new ResponseError(sseResponse);
+      throw new ResponseError(response);
     }
-    logger.debug("Beszel SSE connection opened", { integrationId: this.integration.id, systemId });
 
-    const reader = sseResponse.body.getReader();
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error("No response body in SSE stream");
+
     const decoder = new TextDecoder();
     let buffer = "";
-    let clientId: string | null = null;
+    let subscribed = false;
 
-    const processLine = (line: string) => {
-      if (!line.startsWith("data:")) return;
-      const jsonStr = line.slice(5).trim();
-      if (!jsonStr) return;
+    const processLine = async (line: string) => {
+      if (!line.startsWith("data: ")) return;
 
       try {
-        const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+        const parsed = JSON.parse(line.slice(6)) as Record<string, unknown>;
 
-        if (!clientId && typeof parsed.clientId === "string") {
-          clientId = parsed.clientId;
-          this.subscribeTopic(clientId, systemId, session.token).catch((err) => {
-            logger.warn("Failed to subscribe to rt_metrics topic, aborting SSE", { error: err });
-            reader.cancel().catch(() => {});
+        // PB_CONNECT delivers the clientId — use it to POST our subscriptions
+        if (!subscribed && typeof parsed.clientId === "string") {
+          subscribed = true;
+          const subscribeResponse = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
+            method: "POST",
+            headers: {
+              Authorization: session.token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              clientId: parsed.clientId,
+              subscriptions: ["system_stats", "container_stats"],
+            }),
+            signal,
+          });
+
+          if (!subscribeResponse.ok) {
+            logger.warn("Beszel SSE subscription POST failed", {
+              integrationId: this.integration.id,
+              systemId,
+              status: subscribeResponse.status,
+            });
+            throw new ResponseError(subscribeResponse);
+          }
+
+          logger.debug("Beszel SSE subscribed to collections", {
+            integrationId: this.integration.id,
+            systemId,
+            clientId: parsed.clientId,
           });
           return;
         }
 
-        if ("stats" in parsed) {
-          const now = new Date().toISOString();
-          const envelope = { id: "", system: systemId, type: "1m" as const, created: now, updated: now };
-          const stats: BeszelSystemStatsRecord = { ...envelope, stats: parsed.stats as BeszelSystemStats };
+        const record = parsed.record as Record<string, unknown> | undefined;
+        if (!record || record.system !== systemId) return;
 
-          let containerStats: BeszelContainerStatsRecord | null = null;
-          const hasContainers =
-            parsed.container &&
-            Array.isArray(parsed.container) &&
-            (parsed.container as BeszelContainerStats[]).length > 0;
-          if (hasContainers) {
-            containerStats = { ...envelope, stats: parsed.container as BeszelContainerStats[] };
-          }
-          onMessage({ stats, containerStats });
+        if (Array.isArray(record.stats)) {
+          onMessage({
+            type: "container_stats",
+            record: record as unknown as BeszelContainerStatsRecord,
+          });
+        } else if (record.stats && typeof record.stats === "object") {
+          onMessage({
+            type: "system_stats",
+            record: record as unknown as BeszelSystemStatsRecord,
+          });
         }
-      } catch {
-        logger.debug("Failed to parse SSE message", { line });
+      } catch (error) {
+        if (error instanceof ResponseError) throw error;
+        // skip malformed SSE data lines
       }
     };
 
     try {
-      while (!signal.aborted) {
+      while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
         buffer = lines.pop() ?? "";
+
         for (const line of lines) {
-          processLine(line);
+          await processLine(line);
         }
       }
-      if (!signal.aborted) {
-        logger.warn("Beszel SSE stream ended unexpectedly", {
-          integrationId: this.integration.id,
-          systemId,
-        });
-        throw new Error("Beszel SSE stream ended unexpectedly");
-      }
     } finally {
-      reader.cancel().catch(() => {});
-    }
-  }
-
-  private async subscribeTopic(clientId: string, systemId: string, token: string): Promise<void> {
-    const topic = `rt_metrics?options=${JSON.stringify({ query: { system: systemId } })}`;
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/realtime"), {
-      method: "POST",
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ clientId, subscriptions: [topic] }),
-    });
-    if (!response.ok) {
-      throw new ResponseError(response);
+      reader.releaseLock();
+      logger.debug("Beszel SSE connection closed", { integrationId: this.integration.id, systemId });
     }
   }
 

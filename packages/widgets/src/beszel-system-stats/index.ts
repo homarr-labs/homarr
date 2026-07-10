@@ -28,10 +28,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
             data = [],
             isPending,
             isError,
-          } = clientApi.widget.beszel.getSystems.useQuery(
-            { integrationIds },
-            { enabled: integrationIds.length > 0, staleTime: 30_000 },
-          );
+          } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
           const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
           return { data: selectData, isPending, isError };
         },
@@ -48,6 +45,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showDockerCpu: factory.switch({ defaultValue: true }),
       showDockerMemory: factory.switch({ defaultValue: true }),
       showDockerNetwork: factory.switch({ defaultValue: true }),
+      showStorage: factory.switch({ defaultValue: true }),
     }));
   },
   errors: {

@@ -1,6 +1,3 @@
-import { observable } from "@trpc/server/observable";
-
-import type { ArchiveTeamWarriorStatus } from "@homarr/integrations";
 import { archiveTeamWarriorRequestHandler } from "@homarr/request-handler/archive-team-warrior";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -11,29 +8,11 @@ export const archiveTeamWarriorRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "archiveTeamWarrior"))
     .query(async ({ ctx }) => {
       const handler = archiveTeamWarriorRequestHandler.handler(ctx.integration, {});
-      const { data, timestamp } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data, timestamp } = await handler.getDataAsync();
 
       return {
         status: data,
         updatedAt: timestamp,
       };
-    }),
-
-  subscribeStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "archiveTeamWarrior"))
-    .subscription(({ ctx }) => {
-      return observable<{ status: ArchiveTeamWarriorStatus; updatedAt: Date }>((emit) => {
-        const handler = archiveTeamWarriorRequestHandler.handler(ctx.integration, {});
-        const unsubscribe = handler.subscribe((status) => {
-          emit.next({
-            status,
-            updatedAt: new Date(),
-          });
-        });
-
-        return () => {
-          unsubscribe();
-        };
-      });
     }),
 });
