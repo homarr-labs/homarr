@@ -9,3 +9,8 @@ export const nullableEmailSchema = utf8EmailSchema
   .transform((value) => (value === "" ? null : value))
   .optional()
   .nullable();
+
+export const requiredNullableEmailSchema = utf8EmailSchema
+  .or(z.literal(""))
+  .transform((value) => (value === "" ? null : value))
+  .nullable();

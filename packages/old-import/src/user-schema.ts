@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { nullableEmailSchema } from "@homarr/validation/email";
+import { requiredNullableEmailSchema } from "@homarr/validation/email";
 
 const regexEncryptedSchema = z.string().regex(/^[a-f0-9]+\.[a-f0-9]+$/g);
 
@@ -9,7 +9,7 @@ const encryptedSchema = z.custom<`${string}.${string}`>((value) => regexEncrypte
 export const oldmarrImportUserSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: nullableEmailSchema,
+  email: requiredNullableEmailSchema,
   emailVerified: z.date().nullable(),
   image: z.string().nullable(),
   isAdmin: z.boolean(),
