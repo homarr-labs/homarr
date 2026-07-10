@@ -1,10 +1,8 @@
-import dayjs from "dayjs";
-
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { IMediaOrganizerIntegration, MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
 interface MediaOrganizerData {
   missing: MissingMediaItem[];
@@ -13,7 +11,7 @@ interface MediaOrganizerData {
   queuedCount: number;
 }
 
-export const mediaOrganizerRequestHandler = createCachedIntegrationRequestHandler<
+export const mediaOrganizerRequestHandler = createIntegrationRequestHandler<
   MediaOrganizerData,
   IntegrationKindByCategory<"mediaOrganizer">,
   { pageSize: number }
@@ -31,6 +29,5 @@ export const mediaOrganizerRequestHandler = createCachedIntegrationRequestHandle
       queuedCount: queueResult.totalCount,
     };
   },
-  cacheDuration: dayjs.duration(1, "minute"),
-  queryKey: "mediaOrganizer",
+  cacheTtlMs: 60_000,
 });
