@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Pokaż informacje o systemie plików"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Domyślna karta"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Pokaż pasek wykorzystania w tle"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
