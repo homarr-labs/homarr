@@ -48,6 +48,7 @@ export const widgetKinds = [
   "beszelSystemGrid",
   "beszelAlerts",
   "beszelSystemStats",
+  "traefik",
   "customApi",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

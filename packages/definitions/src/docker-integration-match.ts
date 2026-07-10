@@ -33,6 +33,7 @@ const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = 
   paperlessNgx: ["paperless-ngx", "paperless"],
   coolify: ["coolify"],
   truenas: ["truenas"],
+  synology: ["synology", "diskstation"],
 };
 
 export const matchIntegrationKind = (search: string): IntegrationKind | null => {

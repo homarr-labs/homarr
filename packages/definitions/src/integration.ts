@@ -321,6 +321,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
     defaultPort: 80,
   },
+  synology: {
+    name: "Synology DiskStation",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/synology.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/synology"),
+    defaultPort: 5000,
+  },
   unraid: {
     name: "Unraid",
     secretKinds: [["apiKey"]],
@@ -424,6 +432,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+  },
+  traefik: {
+    name: "Traefik",
+    secretKinds: [[], ["username", "password"], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
+    category: ["reverseProxy"],
+    documentationUrl: createDocumentationLink("/docs/integrations/traefik"),
+    defaultPort: 8080,
   },
   archiveTeamWarrior: {
     name: "ArchiveTeam Warrior",
@@ -545,6 +561,7 @@ export const integrationCategories = [
   "documents",
   "mediaLibrary",
   "uptimeMonitoring",
+  "reverseProxy",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

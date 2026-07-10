@@ -295,13 +295,6 @@
       "when": 1780764500000,
       "tag": "0041_merge_custom_widget_url",
       "breakpoints": true
-    },
-    {
-      "idx": 42,
-      "version": "5",
-      "when": 1783176100870,
-      "tag": "0042_add_widget_secret",
-      "breakpoints": true
     }
   ]
 }
