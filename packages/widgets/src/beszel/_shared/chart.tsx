@@ -174,6 +174,25 @@ const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   network: (c) => (c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0)),
 };
 
+export const useEfsChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  efsPaths: string[],
+  timePeriod: BeszelTimePeriod = "1h",
+) =>
+  useMemo(() => {
+    if (!systemStats?.length) return [];
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+    const mapped = ordered.map((record) => {
+      const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
+      const efs = record.stats.efs ?? {};
+      for (const path of efsPaths) {
+        point[path] = efs[path]?.du ?? 0;
+      }
+      return point;
+    });
+    return padTimeGrid(mapped, timePeriod);
+  }, [systemStats, efsPaths, timePeriod]);
+
 export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],

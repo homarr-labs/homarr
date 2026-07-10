@@ -1336,6 +1336,10 @@
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Cloud-native reverse proxy and load balancer"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -3506,7 +3510,11 @@
       "name": "Notifications",
       "description": "Display notification history from an integration",
       "noItems": "No notifications to display.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Hide logos"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3585,6 +3593,40 @@
       },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
+      }
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Overview of Traefik routers, services, middlewares, and entry points",
+      "option": {
+        "showTcp": {
+          "label": "Show TCP"
+        },
+        "showUdp": {
+          "label": "Show UDP"
+        },
+        "showEntryPoints": {
+          "label": "Show entry points"
+        }
+      },
+      "instances": "Traefik instances",
+      "versionUnknown": "Version unknown",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Entry points"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Services",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "errors": "{count} errors",
+        "warnings": "{count} warnings"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Traefik data"
       }
     },
     "audioStats": {
@@ -3927,6 +3969,9 @@
         },
         "showDockerNetwork": {
           "label": "Show Docker network chart"
+        },
+        "showStorage": {
+          "label": "Show storage chart"
         }
       },
       "selectSystem": "Select system",
@@ -3961,6 +4006,11 @@
           "subtitle": "Throughput of root filesystem",
           "read": "Read",
           "write": "Write"
+        },
+        "storage": {
+          "title": "Storage",
+          "subtitle": "Per-filesystem disk usage",
+          "series": "Used"
         },
         "network": {
           "title": "Bandwidth",

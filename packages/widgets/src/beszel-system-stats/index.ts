@@ -45,6 +45,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showDockerCpu: factory.switch({ defaultValue: true }),
       showDockerMemory: factory.switch({ defaultValue: true }),
       showDockerNetwork: factory.switch({ defaultValue: true }),
+      showStorage: factory.switch({ defaultValue: true }),
     }));
   },
   errors: {
