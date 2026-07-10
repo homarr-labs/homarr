@@ -1,0 +1,21 @@
+packages/old-import/src/user-schema.ts
+  s_8e1557f5ea7998::t_54d098fce91736 3,12
+packages/validation/src/email.ts
+  s_8e1557f5ea7998::t_5dda146c784e16 12-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "1942afe333b0f3529e2d0deacdb5d327b05fbcaf",
+  "prompts": {},
+  "sessions": {
+    "s_8e1557f5ea7998": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019f4c9f-7f15-7c4f-8541-4f2758515db8",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
