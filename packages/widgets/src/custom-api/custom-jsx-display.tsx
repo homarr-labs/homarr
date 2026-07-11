@@ -32,7 +32,7 @@ export function extractHttpMethods(template: string): string[] {
     if (/<ToggleSwitch\b/.test(template) && methods.size === 0) methods.add("POST");
     if (/<SubFetch\b/.test(template) && methods.size === 0) methods.add("GET");
   }
-  return [...methods].sort();
+  return [...methods].toSorted();
 }
 
 const METHOD_COLORS: Record<string, string> = {

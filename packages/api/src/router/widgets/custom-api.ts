@@ -19,7 +19,8 @@ const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"] as const;
 
 const validateUrl = (urlString: string): URL => new URL(urlString);
 
-const resolveTargetUrl = (definitionUrl: string, targetUrl: string): URL => new URL(targetUrl, validateUrl(definitionUrl));
+const resolveTargetUrl = (definitionUrl: string, targetUrl: string): URL =>
+  new URL(targetUrl, validateUrl(definitionUrl));
 
 const assertSameOrigin = (definitionUrl: string, targetUrl: URL): void => {
   const definitionOrigin = validateUrl(definitionUrl).origin;

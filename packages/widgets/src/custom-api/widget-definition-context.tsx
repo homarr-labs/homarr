@@ -5,13 +5,7 @@ import { createContext, useContext } from "react";
 
 const WidgetDefinitionContext = createContext<string>("");
 
-export function WidgetDefinitionProvider({
-  definitionId,
-  children,
-}: {
-  definitionId: string;
-  children: ReactNode;
-}) {
+export function WidgetDefinitionProvider({ definitionId, children }: { definitionId: string; children: ReactNode }) {
   return <WidgetDefinitionContext.Provider value={definitionId}>{children}</WidgetDefinitionContext.Provider>;
 }
 

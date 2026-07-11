@@ -94,7 +94,12 @@ export function CustomWidgetPreview({
                 Widget makes HTTP requests:
               </Text>
               {httpMethods.map((m) => (
-                <Badge key={m} size="xs" color={m === "DELETE" ? "red" : m === "GET" ? "blue" : "orange"} variant="filled">
+                <Badge
+                  key={m}
+                  size="xs"
+                  color={m === "DELETE" ? "red" : m === "GET" ? "blue" : "orange"}
+                  variant="filled"
+                >
                   {m}
                 </Badge>
               ))}

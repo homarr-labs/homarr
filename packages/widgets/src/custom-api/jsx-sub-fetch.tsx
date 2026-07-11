@@ -3,14 +3,7 @@
 import type { ComponentType, ReactNode } from "react";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Alert, Badge, Button, Code, Skeleton, Switch, Text, Title } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCheck,
-  IconPlayerPlay,
-  IconPower,
-  IconRefresh,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconPlayerPlay, IconPower, IconRefresh, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
@@ -242,7 +235,6 @@ export interface SubDataProps {
   fw?: number;
   c?: string;
 }
-
 
 export function SubData({ path, as = "Text", ...props }: SubDataProps) {
   const subData = useContext(SubFetchDataContext);
