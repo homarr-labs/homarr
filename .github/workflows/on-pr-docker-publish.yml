@@ -7,6 +7,7 @@ on:
       - dev
 
 permissions:
+  contents: read
   packages: write
 
 env:
@@ -26,6 +27,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Docker meta
         id: meta
@@ -33,7 +36,7 @@ jobs:
         with:
           images: "${{ env.GHCR_REPO }}"
           tags: |
-            type=raw,value=omar-test-pr-${{ github.event.number }}
+            type=raw,value=pr-${{ github.event.number }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4

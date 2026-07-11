@@ -11,7 +11,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_TAG: omar-test-pr-${{ github.event.number }}
+  IMAGE_TAG: pr-${{ github.event.number }}
 
 jobs:
   delete-image:
