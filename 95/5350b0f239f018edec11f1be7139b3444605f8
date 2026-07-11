@@ -1,0 +1,50 @@
+packages/definitions/src/hotkeys.ts
+  s_37b821a6ce4f24::t_8ef0482c9e5c4b 6
+packages/widgets/src/open-webui/chat.tsx
+  s_37b821a6ce4f24::t_6901c0f7e53000 162-174
+  s_37b821a6ce4f24::t_a2e6cdb4185d58 52-60
+packages/spotlight/src/modes/ask-ai/ask-ai-group.tsx
+  s_37b821a6ce4f24::t_9fc3e081ed7cf1 1-61
+packages/spotlight/src/modes/index.tsx
+  s_37b821a6ce4f24::t_a2509f779b2ce7 2,17
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_37b821a6ce4f24::t_e5287954ccb316 52-60
+  s_37b821a6ce4f24::t_f8a35de610fde8 111-115
+  s_37b821a6ce4f24::t_f9b90f4fbabcb2 14,20,24
+packages/spotlight/src/index.ts
+  s_37b821a6ce4f24::t_b8db28d44d24e6 28-38
+  s_37b821a6ce4f24::t_89ec0857618d29 3,6
+packages/translation/src/lang/en.json
+  s_37b821a6ce4f24::t_fd2550f759fb9a 1492
+  s_37b821a6ce4f24::t_74904b6842b0d5 5791-5800
+packages/spotlight/src/spotlight-store.ts
+  s_37b821a6ce4f24::t_587c911e8327bc 17-20
+apps/nextjs/src/components/open-webui-chat.tsx
+  s_37b821a6ce4f24::t_89f19dbb4b5a62 1-108
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_37b821a6ce4f24::t_4ef28ab00e3f31 151
+  s_37b821a6ce4f24::t_f4e8a31deb5fb4 35
+packages/spotlight/src/modes/ask-ai/index.tsx
+  s_37b821a6ce4f24::t_ed8abccadce621 1-8
+packages/spotlight/src/modes/help/home-empty-groups.tsx
+  s_37b821a6ce4f24::t_c850ef4674ba1c 45-54
+  s_37b821a6ce4f24::t_ea765a5f245c9c 11,21
+apps/nextjs/src/app/[locale]/_client-providers/open-webui-chat.tsx
+  s_37b821a6ce4f24::t_d7dc45fba228de 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "955350b0f239f018edec11f1be7139b3444605f8",
+  "prompts": {},
+  "sessions": {
+    "s_37b821a6ce4f24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ffbc0292-971b-4a0b-91de-23bf0bfa31dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
