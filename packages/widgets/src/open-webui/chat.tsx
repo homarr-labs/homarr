@@ -170,6 +170,7 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   const handleNewChat = () => {
     stream.reset();
     attachments.reset();
+    setInput("");
     setError(null);
     setHistoryOpened(false);
   };

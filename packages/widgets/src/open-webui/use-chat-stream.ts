@@ -77,7 +77,12 @@ export function useChatStream({
   const runPersist = async (finalMessages: ChatMessage[], session: number) => {
     if (!integrationId || !model) return;
     // Native history stores plain text; image data URLs are dropped on persist.
-    const title = finalMessages.find((message) => message.role === "user")?.content.slice(0, 80) ?? newChatTitle;
+    // Derive the title from the first user message that actually has text so an
+    // image-only opening turn still gets the fallback title instead of a blank.
+    const firstUserText = finalMessages
+      .find((message) => message.role === "user" && message.content.trim() !== "")
+      ?.content.trim();
+    const title = firstUserText ? firstUserText.slice(0, 80) : newChatTitle;
     const payload = {
       title,
       models: [model],
@@ -131,15 +136,15 @@ export function useChatStream({
     setPendingContextTexts([]);
   };
 
-  const finalizeAssistantMessage = (stopped = false) => {
+  const finalizeAssistantMessage = (skipPersist = false) => {
     const finalText = streamingTextRef.current;
     if (finalText.length > 0) {
       const finalMessages = [...messagesRef.current, { role: "assistant" as const, content: finalText }];
       setMessages(finalMessages);
       messagesRef.current = finalMessages;
-      // A user-stopped reply is kept on screen but not written to history as a
-      // finished turn; a later real turn will persist the whole conversation.
-      if (!stopped) void persistChat(finalMessages);
+      // A stopped or failed reply is kept on screen but not written to history as
+      // a finished turn; a later real turn will persist the whole conversation.
+      if (!skipPersist) void persistChat(finalMessages);
     }
     streamingTextRef.current = "";
     setStreamingText("");
@@ -165,12 +170,14 @@ export function useChatStream({
           finalizeAssistantMessage();
         } else if (event.type === "error") {
           setError(event.message);
-          finalizeAssistantMessage();
+          // Don't persist a partial reply from a failed turn as finished history.
+          finalizeAssistantMessage(true);
         }
       },
       onError: (err) => {
         setError(err.message);
-        finalizeAssistantMessage();
+        // Don't persist a partial reply from a failed turn as finished history.
+        finalizeAssistantMessage(true);
       },
     },
   );

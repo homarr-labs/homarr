@@ -47,25 +47,30 @@ export const openWebUiCompletionChunkSchema = z.object({
     .nullish(),
 });
 
-// A single chat message exchanged with the model / persisted in a chat.
-export const openWebUiChatMessageSchema = z.object({
-  role: z.enum(["system", "user", "assistant"]),
-  content: z.string(),
-});
-
-export type OpenWebUiChatMessage = z.infer<typeof openWebUiChatMessageSchema>;
-
-// Multimodal content part (OpenAI vision format). Used only for outbound
-// completion requests so users can attach images to a message.
+// Multimodal content part (OpenAI vision format). Lets a message carry text
+// and/or images.
 export const openWebUiContentPartSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("text"), text: z.string() }),
   z.object({ type: z.literal("image_url"), image_url: z.object({ url: z.string() }) }),
 ]);
 
+// Message content is either plain text or multimodal parts. Both the completion
+// and the native chat/history contracts use this so an attachment-backed message
+// round-trips through create/update/get without parse failures or lossy drops.
+export const openWebUiMessageContentSchema = z.union([z.string(), z.array(openWebUiContentPartSchema)]);
+
+// A single chat message exchanged with the model / persisted in a chat.
+export const openWebUiChatMessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: openWebUiMessageContentSchema,
+});
+
+export type OpenWebUiChatMessage = z.infer<typeof openWebUiChatMessageSchema>;
+
 // A completion message can carry plain text or multimodal parts (text + images).
 export const openWebUiCompletionMessageSchema = z.object({
   role: z.enum(["system", "user", "assistant"]),
-  content: z.union([z.string(), z.array(openWebUiContentPartSchema)]),
+  content: openWebUiMessageContentSchema,
 });
 
 export type OpenWebUiCompletionMessage = z.infer<typeof openWebUiCompletionMessageSchema>;
@@ -190,7 +195,7 @@ export const openWebUiHistoryMessageSchema = z.object({
   id: z.string().nullish(),
   parentId: z.string().nullish(),
   role: z.string().nullish(),
-  content: z.string().nullish(),
+  content: openWebUiMessageContentSchema.nullish(),
 });
 
 export const openWebUiChatSchema = z.object({
@@ -206,7 +211,7 @@ export const openWebUiChatSchema = z.object({
         .array(
           z.object({
             role: z.string().nullish(),
-            content: z.string().nullish(),
+            content: openWebUiMessageContentSchema.nullish(),
           }),
         )
         .nullish(),

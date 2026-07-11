@@ -98,9 +98,11 @@ export function useAttachments({ integrationId, onError, errorMessages }: UseAtt
     const raw = webInput.trim();
     if (!raw) return;
     const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-    setWebInput("");
     try {
       const document = await processWeb.mutateAsync({ integrationId, url });
+      // Only clear the field once ingestion succeeds so a transient error
+      // doesn't force the user to retype the URL.
+      setWebInput("");
       setWebItems((previous) =>
         previous.some((item) => item.collectionName === document.collectionName)
           ? previous

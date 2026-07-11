@@ -38,6 +38,47 @@ const throwIfNotCreator = (integration: { creatorId?: string | null }, userId: s
   }
 };
 
+// Hosts that should never be fetched server-side. processWeb is already
+// creator-gated, but we still refuse loopback and the cloud metadata endpoint so
+// a stray URL can't turn Open WebUI's fetcher into an SSRF vector. Private LAN
+// ranges stay allowed on purpose (self-hosters routinely ingest internal wikis).
+const isBlockedWebHost = (hostname: string): boolean => {
+  const host = hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  return (
+    host === "localhost" ||
+    host.endsWith(".localhost") ||
+    host === "0.0.0.0" ||
+    host === "::" ||
+    host === "::1" ||
+    host.startsWith("127.") ||
+    host === "169.254.169.254" || // AWS/GCP/Azure instance metadata
+    host === "metadata.google.internal"
+  );
+};
+
+// A user-provided URL for web-page ingestion: must be http(s) and not target a
+// loopback/metadata host.
+const webUrlSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    let parsed: URL;
+    try {
+      parsed = new URL(value);
+    } catch {
+      return false;
+    }
+    return (parsed.protocol === "http:" || parsed.protocol === "https:") && !isBlockedWebHost(parsed.hostname);
+  }, "URL must be an http(s) address and must not point at a loopback or metadata host");
+
+// Roughly 18 MB of raw bytes once base64-decoded (base64 inflates by ~4/3).
+// Bounds the upload/transcription payloads so a huge request can't pressure
+// memory here or upstream before we even start decoding.
+const MAX_BASE64_LENGTH = 25_000_000;
+const boundedBase64Schema = z.string().min(1).max(MAX_BASE64_LENGTH);
+const uploadFilenameSchema = z.string().min(1).max(255);
+const contentTypeSchema = z.string().min(1).max(255);
+
 const messageSchema = z.object({
   role: z.enum(["system", "user", "assistant"]),
   content: z.string(),
@@ -123,12 +164,6 @@ const groundMessagesAsync = async (
 
 export const openWebUiRouter = createTRPCRouter({
   getModels: publicProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the available Open WebUI chat models for the selected integration.",
-      },
-    })
     .concat(createOneIntegrationMiddleware("query", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session?.user.id);
@@ -140,12 +175,6 @@ export const openWebUiRouter = createTRPCRouter({
   // Chat history exposes private user data, so we require "interact" access
   // (not just "query") and verify the caller is the integration's creator.
   getChats: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the saved Open WebUI chat conversations for the selected integration.",
-      },
-    })
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -158,12 +187,6 @@ export const openWebUiRouter = createTRPCRouter({
   // gate them like the interactive chat paths (protected + "interact" access,
   // creator-only) instead of leaving them reachable by anonymous board viewers.
   getKnowledge: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the Open WebUI knowledge bases available for the selected integration.",
-      },
-    })
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -173,12 +196,6 @@ export const openWebUiRouter = createTRPCRouter({
     }),
 
   getFiles: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the files stored in Open WebUI for the selected integration.",
-      },
-    })
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -188,12 +205,6 @@ export const openWebUiRouter = createTRPCRouter({
     }),
 
   getNotes: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the notes stored in Open WebUI for the selected integration.",
-      },
-    })
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -203,12 +214,6 @@ export const openWebUiRouter = createTRPCRouter({
     }),
 
   getNote: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "Get the full contents of a single Open WebUI note by id.",
-      },
-    })
     .input(z.object({ noteId: z.string() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx, input }) => {
@@ -219,12 +224,6 @@ export const openWebUiRouter = createTRPCRouter({
     }),
 
   getKnowledgeFiles: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "List the files belonging to an Open WebUI knowledge base.",
-      },
-    })
     .input(z.object({ knowledgeId: z.string() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx, input }) => {
@@ -239,13 +238,7 @@ export const openWebUiRouter = createTRPCRouter({
   // Ingest a web page so its content can ground later messages. Returns the
   // collection to retrieve from plus a display title.
   processWeb: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "Ingest a web page into Open WebUI so its content can ground later chat messages.",
-      },
-    })
-    .input(z.object({ url: z.string().url() }))
+    .input(z.object({ url: webUrlSchema }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -256,7 +249,9 @@ export const openWebUiRouter = createTRPCRouter({
   // Upload a file (e.g. a document) so it can be retrieved from later. Returns
   // the file id; its vector collection is `file-{id}`.
   uploadFile: protectedProcedure
-    .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
+    .input(
+      z.object({ filename: uploadFilenameSchema, contentBase64: boundedBase64Schema, contentType: contentTypeSchema }),
+    )
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -266,7 +261,9 @@ export const openWebUiRouter = createTRPCRouter({
 
   // Transcribe recorded audio to text for voice messages.
   transcribe: protectedProcedure
-    .input(z.object({ filename: z.string(), contentBase64: z.string(), contentType: z.string() }))
+    .input(
+      z.object({ filename: uploadFilenameSchema, contentBase64: boundedBase64Schema, contentType: contentTypeSchema }),
+    )
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);

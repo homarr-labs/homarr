@@ -42,17 +42,34 @@ export const toCompletionMessages = (messages: ChatMessage[]): CompletionMessage
       : { role: message.role, content: message.content },
   );
 
-type RawMessage = { role?: string | null; content?: string | null };
+type ContentPart = { type?: string | null; text?: string | null };
+type MessageContent = string | ContentPart[] | null | undefined;
+type RawMessage = { role?: string | null; content?: MessageContent };
 type HistoryMessage = RawMessage & { parentId?: string | null };
 interface RawChat {
   messages?: RawMessage[] | null;
   history?: { currentId?: string | null; messages?: Record<string, HistoryMessage> | null } | null;
 }
 
-const toChatMessage = (role: string | null | undefined, content: string | null | undefined): ChatMessage | null =>
-  (role === "system" || role === "user" || role === "assistant") && typeof content === "string"
-    ? { role, content }
-    : null;
+// Open WebUI stores message content as either a plain string or multimodal
+// parts. Flatten to display text (keeping text parts, dropping image nodes)
+// rather than discarding the whole message when it isn't a bare string.
+const flattenContent = (content: MessageContent): string | null => {
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .filter((part): part is ContentPart & { text: string } => typeof part?.text === "string")
+      .map((part) => part.text)
+      .join("");
+  }
+  return null;
+};
+
+const toChatMessage = (role: string | null | undefined, content: MessageContent): ChatMessage | null => {
+  if (role !== "system" && role !== "user" && role !== "assistant") return null;
+  const text = flattenContent(content);
+  return text === null ? null : { role, content: text };
+};
 
 /**
  * Reconstructs the ordered conversation from an Open WebUI chat. Chats created in
