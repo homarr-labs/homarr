@@ -308,6 +308,7 @@ export class BeszelIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
       headers: { Authorization: session.token },
       signal,
+      bodyTimeout: 0,
     });
 
     if (!response.ok) {
@@ -343,7 +344,7 @@ export class BeszelIntegration extends Integration {
             },
             body: JSON.stringify({
               clientId: parsed.clientId,
-              subscriptions: ["system_stats", "container_stats"],
+              subscriptions: ["system_stats/*", "container_stats/*"],
             }),
             signal,
           });

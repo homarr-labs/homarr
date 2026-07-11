@@ -61,7 +61,7 @@ export const createAxiosCertificateInstanceAsync = async (
 
 export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
-  options?: RequestInit & { timeout?: number },
+  options?: RequestInit & { timeout?: number; bodyTimeout?: number },
 ): Promise<Response> => {
   const agent = await createCertificateAgentAsync(undefined);
   if (options?.timeout) {
