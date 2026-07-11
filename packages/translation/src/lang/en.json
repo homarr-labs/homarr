@@ -1489,6 +1489,7 @@
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
         "docker": "Docker",
+        "aiChat": "AI Chat",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
@@ -5787,6 +5788,16 @@
       "fetch": "An error occurred while fetching data"
     },
     "mode": {
+      "askAi": {
+        "help": "Start an AI chat",
+        "title": "AI Chat",
+        "group": {
+          "ask": {
+            "startWithQuery": "Ask AI: {query}",
+            "hint": "Start an AI chat"
+          }
+        }
+      },
       "appIntegrationBoard": {
         "help": "Search for apps, integrations or boards",
         "group": {

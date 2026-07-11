@@ -32,7 +32,7 @@ import { SearchEngineOptimization } from "~/components/layout/search-engine-opti
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
-import { FloatingChatButtonProvider } from "./_client-providers/floating-chat";
+import { OpenWebUiChatProvider } from "./_client-providers/open-webui-chat";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
@@ -148,7 +148,7 @@ export default async function Layout(props: {
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />
-          <FloatingChatButtonProvider />
+          <OpenWebUiChatProvider />
           {props.children}
         </StackedProvider>
       </body>

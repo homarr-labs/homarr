@@ -1,9 +1,9 @@
 "use client";
 
-import { mediaRequestSearchEvent, spotlightActions } from "./spotlight-store";
+import { mediaRequestSearchEvent, openWebUiChatEvent, spotlightActions } from "./spotlight-store";
 
 export { Spotlight } from "./components/spotlight";
-export { openSpotlight, openMediaRequestSearch };
+export { openSpotlight, openMediaRequestSearch, openOpenWebUiChat };
 export {
   SpotlightProvider,
   useRegisterSpotlightContextResults,
@@ -25,4 +25,14 @@ const openMediaRequestSearch = (options: OpenMediaRequestSearchOptions = {}) => 
   spotlightActions.open();
 };
 
-export { mediaRequestSearchEvent };
+export { mediaRequestSearchEvent, openWebUiChatEvent };
+
+// Opens the Open WebUI chat side panel, optionally seeding it with a query to
+// start a conversation from. Closes the spotlight so the panel takes over.
+const openOpenWebUiChat = (query?: string) => {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent<{ query?: string }>(openWebUiChatEvent, { detail: { query } }));
+  }
+
+  spotlightActions.close();
+};

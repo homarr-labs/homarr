@@ -49,7 +49,15 @@ import { useCameraCapture } from "./use-camera-capture";
 import { useChatStream } from "./use-chat-stream";
 import { useVoiceRecording } from "./use-voice-recording";
 
-export function Chat({ options, integrationIds, isEditMode }: WidgetComponentProps<"openWebUi">) {
+// `initialQuery` is only supplied when the chat is opened from outside the board
+// (spotlight / side panel "start chat with query"); the board widget renderer
+// never passes it.
+export function Chat({
+  options,
+  integrationIds,
+  isEditMode,
+  initialQuery,
+}: WidgetComponentProps<"openWebUi"> & { initialQuery?: string }) {
   const t = useI18n();
   const integrationId = integrationIds.at(0);
 
@@ -150,6 +158,19 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
   useEffect(() => {
     viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
   }, [stream.messages, stream.streamingText, composerHeight]);
+
+  // When opened with an initial query (spotlight / side panel "start chat with
+  // query"), send it once the model has loaded. The caller remounts the chat per
+  // open (via key) so a fresh query is always delivered.
+  const autoSentRef = useRef(false);
+  useEffect(() => {
+    if (autoSentRef.current) return;
+    const trimmed = initialQuery?.trim();
+    if (!trimmed || !model || !integrationId || stream.isStreaming) return;
+    autoSentRef.current = true;
+    stream.send({ role: "user", content: trimmed });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery, model, integrationId]);
 
   // Nothing to send yet: no typed text and no inline image attachments.
   const composerEmpty = !input.trim() && attachments.images.length === 0;

@@ -14,6 +14,10 @@ export interface MediaRequestSearchScope {
 export const mediaRequestSearchScopeAtom = atom<MediaRequestSearchScope>({});
 export const mediaRequestSearchEvent = "homarr:spotlight:media-request-search";
 
+// Dispatched to open the Open WebUI chat side panel (optionally with a query to
+// start a conversation from). The app-level provider listens for this.
+export const openWebUiChatEvent = "homarr:spotlight:open-web-ui-chat";
+
 export const setSelectedAction = (index: number, store: SpotlightStore) => {
   store.updateState((state) => ({ ...state, selected: index }));
 };

@@ -8,6 +8,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -17,6 +18,7 @@ import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 import type { SearchMode } from "../../lib/mode";
 import { appIntegrationBoardMode } from "../app-integration-board";
+import { askAiMode } from "../ask-ai";
 import { commandMode } from "../command";
 import { externalMode } from "../external";
 import { mediaMode } from "../media";
@@ -38,6 +40,16 @@ export const useHomeEmptyGroups = () => {
 
   if (session?.user.permissions.includes("admin")) {
     visibleSearchModes.unshift(userGroupMode);
+  }
+
+  // Only surface the "Ask AI" mode when the user owns an Open WebUI integration.
+  const { data: integrations = [] } = clientApi.integration.all.useQuery(undefined, {
+    enabled: Boolean(session?.user?.id),
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+  });
+  if (integrations.some((integration) => integration.kind === "openWebUi" && integration.creatorId === session?.user?.id)) {
+    visibleSearchModes.push(askAiMode);
   }
 
   return [

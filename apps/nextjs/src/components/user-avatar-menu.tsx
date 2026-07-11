@@ -11,14 +11,17 @@ import {
   IconHome,
   IconLogin,
   IconLogout,
+  IconRobot,
   IconSettings,
   IconTool,
 } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { signOut, useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
+import { openOpenWebUiChat } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -45,6 +48,15 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
   const { logoutUrl } = useAuthContext();
   const { openModal } = useModalAction(LogoutModal);
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+
+  const { data: integrations = [] } = clientApi.integration.all.useQuery(undefined, {
+    enabled: Boolean(session.data?.user?.id),
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+  });
+  const hasOpenWebUiIntegration = integrations.some(
+    (integration) => integration.kind === "openWebUi" && integration.creatorId === session.data?.user?.id,
+  );
 
   const handleSignout = useCallback(async () => {
     await signOut({
@@ -94,6 +106,11 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
             {isDockerEnabled && (
               <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
                 {t("docker")}
+              </Menu.Item>
+            )}
+            {hasOpenWebUiIntegration && (
+              <Menu.Item leftSection={<IconRobot size="1rem" />} onClick={() => openOpenWebUiChat()}>
+                {t("aiChat")}
               </Menu.Item>
             )}
           </>

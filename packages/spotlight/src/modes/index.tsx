@@ -1,4 +1,5 @@
 import { appIntegrationBoardMode } from "./app-integration-board";
+import { askAiMode } from "./ask-ai";
 import { commandMode } from "./command";
 import { externalMode } from "./external";
 import { homeMode } from "./home";
@@ -13,5 +14,6 @@ export const searchModes = [
   commandMode,
   pageMode,
   mediaMode,
+  askAiMode,
   homeMode,
 ] as const;
