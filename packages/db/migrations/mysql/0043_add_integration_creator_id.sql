@@ -1,0 +1,2 @@
+ALTER TABLE `integration` ADD `creator_id` varchar(64);--> statement-breakpoint
+ALTER TABLE `integration` ADD CONSTRAINT `integration_creator_id_user_id_fk` FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON DELETE set null ON UPDATE no action;

@@ -288,6 +288,13 @@
       "when": 1783176100870,
       "tag": "0040_add_widget_secret",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "6",
+      "when": 1783786326756,
+      "tag": "0041_add_integration_creator_id",
+      "breakpoints": true
     }
   ]
 }

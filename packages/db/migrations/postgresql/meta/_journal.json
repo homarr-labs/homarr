@@ -64,6 +64,13 @@
       "when": 1783176100870,
       "tag": "0008_add_widget_secret",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1783786378808,
+      "tag": "0009_add_integration_creator_id",
+      "breakpoints": true
     }
   ]
 }
