@@ -1,0 +1,24 @@
+packages/api/src/router/widgets/open-webui.ts
+  s_37b821a6ce4f24::t_530d7152ac9cdb 173
+  s_37b821a6ce4f24::t_0d7842cba65fed 300
+  s_37b821a6ce4f24::t_73e52b6a705941 314-315
+  s_37b821a6ce4f24::t_7b471d73c09a24 184,196,205,214,224,236,284
+packages/request-handler/src/open-webui.ts
+  s_37b821a6ce4f24::t_7becd48b1523cd 13,15,24,27,36,39,48,51,60,63,72,75,84,87,96,99,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "68ce7e73c0336386526c72d39ce2dbffd1020124",
+  "prompts": {},
+  "sessions": {
+    "s_37b821a6ce4f24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ffbc0292-971b-4a0b-91de-23bf0bfa31dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
