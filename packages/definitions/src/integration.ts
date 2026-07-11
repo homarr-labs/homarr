@@ -379,7 +379,7 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/patchmon"),
     defaultPort: 3413,
-    apiKeySettingsPath: "/settings/api-keys",
+    apiKeySettingsPath: "/settings/integrations",
   },
   tracearr: {
     name: "Tracearr",
