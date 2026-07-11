@@ -10,9 +10,9 @@ import type {
   OpenWebUiNote,
 } from "@homarr/integrations/types";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const openWebUiModelsRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiModelsRequestHandler = createIntegrationRequestHandler<
   OpenWebUiModel[],
   "openWebUi",
   Record<string, never>
@@ -21,11 +21,10 @@ export const openWebUiModelsRequestHandler = createCachedIntegrationRequestHandl
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getModelsAsync();
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "openWebUiModels",
+  cacheTtlMs: dayjs.duration(5, "minutes").asMilliseconds(),
 });
 
-export const openWebUiKnowledgeRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiKnowledgeRequestHandler = createIntegrationRequestHandler<
   OpenWebUiKnowledge[],
   "openWebUi",
   Record<string, never>
@@ -34,11 +33,10 @@ export const openWebUiKnowledgeRequestHandler = createCachedIntegrationRequestHa
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getKnowledgeAsync();
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "openWebUiKnowledge",
+  cacheTtlMs: dayjs.duration(5, "minutes").asMilliseconds(),
 });
 
-export const openWebUiKnowledgeFilesRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiKnowledgeFilesRequestHandler = createIntegrationRequestHandler<
   OpenWebUiFileSummary[],
   "openWebUi",
   { knowledgeId: string }
@@ -47,11 +45,10 @@ export const openWebUiKnowledgeFilesRequestHandler = createCachedIntegrationRequ
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getKnowledgeFilesAsync(input.knowledgeId);
   },
-  cacheDuration: dayjs.duration(1, "minute"),
-  queryKey: "openWebUiKnowledgeFiles",
+  cacheTtlMs: dayjs.duration(1, "minute").asMilliseconds(),
 });
 
-export const openWebUiFilesRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiFilesRequestHandler = createIntegrationRequestHandler<
   OpenWebUiFileSummary[],
   "openWebUi",
   Record<string, never>
@@ -60,11 +57,10 @@ export const openWebUiFilesRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.listFilesAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
-  queryKey: "openWebUiFiles",
+  cacheTtlMs: dayjs.duration(30, "seconds").asMilliseconds(),
 });
 
-export const openWebUiNotesRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiNotesRequestHandler = createIntegrationRequestHandler<
   OpenWebUiNote[],
   "openWebUi",
   Record<string, never>
@@ -73,11 +69,10 @@ export const openWebUiNotesRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.listNotesAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
-  queryKey: "openWebUiNotes",
+  cacheTtlMs: dayjs.duration(30, "seconds").asMilliseconds(),
 });
 
-export const openWebUiNoteRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiNoteRequestHandler = createIntegrationRequestHandler<
   OpenWebUiNote,
   "openWebUi",
   { noteId: string }
@@ -86,11 +81,10 @@ export const openWebUiNoteRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNoteAsync(input.noteId);
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
-  queryKey: "openWebUiNote",
+  cacheTtlMs: dayjs.duration(30, "seconds").asMilliseconds(),
 });
 
-export const openWebUiChatsRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiChatsRequestHandler = createIntegrationRequestHandler<
   OpenWebUiChatListItem[],
   "openWebUi",
   Record<string, never>
@@ -99,11 +93,10 @@ export const openWebUiChatsRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.listChatsAsync();
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
-  queryKey: "openWebUiChats",
+  cacheTtlMs: dayjs.duration(15, "seconds").asMilliseconds(),
 });
 
-export const openWebUiChatRequestHandler = createCachedIntegrationRequestHandler<
+export const openWebUiChatRequestHandler = createIntegrationRequestHandler<
   OpenWebUiChat,
   "openWebUi",
   { chatId: string }
@@ -112,6 +105,5 @@ export const openWebUiChatRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getChatAsync(input.chatId);
   },
-  cacheDuration: dayjs.duration(15, "seconds"),
-  queryKey: "openWebUiChat",
+  cacheTtlMs: dayjs.duration(15, "seconds").asMilliseconds(),
 });

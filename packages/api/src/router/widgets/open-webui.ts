@@ -170,7 +170,7 @@ export const openWebUiRouter = createTRPCRouter({
   getModels: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
     throwIfNotCreator(ctx.integration, ctx.session?.user.id);
     const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    const { data } = await handler.getDataAsync();
     return data;
   }),
 
@@ -181,7 +181,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiChatsRequestHandler.handler(ctx.integration, {});
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -193,7 +193,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiKnowledgeRequestHandler.handler(ctx.integration, {});
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -202,7 +202,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiFilesRequestHandler.handler(ctx.integration, {});
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -211,7 +211,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiNotesRequestHandler.handler(ctx.integration, {});
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -221,7 +221,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -233,7 +233,7 @@ export const openWebUiRouter = createTRPCRouter({
       const handler = openWebUiKnowledgeFilesRequestHandler.handler(ctx.integration, {
         knowledgeId: input.knowledgeId,
       });
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -281,7 +281,7 @@ export const openWebUiRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiChatRequestHandler.handler(ctx.integration, { chatId: input.chatId });
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await handler.getDataAsync();
       return data;
     }),
 
@@ -297,7 +297,7 @@ export const openWebUiRouter = createTRPCRouter({
         messages: input.messages,
         meta: { tags: [homarrUserTag(ctx.session.user.id)] },
       });
-      await openWebUiChatsRequestHandler.handler(ctx.integration, {}).invalidateAsync();
+      openWebUiChatsRequestHandler.invalidateCache();
       return chat;
     }),
 
@@ -311,8 +311,8 @@ export const openWebUiRouter = createTRPCRouter({
         ...input.chat,
         meta: { tags: [homarrUserTag(ctx.session.user.id)] },
       });
-      await openWebUiChatsRequestHandler.handler(ctx.integration, {}).invalidateAsync();
-      await openWebUiChatRequestHandler.handler(ctx.integration, { chatId: input.chatId }).invalidateAsync();
+      openWebUiChatsRequestHandler.invalidateCache();
+      openWebUiChatRequestHandler.invalidateCache();
       return chat;
     }),
 
