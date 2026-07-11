@@ -1,0 +1,71 @@
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_d9c70d6781e83b::t_54399df3c28429 5-6,19-45,52,75-86
+  s_d9c70d6781e83b::t_8dea1b1d3877b3 9
+  s_d9c70d6781e83b::t_9059d148d46cad 49
+  s_d9c70d6781e83b::t_ec309ef0adfdd1 73-74,89-108,110-118
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  s_d9c70d6781e83b::t_4b079034ea57d3 3
+  s_d9c70d6781e83b::t_6bc1e45e3e3155 1-2,4-12,14-20
+  s_d9c70d6781e83b::t_21b130a816af84 13
+packages/widgets/package.json
+  s_d9c70d6781e83b::t_42ce9b407068fd 18
+  s_d9c70d6781e83b::t_7aade2f72ecc11 58
+packages/api/src/router/widgets/custom-api.ts
+  s_d9c70d6781e83b::t_f4b5f65fecc21d 119-211
+  s_d9c70d6781e83b::t_68c4a7033d50ad 16-18,22-45
+  s_d9c70d6781e83b::t_01cf4876dc8dfa 46
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_d9c70d6781e83b::t_7835cfe8dbdf35 1396,1398
+packages/validation/src/custom-widget.ts
+  s_d9c70d6781e83b::t_dae490b7f231e4 261,270,273,276
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview.tsx
+  s_d9c70d6781e83b::t_73cb29a9fe5189 90-104
+  s_d9c70d6781e83b::t_4572f9411a4245 5,9
+  s_d9c70d6781e83b::t_be7a830e33bb41 62-67
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_d9c70d6781e83b::t_393dd2bbcf6128 67-71
+  s_d9c70d6781e83b::t_54e403ec7b959c 77
+  s_d9c70d6781e83b::t_ce7a926d11013f 121-122
+  s_d9c70d6781e83b::t_47c8790de52daa 37-46,48-66,72-76,78-80,82-83,85-88,91-95,97,100-101,103,106-120,123-136,139-141,143-150,231-239
+  s_d9c70d6781e83b::t_c3564ba03a0d9a 153-154,159-160,163-164,168-169,171-176,185-230,240-241
+  s_d9c70d6781e83b::t_be81ef288982d9 151
+  s_d9c70d6781e83b::t_83600f9b929230 155
+  s_d9c70d6781e83b::t_eae7cf5c4fd7c8 242
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_d9c70d6781e83b::t_d4ca9f26e1c329 184,186-189,191-205
+  s_d9c70d6781e83b::t_9c737bfd6ebd95 312,316-326
+  s_d9c70d6781e83b::t_11138808be850a 96
+  s_d9c70d6781e83b::t_cdb9b9a3299be7 4-7,9-20,23-24,26-32,34-36,38-41,43-44,46-47,51,53-57,59-70,73,78-80,82-84,88-89,91,105-113,117-183,209-210,221-224,234-237,248-249,267,276-311,313-315,327-328,337-348,350-352,399,408-409,420-421,431-437
+  s_d9c70d6781e83b::t_b8048820271953 359-365
+  s_d9c70d6781e83b::t_07d8cdf4c32d83 1-2,22,25,42,72
+  s_d9c70d6781e83b::t_223cf3a072cc08 410-419
+  s_d9c70d6781e83b::t_4916395415f86a 190
+  s_d9c70d6781e83b::t_fd74126d085cff 349
+  s_d9c70d6781e83b::t_1d0b1d90b1241e 93
+  s_d9c70d6781e83b::t_c476043b824193 185
+packages/widgets/src/custom-api/component.tsx
+  s_d9c70d6781e83b::t_ade930d2fb8bba 482-485
+packages/widgets/src/custom-api/jsx-sub-fetch.tsx
+  s_d9c70d6781e83b::t_08dee8e5a296e6 1-4,6-27,32-98,100-459
+  s_d9c70d6781e83b::t_d41cbbd172d7da 5
+  s_d9c70d6781e83b::t_6e6ac4202570ba 28-31
+  s_d9c70d6781e83b::t_dda244f34ca5f4 99
+pnpm-lock.yaml
+  s_d9c70d6781e83b::t_42d7e57e061d31 2590-2592
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "aa8410d326e38e5006154418aa921bfeb20206b8",
+  "prompts": {},
+  "sessions": {
+    "s_d9c70d6781e83b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "77bcd087-8db3-421c-8ec3-d4f846ca9ad7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
