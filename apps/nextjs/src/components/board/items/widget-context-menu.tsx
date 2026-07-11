@@ -38,6 +38,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
   const settings = useSettings();
+  const isRightClickEnabled = settings.enableRightClickOnWidgets;
   const { openModal } = useModalAction(WidgetEditModal);
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
@@ -158,6 +159,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 
   if (!session) return <>{children}</>;
+  if (!isRightClickEnabled) return <>{children}</>;
 
   const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
 

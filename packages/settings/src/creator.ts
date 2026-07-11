@@ -10,6 +10,7 @@ export type SettingsContextProps = Pick<
   | "openSearchInNewTab"
   | "ddgBangs"
   | "pingIconsEnabled"
+  | "enableRightClickOnWidgets"
 > &
   Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
   Pick<ServerSettings["user"], "enableGravatar">;
@@ -32,6 +33,7 @@ export type UserSettings = Pick<
   | "openSearchInNewTab"
   | "ddgBangs"
   | "pingIconsEnabled"
+  | "enableRightClickOnWidgets"
 >;
 
 export const createSettings = ({
@@ -48,6 +50,7 @@ export const createSettings = ({
   homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
   pingIconsEnabled: user?.pingIconsEnabled ?? false,
+  enableRightClickOnWidgets: user?.enableRightClickOnWidgets ?? true,
   enableStatusByDefault: serverSettings.board.enableStatusByDefault,
   forceDisableStatus: serverSettings.board.forceDisableStatus,
   enableGravatar: serverSettings.user.enableGravatar,
