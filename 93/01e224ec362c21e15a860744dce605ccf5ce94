@@ -1,0 +1,35 @@
+packages/integrations/src/open-webui/open-webui-types.ts
+  s_37b821a6ce4f24::t_b741290cb870b8 230-232,237
+packages/api/src/router/widgets/open-webui.ts
+  s_37b821a6ce4f24::t_b21aa631ff5f7a 82-85
+  s_37b821a6ce4f24::t_a8d69543f13685 300,312-315
+packages/widgets/src/open-webui/use-voice-recording.ts
+  s_37b821a6ce4f24::t_912707794fb1da 111,118-122
+  s_37b821a6ce4f24::t_67048de52afbeb 12
+  s_37b821a6ce4f24::t_a762c60fc925a3 26
+packages/integrations/src/open-webui/test/open-webui-integration.spec.ts
+  s_37b821a6ce4f24::t_6abe72a781b913 150-228
+packages/widgets/src/open-webui/chat.tsx
+  s_37b821a6ce4f24::t_a4079c366bcfa7 11
+  s_37b821a6ce4f24::t_e3be9828a36817 119
+  s_37b821a6ce4f24::t_8074df2176ca0f 77-81
+  s_37b821a6ce4f24::t_7ebf68f525a0a1 261-274
+packages/translation/src/lang/en.json
+  s_37b821a6ce4f24::t_7c7b95780cb0cd 3901
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "9301e224ec362c21e15a860744dce605ccf5ce94",
+  "prompts": {},
+  "sessions": {
+    "s_37b821a6ce4f24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ffbc0292-971b-4a0b-91de-23bf0bfa31dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
