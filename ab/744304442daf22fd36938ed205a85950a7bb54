@@ -1,0 +1,19 @@
+.github/workflows/autofix.yml
+  s_c909105650f9b7::t_85371d6f50dd7c 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "ab744304442daf22fd36938ed205a85950a7bb54",
+  "prompts": {},
+  "sessions": {
+    "s_c909105650f9b7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e0ec552a-84df-4435-af9f-aa65a882e23b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
