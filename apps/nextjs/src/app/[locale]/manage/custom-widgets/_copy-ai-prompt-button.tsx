@@ -34,224 +34,209 @@ const PROMPT_RULES = `
 - For arrays of items, inspect the API response to find the correct paths
 
 ## Display Type Guide
-- \`singleValue\`: Show one prominent number/text (e.g. total count, status)
-- \`keyValue\`: Show labeled pairs like "CPU: 45%" — use \`mappings\` array
-- \`table\`: Show tabular data from an array — needs \`tablePath\` for the array and \`columns\` for headers
-- \`statGrid\`: Grid of stat cards with optional colors — great for dashboards (e.g. "Movies: 38, Series: 63")
-- \`progressBars\`: Visual progress bars with value/max — for storage, quotas, etc.
-- \`statusIndicator\`: Green/red dots based on value matching — for service health checks
-- \`countGrid\`: Simple grid of counts — like statGrid but simpler, no colors
-- \`raw\`: Raw JSON display — for debugging or complex data
-- \`actionButton\`: A button that triggers the API call on click — for POST/PUT actions
-- \`customJsx\`: Custom JSX layout using whitelisted Mantine components — full creative control over presentation. Set \`displayConfig.template\` to a JSX string. Access API data via \`{data.fieldName}\` bindings (e.g. \`{data.name}\`, \`{data.items[0].title}\`).
+- \`singleValue\`: One prominent number/text
+- \`keyValue\`: Labeled pairs — use \`mappings\` array
+- \`table\`: Tabular data — \`tablePath\` + \`columns\`
+- \`statGrid\`: Grid of stat cards with colors
+- \`progressBars\`: Visual progress bars with value/max
+- \`statusIndicator\`: Green/red dots based on value matching
+- \`countGrid\`: Simple count grid
+- \`raw\`: Raw JSON display
+- \`actionButton\`: Button that triggers the API call on click
+- \`customJsx\`: **Full Mantine v9 JSX** — complete creative control. Set \`displayConfig.template\` to a JSX string.
 
-## Custom JSX (\`customJsx\`) — Available Mantine Components
-When using \`customJsx\`, the template supports whitelisted Mantine UI components. These are React components from the Mantine v9 library. Use their props as documented below.
+## Custom JSX (\`customJsx\`) — Component Reference
 
-### Layout Components
-- **Stack** — Vertical flex container. Props: \`gap\` (xs|sm|md|lg|xl or number), \`align\` (stretch|center|flex-start|flex-end), \`justify\`
-- **Group** — Horizontal flex container. Props: \`gap\`, \`justify\` (flex-start|center|space-between|space-around|flex-end), \`wrap\` (wrap|nowrap), \`grow\` (boolean)
-- **Flex** — Generic flex container. Props: \`direction\` (row|column), \`gap\`, \`align\`, \`justify\`, \`wrap\`
-- **Grid** + **Grid.Col** — CSS grid layout. Grid props: \`gutter\` (gap). Grid.Col props: \`span\` (1-12 or "auto"), \`offset\`
-- **SimpleGrid** — Auto-column grid. Props: \`cols\` (number), \`spacing\`, \`verticalSpacing\`
-- **Center** — Centers content. Props: \`inline\` (boolean)
-- **Space** — Empty spacing. Props: \`h\` (height), \`w\` (width)
-- **Container** — Max-width wrapper. Props: \`size\` (xs|sm|md|lg|xl), \`fluid\` (boolean)
-- **AspectRatio** — Maintains aspect ratio. Props: \`ratio\` (number, e.g. 16/9)
+All Mantine v9 components listed below are available. For full Mantine prop documentation, refer to https://mantine.dev/llms.txt or use Context7/web search for any component's detailed API.
 
-### Typography Components
-- **Text** — Body text. Props: \`size\` (xs|sm|md|lg|xl), \`fw\` (font-weight number, e.g. 700), \`c\` (color: "dimmed"|"red"|"blue"|...), \`ta\` (text-align), \`tt\` (text-transform: "capitalize"|"uppercase"|"lowercase"), \`td\` (text-decoration), \`lineClamp\` (number), \`truncate\` (boolean), \`span\` (renders as span)
-- **Title** — Heading. Props: \`order\` (1-6, maps to h1-h6), \`size\`, \`c\`, \`ta\`, \`tt\`
-- **Code** — Inline code. Props: \`color\`, \`block\` (boolean for code block)
-- **Highlight** — Text with highlighted substring. Props: \`highlight\` (string or string[])
-- **Mark** — Highlighted text background. Props: \`color\`
-- **Kbd** — Keyboard key display
-- **Blockquote** — Styled quote. Props: \`color\`, \`cite\`, \`icon\`
-- **Anchor** — Link. Props: \`href\`, \`target\`, \`underline\` ("always"|"hover"|"never")
-- **NumberFormatter** — Formatted number display. Props: \`value\` (number), \`prefix\` (e.g. "$"), \`suffix\` (e.g. "%"), \`thousandSeparator\` (boolean or string), \`decimalScale\` (number)
+### Layout
+Box, Stack, Group, Flex, Grid + Grid.Col, SimpleGrid, Center, Space, Container, AspectRatio, Overlay, ScrollArea
 
-### Data Display Components
-- **Badge** — Label badge. Props: \`color\`, \`variant\` (filled|light|outline|dot|default), \`size\` (xs|sm|md|lg|xl), \`radius\`, \`tt\`
-- **Card** + **Card.Section** — Content card. Card props: \`shadow\` (xs|sm|md|lg|xl), \`padding\`/\`p\`, \`radius\`, \`withBorder\` (boolean). Card.Section props: \`withBorder\`, \`inheritPadding\`
-- **Paper** — Surface container. Props: \`shadow\`, \`p\`, \`radius\`, \`withBorder\`
-- **Alert** — Notification box. Props: \`color\`, \`variant\` (filled|light|outline), \`title\`, \`icon\`
-- **ThemeIcon** — Icon container. Props: \`color\`, \`variant\`, \`size\`, \`radius\`
-- **ColorSwatch** — Color preview. Props: \`color\` (CSS color string)
-- **Table** + **Table.Thead**, **Table.Tbody**, **Table.Tr**, **Table.Th**, **Table.Td** — HTML table. Table props: \`striped\` (boolean), \`withTableBorder\`, \`withColumnBorders\`, \`highlightOnHover\`
-- **List** + **List.Item** — Ordered/unordered list. List props: \`type\` ("ordered"|"unordered"), \`icon\`, \`spacing\`
-- **Timeline** + **Timeline.Item** — Vertical timeline. Timeline props: \`active\` (number), \`bulletSize\`. Item props: \`title\`, \`bullet\`
-- **Accordion** + **.Item** + **.Control** + **.Panel** — Collapsible sections. Item props: \`value\` (string). Control: clickable header. Panel: content.
-- **Indicator** — Dot indicator on content. Props: \`color\`, \`position\`, \`size\`, \`label\`, \`processing\` (boolean)
-- **Pill** — Removable tag. Props: \`size\`, \`withRemoveButton\`
-- **Spoiler** — Show more/less. Props: \`maxHeight\` (number), \`showLabel\`, \`hideLabel\`
+### Typography
+Text, Title, Code, Highlight, Mark, Kbd, Blockquote, Anchor (href sanitized), NumberFormatter, Marquee, RollingNumber
 
-### Feedback Components
-- **Progress** + **Progress.Section** — Progress bar. Progress props: \`value\` (0-100), \`color\`, \`size\`, \`radius\`, \`striped\`, \`animated\`. Section props: \`value\`, \`color\`
-- **RingProgress** — Circular progress. Props: \`sections\` (array of {value, color}), \`size\`, \`thickness\`, \`label\` (ReactNode)
-- **Skeleton** — Loading placeholder. Props: \`height\`, \`width\`, \`radius\`, \`visible\` (boolean)
-- **Loader** — Spinner. Props: \`size\`, \`color\`, \`type\` (oval|bars|dots)
+### Data Display
+Badge, Card + Card.Section, Paper, Alert, ThemeIcon, ColorSwatch, Table (+ Thead/Tbody/Tfoot/Caption/Tr/Th/Td), List + List.Item, Timeline + Timeline.Item, Accordion (+ Item/Control/Panel), Indicator, Pill, Spoiler, Progress + Progress.Section, RingProgress, SemiCircleProgress, Skeleton, Loader, Image, Avatar + Avatar.Group, BackgroundImage, Tooltip, Divider, DataList (+ Item/ItemLabel/ItemValue), EmptyState (+ Indicator/Title/Description/Actions), Fieldset, Notification (visual), Rating (read-only)
 
-### Media Components
-- **Image** — Responsive image. Props: \`src\`, \`alt\`, \`w\` (width), \`h\` (height), \`radius\`, \`fit\` (cover|contain|fill)
-- **Avatar** + **Avatar.Group** — User avatar. Props: \`src\`, \`alt\`, \`size\` (xs|sm|md|lg|xl or number), \`radius\` (sm|xl), \`color\`
-- **BackgroundImage** — Background image container. Props: \`src\`, \`radius\`
-- **Tooltip** — Hover tooltip. Props: \`label\` (string), \`position\` (top|bottom|left|right), \`withArrow\`
-- **Divider** — Horizontal/vertical rule. Props: \`orientation\` (horizontal|vertical), \`label\`, \`labelPosition\`, \`size\`
-- **ScrollArea** — Scrollable container. Props: \`h\` (height), \`type\` (auto|always|scroll|hover)
+### Navigation
+Breadcrumbs, NavLink (href sanitized), Stepper + Stepper.Step, Tabs + Tabs.List + Tabs.Tab + Tabs.Panel, Tree
 
-### Charts (@mantine/charts)
-- **AreaChart**, **BarChart**, **LineChart** — Props: \`data\` (array of objects), \`dataKey\` (x-axis key), \`series\` (array of {name, color}), \`h\` (height), \`curveType\` (for Area/Line)
-- **DonutChart**, **PieChart** — Props: \`data\` (array of {name, value, color}), \`h\`, \`withLabels\`, \`withLabelsLine\`
-- **RadarChart** — Props: \`data\`, \`dataKey\`, \`series\`
-- **RadialBarChart** — Props: \`data\` (array of {name, value, color}), \`h\`
-- **Sparkline** — Props: \`data\` (flat number array), \`h\`, \`w\`, \`color\`, \`curveType\`
+### Interactive Display (visual only — no event handlers)
+Button, ActionIcon, Burger, CloseButton, Chip + Chip.Group, Pagination, SegmentedControl, Slider (read-only), Switch (read-only)
 
-### Common Prop Patterns
-- **Spacing/sizing:** Most components accept \`p\` (padding), \`m\` (margin), \`px\`/\`py\`/\`mx\`/\`my\`/\`pt\`/\`pb\`/\`pl\`/\`pr\`/\`mt\`/\`mb\`/\`ml\`/\`mr\` with values xs|sm|md|lg|xl or numbers
-- **Colors:** Use Mantine color names: "red", "blue", "green", "orange", "violet", "pink", "cyan", "grape", "teal", "yellow", "lime", "indigo", "gray", "dark". Add shade suffix: "red.6", "blue.4"
-- **Styles:** Use \`style={{...}}\` for inline CSS. E.g. \`style={{flex: 1, minWidth: 0}}\`
-- **Conditional rendering:** Use ternaries: \`{condition ? <Text>Yes</Text> : <Text>No</Text>}\`
-- **Responsive:** Most size/spacing props accept object: \`{{ base: "sm", md: "lg" }}\`
+### Hover Overlays & Menus
+HoverCard + HoverCard.Target + HoverCard.Dropdown, Menu + Menu.Target + Menu.Dropdown + Menu.Item + Menu.Label + Menu.Divider
 
-### Interactive Components (built-in, state-managed)
-These components manage their own internal state — they provide interactivity without event handlers:
+### Utility
+CopyButton (click-to-copy, props: \`value\`), Collapse (animate show/hide, props: \`in\`), Transition (animate, props: \`mounted\`, \`transition\`)
 
-**PaginatedList** — Paginates its children with prev/next buttons.
-Props: \`pageSize\` (number, default 6)
-Usage: Wrap a \`.map()\` expression to paginate results.
+### Charts (@mantine/charts — ALL)
+AreaChart, BarChart, LineChart, DonutChart, PieChart, RadarChart, RadialBarChart, Sparkline, BubbleChart, CompositeChart, FunnelChart, Heatmap, ScatterChart, SankeyChart, Treemap, BarsList
+
+### Dates (@mantine/dates)
+Calendar (static), MiniCalendar (static), DatePicker (static/read-only), TimeValue
+
+### SubFetch — In-Widget HTTP Requests (server-proxied)
+These components make HTTP requests through the Homarr server proxy (same-origin as widget URL, inherits widget auth). HTTP method warnings are shown in the widget UI.
+
+**SubFetch** — Fetch data from a sub-endpoint and display results.
+Props: \`url\` (relative or absolute), \`method\` (GET|POST|PUT|DELETE|PATCH), \`body\` (JSON string), \`headers\` (JSON string), \`trigger\` ("auto"|"manual"), \`label\`, \`color\`, \`display\` ("json"|"text"), \`path\` (dot-path for display="text")
 \`\`\`jsx
-<PaginatedList pageSize={8}>
-  {data.results.map(item =>
-    <Card withBorder p="xs" mb="xs">
-      <Text>{item.name}</Text>
-    </Card>
-  )}
-</PaginatedList>
+<SubFetch url="/api/v1/status" trigger="auto">
+  <SubData path="name" as="Title" order={3} />
+  <SubData path="status" as="Badge" color="green" />
+</SubFetch>
 \`\`\`
 
-**TabsContainer + TabPanel** — Tabbed interface with automatic tab switching.
-TabsContainer props: \`defaultTab\` (string, optional — defaults to first tab)
-TabPanel props: \`value\` (string, required — unique tab ID), \`label\` (string, optional — tab display text)
+**SubData** — Reads data from parent SubFetch context.
+Props: \`path\` (dot-notation), \`as\` ("Text"|"Title"|"Badge"|"Code"), \`size\`, \`color\`, \`fw\`, \`c\`, \`order\`
+
+**ActionButton** — Button that fires an HTTP request on click.
+Props: \`url\`, \`method\` (default POST), \`body\`, \`headers\`, \`label\`, \`color\`, \`variant\`, \`size\`, \`confirmMessage\`, \`successMessage\`, \`icon\` (play|check|refresh|power|trash), \`fullWidth\`, \`disabled\`
 \`\`\`jsx
-<TabsContainer defaultTab="overview">
-  <TabPanel value="overview" label="Overview">
-    <Text>{data.description}</Text>
-  </TabPanel>
-  <TabPanel value="stats" label="Statistics">
-    <Text>Total: {data.count}</Text>
-  </TabPanel>
-</TabsContainer>
+<ActionButton url="/api/lights/1/toggle" method="POST" label="Toggle Light" color="yellow" icon="power" confirmMessage="Toggle the light?" />
 \`\`\`
 
-**Collapsible** — Expandable/collapsible section with a title.
-Props: \`title\` (string, required), \`defaultOpen\` (boolean, default false)
+**ToggleSwitch** — Switch that sends different payloads for on/off states.
+Props: \`url\`, \`method\` (default POST), \`onBody\` (JSON), \`offBody\` (JSON), \`initialValue\`, \`label\`, \`color\`, \`size\`, \`disabled\`
 \`\`\`jsx
-<Collapsible title="Details" defaultOpen={true}>
-  <Text>{data.details}</Text>
-</Collapsible>
+<ToggleSwitch url="/api/lights/1" onBody='{"state":"on"}' offBody='{"state":"off"}' label="Living Room" color="yellow" />
 \`\`\`
 
-**StatBar** — A horizontal stat bar with label/value (great for RPG-style stats, progress).
-Props: \`value\` (number), \`max\` (number, default 100), \`label\` (string), \`color\` (Mantine color)
-\`\`\`jsx
-<StatBar label="HP" value={45} max={100} color="red" />
-<StatBar label="ATK" value={80} max={255} color="orange" />
-\`\`\`
+**RefreshButton** — Re-fetches the parent widget data.
+Props: \`label\`, \`color\`, \`variant\`, \`size\`
 
-**TypeBadge** — A colored badge that maps common type names to colors (normal, fire, water, electric, grass, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy).
-Props: \`type\` (string), \`size\` (xs|sm|md|lg|xl, default sm)
-\`\`\`jsx
-<Group gap="xs">
-  <TypeBadge type="fire" />
-  <TypeBadge type="flying" />
-</Group>
-\`\`\`
+### Custom Interactive Components (built-in state)
+**PaginatedList** — Paginates children. Props: \`pageSize\` (default 6)
+**TabsContainer + TabPanel** — Tabbed UI. TabsContainer: \`defaultTab\`. TabPanel: \`value\`, \`label\`
+**Collapsible** — Expand/collapse. Props: \`title\`, \`defaultOpen\`
+**StatBar** — Horizontal stat bar. Props: \`value\`, \`max\`, \`label\`, \`color\`
+**TypeBadge** — Colored type badge (auto-maps: fire→red, water→blue, etc.). Props: \`type\`, \`size\`
 
-**Available bindings in templates:**
-- \`data\` — the full API response JSON object
-- \`String(v)\`, \`Number(v)\`, \`Boolean(v)\` — type coercion helpers
-- \`Math.round\`, \`Math.floor\`, \`Math.ceil\`, \`Math.abs\`, \`Math.min\`, \`Math.max\`, \`Math.pow\`, \`Math.sqrt\`, \`Math.PI\`
-- \`JSON.stringify(v)\`, \`Array.isArray(v)\`, \`Object.keys(v)\`, \`Object.values(v)\`, \`Object.entries(v)\`
-- Expression arrows for \`.map()\`, \`.filter()\`, \`.slice()\` — e.g. \`{data.items.map(item => <Text>{item.name}</Text>)}\`
-- Ternaries for conditionals — e.g. \`{data.count > 0 ? "active" : "idle"}\`
+### Bindings
+- \`data\` — full API response
+- \`String(v)\`, \`Number(v)\`, \`Boolean(v)\`, \`parseInt(v)\`, \`parseFloat(v)\`
+- \`Math.round/floor/ceil/abs/min/max/pow/sqrt/PI\`
+- \`JSON.stringify(v)\`, \`Array.isArray(v)\`, \`Array.from(v)\`, \`Object.keys/values/entries(v)\`
+- \`Date.now()\`, \`Date.create(v)\`, \`Date.toISOString(v)\`, \`Date.toLocaleDateString(v, locale?)\`, \`Date.toLocaleTimeString(v, locale?)\`, \`Date.getTime(v)\`, \`Date.getYear(v)\`, \`Date.getMonth(v)\`, \`Date.getDay(v)\`
+- \`encodeURIComponent(v)\`, \`decodeURIComponent(v)\`, \`isNaN(v)\`, \`isFinite(v)\`
+- \`.map()\`, \`.filter()\`, \`.slice()\`, ternaries for conditionals
 
-**FORBIDDEN keywords (template will be rejected):** constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch
+**FORBIDDEN keywords:** constructor, __proto__, eval, Function, import, require, globalThis, window, document
 
-**Chart data formats:**
-- BarChart/LineChart/AreaChart: \`data={data.items}\` + \`dataKey="month"\` (x-axis key) + \`series={[{ name: "count", color: "blue" }]}\` where series \`name\` matches a numeric key in each data row
-- DonutChart/PieChart: \`data={data.items}\` where each item is \`{ name: "Label", value: 42, color: "blue" }\` — NO dataKey or series
-- Sparkline: \`data={[1,2,3]}\` — flat number array
-- NumberFormatter: \`<NumberFormatter value={data.price} thousandSeparator prefix="$" />\`
+### Chart Data Formats
+- BarChart/LineChart/AreaChart: \`data={items}\` + \`dataKey="x"\` + \`series={[{name:"y",color:"blue"}]}\`
+- DonutChart/PieChart: \`data={[{name,value,color}]}\`
+- ScatterChart: \`data={items}\` + \`dataKey={xKey}\` + \`series={[{name, color}]}\`
+- CompositeChart: same as Bar/Line/Area + \`composedChart\` with type per series
+- Sparkline: \`data={[numbers]}\`
+- Heatmap: \`data={items}\` + \`dataKey\` + \`series\`
 
-### Full Pokémon Card Example (demonstrating TypeBadge, StatBar, TabsContainer, Collapsible)
-API: \`https://pokeapi.co/api/v2/pokemon/charizard\`
-\`\`\`jsx
-<Stack gap="sm" p="xs">
-  <Group wrap="nowrap">
-    <Avatar src={data.sprites.front_default} size={80} radius="sm" />
-    <Stack gap={4} style={{flex: 1}}>
-      <Title order={3} tt="capitalize">{data.name}</Title>
-      <Text size="xs" c="dimmed">#{String(data.id).padStart(3, "0")}</Text>
-      <Group gap="xs">
-        {data.types.map(t => <TypeBadge type={t.type.name} />)}
-      </Group>
-    </Stack>
-  </Group>
-  <TabsContainer defaultTab="stats">
-    <TabPanel value="stats" label="Stats">
-      <Stack gap="xs" pt="xs">
-        {data.stats.map(s =>
-          <StatBar label={s.stat.name} value={s.base_stat} max={255} color={s.base_stat > 100 ? "green" : "red"} />
-        )}
-      </Stack>
-    </TabPanel>
-    <TabPanel value="abilities" label="Abilities">
-      <Stack gap="xs" pt="xs">
-        {data.abilities.map(a =>
-          <Badge variant={a.is_hidden ? "outline" : "filled"} tt="capitalize">
-            {a.ability.name}{a.is_hidden ? " (hidden)" : ""}
-          </Badge>
-        )}
-      </Stack>
-    </TabPanel>
-    <TabPanel value="moves" label="Moves">
-      <Collapsible title="Move list">
-        <Group gap="xs" pt="xs">
-          {data.moves.slice(0, 20).map(m =>
-            <Badge size="xs" variant="light" tt="capitalize">{m.move.name}</Badge>
-          )}
-        </Group>
-      </Collapsible>
-    </TabPanel>
-  </TabsContainer>
-</Stack>
-\`\`\`
-
-### Paginated List Example
-API: \`https://pokeapi.co/api/v2/pokemon?limit=50\`
+### Pokédex Example (75 pokemon)
+API: \`https://pokeapi.co/api/v2/pokemon?limit=75\`
 \`\`\`jsx
 <Stack gap="sm" p="xs">
   <Group justify="space-between">
     <Title order={3}>Pokédex</Title>
-    <Badge size="lg" color="red">{data.count} Pokémon</Badge>
+    <Badge size="lg" color="red">{data.count} total</Badge>
   </Group>
   <PaginatedList pageSize={10}>
     {data.results.map((pokemon, i) =>
       <Card withBorder p="xs" mb="xs">
         <Group wrap="nowrap">
-          <Avatar
-            src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}
-            size="lg"
-            radius="sm"
-          />
-          <Stack gap={0} style={{ flex: 1 }}>
+          <Avatar src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"} size="lg" radius="sm" />
+          <Stack gap={0} style={{flex: 1}}>
             <Text fw={700} tt="capitalize">{pokemon.name}</Text>
-            <Text size="xs" c="dimmed">#{String(i + 1)}</Text>
+            <Text size="xs" c="dimmed">#{String(i + 1).padStart(3, "0")}</Text>
           </Stack>
         </Group>
       </Card>
     )}
   </PaginatedList>
+</Stack>
+\`\`\`
+
+### Pokédex with Detail Fetch (SubFetch for sub-resources)
+API: \`https://pokeapi.co/api/v2/pokemon?limit=75\`
+\`\`\`jsx
+<Stack gap="sm" p="xs">
+  <Title order={3}>Pokédex</Title>
+  <PaginatedList pageSize={5}>
+    {data.results.map((pokemon, i) =>
+      <Card withBorder p="xs" mb="xs">
+        <Group wrap="nowrap">
+          <Avatar src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"} size={60} radius="sm" />
+          <Stack gap={2} style={{flex: 1}}>
+            <Text fw={700} tt="capitalize">{pokemon.name}</Text>
+            <SubFetch url={pokemon.url} trigger="auto">
+              <Group gap="xs">
+                <SubData path="types.0.type.name" as="Badge" color="red" />
+                <SubData path="stats.0.base_stat" as="Text" size="xs" />
+              </Group>
+            </SubFetch>
+          </Stack>
+        </Group>
+      </Card>
+    )}
+  </PaginatedList>
+</Stack>
+\`\`\`
+
+### Stocks Dashboard (Charts + Live Data)
+API: \`https://your-stocks-api.com/portfolio\`
+\`\`\`jsx
+<Stack gap="md" p="sm">
+  <Group justify="space-between">
+    <Title order={3}>Portfolio</Title>
+    <RefreshButton label="Refresh" size="xs" />
+  </Group>
+  <SimpleGrid cols={3}>
+    {data.holdings.map(stock =>
+      <Card withBorder p="xs">
+        <Text fw={700}>{stock.symbol}</Text>
+        <NumberFormatter value={stock.price} prefix="$" decimalScale={2} />
+        <Sparkline data={stock.history} h={40} color={stock.change > 0 ? "green" : "red"} />
+      </Card>
+    )}
+  </SimpleGrid>
+  <LineChart h={200} data={data.timeline} dataKey="date" series={[{name: "value", color: "blue"}]} />
+</Stack>
+\`\`\`
+
+### Navidrome Mini-Player (Buttons + State)
+API: \`https://your-navidrome.local/api/nowplaying\`
+\`\`\`jsx
+<Stack gap="sm" p="sm">
+  <Group wrap="nowrap">
+    <Image src={data.albumArt} w={80} h={80} radius="sm" />
+    <Stack gap={2} style={{flex: 1}}>
+      <Text fw={700} lineClamp={1}>{data.title}</Text>
+      <Text size="sm" c="dimmed" lineClamp={1}>{data.artist}</Text>
+      <Progress value={data.progress} size="xs" color="red" />
+    </Stack>
+  </Group>
+  <Group justify="center" gap="sm">
+    <ActionButton url="/api/player/previous" method="POST" label="Prev" size="xs" variant="subtle" />
+    <ActionButton url="/api/player/toggle" method="POST" label={data.playing ? "Pause" : "Play"} icon="play" color="red" />
+    <ActionButton url="/api/player/next" method="POST" label="Next" size="xs" variant="subtle" />
+  </Group>
+  <Group justify="center">
+    <ToggleSwitch url="/api/player/shuffle" method="POST" onBody='{"shuffle":true}' offBody='{"shuffle":false}' initialValue={data.shuffle} label="Shuffle" size="xs" />
+    <ToggleSwitch url="/api/player/repeat" method="POST" onBody='{"repeat":true}' offBody='{"repeat":false}' initialValue={data.repeat} label="Repeat" size="xs" />
+  </Group>
+</Stack>
+\`\`\`
+
+### Smart Home Light Switch
+API: \`https://your-ha.local/api/states/light.living_room\`
+\`\`\`jsx
+<Stack gap="md" p="sm">
+  <Group justify="space-between">
+    <Title order={4}>Living Room</Title>
+    <Badge color={data.state === "on" ? "yellow" : "gray"}>{data.state}</Badge>
+  </Group>
+  <ToggleSwitch url="/api/services/light/toggle" method="POST" onBody='{"entity_id":"light.living_room"}' offBody='{"entity_id":"light.living_room"}' initialValue={data.state === "on"} label="Power" color="yellow" />
+  <ActionButton url="/api/services/light/turn_off" method="POST" body='{"entity_id":"light.living_room"}' label="Force Off" color="red" icon="power" confirmMessage="Turn off?" />
 </Stack>
 \`\`\`
 

@@ -258,7 +258,7 @@ const rawDisplayConfigSchema = z.object({
 });
 
 const FORBIDDEN_TEMPLATE_PATTERN =
-  /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bfetch\b|\bXMLHttpRequest\b/i;
+  /\bconstructor\b|\b__proto__\b|\bprototype\b|\beval\b|\bFunction\b|\bimport\s*\(|\brequire\b|\bglobalThis\b|\bwindow\b|\bdocument\b|\bXMLHttpRequest\b/i;
 
 const customJsxDisplayConfigSchema = z.object({
   type: z
@@ -267,13 +267,13 @@ const customJsxDisplayConfigSchema = z.object({
   template: z
     .string()
     .min(1)
-    .max(10000)
+    .max(50000)
     .refine((t) => !FORBIDDEN_TEMPLATE_PATTERN.test(t), {
       message:
-        "Template contains forbidden keywords (constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch)",
+        "Template contains forbidden keywords (constructor, __proto__, eval, Function, import, require, globalThis, window, document)",
     })
     .describe(
-      "JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Forbidden keywords: constructor, __proto__, eval, Function, import, require, globalThis, window, document, fetch",
+      "JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Use SubFetch for in-widget HTTP requests. Forbidden keywords: constructor, __proto__, eval, Function, import, require, globalThis, window, document",
     ),
 });
 

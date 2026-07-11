@@ -1393,9 +1393,9 @@ function DisplayTypeFields({
           '<Stack gap="sm">\n  <Title order={3}>{data.name}</Title>\n  <Text>{data.description}</Text>\n</Stack>'
         }
         minRows={8}
-        maxRows={20}
+        maxRows={30}
         autosize
-        maxLength={10000}
+        maxLength={50000}
         styles={{ input: { fontFamily: "monospace" } }}
         {...form.getInputProps("template")}
       />

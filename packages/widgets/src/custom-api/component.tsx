@@ -479,7 +479,10 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
 
   const Component = dataType ? displayComponents[dataType] : undefined;
   if (Component) {
-    const enrichedData = dataType === "actionButton" ? { ...widgetData, widgetDefinitionId: definitionId } : widgetData;
+    const enrichedData =
+      dataType === "actionButton" || dataType === "customJsx"
+        ? { ...widgetData, widgetDefinitionId: definitionId }
+        : widgetData;
     return <Component data={enrichedData} />;
   }
 
