@@ -26,14 +26,20 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
-import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
+import {
+  formatByteRate,
+  formatLoadAvg,
+  formatPercent,
+  formatTemp,
+  formatUptime,
+  getProgressTrackSize,
+} from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
-const getProgressTrackSize = (size: SizeConfig["progressSize"]): number => (size === "xs" ? 6 : 9);
 
 type SystemRowWithKey = BeszelSystemRow & { _key: string };
 

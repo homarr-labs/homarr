@@ -2,7 +2,7 @@ import { Box, Group, HoverCard, Progress, Stack, Text, UnstyledButton } from "@m
 
 import type { BeszelSystemRow } from "./types";
 import { thresholdColor } from "./colors";
-import { formatPercent } from "./format";
+import { formatPercent, getProgressTrackSize } from "./format";
 
 interface DiskUsageProps {
   system: BeszelSystemRow;
@@ -18,7 +18,7 @@ const severityColor = (value: number) => `var(--mantine-color-${thresholdColor(v
 
 export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap = 6 }: DiskUsageProps) => {
   const filesystems = Object.entries(system.extraFilesystems).filter(([path]) => path !== "/");
-  const trackSize = progressSize === "xs" ? 6 : 9;
+  const trackSize = getProgressTrackSize(progressSize);
   const dotSize = progressSize === "xs" ? 2 : 3;
   const dotGap = 2;
 
@@ -36,19 +36,19 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
         disabled={filesystems.length === 0}
       >
         <HoverCard.Target>
-          <UnstyledButton
-            aria-label={filesystems.length > 0 ? `Show usage for ${filesystems.length + 1} filesystems` : undefined}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flex: 1,
-              minWidth: 24,
-              cursor: filesystems.length ? "pointer" : "default",
-            }}
-          >
-            <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
-              <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
-              {filesystems.length > 0 && (
+          {filesystems.length > 0 ? (
+            <UnstyledButton
+              aria-label={`Show usage for ${filesystems.length + 1} filesystems`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flex: 1,
+                minWidth: 24,
+                cursor: "pointer",
+              }}
+            >
+              <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
+                <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
                 <Group
                   gap={dotGap}
                   wrap="nowrap"
@@ -72,9 +72,15 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
                     />
                   ))}
                 </Group>
-              )}
+              </Box>
+            </UnstyledButton>
+          ) : (
+            <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
+              <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
+                <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
+              </Box>
             </Box>
-          </UnstyledButton>
+          )}
         </HoverCard.Target>
         <HoverCard.Dropdown p={8}>
           <Stack gap={6} miw={145}>

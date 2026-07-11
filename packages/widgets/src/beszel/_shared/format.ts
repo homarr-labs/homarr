@@ -35,6 +35,8 @@ export const formatGB = (value: number): string => {
 
 export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
+export const getProgressTrackSize = (size: "xs" | "sm"): number => (size === "xs" ? 6 : 9);
+
 export const chartAxisFormatters = {
   percent: formatPercent,
   gb: (value: number) => {

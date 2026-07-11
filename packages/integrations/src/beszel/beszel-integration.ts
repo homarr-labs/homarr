@@ -459,6 +459,7 @@ export class BeszelIntegration extends Integration {
           for (const frame of parser.push(decoder.decode())) await processFrameAsync(frame);
           for (const frame of parser.finish()) await processFrameAsync(frame);
         } finally {
+          await reader.cancel().catch(() => {});
           reader.releaseLock();
         }
 

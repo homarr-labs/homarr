@@ -177,7 +177,7 @@ export function BeszelStatsView({
 
   if (historicalError) throw historicalError;
 
-  if (isLive && liveError && !liveData) {
+  if (isLive && liveError) {
     return (
       <Center h={CHART_HEIGHT}>
         <Stack align="center" gap="sm" p="md">
