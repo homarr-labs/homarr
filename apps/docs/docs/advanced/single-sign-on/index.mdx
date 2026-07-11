@@ -199,9 +199,9 @@ Homarr supports multiple authentication options, from internal userbase (credent
     | ``AUTH_OIDC_CLIENT_NAME``   | Display name of provider (in login screen)                 | OIDC          |
     | ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
     | ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
-    | ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim                  | groups        |
+    | ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim. Dot-separated paths such as `resource_access.homarr.roles` are supported. | groups        |
     | ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
-    | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
+    | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. Dot-separated paths are supported. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
     | ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
     | ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
     | ``AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`` | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`. | client_secret_basic |
