@@ -167,14 +167,12 @@ const groundMessagesAsync = async (
 };
 
 export const openWebUiRouter = createTRPCRouter({
-  getModels: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
-    .query(async ({ ctx }) => {
-      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
-      const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
-      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-      return data;
-    }),
+  getModels: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
+    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
+    const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
+    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data;
+  }),
 
   // Chat history exposes private user data, so we require "interact" access
   // (not just "query") and verify the caller is the integration's creator.

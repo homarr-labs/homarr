@@ -48,7 +48,9 @@ export const useHomeEmptyGroups = () => {
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   });
-  if (integrations.some((integration) => integration.kind === "openWebUi" && integration.creatorId === session?.user?.id)) {
+  if (
+    integrations.some((integration) => integration.kind === "openWebUi" && integration.creatorId === session?.user?.id)
+  ) {
     visibleSearchModes.push(askAiMode);
   }
 
