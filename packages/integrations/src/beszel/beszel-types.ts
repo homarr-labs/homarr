@@ -133,9 +133,9 @@ export interface BeszelSystemStats {
   /** disk usage (%) */
   dp: number;
   /** disk read (MB/s) */
-  dr: number;
+  dr?: number;
   /** disk write (MB/s) */
-  dw: number;
+  dw?: number;
   /** disk read max (MB/s) */
   drm?: number;
   /** disk write max (MB/s) */
@@ -145,9 +145,9 @@ export interface BeszelSystemStats {
   /** disk IOPS max [read, write] */
   diom?: [number, number];
   /** network sent — all interfaces (bytes/s) */
-  ns: number;
+  ns?: number;
   /** network received — all interfaces (bytes/s) */
-  nr: number;
+  nr?: number;
   /** bandwidth — public interfaces only (bytes/s) [sent, recv]. Prefer over ns/nr */
   b?: [number, number];
   /** network sent max (bytes/s) */
@@ -169,26 +169,26 @@ export interface BeszelSystemStats {
 }
 
 export interface BeszelExtraFsStats {
-  /** total disk (bytes) */
+  /** total disk (GiB) */
   d: number;
-  /** disk used (bytes) */
+  /** disk used (GiB) */
   du: number;
   /** read (bytes/s) */
   r: number;
   /** write (bytes/s) */
   w: number;
   /** read max (bytes/s) */
-  rm: number;
+  rm?: number;
   /** write max (bytes/s) */
-  wm: number;
+  wm?: number;
   /** read (IOPS) */
-  rb: number;
+  rb?: number;
   /** write (IOPS) */
-  wb: number;
+  wb?: number;
   /** read max (IOPS) */
-  rbm: number;
+  rbm?: number;
   /** write max (IOPS) */
-  wbm: number;
+  wbm?: number;
 }
 
 export interface BeszelGPUData {
@@ -382,6 +382,8 @@ export interface BeszelSystemRow {
   memory: number;
   /** disk usage (%) */
   disk: number;
+  /** extra filesystem usage (%) keyed by mount path */
+  extraFilesystems: Record<string, number>;
   /** GPU usage (%) */
   gpu: number;
   /** load average [1m, 5m, 15m] */

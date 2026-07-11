@@ -41,15 +41,12 @@ import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dy
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 
-export const BoardContentHeaderActions = () => {
+export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
-  // Fall back to read-only if the query has no data (e.g. errored) so we never expose
-  // edit/save/settings UI that would then fail server-side.
-  const { data: demoReadOnly = true, isLoading } = clientApi.info.isDemoReadOnly.useQuery();
 
-  if (!hasChangeAccess || isLoading) {
+  if (!hasChangeAccess) {
     return <SelectBoardsMenu />;
   }
 
