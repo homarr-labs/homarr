@@ -1,0 +1,153 @@
+apps/docs/docs/widgets/beszel-system-stats/index.mdx
+  s_8c9a391b5a761b::t_36bdafbc9fa292 2-3,7-12,14,16,26-33,40
+  s_8c9a391b5a761b::t_279a29044e3808 18
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_8c9a391b5a761b::t_279a29044e3808 23-24
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_b7c065b454e2ca::t_efd758fa5df761 44,49
+packages/translation/src/lang/en.json
+  s_8c9a391b5a761b::t_a1c2107a2acef9 4060-4061
+packages/widgets/src/beszel/_shared/use-live-stats.ts
+  s_8c9a391b5a761b::t_5ef3e7bef41912 4,34
+  s_8c9a391b5a761b::t_9ff56410f61446 9-11
+  s_8c9a391b5a761b::t_e47df60ee2fefc 52
+apps/nextjs/src/env.ts
+  s_b7c065b454e2ca::t_efd758fa5df761 7
+packages/integrations/src/beszel/pocketbase-realtime.ts
+  s_8c9a391b5a761b::t_509f0a24caf6aa 1-65
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  s_8c9a391b5a761b::t_0858ff4c8f2d56 3-4,9,12,20-30,44,47-53
+  s_8c9a391b5a761b::t_236857ccd263bd 54
+packages/integrations/src/beszel/test/pocketbase-realtime.spec.ts
+  s_8c9a391b5a761b::t_26bf6d1804e18a 9,14,21,29
+  s_8c9a391b5a761b::t_509f0a24caf6aa 1-8,10-13,15-20,22-28,30-31
+packages/integrations/src/beszel/beszel-types.ts
+  s_28d426fa98ba48::t_04f30d9937f456 385-386
+  s_8c9a391b5a761b::t_a1c2107a2acef9 136,138,148,150,172,174,181,183,185,187,189,191
+packages/widgets/src/beszel-system-table/component.tsx
+  s_28d426fa98ba48::t_ece17fc21054d7 33,166-171,173-174
+  s_28d426fa98ba48::t_8d990af8dd6f2b 102,172
+  s_28d426fa98ba48::t_d724149db0b3ee 36,103,106-111
+packages/api/src/query-cache.ts
+  s_8c9a391b5a761b::t_a1c2107a2acef9 19
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_8c9a391b5a761b::t_1763d4d27208bd 59,110,126,128,130-132,134
+  s_8c9a391b5a761b::t_fddd967a2d5a1a 4-5,18,41,45-46,82,140-156
+packages/integrations/src/beszel/beszel-integration.ts
+  s_8c9a391b5a761b::t_e47df60ee2fefc 476
+  s_8c9a391b5a761b::t_bbea40507ea78d 22-23,53-81
+  s_8c9a391b5a761b::t_10bf936e2817b7 468-474
+  s_8c9a391b5a761b::t_937b427a8331f4 29,34-51,339,345-347,350-351,354-357,359,361-363,365,367-368,371,374,377,379-413,416,418,421-446,449,451-462,465,467,477-479,482-484,486,489-494
+  s_8c9a391b5a761b::t_ac79d139f40336 375-376,378,447-448,450,480-481,485
+  s_8c9a391b5a761b::t_26bf6d1804e18a 348-349
+  s_8c9a391b5a761b::t_f7bbbd8e71c69d 52
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_8c9a391b5a761b::t_279a29044e3808 22-23
+packages/integrations/src/beszel/test/beszel-integration.spec.ts
+  s_8c9a391b5a761b::t_e7d890c77012cb 43,46-83,159-160
+  s_8c9a391b5a761b::t_b971545003e426 44-45,84-158
+packages/widgets/src/beszel/_shared/format.ts
+  s_8c9a391b5a761b::t_5ef3e7bef41912 32,40-45
+packages/widgets/src/beszel/_shared/format.spec.ts
+  s_8c9a391b5a761b::t_105f1259acd576 1-16
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  s_28d426fa98ba48::t_e3140f95793fdb 259
+  s_8c9a391b5a761b::t_1763d4d27208bd 155-156,185-187,189-191,200,206,214-216,224-258,260-291,294-334
+  s_8c9a391b5a761b::t_bab546764d04c1 1-3,5-32,43-78,80-154,157-176,179-184,188,192-198,207-213,217-223,292-293,335-339
+  s_8c9a391b5a761b::t_98ac16911bab82 79
+  s_8c9a391b5a761b::t_c5ba6ff3714a1f 177-178
+  s_28d426fa98ba48::t_bc3463af30a1d3 4,33-42,199,201-205
+packages/widgets/src/beszel-system-table/index.ts
+  s_097df6c4b132c3::t_e6f56120eed5dd 28
+packages/widgets/src/beszel/_shared/chart.spec.ts
+  s_8c9a391b5a761b::t_36bdafbc9fa292 7-11,35-41
+  s_8c9a391b5a761b::t_0cf2511f82a976 71
+  s_8c9a391b5a761b::t_0a391c43aae12e 5,66-70,72-85
+  s_8c9a391b5a761b::t_443371d0de94b9 1-4,6,12-34,42-65,86-87
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_8c9a391b5a761b::t_5ef3e7bef41912 13,105-115
+packages/integrations/src/mock/data/beszel.ts
+  s_28d426fa98ba48::t_4c86d585427423 229
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_b7c065b454e2ca::t_efd758fa5df761 25,44
+packages/widgets/src/beszel-system-grid/index.ts
+  s_097df6c4b132c3::t_e6f56120eed5dd 9
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_28d426fa98ba48::t_1f4d742f37e533 115,118-119,401
+  s_28d426fa98ba48::t_ece17fc21054d7 34,199,203-204
+  s_28d426fa98ba48::t_d724149db0b3ee 110,113-114,132,149,200
+  s_28d426fa98ba48::t_79b84385d58a3e 131,136-141,147,198
+  s_28d426fa98ba48::t_8d011df968f756 201-202
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_8c9a391b5a761b::t_0a391c43aae12e 33,54-63,73-83
+  s_8c9a391b5a761b::t_0cf2511f82a976 64-72
+  s_8c9a391b5a761b::t_443371d0de94b9 216-226
+  s_8c9a391b5a761b::t_36bdafbc9fa292 227-242
+  s_8c9a391b5a761b::t_dc45a3d45988b6 210,213
+  s_8c9a391b5a761b::t_fc2cc2bc1777dd 84-85
+packages/widgets/src/definition.ts
+  s_097df6c4b132c3::t_e6f56120eed5dd 3,72
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_8c9a391b5a761b::t_0411fed73af211 53
+  s_097df6c4b132c3::t_16e3a434786c7a 52,55,301-302
+  s_097df6c4b132c3::t_e6f56120eed5dd 7,282
+  s_097df6c4b132c3::t_5571ca817a8ffe 54
+packages/widgets/src/beszel-system-stats/index.ts
+  s_097df6c4b132c3::t_e6f56120eed5dd 19
+packages/request-handler/src/beszel.ts
+  s_28d426fa98ba48::t_04f30d9937f456 37
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_28d426fa98ba48::t_b814bfcfe150e9 49,51-68,70-76,79-80,82-83,86-87,90
+  s_28d426fa98ba48::t_d724149db0b3ee 27
+  s_28d426fa98ba48::t_ece17fc21054d7 38,78,95-96
+  s_28d426fa98ba48::t_8d011df968f756 15-16,30,32-37,41-47,84-85,88-89
+  s_28d426fa98ba48::t_04f30d9937f456 2-11,13-14,18,20,24-25,28-29,39-40,48,77,81,91-94,97-99
+  s_28d426fa98ba48::t_283cc054781b7c 1,17
+  s_28d426fa98ba48::t_8d990af8dd6f2b 12,19,26
+  s_28d426fa98ba48::t_1f4d742f37e533 21-23,31,50,69
+packages/api/src/test/query-cache.spec.ts
+  s_8c9a391b5a761b::t_a1c2107a2acef9 70-71
+packages/api/src/router/widgets/beszel.ts
+  s_8c9a391b5a761b::t_ac79d139f40336 210-216,233-234,245,259-265,278-283,290-295
+  s_8c9a391b5a761b::t_47f0e973aace9b 235-244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "6bded95313d4b4b2c6b45cc68cf4afe7277b40b5",
+  "prompts": {},
+  "sessions": {
+    "s_097df6c4b132c3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f518e-1233-7030-98a2-e64850733be6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_28d426fa98ba48": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f518e-27ad-7310-8199-74262ac4bac9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c9a391b5a761b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f518d-4ca0-76e2-b9fc-c5701596a396",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b7c065b454e2ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f51af-7b76-70c2-b157-5a562f08ce3a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
