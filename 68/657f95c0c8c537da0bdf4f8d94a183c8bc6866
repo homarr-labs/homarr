@@ -1,0 +1,56 @@
+Dockerfile
+  s_19b10fee95e824::t_94cb28ac40b45c 18
+  s_19b10fee95e824::t_97a524eaee74cc 1
+  s_19b10fee95e824::t_a65037c4cf455f 2,14-15,17,19-22,27,29-33
+  s_19b10fee95e824::t_2b176b2d422d07 16
+package.json
+  s_19b10fee95e824::t_a65037c4cf455f 9,11-12
+  s_19b10fee95e824::t_1d69c757d01d5a 10
+  s_19b10fee95e824::t_2f3955d136b06b 40-42,74
+.dockerignore
+  s_19b10fee95e824::t_046ecb960e20c7 16
+  s_19b10fee95e824::t_a308d04074e155 9-14
+.github/act/README.md
+  s_19b10fee95e824::t_a65037c4cf455f 1-8,10-11,13-36
+  s_19b10fee95e824::t_a080f99b85d07b 12
+  s_19b10fee95e824::t_1d69c757d01d5a 9
+.github/workflows/ci.yml
+  s_19b10fee95e824::t_7b5233bfbf0692 63,113
+  s_19b10fee95e824::t_1d69c757d01d5a 58
+  s_19b10fee95e824::t_a65037c4cf455f 1,5-8,11,13-34,37,43-45,48-50,52-57,59-60,66-75,80-81,89-90,92-93,95-97,99-105,107-110,115-116,121,123,125,127,129-147,166-167,169-170,172-174,176,181-182,184-185,187-211,213-220,222-224,226-240,242-247,249-252,254-260,262-266,268-276,278-303
+  s_19b10fee95e824::t_a080f99b85d07b 83-84,86-87
+  s_19b10fee95e824::t_d5dbc233bad310 175,177-180,186
+  s_19b10fee95e824::t_72e4895cca04fc 122,126,149-164
+.github/workflows/deployment-docker-image.yml
+  s_19b10fee95e824::t_a65037c4cf455f 151-155,195-199
+.github/act/.secrets.example
+  s_19b10fee95e824::t_a65037c4cf455f 1-4
+turbo.json
+  s_19b10fee95e824::t_a65037c4cf455f 3,16
+scripts/ci/act.sh
+  s_19b10fee95e824::t_352dd858e51ba0 31
+  s_19b10fee95e824::t_a65037c4cf455f 1-7,11,13-21,27-29,32-33,37,46-60,62-64,66-69,71,76,85-89
+  s_19b10fee95e824::t_b08c82a866f024 77,79-80,82,84
+  s_19b10fee95e824::t_a080f99b85d07b 78,81,83
+  s_19b10fee95e824::t_4a44553fb337d4 22-26,30
+  s_19b10fee95e824::t_1d69c757d01d5a 8-10,12,34-36,38-45,61,65,72-75
+  s_19b10fee95e824::t_7fc6cebf58954e 70
+.github/act/.gitignore
+  s_19b10fee95e824::t_a65037c4cf455f 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "68657f95c0c8c537da0bdf4f8d94a183c8bc6866",
+  "prompts": {},
+  "sessions": {
+    "s_19b10fee95e824": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f51da-d522-7542-b623-5c88e6d9e54c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
