@@ -7,6 +7,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";
+import { extractProfileName } from "./profile";
 import { assertVerifiedEmailForCredentialsLinking } from "./verified-email";
 
 export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profile> => ({
@@ -76,12 +77,3 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
   // @ts-expect-error `undici` has a `duplex` option
   [customFetch]: fetchWithTrustedCertificatesAsync,
 });
-
-export const extractProfileName = (profile: Profile) => {
-  if (!env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE) {
-    // Use the name as the username if the preferred_username is an email address
-    return profile.preferred_username?.includes("@") ? profile.name : profile.preferred_username;
-  }
-
-  return profile[env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE as keyof typeof profile] as string;
-};

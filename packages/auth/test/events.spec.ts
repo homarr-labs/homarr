@@ -1,7 +1,7 @@
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
@@ -21,6 +21,12 @@ vi.mock("../env", () => {
     env: mockEnv,
   };
 });
+
+afterEach(() => {
+  mockEnv.AUTH_OIDC_GROUPS_ATTRIBUTE = "someRandomGroupsKey";
+  mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = false;
+});
+
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type HeadersExport = typeof import("next/headers");
 vi.mock("next/headers", async (importOriginal) => {
@@ -143,6 +149,30 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       await eventHandler?.({
         user: { id: "1", name: "test" },
         profile: { preferred_username: "test", someRandomGroupsKey: ["test"] },
+        account: null,
+      });
+
+      // Assert
+      const dbGroupMembers = await db.query.groupMembers.findFirst({
+        where: eq(groupMembers.userId, "1"),
+      });
+      expect(dbGroupMembers?.groupId).toBe("1");
+    });
+    test("should add missing group membership from a nested claim", async () => {
+      // Arrange
+      mockEnv.AUTH_OIDC_GROUPS_ATTRIBUTE = "resource_access.homarr.roles";
+      const db = createDb();
+      await createUserAsync(db);
+      await createGroupAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+
+      // Act
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          resource_access: { homarr: { roles: ["test"] } },
+        },
         account: null,
       });
 
