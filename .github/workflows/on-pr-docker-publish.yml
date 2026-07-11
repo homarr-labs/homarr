@@ -13,7 +13,7 @@ permissions:
 env:
   SKIP_ENV_VALIDATION: true
   REGISTRY: ghcr.io
-  GHCR_REPO: ghcr.io/${{ github.repository }}
+  GHCR_REPO: ghcr.io/homarr-labs/homarr-test
   TURBO_TELEMETRY_DISABLED: 1
 
 concurrency:
@@ -36,7 +36,7 @@ jobs:
         with:
           images: "${{ env.GHCR_REPO }}"
           tags: |
-            type=raw,value=homarr-test-pr-${{ github.event.number }}
+            type=raw,value=pr-${{ github.event.number }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4

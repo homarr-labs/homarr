@@ -11,7 +11,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_TAG: homarr-test-pr-${{ github.event.number }}
+  IMAGE_TAG: pr-${{ github.event.number }}
 
 jobs:
   delete-image:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const packageName = 'homarr';
+            const packageName = 'homarr-test';
             const org = context.repo.owner;
             const tag = process.env.IMAGE_TAG;
 
