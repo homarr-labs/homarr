@@ -1,0 +1,58 @@
+name: "[PR] Cleanup Docker preview image"
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+
+permissions:
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_TAG: omar-test-pr-${{ github.event.number }}
+
+jobs:
+  delete-image:
+    name: Delete PR preview image from GHCR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Delete package version
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const packageName = 'homarr';
+            const org = context.repo.owner;
+            const tag = process.env.IMAGE_TAG;
+
+            const versions = await github.paginate(
+              github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
+              {
+                package_type: 'container',
+                package_name: packageName,
+                org,
+                per_page: 100,
+              }
+            );
+
+            const target = versions.find(v =>
+              v.metadata?.container?.tags?.includes(tag)
+            );
+
+            if (!target) {
+              console.log(`No package version found with tag "${tag}". Nothing to delete.`);
+              return;
+            }
+
+            console.log(`Deleting package version ${target.id} (tag: ${tag})`);
+
+            await github.rest.packages.deletePackageVersionForOrg({
+              package_type: 'container',
+              package_name: packageName,
+              org,
+              package_version_id: target.id,
+            });
+
+            console.log(`Successfully deleted package version ${target.id}`);
