@@ -1,17 +1,23 @@
 name: "[PR] Cleanup Docker preview image"
 
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
     branches:
       - dev
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "PR number whose preview image to delete"
+        required: true
+        type: number
 
 permissions:
   packages: write
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_TAG: pr-${{ github.event.number }}
+  IMAGE_TAG: pr-${{ github.event.inputs.pr-number || github.event.number }}
 
 jobs:
   delete-image:

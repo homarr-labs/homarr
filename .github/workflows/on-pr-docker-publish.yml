@@ -2,9 +2,20 @@ name: "[PR] Publish Docker preview image"
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - dev
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "PR number (uses head ref of that PR)"
+        required: true
+        type: number
+      ref:
+        description: "Git ref to build (branch, tag, or SHA)"
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -17,18 +28,33 @@ env:
   TURBO_TELEMETRY_DISABLED: 1
 
 concurrency:
-  group: pr-docker-${{ github.event.number }}
+  group: pr-docker-${{ github.event.inputs.pr-number || github.event.number }}
   cancel-in-progress: true
 
 jobs:
   build-and-push:
     name: Build and push PR preview image
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      )
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+          ref: ${{ github.event.inputs.ref || '' }}
+
+      - name: Determine tag
+        id: tag
+        run: |
+          PR_NUMBER="${{ github.event.inputs.pr-number || github.event.number }}"
+          echo "tag=pr-${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "pr-number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
 
       - name: Docker meta
         id: meta
@@ -36,7 +62,7 @@ jobs:
         with:
           images: "${{ env.GHCR_REPO }}"
           tags: |
-            type=raw,value=pr-${{ github.event.number }}
+            type=raw,value=${{ steps.tag.outputs.tag }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4
