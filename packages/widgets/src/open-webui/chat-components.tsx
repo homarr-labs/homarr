@@ -213,8 +213,10 @@ export function KnowledgeRow({
   onToggleFile: (file: FileAttachment) => void;
   emptyFilesLabel: string;
 }) {
-  // Default to expanded so a base's documents are visible without an extra click.
-  const [expanded, setExpanded] = useState(true);
+  // Start collapsed so opening the picker doesn't fire getKnowledgeFiles for
+  // every knowledge base at once (an N+1 burst on large accounts). Files load
+  // only when a specific row is expanded.
+  const [expanded, setExpanded] = useState(false);
   const { data: files = [], isLoading } = clientApi.widget.openWebUi.getKnowledgeFiles.useQuery(
     { integrationId, knowledgeId },
     { enabled: expanded && Boolean(integrationId), refetchOnWindowFocus: false, retry: false },
@@ -577,7 +579,12 @@ export function MessageBubble({
             </Text>
           ) : (
             <div className={classes.markdown}>
-              <ReactMarkdown skipHtml>{content}</ReactMarkdown>
+              {/* skipHtml only strips raw HTML; drop markdown images too so
+                  untrusted model output can't trigger arbitrary browser fetches
+                  on render. */}
+              <ReactMarkdown skipHtml components={{ img: () => null }}>
+                {content}
+              </ReactMarkdown>
             </div>
           )
         ) : null}

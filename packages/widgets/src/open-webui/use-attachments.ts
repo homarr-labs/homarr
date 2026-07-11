@@ -128,7 +128,13 @@ export function useAttachments({ integrationId, onError, errorMessages }: UseAtt
     }
     try {
       const full = await utils.widget.openWebUi.getNote.fetch({ integrationId, noteId: note.id });
-      setNoteItems((previous) => [...previous, { id: full.id, title: full.title, content: full.content }]);
+      // A double-click can start two fetches before state updates; dedupe on the
+      // resolved id so the note isn't attached (and grounded) twice.
+      setNoteItems((previous) =>
+        previous.some((item) => item.id === full.id)
+          ? previous
+          : [...previous, { id: full.id, title: full.title, content: full.content }],
+      );
     } catch {
       onError(errorMessages.note);
     }
@@ -150,7 +156,13 @@ export function useAttachments({ integrationId, onError, errorMessages }: UseAtt
       const transcript = extractChatMessages(full.chat)
         .map((message) => `${message.role}: ${message.content}`)
         .join("\n");
-      setChatItems((previous) => [...previous, { id: chat.id, title: chat.title ?? chat.id, transcript }]);
+      // Dedupe on the resolved id so a double-click can't attach the same chat
+      // (and its transcript) twice.
+      setChatItems((previous) =>
+        previous.some((item) => item.id === chat.id)
+          ? previous
+          : [...previous, { id: chat.id, title: chat.title ?? chat.id, transcript }],
+      );
     } catch {
       onError(errorMessages.chat);
     }

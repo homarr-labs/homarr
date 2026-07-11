@@ -107,6 +107,12 @@ export function useVoiceRecording({
       recordingTimerRef.current = window.setInterval(() => setRecordingSeconds((value) => value + 1), 1000);
       setIsRecording(true);
     } catch {
+      // getUserMedia may have succeeded before AudioContext/MediaRecorder setup
+      // threw; release the mic stream and context so it isn't left running.
+      releaseAudioResources();
+      mediaRecorderRef.current = null;
+      setAnalyser(null);
+      setIsRecording(false);
       onError(micErrorMessage);
     }
   };
@@ -121,8 +127,16 @@ export function useVoiceRecording({
     mediaRecorderRef.current?.stop();
   };
 
-  // Tear down the microphone stream and timer on unmount.
-  useEffect(() => () => releaseAudioResources(), []);
+  // Tear down the microphone stream and timer on unmount. Mark the session
+  // cancelled first so a recorder "stop" fired while stopping the tracks doesn't
+  // upload/transcribe partial audio after the component is gone.
+  useEffect(
+    () => () => {
+      recordingCancelledRef.current = true;
+      releaseAudioResources();
+    },
+    [],
+  );
 
   return {
     isRecording,

@@ -122,16 +122,30 @@ const groundMessagesAsync = async (
 };
 
 export const openWebUiRouter = createTRPCRouter({
-  getModels: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
-    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
-    const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-    return data;
-  }),
+  getModels: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the available Open WebUI chat models for the selected integration.",
+      },
+    })
+    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .query(async ({ ctx }) => {
+      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
+      const handler = openWebUiModelsRequestHandler.handler(ctx.integration, {});
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
 
   // Chat history exposes private user data, so we require "interact" access
   // (not just "query") and verify the caller is the integration's creator.
   getChats: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the saved Open WebUI chat conversations for the selected integration.",
+      },
+    })
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
@@ -140,42 +154,81 @@ export const openWebUiRouter = createTRPCRouter({
       return data;
     }),
 
-  getKnowledge: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
-    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
-    const handler = openWebUiKnowledgeRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-    return data;
-  }),
+  // Knowledge bases, files and notes expose private source content/metadata, so
+  // gate them like the interactive chat paths (protected + "interact" access,
+  // creator-only) instead of leaving them reachable by anonymous board viewers.
+  getKnowledge: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the Open WebUI knowledge bases available for the selected integration.",
+      },
+    })
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .query(async ({ ctx }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
+      const handler = openWebUiKnowledgeRequestHandler.handler(ctx.integration, {});
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
 
-  getFiles: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
-    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
-    const handler = openWebUiFilesRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-    return data;
-  }),
+  getFiles: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the files stored in Open WebUI for the selected integration.",
+      },
+    })
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .query(async ({ ctx }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
+      const handler = openWebUiFilesRequestHandler.handler(ctx.integration, {});
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
 
-  getNotes: publicProcedure.concat(createOneIntegrationMiddleware("query", "openWebUi")).query(async ({ ctx }) => {
-    throwIfNotCreator(ctx.integration, ctx.session?.user.id);
-    const handler = openWebUiNotesRequestHandler.handler(ctx.integration, {});
-    const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-    return data;
-  }),
+  getNotes: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the notes stored in Open WebUI for the selected integration.",
+      },
+    })
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
+    .query(async ({ ctx }) => {
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
+      const handler = openWebUiNotesRequestHandler.handler(ctx.integration, {});
+      const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
+    }),
 
-  getNote: publicProcedure
+  getNote: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Get the full contents of a single Open WebUI note by id.",
+      },
+    })
     .input(z.object({ noteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx, input }) => {
-      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
       const { data } = await handler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
     }),
 
-  getKnowledgeFiles: publicProcedure
+  getKnowledgeFiles: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List the files belonging to an Open WebUI knowledge base.",
+      },
+    })
     .input(z.object({ knowledgeId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "openWebUi"))
+    .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .query(async ({ ctx, input }) => {
-      throwIfNotCreator(ctx.integration, ctx.session?.user.id);
+      throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const handler = openWebUiKnowledgeFilesRequestHandler.handler(ctx.integration, {
         knowledgeId: input.knowledgeId,
       });
@@ -186,6 +239,12 @@ export const openWebUiRouter = createTRPCRouter({
   // Ingest a web page so its content can ground later messages. Returns the
   // collection to retrieve from plus a display title.
   processWeb: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Ingest a web page into Open WebUI so its content can ground later chat messages.",
+      },
+    })
     .input(z.object({ url: z.string().url() }))
     .concat(createOneIntegrationMiddleware("interact", "openWebUi"))
     .mutation(async ({ ctx, input }) => {

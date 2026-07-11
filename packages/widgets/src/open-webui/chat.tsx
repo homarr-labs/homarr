@@ -112,10 +112,18 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
     captureErrorMessage: t("widget.openWebUi.captureError"),
   });
 
-  // Default to the first available model once the list loads.
+  // Keep the selection reconciled with the available models: default to the
+  // first one, and reset if the current id disappears (integration change or a
+  // model removed/renamed upstream) so sends don't use a stale id.
   useEffect(() => {
-    if (model !== null || models.length === 0) return;
-    setModel(models[0]?.id ?? null);
+    if (models.length === 0) {
+      if (model !== null) setModel(null);
+      return;
+    }
+
+    if (model === null || !models.some((item) => item.id === model)) {
+      setModel(models[0]?.id ?? null);
+    }
   }, [model, models]);
 
   // Track the floating composer's height so messages can pad below it.
@@ -505,7 +513,13 @@ export function Chat({ options, integrationIds, isEditMode }: WidgetComponentPro
                     key={chat.id}
                     active={chat.id === stream.activeChatId}
                     label={chat.title ?? chat.id}
-                    onClick={() => stream.setSelectedChatId(chat.id)}
+                    onClick={() => {
+                      // Drop the draft's grounding so a loaded conversation
+                      // isn't answered against the previous draft's attachments.
+                      attachments.reset();
+                      setError(null);
+                      stream.setSelectedChatId(chat.id);
+                    }}
                   />
                 ))
               )}

@@ -45,6 +45,10 @@ export function useChatStream({
   // Read inside the serialized persist loop so a burst of turns reuses the chat
   // created by the first write instead of racing on the not-yet-committed state.
   const activeChatIdRef = useRef<string | null>(null);
+  // Bumped whenever the conversation is replaced (history load / new chat) so a
+  // detached persist that started against an old conversation can be discarded
+  // instead of rebinding the cleared chat to a stale Open WebUI chat id.
+  const sessionRef = useRef(0);
   const persistInFlightRef = useRef(false);
   const pendingPersistRef = useRef<ChatMessage[] | null>(null);
 
@@ -60,6 +64,7 @@ export function useChatStream({
   // Hydrate the conversation when a history chat finishes loading.
   useEffect(() => {
     if (!loadedChat) return;
+    sessionRef.current += 1;
     const loadedMessages = extractChatMessages(loadedChat.chat);
     setMessages(loadedMessages);
     messagesRef.current = loadedMessages;
@@ -69,7 +74,7 @@ export function useChatStream({
     onChatLoaded();
   }, [loadedChat, setModel, onChatLoaded]);
 
-  const runPersist = async (finalMessages: ChatMessage[]) => {
+  const runPersist = async (finalMessages: ChatMessage[], session: number) => {
     if (!integrationId || !model) return;
     // Native history stores plain text; image data URLs are dropped on persist.
     const title = finalMessages.find((message) => message.role === "user")?.content.slice(0, 80) ?? newChatTitle;
@@ -84,9 +89,13 @@ export function useChatStream({
         await updateChat.mutateAsync({ integrationId, chatId, chat: payload });
       } else {
         const chat = await createChat.mutateAsync({ integrationId, ...payload });
+        // The conversation was cleared/replaced while this create was in flight;
+        // don't rebind the now-stale chat id onto the current conversation.
+        if (session !== sessionRef.current) return;
         activeChatIdRef.current = chat.id;
         setActiveChatId(chat.id);
       }
+      if (session !== sessionRef.current) return;
       await utils.widget.openWebUi.getChats.invalidate({ integrationId });
     } catch {
       // Persistence is best-effort; the conversation remains usable in-memory.
@@ -98,6 +107,7 @@ export function useChatStream({
   // a single trailing save of the latest messages so turns don't stack
   // concurrent POSTs (or create duplicate chats on the first save).
   const persistChat = async (finalMessages: ChatMessage[]) => {
+    const session = sessionRef.current;
     if (persistInFlightRef.current) {
       pendingPersistRef.current = finalMessages;
       return;
@@ -107,7 +117,7 @@ export function useChatStream({
       let next: ChatMessage[] | null = finalMessages;
       while (next) {
         pendingPersistRef.current = null;
-        await runPersist(next);
+        await runPersist(next, session);
         next = pendingPersistRef.current;
       }
     } finally {
@@ -207,6 +217,7 @@ export function useChatStream({
   };
 
   const reset = () => {
+    sessionRef.current += 1;
     setMessages([]);
     messagesRef.current = [];
     setActiveChatId(null);

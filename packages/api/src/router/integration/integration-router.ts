@@ -345,32 +345,66 @@ export const integrationRouter = createTRPCRouter({
       const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
 
       const integrationId = createId();
-      await ctx.db.insert(integrations).values({
-        id: integrationId,
-        name: input.name,
-        url: input.url,
-        kind: input.kind,
-        appId,
-        creatorId: ctx.session.user.id,
-      });
-
-      // Auto-grant the creator "full" permission so they can immediately use
-      // and manage the integration they just created.
-      await ctx.db.insert(integrationUserPermissions).values({
+      const userId = ctx.session.user.id;
+      const secretValues = input.secrets.map((secret) => ({
+        kind: secret.kind,
+        value: encryptSecret(secret.value),
         integrationId,
-        userId: ctx.session.user.id,
-        permission: "full",
-      });
+      }));
 
-      if (input.secrets.length >= 1) {
-        await ctx.db.insert(integrationSecrets).values(
-          input.secrets.map((secret) => ({
-            kind: secret.kind,
-            value: encryptSecret(secret.value),
-            integrationId,
-          })),
-        );
-      }
+      // Create the integration, its creator permission and secrets atomically so
+      // a failure part-way through can't leave a committed integration the
+      // creator can neither use nor manage.
+      await handleTransactionsAsync(ctx.db, {
+        handleAsync: async (db, schema) => {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.integrations).values({
+              id: integrationId,
+              name: input.name,
+              url: input.url,
+              kind: input.kind,
+              appId,
+              creatorId: userId,
+            });
+            // Auto-grant the creator "full" permission so they can immediately
+            // use and manage the integration they just created.
+            await transaction.insert(schema.integrationUserPermissions).values({
+              integrationId,
+              userId,
+              permission: "full",
+            });
+            if (secretValues.length >= 1) {
+              await transaction.insert(schema.integrationSecrets).values(secretValues);
+            }
+          });
+        },
+        handleSync: (db) => {
+          db.transaction((transaction) => {
+            transaction
+              .insert(integrations)
+              .values({
+                id: integrationId,
+                name: input.name,
+                url: input.url,
+                kind: input.kind,
+                appId,
+                creatorId: userId,
+              })
+              .run();
+            transaction
+              .insert(integrationUserPermissions)
+              .values({
+                integrationId,
+                userId,
+                permission: "full",
+              })
+              .run();
+            if (secretValues.length >= 1) {
+              transaction.insert(integrationSecrets).values(secretValues).run();
+            }
+          });
+        },
+      });
 
       logger.info("Created integration", {
         id: integrationId,

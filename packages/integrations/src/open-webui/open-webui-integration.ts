@@ -35,6 +35,10 @@ import {
 
 const logger = createLogger({ module: "open-webui-integration" });
 
+// Default per-request timeout so a stalled upstream can't hang model/file/note/
+// chat calls indefinitely. Streaming completions opt out (they are long-lived).
+const DEFAULT_REQUEST_TIMEOUT_MS = 10_000;
+
 // The (undici) request options accepted by the shared fetch helper. Derived so
 // the request helpers stay in sync with the underlying fetch types.
 type RequestOptions = NonNullable<Parameters<typeof fetchWithTrustedCertificatesAsync>[1]>;
@@ -220,6 +224,10 @@ export class OpenWebUiIntegration extends Integration {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ model: params.model, messages: params.messages, stream: true }),
+      // Long-lived stream: opt out of the default request timeout and rely on the
+      // caller's abort signal instead (the timeout path would also replace this
+      // signal, breaking cancellation).
+      timeout: undefined,
       signal,
     });
 
@@ -248,8 +256,13 @@ export class OpenWebUiIntegration extends Integration {
         // Some providers end the stream with a finish_reason chunk and no
         // explicit [DONE] sentinel; treat that as a clean completion too.
         if (choice?.finish_reason) return true;
-      } catch {
-        logger.debug("Failed to parse Open WebUI completion chunk", { line: trimmed });
+      } catch (error) {
+        // The chunk can contain model output or grounded user data, so log only
+        // safe metadata rather than the raw payload.
+        logger.debug("Failed to parse Open WebUI completion chunk", {
+          error: error instanceof Error ? error.message : "unknown",
+          payloadLength: payload.length,
+        });
       }
       return false;
     };
@@ -258,7 +271,15 @@ export class OpenWebUiIntegration extends Integration {
     try {
       while (!signal.aborted) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          // The server may close after the final data: event without a trailing
+          // newline; parse whatever is left so a valid completion isn't treated
+          // as a truncated stream.
+          if (buffer.trim() !== "" && processLine(buffer)) {
+            completed = true;
+          }
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
@@ -301,6 +322,10 @@ export class OpenWebUiIntegration extends Integration {
     init?: Omit<RequestOptions, "headers"> & { headers?: Record<string, string> },
   ) {
     const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
+      // Apply a default timeout unless the caller opts out (e.g. streaming
+      // completions pass `timeout: undefined` to stay open indefinitely). A
+      // spread after this key lets an explicit caller value win.
+      timeout: DEFAULT_REQUEST_TIMEOUT_MS,
       ...init,
       headers: { ...this.getAuthHeaders(), ...init?.headers },
     });

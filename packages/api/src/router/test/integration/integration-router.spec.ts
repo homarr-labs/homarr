@@ -4,6 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
+import { and, eq } from "@homarr/db";
 import { apps, integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
@@ -321,7 +322,12 @@ describe("create should create a new integration", () => {
 
     const dbIntegration = await db.query.integrations.findFirst();
     const dbSecret = await db.query.integrationSecrets.findFirst();
-    const dbPermission = await db.query.integrationUserPermissions.findFirst();
+    const dbPermission = await db.query.integrationUserPermissions.findFirst({
+      where: and(
+        eq(integrationUserPermissions.integrationId, dbIntegration!.id),
+        eq(integrationUserPermissions.userId, defaultUserId),
+      ),
+    });
     expect(dbIntegration).toBeDefined();
     expect(dbIntegration!.name).toBe(input.name);
     expect(dbIntegration!.kind).toBe(input.kind);
