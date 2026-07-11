@@ -19,17 +19,24 @@ command -v act >/dev/null 2>&1 || {
   exit 1
 }
 
+docker info >/dev/null 2>&1 || {
+  echo "Docker is not running" >&2
+  exit 1
+}
+
 if [[ -z "${DOCKER_HOST:-}" ]]; then
   DOCKER_HOST=$(docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null || true)
   export DOCKER_HOST
 fi
 
 head_sha=$(git rev-parse HEAD)
-base_sha=$(git rev-parse HEAD~1)
+base_sha=$(git rev-parse HEAD~1 2>/dev/null || echo "$head_sha")
 head_ref=$(git branch --show-current)
 head_ref=${head_ref:-act-local}
 event_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-event.XXXXXX")
 trap 'rm -f "$event_file"' EXIT
+
+json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\t/\\t/g'; }
 
 if [[ "$mode" == "cleanup" ]]; then
   event_name="workflow_dispatch"
@@ -41,6 +48,7 @@ if [[ "$mode" == "cleanup" ]]; then
 EOF
 else
   event_name="pull_request"
+  safe_ref=$(json_escape "$head_ref")
   cat >"$event_file" <<EOF
 {
   "action": "synchronize",
@@ -52,7 +60,7 @@ else
     "base": { "sha": "$base_sha", "ref": "dev" },
     "head": {
       "sha": "$head_sha",
-      "ref": "$head_ref",
+      "ref": "$safe_ref",
       "repo": { "full_name": "homarr-labs/homarr" }
     }
   }

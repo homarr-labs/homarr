@@ -201,6 +201,7 @@ jobs:
             -e SECRET_ENCRYPTION_KEY="$SECRET_ENCRYPTION_KEY" \
             homarr-ci
           PORT=$(docker port "$CONTAINER_NAME" 7575/tcp | sed 's/.*://')
+          [[ "$PORT" =~ ^[0-9]+$ ]] || { echo "ERROR: invalid port mapping: '$PORT'"; exit 1; }
           URL="http://127.0.0.1:${PORT}"
 
           healthy=false
@@ -219,10 +220,22 @@ jobs:
             exit 1
           fi
 
+          warmup_ok=0
           for _ in $(seq 1 5); do
-            curl -sf "$URL/" >/dev/null 2>&1 || true
+            curl -sf "$URL/" >/dev/null 2>&1 && warmup_ok=$((warmup_ok + 1))
             sleep 2
           done
+          if [ "$warmup_ok" -eq 0 ]; then
+            echo "ERROR: All warmup requests failed"
+            docker logs "$CONTAINER_NAME" --tail 50
+            exit 1
+          fi
+
+          docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" | grep -qx true || {
+            echo "ERROR: Container died before memory measurement"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          }
 
           RAW_MEMORY=$(docker stats --no-stream --format '{{.MemUsage}}' "$CONTAINER_NAME" | sed 's| /.*||')
           MEMORY_MB=$(echo "$RAW_MEMORY" | awk '
@@ -233,8 +246,13 @@ jobs:
           ')
 
           echo "Memory usage: ${MEMORY_MB} MB (${RAW_MEMORY})"
-          if [ -z "$MEMORY_MB" ]; then
-            echo "ERROR: Could not parse memory usage from docker stats"
+          [[ "$MEMORY_MB" =~ ^[0-9]+(\.[0-9]+)?$ ]] || {
+            echo "ERROR: non-numeric memory value: '$MEMORY_MB' (raw: '$RAW_MEMORY')"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          }
+          if awk "BEGIN { exit !($MEMORY_MB < 50) }"; then
+            echo "ERROR: Memory suspiciously low (${MEMORY_MB} MB) — container may have crashed"
             docker logs "$CONTAINER_NAME" --tail 100
             exit 1
           elif awk "BEGIN { exit !($MEMORY_MB > 700) }"; then
