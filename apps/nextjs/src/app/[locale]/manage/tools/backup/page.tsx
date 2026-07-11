@@ -6,6 +6,7 @@ import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { createMetaTitle } from "~/metadata";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BackupExportCard } from "./_components/backup-export-card";
 import { BackupImportCard } from "./_components/backup-import-card";
 
@@ -31,10 +32,13 @@ export default async function BackupPage() {
   const t = await getScopedI18n("management.page.tool.backup");
 
   return (
-    <Stack>
-      <Title>{t("title")}</Title>
-      <BackupExportCard />
-      <BackupImportCard />
-    </Stack>
+    <>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Title>{t("title")}</Title>
+        <BackupExportCard />
+        <BackupImportCard />
+      </Stack>
+    </>
   );
 }

@@ -1,20 +1,10 @@
-import dayjs from "dayjs";
+import type { ReleaseResponse, ReleasesRepositoryRequest } from "./release-providers";
+import { getLatestMatchingReleaseAsync } from "./release-providers";
+import { createRequestHandler } from "./lib/request-handler";
 
-import type { IntegrationKindByCategory } from "@homarr/definitions";
-import type { ReleaseResponse, ReleasesRepository } from "@homarr/integrations";
-import { createIntegrationAsync } from "@homarr/integrations";
-
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
-
-export const releasesRequestHandler = createCachedIntegrationRequestHandler<
-  ReleaseResponse,
-  IntegrationKindByCategory<"releasesProvider">,
-  ReleasesRepository
->({
-  requestAsync: async (integration, input) => {
-    const instance = await createIntegrationAsync(integration);
-    return instance.getLatestMatchingReleaseAsync(input.identifier, input.versionRegex);
+export const releasesRequestHandler = createRequestHandler<ReleaseResponse, ReleasesRepositoryRequest>({
+  async requestAsync(input) {
+    return await getLatestMatchingReleaseAsync(input);
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
-  queryKey: "repositoriesReleases",
+  cacheTtlMs: 5 * 60 * 1000,
 });

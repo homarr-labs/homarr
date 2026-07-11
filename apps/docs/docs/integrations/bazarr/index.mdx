@@ -1,0 +1,54 @@
+---
+title: 'Bazarr'
+description: "Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { bazarrIntegration } from '.';
+import { bazarrWidget } from '@site/docs/widgets/bazarr';
+
+<IntegrationHeader
+  integration={bazarrIntegration}
+  categories={['Subtitles', 'Media']}
+/>
+
+Bazarr complements Sonarr and Radarr by managing subtitle downloads. The Homarr integration uses your Bazarr API key to fetch missing subtitle counts and health badges.
+
+### Screenshots
+
+import apiKeySettings from './img/api-key-settings.png';
+import widgetOverview from '@site/docs/widgets/bazarr/img/widget-overview.png';
+
+<div className="flex flex-col gap-4">
+  <div>
+    <p>API key location in Bazarr (<strong>Settings → General → Security</strong>):</p>
+    <img src={apiKeySettings} alt="bazarr-api-key-settings" width={128 * 4} />
+  </div>
+  <div>
+    <p>Bazarr widget on a Homarr board:</p>
+    <img src={widgetOverview} alt="bazarr-widget-on-board" width={128 * 4} />
+  </div>
+</div>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{ widget: bazarrWidget }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+You can find your Bazarr API key under **Settings → General → Security**.
+
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+      "Open Bazarr and go to Settings → General → Security.",
+      "Copy the API key and paste it into Homarr when creating the integration.",
+    ],
+}]} />

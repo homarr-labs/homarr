@@ -1,14 +1,11 @@
-import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
-export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
-  queryKey: "fetchStockPriceResult",
-  widgetKind: "stockPrice",
+export const fetchStockPriceHandler = createWidgetRequestHandler({
   async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
     const response = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -42,7 +39,6 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
       shortName: firstResult.meta.shortName,
     };
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
 });
 
 const dataSchema = z

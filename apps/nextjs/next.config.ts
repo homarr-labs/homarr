@@ -5,20 +5,8 @@ import "@homarr/common/env";
 import "@homarr/core/infrastructure/logs/env";
 import "@homarr/docker/env";
 
-import { readFileSync } from "fs";
-
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-
-const homarrVersion = (() => {
-  for (const candidate of ["../../package.json", "./package.json"]) {
-    try {
-      const pkg = JSON.parse(readFileSync(candidate, "utf-8"));
-      if (pkg.name === "homarr") return pkg.version as string;
-    } catch {}
-  }
-  return "unknown";
-})();
 
 // Package path does not work... so we need to use relative path
 const withNextIntl = createNextIntlPlugin({
@@ -27,12 +15,10 @@ const withNextIntl = createNextIntlPlugin({
 
 const nextConfig: NextConfig = {
   env: {
-    HOMARR_VERSION: homarrVersion,
+    HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },
   output: "standalone",
   reactStrictMode: true,
-  // Ship browser source maps so production client stack traces are readable, see https://github.com/homarr-labs/homarr/issues/5891
-  productionBrowserSourceMaps: true,
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
@@ -43,12 +29,20 @@ const nextConfig: NextConfig = {
    */
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
-    // Ship server source maps so production Node stack traces in logs reference original source, see https://github.com/homarr-labs/homarr/issues/5891
-    serverSourceMaps: true,
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
-    turbopackFileSystemCacheForDev: false,
-    preloadEntriesOnStart: false,
+    turbopackFileSystemCacheForDev: true,
     webpackMemoryOptimizations: true,
+  },
+  turbopack: {
+    // ponytail: known Turbopack NFT warning from path.join(process.cwd(), …) in
+    // src/app/api/backup/{route,shared}.ts. No working placement in 16.2.x
+    // (see vercel/next.js#95125). Suppress until upstream fix lands.
+    ignoreIssue: [
+      {
+        path: "**/*",
+        title: "Encountered unexpected file in NFT list",
+      },
+    ],
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {

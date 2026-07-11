@@ -2,13 +2,15 @@
 
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
   createWSClient,
   httpBatchStreamLink,
   httpLink,
+  httpSubscriptionLink,
   isNonJsonSerializable,
   loggerLink,
   splitLink,
@@ -21,7 +23,13 @@ import { TRPCClientError } from "@trpc/client";
 
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { queryCacheDefaultStaleTimeMs } from "@homarr/api/query-cache";
+import {
+  isPersistableWidgetQueryKey,
+  queryCacheBuster,
+  queryCacheDefaultGcTimeMs,
+  queryCacheDefaultRefetchIntervalMs,
+  queryCacheDefaultStaleTimeMs,
+} from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
@@ -29,7 +37,6 @@ import { showWarningNotification } from "@homarr/notifications";
 import { createWidgetQueryPersister } from "./query-cache-persister";
 
 const getWebSocketProtocol = () => {
-  // window is not defined on server side
   if (typeof window === "undefined") {
     return "ws";
   }
@@ -55,32 +62,36 @@ const wsClient = createWSClient({
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {
-  const [queryPersister] = useState(() => createWidgetQueryPersister());
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            persister: queryPersister.persisterFn,
-            staleTime: queryCacheDefaultStaleTimeMs,
-          },
-          mutations: {
-            onError(error) {
-              if (
-                error instanceof TRPCClientError &&
-                error.data?.code === "FORBIDDEN" &&
-                error.message === "Mutations are disabled in demo mode"
-              ) {
-                showWarningNotification({
-                  title: "Demo mode",
-                  message: "This action is disabled in demo mode.",
-                });
-              }
-            },
+  const [persister] = useState(() => createWidgetQueryPersister());
+  const [queryClient] = useState(() => {
+    const client = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: queryCacheDefaultStaleTimeMs,
+          gcTime: queryCacheDefaultGcTimeMs,
+          refetchOnWindowFocus: false,
+          refetchOnReconnect: false,
+          retry: 3,
+        },
+        mutations: {
+          onError(error) {
+            if (
+              error instanceof TRPCClientError &&
+              error.data?.code === "FORBIDDEN" &&
+              error.message === "Mutations are disabled in demo mode"
+            ) {
+              showWarningNotification({
+                title: "Demo mode",
+                message: "This action is disabled in demo mode.",
+              });
+            }
           },
         },
-      }),
-  );
+      },
+    });
+    client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
+    return client;
+  });
 
   const [trpcClient] = useState(() => {
     return clientApi.createClient({
@@ -91,16 +102,21 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         }),
         splitLink({
           condition: ({ type }) => type === "subscription",
-          true: wsLink<AppRouter>({
-            client: wsClient,
-            transformer: superjson,
+          true: splitLink({
+            condition: ({ path }) => path === "widget.beszel.subscribeSystemStats",
+            true: httpSubscriptionLink({
+              url: getTrpcUrl(),
+              transformer: superjson,
+              eventSourceOptions: { withCredentials: true },
+            }),
+            false: wsLink<AppRouter>({
+              client: wsClient,
+              transformer: superjson,
+            }),
           }),
           false: splitLink({
             condition: ({ input }) => isNonJsonSerializable(input),
             true: httpLink({
-              /**
-               * We don't want to transform the data here as we want to use form data
-               */
               transformer: {
                 serialize(object: unknown) {
                   return object;
@@ -115,7 +131,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
             false: httpBatchStreamLink({
               transformer: superjson,
               url: getTrpcUrl(),
-              maxURLLength: 2083, // Suggested by tRPC: https://trpc.io/docs/client/links/httpBatchLink#setting-a-maximum-url-length
+              maxURLLength: 2083,
               headers: createHeadersCallbackForSource("nextjs-react (json)"),
             }),
           }),
@@ -126,10 +142,21 @@ export function TRPCReactProvider(props: PropsWithChildren) {
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister,
+          buster: queryCacheBuster,
+          maxAge: queryCacheDefaultGcTimeMs,
+          dehydrateOptions: {
+            shouldDehydrateQuery: (query) =>
+              query.state.status === "success" && isPersistableWidgetQueryKey(query.queryKey),
+          },
+        }}
+      >
         <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
         <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </clientApi.Provider>
   );
 }

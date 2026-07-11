@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "",
     "iconPicker": {
       "label": "",
-      "header": ""
+      "header": "",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "Svetli način",
         "management": "Nastavitve",
+        "docker": "",
         "preferences": "Prilagoditev",
         "logout": "Odjava",
         "login": "Prijava",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Nastavitve"
+        "settings": "Nastavitve",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": ""
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": ""
         },
@@ -2352,6 +2368,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": ""
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "",
       "text": ""
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Domov",
@@ -4499,85 +4555,13 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": ""
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
               "label": ""
             },
-            "smartHomeEntityState": {
-              "label": ""
-            },
             "ping": {
-              "label": ""
-            },
-            "mediaServer": {
-              "label": "Predstavnostni strežnik"
-            },
-            "mediaOrganizer": {
-              "label": ""
-            },
-            "downloads": {
-              "label": ""
-            },
-            "mediaRequestStats": {
-              "label": ""
-            },
-            "mediaRequestList": {
-              "label": ""
-            },
-            "rssFeeds": {
-              "label": ""
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": ""
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": ""
-            },
-            "mediaTranscoding": {
-              "label": ""
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

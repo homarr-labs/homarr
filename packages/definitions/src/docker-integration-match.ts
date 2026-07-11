@@ -31,11 +31,11 @@ const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = 
   audiobookshelf: ["audiobookshelf"],
   navidrome: ["navidrome"],
   paperlessNgx: ["paperless-ngx", "paperless"],
-  searchCh: ["search-ch"],
-  gitHubContainerRegistry: ["ghcr"],
-  linuxServerIO: ["linuxserver"],
+  patchmon: ["patchmon", "patch-mon"],
   coolify: ["coolify"],
   truenas: ["truenas"],
+  bazarr: ["bazarr"],
+  synology: ["synology", "diskstation"],
 };
 
 export const matchIntegrationKind = (search: string): IntegrationKind | null => {
@@ -63,19 +63,7 @@ export const matchIntegrationKind = (search: string): IntegrationKind | null => 
   return null;
 };
 
-const notDockerDiscoverable = new Set<IntegrationKind>([
-  "dockerHub",
-  "github",
-  "gitlab",
-  "npm",
-  "codeberg",
-  "linuxServerIO",
-  "gitHubContainerRegistry",
-  "quay",
-  "ical",
-  "searchCh",
-  "mock",
-]);
+const notDockerDiscoverable = new Set<IntegrationKind>(["ical", "mock"]);
 
 interface ContainerMatchInput {
   image: string;

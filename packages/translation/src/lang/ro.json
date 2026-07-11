@@ -2,168 +2,168 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Bun venit",
+        "subtitle": "Să începem cu configurarea Homarr.",
+        "description": "Pentru a începe, selectează modul în care vrei să setezi Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": "",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "scratch": "Începe de la zero",
+          "importOldmarr": "Importă din Homarr înainte de 1.0",
+          "restoreSqlite": "Restaurează dintr-un backup SQLite",
+          "restoreSqliteDescription": "Încarcă o copie completă a bazei de date SQLite dintr-o instalare anterioară a Homarr. Aceasta va restaura toate interfețele, utilizatorii, aplicaţiile, integrările şi setările.",
+          "backToOptions": "← Înapoi la opțiunile de configurare"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importare date",
+        "subtitle": "Puteți importa date dintr-o instalare Homarr existentă.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Trage fişierul zip aici sau apasă pentru a-l căuta",
+          "description": "Fișierul zip încărcat va fi procesat și vei putea selecta ceea ce dorești să imporți"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Schimbă fișierul"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importă Setări",
+          "description": "Configurare comportamentul de importare"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "S-au găsit {count} secţiuni",
+          "description": "Alege toate secțiunile cu dimensiunea pe care dorești să o imporți",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Selectează tot",
+            "unselectAll": "Deselectează tot"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Rezumat importare",
+          "description": "În rezumatul de mai jos poți vedea ce va fi importat",
           "action": {
-            "import": ""
+            "import": "Confirmă importul şi continuă"
           },
           "entities": {
             "apps": "Aplicații",
             "boards": "Planșe",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integrări",
+            "credentialUsers": "Utilizatori acreditați"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Introdu token-ul de import",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token-ul",
+              "description": "Introdu token-ul de import afișat în instalarea de homarr anterioară"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token invalid",
+              "message": "Token-ul introdus e invalid"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Utilizator Administrator",
+        "subtitle": "Specifică credențialele pentru utilizatorul administrator.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Utilizator creat",
+            "message": "Utilizatorul a fost creat cu succes"
           },
           "error": {
-            "title": ""
+            "title": "Crearea utilizatorului a eșuat"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Grup extern",
+        "subtitle": "Specifică grupul care ar trebui să fie utilizat pentru utilizatori externi.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Nume grup",
+            "description": "Numele trebuie să corespundă grupului de administratori al furnizorului extern"
           }
         }
       },
       "settings": {
         "title": "Setări",
-        "subtitle": ""
+        "subtitle": "Configurare setări server."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integrări",
+        "subtitle": "Selectează serviciile pe care le folosești.",
+        "description": "Alegeți integrările pe care doriți să le conectați. Vă vom configura tabloul de bord cu widget-uri care se potrivesc automat.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Continuă",
+          "skip": "Omite pentru moment"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} din {total}",
+          "skip": "Omite această integrare",
+          "finishing": "Se configurează tabloul de bord...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Configurarea a eșuat",
+            "message": "Ceva nu a mers bine în timpul configurării tabloului de bord. Te rugăm să încerci din nou."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Helperi URL",
+            "description": "Acești helperi încearcă să ghicească URL-ul serviciilor tale. Dacă nu funcționează, introdu adresa manual."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "URL de bază",
+          "placeholder": "homelab.local sau 192.168.1.1",
+          "hint": "Introdu domeniul de bază sau IP-ul pentru a completa automat adresele URL ale integrărilor",
+          "warning": "Setarea adresei URL de bază acum va completa automat toate URL-urile integrărilor, scurtând timpul necesar configurării",
+          "preview": "de ex. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomeniu",
+            "hostPort": "Gazdă:Port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker a detectat {count} servicii",
+          "detectedBreakdown": "{integrations} integrări · {apps} aplicații",
+          "summary": "Homarr a detectat {apps} aplicații, dintre care {integrations} au integrări încorporate",
+          "appBadge": "Aplicație",
+          "appSectionLabel": "Aplicații de adăugat la tabloul de bord ({count} selectate)",
+          "scanning": "Scanare Docker...",
+          "scanningDescription": "Căutare containere care rulează pe sistem"
         }
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Finalizează configurarea",
+        "subtitle": "Ești gata să începi!",
+        "description": "Ai finalizat cu succes procesul de configurare. Acum poți începe să utilizezi Homarr. Selectează următoarea acțiune:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Mergi la panoul {name}",
+          "createBoard": "Creează primul tău panou",
+          "inviteUser": "Invită alți utilizatori",
+          "docs": "Citește documentația"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Înapoi la început"
   },
   "user": {
     "title": "Utilizatori",
     "name": "Utilizator",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Conecteaza-te la contul tau",
+        "subtitle": "Bine ai revenit! Introdu datele de autentificare"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Alătură-te Homarr",
+        "subtitle": "Bine ai venit la Homarr! Te rugăm să-ți creezi contul",
+        "description": "Ai fost invitat de {username}"
       },
       "init": {
-        "title": "",
+        "title": "Instalare Homarr nouă",
         "subtitle": ""
       }
     },
@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "",
     "iconPicker": {
       "label": "",
-      "header": ""
+      "header": "",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "",
+        "docker": "",
         "preferences": "Preferințele dvs.",
         "logout": "",
         "login": "Utilizator",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Setări"
+        "settings": "Setări",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Afișare informații despre sistemul de fișiere"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": ""
         },
@@ -2352,6 +2368,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": ""
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "",
       "text": ""
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Acasă",
@@ -4499,85 +4555,13 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": ""
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
               "label": ""
             },
-            "smartHomeEntityState": {
-              "label": ""
-            },
             "ping": {
-              "label": ""
-            },
-            "mediaServer": {
-              "label": "Server-ul media"
-            },
-            "mediaOrganizer": {
-              "label": ""
-            },
-            "downloads": {
-              "label": ""
-            },
-            "mediaRequestStats": {
-              "label": ""
-            },
-            "mediaRequestList": {
-              "label": ""
-            },
-            "rssFeeds": {
-              "label": ""
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": ""
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": ""
-            },
-            "mediaTranscoding": {
-              "label": ""
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
               "label": ""
             }
           },
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

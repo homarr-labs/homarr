@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "此處",
     "iconPicker": {
       "label": "Icon 網址",
-      "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}"
+      "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "切換至暗黑模式",
         "switchToLightMode": "切換至日間模式",
         "management": "管理中心",
+        "docker": "",
         "preferences": "偏好設定",
         "logout": "登出",
         "login": "登入",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "設定"
+        "settings": "設定",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "顯示檔案系統訊息"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "預設頁面"
         },
@@ -2352,6 +2368,9 @@
       "name": "",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "提供者"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "找不到匹配的版本",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "不存在",
       "text": "找不到請求的資源"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "首頁",
@@ -4499,86 +4555,14 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft 伺服器狀態"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "icon 上傳器"
             },
             "analytics": {
               "label": "分析"
             },
-            "smartHomeEntityState": {
-              "label": "智能居家狀態"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "多媒體伺服器"
-            },
-            "mediaOrganizer": {
-              "label": "多媒體組織者"
-            },
-            "downloads": {
-              "label": "正在下載"
-            },
-            "mediaRequestStats": {
-              "label": "多媒體請求狀態"
-            },
-            "mediaRequestList": {
-              "label": "多媒體請求列表"
-            },
-            "rssFeeds": {
-              "label": "RSS 訂閱"
-            },
-            "indexerManager": {
-              "label": "索引器管理"
-            },
-            "healthMonitoring": {
-              "label": "健康監測"
-            },
-            "dnsHole": {
-              "label": "DNS Hole 數據"
-            },
-            "updateChecker": {
-              "label": "更新檢查"
-            },
-            "mediaTranscoding": {
-              "label": "多媒體轉碼中"
-            },
-            "networkController": {
-              "label": "網路控制"
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": ""
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "取得 Docker 容器失敗"
+      "internalServerError": "取得 Docker 容器失敗",
+      "noColumns": ""
     }
   },
   "kubernetes": {

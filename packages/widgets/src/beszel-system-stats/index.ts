@@ -16,6 +16,7 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
+  queryKey: [["widget", "beszel"]],
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
@@ -28,10 +29,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
             data = [],
             isPending,
             isError,
-          } = clientApi.widget.beszel.getSystems.useQuery(
-            { integrationIds },
-            { enabled: integrationIds.length > 0, staleTime: 30_000 },
-          );
+          } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
           const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
           return { data: selectData, isPending, isError };
         },

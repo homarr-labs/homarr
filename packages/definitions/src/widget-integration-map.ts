@@ -20,27 +20,31 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   "mediaRequests-requestList": getIntegrationKindsByCategory("mediaRequest"),
   "mediaRequests-requestStats": getIntegrationKindsByCategory("mediaRequest"),
   mediaTranscoding: getIntegrationKindsByCategory("mediaTranscoding"),
+  mediaMissing: getIntegrationKindsByCategory("mediaOrganizer"),
   networkControllerSummary: getIntegrationKindsByCategory("networkController"),
   networkControllerStatus: getIntegrationKindsByCategory("networkController"),
   indexerManager: getIntegrationKindsByCategory("indexerManager"),
-  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring"),
+  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
   mediaReleases: ["emby", "jellyfin", "plex"],
-  systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances"],
-  systemDisks: ["dashDot", "openmediavault", "truenas", "unraid"],
+  systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   coolify: ["coolify"],
-  timetable: ["searchCh"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
   paperlessNgx: ["paperlessNgx"],
+  patchmon: ["patchmon"],
+  bazarr: ["bazarr"],
   tracearr: ["tracearr"],
   speedtestTracker: ["speedtestTracker"],
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
   vpn: getIntegrationKindsByCategory("vpn"),
+  archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
   openWebUi: ["openWebUi"],
+  traefik: ["traefik"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
@@ -81,18 +85,7 @@ export const featuredIntegrations: readonly IntegrationKind[] = [
   "jellyfin",
 ];
 
-export const hiddenFromOnboarding = new Set<IntegrationKind>([
-  "searchCh",
-  "github",
-  "dockerHub",
-  "gitlab",
-  "npm",
-  "codeberg",
-  "linuxServerIO",
-  "gitHubContainerRegistry",
-  "quay",
-  "mock",
-]);
+export const hiddenFromOnboarding = new Set<IntegrationKind>(["mock"]);
 
 export const defaultBookmarkApps = [
   {

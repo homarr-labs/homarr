@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je."
+      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Schakel naar donkere modus",
         "switchToLightMode": "Schakel naar lichte modus",
         "management": "Beheer",
+        "docker": "",
         "preferences": "Jouw voorkeuren",
         "logout": "Uitloggen",
         "login": "Inloggen",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Instellingen"
+        "settings": "Instellingen",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Bestandssysteem info weergeven"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Standaard tab"
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker statistieken",
       "description": "",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Aanbieder"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identificator",
             "placeholder": "Naam of Eigenaar/naam"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Geen aanbieder",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Ongeldige identificator",
           "noMatchingVersion": "Geen overeenkomende versie gevonden",
           "noReleasesFound": "Geen uitgaves gevonden",
-          "noProviderSeleceted": "Geen aanbieder geselecteerd",
-          "noProviderResponse": "Geen reactie van aanbieder"
+          "noProviderSelected": "",
+          "noProviderResponse": "Geen reactie van aanbieder",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Niet gevonden",
       "text": "Kon de aangevraagde bron niet vinden"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Home",
@@ -4499,86 +4555,14 @@
             "disabled": "Uitgeschakeld"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft server status"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Icoon updater"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Smart home entiteitstatus"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Mediaserver"
-            },
-            "mediaOrganizer": {
-              "label": "Media organisatoren"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Media-aanvraag statistieken"
-            },
-            "mediaRequestList": {
-              "label": "Media-aanvraag lijst"
-            },
-            "rssFeeds": {
-              "label": "RSS-feeds"
-            },
-            "indexerManager": {
-              "label": "Indexeringsbeheerder"
-            },
-            "healthMonitoring": {
-              "label": "Gezondheidsmonitoring"
-            },
-            "dnsHole": {
-              "label": "DNS-hole gegevens"
-            },
-            "updateChecker": {
-              "label": "Update checker"
-            },
-            "mediaTranscoding": {
-              "label": "Mediatranscodering"
-            },
-            "networkController": {
-              "label": "Netwerkcontroller"
-            },
-            "refreshNotifications": {
-              "label": "Melding updater"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall geheugen"
-            },
-            "firewallVersion": {
-              "label": "Firewall versie"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall interfaces"
-            },
-            "weather": {
-              "label": "Weer"
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker-containers zijn niet opgehaald"
+      "internalServerError": "Docker-containers zijn niet opgehaald",
+      "noColumns": ""
     }
   },
   "kubernetes": {

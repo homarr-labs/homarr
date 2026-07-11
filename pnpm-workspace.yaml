@@ -14,44 +14,45 @@ catalog:
   "@dnd-kit/utilities": ^3.2.2
   "@drizzle-team/brocli": ^0.12.0
   "@extractus/feed-extractor": 7.2.1
-  '@gfazioli/mantine-onboarding-tour': ^4.0.5
+  "@gfazioli/mantine-onboarding-tour": ^4.0.6
   "@gitbeaker/rest": ^43.8.0
   "@homarr/gridstack": ^1.12.0
   "@homarr/node-unifi": ^2.6.0
-  "@immich/sdk": ^2.7.5
+  "@immich/sdk": ^3.0.1
   "@jellyfin/sdk": ^0.13.0
   "@kubernetes/client-node": ^1.4.0
   "@modelcontextprotocol/sdk": 1.29.0
-  "@mantine/charts": ^9.3.2
-  "@mantine/colors-generator": ^9.3.2
-  "@mantine/core": ^9.3.2
-  "@mantine/dates": ^9.3.2
-  "@mantine/dropzone": ^9.3.2
-  "@mantine/form": ^9.3.2
-  "@mantine/hooks": ^9.3.2
-  "@mantine/modals": ^9.3.2
-  "@mantine/notifications": ^9.3.2
-  "@mantine/spotlight": ^9.3.2
-  "@mantine/tiptap": ^9.3.2
-  "@next/eslint-plugin-next": 16.2.9
+  "@mantine/charts": ^9.4.1
+  "@mantine/colors-generator": ^9.4.1
+  "@mantine/core": ^9.4.1
+  "@mantine/dates": ^9.4.1
+  "@mantine/dropzone": ^9.4.1
+  "@mantine/form": ^9.4.1
+  "@mantine/hooks": ^9.4.1
+  "@mantine/modals": ^9.4.1
+  "@mantine/notifications": ^9.4.1
+  "@mantine/spotlight": ^9.4.1
+  "@mantine/tiptap": ^9.4.1
+  "@next/eslint-plugin-next": 16.2.10
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
-  "@playwright/test": ^1.61.0
+  "@playwright/test": ^1.61.1
   "@semantic-release/changelog": ^6.0.3
   "@semantic-release/commit-analyzer": ^13.0.1
   "@semantic-release/git": ^10.0.1
-  "@semantic-release/github": ^12.0.8
+  "@semantic-release/github": ^12.0.9
   "@semantic-release/npm": ^13.1.5
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
-  "@tanstack/query-persist-client-core": ^5.101.0
-  "@tanstack/react-query": ^5.101.0
-  "@tanstack/react-query-devtools": ^5.101.0
-  "@tanstack/react-query-next-experimental": ^5.101.0
-  "@testcontainers/mysql": ^12.0.3
-  "@testcontainers/postgresql": ^12.0.3
-  "@testcontainers/redis": ^12.0.3
+  "@tanstack/query-async-storage-persister": ^5.101.2
+  "@tanstack/react-query": ^5.101.2
+  "@tanstack/react-query-devtools": ^5.101.2
+  "@tanstack/react-query-next-experimental": ^5.101.2
+  "@tanstack/react-query-persist-client": ^5.101.2
+  "@testcontainers/mysql": ^12.0.4
+  "@testcontainers/postgresql": ^12.0.4
+  "@testcontainers/redis": ^12.0.4
   "@tiptap/extension-color": 3.27.1
   "@tiptap/extension-highlight": 3.27.1
   "@tiptap/extension-image": 3.27.1
@@ -68,12 +69,12 @@ catalog:
   "@tiptap/extension-underline": 3.27.1
   "@tiptap/react": ^3.27.1
   "@tiptap/starter-kit": ^3.27.1
-  "@trpc/client": ^11.17.0
-  "@trpc/next": ^11.17.0
-  "@trpc/react-query": ^11.17.0
-  "@trpc/server": ^11.17.0
-  "@trpc/tanstack-react-query": ^11.17.0
-  "@turbo/gen": ^2.9.18
+  "@trpc/client": ^11.18.0
+  "@trpc/next": ^11.18.0
+  "@trpc/react-query": ^11.18.0
+  "@trpc/server": ^11.18.0
+  "@trpc/tanstack-react-query": ^11.18.0
+  "@turbo/gen": ^2.10.2
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
@@ -88,29 +89,29 @@ catalog:
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
-  "@scalar/api-reference-react": ^0.9.47
+  "@scalar/api-reference-react": ^0.9.51
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
-  posthog-js: ^1.391.2
-  posthog-node: ^4.18.0
-  "@vitejs/plugin-react": ^6.0.2
+  posthog-js: ^1.396.4
+  posthog-node: ^5.39.2
+  "@vitejs/plugin-react": ^6.0.3
   "@vitest/coverage-v8": ^4.1.9
   "@vitest/ui": ^4.1.9
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
-  adm-zip: 0.5.17
+  adm-zip: 0.5.18
   jszip: ^3.10.1
   sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
-  better-sqlite3: ^12.10.0
+  better-sqlite3: ^12.11.1
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   concurrently: ^10.0.3
-  conventional-changelog-conventionalcommits: ^9.3.1
-  cookie: 1.1.1
+  conventional-changelog-conventionalcommits: ^10.2.0
+  cookie: 2.0.1
   cookies: ^0.9.1
   croner: 10.0.1
   cross-env: ^10.1.0
@@ -118,7 +119,7 @@ catalog:
   dayjs: ^1.11.21
   deepmerge: 4.3.1
   dns-caching: ^0.2.9
-  dockerode: ^5.0.0
+  dockerode: ^5.0.1
   dotenv: ^17.4.2
   dotenv-cli: ^11.0.0
   drizzle-kit: ^0.31.10
@@ -126,7 +127,7 @@ catalog:
   drizzle-zod: ^0.8.3
   esbuild: ^0.28.0
   fast-xml-parser: ^5.9.3
-  fastify: ^5.8.5
+  fastify: ^5.9.0
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
@@ -138,20 +139,20 @@ catalog:
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
-  lucide-react: ^1.21.0
+  lucide-react: ^1.23.0
   "mantine-contextmenu": ^9.3.1
   mantine-datatable: ^9.3.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
   mysql2: 3.22.5
-  next: 16.2.9
+  next: 16.2.10
   next-auth: 5.0.0-beta.31
-  next-intl: 4.13.0
+  next-intl: 4.13.1
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  oxfmt: ^0.55.0
-  oxlint: ^1.70.0
+  oxfmt: ^0.57.0
+  oxlint: ^1.72.0
   pg: ^8.22.0
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
@@ -163,22 +164,22 @@ catalog:
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
-  recharts: ^3.8.1
+  recharts: ^3.9.1
   sass: ^1.101.0
   semantic-release: ^25.0.5
   semver-parser: ^4.2.1
   superjson: 2.2.6
   svgson: ^5.3.1
-  testcontainers: ^12.0.3
+  testcontainers: ^12.0.4
   timezones-ical-library: ^2.2.1
   trpc-to-mcp: ^1.3.2
   trpc-to-openapi: ^3.3.0
-  tsdav: ^2.2.2
+  tsdav: ^2.3.0
   tsx: 4.20.4
-  turbo: ^2.9.18
+  turbo: ^2.10.2
   typescript: ^6.0.3
-  vite: ^8.0.16
-  undici: 7.27.2
+  vite: ^8.1.2
+  undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.9
   vite-tsconfig-paths: ^6.1.1
@@ -190,6 +191,7 @@ catalog:
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
+
 catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false
@@ -199,33 +201,39 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  - "@immich/sdk@3.0.0"
   # Renovate security update: turbo@2.9.14
   - turbo@2.9.14
   # Renovate security update: form-data@4.0.6
   - form-data@4.0.6
+  # Renovate security update: undici@7.28.0
+  - undici@7.28.0
+  # Renovate security update: esbuild@0.28.1
+  - esbuild@0.28.1
 overrides:
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
-  "axios@>=1.0.0 <1.8.2": ">=1.18.0"
-  "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.6"
-  "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.6"
-  "esbuild@<=0.24.2": ">=0.28.0"
+  "axios@>=1.0.0 <1.8.2": ">=1.18.1"
+  "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.7"
+  "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.7"
+  "esbuild@<=0.24.2": ">=0.28.1"
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
-  "hono@<4.6.5": ">=4.12.26"
+  "hono@<4.6.5": ">=4.12.27"
   "linkifyjs@<4.3.2": ">=4.3.3"
-  "nanoid@>=4.0.0 <5.0.9": ">=5.1.15"
+  "nanoid@>=4.0.0 <5.0.9": ">=5.1.16"
   "prismjs@<1.30.0": ">=1.30.0"
-  "proxmox-api>undici": "7.27.1"
+  "proxmox-api>undici": "7.28.0"
   "react-is": "^19.2.7"
   "rollup@>=4.0.0 <4.22.4": ">=4.62.2"
   "sha.js@<=2.4.11": ">=2.4.12"
-  "tar-fs@>=3.0.0 <3.0.9": ">=3.1.2"
-  "tar-fs@>=2.0.0 <2.1.3": ">=3.1.2"
+  "tar-fs@>=3.0.0 <3.0.9": ">=3.1.3"
+  "tar-fs@>=2.0.0 <2.1.3": ">=3.1.3"
   "tmp@<=0.2.3": ">=0.2.7"
-  "vite@>=5.0.0 <=5.4.18": ">=8.0.16"
+  "vite@>=5.0.0 <=5.4.18": ">=8.1.3"
 patchedDependencies:
   "@types/node-unifi": "patches/@types__node-unifi.patch"
   "trpc-to-openapi": "patches/trpc-to-openapi.patch"
+
 allowUnusedPatches: true
 allowBuilds:
   "@tree-sitter-grammars/tree-sitter-yaml": true

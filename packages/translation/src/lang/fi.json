@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Valvonta",
       "speedtest": "Nopeustestaus",
       "analytics": "Analytiikka",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1044,7 +1045,7 @@
           "description": "Vastausta ei voitu jäsentää. Tarkista, että URL-osoite osoittaa palvelun perusosoitteeseen."
         },
         "authorization": {
-          "title": "Tuonnistautumisvirhe",
+          "title": "Tunnistautumisvirhe",
           "description": "Pyyntöä ei hyväksytty. Varmista, että kirjautumistiedot ovat oikein ja että niille on määritetty riittävät käyttöoikeudet."
         },
         "statusCode": {
@@ -1412,7 +1413,10 @@
     "here": "",
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
-      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta."
+      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "Hallinta",
+        "docker": "",
         "preferences": "Asetuksesi",
         "logout": "Kirjaudu ulos",
         "login": "",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Asetukset"
+        "settings": "Asetukset",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": ""
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": ""
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker-tilastot",
       "description": "Konttiesi tilastot (tämä widget voidaan lisätä vain ylläpito-oikeuksilla)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Salli kohteiden järjestys"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": "Vaihda albumin kuva X sekunnin välein. Oltava alle 3600 ja vähintään 1."
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": ""
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "Toimittajaa ei ole valittu",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "",
       "text": ""
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Aloitus",
@@ -4499,86 +4555,14 @@
             "disabled": "Ei käytössä"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft-palvelimen tila"
-            },
-            "timetable": {
-              "label": "Aikataulu"
-            },
             "iconsUpdater": {
               "label": "Kuvakepäivitykset"
             },
             "analytics": {
               "label": "Analytiikka"
             },
-            "smartHomeEntityState": {
-              "label": "Älykodin entiteettitila"
-            },
             "ping": {
               "label": "Ping-koestukset"
-            },
-            "mediaServer": {
-              "label": "Mediapalvelimet"
-            },
-            "mediaOrganizer": {
-              "label": "Median hallintatyökalut"
-            },
-            "downloads": {
-              "label": "Lataukset"
-            },
-            "mediaRequestStats": {
-              "label": "Mediapyyntöjen tilastot"
-            },
-            "mediaRequestList": {
-              "label": "Mediapyyntöjen listaus"
-            },
-            "rssFeeds": {
-              "label": "RSS-syötteet"
-            },
-            "indexerManager": {
-              "label": ""
-            },
-            "healthMonitoring": {
-              "label": "Terveydentilan valvonta"
-            },
-            "dnsHole": {
-              "label": ""
-            },
-            "updateChecker": {
-              "label": "Päivitystarkistus"
-            },
-            "mediaTranscoding": {
-              "label": "Median transkoodaus"
-            },
-            "networkController": {
-              "label": ""
-            },
-            "refreshNotifications": {
-              "label": "Ilmoituspäivitykset"
-            },
-            "dockerContainers": {
-              "label": "Docker-kontit"
-            },
-            "firewallCpu": {
-              "label": "Palomuurin suoritin"
-            },
-            "firewallMemory": {
-              "label": "Palomuurin muisti"
-            },
-            "firewallVersion": {
-              "label": "Palomuurin versio"
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": "Sää"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umamin aktiiviset käyttäjät"
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "",
+      "noColumns": ""
     }
   },
   "kubernetes": {

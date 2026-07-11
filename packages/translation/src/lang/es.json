@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
-      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti."
+      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Cambiar a modo oscuro",
         "switchToLightMode": "Cambiar a modo claro",
         "management": "Administración",
+        "docker": "",
         "preferences": "Tus preferencias",
         "logout": "Cerrar sesión",
         "login": "Iniciar sesión",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Ajustes"
+        "settings": "Ajustes",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "Salidas {station}",
       "noStation": "No se ha seleccionado ninguna integración",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Estación"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Mostrar información del sistema de archivos"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Seleccionar pestaña predeterminada"
         },
@@ -2352,6 +2368,9 @@
       "name": "Estadísticas de Docker",
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Habilitar ordenar elementos"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "Instancias"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Mostrar información de la foto",
           "description": "Mostrar la fecha y el índice actual de la foto en la parte inferior de la presentación"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Presentación de fotos de un álbum de Immich",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Proveedor"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nombre o Propietario/Nombre"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Sin Proveedor",
             "tooltip": "El proveedor no pudo ser analizado, por favor configurarlo manualmente después de importar las imágenes"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Identificador no válido",
           "noMatchingVersion": "No se encontró una versión correspondiente",
           "noReleasesFound": "No se encontraron publicaciones",
-          "noProviderSeleceted": "No se ha seleccionado ningún proveedor",
-          "noProviderResponse": "No hay respuesta del proveedor"
+          "noProviderSelected": "",
+          "noProviderResponse": "No hay respuesta del proveedor",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Mostrar la barra de uso en segundo plano"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "No Encontrado",
       "text": "No se pudo encontrar el recurso solicitado"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Inicio",
@@ -4499,86 +4555,14 @@
             "disabled": "Deshabilitado"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Estado del Servidor de Minecraft"
-            },
-            "timetable": {
-              "label": "Horarios de estación"
-            },
             "iconsUpdater": {
               "label": "Actualizador de iconos"
             },
             "analytics": {
               "label": "Estadísticas"
             },
-            "smartHomeEntityState": {
-              "label": "Estado de Entidad de Smart Home"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Servidor Multimedia"
-            },
-            "mediaOrganizer": {
-              "label": "Organizadores multimedia"
-            },
-            "downloads": {
-              "label": "Descargas"
-            },
-            "mediaRequestStats": {
-              "label": "Estadísticas de solicitudes de medios"
-            },
-            "mediaRequestList": {
-              "label": "Lista de solicitudes de medios"
-            },
-            "rssFeeds": {
-              "label": "Fuentes RSS"
-            },
-            "indexerManager": {
-              "label": "Administrador de Índices"
-            },
-            "healthMonitoring": {
-              "label": "Monitoreo de Salud"
-            },
-            "dnsHole": {
-              "label": "Datos de agujero DNS"
-            },
-            "updateChecker": {
-              "label": "Comprobador de actualización"
-            },
-            "mediaTranscoding": {
-              "label": "Transcodificación de medios"
-            },
-            "networkController": {
-              "label": "Controlador de red"
-            },
-            "refreshNotifications": {
-              "label": "Actualizador de notificaciones"
-            },
-            "dockerContainers": {
-              "label": "Contenedores de Docker"
-            },
-            "firewallCpu": {
-              "label": "CPU del Firewall"
-            },
-            "firewallMemory": {
-              "label": "Memoria del Firewall"
-            },
-            "firewallVersion": {
-              "label": "Versión del Firewall"
-            },
-            "firewallInterfaces": {
-              "label": "Interfaces del Firewall"
-            },
-            "weather": {
-              "label": "Tiempo"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fallo al obtener los contenedores de Docker"
+      "internalServerError": "Fallo al obtener los contenedores de Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

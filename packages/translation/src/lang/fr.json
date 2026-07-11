@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Partir de zéro",
           "importOldmarr": "Importer depuis Homarr avant la 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restaurer depuis une sauvegarde SQLite",
+          "restoreSqliteDescription": "Téléchargez une sauvegarde complète de la base de données SQLite depuis une instance Homarr précédente. Cela restaurera tous les tableaux, utilisateurs, applications, intégrations et paramètres.",
+          "backToOptions": "← Retour aux options de configuration"
         }
       },
       "import": {
@@ -110,29 +110,29 @@
             "message": "Une erreur s'est produite lors de la configuration de votre tableau de bord. Veuillez réessayer."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Aides pour les URL",
+            "description": "Ces aides essaient de deviner l'URL de vos services. Si cela ne fonctionne pas, tapez simplement l'adresse manuellement."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
+          "label": "URL de base",
+          "placeholder": "homelab.local ou 192.168.1.1",
+          "hint": "Entrez votre domaine de base ou votre IP pour le remplissage automatique des URL d'intégration",
+          "warning": "Définir votre URL de base maintenant remplira automatiquement toutes les URL d'intégration, ce qui vous fera gagner du temps lors de la configuration",
           "preview": "ex. {example}",
           "mode": {
             "subdomain": "Sous-domaine",
-            "hostPort": ""
+            "hostPort": "Hôte:Port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker a détecté {count} services",
+          "detectedBreakdown": "Intégrations {integrations} · Applications {apps}",
+          "summary": "Les applications {apps} ont été détectées par Homarr, dont {integrations} ont des intégrations intégrées",
+          "appBadge": "App",
+          "appSectionLabel": "Applications à ajouter au tableau de bord ({count} sélectionné)",
+          "scanning": "Analyse de Docker...",
+          "scanningDescription": "Recherche de conteneurs en cours d'exécution sur votre système"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Mot de passe",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Suggestions de mot de passe",
         "suggestion": {
           "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
@@ -205,7 +205,7 @@
         "label": "Ouvrir les résultats de recherche dans un nouvel onglet"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Activer les bangs DuckDuckGo"
       }
     },
     "error": {
@@ -298,10 +298,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Bangs DuckDuckGo activés avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible d'activer/désactiver les bangs DuckDuckGo"
           }
         }
       },
@@ -687,53 +687,53 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Widgets personnalisés",
+        "noResults": "Pas encore de widgets personnalisés. Créez votre premier widget!",
+        "loading": "Chargement..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Créer un widget personnalisé",
+        "subtitle": "Définissez une URL de l'API, l'authentification, et comment afficher les données de réponse."
       },
       "edit": {
-        "title": ""
+        "title": "Modifier le widget personnalisé"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
+      "create": "Créer",
+      "import": "Importer",
+      "save": "Sauvegarder",
+      "delete": "Supprimer le widget personnalisé",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
+      "export": "Exporter",
       "addMapping": "",
-      "addColumn": "",
-      "edit": "",
+      "addColumn": "Ajouter une colonne",
+      "edit": "Modifier",
       "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "removeColumn": "Supprimer la colonne",
+      "addItem": "Ajouter un élément",
+      "removeItem": "Supprimer l'élément",
+      "addBar": "Ajouter une barre",
+      "duplicate": "Dupliquer",
+      "copyAiPrompt": "Copier le prompt IA",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "menu": "Actions"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
+      "name": "Nom",
+      "description": "Description",
+      "iconUrl": "URL de l'icône",
+      "url": "URL",
+      "authType": "Type d’authentification",
       "headerName": "",
       "method": "",
       "requestBody": "",
       "displayType": "",
       "jsonPath": "",
       "jsonPathHint": "",
-      "label": "",
-      "unit": "",
+      "label": "Étiquette",
+      "unit": "Unité",
       "mappings": "",
       "tablePath": "",
       "tablePathHint": "",
@@ -753,28 +753,28 @@
       "labelPosition": "",
       "kvLayout": "",
       "striped": "",
-      "compact": "",
+      "compact": "Mode Compact",
       "maxHeight": "",
-      "color": "",
+      "color": "Couleur",
       "buttonLabel": "",
       "buttonColor": "",
-      "confirmText": "",
+      "confirmText": "Texte de confirmation",
       "confirmTextHint": "",
-      "successMessage": "",
+      "successMessage": "Message de réussite",
       "successMessageHint": "",
-      "enabled": "",
+      "enabled": "Activé",
       "template": {
-        "label": "",
+        "label": "Template JSX",
         "description": ""
       }
     },
     "placeholder": {
       "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
+      "exampleLabelShort": "Température du CPU",
+      "exampleHeader": "Nom",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
       "headerName": "",
       "jsonPath": "",
       "tablePath": "",
@@ -797,27 +797,27 @@
       "sm": "",
       "md": "",
       "lg": "",
-      "xl": ""
+      "xl": "Très grand"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "Au-dessus",
+      "below": "En dessous"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "Général",
+      "connection": "Connexion API",
+      "display": "Configuration de l'affichage"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
+      "singleValue": "Afficher une valeur extraite avec une étiquette et une unité",
+      "keyValue": "Afficher plusieurs valeurs étiquetées côte à côte",
       "table": "",
       "statGrid": "",
       "progressBars": "",
-      "statusIndicator": "",
+      "statusIndicator": "Points d'état colorés montrant en ligne/hors ligne ou l'état de santé",
       "countGrid": "",
       "raw": "",
-      "actionButton": "",
+      "actionButton": "Un bouton qui déclenche une requête lorsqu'elle est cliquée",
       "customJsx": ""
     },
     "method": {
@@ -848,8 +848,8 @@
     },
     "secret": {
       "apiKey": "",
-      "username": "",
-      "password": "",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
       "savedPlaceholder": ""
     },
     "preview": {
@@ -859,34 +859,34 @@
       "rawResponse": ""
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
+      "created": "Widget \"{name}\" créé avec succès.",
+      "updated": "Widget \"{name}\" mis à jour avec succès.",
+      "deleted": "Widget \"{name}\" supprimé.",
+      "imported": "Widget importé avec succès.",
       "aiPromptCopied": "",
       "aiPromptDescription": "",
-      "aiPromptCopy": "",
+      "aiPromptCopy": "Copier dans le presse-papiers",
       "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "aiPromptCopyError": "Échec de la copie du prompt dans le presse-papiers. Votre navigateur peut ne pas prendre en charge cette fonctionnalité.",
+      "createError": "Impossible de créer le widget. Vérifiez que votre point de terminaison API est joignable.",
+      "updateError": "Impossible de mettre à jour le widget. Vos modifications n'ont pas été enregistrées.",
+      "importError": "Impossible d'importer le widget. Assurez-vous que le fichier est un export JSON de widget personnalisé valide.",
+      "exportError": "Impossible d'exporter le widget.",
+      "duplicated": "Widget \"{name}\" dupliqué.",
+      "duplicateError": "Impossible de dupliquer le widget.",
+      "toggleError": "Impossible de changer le statut du widget.",
+      "deleteError": "Impossible de supprimer le widget.",
+      "previewError": "Impossible de récupérer l'aperçu. Vérifiez l'URL et réessayez.",
+      "executed": "Action exécutée avec succès.",
+      "executeError": "Échec de l'action: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Nom",
+      "url": "URL",
+      "display": "Affichage"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Ce widget est désactivé"
     }
   },
   "integration": {
@@ -1007,22 +1007,23 @@
       "miscellaneous": "",
       "smartHomeServer": "",
       "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
+      "healthMonitoring": "Santé",
+      "search": "Rechercher",
+      "mediaTranscoding": "Transcodage",
+      "networkController": "Réseau",
+      "releasesProvider": "Versions",
+      "notifications": "Notifications",
+      "firewall": "Pare-feu",
       "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "photoService": "Photos",
+      "documents": "Documents",
+      "notes": "Notes",
+      "mediaMonitoring": "Supervision",
+      "speedtest": "Test de débit",
+      "analytics": "Statistiques",
+      "vpn": "VPN",
+      "mediaLibrary": "Bibliothèque de médias",
+      "uptimeMonitoring": "Surveillance des disponibilités"
     },
     "testConnection": {
       "action": {
@@ -1297,8 +1298,8 @@
           "newLabel": "Nouvelle clé privée"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug de la page de statut",
+          "newLabel": "Nouveau slug de page de statut"
         }
       }
     },
@@ -1312,7 +1313,7 @@
       "description": ""
     },
     "navidrome": {
-      "name": "",
+      "name": "Navidrome",
       "description": ""
     },
     "uptimeKuma": {
@@ -1384,7 +1385,7 @@
       "add": "Ajouter",
       "apply": "Appliquer",
       "backToOverview": "Retourner à l'aperçu",
-      "skip": "",
+      "skip": "Ignorer",
       "change": "Modifier",
       "create": "Créer",
       "createAnother": "Créer et recommencer",
@@ -1406,17 +1407,20 @@
       "checkLogs": "Vérifiez les logs pour plus de détails",
       "tryAgain": "Réessayer",
       "loading": "Chargement",
-      "show": "",
-      "hide": ""
+      "show": "Afficher",
+      "hide": "Masquer"
     },
     "here": "ici",
     "iconPicker": {
       "label": "URL de l'icône :",
-      "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous."
+      "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous.",
+      "headerLoading": "Tapez pour rechercher les icônes…",
+      "noResults": "Aucune icône ne correspond à \"{search}\".",
+      "error": "Impossible de charger les icônes."
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "Clair",
         "dark": "Sombre"
       }
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Activer le mode sombre",
         "switchToLightMode": "Activer le mode clair",
         "management": "Administration",
+        "docker": "Docker",
         "preferences": "Vos préférences",
         "logout": "Se déconnecter",
         "login": "Connexion",
@@ -1573,7 +1578,7 @@
         "label": {
           "create": "Nouvelle catégorie",
           "changePosition": "Modifier la position",
-          "settings": ""
+          "settings": "Réglages"
         }
       },
       "openAllInNewTabs": {
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "refresh": "Actualiser",
+        "options": "Options",
+        "actions": "Actions"
       }
     },
     "create": {
@@ -1621,11 +1629,11 @@
     "edit": {
       "title": "Éditer l'élément",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Éditer le widget",
+        "app": "Modifier l'application"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Les modifications apportées à cette application seront appliquées partout où elle est utilisée sur tous les tableaux de bord."
       },
       "advancedOptions": {
         "label": "Options avancées",
@@ -1653,11 +1661,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Connectez d'abord une intégration",
+      "loading": "Chargement...",
+      "placeholder": "Choisir une option",
+      "noResults": "Aucun résultat trouvé",
+      "loadError": "Impossible de charger les options"
     },
     "app": {
       "name": "App",
@@ -1738,7 +1746,7 @@
           "label": "Ouvrir dans un nouvel onglet"
         },
         "withBorder": {
-          "label": ""
+          "label": "Afficher la bordure"
         },
         "items": {
           "label": "Signets",
@@ -1751,7 +1759,7 @@
       "description": "",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Afficher les messages de diffusion"
         }
       }
     },
@@ -1891,10 +1899,13 @@
     },
     "timetable": {
       "name": "",
-      "description": "",
+      "description": "Affiche les heures de départ pour une station",
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -1986,17 +1997,17 @@
       },
       "empty": "",
       "emptyContent": "",
-      "notFound": "",
+      "notFound": "Note introuvable",
       "noNotes": "",
       "integrationRequired": "",
       "updatedAt": "",
       "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
+      "edit": "Modifier",
+      "save": "Sauvegarder",
+      "cancel": "Annuler",
       "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "saveForbidden": "Vous n'êtes pas autorisé à modifier cette note.",
+      "saveFailed": "Impossible d'enregistrer cette note. Veuillez réessayer."
     },
     "iframe": {
       "name": "iFrame",
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Afficher les infos sur le système de fichiers"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Onglet par défaut"
         },
@@ -2352,6 +2368,9 @@
       "name": "Statistiques de Docker",
       "description": "Statistiques de vos conteneurs (Ce widget ne peut être ajouté qu'avec les privilèges d'administrateur)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Activer le tri des éléments"
         },
@@ -2405,32 +2424,38 @@
         "title": "Instances"
       }
     },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
+    },
     "ups": {
       "name": "",
       "description": "",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Afficher la batterie"
         },
         "showLoad": {
-          "label": ""
+          "label": "Afficher la charge"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Afficher la tension"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "En ligne",
+        "onBattery": "Sur batterie",
+        "lowBattery": "Batterie faible",
+        "charging": "Chargement",
+        "unknown": "Inconnu"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Runtime",
+        "load": "Charger",
+        "input": "Entrée",
+        "output": "Sortie"
       },
       "error": {
         "internalServerError": ""
@@ -2441,7 +2466,7 @@
       "description": "Surveillance avancée du serveur multimédia avec des données détaillées de flux et de transcodage",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Afficher les flux actifs"
         },
         "showStats": {
           "label": "Afficher le résumé des statistiques"
@@ -2454,13 +2479,13 @@
         }
       },
       "stats": {
-        "activeStreams": "",
+        "activeStreams": "Flux actif",
         "totalUsers": "Utilisateurs totaux",
-        "transcodes": "",
+        "transcodes": "Transcodages",
         "bandwidth": "Bande passante"
       },
       "streams": {
-        "empty": "",
+        "empty": "Aucun flux actif",
         "user": "Utilisateur",
         "media": "Média",
         "state": "État",
@@ -2502,32 +2527,32 @@
       "avgDuration": "",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Site Web",
+          "description": "Sélectionnez un site web suivi par votre instance Umami",
+          "placeholder": "Sélectionnez un site",
+          "loading": "Chargement des sites Web...",
+          "noWebsites": "Aucun site web trouvé",
+          "configureIntegrationFirst": "Connectez d'abord une intégration Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Intervalle de temps",
+          "description": "La période d'affichage des données du visiteur pour",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Aujourd'hui",
+            "24h": "Dernières 24 heures",
+            "7d": "7 derniers jours",
+            "30d": "30 derniers jours",
+            "month": "Ce mois",
+            "lastMonth": "Le mois dernier"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
+          "label": "Evénement",
+          "description": "Afficher le total des occurrences d'un événement spécifique",
+          "placeholder": "Sélectionner un événement",
+          "loading": "Chargement des événements...",
+          "noEvents": "Aucun événement trouvé",
+          "none": "Aucun événement",
           "configureWebsiteFirst": ""
         },
         "chartType": {
@@ -2577,15 +2602,15 @@
         "direct": ""
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Directe"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Sélectionnez les événements à afficher"
       },
       "error": {
         "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
+        "noWebsite": "Aucun site web configuré",
+        "noData": "Aucune donnée disponible",
         "internalServerError": ""
       }
     },
@@ -2685,10 +2710,10 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
+      "name": "Paperless-ngx",
+      "description": "Aperçu de votre archive de documents Paperless-ngx",
+      "documentsTotal": "Nombre total de documents",
+      "documentsInbox": "Boîte de réception",
       "correspondents": "",
       "tags": "",
       "documentTypes": "",
@@ -2697,7 +2722,7 @@
       "total": "",
       "option": {
         "showInboxRatio": {
-          "label": "",
+          "label": "Afficher le ratio de la boîte de réception",
           "description": ""
         },
         "showInboxRing": {
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Afficher les informations de la photo",
           "description": "Afficher la date et l'index de la photo en bas du diaporama"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Diaporama de photos dans votre album Immich",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Fournisseur"
           },
+          "providerUrl": {
+            "label": "URL du fournisseur"
+          },
           "identifier": {
             "label": "Identifiant",
             "placeholder": "Nom ou Propriétaire / Nom"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Aucun fournisseur",
             "tooltip": "Le fournisseur n'a pas pu être analysé, veuillez le définir manuellement après l'importation des images"
+          },
+          "tokens": {
+            "label": "Tokens du fournisseur",
+            "token": "Token",
+            "configured": "Token configuré",
+            "notConfigured": "Aucun token défini",
+            "save": "Sauvegarder"
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Identifiant non valide",
           "noMatchingVersion": "Aucune version correspondante trouvée",
           "noReleasesFound": "Aucune publication trouvée",
-          "noProviderSeleceted": "Aucun fournisseur sélectionné",
-          "noProviderResponse": "Aucune réponse du fournisseur"
+          "noProviderSelected": "Aucun fournisseur sélectionné",
+          "noProviderResponse": "Aucune réponse du fournisseur",
+          "unexpected": "Erreur de fournisseur inattendue"
         }
       }
     },
@@ -3299,24 +3339,24 @@
       "option": {}
     },
     "speedtestTracker": {
-      "name": "",
+      "name": "Suivi de test de vitesse",
       "description": "",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Afficher le dernier résultat"
         },
         "showStats": {
-          "label": ""
+          "label": "Afficher les moyennes"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Afficher le dernier résultat"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Afficher le graphique de ping"
         }
       },
-      "latestResult": "",
-      "averages": "",
+      "latestResult": "Dernier résultat",
+      "averages": "Moyennes",
       "tests": "",
       "recentResults": "",
       "recentResultsSpeed": "",
@@ -3351,7 +3391,7 @@
         },
         "showTotalMonitors": {
           "label": "",
-          "description": ""
+          "description": "Afficher le nombre total de moniteurs configurés"
         },
         "showUpCount": {
           "label": "",
@@ -3366,35 +3406,35 @@
           "description": ""
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Temps de disponibilité moyen (24h)",
       "stats": {
-        "totalMonitors": "",
+        "totalMonitors": "Nombre total de moniteurs",
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossible de récupérer les données de disponibilité"
       }
     },
     "audioStats": {
-      "name": "",
+      "name": "Statistiques audio",
       "description": "",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Afficher l'artiste",
+          "description": "Afficher le nombre total d'artistes dans votre bibliothèque musicale (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Afficher l'album",
+          "description": "Afficher le nombre total d'albums dans votre bibliothèque musicale (Navidrome)"
         },
         "showSongs": {
-          "label": "",
+          "label": "Afficher les titres",
           "description": ""
         },
         "showNowPlaying": {
-          "label": "",
+          "label": "Afficher la lecture en cours",
           "description": ""
         },
         "showNowPlayingList": {
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Afficher la barre d'utilisation en arrière-plan"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Non trouvé",
       "text": "Impossible de trouver la ressource demandée"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Accueil",
@@ -4499,86 +4555,14 @@
             "disabled": "Désactivé"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "État du serveur Minecraft"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Mise à jour des icônes"
             },
             "analytics": {
               "label": "Statistiques"
             },
-            "smartHomeEntityState": {
-              "label": "État de l'entité Maison Connectée"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Serveur multimédia"
-            },
-            "mediaOrganizer": {
-              "label": "Organisateurs de Médias"
-            },
-            "downloads": {
-              "label": "Téléchargements"
-            },
-            "mediaRequestStats": {
-              "label": "Statistiques des demandes de médias"
-            },
-            "mediaRequestList": {
-              "label": "Liste des demandes de médias"
-            },
-            "rssFeeds": {
-              "label": "Flux RSS"
-            },
-            "indexerManager": {
-              "label": "Gestionnaire d’indexeur"
-            },
-            "healthMonitoring": {
-              "label": "Moniteur de santé"
-            },
-            "dnsHole": {
-              "label": "Données du puit DNS"
-            },
-            "updateChecker": {
-              "label": "Vérificateur de mise à jour"
-            },
-            "mediaTranscoding": {
-              "label": "Transcodage des médias"
-            },
-            "networkController": {
-              "label": "Contrôleur réseau"
-            },
-            "refreshNotifications": {
-              "label": "Mise à jour des notifications"
-            },
-            "dockerContainers": {
-              "label": "Conteneurs Docker"
-            },
-            "firewallCpu": {
-              "label": "Processeur du pare-feu"
-            },
-            "firewallMemory": {
-              "label": "Mémoire du pare-feu"
-            },
-            "firewallVersion": {
-              "label": "Version du pare-feu"
-            },
-            "firewallInterfaces": {
-              "label": "Interfaces du pare-feu"
-            },
-            "weather": {
-              "label": "Météo"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Impossible de récupérer les conteneurs Docker"
+      "internalServerError": "Impossible de récupérer les conteneurs Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

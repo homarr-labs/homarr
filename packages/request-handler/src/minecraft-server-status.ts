@@ -1,14 +1,11 @@
-import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
-export const minecraftServerStatusRequestHandler = createCachedWidgetRequestHandler({
-  queryKey: "minecraftServerStatusApiResult",
-  widgetKind: "minecraftServerStatus",
+export const minecraftServerStatusRequestHandler = createWidgetRequestHandler({
   async requestAsync(input: { domain: string; isBedrockServer: boolean }) {
     const path = `${input.isBedrockServer ? "/bedrock" : ""}/3/${input.domain}`;
 
@@ -17,7 +14,6 @@ export const minecraftServerStatusRequestHandler = createCachedWidgetRequestHand
     );
     return responseSchema.parse(await response.json());
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
 });
 
 const responseSchema = z

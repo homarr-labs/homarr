@@ -85,6 +85,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         ),
         integrationSupport: "supportedIntegrations" in currentDefinition,
         settings,
+        itemId: item.id,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {

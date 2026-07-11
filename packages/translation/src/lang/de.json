@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "Überwachung",
       "speedtest": "Geschwindigkeitstest",
       "analytics": "Nutzungsdaten",
+      "vpn": "",
       "mediaLibrary": "Medienbibliothek",
       "uptimeMonitoring": "Überwachung der Betriebszeit"
     },
@@ -1412,7 +1413,10 @@
     "here": "Hier",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
+      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
+      "headerLoading": "Tippe um die Symbole zu durchsuchen…",
+      "noResults": "Keine Symbole stimmen mit \"{search}\" überein.",
+      "error": "Konnte Symbole nicht laden."
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
+        "docker": "",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Einstellungen"
+        "settings": "Einstellungen",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "{station} Abfahrt",
       "noStation": "Keine Station ausgewählt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Station"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Standard Tab"
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker Statistiken",
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Sortierung von Elementen aktivieren"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "Instanzen"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "UPS",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Foto Infos anzeigen",
           "description": "Datum des Bildes und des aktuellen Indexes am unteren Rand der Diashow anzeigen"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Diashow der Bilder in Ihrem Immich Album",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Anbieter"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name oder Eigentümer/Name"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Keine Anbieter",
             "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Ungültige Kennung",
           "noMatchingVersion": "Keine passende Version gefunden",
           "noReleasesFound": "Keine Veröffentlichungen gefunden",
-          "noProviderSeleceted": "Kein Anbieter ausgewählt",
-          "noProviderResponse": "Keine Antwort vom Anbieter"
+          "noProviderSelected": "",
+          "noProviderResponse": "Keine Antwort vom Anbieter",
+          "unexpected": ""
         }
       }
     },
@@ -3395,53 +3435,53 @@
         },
         "showNowPlaying": {
           "label": "\"Sie hören\" anzeigen",
-          "description": ""
+          "description": "Zeige aktuell gespielte Titel an (Navidrome)"
         },
         "showNowPlayingList": {
-          "label": "",
-          "description": ""
+          "label": "\"Sie hören jetzt\" Wiedergabeliste anzeigen",
+          "description": "Einzelne Tracks anstelle der aktiven Streamanzahl anzeigen (Navidrome)"
         },
         "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
+          "label": "Maximale jetzt abgespielte Elemente",
+          "description": "Maximale Anzahl an Titeln, die in der \"Sie hören jetzt\" Wiedergabeliste angezeigt werden (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Anzahl der Bibliotheken anzeigen",
+          "description": "Zeige die Anzahl der Bibliotheken in deiner Instanz (Hörbücherregal)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Hörbücher anzeigen",
+          "description": "Zeige die Gesamtzahl der Hörbücher in allen Bibliotheken (Hörbücherregal)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Podcasts anzeigen",
+          "description": "Zeige die Gesamtzahl der Podcasts in allen Bibliotheken (Hörbücherregal)"
         },
         "showListeningTime": {
-          "label": "",
+          "label": "Hördauer anzeigen",
           "description": "Zeigt deine gesamte Hörzeit (Audiobookshelf)"
         },
         "showActiveSessions": {
           "label": "Aktive Streams anzeigen",
-          "description": ""
+          "description": "Zeige die Anzahl der aktuell aktiven Wiedergabesitzungen (Hörbücherregal)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Kompakter Modus",
+          "description": "Verwenden Sie ein dichteres Layout mit kleineren Kacheln, ideal für kleine Widget-Größen"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
+      "artists": "Künstler",
+      "albums": "Alben",
+      "songs": "Musik",
+      "libraryCount": "Bibliotheken",
+      "audiobooks": "Hörbücher",
+      "podcasts": "Podcasts",
+      "listeningTime": "Hördauer",
+      "activeSessions": "Aktive Sitzungen",
+      "nowPlaying": "Aktuelle Wiedergabe",
+      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Audio-Statistikdaten"
       }
     },
     "systemResources": {
@@ -3457,7 +3497,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Speicher",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Netzwerk"
           }
         },
@@ -3474,7 +3514,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "Arbeitsspeicher",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "Netzwerk",
         "up": "OBEN",
         "down": "UNTEN"
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Zeige Hintergrundnutzungsleiste"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3510,93 +3555,93 @@
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "Benutzerdefinierte API",
+      "description": "Zeigt Daten von jeder externen API mit benutzerdefinierter Konfiguration an.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "Definitions ID"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Aktualisierungsintervall",
+          "description": "Wie oft Daten von der API neu geladen werden sollen (in Sekunden)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "Keine Definition ausgewählt",
+      "definitionNotFound": "Widget-Definition nicht gefunden. Möglicherweise wurde sie gelöscht.",
+      "noDisplayOutput": "Keine Anzeige-Ausgabe",
+      "executeConfirm": "Bist du dir sicher, dass du diese Aktion ausführen möchtest?",
+      "executing": "Wird ausgeführt...",
+      "executeSuccess": "Aktion erfolgreich ausgeführt",
+      "executeFailed": "Aktion fehlgeschlagen. Überprüfen Sie die Widget-Konfiguration."
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Systeme (Tabelle)",
+      "description": "Tabellenansicht aller Beszel-überwachten Systeme mit sortierbaren Spalten und Statusindikatoren",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Status Filter"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sortieren nach"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Sortierreihenfolge"
         },
         "showCpu": {
-          "label": ""
+          "label": "CPU anzeigen"
         },
         "showMemory": {
-          "label": ""
+          "label": "Arbeitsspeicher anzeigen"
         },
         "showDisk": {
-          "label": ""
+          "label": "Datenträger anzeigen"
         },
         "showGpu": {
-          "label": ""
+          "label": "GPU anzeigen"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Zeige Belastungsdurchschnitt"
         },
         "showNet": {
-          "label": ""
+          "label": "Netzwerk anzeigen"
         },
         "showTemp": {
-          "label": ""
+          "label": "Temperatur anzeigen"
         },
         "showBattery": {
-          "label": ""
+          "label": "Akkustand anzeigen"
         },
         "showServices": {
-          "label": ""
+          "label": "Dienste anzeigen"
         },
         "showUptime": {
-          "label": ""
+          "label": "Laufzeit anzeigen"
         },
         "showAgent": {
-          "label": ""
+          "label": "Agent-Version anzeigen"
         }
       },
-      "noRecords": "",
+      "noRecords": "Keine Systeme gefunden",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Keine Verbindung zu Beszel. Überprüfen Sie Ihre Integrationseinstellungen."
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "System",
+        "cpu": "CPU",
+        "memory": "Arbeitsspeicher",
+        "disk": "Datenträger",
+        "gpu": "GPU",
+        "loadAvg": "Systemlast",
+        "net": "Netz",
+        "temp": "Temperatur",
+        "battery": "Batterie",
+        "services": "Dienste",
+        "uptime": "Betriebszeit",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
+      "name": "Beszel Systems (Grid)",
       "description": "",
       "option": {
         "statusFilter": {
@@ -3638,6 +3683,9 @@
       },
       "error": {
         "internalServerError": ""
+      },
+      "empty": {
+        "noSystems": ""
       },
       "metric": {
         "cpu": "CPU",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "System auswählen",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Nicht gefunden",
       "text": "Konnte die angeforderte Ressource nicht finden"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Startseite",
@@ -4499,86 +4555,14 @@
             "disabled": "Deaktiviert"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Status des Minecraft Servers"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Symbol Updater"
             },
             "analytics": {
               "label": "Nutzungsdaten"
             },
-            "smartHomeEntityState": {
-              "label": "Status der Smart Home Entitäten"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Medien Server"
-            },
-            "mediaOrganizer": {
-              "label": "Medienorganisatoren"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Statistik der Medienanfragen"
-            },
-            "mediaRequestList": {
-              "label": "Liste der Medienanfragen"
-            },
-            "rssFeeds": {
-              "label": "RSS Feeds"
-            },
-            "indexerManager": {
-              "label": "Index Manager"
-            },
-            "healthMonitoring": {
-              "label": "Überwachung des Zustandes"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Daten"
-            },
-            "updateChecker": {
-              "label": "Updateprüfer"
-            },
-            "mediaTranscoding": {
-              "label": "Medien Transkodierung"
-            },
-            "networkController": {
-              "label": "Netzwerk Controller"
-            },
-            "refreshNotifications": {
-              "label": "Benachrichtigungs Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker Container"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Speicher"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Schnittstellen"
-            },
-            "weather": {
-              "label": "Wetter"
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Fehler beim Abrufen der Docker Container"
+      "internalServerError": "Fehler beim Abrufen der Docker Container",
+      "noColumns": ""
     }
   },
   "kubernetes": {

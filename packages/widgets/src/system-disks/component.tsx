@@ -10,6 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { filterStorageVolumes } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
@@ -118,27 +119,29 @@ const SystemDiskCard = ({
 
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput, {
-    staleTime: 5 * 1000,
-  });
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(queryInput, {
-    onData(data) {
-      utils.widget.healthMonitoring.getSystemHealthStatus.setData(queryInput, (oldData) =>
-        oldData?.map((item) => (item.integrationId === data.integrationId ? { ...item, ...data } : item)),
-      );
-    },
-  });
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
 
   const lastItem = data.at(-1);
 
   if (!lastItem) return <WidgetEmptyState />;
-  const { fileSystem, smart } = lastItem.healthInfo;
 
-  if (fileSystem.length === 0) {
+  const rawFileSystem = lastItem.healthInfo.fileSystem;
+  if (rawFileSystem.length === 0) {
     throw new NoIntegrationDataError();
   }
+
+  const fileSystem = filterStorageVolumes(
+    rawFileSystem,
+    options.visibleStorageVolumes,
+    lastItem.integrationId,
+  );
+  const smart = filterStorageVolumes(
+    lastItem.healthInfo.smart,
+    options.visibleStorageVolumes,
+    lastItem.integrationId,
+  );
+
+  if (fileSystem.length === 0) return <WidgetEmptyState />;
 
   return (
     <Stack gap="xs" p="xs" h="100%">

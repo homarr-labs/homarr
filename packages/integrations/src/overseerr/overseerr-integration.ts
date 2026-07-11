@@ -132,11 +132,14 @@ export class OverseerrIntegration
       },
     );
 
-    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
+    const allRequests = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/v1/request", { take: 20, sort: "modified" }),
+      {
+        headers: {
+          "X-Api-Key": this.getSecretValue("apiKey"),
+        },
       },
-    });
+    );
 
     const pendingResults = (await getRequestsSchema.parseAsync(await pendingRequests.json())).results;
     const allResults = (await getRequestsSchema.parseAsync(await allRequests.json())).results;

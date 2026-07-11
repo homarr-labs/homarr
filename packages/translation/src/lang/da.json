@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig."
+      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Skift til mørk tilstand",
         "switchToLightMode": "Skift til lys tilstand",
         "management": "Håndtering",
+        "docker": "",
         "preferences": "Dine indstillinger",
         "logout": "Log ud",
         "login": "Log ind",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Indstillinger"
+        "settings": "Indstillinger",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "Afgange {station}",
       "noStation": "Ingen station valgt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Station"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Vis information om filsystemet"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Standard fane"
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker statistik",
       "description": "Statistik for dine containere (Denne widget kan kun tilføjes med administratorrettigheder)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Aktiver sortering"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "Instanser"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Vis billedinfo",
           "description": "Vis dato for billedet og det aktuelle indeks i bunden af diasshowet"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Diasshow af billeder i dit Immich album",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Udbyder"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Ingen Udbyder",
             "tooltip": "Udbyderen kunne ikke fortolkes, angiv venligst det manuelt efter import af billederne"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen matchende version fundet",
           "noReleasesFound": "Ingen udgivelser fundet",
-          "noProviderSeleceted": "Ingen udbyder valgt",
-          "noProviderResponse": "Intet svar fra udbyder"
+          "noProviderSelected": "",
+          "noProviderResponse": "Intet svar fra udbyder",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Vis forbrugslinje i baggrunden"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Ikke Fundet",
       "text": "Kunne ikke finde den anmodede ressource"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Hjem",
@@ -4499,86 +4555,14 @@
             "disabled": "Deaktiveret"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Status for Minecraft server"
-            },
-            "timetable": {
-              "label": "Tidsskema"
-            },
             "iconsUpdater": {
               "label": "Opdatering Af Ikoner"
             },
             "analytics": {
               "label": "Analyser"
             },
-            "smartHomeEntityState": {
-              "label": "Smarthjem ententitets tilstand"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Medieserver"
-            },
-            "mediaOrganizer": {
-              "label": "Medieorganisatorer"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Statistik For Medieforespørgsel"
-            },
-            "mediaRequestList": {
-              "label": "Liste Over Medieforespørgsler"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indekser Manager"
-            },
-            "healthMonitoring": {
-              "label": "Helbredsovervågning"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Opdaterings checker"
-            },
-            "mediaTranscoding": {
-              "label": "Omkodning af medier"
-            },
-            "networkController": {
-              "label": "Netværkskontroller"
-            },
-            "refreshNotifications": {
-              "label": "Notifikations opdaterer"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Hukommelse"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Grænseflader"
-            },
-            "weather": {
-              "label": "Vejr"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Kunne ikke hente Docker-containere"
+      "internalServerError": "Kunne ikke hente Docker-containere",
+      "noColumns": ""
     }
   },
   "kubernetes": {

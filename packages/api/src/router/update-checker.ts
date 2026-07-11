@@ -9,7 +9,7 @@ export const updateCheckerRouter = createTRPCRouter({
   getAvailableUpdates: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     try {
       const handler = updateCheckerRequestHandler.handler({});
-      const data = await handler.getCachedOrUpdatedDataAsync({});
+      const data = await handler.getDataAsync();
       return data.data.availableUpdates;
     } catch (error) {
       logger.error(new Error("Failed to get available updates", { cause: error }));

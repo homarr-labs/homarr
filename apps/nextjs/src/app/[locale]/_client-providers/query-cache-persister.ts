@@ -1,49 +1,32 @@
-import type { AsyncStorage, PersistedQuery } from "@tanstack/query-persist-client-core";
-import { experimental_createQueryPersister } from "@tanstack/query-persist-client-core";
-import { parse, stringify } from "superjson";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import superjson from "superjson";
 
 import { fetchApi } from "@homarr/api/client";
-import {
-  getActiveQueryCacheBoardId,
-  isPersistableWidgetQueryKey,
-  queryCacheStoragePrefix,
-} from "@homarr/api/query-cache";
+import { getActiveQueryCacheBoardId, queryCacheStoragePrefix } from "@homarr/api/query-cache";
 
 const queryCacheStorage = {
-  async getItem(_key) {
-    return null;
-  },
-  async setItem(key, value) {
+  getItem: (_key: string) => null as string | null,
+  async setItem(_key: string, value: string) {
     const boardId = getActiveQueryCacheBoardId();
     if (!boardId) return;
-
-    try {
-      await fetchApi.queryCache.setItem.mutate({ boardId, key, value });
-    } catch {
-      // Query persistence is best-effort; failed writes should not affect widget rendering.
-    }
+    await fetchApi.queryCache.setItem.mutate({ boardId, value }).catch((error) => {
+      console.warn("[query-cache] persist failed", error);
+    });
   },
-  async removeItem(key) {
+  async removeItem(_key: string) {
     const boardId = getActiveQueryCacheBoardId();
     if (!boardId) return;
-
-    try {
-      await fetchApi.queryCache.removeItem.mutate({ boardId, key });
-    } catch {
-      // Query persistence is best-effort; failed removals should not affect widget rendering.
-    }
+    await fetchApi.queryCache.removeItem.mutate({ boardId }).catch((error) => {
+      console.warn("[query-cache] remove failed", error);
+    });
   },
-} satisfies AsyncStorage<string>;
+};
 
 export const createWidgetQueryPersister = () =>
-  experimental_createQueryPersister<string>({
+  createAsyncStoragePersister({
     storage: typeof window === "undefined" ? undefined : queryCacheStorage,
-    maxAge: Number.POSITIVE_INFINITY,
-    prefix: queryCacheStoragePrefix,
-    refetchOnRestore: true,
-    serialize: (query) => stringify(query),
-    deserialize: (value) => parse<PersistedQuery>(value),
-    filters: {
-      predicate: (query) => isPersistableWidgetQueryKey(query.queryKey),
-    },
+    key: queryCacheStoragePrefix,
+    throttleTime: 2000,
+    serialize: (data) => superjson.stringify(data),
+    deserialize: (data) => superjson.parse(data),
   });

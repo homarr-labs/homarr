@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "כאן",
     "iconPicker": {
       "label": "קישור של הסמל",
-      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} ."
+      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} .",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "עבור למצב כהה",
         "switchToLightMode": "עבור למצב בהיר",
         "management": "ניהול",
+        "docker": "",
         "preferences": "העדפות שלך",
         "logout": "התנתק/י",
         "login": "התחבר/י",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "הגדרות"
+        "settings": "הגדרות",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "כרטיסיית ברירת מחדל"
         },
@@ -2352,6 +2368,9 @@
       "name": "סטטיסטיקות דוקר",
       "description": "סטטיסטיקות של המכולות שלך (ניתן להוסיף ווידג'ט זה רק עם הרשאות מנהל)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "אפשר מיון פריטים"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "ספק"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "ללא ספק",
             "tooltip": "לא ניתן היה לנתח את הספק, אנא הגדר אותו ידנית לאחר ייבוא ​​התמונות"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "מזהה לא חוקי",
           "noMatchingVersion": "לא נמצאה גרסה תואמת",
           "noReleasesFound": "לא נמצאו שיחרורים",
-          "noProviderSeleceted": "לא נבחר ספק",
-          "noProviderResponse": "אין תשובה מהספק"
+          "noProviderSelected": "",
+          "noProviderResponse": "אין תשובה מהספק",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "לא נמצא",
       "text": "לא ניתן לאתר את המשאב המבוקש"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "מסך הבית",
@@ -4499,86 +4555,14 @@
             "disabled": "מושבת"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "סטטוס שרת מיינקראפט"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "עדכון אייקונים"
             },
             "analytics": {
               "label": "ניתוחים"
             },
-            "smartHomeEntityState": {
-              "label": "סטטוס יישות בית חכם"
-            },
             "ping": {
               "label": "פינגים"
-            },
-            "mediaServer": {
-              "label": "שרת מדיה"
-            },
-            "mediaOrganizer": {
-              "label": "מארגני מדיה"
-            },
-            "downloads": {
-              "label": "הורדות"
-            },
-            "mediaRequestStats": {
-              "label": "סטטוס בקשות מדיה"
-            },
-            "mediaRequestList": {
-              "label": "רשימת בקשות מדיה"
-            },
-            "rssFeeds": {
-              "label": "הזנות RSS"
-            },
-            "indexerManager": {
-              "label": "מנהל אינדקסים"
-            },
-            "healthMonitoring": {
-              "label": "ניטור בריאות המערכת"
-            },
-            "dnsHole": {
-              "label": "נתוני חור DNS"
-            },
-            "updateChecker": {
-              "label": "בודק עדכונים"
-            },
-            "mediaTranscoding": {
-              "label": "המרת קידוד מדיה"
-            },
-            "networkController": {
-              "label": "בקר רשת"
-            },
-            "refreshNotifications": {
-              "label": "עדכון התראות"
-            },
-            "dockerContainers": {
-              "label": "מכולות דוקר"
-            },
-            "firewallCpu": {
-              "label": "מעבד חומת האש"
-            },
-            "firewallMemory": {
-              "label": "זיכרון חומת אש"
-            },
-            "firewallVersion": {
-              "label": "גרסת חומת אש"
-            },
-            "firewallInterfaces": {
-              "label": "ממשקי חומת אש"
-            },
-            "weather": {
-              "label": "מזג אוויר"
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "נכשל בקבלת קונטיינרי דוקר"
+      "internalServerError": "נכשל בקבלת קונטיינרי דוקר",
+      "noColumns": ""
     }
   },
   "kubernetes": {

@@ -8,8 +8,8 @@
         "action": {
           "scratch": "Start fra begynnelsen",
           "importOldmarr": "Importer fra Homarr før 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
+          "restoreSqlite": "Gjenopprett fra SQLite sikkerhetskopi",
+          "restoreSqliteDescription": "Last opp en full SQLite database sikkerhetskopi fra en tidligere Homarr instans. Dette vil gjenopprette alle tavler, brukere, apper, integrasjoner og innstillinger.",
           "backToOptions": ""
         }
       },
@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg."
+      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Bytt til mørk modus",
         "switchToLightMode": "Bytt til lys modus",
         "management": "Administrasjon",
+        "docker": "",
         "preferences": "Dine innstillinger",
         "logout": "Logg ut",
         "login": "Logg Inn",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Innstillinger"
+        "settings": "Innstillinger",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "Avganger {station}",
       "noStation": "Ingen stasjon valgt",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Stasjon"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Vis filsysteminfo"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Standard fane"
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker status",
       "description": "Statistikk over containerne dine (denne widgeten kan bare legges til med administratorrettigheter)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Aktiver sortering av elementer"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "Instanser"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Vis bildeinformasjon",
           "description": "Vis datoen for bildet og gjeldende indeks nederst i lysbildeserien"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Lysbildefremvisning av bilder i ditt Immich-album",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Leverandør"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller Eier/Navn"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Ingen leverandør",
             "tooltip": "Leverandøren kunne ikke tolkes, sett den manuelt etter import av bildene"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen samsvarende versjon funnet",
           "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSeleceted": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør"
+          "noProviderSelected": "",
+          "noProviderResponse": "Ingen respons fra leverandør",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Vis bakgrunnsbrukslinje"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Ikke funnet",
       "text": "Fant ikke den forespurte ressursen"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Hjem",
@@ -4499,86 +4555,14 @@
             "disabled": "Deaktivert"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft serverstatus"
-            },
-            "timetable": {
-              "label": "Timeplan"
-            },
             "iconsUpdater": {
               "label": "Ikon oppdatering"
             },
             "analytics": {
               "label": "Statistikk"
             },
-            "smartHomeEntityState": {
-              "label": "Smart hjem enhets tilstand"
-            },
             "ping": {
               "label": "Pinger"
-            },
-            "mediaServer": {
-              "label": "Medieserver"
-            },
-            "mediaOrganizer": {
-              "label": "Media organisatorer"
-            },
-            "downloads": {
-              "label": "Nedlastinger"
-            },
-            "mediaRequestStats": {
-              "label": "Statistikk for mediaforespørsler"
-            },
-            "mediaRequestList": {
-              "label": "Liste over mediaspillforespørsler"
-            },
-            "rssFeeds": {
-              "label": "RSS feed"
-            },
-            "indexerManager": {
-              "label": "Indekserings-behandler"
-            },
-            "healthMonitoring": {
-              "label": "Systemhelseovervåking"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Oppdateringssjekk"
-            },
-            "mediaTranscoding": {
-              "label": "Media transkoding"
-            },
-            "networkController": {
-              "label": "Nettverkskontroller"
-            },
-            "refreshNotifications": {
-              "label": "Varseloppdaterer"
-            },
-            "dockerContainers": {
-              "label": "Docker-beholdere"
-            },
-            "firewallCpu": {
-              "label": "Brannmur-CPU"
-            },
-            "firewallMemory": {
-              "label": "Brannmur-minne"
-            },
-            "firewallVersion": {
-              "label": "Brannmur-versjon"
-            },
-            "firewallInterfaces": {
-              "label": "Brannmur-grensesnitt"
-            },
-            "weather": {
-              "label": "Vær"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Aktive Besøkende"
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Klarte ikke hente Docker-containere"
+      "internalServerError": "Klarte ikke hente Docker-containere",
+      "noColumns": ""
     }
   },
   "kubernetes": {

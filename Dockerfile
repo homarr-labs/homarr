@@ -1,4 +1,4 @@
-FROM node:24.17.0-alpine AS base
+FROM node:24.18.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -19,17 +19,6 @@ ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 
 RUN corepack enable pnpm && pnpm build
-
-# The standalone output tracing omits server chunk source maps (.next/server/**/*.map), which is
-# where production Node stack frames point. Copy the .map files into the standalone tree (preserving
-# directory structure) so the existing standalone COPY ships them, keeping traces readable.
-# See https://github.com/homarr-labs/homarr/issues/5891
-RUN cd apps/nextjs/.next/server && \
-    find . -name '*.map' | while IFS= read -r map; do \
-      dest="../standalone/apps/nextjs/.next/server/$map"; \
-      mkdir -p "$(dirname "$dest")"; \
-      cp "$map" "$dest"; \
-    done
 
 FROM base AS runner
 WORKDIR /app
@@ -53,6 +42,7 @@ RUN mkdir -p /var/cache/nginx && \
 
 COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
@@ -75,9 +65,6 @@ ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
-# Tell Node to symbolicate stack traces using the shipped .map files so production logs
-# show original source locations instead of minified frames, see https://github.com/homarr-labs/homarr/issues/5891
-ENV NODE_OPTIONS='--enable-source-maps'
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]

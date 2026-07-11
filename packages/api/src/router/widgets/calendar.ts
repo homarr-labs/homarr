@@ -1,13 +1,8 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
-import type { Modify } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { CalendarEvent } from "@homarr/integrations/types";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
@@ -39,9 +34,7 @@ export const calendarRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
-          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          const { data } = await innerHandler.getDataAsync();
 
           return {
             events: data,
@@ -70,41 +63,6 @@ export const calendarRouter = createTRPCRouter({
           ),
         );
         return [];
-      });
-    }),
-  subscribeToEvents: publicProcedure
-    .input(
-      z.object({
-        year: z.number(),
-        month: z.number(),
-        releaseType: z.array(z.enum(radarrReleaseTypes)),
-        showUnmonitored: z.boolean(),
-      }),
-    )
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
-    .subscription(({ ctx, input }) => {
-      return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"calendar"> }>;
-        events: CalendarEvent[];
-      }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const { integrationIds: _integrationIds, ...handlerInput } = input;
-          const innerHandler = calendarMonthRequestHandler.handler(integrationWithSecrets, handlerInput);
-          const unsubscribe = innerHandler.subscribe((events) => {
-            emit.next({
-              integration,
-              events,
-            });
-          });
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
       });
     }),
 });

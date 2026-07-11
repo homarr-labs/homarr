@@ -1285,6 +1285,14 @@
           "label": "API Key (Secret)",
           "newLabel": "New API Key (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "API Key",
+          "newLabel": "New API Key"
+        },
+        "patchmonApiSecret": {
+          "label": "API Secret",
+          "newLabel": "New API Secret"
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "New App Id"
@@ -1328,9 +1336,21 @@
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Cloud-native reverse proxy and load balancer"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Patch management and monitoring for Linux hosts"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
     }
   },
   "media": {
@@ -1598,7 +1618,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Settings"
+        "settings": "Settings",
+        "refresh": "Refresh",
+        "options": "Options",
+        "actions": "Actions"
       }
     },
     "create": {
@@ -1900,6 +1923,9 @@
       "title": "Departures {station}",
       "noStation": "No station selected",
       "option": {
+        "baseUrl": {
+          "label": "Search.ch URL"
+        },
         "station": {
           "label": "Station"
         }
@@ -2278,6 +2304,11 @@
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
+        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -2357,6 +2388,9 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "columns": {
+          "label": "Columns to show"
+        },
         "enableRowSorting": {
           "label": "Enable items sorting"
         },
@@ -2740,6 +2774,193 @@
         "internalServerError": "Failed to fetch Paperless-ngx data"
       }
     },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Overview of host patch status from PatchMon",
+      "title": "PatchMon Statistics",
+      "totalHosts": "Total Hosts",
+      "hostsNeedingUpdates": "Needs Updates",
+      "securityUpdates": "Security Updates",
+      "upToDateHosts": "Up-to-Date Hosts",
+      "hostsWithSecurityUpdates": "Hosts with Security Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Outdated Packages",
+      "totalRepos": "Repositories",
+      "osDistribution": "OS Distribution",
+      "compliance": "Patch Compliance",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Updated {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Show total hosts",
+          "description": "Display the total number of monitored hosts"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Show hosts needing updates",
+          "description": "Display hosts with at least one outdated package"
+        },
+        "showSecurityUpdates": {
+          "label": "Show security updates",
+          "description": "Display the total number of security updates available"
+        },
+        "showUpToDateHosts": {
+          "label": "Show up-to-date hosts",
+          "description": "Display hosts with zero outdated packages"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Show hosts with security updates",
+          "description": "Display hosts requiring security patches"
+        },
+        "showRecentUpdates24h": {
+          "label": "Show recent updates (24h)",
+          "description": "Display the number of updates applied in the last 24 hours"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Show outdated packages",
+          "description": "Display the total number of outdated packages across all hosts"
+        },
+        "showTotalRepos": {
+          "label": "Show repositories",
+          "description": "Display the number of active repositories being monitored"
+        },
+        "enableThresholdColors": {
+          "label": "Enable threshold colors",
+          "description": "Color stat values green, yellow, or red based on severity presets"
+        },
+        "useCustomThresholds": {
+          "label": "Advanced thresholds",
+          "description": "Customize warning and critical thresholds per stat using absolute counts or percentages of total hosts"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolute count",
+            "percent": "Percent of total hosts"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Needs updates threshold mode",
+          "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Needs updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Needs updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Security updates threshold mode",
+          "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Hosts with security updates threshold mode",
+          "description": "Compare the host count as an absolute value or percentage of total hosts"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Hosts with security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Hosts with security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Up-to-date hosts threshold mode",
+          "description": "Compare the up-to-date host count as an absolute value or percentage of total hosts"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Up-to-date hosts warning threshold",
+          "description": "Enter yellow when the value is at or above this threshold but below full coverage"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Up-to-date hosts critical threshold",
+          "description": "Enter red when the value falls below this threshold"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Outdated packages threshold mode",
+          "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Outdated packages warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Outdated packages critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "showOsDistribution": {
+          "label": "Show OS distribution",
+          "description": "Display a breakdown of monitored hosts by operating system"
+        },
+        "osDistributionLimit": {
+          "label": "OS distribution limit",
+          "description": "Maximum number of operating systems to display",
+          "option": {
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "All"
+          }
+        },
+        "showOsVersion": {
+          "label": "Show OS version",
+          "description": "Append the OS version to each distribution label when available"
+        },
+        "showComplianceHero": {
+          "label": "Show compliance hero",
+          "description": "Display a compliance ring showing the percentage of up-to-date hosts"
+        },
+        "osDisplayMode": {
+          "label": "OS display mode",
+          "description": "Choose how to display the operating system distribution",
+          "option": {
+            "bars": "Horizontal bars",
+            "donut": "Donut chart"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch PatchMon data"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Overview of missing subtitles and health status from your Bazarr instance",
+      "episodes": "Missing Episodes",
+      "movies": "Missing Movies",
+      "providers": "Provider Issues",
+      "status": "Health Issues",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Show missing episodes",
+          "description": "Display the number of episodes with missing subtitles"
+        },
+        "showMissingMovies": {
+          "label": "Show missing movies",
+          "description": "Display the number of movies with missing subtitles"
+        },
+        "showProviderIssues": {
+          "label": "Show provider issues",
+          "description": "Display the number of subtitle providers with issues"
+        },
+        "showHealthIssues": {
+          "label": "Show health issues",
+          "description": "Display the number of Bazarr health issues"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Bazarr data"
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Server Stats",
       "description": "Information about your Immich instance",
@@ -2770,8 +2991,8 @@
       "name": "Immich Album",
       "option": {
         "albumId": {
-          "label": "Album ID",
-          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "label": "Album",
+          "description": "Select the Immich album to show in the slideshow."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -2780,6 +3001,10 @@
         "showPhotoInfo": {
           "label": "Show photo info",
           "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        },
+        "randomizePhotos": {
+          "label": "Randomize photos",
+          "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
       "description": "Slideshow of pictures in your Immich album",
@@ -3075,6 +3300,35 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "Missing & Queued Media",
+      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Show missing items"
+        },
+        "showQueued": {
+          "label": "Show queued items"
+        },
+        "pageSize": {
+          "label": "Items per page"
+        }
+      },
+      "tab": {
+        "missing": "Missing",
+        "queued": "Queued"
+      },
+      "type": {
+        "movie": "Movie",
+        "episode": "Episode"
+      },
+      "empty": {
+        "missing": "No missing items",
+        "queued": "No queued items",
+        "noTabsEnabled": "Enable at least one tab in the widget settings"
+      },
+      "timeLeft": "Time left"
+    },
     "rssFeed": {
       "name": "RSS feeds",
       "description": "Monitor and display one or more generic RSS, ATOM or JSON feeds",
@@ -3144,6 +3398,9 @@
           "provider": {
             "label": "Provider"
           },
+          "providerUrl": {
+            "label": "Provider URL"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -3191,6 +3448,13 @@
           "noProvider": {
             "label": "No Provider",
             "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          },
+          "tokens": {
+            "label": "Provider Tokens",
+            "token": "Token",
+            "configured": "Token configured",
+            "notConfigured": "No token set",
+            "save": "Save"
           }
         }
       },
@@ -3213,8 +3477,9 @@
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found",
-          "noProviderSeleceted": "No provider selected",
-          "noProviderResponse": "No response from provider"
+          "noProviderSelected": "No provider selected",
+          "noProviderResponse": "No response from provider",
+          "unexpected": "Unexpected provider error"
         }
       }
     },
@@ -3307,7 +3572,11 @@
       "name": "Notifications",
       "description": "Display notification history from an integration",
       "noItems": "No notifications to display.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Hide logos"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3386,6 +3655,40 @@
       },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
+      }
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Overview of Traefik routers, services, middlewares, and entry points",
+      "option": {
+        "showTcp": {
+          "label": "Show TCP"
+        },
+        "showUdp": {
+          "label": "Show UDP"
+        },
+        "showEntryPoints": {
+          "label": "Show entry points"
+        }
+      },
+      "instances": "Traefik instances",
+      "versionUnknown": "Version unknown",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Entry points"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Services",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "errors": "{count} errors",
+        "warnings": "{count} warnings"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Traefik data"
       }
     },
     "audioStats": {
@@ -3514,6 +3817,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
         }
       },
       "status": {
@@ -3803,14 +4111,19 @@
         },
         "disk": {
           "title": "Disk Usage",
-          "subtitle": "Usage of root partition",
-          "series": "Used"
+          "subtitle": "Usage by filesystem",
+          "series": "Root"
         },
         "diskIO": {
           "title": "Disk I/O",
           "subtitle": "Throughput of root filesystem",
           "read": "Read",
           "write": "Write"
+        },
+        "storage": {
+          "title": "Storage",
+          "subtitle": "Per-filesystem disk usage",
+          "series": "Used"
         },
         "network": {
           "title": "Bandwidth",
@@ -4362,7 +4675,7 @@
                   "notStarted": "Not started"
                 },
                 "name": {
-"management": "Management",
+                  "management": "Management",
                   "dashboard": "Dashboard"
                 }
               }
@@ -4575,89 +4888,14 @@
             "disabled": "Disabled"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft server status"
-            },
-            "timetable": {
-              "label": "Timetable"
-            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
             "analytics": {
               "label": "Analytics"
             },
-            "smartHomeEntityState": {
-              "label": "Smart Home Entity State"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "Media Server"
-            },
-            "mediaOrganizer": {
-              "label": "Media Organizers"
-            },
-            "downloads": {
-              "label": "Downloads"
-            },
-            "mediaRequestStats": {
-              "label": "Media Request Stats"
-            },
-            "mediaRequestList": {
-              "label": "Media Request List"
-            },
-            "rssFeeds": {
-              "label": "RSS feeds"
-            },
-            "indexerManager": {
-              "label": "Indexer Manager"
-            },
-            "healthMonitoring": {
-              "label": "Health Monitoring"
-            },
-            "dnsHole": {
-              "label": "DNS Hole Data"
-            },
-            "updateChecker": {
-              "label": "Update checker"
-            },
-            "mediaTranscoding": {
-              "label": "Media transcoding"
-            },
-            "networkController": {
-              "label": "Network Controller"
-            },
-            "refreshNotifications": {
-              "label": "Notification Updater"
-            },
-            "dockerContainers": {
-              "label": "Docker containers"
-            },
-            "firewallCpu": {
-              "label": "Firewall CPU"
-            },
-            "firewallMemory": {
-              "label": "Firewall Memory"
-            },
-            "firewallVersion": {
-              "label": "Firewall Version"
-            },
-            "firewallInterfaces": {
-              "label": "Firewall Interfaces"
-            },
-            "weather": {
-              "label": "Weather"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": "Umami Active Visitors"
-            },
-            "vpn": {
-              "label": "VPN Status"
             }
           },
           "interval": {
@@ -5150,7 +5388,8 @@
       }
     },
     "error": {
-      "internalServerError": "Failed to fetch Docker containers"
+      "internalServerError": "Failed to fetch Docker containers",
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {

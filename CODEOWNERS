@@ -1,12 +1,220 @@
 # ── CODEOWNERS ───────────────────────────────────────
 * @homarr-labs/maintainers
 
-# Specific features / integrations 
-# Glueten
-apps/docs/docs/integrations/glueten @Lok3sh-kumar
+# Specific features / integrations
+# These owners come from the PR that introduced each integration implementation.
+# Specific rules override the global fallback because CODEOWNERS uses the last
+# matching pattern; do not include @homarr-labs/maintainers here unless they
+# should also be requested for that integration.
+
+# AdGuard Home - introduced in https://github.com/homarr-labs/homarr/pull/929 by @hillaliy
+apps/docs/docs/integrations/adguard-home @hillaliy
+packages/integrations/src/adguard-home @hillaliy
+
+# Anchor - introduced in https://github.com/homarr-labs/homarr/pull/5040 by @ohmzi
+apps/docs/docs/integrations/anchor @ohmzi
+packages/integrations/src/anchor @ohmzi
+
+# ArchiveTeam Warrior - introduced in https://github.com/homarr-labs/homarr/pull/5784 by @darbyjack
+apps/docs/docs/integrations/archive-team-warrior @darbyjack
+packages/integrations/src/archive-team-warrior @darbyjack
+
+# Bazarr - introduced in https://github.com/homarr-labs/homarr/pull/6156 by @Ayush7614
+apps/docs/docs/integrations/bazarr @Ayush7614
+apps/docs/docs/widgets/bazarr @Ayush7614
+packages/api/src/router/widgets/bazarr.ts @Ayush7614
+packages/integrations/src/bazarr @Ayush7614
+packages/request-handler/src/bazarr.ts @Ayush7614
+packages/widgets/src/bazarr @Ayush7614
+
+# Audiobookshelf - introduced in https://github.com/homarr-labs/homarr/pull/5910 by @ajnart
+apps/docs/docs/integrations/audiobookshelf @ajnart
+packages/integrations/src/audiobookshelf @ajnart
+
+# Beszel - introduced in https://github.com/homarr-labs/homarr/pull/5900 by @ajnart
+apps/docs/docs/integrations/beszel @ajnart
+packages/integrations/src/beszel @ajnart
+
+# Codeberg - introduced in https://github.com/homarr-labs/homarr/pull/3253 by @Aandree5
+apps/docs/docs/integrations/codeberg @Aandree5
+packages/integrations/src/codeberg @Aandree5
+
+# Coolify - introduced in https://github.com/homarr-labs/homarr/pull/4789 by @Rhiz3K
+apps/docs/docs/integrations/coolify @Rhiz3K
+packages/integrations/src/coolify @Rhiz3K
+
+# Dash. - introduced in https://github.com/homarr-labs/homarr/pull/1541 by @manuel-rw
+apps/docs/docs/integrations/dash-dot @manuel-rw
+packages/integrations/src/dashdot @manuel-rw
+
+# Docker Hub - introduced in https://github.com/homarr-labs/homarr/pull/3253 by @Aandree5
+apps/docs/docs/integrations/docker-hub @Aandree5
+packages/integrations/src/docker-hub @Aandree5
+
+# Emby - introduced in https://github.com/homarr-labs/homarr/pull/2466 by @Meierschlumpf
+apps/docs/docs/integrations/emby @Meierschlumpf
+packages/integrations/src/emby @Meierschlumpf
+
+# GitHub - introduced in https://github.com/homarr-labs/homarr/pull/3253 by @Aandree5
+apps/docs/docs/integrations/github @Aandree5
+packages/integrations/src/github @Aandree5
+
+# GitHub Container Registry - introduced in https://github.com/homarr-labs/homarr/pull/3727 by @Aandree5
+apps/docs/docs/integrations/github-containerregistry @Aandree5
+packages/integrations/src/github-container-registry @Aandree5
+
+# GitLab - introduced in https://github.com/homarr-labs/homarr/pull/3253 by @Aandree5
+apps/docs/docs/integrations/gitlab @Aandree5
+packages/integrations/src/gitlab @Aandree5
+
+# Glances - introduced in https://github.com/homarr-labs/homarr/pull/5102 by @manuel-rw
+apps/docs/docs/integrations/glances @manuel-rw
+packages/integrations/src/glances @manuel-rw
+
+# Gluetun - introduced in https://github.com/homarr-labs/homarr/pull/5812 by @Lok3sh-kumar
+apps/docs/docs/integrations/gluetun @Lok3sh-kumar
 packages/integrations/src/gluetun @Lok3sh-kumar
 
-# Exempt Renovate‑managed files (no owners)
+# Gotify - introduced in https://github.com/homarr-labs/homarr/pull/5847 by @Nerdy-Technician
+apps/docs/docs/integrations/gotify @Nerdy-Technician
+packages/integrations/src/gotify @Nerdy-Technician
+
+# Home Assistant - introduced in https://github.com/homarr-labs/homarr/pull/578 by @manuel-rw
+apps/docs/docs/integrations/home-assistant @manuel-rw
+packages/integrations/src/homeassistant @manuel-rw
+
+# ICal - introduced in https://github.com/homarr-labs/homarr/pull/3980 by @NicolasNewman
+apps/docs/docs/integrations/ical @NicolasNewman
+packages/integrations/src/ical @NicolasNewman
+
+# Immich - introduced in https://github.com/homarr-labs/homarr/pull/5165 by @manuel-rw
+apps/docs/docs/integrations/immich @manuel-rw
+packages/integrations/src/immich @manuel-rw
+
+# Jellyfin - introduced in https://github.com/homarr-labs/homarr/pull/672 by @manuel-rw
+apps/docs/docs/integrations/jellyfin @manuel-rw
+packages/integrations/src/jellyfin @manuel-rw
+
+# Jellyseerr - introduced in https://github.com/homarr-labs/homarr/pull/774 by @manuel-rw
+apps/docs/docs/integrations/jellyseerr @manuel-rw
+packages/integrations/src/jellyseerr @manuel-rw
+
+# LinuxServer.io - introduced in https://github.com/homarr-labs/homarr/pull/3607 by @Aandree5
+apps/docs/docs/integrations/linux-server-io @Aandree5
+packages/integrations/src/linuxserverio @Aandree5
+
+# Navidrome - introduced in https://github.com/homarr-labs/homarr/pull/5910 by @ajnart
+apps/docs/docs/integrations/navidrome @ajnart
+packages/integrations/src/navidrome @ajnart
+
+# Nextcloud - introduced in https://github.com/homarr-labs/homarr/pull/2501 by @manuel-rw
+apps/docs/docs/integrations/nextcloud @manuel-rw
+packages/integrations/src/nextcloud @manuel-rw
+
+# npm - introduced in https://github.com/homarr-labs/homarr/pull/3253 by @Aandree5
+apps/docs/docs/integrations/npm @Aandree5
+packages/integrations/src/npm @Aandree5
+
+# ntfy - introduced in https://github.com/homarr-labs/homarr/pull/2900 by @itzTheMeow
+apps/docs/docs/integrations/ntfy @ajnart @manuel-rw
+packages/integrations/src/ntfy @ajnart @manuel-rw
+
+# OpenMediaVault - introduced in https://github.com/homarr-labs/homarr/pull/1142 by @hillaliy
+apps/docs/docs/integrations/open-media-vault @hillaliy
+packages/integrations/src/openmediavault @hillaliy
+
+# OPNsense - introduced in https://github.com/homarr-labs/homarr/pull/3424 by @Oupsman
+apps/docs/docs/integrations/opnsense @Oupsman
+packages/integrations/src/opnsense @Oupsman
+
+# Overseerr - introduced in https://github.com/homarr-labs/homarr/pull/774 by @manuel-rw
+apps/docs/docs/integrations/overseerr @manuel-rw
+packages/integrations/src/overseerr @manuel-rw
+
+# Paperless-ngx - introduced in https://github.com/homarr-labs/homarr/pull/5910 by @ajnart
+apps/docs/docs/integrations/paperless-ngx @ajnart
+packages/integrations/src/paperless-ngx @ajnart
+
+# PatchMon - introduced in https://github.com/homarr-labs/homarr/pull/6119 by @mrjoshuap
+apps/docs/docs/integrations/patchmon @mrjoshuap
+packages/integrations/src/patchmon @mrjoshuap
+packages/widgets/src/patchmon @mrjoshuap
+packages/api/src/router/widgets/patchmon.ts @mrjoshuap
+packages/request-handler/src/patchmon.ts @mrjoshuap
+
+# PeaNUT - introduced in https://github.com/homarr-labs/homarr/pull/5862 by @afonsojramos
+apps/docs/docs/integrations/peanut @afonsojramos
+packages/integrations/src/peanut @afonsojramos
+
+# Pi-hole - introduced in https://github.com/homarr-labs/homarr/pull/521 by @Meierschlumpf
+apps/docs/docs/integrations/pi-hole @Meierschlumpf
+packages/integrations/src/pi-hole @Meierschlumpf
+
+# Plex - introduced in https://github.com/homarr-labs/homarr/pull/1342 by @hillaliy
+apps/docs/docs/integrations/plex @hillaliy
+packages/integrations/src/plex @hillaliy
+
+# Prowlarr - introduced in https://github.com/homarr-labs/homarr/pull/965 by @hillaliy
+apps/docs/docs/integrations/prowlarr @hillaliy
+packages/integrations/src/prowlarr @hillaliy
+
+# Proxmox - introduced in https://github.com/homarr-labs/homarr/pull/1969 by @Meierschlumpf
+apps/docs/docs/integrations/proxmox @Meierschlumpf
+packages/integrations/src/proxmox @Meierschlumpf
+
+# Quay - introduced in https://github.com/homarr-labs/homarr/pull/3607 by @Aandree5
+apps/docs/docs/integrations/quay @Aandree5
+packages/integrations/src/quay @Aandree5
+
+# search.ch - introduced in https://github.com/homarr-labs/homarr/pull/5180 by @Meierschlumpf
+apps/docs/docs/integrations/search-ch @Meierschlumpf
+packages/integrations/src/search-ch @Meierschlumpf
+
+# Speedtest Tracker - introduced in https://github.com/homarr-labs/homarr/pull/5363 by @kylegrieder
+apps/docs/docs/integrations/speedtest-tracker @kylegrieder
+packages/integrations/src/speedtest-tracker @kylegrieder
+
+# Synology - introduced in https://github.com/homarr-labs/homarr/pull/6121 by @mrjoshuap
+apps/docs/docs/integrations/synology @mrjoshuap
+packages/integrations/src/synology @mrjoshuap
+
+# Technitium DNS - introduced in https://github.com/homarr-labs/homarr/pull/5832 by @lopsch
+apps/docs/docs/integrations/technitium-dns @lopsch
+packages/integrations/src/technitium @lopsch
+
+# Tracearr - introduced in https://github.com/homarr-labs/homarr/pull/5060 by @StrandedTurtle
+apps/docs/docs/integrations/tracearr @StrandedTurtle
+packages/integrations/src/tracearr @StrandedTurtle
+
+# TrueNAS - introduced in https://github.com/homarr-labs/homarr/pull/3745 by @manuel-rw
+apps/docs/docs/integrations/truenas @manuel-rw @afonsojramos
+packages/integrations/src/truenas @manuel-rw @afonsojramos
+
+# Umami - introduced in https://github.com/homarr-labs/homarr/pull/5362 by @febrile42
+apps/docs/docs/integrations/umami @febrile42
+packages/integrations/src/umami @febrile42
+
+# UniFi Controller - introduced in https://github.com/homarr-labs/homarr/pull/2236 by @pitschi
+apps/docs/docs/integrations/unifi-controller @pitschi
+packages/integrations/src/unifi-controller @pitschi
+
+# Unraid - introduced in https://github.com/homarr-labs/homarr/pull/4439 by @manuel-rw
+apps/docs/docs/integrations/unraid @manuel-rw
+packages/integrations/src/unraid @manuel-rw
+
+# Uptime Kuma - introduced in https://github.com/homarr-labs/homarr/pull/5910 by @ajnart
+apps/docs/docs/integrations/uptime-kuma @ajnart
+packages/integrations/src/uptime-kuma @ajnart
+
+# Traefik - by @Nerdy-Technician
+apps/docs/docs/integrations/traefik @Nerdy-Technician
+apps/docs/docs/widgets/traefik @Nerdy-Technician
+packages/api/src/router/widgets/traefik.ts @Nerdy-Technician
+packages/integrations/src/traefik @Nerdy-Technician
+packages/request-handler/src/traefik.ts @Nerdy-Technician
+packages/widgets/src/traefik @Nerdy-Technician
+
+# Exempt Renovate-managed files (no owners)
 package.json
 **/package.json
 package-lock.json

@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { PaperlessNgxStats } from "@homarr/integrations";
 
-import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
+import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const paperlessNgxStatsRequestHandler = createCachedIntegrationRequestHandler<
+export const paperlessNgxStatsRequestHandler = createIntegrationRequestHandler<
   PaperlessNgxStats,
   "paperlessNgx",
   Record<string, never>
@@ -14,6 +12,4 @@ export const paperlessNgxStatsRequestHandler = createCachedIntegrationRequestHan
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatsAsync();
   },
-  cacheDuration: dayjs.duration(15, "minute"),
-  queryKey: "paperless-ngx-stats",
 });

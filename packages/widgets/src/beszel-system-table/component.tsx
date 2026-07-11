@@ -26,10 +26,18 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
-import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime } from "../beszel/_shared/format";
-import { useBeszelFilteredSystems, useBeszelSystemsSubscription } from "../beszel/_shared/hooks";
+import {
+  formatByteRate,
+  formatLoadAvg,
+  formatPercent,
+  formatTemp,
+  formatUptime,
+  getProgressTrackSize,
+} from "../beszel/_shared/format";
+import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
+import { DiskUsage } from "../beszel/_shared/disk-usage";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -74,13 +82,9 @@ export default function BeszelSystemTableWidget({
     data: results = [],
     error: systemsError,
     isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery(
-    { integrationIds },
-    { staleTime: 10_000, gcTime: 48 * 60 * 60 * 1000, refetchInterval: 10_000, retry: false },
-  );
+  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
   const size = getSizeConfig(width);
 
-  useBeszelSystemsSubscription(integrationIds, !isEditMode);
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
@@ -101,11 +105,16 @@ export default function BeszelSystemTableWidget({
   }, [filteredSystems, sortStatus]);
 
   const PercentCell = ({ value }: { value: number }) => (
-    <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
-      <Text size={size.fontSize} fw={500} miw={size.valueMiw} ta="right" style={{ whiteSpace: "nowrap" }}>
+    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
+      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(value)}
       </Text>
-      <Progress value={value} color={thresholdColor(value)} size={size.progressSize} style={{ flex: 1 }} />
+      <Progress
+        value={value}
+        color={thresholdColor(value)}
+        size={getProgressTrackSize(size.progressSize)}
+        style={{ flex: 1 }}
+      />
     </Group>
   );
 
@@ -160,7 +169,15 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.disk} />,
+        render: (record) => (
+          <DiskUsage
+            system={record}
+            fontSize={size.fontSize}
+            progressSize={size.progressSize}
+            valueMiw={size.valueMiw}
+            valueGap={8}
+          />
+        ),
       },
       options.showGpu && {
         accessor: "gpu",

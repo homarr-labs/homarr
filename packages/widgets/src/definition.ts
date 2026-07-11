@@ -1,5 +1,6 @@
+import type React from "react";
 import type { LoaderComponent } from "next/dynamic";
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -9,7 +10,35 @@ import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetImports } from ".";
-import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
+import type { inferOptionsFromCreator, inferOptionsFromDefinition, WidgetOptionsRecord } from "./options";
+
+export interface WidgetContextMenuAction {
+  key: string;
+  label: stringOrTranslation;
+  icon?: TablerIcon;
+  onClick: () => void;
+  hidden?: boolean;
+  disabled?: boolean;
+  color?: string;
+}
+
+export interface WidgetContextMenuContext {
+  isEditMode: boolean;
+  boardId: string | undefined;
+  itemId: string | undefined;
+}
+
+export interface WidgetContextActionProps<
+  TKind extends WidgetKind,
+  TOptions extends WidgetOptionsRecord = WidgetOptionsRecord,
+> {
+  kind: TKind;
+  options: inferOptionsFromDefinition<TOptions>;
+  setOptions: (partial: Partial<inferOptionsFromDefinition<TOptions>>) => void;
+  integrationIds: string[];
+  context: WidgetContextMenuContext;
+  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>;
+}
 
 const createWithDynamicImport =
   <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(kind: TKind, definition: TDefinition) =>
@@ -40,6 +69,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 
 export interface WidgetDefinition {
   icon: TablerIcon;
+  queryKey?: QueryKey;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
   maxIntegrations?: number;
@@ -56,6 +86,7 @@ export interface WidgetDefinition {
       }
     >
   >;
+  contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
 }
 
 export interface WidgetProps<TKind extends WidgetKind> {
@@ -70,6 +101,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;
+  widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
 };
 
 export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKind]["definition"]["createOptions"];

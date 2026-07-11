@@ -7,6 +7,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NavigationLink } from "./_navigation";
 
 interface LayoutProps {
@@ -24,6 +25,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
 
   return (
     <ManageContainer size="xl">
+      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, group.name]])} />
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">

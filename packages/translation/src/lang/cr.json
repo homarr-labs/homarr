@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "crwdns4473:0crwdne4473:0",
       "speedtest": "crwdns4475:0crwdne4475:0",
       "analytics": "crwdns4477:0crwdne4477:0",
+      "vpn": "crwdns5687:0crwdne5687:0",
       "mediaLibrary": "crwdns4979:0crwdne4979:0",
       "uptimeMonitoring": "crwdns4981:0crwdne4981:0"
     },
@@ -1412,7 +1413,10 @@
     "here": "crwdns552:0crwdne552:0",
     "iconPicker": {
       "label": "crwdns554:0crwdne554:0",
-      "header": "crwdns556:0{countIcons}crwdne556:0"
+      "header": "crwdns556:0{countIcons}crwdne556:0",
+      "headerLoading": "crwdns5681:0crwdne5681:0",
+      "noResults": "crwdns5683:0{search}crwdne5683:0",
+      "error": "crwdns5685:0crwdne5685:0"
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "crwdns594:0crwdne594:0",
         "switchToLightMode": "crwdns596:0crwdne596:0",
         "management": "crwdns598:0crwdne598:0",
+        "docker": "crwdns5703:0crwdne5703:0",
         "preferences": "crwdns600:0crwdne600:0",
         "logout": "crwdns602:0crwdne602:0",
         "login": "crwdns604:0crwdne604:0",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "crwdns702:0crwdne702:0"
+        "settings": "crwdns702:0crwdne702:0",
+        "refresh": "crwdns5739:0crwdne5739:0",
+        "options": "crwdns5709:0crwdne5709:0",
+        "actions": "crwdns5711:0crwdne5711:0"
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "crwdns4004:0{station}crwdne4004:0",
       "noStation": "crwdns4006:0crwdne4006:0",
       "option": {
+        "baseUrl": {
+          "label": "crwdns5713:0crwdne5713:0"
+        },
         "station": {
           "label": "crwdns4008:0crwdne4008:0"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "crwdns1082:0crwdne1082:0"
         },
+        "visibleStorageVolumes": {
+          "label": "crwdns5741:0crwdne5741:0",
+          "description": "crwdns5743:0crwdne5743:0",
+          "placeholder": "crwdns5745:0crwdne5745:0"
+        },
         "defaultTab": {
           "label": "crwdns2636:0crwdne2636:0"
         },
@@ -2352,6 +2368,9 @@
       "name": "crwdns3424:0crwdne3424:0",
       "description": "crwdns3426:0crwdne3426:0",
       "option": {
+        "columns": {
+          "label": "crwdns5705:0crwdne5705:0"
+        },
         "enableRowSorting": {
           "label": "crwdns3808:0crwdne3808:0"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "crwdns3876:0crwdne3876:0"
       }
+    },
+    "vpn": {
+      "name": "crwdns5689:0crwdne5689:0",
+      "description": "crwdns5691:0crwdne5691:0",
+      "serviceUnavailable": "crwdns5693:0crwdne5693:0",
+      "option": {}
     },
     "ups": {
       "name": "crwdns4481:0crwdne4481:0",
@@ -2759,8 +2784,8 @@
       "name": "crwdns3908:0crwdne3908:0",
       "option": {
         "albumId": {
-          "label": "crwdns3910:0crwdne3910:0",
-          "description": "crwdns3912:0crwdne3912:0"
+          "label": "crwdns5715:0crwdne5715:0",
+          "description": "crwdns5717:0crwdne5717:0"
         },
         "rotationIntervalSeconds": {
           "label": "crwdns3914:0crwdne3914:0",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "crwdns3918:0crwdne3918:0",
           "description": "crwdns3920:0crwdne3920:0"
+        },
+        "randomizePhotos": {
+          "label": "crwdns5719:0crwdne5719:0",
+          "description": "crwdns5721:0crwdne5721:0"
         }
       },
       "description": "crwdns3922:0crwdne3922:0",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "crwdns3204:0crwdne3204:0"
           },
+          "providerUrl": {
+            "label": "crwdns5723:0crwdne5723:0"
+          },
           "identifier": {
             "label": "crwdns3206:0crwdne3206:0",
             "placeholder": "crwdns3208:0crwdne3208:0"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "crwdns3508:0crwdne3508:0",
             "tooltip": "crwdns3510:0crwdne3510:0"
+          },
+          "tokens": {
+            "label": "crwdns5725:0crwdne5725:0",
+            "token": "crwdns5727:0crwdne5727:0",
+            "configured": "crwdns5729:0crwdne5729:0",
+            "notConfigured": "crwdns5731:0crwdne5731:0",
+            "save": "crwdns5733:0crwdne5733:0"
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "crwdns3512:0crwdne3512:0",
           "noMatchingVersion": "crwdns3514:0crwdne3514:0",
           "noReleasesFound": "crwdns3516:0crwdne3516:0",
-          "noProviderSeleceted": "crwdns3518:0crwdne3518:0",
-          "noProviderResponse": "crwdns3520:0crwdne3520:0"
+          "noProviderSelected": "crwdns5735:0crwdne5735:0",
+          "noProviderResponse": "crwdns3520:0crwdne3520:0",
+          "unexpected": "crwdns5737:0crwdne5737:0"
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "crwdns3842:0crwdne3842:0"
+        },
+        "visibleStorageVolumes": {
+          "label": "crwdns5747:0crwdne5747:0",
+          "description": "crwdns5749:0crwdne5749:0",
+          "placeholder": "crwdns5751:0crwdne5751:0"
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": "crwdns5653:0crwdne5653:0"
       },
+      "empty": {
+        "noSystems": "crwdns5677:0crwdne5677:0"
+      },
       "metric": {
         "cpu": "crwdns4865:0crwdne4865:0",
         "memory": "crwdns4867:0crwdne4867:0",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "crwdns4927:0crwdne4927:0",
+      "empty": {
+        "noSystems": "crwdns5679:0crwdne5679:0"
+      },
       "error": {
         "internalServerError": "crwdns5661:0crwdne5661:0",
         "liveConnectionFailed": "crwdns5663:0crwdne5663:0",
@@ -4133,6 +4184,11 @@
       "title": "crwdns1568:0crwdne1568:0",
       "text": "crwdns1570:0crwdne1570:0"
     },
+    "error": {
+      "title": "crwdns5697:0crwdne5697:0",
+      "text": "crwdns5699:0crwdne5699:0",
+      "digest": "crwdns5701:0{digest}crwdne5701:0"
+    },
     "navbar": {
       "items": {
         "home": "crwdns1572:0crwdne1572:0",
@@ -4499,86 +4555,14 @@
             "disabled": "crwdns3484:0crwdne3484:0"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "crwdns2496:0crwdne2496:0"
-            },
-            "timetable": {
-              "label": "crwdns4010:0crwdne4010:0"
-            },
             "iconsUpdater": {
               "label": "crwdns1828:0crwdne1828:0"
             },
             "analytics": {
               "label": "crwdns1830:0crwdne1830:0"
             },
-            "smartHomeEntityState": {
-              "label": "crwdns1832:0crwdne1832:0"
-            },
             "ping": {
               "label": "crwdns1834:0crwdne1834:0"
-            },
-            "mediaServer": {
-              "label": "crwdns1836:0crwdne1836:0"
-            },
-            "mediaOrganizer": {
-              "label": "crwdns1838:0crwdne1838:0"
-            },
-            "downloads": {
-              "label": "crwdns1840:0crwdne1840:0"
-            },
-            "mediaRequestStats": {
-              "label": "crwdns1842:0crwdne1842:0"
-            },
-            "mediaRequestList": {
-              "label": "crwdns1844:0crwdne1844:0"
-            },
-            "rssFeeds": {
-              "label": "crwdns1846:0crwdne1846:0"
-            },
-            "indexerManager": {
-              "label": "crwdns1848:0crwdne1848:0"
-            },
-            "healthMonitoring": {
-              "label": "crwdns1850:0crwdne1850:0"
-            },
-            "dnsHole": {
-              "label": "crwdns1852:0crwdne1852:0"
-            },
-            "updateChecker": {
-              "label": "crwdns2258:0crwdne2258:0"
-            },
-            "mediaTranscoding": {
-              "label": "crwdns2436:0crwdne2436:0"
-            },
-            "networkController": {
-              "label": "crwdns3153:0crwdne3153:0"
-            },
-            "refreshNotifications": {
-              "label": "crwdns3482:0crwdne3482:0"
-            },
-            "dockerContainers": {
-              "label": "crwdns3430:0crwdne3430:0"
-            },
-            "firewallCpu": {
-              "label": "crwdns3592:0crwdne3592:0"
-            },
-            "firewallMemory": {
-              "label": "crwdns3594:0crwdne3594:0"
-            },
-            "firewallVersion": {
-              "label": "crwdns3596:0crwdne3596:0"
-            },
-            "firewallInterfaces": {
-              "label": "crwdns3598:0crwdne3598:0"
-            },
-            "weather": {
-              "label": "crwdns3724:0crwdne3724:0"
-            },
-            "tracearr": {
-              "label": "crwdns3990:0crwdne3990:0"
-            },
-            "umamiActiveVisitors": {
-              "label": "crwdns4223:0crwdne4223:0"
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "crwdns2262:0crwdne2262:0"
+      "internalServerError": "crwdns2262:0crwdne2262:0",
+      "noColumns": "crwdns5707:0crwdne5707:0"
     }
   },
   "kubernetes": {

@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "こちら",
     "iconPicker": {
       "label": "アイコン URL",
-      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。"
+      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "ダークモードに切り替え",
         "switchToLightMode": "ライトモードに切り替え",
         "management": "管理",
+        "docker": "",
         "preferences": "個人設定",
         "logout": "ログアウト",
         "login": "ログイン",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "設定"
+        "settings": "設定",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "{station} 出発時刻",
       "noStation": "駅が選択されていません",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "駅"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "デフォルトのタブ"
         },
@@ -2352,6 +2368,9 @@
       "name": "Dockerのステータス",
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "アイテムの並び替えを有効にする"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "インスタンス"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "写真情報を表示",
           "description": "スライドショーの下部に画像の日付と現在の索引を表示します"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Immichアルバムの写真のスライド",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "プロバイダー"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別名",
             "placeholder": "名前、または所有者名"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "プロバイダーがありません",
             "tooltip": "プロバイダーを解析できませんでした。画像をインポートしたあとで、手動で設定してください"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "無効な識別子",
           "noMatchingVersion": "一致するバージョンが見つかりません",
           "noReleasesFound": "リリースが見つかりませんでした",
-          "noProviderSeleceted": "プロバイダーが選択されていません",
-          "noProviderResponse": "プロバイダーからの応答がありません"
+          "noProviderSelected": "",
+          "noProviderResponse": "プロバイダーからの応答がありません",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "バックグラウンドの使用状況バーを表示"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "見つかりません",
       "text": "要求されたリソースが見つかりませんでした"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "ホーム",
@@ -4499,86 +4555,14 @@
             "disabled": "無効"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft サーバーの状態"
-            },
-            "timetable": {
-              "label": "タイムテーブル"
-            },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
             },
             "analytics": {
               "label": "統計情報"
             },
-            "smartHomeEntityState": {
-              "label": "スマートホームエンティティの状態"
-            },
             "ping": {
               "label": "Pings"
-            },
-            "mediaServer": {
-              "label": "メディアサーバー"
-            },
-            "mediaOrganizer": {
-              "label": "メディアオーガナイザー"
-            },
-            "downloads": {
-              "label": "ダウンロード"
-            },
-            "mediaRequestStats": {
-              "label": "メディアリクエストの統計情報"
-            },
-            "mediaRequestList": {
-              "label": "メディアリクエストのリスト"
-            },
-            "rssFeeds": {
-              "label": "RSS フィード"
-            },
-            "indexerManager": {
-              "label": "インデクサーマネージャー"
-            },
-            "healthMonitoring": {
-              "label": "ヘルスモニタ"
-            },
-            "dnsHole": {
-              "label": "DNS Holeデータ"
-            },
-            "updateChecker": {
-              "label": "アップデートチェッカー"
-            },
-            "mediaTranscoding": {
-              "label": "メディアのトランスコーディング"
-            },
-            "networkController": {
-              "label": "ネットワークコントローラ"
-            },
-            "refreshNotifications": {
-              "label": "通知アップデーター"
-            },
-            "dockerContainers": {
-              "label": "Docker コンテナ"
-            },
-            "firewallCpu": {
-              "label": "ファイアウォールの CPU"
-            },
-            "firewallMemory": {
-              "label": "ファイアウォールのメモリ"
-            },
-            "firewallVersion": {
-              "label": "ファイアウォールのバージョン"
-            },
-            "firewallInterfaces": {
-              "label": "ファイアウォールのインターフェース"
-            },
-            "weather": {
-              "label": "天気"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Docker コンテナの取得に失敗しました"
+      "internalServerError": "Docker コンテナの取得に失敗しました",
+      "noColumns": ""
     }
   },
   "kubernetes": {

@@ -1,6 +1,8 @@
+import type { MutableRefObject } from "react";
+import { useRef } from "react";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import { ErrorBoundary } from "react-error-boundary";
@@ -16,6 +18,7 @@ import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
+import { WidgetContextMenu } from "./widget-context-menu";
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -30,30 +33,33 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
+  const widgetStateRef = useRef<Record<string, unknown> | null>(null);
 
   return (
     <>
-      <Card
-        ref={ref}
-        className={combineClasses(
-          classes.itemCard,
-          `${item.kind}-wrapper`,
-          "grid-stack-item-content",
-          item.advancedOptions.customCssClasses.join(" "),
-        )}
-        radius={board.itemRadius}
-        styles={{
-          root: {
-            "--opacity": board.opacity / 100,
-            containerType: "size",
-            overflow: getOverflowFromKind(item.kind),
-            "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-          },
-        }}
-        p={0}
-      >
-        <InnerContent item={item} width={width} height={height} />
-      </Card>
+      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+        <Card
+          ref={ref}
+          className={combineClasses(
+            classes.itemCard,
+            `${item.kind}-wrapper`,
+            "grid-stack-item-content",
+            item.advancedOptions.customCssClasses.join(" "),
+          )}
+          radius={board.itemRadius}
+          styles={{
+            root: {
+              "--opacity": board.opacity / 100,
+              containerType: "size",
+              overflow: getOverflowFromKind(item.kind),
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+            },
+          }}
+          p={0}
+        >
+          <InnerContent item={item} width={width} height={height} widgetStateRef={widgetStateRef} />
+        </Card>
+      </WidgetContextMenu>
       {item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
@@ -83,6 +89,7 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
+  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
 }
 
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
@@ -98,12 +105,16 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
+  const queryClient = useQueryClient();
 
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
-          onReset={reset}
+          onReset={() => {
+            void queryClient.invalidateQueries({ queryKey: [["widget"]] });
+            reset();
+          }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />

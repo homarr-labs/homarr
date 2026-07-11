@@ -36,8 +36,9 @@ import { humanFileSize } from "@homarr/common";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import type { WidgetComponentProps } from "../definition";
+import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
+import type { WidgetComponentProps } from "../definition";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
@@ -52,38 +53,11 @@ export const SystemHealthMonitoring = ({
   width,
 }: WidgetComponentProps<"healthMonitoring">) => {
   const t = useI18n();
-  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
-    {
-      integrationIds,
-    },
-    {
-      staleTime: 5 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+    integrationIds,
+  });
   const [opened, { open, close }] = useDisclosure(false);
-  const utils = clientApi.useUtils();
   const board = useRequiredBoard();
-
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
-    { integrationIds },
-    {
-      onData(data) {
-        utils.widget.healthMonitoring.getSystemHealthStatus.setData({ integrationIds }, (prevData) => {
-          if (!prevData) {
-            return undefined;
-          }
-          return prevData.map((item) =>
-            item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
-              : item,
-          );
-        });
-      },
-    },
-  );
 
   const isTiny = width < 256;
 
@@ -92,7 +66,13 @@ export const SystemHealthMonitoring = ({
   return (
     <Stack h="100%" gap="sm" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-        const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
+        const filteredFileSystem = filterStorageVolumes(
+          healthInfo.fileSystem,
+          options.visibleStorageVolumes,
+          integrationId,
+        );
+        const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes, integrationId);
+        const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
         return (
           <Stack
@@ -316,8 +296,12 @@ interface SmartData {
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
   return fileSystems
     .map((fileSystem) => {
-      const baseDeviceName = fileSystem.deviceName.replace(/[0-9]+$/, "");
-      const smartDisk = smartData.find((smart) => smart.deviceName === baseDeviceName);
+      const normalizedFileSystemName = normalizeStorageDeviceName(fileSystem.deviceName);
+      const smartDisk = smartData.find(
+        (smart) =>
+          smart.deviceName === fileSystem.deviceName ||
+          normalizeStorageDeviceName(smart.deviceName) === normalizedFileSystemName,
+      );
 
       return {
         deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,

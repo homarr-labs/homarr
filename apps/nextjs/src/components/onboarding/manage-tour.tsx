@@ -105,7 +105,7 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
         content: (
           <TourStepContent
             description={t("welcome.description")}
-            documentationHref={createDocumentationLink("/docs/category/management")}
+            documentationHref={createDocumentationLink("/docs/management/boards")}
           />
         ),
       },

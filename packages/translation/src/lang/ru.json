@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "здесь",
     "iconPicker": {
       "label": "URL иконки",
-      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок."
+      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок.",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Переключить на тёмную тему",
         "switchToLightMode": "Переключить на светлую тему",
         "management": "Управление",
+        "docker": "",
         "preferences": "Настройки",
         "logout": "Выйти",
         "login": "Вход",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Настройки"
+        "settings": "Настройки",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "Отправления {station}",
       "noStation": "Станция не выбрана",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": "Станция"
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Показать информацию о файловой системе"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Вкладка по умолчанию"
         },
@@ -2352,6 +2368,9 @@
       "name": "Статистика Docker",
       "description": "Статистика контейнеров (этот виджет можно добавить только с правами администратора)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": "Включить сортировку элементов"
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": "Экземпляры"
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2769,6 +2794,10 @@
         "showPhotoInfo": {
           "label": "Показать информацию о фото",
           "description": "Отображать дату снимка и текущий номер в нижней части слайд-шоу"
+        },
+        "randomizePhotos": {
+          "label": "",
+          "description": ""
         }
       },
       "description": "Слайд-шоу фотографий из вашего альбома Immich",
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Провайдер"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Идентификатор",
             "placeholder": "Имя или Владелец/Имя"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "Нет провайдера",
             "tooltip": "Не удалось определить провайдер, укажите его вручную после импорта образов"
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "Неверный идентификатор",
           "noMatchingVersion": "Подходящая версия не найдена",
           "noReleasesFound": "Релизы не найдены",
-          "noProviderSeleceted": "Провайдер не выбран",
-          "noProviderResponse": "Нет ответа от провайдера"
+          "noProviderSelected": "",
+          "noProviderResponse": "Нет ответа от провайдера",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Показывать фоновую шкалу использования"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Не найдено",
       "text": "Запрошенный ресурс не найден"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Главная",
@@ -4499,86 +4555,14 @@
             "disabled": "Отключено"
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Статус сервера Minecraft"
-            },
-            "timetable": {
-              "label": "Расписание"
-            },
             "iconsUpdater": {
               "label": "Обновление иконок"
             },
             "analytics": {
               "label": "Аналитика"
             },
-            "smartHomeEntityState": {
-              "label": "Состояние объектов умного дома"
-            },
             "ping": {
               "label": "Проверка доступности"
-            },
-            "mediaServer": {
-              "label": "Медиасервер"
-            },
-            "mediaOrganizer": {
-              "label": "Организация медиафайлов"
-            },
-            "downloads": {
-              "label": "Загрузки"
-            },
-            "mediaRequestStats": {
-              "label": "Статистика запросов медиаконтента"
-            },
-            "mediaRequestList": {
-              "label": "Список запросов медиаконтента"
-            },
-            "rssFeeds": {
-              "label": "RSS-ленты"
-            },
-            "indexerManager": {
-              "label": "Управление индексаторами"
-            },
-            "healthMonitoring": {
-              "label": "Мониторинг состояния"
-            },
-            "dnsHole": {
-              "label": "Данные DNS-фильтра"
-            },
-            "updateChecker": {
-              "label": "Проверка обновлений"
-            },
-            "mediaTranscoding": {
-              "label": "Перекодирование медиафайлов"
-            },
-            "networkController": {
-              "label": "Сетевой контроллер"
-            },
-            "refreshNotifications": {
-              "label": "Обновление уведомлений"
-            },
-            "dockerContainers": {
-              "label": "Контейнеры Docker"
-            },
-            "firewallCpu": {
-              "label": "ЦП межсетевого экрана"
-            },
-            "firewallMemory": {
-              "label": "Память межсетевого экрана"
-            },
-            "firewallVersion": {
-              "label": "Версия межсетевого экрана"
-            },
-            "firewallInterfaces": {
-              "label": "Интерфейсы межсетевого экрана"
-            },
-            "weather": {
-              "label": "Погода"
-            },
-            "tracearr": {
-              "label": "Tracearr"
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах"
+      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах",
+      "noColumns": ""
     }
   },
   "kubernetes": {

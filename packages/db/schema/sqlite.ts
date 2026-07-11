@@ -531,6 +531,25 @@ export const customWidgetSecrets = sqliteTable(
   }),
 );
 
+export const widgetSecrets = sqliteTable(
+  "widget_secret",
+  {
+    itemId: text()
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    kind: text().notNull(),
+    value: text().$type<`${string}.${string}`>().notNull(),
+    updatedAt: int({ mode: "timestamp" })
+      .$onUpdateFn(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.itemId, table.kind],
+    }),
+  }),
+);
+
 export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
   name: text().notNull().primaryKey(),
   cronExpression: text().notNull(),
@@ -740,9 +759,17 @@ export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({
 export const itemRelations = relations(items, ({ one, many }) => ({
   integrations: many(integrationItems),
   layouts: many(itemLayouts),
+  secrets: many(widgetSecrets),
   board: one(boards, {
     fields: [items.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const widgetSecretRelations = relations(widgetSecrets, ({ one }) => ({
+  item: one(items, {
+    fields: [widgetSecrets.itemId],
+    references: [items.id],
   }),
 }));
 

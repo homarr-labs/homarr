@@ -1021,6 +1021,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
+      "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
@@ -1412,7 +1413,10 @@
     "here": "tu",
     "iconPicker": {
       "label": "URL ikony",
-      "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} ."
+      "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} .",
+      "headerLoading": "",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1464,6 +1468,7 @@
         "switchToDarkMode": "Prepnúť na tmavý motív",
         "switchToLightMode": "Prepnúť na svetlý motív",
         "management": "Administrácia",
+        "docker": "",
         "preferences": "Vaše preferencie",
         "logout": "Odhlásiť",
         "login": "Prihlásiť sa",
@@ -1593,7 +1598,10 @@
     },
     "menu": {
       "label": {
-        "settings": "Nastavenia"
+        "settings": "Nastavenia",
+        "refresh": "",
+        "options": "",
+        "actions": ""
       }
     },
     "create": {
@@ -1895,6 +1903,9 @@
       "title": "",
       "noStation": "",
       "option": {
+        "baseUrl": {
+          "label": ""
+        },
         "station": {
           "label": ""
         }
@@ -2273,6 +2284,11 @@
         "fileSystem": {
           "label": "Zobraziť informácie o súborovom systéme"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Predvolená karta"
         },
@@ -2352,6 +2368,9 @@
       "name": "Docker stav",
       "description": "Štatistiky vašich kontajnerov (Túto miniaplikáciu je možné pridať iba s oprávneniami správcu)",
       "option": {
+        "columns": {
+          "label": ""
+        },
         "enableRowSorting": {
           "label": ""
         },
@@ -2404,6 +2423,12 @@
       "instances": {
         "title": ""
       }
+    },
+    "vpn": {
+      "name": "",
+      "description": "",
+      "serviceUnavailable": "",
+      "option": {}
     },
     "ups": {
       "name": "",
@@ -2767,6 +2792,10 @@
           "description": ""
         },
         "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        },
+        "randomizePhotos": {
           "label": "",
           "description": ""
         }
@@ -3133,6 +3162,9 @@
           "provider": {
             "label": "Poskytovateľ"
           },
+          "providerUrl": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Meno alebo vlastník/meno"
@@ -3180,6 +3212,13 @@
           "noProvider": {
             "label": "",
             "tooltip": ""
+          },
+          "tokens": {
+            "label": "",
+            "token": "",
+            "configured": "",
+            "notConfigured": "",
+            "save": ""
           }
         }
       },
@@ -3202,8 +3241,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSelected": "",
+          "noProviderResponse": "",
+          "unexpected": ""
         }
       }
     },
@@ -3503,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3639,6 +3684,9 @@
       "error": {
         "internalServerError": ""
       },
+      "empty": {
+        "noSystems": ""
+      },
       "metric": {
         "cpu": "",
         "memory": "",
@@ -3712,6 +3760,9 @@
         }
       },
       "selectSystem": "",
+      "empty": {
+        "noSystems": ""
+      },
       "error": {
         "internalServerError": "",
         "liveConnectionFailed": "",
@@ -4133,6 +4184,11 @@
       "title": "Nenájdené",
       "text": "Nepodarilo sa nájsť požadovaný zdroj"
     },
+    "error": {
+      "title": "",
+      "text": "",
+      "digest": ""
+    },
     "navbar": {
       "items": {
         "home": "Domovská stránka",
@@ -4499,86 +4555,14 @@
             "disabled": ""
           },
           "job": {
-            "minecraftServerStatus": {
-              "label": "Minecraft Server Stav"
-            },
-            "timetable": {
-              "label": ""
-            },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
             },
             "analytics": {
               "label": "Analytika"
             },
-            "smartHomeEntityState": {
-              "label": "Stav entity inteligentnej domácnosti"
-            },
             "ping": {
               "label": "Pingy"
-            },
-            "mediaServer": {
-              "label": "Multimediálny Server"
-            },
-            "mediaOrganizer": {
-              "label": "Organizátori médií"
-            },
-            "downloads": {
-              "label": "Na stiahnutie"
-            },
-            "mediaRequestStats": {
-              "label": "Štatistiky mediálnych požiadaviek"
-            },
-            "mediaRequestList": {
-              "label": "Zoznam mediálnych požiadaviek"
-            },
-            "rssFeeds": {
-              "label": "RSS kanály"
-            },
-            "indexerManager": {
-              "label": "Správca indexovania"
-            },
-            "healthMonitoring": {
-              "label": "Monitorovanie zdravia"
-            },
-            "dnsHole": {
-              "label": "Údaje o dierach DNS"
-            },
-            "updateChecker": {
-              "label": "Kontrola aktualizácií"
-            },
-            "mediaTranscoding": {
-              "label": "Prekódovanie médií"
-            },
-            "networkController": {
-              "label": "Sieťový ovládač"
-            },
-            "refreshNotifications": {
-              "label": ""
-            },
-            "dockerContainers": {
-              "label": "Docker kontajnery"
-            },
-            "firewallCpu": {
-              "label": ""
-            },
-            "firewallMemory": {
-              "label": ""
-            },
-            "firewallVersion": {
-              "label": ""
-            },
-            "firewallInterfaces": {
-              "label": ""
-            },
-            "weather": {
-              "label": ""
-            },
-            "tracearr": {
-              "label": ""
-            },
-            "umamiActiveVisitors": {
-              "label": ""
             }
           },
           "interval": {
@@ -5071,7 +5055,8 @@
       }
     },
     "error": {
-      "internalServerError": "Nepodarilo sa načítať kontajnery Docker"
+      "internalServerError": "Nepodarilo sa načítať kontajnery Docker",
+      "noColumns": ""
     }
   },
   "kubernetes": {

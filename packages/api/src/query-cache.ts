@@ -1,9 +1,11 @@
 import type { QueryKey } from "@tanstack/react-query";
 
-export const queryCacheRetentionMs = 1000 * 60 * 60 * 24;
-export const queryCacheDefaultStaleTimeMs = 1000 * 60 * 5;
+export const queryCacheDefaultStaleTimeMs = 0;
+export const queryCacheDefaultRefetchIntervalMs = 30_000;
+export const queryCacheDefaultGcTimeMs = 1000 * 60 * 60 * 24;
 export const queryCacheMaxValueBytes = 1024 * 1024;
 export const queryCacheStoragePrefix = "homarr-widget-query";
+export const queryCacheBuster = "v2-superjson";
 
 let activeQueryCacheBoardId: string | null = null;
 
@@ -14,7 +16,7 @@ export const setActiveQueryCacheBoardId = (boardId: string | null) => {
 export const getActiveQueryCacheBoardId = () => activeQueryCacheBoardId;
 
 const persistableQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const excludedWidgetPaths = new Set(["widget.app.ping"]);
+const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
 
 const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
   const first = queryKey[0];

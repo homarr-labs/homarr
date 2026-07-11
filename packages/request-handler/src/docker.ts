@@ -1,5 +1,4 @@
 import type { Readable } from "node:stream";
-import dayjs from "dayjs";
 import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
@@ -13,7 +12,7 @@ import type { ContainerState, Port } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
 
@@ -171,16 +170,13 @@ const mockContainers: {
   },
 ];
 
-export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
-  queryKey: "dockerContainersResult",
-  widgetKind: "dockerContainers",
+export const dockerContainersRequestHandler = createWidgetRequestHandler({
   async requestAsync() {
     if (isDemoMode) {
       return mockContainers;
     }
     return await getContainersWithStatsAsync();
   },
-  cacheDuration: dayjs.duration(20, "seconds"),
 });
 
 const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);
@@ -304,7 +300,10 @@ async function getContainersWithStatsAsync() {
 
     const stats = await instance
       .getContainer(container.Id)
-      .stats({ stream: false, "one-shot": true })
+      // Not in one-shot mode: the daemon then includes precpu_stats (the
+      // previous reading), which is required to compute the current CPU usage
+      // as a delta. One-shot omits it and would only expose lifetime totals.
+      .stats({ stream: false })
       .catch(
         () =>
           ({
@@ -340,12 +339,22 @@ export function calculateCpuUsage(stats: ContainerStats): number {
   }
 
   const numberOfCpus = stats.cpu_stats.online_cpus;
-  const usage = stats.cpu_stats.system_cpu_usage;
-  if (!usage || usage === 0) {
+
+  // Docker's own formula for the current (instantaneous) CPU usage: it compares
+  // the latest reading against the previous one (precpu_stats). Dividing the
+  // cumulative total_usage by the cumulative system_cpu_usage instead would
+  // report the container's lifetime average, which stays high long after a load
+  // spike has ended. precpu_stats is only present when the stats are NOT fetched
+  // in one-shot mode; when it is absent (e.g. Podman) the deltas fall back to the
+  // cumulative totals, matching the previous behaviour.
+  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - (stats.precpu_stats?.cpu_usage?.total_usage ?? 0);
+  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - (stats.precpu_stats?.system_cpu_usage ?? 0);
+
+  if (systemDelta <= 0 || cpuDelta < 0) {
     return 0;
   }
 
-  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+  return (cpuDelta / systemDelta) * numberOfCpus * 100;
 }
 
 export function calculateMemoryUsage(stats: ContainerStats): number {

@@ -23,16 +23,9 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const { data: app } = clientApi.app.byId.useQuery(
-    {
-      id: options.appId,
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const { data: app } = clientApi.app.byId.useQuery({
+    id: options.appId,
+  });
   useRegisterSpotlightContextResults(
     `app-${app?.id ?? options.appId}`,
     app?.href
@@ -87,6 +80,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           justify="center"
           align="center"
           gap={isColumnLayout ? 0 : "sm"}
+          onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
         >
           <Stack gap={0}>
             {options.showTitle && (

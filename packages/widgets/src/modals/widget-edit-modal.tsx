@@ -19,6 +19,7 @@ import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
 import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import type { OptionsBuilderResult } from "../options";
+import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
 import { WidgetAdvancedOptionsModal } from "./widget-advanced-options-modal";
@@ -38,6 +39,7 @@ interface ModalProps<TSort extends WidgetKind> {
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
+  itemId?: string;
   appId?: string;
 }
 
@@ -53,24 +55,29 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   });
   const { definition } = widgetImports[innerProps.kind];
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
+  const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
+    | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
+    | undefined;
+  const optionsFieldSchema = objectEntries(options).reduce(
+    (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
+      if (value.validate) {
+        acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
+      }
+
+      return acc;
+    },
+    {} as Record<string, z.ZodType<unknown>>,
+  );
+  const optionsSchema = optionsSuperRefine
+    ? z.object(optionsFieldSchema).superRefine(optionsSuperRefine)
+    : z.object(optionsFieldSchema);
 
   const form = useForm({
     mode: "controlled",
     initialValues: innerProps.value,
     validate: schemaResolver(
       z.object({
-        options: z.object(
-          objectEntries(options).reduce(
-            (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
-              if (value.validate) {
-                acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
-              }
-
-              return acc;
-            },
-            {} as Record<string, z.ZodType<unknown>>,
-          ),
-        ),
+        options: optionsSchema,
         integrationIds: z.array(z.string()),
         advancedOptions: z.object({
           customCssClasses: z.array(z.string()),
@@ -146,6 +153,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             property={key}
             options={value as never}
             initialOptions={innerProps.value.options}
+            itemId={innerProps.itemId}
           />
         );
       })}

@@ -2,7 +2,7 @@ import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
 import type { ActionIconProps } from "@mantine/core";
 import { z } from "zod/v4";
-import type { ZodType } from "zod/v4";
+import type { RefinementCtx, ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 
@@ -13,6 +13,7 @@ import type { ReleasesRepository } from "./releases/releases-repository";
 interface CommonInput<TType> {
   defaultValue?: TType;
   withDescription?: boolean;
+  skipContextMenu?: boolean;
 }
 
 interface TextInput extends CommonInput<string> {
@@ -54,6 +55,7 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   useOptions: (
     query: string,
     integrationIds: string[],
+    options: Record<string, unknown>,
   ) => {
     isPending: boolean;
     options: DynamicSelectOption[];
@@ -63,6 +65,15 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
 interface IntegrationSelectInput extends CommonInput<string> {
   clearable?: boolean;
   searchable?: boolean;
+  useOptions: (integrationIds: string[]) => {
+    data: { value: string; label: string }[];
+    isPending: boolean;
+    isError: boolean;
+  };
+}
+
+interface IntegrationMultiSelectInput extends CommonInput<string[]> {
+  withDescription?: boolean;
   useOptions: (integrationIds: string[]) => {
     data: { value: string; label: string }[];
     isPending: boolean;
@@ -91,6 +102,7 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    skipContextMenu: input?.skipContextMenu ?? false,
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,
@@ -193,6 +205,12 @@ const optionsFactory = {
     searchable: input.searchable ?? true,
     useOptions: input.useOptions,
   }),
+  integrationMultiSelect: (input: IntegrationMultiSelectInput) => ({
+    type: "integrationMultiSelect" as const,
+    defaultValue: input.defaultValue ?? [],
+    withDescription: input.withDescription ?? false,
+    useOptions: input.useOptions,
+  }),
   customWidgetSelect: (input?: CommonInput<string>) => ({
     type: "customWidgetSelect" as const,
     defaultValue: input?.defaultValue ?? "",
@@ -239,9 +257,12 @@ type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<
   Record<keyof TOptions, FieldConfiguration<TOptions>>
 >;
 
+export const OPTIONS_SUPER_REFINE = Symbol("optionsSuperRefine");
+
 const createOptions = <TOptions extends WidgetOptionsRecord>(
   optionsCallback: (factory: WidgetOptionFactory) => TOptions,
   configuration?: ConfigurationInput<TOptions>,
+  optionsSuperRefine?: (data: inferOptionsFromDefinition<TOptions>, ctx: RefinementCtx) => void,
 ) => {
   const obj = {} as Record<keyof TOptions, unknown>;
   const options = optionsCallback(optionsFactory);
@@ -253,9 +274,18 @@ const createOptions = <TOptions extends WidgetOptionsRecord>(
     };
   }
 
-  return obj as {
+  const result = obj as {
     [key in keyof TOptions]: TOptions[key] & FieldConfiguration<TOptions>;
   };
+
+  if (optionsSuperRefine) {
+    Object.defineProperty(result, OPTIONS_SUPER_REFINE, {
+      value: optionsSuperRefine,
+      enumerable: false,
+    });
+  }
+
+  return result;
 };
 
 type OptionsBuilder = typeof createOptions;
