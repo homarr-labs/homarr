@@ -1,0 +1,38 @@
+packages/widgets/src/beszel/_shared/format.spec.ts
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 3,16-19
+  s_297dc5c3f8a4b7::t_77146b32f3482f 20
+packages/widgets/src/beszel-system-table/component.tsx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 29-36
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 21
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 20
+apps/docs/docs/widgets/beszel-system-stats/index.mdx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 18
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 180
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 5,21,39-51,75-81,83
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 30-37
+packages/integrations/src/beszel/beszel-integration.ts
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 462
+packages/widgets/src/beszel/_shared/format.ts
+  s_297dc5c3f8a4b7::t_150c9d40d5f96c 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "e0e4a3d353133d375cb32e87319fa8f70c982c45",
+  "prompts": {},
+  "sessions": {
+    "s_297dc5c3f8a4b7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f51d7-f44d-7a93-9cd1-c512ec332d64",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
