@@ -34,6 +34,7 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
     cpu: info.cpu,
     memory: info.mp,
     disk: info.dp,
+    extraFilesystems: info.efs ?? {},
     gpu: info.g ?? 0,
     loadAvg: info.la ?? null,
     // bb = bytes/s (newer), b = Mbps (legacy, multiply to get bytes/s)

@@ -22,6 +22,7 @@ import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
 import { createMetaTitle } from "~/metadata";
+import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
@@ -40,7 +41,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
-      headerActions: <BoardContentHeaderActions />,
+      headerActions: <BoardContentHeaderActions demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
     }),

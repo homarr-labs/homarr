@@ -31,6 +31,7 @@ import { formatByteRate, formatLoadAvg, formatPercent, formatTemp, formatUptime 
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
+import { DiskUsage } from "../beszel/_shared/disk-usage";
 
 interface SizeConfig {
   iconSize: number;
@@ -106,22 +107,16 @@ const getMaxVisibleMetrics = (cellHeight: number, size: SizeConfig): number => {
   return Math.max(1, Math.floor(available / size.rowHeight));
 };
 
-const MIN_CELL_WIDTH = 120;
+const MIN_CELL_WIDTH = 180;
 const MIN_CELL_HEIGHT = 80;
 
-const getColCount = (width: number, itemCount: number): number => {
+const getProgressTrackSize = (size: SizeConfig["progressSize"]): number => (size === "xs" ? 6 : 9);
+
+const getColCount = (width: number, height: number, itemCount: number): number => {
   if (itemCount <= 1) return 1;
   const maxCols = Math.min(itemCount, Math.max(1, Math.floor(width / MIN_CELL_WIDTH)));
-
-  let best = 1;
-  for (let c = 1; c <= maxCols; c++) {
-    const emptyCells = (c - (itemCount % c)) % c;
-    const bestEmpty = (best - (itemCount % best)) % best;
-    if (emptyCells < bestEmpty || (emptyCells === bestEmpty && c > best)) {
-      best = c;
-    }
-  }
-  return best;
+  const aspectRatio = width / Math.max(height, MIN_CELL_HEIGHT);
+  return Math.min(maxCols, Math.max(1, Math.ceil(Math.sqrt(itemCount * aspectRatio))));
 };
 
 interface MetricRowProps {
@@ -133,20 +128,25 @@ interface MetricRowProps {
 }
 
 const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "progress" | "size">) => (
-  <Group gap={6} wrap="nowrap" style={{ flex: 1 }}>
-    <Text size={size.fontSize} fw={500} miw={size.valueMiw} ta="right">
+  <Group gap={6} wrap="nowrap" style={{ flex: 1, minWidth: 0, marginLeft: "auto" }}>
+    <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {value}
     </Text>
     {progress && (
-      <Progress value={progress.value} color={progress.color} size={size.progressSize} style={{ flex: 1 }} />
+      <Progress
+        value={progress.value}
+        color={progress.color}
+        size={getProgressTrackSize(size.progressSize)}
+        style={{ flex: 1 }}
+      />
     )}
   </Group>
 );
 
 const MetricRow = ({ icon, label, value, progress, size }: MetricRowProps) => (
-  <Group gap="xs" wrap="nowrap" style={{ minHeight: size.rowHeight }}>
+  <Group gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: size.rowHeight }}>
     {icon}
-    <Text size={size.fontSize} c="dimmed" miw={size.labelMiw}>
+    <Text size={size.fontSize} c="dimmed" w={size.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {label}
     </Text>
     <MetricValue value={value} progress={progress} size={size} />
@@ -195,14 +195,13 @@ const metricRenderers = [
   {
     key: "showDisk",
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
-      <MetricRow
-        key="disk"
-        icon={<HardDrive size={sz.iconSize} />}
-        label={t("metric.disk")}
-        value={formatPercent(s.disk)}
-        progress={{ value: s.disk, color: thresholdColor(s.disk) }}
-        size={sz}
-      />
+      <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
+        <HardDrive size={sz.iconSize} />
+        <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+          {t("metric.disk")}
+        </Text>
+        <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
+      </Group>
     ),
     visible: (s: BeszelSystemRow, o: SystemCardProps["options"]) => o.showDisk,
   },
@@ -399,7 +398,7 @@ export default function BeszelSystemGridWidget({
     );
   }
 
-  const cols = getColCount(width, filteredSystems.length);
+  const cols = getColCount(width, height, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
   const rawCellHeight = height / rows;
   const scrollEnabled = rawCellHeight < MIN_CELL_HEIGHT;

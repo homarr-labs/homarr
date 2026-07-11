@@ -16,6 +16,7 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
+  queryKey: [["widget", "beszel"]],
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
@@ -45,7 +46,6 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       showDockerCpu: factory.switch({ defaultValue: true }),
       showDockerMemory: factory.switch({ defaultValue: true }),
       showDockerNetwork: factory.switch({ defaultValue: true }),
-      showStorage: factory.switch({ defaultValue: true }),
     }));
   },
   errors: {

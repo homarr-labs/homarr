@@ -19,15 +19,66 @@ import type {
   BeszelSystemDetails,
   BeszelSystemdService,
   BeszelSystemStatsRecord,
+  BeszelSystemStats,
+  BeszelContainerStats,
   CreateAlertInput,
   LiveStatsEvent,
   PocketBaseListResponse,
   UpdateAlertInput,
 } from "./beszel-types";
+import { createRealtimeMetricsTopic, PocketBaseSseParser } from "./pocketbase-realtime";
 
 const logger = createLogger({ module: "beszel-integration" });
 
 const escapeFilterValue = (value: string) => value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+const realtimeRetryDelaysMs = [200, 300, 500, 1_000, 1_500, 2_000] as const;
+
+const supportsRealtimeMetrics = (version: string) => {
+  const [major = 0, minor = 0] = version.replace(/^v/, "").split(".").map(Number);
+  return major > 0 || minor >= 13;
+};
+
+const waitForRetryAsync = async (delayMs: number, signal: AbortSignal) =>
+  await new Promise<void>((resolve) => {
+    if (signal.aborted) return resolve();
+    const timeout = setTimeout(done, delayMs);
+    signal.addEventListener("abort", done, { once: true });
+    function done() {
+      clearTimeout(timeout);
+      signal.removeEventListener("abort", done);
+      resolve();
+    }
+  });
+
+interface BeszelRealtimeSnapshot {
+  stats?: BeszelSystemStats;
+  container?: BeszelContainerStats[];
+}
+
+export const normalizeRealtimeSnapshot = (
+  payload: BeszelRealtimeSnapshot,
+  systemId: string,
+  receivedAt = new Date(),
+): LiveStatsEvent[] => {
+  const created = receivedAt.toISOString();
+  const id = `realtime-${receivedAt.getTime()}`;
+  const events: LiveStatsEvent[] = [];
+
+  if (payload.stats && typeof payload.stats === "object" && !Array.isArray(payload.stats)) {
+    events.push({
+      type: "system_stats",
+      record: { id, system: systemId, stats: payload.stats, type: "1m", created, updated: created },
+    });
+  }
+  if (Array.isArray(payload.container)) {
+    events.push({
+      type: "container_stats",
+      record: { id, system: systemId, stats: payload.container, type: "1m", created, updated: created },
+    });
+  }
+
+  return events;
+};
 
 interface BeszelSession {
   token: string;
@@ -285,124 +336,162 @@ export class BeszelIntegration extends Integration {
     });
   }
 
-  /**
-   * Subscribe to real-time system and container stats via PocketBase SSE.
-   * Connects to the PocketBase Realtime API and parses incoming SSE events,
-   * filtering by systemId. This provides live-updating metrics (≤1s latency
-   * from agent) instead of polling the REST API every 5s.
-   */
+  /** Subscribe to Beszel's custom one-second `rt_metrics` PocketBase topic. */
   public async subscribeRealtimeMetrics(
     systemId: string,
     onMessage: (event: LiveStatsEvent) => void,
     signal: AbortSignal,
   ): Promise<void> {
-    const session = await this.authenticateAsync();
-    const realtimeUrl = this.url("/api/realtime");
-
-    logger.debug("Opening Beszel SSE connection for realtime metrics", {
-      integrationId: this.integration.id,
-      systemId,
-      url: realtimeUrl.pathname,
-    });
-
-    const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
-      headers: { Authorization: session.token },
-      signal,
-      bodyTimeout: 0,
-    });
-
-    if (!response.ok) {
-      logger.warn("Beszel SSE connection failed", {
-        integrationId: this.integration.id,
-        systemId,
-        status: response.status,
-      });
-      throw new ResponseError(response);
+    const systems = await this.getSystemsAsync();
+    const system = systems.find((candidate) => candidate.id === systemId);
+    if (!system) throw new Error("Selected Beszel system was not found");
+    if (system.status !== "up")
+      throw new Error(`Beszel system is ${system.status}; Live mode requires an online system`);
+    if (!supportsRealtimeMetrics(system.info.v)) {
+      throw new Error(`Beszel agent ${system.info.v} does not support Live mode; version 0.13.0 or newer is required`);
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error("No response body in SSE stream");
+    const realtimeUrl = this.url("/api/realtime");
+    const topic = createRealtimeMetricsTopic(systemId);
+    let retryAttempt = 0;
+    let emittedSnapshotCount = 0;
 
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let subscribed = false;
-
-    const processLine = async (line: string) => {
-      if (!line.startsWith("data: ")) return;
-
+    while (!signal.aborted) {
       try {
-        const parsed = JSON.parse(line.slice(6)) as Record<string, unknown>;
-
-        // PB_CONNECT delivers the clientId — use it to POST our subscriptions
-        if (!subscribed && typeof parsed.clientId === "string") {
-          subscribed = true;
-          const subscribeResponse = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
-            method: "POST",
+        let session = await this.authenticateAsync();
+        const openStream = async () =>
+          await fetchWithTrustedCertificatesAsync(realtimeUrl, {
             headers: {
+              Accept: "text/event-stream",
               Authorization: session.token,
-              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
+              Pragma: "no-cache",
             },
-            body: JSON.stringify({
-              clientId: parsed.clientId,
-              subscriptions: ["system_stats/*", "container_stats/*"],
-            }),
             signal,
+            bodyTimeout: 0,
           });
 
-          if (!subscribeResponse.ok) {
-            logger.warn("Beszel SSE subscription POST failed", {
+        logger.debug("Opening Beszel rt_metrics SSE connection", {
+          integrationId: this.integration.id,
+          systemId,
+          retryAttempt,
+        });
+        let response = await openStream();
+        if (response.status === 401) {
+          await this.sessionStore.clearAsync();
+          session = await this.authenticateAsync();
+          response = await openStream();
+        }
+        if (!response.ok) throw new ResponseError(response);
+
+        const reader = response.body?.getReader();
+        if (!reader) throw new Error("Beszel realtime response has no body");
+        const decoder = new TextDecoder();
+        const parser = new PocketBaseSseParser();
+        let clientId: string | undefined;
+
+        const processFrameAsync = async (frame: ReturnType<PocketBaseSseParser["push"]>[number]) => {
+          if (frame.event === "PB_CONNECT") {
+            let fallbackClientId: string | undefined;
+            try {
+              const connectData = JSON.parse(frame.data) as { clientId?: string };
+              fallbackClientId = connectData.clientId;
+            } catch {
+              // PocketBase normally provides the client ID in the SSE id field.
+            }
+            clientId = frame.id || fallbackClientId;
+            if (!clientId) throw new Error("PocketBase PB_CONNECT event did not include a client ID");
+
+            const subscribeResponse = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
+              method: "POST",
+              headers: { Authorization: session.token, "Content-Type": "application/json" },
+              body: JSON.stringify({ clientId, subscriptions: [topic] }),
+              signal,
+            });
+            if (subscribeResponse.status === 401) await this.sessionStore.clearAsync();
+            if (!subscribeResponse.ok) throw new ResponseError(subscribeResponse);
+            logger.debug("Subscribed to Beszel rt_metrics topic", {
               integrationId: this.integration.id,
               systemId,
-              status: subscribeResponse.status,
+              clientId,
             });
-            throw new ResponseError(subscribeResponse);
+            return;
           }
 
-          logger.debug("Beszel SSE subscribed to collections", {
+          if (!frame.event.startsWith("rt_metrics")) return;
+          try {
+            const snapshot = JSON.parse(frame.data) as BeszelRealtimeSnapshot;
+            const events = normalizeRealtimeSnapshot(snapshot, systemId);
+            if (events.length === 0) return;
+            emittedSnapshotCount += 1;
+            retryAttempt = 0;
+            for (const event of events) onMessage(event);
+            if (emittedSnapshotCount === 1 || emittedSnapshotCount % 30 === 0) {
+              logger.debug("Forwarded Beszel rt_metrics snapshots", {
+                integrationId: this.integration.id,
+                systemId,
+                emittedSnapshotCount,
+                containerCount: snapshot.container?.length ?? 0,
+              });
+            }
+          } catch (error) {
+            logger.warn("Failed to parse Beszel rt_metrics payload", {
+              integrationId: this.integration.id,
+              systemId,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        };
+
+        logger.debug("Beszel rt_metrics SSE connection established", {
+          integrationId: this.integration.id,
+          systemId,
+          contentType: response.headers.get("content-type"),
+        });
+        try {
+          while (!signal.aborted) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            for (const frame of parser.push(decoder.decode(value, { stream: true }))) {
+              await processFrameAsync(frame);
+            }
+          }
+          for (const frame of parser.push(decoder.decode())) await processFrameAsync(frame);
+          for (const frame of parser.finish()) await processFrameAsync(frame);
+        } finally {
+          reader.releaseLock();
+        }
+
+        if (!signal.aborted) throw new Error("Beszel rt_metrics SSE stream ended unexpectedly");
+      } catch (error) {
+        if (signal.aborted) break;
+        if (error instanceof ResponseError && error.statusCode === 401 && retryAttempt === 0) {
+          retryAttempt += 1;
+          logger.debug("Retrying Beszel rt_metrics handshake after reauthentication", {
             integrationId: this.integration.id,
             systemId,
-            clientId: parsed.clientId,
           });
-          return;
+          continue;
         }
-
-        const record = parsed.record as Record<string, unknown> | undefined;
-        if (!record || record.system !== systemId) return;
-
-        if (Array.isArray(record.stats)) {
-          onMessage({
-            type: "container_stats",
-            record: record as unknown as BeszelContainerStatsRecord,
-          });
-        } else if (record.stats && typeof record.stats === "object") {
-          onMessage({
-            type: "system_stats",
-            record: record as unknown as BeszelSystemStatsRecord,
-          });
-        }
-      } catch (error) {
-        if (error instanceof ResponseError) throw error;
-        // skip malformed SSE data lines
+        if (error instanceof ResponseError && error.statusCode < 500 && error.statusCode !== 429) throw error;
+        const delayMs = realtimeRetryDelaysMs[Math.min(retryAttempt, realtimeRetryDelaysMs.length - 1)] ?? 2_000;
+        retryAttempt += 1;
+        logger.warn("Beszel rt_metrics connection lost; retrying", {
+          integrationId: this.integration.id,
+          systemId,
+          retryAttempt,
+          delayMs,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        await waitForRetryAsync(delayMs, signal);
       }
-    };
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          await processLine(line);
-        }
-      }
-    } finally {
-      reader.releaseLock();
-      logger.debug("Beszel SSE connection closed", { integrationId: this.integration.id, systemId });
     }
+
+    logger.debug("Beszel rt_metrics subscription stopped", {
+      integrationId: this.integration.id,
+      systemId,
+      emittedSnapshotCount,
+    });
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

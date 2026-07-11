@@ -4,7 +4,7 @@ import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Loader, Menu, Switch, Text } from "@mantine/core";
 import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -49,7 +49,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
-  const widgetQueryKey = useMemo(() => [["widget", item.kind]], [item.kind]);
+  const widgetQueryKey = useMemo(
+    () => ("queryKey" in currentDefinition ? (currentDefinition.queryKey as QueryKey) : [["widget", item.kind]]),
+    [currentDefinition, item.kind],
+  );
   const isWidgetFetching = useIsFetching({ queryKey: widgetQueryKey }) > 0;
   const handleRefetch = useCallback(() => {
     void queryClient.refetchQueries({ queryKey: widgetQueryKey, type: "all" });
@@ -276,7 +279,7 @@ const WidgetCacheAge = ({
   isFetching,
 }: {
   queryClient: QueryClient;
-  queryKey: unknown[];
+  queryKey: QueryKey;
   isFetching: boolean;
 }) => {
   // 1s tick for "just now" → "1s ago" label transition; isFetching prop handles refetch reactivity
@@ -295,8 +298,8 @@ const WidgetCacheAge = ({
     .filter(Boolean);
   if (timestamps.length === 0) return null;
 
-  const oldest = Math.min(...timestamps);
-  const seconds = Math.floor((Date.now() - oldest) / 1000);
+  const latest = Math.max(...timestamps);
+  const seconds = Math.floor((Date.now() - latest) / 1000);
   if (seconds < 5) return "just now";
   if (seconds < 60) return `${seconds}s ago`;
   return `${Math.floor(seconds / 60)}m ago`;

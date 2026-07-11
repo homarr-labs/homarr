@@ -10,6 +10,7 @@ import {
   createWSClient,
   httpBatchStreamLink,
   httpLink,
+  httpSubscriptionLink,
   isNonJsonSerializable,
   loggerLink,
   splitLink,
@@ -101,9 +102,17 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         }),
         splitLink({
           condition: ({ type }) => type === "subscription",
-          true: wsLink<AppRouter>({
-            client: wsClient,
-            transformer: superjson,
+          true: splitLink({
+            condition: ({ path }) => path === "widget.beszel.subscribeSystemStats",
+            true: httpSubscriptionLink({
+              url: getTrpcUrl(),
+              transformer: superjson,
+              eventSourceOptions: { withCredentials: true },
+            }),
+            false: wsLink<AppRouter>({
+              client: wsClient,
+              transformer: superjson,
+            }),
           }),
           false: splitLink({
             condition: ({ input }) => isNonJsonSerializable(input),

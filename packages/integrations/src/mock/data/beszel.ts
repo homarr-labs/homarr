@@ -226,6 +226,7 @@ export class BeszelMockService {
         u: randInt(86400, 2_000_000),
         mp: clamp(sys.baseMem + rand(-5, 5), 0, 100),
         dp: clamp(sys.baseDisk + rand(-2, 2), 0, 100),
+        efs: i === 0 ? { "/mnt/sda": 86.9, "/mnt/sdb": 70.5, "/mnt/sdc": 42.7 } : undefined,
         bb: rand(200, 3000) * KB,
         v: "0.8.2",
         g: i === 3 ? rand(15, 45) : 0,

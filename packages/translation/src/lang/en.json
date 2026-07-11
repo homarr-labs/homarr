@@ -4031,9 +4031,6 @@
         },
         "showDockerNetwork": {
           "label": "Show Docker network chart"
-        },
-        "showStorage": {
-          "label": "Show storage chart"
         }
       },
       "selectSystem": "Select system",
@@ -4060,8 +4057,8 @@
         },
         "disk": {
           "title": "Disk Usage",
-          "subtitle": "Usage of root partition",
-          "series": "Used"
+          "subtitle": "Usage by filesystem",
+          "series": "Root"
         },
         "diskIO": {
           "title": "Disk I/O",
