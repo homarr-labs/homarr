@@ -8,6 +8,7 @@ import {
   CloseButton,
   Group,
   Image,
+  Loader,
   Modal,
   NavLink,
   Paper,
@@ -73,7 +74,11 @@ export function Chat({
   const headerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: models = [], isLoading: modelsLoading } = clientApi.widget.openWebUi.getModels.useQuery(
+  const {
+    data: models = [],
+    isLoading: modelsLoading,
+    isError: modelsError,
+  } = clientApi.widget.openWebUi.getModels.useQuery(
     { integrationId: integrationId ?? "" },
     { enabled: Boolean(integrationId), refetchOnWindowFocus: false, retry: false },
   );
@@ -111,6 +116,7 @@ export function Chat({
     onError: setError,
     onTranscribed: (text) => setInput((previous) => (previous ? `${previous} ${text}` : text)),
     micErrorMessage: t("widget.openWebUi.micError"),
+    micPermissionErrorMessage: t("widget.openWebUi.micPermissionError"),
     transcribeErrorMessage: t("widget.openWebUi.transcribeError"),
   });
 
@@ -252,9 +258,20 @@ export function Chat({
       <ScrollArea className={classes.messages} viewportRef={viewportRef} type="auto">
         <Stack gap="xs" p="xs" pt={headerHeight + 8} pb={composerHeight + 24}>
           {stream.messages.length === 0 && !stream.isStreaming ? (
-            <Stack align="center" justify="center" gap="xs" mt="xl" c="dimmed">
-              <IconRobot size={32} />
-              <Text size="sm">{t("widget.openWebUi.emptyState")}</Text>
+            <Stack align="center" justify="center" gap="xs" mt="xl" c={modelsError ? "red.6" : "dimmed"}>
+              {modelsLoading ? (
+                <Loader size="sm" />
+              ) : modelsError ? (
+                <>
+                  <IconRobot size={32} />
+                  <Text size="sm">{t("widget.openWebUi.error.internalServerError")}</Text>
+                </>
+              ) : (
+                <>
+                  <IconRobot size={32} />
+                  <Text size="sm">{t("widget.openWebUi.emptyState")}</Text>
+                </>
+              )}
             </Stack>
           ) : null}
           {stream.messages.map((message, index) => (

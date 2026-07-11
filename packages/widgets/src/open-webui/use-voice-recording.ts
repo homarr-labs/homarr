@@ -9,6 +9,7 @@ interface UseVoiceRecordingOptions {
   onError: (message: string) => void;
   onTranscribed: (text: string) => void;
   micErrorMessage: string;
+  micPermissionErrorMessage: string;
   transcribeErrorMessage: string;
 }
 
@@ -22,6 +23,7 @@ export function useVoiceRecording({
   onError,
   onTranscribed,
   micErrorMessage,
+  micPermissionErrorMessage,
   transcribeErrorMessage,
 }: UseVoiceRecordingOptions) {
   const [isRecording, setIsRecording] = useState(false);
@@ -106,14 +108,18 @@ export function useVoiceRecording({
       setRecordingSeconds(0);
       recordingTimerRef.current = window.setInterval(() => setRecordingSeconds((value) => value + 1), 1000);
       setIsRecording(true);
-    } catch {
+    } catch (error) {
       // getUserMedia may have succeeded before AudioContext/MediaRecorder setup
       // threw; release the mic stream and context so it isn't left running.
       releaseAudioResources();
       mediaRecorderRef.current = null;
       setAnalyser(null);
       setIsRecording(false);
-      onError(micErrorMessage);
+      // Distinguish a denied/dismissed permission prompt from other mic failures
+      // so the user gets an actionable message.
+      const denied =
+        error instanceof DOMException && (error.name === "NotAllowedError" || error.name === "SecurityError");
+      onError(denied ? micPermissionErrorMessage : micErrorMessage);
     }
   };
 

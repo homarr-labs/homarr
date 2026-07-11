@@ -147,5 +147,84 @@ describe("OpenWebUiIntegration", () => {
         ),
       ).rejects.toThrow();
     });
+
+    test("flushes the final SSE frame when it has no trailing newline", async () => {
+      mockFetch.mockResolvedValue(
+        asFetchResult(
+          new Response(
+            streamFrom([
+              `data: ${JSON.stringify({ choices: [{ delta: { content: "done" } }] })}\n`,
+              // Final event: no trailing newline and ends via finish_reason (no [DONE]).
+              `data: ${JSON.stringify({ choices: [{ delta: {}, finish_reason: "stop" }] })}`,
+            ]),
+            { status: 200 },
+          ),
+        ),
+      );
+
+      const deltas: string[] = [];
+      await expect(
+        createIntegration().streamChatCompletionAsync(
+          { model: "llama3", messages: [{ role: "user", content: "Hi" }] },
+          (delta) => deltas.push(delta),
+          new AbortController().signal,
+        ),
+      ).resolves.toBeUndefined();
+
+      expect(deltas.join("")).toBe("done");
+    });
+  });
+
+  describe("requestAsync timeouts", () => {
+    test("applies a default timeout to non-streaming requests", async () => {
+      setupMockFetch({ "/api/models": { data: [] } });
+
+      await createIntegration().getModelsAsync();
+
+      const options = mockFetch.mock.calls.at(0)?.[1] as { timeout?: number } | undefined;
+      expect(options?.timeout).toBeGreaterThan(0);
+    });
+
+    test("does not time out the long-lived streaming completion", async () => {
+      mockFetch.mockResolvedValue(asFetchResult(new Response(streamFrom(["data: [DONE]\n"]), { status: 200 })));
+
+      await createIntegration().streamChatCompletionAsync(
+        { model: "llama3", messages: [{ role: "user", content: "Hi" }] },
+        () => undefined,
+        new AbortController().signal,
+      );
+
+      const options = mockFetch.mock.calls.at(0)?.[1] as { timeout?: number } | undefined;
+      expect(options?.timeout).toBeUndefined();
+    });
+  });
+
+  describe("getChatAsync", () => {
+    test("parses a chat whose message content is multimodal (text + image parts)", async () => {
+      setupMockFetch({
+        "/api/v1/chats/abc": {
+          id: "abc",
+          chat: {
+            title: "Vision",
+            models: ["llava"],
+            messages: [
+              {
+                role: "user",
+                content: [
+                  { type: "text", text: "What is this?" },
+                  { type: "image_url", image_url: { url: "data:image/png;base64,AAAA" } },
+                ],
+              },
+              { role: "assistant", content: "A cat." },
+            ],
+          },
+        },
+      });
+
+      const chat = await createIntegration().getChatAsync("abc");
+
+      expect(chat.id).toBe("abc");
+      expect(chat.chat?.messages?.[0]?.content).toBeDefined();
+    });
   });
 });

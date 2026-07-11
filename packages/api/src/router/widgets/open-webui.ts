@@ -79,6 +79,10 @@ const boundedBase64Schema = z.string().min(1).max(MAX_BASE64_LENGTH);
 const uploadFilenameSchema = z.string().min(1).max(255);
 const contentTypeSchema = z.string().min(1).max(255);
 
+// Tag persisted conversations with the owning Homarr user so they can be found
+// back in Open WebUI even when an integration/account is shared between users.
+const homarrUserTag = (userId: string) => `homarr-user:${userId}`;
+
 const messageSchema = z.object({
   role: z.enum(["system", "user", "assistant"]),
   content: z.string(),
@@ -293,6 +297,7 @@ export const openWebUiRouter = createTRPCRouter({
         title: input.title,
         models: input.models,
         messages: input.messages,
+        meta: { tags: [homarrUserTag(ctx.session.user.id)] },
       });
       await openWebUiChatsRequestHandler.handler(ctx.integration, {}).invalidateAsync();
       return chat;
@@ -304,7 +309,10 @@ export const openWebUiRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       throwIfNotCreator(ctx.integration, ctx.session.user.id);
       const client = await createIntegrationAsync(ctx.integration);
-      const chat = await client.updateChatAsync(input.chatId, input.chat);
+      const chat = await client.updateChatAsync(input.chatId, {
+        ...input.chat,
+        meta: { tags: [homarrUserTag(ctx.session.user.id)] },
+      });
       await openWebUiChatsRequestHandler.handler(ctx.integration, {}).invalidateAsync();
       await openWebUiChatRequestHandler.handler(ctx.integration, { chatId: input.chatId }).invalidateAsync();
       return chat;

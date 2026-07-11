@@ -3898,6 +3898,7 @@
       "stopRecording": "Stop recording",
       "cancelRecording": "Cancel recording",
       "micError": "Could not access the microphone",
+      "micPermissionError": "Microphone access was denied. Allow it in your browser to record voice messages.",
       "transcribeError": "Could not transcribe the recording",
       "error": {
         "internalServerError": "Failed to reach Open WebUI"

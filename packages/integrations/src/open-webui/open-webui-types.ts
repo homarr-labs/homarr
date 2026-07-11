@@ -227,9 +227,12 @@ export const openWebUiChatSchema = z.object({
 
 export type OpenWebUiChat = z.infer<typeof openWebUiChatSchema>;
 
-// Body used when creating/updating a chat through the native API.
+// Body used when creating/updating a chat through the native API. `meta.tags`
+// lets Homarr tag a conversation (e.g. with the owning Homarr user id) so it can
+// be found back in Open WebUI even when an integration/account is shared.
 export interface OpenWebUiChatPayload {
   title: string;
   models: string[];
   messages: OpenWebUiChatMessage[];
+  meta?: { tags?: string[] };
 }
