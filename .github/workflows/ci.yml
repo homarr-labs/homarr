@@ -63,6 +63,7 @@ jobs:
         if: '!env.ACT'
         with:
           fetch-depth: 0
+          persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
 
       - name: Validate manual inputs
@@ -84,7 +85,7 @@ jobs:
         run: pnpm turbo run format --affected --continue -- --check
 
       - name: Lint, typecheck, and build affected workspaces
-        run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful --summarize
+        run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful
 
       - name: Validate workspace configuration
         run: pnpm lint:ws
@@ -163,11 +164,32 @@ jobs:
           DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
             --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
 
+      - name: Cache Playwright browsers
+        if: '!env.ACT'
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
 
       - name: Run E2E tests
         run: pnpm test:e2e
+
+      - name: Upload E2E artifacts
+        if: failure() && !env.ACT
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 7
 
       - name: Run memory regression test
         env:
@@ -211,7 +233,11 @@ jobs:
           ')
 
           echo "Memory usage: ${MEMORY_MB} MB (${RAW_MEMORY})"
-          if awk "BEGIN { exit !($MEMORY_MB > 700) }"; then
+          if [ -z "$MEMORY_MB" ]; then
+            echo "ERROR: Could not parse memory usage from docker stats"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          elif awk "BEGIN { exit !($MEMORY_MB > 700) }"; then
             echo "ERROR: Memory usage ${MEMORY_MB} MB exceeds 700 MB"
             docker logs "$CONTAINER_NAME" --tail 100
             exit 1

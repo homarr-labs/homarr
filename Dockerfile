@@ -3,23 +3,18 @@
 FROM node:24.18.0-alpine AS base
 
 FROM base AS builder
-RUN apk add --no-cache libc6-compat
-RUN apk update
-
-# Set working directory
 WORKDIR /app
-RUN apk add --no-cache libc6-compat curl bash
-RUN apk update
+RUN apk add --no-cache libc6-compat curl bash && apk update
 
 RUN corepack enable pnpm
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY patches ./patches
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && pnpm --config.node-linker=isolated fetch
+    pnpm config set store-dir /pnpm/store && pnpm fetch
 
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && pnpm install --recursive --offline --frozen-lockfile
+    pnpm install --recursive --offline --frozen-lockfile
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
