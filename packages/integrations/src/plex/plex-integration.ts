@@ -43,10 +43,25 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         const userElement = mediaElement.User ? mediaElement.User[0] : undefined;
         const playerElement = mediaElement.Player ? mediaElement.Player[0] : undefined;
         const sessionElement = mediaElement.Session ? mediaElement.Session[0] : undefined;
+        const transcodeElement = mediaElement.TranscodeSession ? mediaElement.TranscodeSession[0] : undefined;
+        const mediaInfoElement = mediaElement.Media ? mediaElement.Media[0] : undefined;
 
         if (!playerElement) {
           return undefined;
         }
+
+        const positionMs = mediaElement.$.viewOffset ? Number(mediaElement.$.viewOffset) : null;
+        const durationMs = mediaElement.$.duration ? Number(mediaElement.$.duration) : null;
+
+        const playerState = playerElement.$.state;
+        const playbackState =
+          playerState === "playing" || playerState === "paused" || playerState === "buffering" ? playerState : null;
+
+        const location = sessionElement?.$.location === "wan" ? "wan" : sessionElement?.$.location === "lan" ? "lan" : null;
+
+        const streams = mediaInfoElement?.Part?.[0]?.Stream ?? [];
+        const videoStream = streams.find((stream) => stream.$.streamType === "1");
+        const audioStream = streams.find((stream) => stream.$.streamType === "2");
 
         return {
           sessionId: sessionElement?.$.id ?? "unknown",
@@ -63,7 +78,42 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
             episodeName: mediaElement.$.title ?? null,
             albumName: mediaElement.$.type === "track" ? (mediaElement.$.parentTitle ?? null) : null,
             episodeCount: mediaElement.$.index ?? null,
-            metadata: null,
+            playback: {
+              state: playbackState,
+              positionMs,
+              durationMs,
+            },
+            location,
+            metadata: {
+              video: {
+                resolution:
+                  videoStream?.$.width && videoStream.$.height
+                    ? {
+                        width: Number(videoStream.$.width),
+                        height: Number(videoStream.$.height),
+                      }
+                    : null,
+                frameRate: videoStream?.$.frameRate ? Number(videoStream.$.frameRate) : null,
+              },
+              audio: {
+                channelCount: audioStream?.$.channels ? Number(audioStream.$.channels) : null,
+                codec: audioStream?.$.codec ?? mediaInfoElement?.$.audioCodec ?? null,
+              },
+              transcoding: {
+                container: transcodeElement?.$.container ?? null,
+                resolution:
+                  transcodeElement?.$.width && transcodeElement.$.height
+                    ? {
+                        width: Number(transcodeElement.$.width),
+                        height: Number(transcodeElement.$.height),
+                      }
+                    : null,
+                target: {
+                  audioCodec: transcodeElement?.$.audioCodec ?? null,
+                  videoCodec: transcodeElement?.$.videoCodec ?? null,
+                },
+              },
+            },
           },
         };
       })
