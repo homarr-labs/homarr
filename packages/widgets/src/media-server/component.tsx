@@ -78,34 +78,36 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
             positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
 
           return (
-            <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
-              <Icon
-                size={16}
-                color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
-                style={{ flexShrink: 0 }}
-              />
-              <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
-                {currentlyPlaying.name}
-              </Text>
-              {isPaused && (
-                <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
-                  {t("items.paused")}
+            <Stack gap={4} style={{ minWidth: 0 }}>
+              <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
+                <Icon
+                  size={16}
+                  color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
+                  style={{ flexShrink: 0 }}
+                />
+                <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
+                  {currentlyPlaying.name}
                 </Text>
-              )}
-              {!isPaused && remainingMinutes !== null && (
-                <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
-                  {t("items.remaining", { minutes: remainingMinutes.toString() })}
-                </Text>
-              )}
+                {isPaused && (
+                  <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
+                    {t("items.paused")}
+                  </Text>
+                )}
+                {!isPaused && remainingMinutes !== null && (
+                  <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+                    {t("items.remaining", { minutes: remainingMinutes.toString() })}
+                  </Text>
+                )}
+              </Group>
               {progressPercent !== null && (
                 <Progress
                   value={progressPercent}
-                  size={6}
+                  size={4}
                   color={isPaused ? "yellow" : "green"}
-                  style={{ backgroundColor: "rgba(255, 255, 255, 0.15)", width: 40, flexShrink: 0 }}
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.15)" }}
                 />
               )}
-            </Group>
+            </Stack>
           );
         },
       },
@@ -219,7 +221,8 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       },
       py: 4,
       style: {
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "visible",
       },
     }),
   });
