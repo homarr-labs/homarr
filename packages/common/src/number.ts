@@ -21,11 +21,17 @@ export const randomInt = (min: number, max: number) => {
 };
 
 /**
- *  Number of bytes to si format. (Division by 1024)
- *  Does not accept floats, size in bytes should be an integer.
- *  Will return "NaI" and logs a warning if a float is passed.
- *  Concat as parameters so it is not added if the returned value is "NaI" or "∞".
- *  Returns "∞" if the size is too large to be represented in the current format.
+ *  Number of bytes to a human-readable string using binary (KiB) suffixes.
+ *  Does not accept floats; size in bytes should be an integer.
+ *  Will return "NaI" and log a warning if a float is passed.
+ *  `concat` is appended after the unit so it is omitted when the returned
+ *  value is "NaI" or "∞". Returns "∞" if the size is too large to be
+ *  represented in the current format.
+ *
+ *  @deprecated Use `formatBytes` for single values, `formatBytesPair` for
+ *  paired "used / total" displays, and `formatByteRate` for byte-per-second
+ *  rates. This function is kept for backwards compatibility but should not
+ *  be used in new code.
  */
 export const humanFileSize = (size: number, concat = ""): string => {
   //64bit limit for Number stops at EiB
