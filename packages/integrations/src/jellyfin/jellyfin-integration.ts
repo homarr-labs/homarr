@@ -50,6 +50,13 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
         if (sessionInfo.NowPlayingItem) {
+          const positionMs = sessionInfo.PlayState?.PositionTicks
+            ? Math.round(sessionInfo.PlayState.PositionTicks / 10_000)
+            : null;
+          const durationMs = sessionInfo.NowPlayingItem.RunTimeTicks
+            ? Math.round(sessionInfo.NowPlayingItem.RunTimeTicks / 10_000)
+            : null;
+
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
@@ -57,6 +64,12 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            playback: {
+              state: sessionInfo.PlayState?.IsPaused ? "paused" : "playing",
+              positionMs,
+              durationMs,
+            },
+            location: null,
             metadata: {
               video: {
                 resolution:
