@@ -20,4 +20,10 @@ describe("createNextcloudCalendarServerUrl", () => {
       "https://example.com/nextcloud/remote.php/dav/",
     );
   });
+
+  test("does not duplicate an existing DAV endpoint", () => {
+    expect(createNextcloudCalendarServerUrl("https://example.com/nextcloud/remote.php/dav")).toBe(
+      "https://example.com/nextcloud/remote.php/dav/",
+    );
+  });
 });
