@@ -441,7 +441,7 @@ const customJsxTemplateSchema = z
     }
   })
   .describe(
-    "JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Direct network access is unavailable; v2 templates reference named requests.",
+    "JSX template string using whitelisted Mantine components. Access API data via {data.fieldName}. Direct fetch and XMLHttpRequest access are unavailable; v2 templates reference named requests.",
   );
 
 const customJsxDisplayConfigV1Schema = z.object({

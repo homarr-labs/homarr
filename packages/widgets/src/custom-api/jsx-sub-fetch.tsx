@@ -185,7 +185,7 @@ export function SubFetch({
 
   const result = query.data as RequestResult | undefined;
   const requestError =
-    (query.error ? t("requestFailed") : null) ??
+    (query.error && !result ? t("requestFailed") : null) ??
     (!result?.ok ? (result?.error ?? `${t("requestFailed")} (${result?.status ?? 0})`) : null);
 
   if (!result && query.isPending) {

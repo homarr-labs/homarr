@@ -18,13 +18,12 @@ export const WidgetCustomWidgetSelectInput = ({
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const board = useOptionalBoard();
+  const currentValue = form.values.options[property] as string;
   const { data, isLoading } = clientApi.customWidget.available.useQuery(
-    { boardId: board?.id ?? "" },
+    { boardId: board?.id ?? "", currentId: currentValue || undefined },
     { enabled: board !== null },
   );
   const [search, setSearch] = useState("");
-
-  const currentValue = form.values.options[property] as string;
 
   const definitions = useMemo(() => (data ?? []).map((def) => ({ value: def.id, label: def.name })), [data]);
 

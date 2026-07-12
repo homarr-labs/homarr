@@ -46,6 +46,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { CUSTOM_JSX_METHOD_COLORS } from "@homarr/widgets/custom-api/custom-jsx-display";
 import { useScopedI18n } from "@homarr/translation/client";
 import { displayComponents } from "@homarr/widgets/custom-api/component";
 import { extractDisplayData } from "@homarr/widgets/custom-api/extract-display-data";
@@ -95,8 +96,7 @@ interface CustomWidgetPreviewProps {
   onSampleDataChange?: (value: unknown) => void;
 }
 
-const METHOD_COLORS: Record<string, string> = { DELETE: "red", GET: "blue" };
-const methodColor = (method: string) => METHOD_COLORS[method] ?? "orange";
+const methodColor = (method: string) => CUSTOM_JSX_METHOD_COLORS[method] ?? "gray";
 
 function journalEntryColor(entry: { simulated: boolean; status: number | null }): string {
   if (entry.simulated) return "yellow";

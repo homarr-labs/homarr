@@ -239,13 +239,25 @@ function isSafeUrl(url: unknown): boolean {
 function SafeAnchor(props: Record<string, unknown>) {
   const href = props.href;
   const safeHref = href && isSafeUrl(href) ? href : undefined;
-  return createElement(Anchor as never, { ...sanitizeCustomJsxProps(props), href: safeHref });
+  const sanitized = sanitizeCustomJsxProps(props);
+  const opensNewWindow = sanitized.target === "_blank";
+  return createElement(Anchor as never, {
+    ...sanitized,
+    href: safeHref,
+    rel: opensNewWindow ? "noopener noreferrer" : sanitized.rel,
+  });
 }
 
 function SafeNavLink(props: Record<string, unknown>) {
   const href = props.href;
   const safeHref = href && isSafeUrl(href) ? href : undefined;
-  return createElement(NavLink as never, { ...sanitizeCustomJsxProps(props), href: safeHref });
+  const sanitized = sanitizeCustomJsxProps(props);
+  const opensNewWindow = sanitized.target === "_blank";
+  return createElement(NavLink as never, {
+    ...sanitized,
+    href: safeHref,
+    rel: opensNewWindow ? "noopener noreferrer" : sanitized.rel,
+  });
 }
 
 function SafeButton(props: Record<string, unknown>) {
@@ -301,7 +313,13 @@ function SafeCalendar(props: Record<string, unknown>) {
 }
 
 function SafeMiniCalendar(props: Record<string, unknown>) {
-  return createElement(MiniCalendar as never, { ...sanitizeCustomJsxProps(props), static: true });
+  return createElement(MiniCalendar as never, {
+    ...sanitizeCustomJsxProps(props),
+    style: { pointerEvents: "none" },
+    previousControlProps: { disabled: true, tabIndex: -1 },
+    nextControlProps: { disabled: true, tabIndex: -1 },
+    getDayProps: () => ({ disabled: true, tabIndex: -1 }),
+  });
 }
 
 function SafeTree(props: Record<string, unknown>) {
@@ -309,7 +327,12 @@ function SafeTree(props: Record<string, unknown>) {
 }
 
 function SafeDatePicker(props: Record<string, unknown>) {
-  return createElement(DatePicker as never, { ...sanitizeCustomJsxProps(props), static: true });
+  return createElement(DatePicker as never, {
+    ...sanitizeCustomJsxProps(props),
+    style: { pointerEvents: "none" },
+    enableKeyboardNavigation: false,
+    getDayProps: () => ({ disabled: true, tabIndex: -1 }),
+  });
 }
 
 function createSafeDateComponent(component: ComponentType<never>) {
@@ -730,7 +753,7 @@ safeDate.toLocaleTimeString = createSafeCallable((v: string | number, locale?: s
 safeDate.getTime = createSafeCallable((v: string | number) => new Date(v).getTime());
 safeDate.getYear = createSafeCallable((v: string | number) => new Date(v).getFullYear());
 safeDate.getMonth = createSafeCallable((v: string | number) => new Date(v).getMonth());
-safeDate.getDay = createSafeCallable((v: string | number) => new Date(v).getDay());
+safeDate.getDay = createSafeCallable((v: string | number) => new Date(v).getUTCDay());
 Object.freeze(safeDate);
 
 export const SAFE_BINDINGS = (apiData: unknown) => ({

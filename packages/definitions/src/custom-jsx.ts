@@ -291,7 +291,11 @@ const componentSafeProps: Readonly<Record<string, readonly string[]>> = {
 function documentationUrl(packageName: CustomJsxComponentPackage, name: string): string {
   if (packageName === "@homarr/widgets") return "https://homarr.dev/docs/management/custom-widgets/";
   const section = packageName === "@mantine/core" ? "core" : packageName === "@mantine/charts" ? "charts" : "dates";
-  return `https://mantine.dev/${section}/${name.split(".")[0]?.toLowerCase() ?? ""}/`;
+  const slug = (name.split(".")[0] ?? "")
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+  return `https://mantine.dev/${section}/${slug}/`;
 }
 
 const describe = (

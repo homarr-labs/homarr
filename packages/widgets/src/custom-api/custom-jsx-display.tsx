@@ -20,7 +20,7 @@ function appendParseError(prev: string[], message: string): string[] {
   return [...prev, message];
 }
 
-const METHOD_COLORS: Record<string, string> = {
+export const CUSTOM_JSX_METHOD_COLORS: Record<string, string> = {
   GET: "blue",
   POST: "orange",
   PUT: "yellow",
@@ -173,7 +173,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
                         {capability.id}
                       </Text>
                       <Group gap={4} wrap="nowrap">
-                        <Badge size="xs" color={METHOD_COLORS[capability.method] ?? "gray"} variant="light">
+                        <Badge size="xs" color={CUSTOM_JSX_METHOD_COLORS[capability.method] ?? "gray"} variant="light">
                           {capability.method}
                         </Badge>
                         <Badge size="xs" color="gray" variant="outline">

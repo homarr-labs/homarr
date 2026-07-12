@@ -838,7 +838,7 @@ class Interpreter {
         case "charAt":
           return { handled: true, value: receiver.charAt(numericArgument(args[0], 0)) };
         case "split": {
-          const limit = Math.max(0, Math.min(2_000, numericArgument(args[1], 100)));
+          const limit = Math.max(0, Math.min(2_000, numericArgument(args[1], 2_000)));
           const split = args[0] === undefined ? [receiver] : receiver.split(String(args[0]), limit);
           this.budget.collection(split.length);
           return { handled: true, value: split };

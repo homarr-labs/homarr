@@ -7,7 +7,7 @@ import { z } from "zod/v4";
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { boards, customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
-import { eq } from "@homarr/db";
+import { eq, or } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
   customWidgetAuthTypes,
@@ -107,7 +107,6 @@ export const customWidgetRouter = createTRPCRouter({
     .query(() => getImportJsonSchema()),
 
   validate: adminProcedure
-    .input(z.object({ widget: z.unknown() }))
     .meta({
       mcp: {
         enabled: true,
@@ -115,6 +114,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Validate a complete custom-widget JSON draft without saving or making network requests. REQUIRED: widget (the homarr-custom-widget-v3 object). Returns structured issue paths and messages so an agent can correct the draft and validate again.",
       },
     })
+    .input(z.object({ widget: z.unknown() }))
     .query(({ input }) => {
       const result = customWidgetImportSchema.safeParse(input.widget);
       if (!result.success) {
@@ -161,7 +161,6 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   byId: adminProcedure
-    .input(z.object({ id: z.string() }))
     .meta({
       mcp: {
         enabled: true,
@@ -169,6 +168,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Get one complete custom-widget definition for iterative editing. REQUIRED: id. Stored secret values are never returned; only their presence is reported.",
       },
     })
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -198,23 +198,26 @@ export const customWidgetRouter = createTRPCRouter({
       };
     }),
 
-  available: protectedProcedure.input(z.object({ boardId: z.string() })).query(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-    return ctx.db.query.customWidgetDefinitions.findMany({
-      where: eq(customWidgetDefinitions.enabled, true),
-      orderBy: (table, { asc }) => asc(table.name),
-      columns: {
-        id: true,
-        name: true,
-        description: true,
-        iconUrl: true,
-        displayType: true,
-      },
-    });
-  }),
+  available: protectedProcedure
+    .input(z.object({ boardId: z.string(), currentId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      return ctx.db.query.customWidgetDefinitions.findMany({
+        where: input.currentId
+          ? or(eq(customWidgetDefinitions.enabled, true), eq(customWidgetDefinitions.id, input.currentId))
+          : eq(customWidgetDefinitions.enabled, true),
+        orderBy: (table, { asc }) => asc(table.name),
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          iconUrl: true,
+          displayType: true,
+        },
+      });
+    }),
 
   create: adminProcedure
-    .input(customWidgetCreateSchema)
     .meta({
       mcp: {
         enabled: true,
@@ -222,6 +225,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Create a validated custom widget. Admin only. Call customWidget_schema and customWidget_validate first. For Custom JSX use jsxApiVersion 2, named requests, a GET base method, and no inline credentials.",
       },
     })
+    .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
       const id = createId();
 
@@ -256,7 +260,6 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   update: adminProcedure
-    .input(customWidgetUpdateSchema)
     .meta({
       mcp: {
         enabled: true,
@@ -264,6 +267,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Update an existing custom widget. Admin only. REQUIRED: id. Read it with customWidget_byId, preserve unrelated fields, validate the resulting complete draft, then send the changed fields. Omit secrets to preserve stored credentials.",
       },
     })
+    .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -354,7 +358,6 @@ export const customWidgetRouter = createTRPCRouter({
   }),
 
   readTemplate: adminProcedure
-    .input(z.object({ id: z.string() }))
     .meta({
       mcp: {
         enabled: true,
@@ -362,6 +365,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Read the JSX template of a custom widget definition as plain text. Returns the template string separately from the full widget config, making it easier to inspect and edit.",
       },
     })
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -396,6 +400,13 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   writeTemplate: adminProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Update only the JSX template of a custom widget definition. Accepts either a single template string or templateLines (array of strings joined with newlines). Validates the template AST before saving. This avoids needing to send the full widget JSON for template-only edits.",
+      },
+    })
     .input(
       z
         .object({
@@ -410,13 +421,6 @@ export const customWidgetRouter = createTRPCRouter({
           message: "Provide template or templateLines, not both",
         }),
     )
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Update only the JSX template of a custom widget definition. Accepts either a single template string or templateLines (array of strings joined with newlines). Validates the template AST before saving. This avoids needing to send the full widget JSON for template-only edits.",
-      },
-    })
     .mutation(async ({ ctx, input }) => {
       const resolvedTemplate =
         input.templateLines !== undefined ? input.templateLines.join("\n") : (input.template ?? "");
@@ -467,6 +471,13 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   patchTemplate: adminProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Patch selected lines of a Custom JSX template without rewriting the whole template. First call customWidget_readTemplate and pass its revision as expectedRevision. Each edit uses a 1-based startLine, deleteCount, and replacementLines. Edits are applied atomically, then the complete template and named-request references are validated before saving. A stale revision is rejected so the agent can re-read and retry safely.",
+      },
+    })
     .input(
       z.object({
         id: z.string(),
@@ -483,13 +494,6 @@ export const customWidgetRouter = createTRPCRouter({
           .max(100),
       }),
     )
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Patch selected lines of a Custom JSX template without rewriting the whole template. First call customWidget_readTemplate and pass its revision as expectedRevision. Each edit uses a 1-based startLine, deleteCount, and replacementLines. Edits are applied atomically, then the complete template and named-request references are validated before saving. A stale revision is rejected so the agent can re-read and retry safely.",
-      },
-    })
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -545,7 +549,6 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   export: adminProcedure
-    .input(z.object({ id: z.string() }))
     .meta({
       mcp: {
         enabled: true,
@@ -553,6 +556,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Export one custom widget as a homarr-custom-widget-v3 object suitable for validation, modification, and re-import. REQUIRED: id. Secrets are excluded.",
       },
     })
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -583,7 +587,6 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   import: adminProcedure
-    .input(customWidgetImportSchema)
     .meta({
       mcp: {
         enabled: true,
@@ -591,6 +594,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Create a custom widget directly from a complete homarr-custom-widget-v3 import object. Admin only. Use customWidget_validate first. This is the preferred creation tool for AI-generated authoring bundles because secrets are omitted and configured separately.",
       },
     })
+    .input(customWidgetImportSchema)
     .mutation(async ({ ctx, input }) => {
       const id = createId();
 
@@ -614,6 +618,13 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   preview: adminProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Test a custom-widget draft through Homarr's hardened preview executor. Admin only. GET only; actions remain simulated. REQUIRED: url, method GET, authType, displayType, displayConfig. OPTIONAL: definitionId reuses that saved widget's stored credentials; omit secrets whenever possible. Returns sanitized response data, HTTP status, and a short-lived preview session for named query testing.",
+      },
+    })
     .input(
       z.object({
         url: z.string().url(),
@@ -627,13 +638,6 @@ export const customWidgetRouter = createTRPCRouter({
         definitionId: z.string().optional(),
       }),
     )
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Test a custom-widget draft through Homarr's hardened preview executor. Admin only. GET only; actions remain simulated. REQUIRED: url, method GET, authType, displayType, displayConfig. OPTIONAL: definitionId reuses that saved widget's stored credentials; omit secrets whenever possible. Returns sanitized response data, HTTP status, and a short-lived preview session for named query testing.",
-      },
-    })
     .mutation(async ({ ctx, input }) => {
       const secrets = [...input.secrets];
 
@@ -744,7 +748,6 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   previewQuery: adminProcedure
-    .input(previewSessionRequestSchema)
     .meta({
       mcp: {
         enabled: true,
@@ -752,6 +755,7 @@ export const customWidgetRouter = createTRPCRouter({
           "Run one named GET query from a short-lived custom-widget preview session. REQUIRED: sessionId from customWidget_preview, requestId declared as a query, and typed params. Uses the hardened executor and returns sanitized response data for another validate/update iteration.",
       },
     })
+    .input(previewSessionRequestSchema)
     .query(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
       const request = session.requests.find(
@@ -813,7 +817,6 @@ export const customWidgetRouter = createTRPCRouter({
     ),
 
   previewJournal: adminProcedure
-    .input(z.object({ sessionId: z.string().min(1) }))
     .meta({
       mcp: {
         enabled: true,
@@ -821,17 +824,18 @@ export const customWidgetRouter = createTRPCRouter({
           "Read the redacted request journal for a custom-widget preview session. REQUIRED: sessionId. Use it to inspect statuses and durations; credentials and parameter values are never returned.",
       },
     })
+    .input(z.object({ sessionId: z.string().min(1) }))
     .query(async ({ ctx, input }) => getPreviewJournal(input.sessionId, ctx.session.user.id)),
 
   simulatePreviewAction: adminProcedure
-    .input(previewSessionRequestSchema)
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Validate and simulate one named custom-widget action without sending a network request. REQUIRED: sessionId from customWidget_preview, action requestId, and typed params. Confirms parameter substitution and records a simulated journal entry. This MCP tool never enables or executes live actions.",
+          "Validate and simulate one named custom-widget action without sending a network request. REQUIRED: sessionId from customWidget_preview, action requestId, and typed params. Confirms parameter substitution and records a simulated journal entry. Returns requiredPermission as the action's minimum board permission (view, modify, or full), not as an execution result. This MCP tool never enables or executes live actions.",
       },
     })
+    .input(previewSessionRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
       const request = session.requests.find(
