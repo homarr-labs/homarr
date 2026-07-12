@@ -333,20 +333,22 @@ function RawDisplay({ data }: { data: Record<string, unknown> }) {
 function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   const t = useScopedI18n("widget.customApi");
   const { openConfirmModal } = useConfirmModal();
-  const executeMutation = clientApi.customWidget.execute.useMutation();
+  const executeMutation = clientApi.widget.customApi.executeBaseAction.useMutation();
   const [lastSuccess, setLastSuccess] = useState(false);
 
   const buttonLabel = (data.buttonLabel as string) ?? "Execute";
   const buttonColor = (data.buttonColor as string) ?? "blue";
   const confirmText = (data.confirmText as string) || "";
+  const requiresConfirmation = data.requiresConfirmation === true;
   const successMessage = (data.successMessage as string) || t("executeSuccess");
-  const definitionId = data.widgetDefinitionId as string | undefined;
+  const itemId = data.widgetItemId as string | undefined;
+  const isEditMode = data.isEditMode === true;
 
-  const handleExecute = async () => {
-    if (!definitionId) return;
+  const handleExecute = async (confirmed: boolean) => {
+    if (!itemId || isEditMode) return;
     setLastSuccess(false);
     try {
-      const result = await executeMutation.mutateAsync({ definitionId });
+      const result = await executeMutation.mutateAsync({ itemId, confirmed });
       if (result.success) {
         setLastSuccess(true);
         showSuccessNotification({ title: buttonLabel, message: successMessage });
@@ -360,14 +362,14 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   };
 
   const handleClick = () => {
-    if (confirmText) {
+    if (confirmText || requiresConfirmation) {
       openConfirmModal({
         title: buttonLabel,
-        children: confirmText,
-        onConfirm: () => void handleExecute(),
+        children: confirmText || t("executeConfirm"),
+        onConfirm: () => void handleExecute(true),
       });
     } else {
-      void handleExecute();
+      void handleExecute(false);
     }
   };
 
@@ -380,6 +382,7 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
         loading={executeMutation.isPending}
         leftSection={lastSuccess ? <IconCheck size={20} /> : <IconPlayerPlay size={20} />}
         variant={lastSuccess ? "light" : "filled"}
+        disabled={!itemId || isEditMode}
       >
         {executeMutation.isPending ? t("executing") : buttonLabel}
       </Button>
@@ -400,7 +403,7 @@ export const displayComponents: Record<string, ComponentType<{ data: Record<stri
   customJsx: CustomJsxDisplay,
 };
 
-export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
+export default function CustomApiWidget({ options, itemId, isEditMode }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
   const { definitionId, refreshInterval } = options;
 
@@ -417,20 +420,45 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
     );
   }
 
-  return <CustomApiWidgetInner definitionId={definitionId} refreshInterval={refreshInterval as number} />;
+  return (
+    <CustomApiWidgetInner
+      definitionId={definitionId}
+      itemId={itemId}
+      isEditMode={isEditMode}
+      refreshInterval={refreshInterval as number}
+    />
+  );
 }
 
-function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId: string; refreshInterval: number }) {
+function CustomApiWidgetInner({
+  definitionId,
+  itemId,
+  isEditMode,
+  refreshInterval,
+}: {
+  definitionId: string;
+  itemId: string | undefined;
+  isEditMode: boolean;
+  refreshInterval: number;
+}) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
+  const tCustomJsx = useScopedI18n("widget.customApi.customJsx");
   const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
   const intervalMs = Math.max(1000, safeInterval * 1000);
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
-    { definitionId },
+    { itemId: itemId ?? "" },
     {
+      enabled: Boolean(itemId),
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
-        if (result?.type === "actionButton" || result?.type === "disabled") return false;
+        if (
+          result?.type === "actionButton" ||
+          result?.type === "disabled" ||
+          result?.type === "networkAccessNeedsReview"
+        ) {
+          return false;
+        }
         return intervalMs;
       },
       retry: (failureCount, err) => {
@@ -455,7 +483,7 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
         <Stack align="center" gap="xs">
           <IconAlertTriangle size={32} color={`var(--mantine-color-${isNotFound ? "yellow" : "red"}-6)`} />
           <Text c="dimmed" size="sm" ta="center">
-            {isNotFound ? t("definitionNotFound") : error.message}
+            {isNotFound ? t("definitionNotFound") : tCustomJsx("requestFailed")}
           </Text>
         </Stack>
       </Center>
@@ -477,11 +505,24 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
     );
   }
 
+  if (dataType === "networkAccessNeedsReview") {
+    return (
+      <Center h="100%" p="sm">
+        <Stack align="center" gap="xs">
+          <IconAlertTriangle size={32} color="var(--mantine-color-yellow-6)" />
+          <Text c="dimmed" size="sm" ta="center">
+            {tCustomJsx("networkAccessNeedsReview")}
+          </Text>
+        </Stack>
+      </Center>
+    );
+  }
+
   const Component = dataType ? displayComponents[dataType] : undefined;
   if (Component) {
     const enrichedData =
       dataType === "actionButton" || dataType === "customJsx"
-        ? { ...widgetData, widgetDefinitionId: definitionId }
+        ? { ...widgetData, widgetDefinitionId: definitionId, widgetItemId: itemId, isEditMode }
         : widgetData;
     return <Component data={enrichedData} />;
   }

@@ -5,272 +5,174 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconCopy, IconSparkles } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { customJsxExamples, enabledCustomJsxComponents } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-const PROMPT_HEADER = `You are helping configure a Homarr custom widget. Homarr is a self-hosted dashboard that can display data from any API endpoint as a widget.
+const PROMPT_HEADER = `You are configuring a Homarr custom widget. Ask a concise clarifying question only when the requested behavior is ambiguous.
 
-## Your Task
-Generate a valid JSON configuration for a Homarr custom widget based on the user's description and the API response below. If you need clarification, ask specific questions.
+For Custom JSX, return a Homarr authoring bundle with exactly two fenced code blocks:
+1. A \`json\` block containing the complete import object. Set \`displayConfig.template\` to \`"__HOMARR_TEMPLATE__"\`.
+2. A \`jsx\` block containing the readable, multiline template with no JSON escaping.
 
-## Output Format
-- Output the JSON inside a \`\`\`json code block for syntax highlighting. If \`\`\`json is not supported, use a generic \`\`\` code block instead.
-- Do NOT include any text before or after the JSON block unless you have clarifying questions.
-- If your environment supports structured/JSON output mode, use it.
+The user can paste both blocks together into Homarr. Homarr combines and validates them before import. For non-Custom-JSX display types, return only the complete JSON block.
 
-## JSON Schema
-The output must conform to this JSON Schema:
+## Rules
+- Use \`"$schema": "homarr-custom-widget-v3"\`.
+- \`displayType\` and \`displayConfig.type\` must match.
+- Prefer \`customJsx\` with \`jsxApiVersion: 2\` for custom layouts.
+- The base widget request must use GET. Mutations belong in named action requests.
+- JSX cannot call \`fetch\` or use event handlers. Use SubFetch, ActionButton, ToggleSwitch, and RefreshButton.
+- Version 2 network components reference a literal \`requestId\` and pass only declared \`params\`.
+- SubFetch can reference query requests only. ActionButton and ToggleSwitch can reference action requests only.
+- Prefer the SubFetch function-as-children API for fetched data. The callback receives \`(response, metadata)\` and may return any safe JSX tree. Use SubData only for very small path-based displays.
+- SubFetch owns loading, failure, retry, cancellation, and stale-response handling. The render callback runs only when response data is available.
+- Named request paths are same-origin paths beginning with \`/\`. Do not put credentials in a template or export.
+- Query requests use GET and view permission. POST, PUT, and PATCH actions default to modify. DELETE requires full permission and confirmation.
+- Use only components in the generated component reference below.
+- Template output must fit inside a dashboard widget and remain usable at narrow widths.
+- Return the complete import object, not a template fragment. Preserve unrelated fields from the current configuration.
+- Include stable keys for rendered collections, accessible labels for controls and images, useful empty states, and concise content that works in light and dark themes.
+- Prefer one clear information hierarchy over nested cards. Use ActionButton and ToggleSwitch only when the named action and required permission are declared.
 
-`;
+## Named request shape
+\`\`\`ts
+interface CustomJsxRequest {
+  id: string;
+  kind: "query" | "action";
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  pathTemplate: \`/\${string}\`;
+  parameters: Record<string, "string" | "number" | "boolean">;
+  bodyTemplate?: unknown;
+  staticHeaders?: Record<string, string>;
+  auth: "inherit" | "none";
+  minimumBoardPermission: "view" | "modify" | "full";
+  cacheTtlSeconds?: number;
+}
+\`\`\`
 
-const PROMPT_RULES = `
+Path parameters use \`{name}\`. JSON body parameters use \`{ "$param": "name" }\` and preserve the declared type.
 
-## Key Rules
-- The \`displayConfig.type\` field MUST match the \`displayType\` field exactly
-- All \`jsonPath\` fields use JSONPath syntax (e.g. \`$.data.count\`, \`$.items[*].name\`)
-- The \`$schema\` field should be \`"homarr-custom-widget-v2"\`
-- Do NOT include secrets/passwords in the output — those are configured separately in the UI
-- \`url\` must be a full URL including protocol (e.g. \`https://...\`)
-- For arrays of items, inspect the API response to find the correct paths
+## SubFetch rendering
+Use a render child when a named query needs its own layout:
 
-## Display Type Guide
-- \`singleValue\`: One prominent number/text
-- \`keyValue\`: Labeled pairs — use \`mappings\` array
-- \`table\`: Tabular data — \`tablePath\` + \`columns\`
-- \`statGrid\`: Grid of stat cards with colors
-- \`progressBars\`: Visual progress bars with value/max
-- \`statusIndicator\`: Green/red dots based on value matching
-- \`countGrid\`: Simple count grid
-- \`raw\`: Raw JSON display
-- \`actionButton\`: Button that triggers the API call on click
-- \`customJsx\`: **Full Mantine v9 JSX** — complete creative control. Set \`displayConfig.template\` to a JSX string.
-
-## Custom JSX (\`customJsx\`) — Component Reference
-
-All Mantine v9 components listed below are available. For full Mantine prop documentation, refer to https://mantine.dev/llms.txt or use Context7/web search for any component's detailed API.
-
-### Layout
-Box, Stack, Group, Flex, Grid + Grid.Col, SimpleGrid, Center, Space, Container, AspectRatio, Overlay, ScrollArea
-
-### Typography
-Text, Title, Code, Highlight, Mark, Kbd, Blockquote, Anchor (href sanitized), NumberFormatter, Marquee, RollingNumber
-
-### Data Display
-Badge, Card + Card.Section, Paper, Alert, ThemeIcon, ColorSwatch, Table (+ Thead/Tbody/Tfoot/Caption/Tr/Th/Td), List + List.Item, Timeline + Timeline.Item, Accordion (+ Item/Control/Panel), Indicator, Pill, Spoiler, Progress + Progress.Section, RingProgress, SemiCircleProgress, Skeleton, Loader, Image, Avatar + Avatar.Group, BackgroundImage, Tooltip, Divider, DataList (+ Item/ItemLabel/ItemValue), EmptyState (+ Indicator/Title/Description/Actions), Fieldset, Notification (visual), Rating (read-only)
-
-### Navigation
-Breadcrumbs, NavLink (href sanitized), Stepper + Stepper.Step, Tabs + Tabs.List + Tabs.Tab + Tabs.Panel, Tree
-
-### Interactive Display (visual only — no event handlers)
-Button, ActionIcon, Burger, CloseButton, Chip + Chip.Group, Pagination, SegmentedControl, Slider (read-only), Switch (read-only)
-
-### Hover Overlays & Menus
-HoverCard + HoverCard.Target + HoverCard.Dropdown, Menu + Menu.Target + Menu.Dropdown + Menu.Item + Menu.Label + Menu.Divider
-
-### Utility
-CopyButton (click-to-copy, props: \`value\`), Collapse (animate show/hide, props: \`in\`), Transition (animate, props: \`mounted\`, \`transition\`)
-
-### Charts (@mantine/charts — ALL)
-AreaChart, BarChart, LineChart, DonutChart, PieChart, RadarChart, RadialBarChart, Sparkline, BubbleChart, CompositeChart, FunnelChart, Heatmap, ScatterChart, SankeyChart, Treemap, BarsList
-
-### Dates (@mantine/dates)
-Calendar (static), MiniCalendar (static), DatePicker (static/read-only), TimeValue
-
-### SubFetch — In-Widget HTTP Requests (server-proxied)
-These components make HTTP requests through the Homarr server proxy (same-origin as widget URL, inherits widget auth). HTTP method warnings are shown in the widget UI.
-
-**SubFetch** — Fetch data from a sub-endpoint and display results.
-Props: \`url\` (relative or absolute), \`method\` (GET|POST|PUT|DELETE|PATCH), \`body\` (JSON string), \`headers\` (JSON string), \`trigger\` ("auto"|"manual"), \`label\`, \`color\`, \`display\` ("json"|"text"), \`path\` (dot-path for display="text")
 \`\`\`jsx
-<SubFetch url="/api/v1/status" trigger="auto">
-  <SubData path="name" as="Title" order={3} />
-  <SubData path="status" as="Badge" color="green" />
+<SubFetch requestId="service-detail" params={{ id: data.serviceId }}>
+  {(detail, meta) =>
+    <Stack gap="xs">
+      <Group justify="space-between">
+        <Text fw={700}>{detail.name}</Text>
+        <Badge color={meta.ok ? "green" : "red"}>HTTP {meta.status}</Badge>
+      </Group>
+      {detail.metrics.map((metric) =>
+        <Group key={metric.name} justify="space-between">
+          <Text size="sm">{metric.name}</Text>
+          <Text fw={600}>{metric.value}</Text>
+        </Group>
+      )}
+    </Stack>
+  }
 </SubFetch>
 \`\`\`
 
-**SubData** — Reads data from parent SubFetch context.
-Props: \`path\` (dot-notation), \`as\` ("Text"|"Title"|"Badge"|"Code"), \`size\`, \`color\`, \`fw\`, \`c\`, \`order\`
-
-**ActionButton** — Button that fires an HTTP request on click.
-Props: \`url\`, \`method\` (default POST), \`body\`, \`headers\`, \`label\`, \`color\`, \`variant\`, \`size\`, \`confirmMessage\`, \`successMessage\`, \`icon\` (play|check|refresh|power|trash), \`fullWidth\`, \`disabled\`
-\`\`\`jsx
-<ActionButton url="/api/lights/1/toggle" method="POST" label="Toggle Light" color="yellow" icon="power" confirmMessage="Toggle the light?" />
-\`\`\`
-
-**ToggleSwitch** — Switch that sends different payloads for on/off states.
-Props: \`url\`, \`method\` (default POST), \`onBody\` (JSON), \`offBody\` (JSON), \`initialValue\`, \`label\`, \`color\`, \`size\`, \`disabled\`
-\`\`\`jsx
-<ToggleSwitch url="/api/lights/1" onBody='{"state":"on"}' offBody='{"state":"off"}' label="Living Room" color="yellow" />
-\`\`\`
-
-**RefreshButton** — Re-fetches the parent widget data.
-Props: \`label\`, \`color\`, \`variant\`, \`size\`
-
-### Custom Interactive Components (built-in state)
-**PaginatedList** — Paginates children. Props: \`pageSize\` (default 6)
-**TabsContainer + TabPanel** — Tabbed UI. TabsContainer: \`defaultTab\`. TabPanel: \`value\`, \`label\`
-**Collapsible** — Expand/collapse. Props: \`title\`, \`defaultOpen\`
-**StatBar** — Horizontal stat bar. Props: \`value\`, \`max\`, \`label\`, \`color\`
-**TypeBadge** — Colored type badge (auto-maps: fire→red, water→blue, etc.). Props: \`type\`, \`size\`
-
-### Bindings
-- \`data\` — full API response
-- \`String(v)\`, \`Number(v)\`, \`Boolean(v)\`, \`parseInt(v)\`, \`parseFloat(v)\`
-- \`Math.round/floor/ceil/abs/min/max/pow/sqrt/PI\`
-- \`JSON.stringify(v)\`, \`Array.isArray(v)\`, \`Array.from(v)\`, \`Object.keys/values/entries(v)\`
-- \`Date.now()\`, \`Date.create(v)\`, \`Date.toISOString(v)\`, \`Date.toLocaleDateString(v, locale?)\`, \`Date.toLocaleTimeString(v, locale?)\`, \`Date.getTime(v)\`, \`Date.getYear(v)\`, \`Date.getMonth(v)\`, \`Date.getDay(v)\`
-- \`encodeURIComponent(v)\`, \`decodeURIComponent(v)\`, \`isNaN(v)\`, \`isFinite(v)\`
-- \`.map()\`, \`.filter()\`, \`.slice()\`, ternaries for conditionals
-
-**FORBIDDEN keywords:** constructor, __proto__, eval, Function, import, require, globalThis, window, document
-
-### Chart Data Formats
-- BarChart/LineChart/AreaChart: \`data={items}\` + \`dataKey="x"\` + \`series={[{name:"y",color:"blue"}]}\`
-- DonutChart/PieChart: \`data={[{name,value,color}]}\`
-- ScatterChart: \`data={items}\` + \`dataKey={xKey}\` + \`series={[{name, color}]}\`
-- CompositeChart: same as Bar/Line/Area + \`composedChart\` with type per series
-- Sparkline: \`data={[numbers]}\`
-- Heatmap: \`data={items}\` + \`dataKey\` + \`series\`
-
-### Pokédex Example (75 pokemon)
-API: \`https://pokeapi.co/api/v2/pokemon?limit=75\`
-\`\`\`jsx
-<Stack gap="sm" p="xs">
-  <Group justify="space-between">
-    <Title order={3}>Pokédex</Title>
-    <Badge size="lg" color="red">{data.count} total</Badge>
-  </Group>
-  <PaginatedList pageSize={10}>
-    {data.results.map((pokemon, i) =>
-      <Card withBorder p="xs" mb="xs">
-        <Group wrap="nowrap">
-          <Avatar src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"} size="lg" radius="sm" />
-          <Stack gap={0} style={{flex: 1}}>
-            <Text fw={700} tt="capitalize">{pokemon.name}</Text>
-            <Text size="xs" c="dimmed">#{String(i + 1).padStart(3, "0")}</Text>
-          </Stack>
-        </Group>
-      </Card>
-    )}
-  </PaginatedList>
-</Stack>
-\`\`\`
-
-### Pokédex with Detail Fetch (SubFetch for sub-resources)
-API: \`https://pokeapi.co/api/v2/pokemon?limit=75\`
-\`\`\`jsx
-<Stack gap="sm" p="xs">
-  <Title order={3}>Pokédex</Title>
-  <PaginatedList pageSize={5}>
-    {data.results.map((pokemon, i) =>
-      <Card withBorder p="xs" mb="xs">
-        <Group wrap="nowrap">
-          <Avatar src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"} size={60} radius="sm" />
-          <Stack gap={2} style={{flex: 1}}>
-            <Text fw={700} tt="capitalize">{pokemon.name}</Text>
-            <SubFetch url={pokemon.url} trigger="auto">
-              <Group gap="xs">
-                <SubData path="types.0.type.name" as="Badge" color="red" />
-                <SubData path="stats.0.base_stat" as="Text" size="xs" />
-              </Group>
-            </SubFetch>
-          </Stack>
-        </Group>
-      </Card>
-    )}
-  </PaginatedList>
-</Stack>
-\`\`\`
-
-### Stocks Dashboard (Charts + Live Data)
-API: \`https://your-stocks-api.com/portfolio\`
-\`\`\`jsx
-<Stack gap="md" p="sm">
-  <Group justify="space-between">
-    <Title order={3}>Portfolio</Title>
-    <RefreshButton label="Refresh" size="xs" />
-  </Group>
-  <SimpleGrid cols={3}>
-    {data.holdings.map(stock =>
-      <Card withBorder p="xs">
-        <Text fw={700}>{stock.symbol}</Text>
-        <NumberFormatter value={stock.price} prefix="$" decimalScale={2} />
-        <Sparkline data={stock.history} h={40} color={stock.change > 0 ? "green" : "red"} />
-      </Card>
-    )}
-  </SimpleGrid>
-  <LineChart h={200} data={data.timeline} dataKey="date" series={[{name: "value", color: "blue"}]} />
-</Stack>
-\`\`\`
-
-### Navidrome Mini-Player (Buttons + State)
-API: \`https://your-navidrome.local/api/nowplaying\`
-\`\`\`jsx
-<Stack gap="sm" p="sm">
-  <Group wrap="nowrap">
-    <Image src={data.albumArt} w={80} h={80} radius="sm" />
-    <Stack gap={2} style={{flex: 1}}>
-      <Text fw={700} lineClamp={1}>{data.title}</Text>
-      <Text size="sm" c="dimmed" lineClamp={1}>{data.artist}</Text>
-      <Progress value={data.progress} size="xs" color="red" />
-    </Stack>
-  </Group>
-  <Group justify="center" gap="sm">
-    <ActionButton url="/api/player/previous" method="POST" label="Prev" size="xs" variant="subtle" />
-    <ActionButton url="/api/player/toggle" method="POST" label={data.playing ? "Pause" : "Play"} icon="play" color="red" />
-    <ActionButton url="/api/player/next" method="POST" label="Next" size="xs" variant="subtle" />
-  </Group>
-  <Group justify="center">
-    <ToggleSwitch url="/api/player/shuffle" method="POST" onBody='{"shuffle":true}' offBody='{"shuffle":false}' initialValue={data.shuffle} label="Shuffle" size="xs" />
-    <ToggleSwitch url="/api/player/repeat" method="POST" onBody='{"repeat":true}' offBody='{"repeat":false}' initialValue={data.repeat} label="Repeat" size="xs" />
-  </Group>
-</Stack>
-\`\`\`
-
-### Smart Home Light Switch
-API: \`https://your-ha.local/api/states/light.living_room\`
-\`\`\`jsx
-<Stack gap="md" p="sm">
-  <Group justify="space-between">
-    <Title order={4}>Living Room</Title>
-    <Badge color={data.state === "on" ? "yellow" : "gray"}>{data.state}</Badge>
-  </Group>
-  <ToggleSwitch url="/api/services/light/toggle" method="POST" onBody='{"entity_id":"light.living_room"}' offBody='{"entity_id":"light.living_room"}' initialValue={data.state === "on"} label="Power" color="yellow" />
-  <ActionButton url="/api/services/light/turn_off" method="POST" body='{"entity_id":"light.living_room"}' label="Force Off" color="red" icon="power" confirmMessage="Turn off?" />
-</Stack>
-\`\`\`
-
-## API Response
+The callback is an interpreter-managed inline arrow function. Do not use native callbacks, event handlers, global state, or direct network access. Keep list keys stable and design for narrow and wide widget sizes.
 `;
 
-const PROMPT_NO_RESPONSE = `Paste the raw JSON response from your API endpoint below:
+const PROMPT_NO_RESPONSE = `No sample response is available. Leave this marker in your reasoning and ask the user for a representative response if its shape is required:
 
 \`\`\`json
-PASTE_YOUR_API_RESPONSE_HERE
+PASTE_API_RESPONSE_HERE
 \`\`\`
 `;
 
-const PROMPT_FOOTER = `
-## Your Request
-Describe what you want the widget to show:
+function buildComponentReference() {
+  const categories = new Map<string, string[]>();
+  for (const component of enabledCustomJsxComponents) {
+    const names = categories.get(component.category) ?? [];
+    names.push(component.name);
+    categories.set(component.category, names);
+  }
 
-`;
+  return [...categories.entries()].map(([category, names]) => `- ${category}: ${names.join(", ")}`).join("\n");
+}
+
+function buildExamples() {
+  return customJsxExamples
+    .map(
+      (example) => `### ${example.title}
+${example.description}
+\`\`\`json
+${JSON.stringify(
+  {
+    displayType: "customJsx",
+    displayConfig: {
+      type: "customJsx",
+      jsxApiVersion: 2,
+      networkScope: "public",
+      template: "__HOMARR_TEMPLATE__",
+      requests: example.requests,
+    },
+  },
+  null,
+  2,
+)}
+\`\`\`
+\`\`\`jsx
+${example.template}
+\`\`\``,
+    )
+    .join("\n\n");
+}
 
 function buildAiPrompt(
   jsonSchema: unknown,
   rawResponse?: string | null,
   currentConfig?: Record<string, unknown> | null,
 ) {
-  const schemaStr = JSON.stringify(jsonSchema, null, 2);
   const responseSection = rawResponse
-    ? `The API returned the following JSON:\n\n\`\`\`json\n${rawResponse}\n\`\`\`\n`
-    : PROMPT_NO_RESPONSE;
-
-  const configSection = currentConfig
-    ? `\n## Current Widget Configuration\nThe widget is currently configured as follows. Use this as a starting point and modify based on the user's request:\n\n\`\`\`json\n${JSON.stringify(currentConfig, null, 2)}\n\`\`\`\n`
+    ? `## API response\n\n\`\`\`json\n${rawResponse}\n\`\`\`\n`
+    : `## API response\n\n${PROMPT_NO_RESPONSE}`;
+  const currentDisplayConfig = currentConfig?.displayConfig;
+  const currentTemplate =
+    currentDisplayConfig && typeof currentDisplayConfig === "object" && "template" in currentDisplayConfig
+      ? currentDisplayConfig.template
+      : null;
+  const readableCurrentConfig = currentConfig
+    ? {
+        ...currentConfig,
+        ...(currentTemplate && typeof currentTemplate === "string"
+          ? {
+              displayConfig: {
+                ...(currentDisplayConfig as Record<string, unknown>),
+                template: "__HOMARR_TEMPLATE__",
+              },
+            }
+          : {}),
+      }
+    : null;
+  const configSection = readableCurrentConfig
+    ? `## Current configuration\n\nUse this as the starting point and preserve unrelated settings.\n\n\`\`\`json\n${JSON.stringify(readableCurrentConfig, null, 2)}\n\`\`\`\n${typeof currentTemplate === "string" ? `\n\`\`\`jsx\n${currentTemplate}\n\`\`\`\n` : ""}`
     : "";
 
-  return PROMPT_HEADER + schemaStr + PROMPT_RULES + responseSection + configSection + PROMPT_FOOTER;
+  return `${PROMPT_HEADER}
+## Import schema
+The \`__HOMARR_TEMPLATE__\` value is an authoring transport placeholder. Homarr replaces it with the following JSX block before schema and AST validation.
+
+\`\`\`json
+${JSON.stringify(jsonSchema, null, 2)}
+\`\`\`
+
+## Generated component reference
+${buildComponentReference()}
+
+## Tested examples
+${buildExamples()}
+
+${responseSection}
+${configSection}
+## Requested widget
+Describe what the widget should show and which interactions it needs:
+`;
 }
 
 interface CopyAiPromptButtonProps {
@@ -285,9 +187,8 @@ export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptB
 
   const handleCopy = async () => {
     if (!schema) return;
-    const prompt = buildAiPrompt(schema, rawResponse, currentConfig);
     try {
-      await navigator.clipboard.writeText(prompt);
+      await navigator.clipboard.writeText(buildAiPrompt(schema, rawResponse, currentConfig));
       close();
       showSuccessNotification({ title: t("action.copyAiPrompt"), message: t("notification.aiPromptCopied") });
     } catch {

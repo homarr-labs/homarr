@@ -1,26 +1,34 @@
 "use client";
 
 import type { ComponentType, ReactNode } from "react";
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Alert, Badge, Button, Code, Skeleton, Switch, Text, Title } from "@mantine/core";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Alert, Badge, Button, Code, Image, Skeleton, Switch, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconPlayerPlay, IconPower, IconRefresh, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
 
-import { useWidgetDefinitionId } from "./widget-definition-context";
+import { useCustomJsxRuntime } from "./widget-definition-context";
 
-const MAX_CALLS_PER_MINUTE = 10;
-const RATE_WINDOW_MS = 60_000;
-const callTimestamps = new Map<string, number[]>();
+type RuntimeParam = string | number | boolean;
+export type CustomJsxRuntimeParams = Record<string, RuntimeParam>;
 
-const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"] as const;
-type HttpMethod = (typeof HTTP_METHODS)[number];
+interface RequestResult {
+  ok: boolean;
+  status: number;
+  statusText?: string;
+  data: unknown;
+  error?: string;
+  simulated?: boolean;
+}
 
-type SubFetchResult =
-  | { ok: true; status: number; data: unknown }
-  | { ok: false; status: number; data: unknown; error?: string };
+export interface SubFetchMetadata {
+  ok: boolean;
+  status: number;
+  statusText?: string;
+}
 
 const ICON_MAP: Record<string, ComponentType<{ size?: number | string }>> = {
   play: IconPlayerPlay,
@@ -32,16 +40,6 @@ const ICON_MAP: Record<string, ComponentType<{ size?: number | string }>> = {
 
 const SubFetchDataContext = createContext<unknown>(undefined);
 
-function checkRateLimit(definitionId: string): boolean {
-  const now = Date.now();
-  const calls = callTimestamps.get(definitionId) ?? [];
-  const recent = calls.filter((t) => now - t < RATE_WINDOW_MS);
-  if (recent.length >= MAX_CALLS_PER_MINUTE) return false;
-  recent.push(now);
-  callTimestamps.set(definitionId, recent);
-  return true;
-}
-
 function parseBool(value: unknown, defaultValue = false): boolean {
   if (typeof value === "boolean") return value;
   if (value === "true") return true;
@@ -49,32 +47,24 @@ function parseBool(value: unknown, defaultValue = false): boolean {
   return defaultValue;
 }
 
-function parseMethod(method?: string): HttpMethod {
-  const upper = (method ?? "GET").toUpperCase();
-  if (HTTP_METHODS.includes(upper as HttpMethod)) return upper as HttpMethod;
-  return "GET";
-}
-
-function parseJsonRecord(str?: string): Record<string, string> | undefined {
-  if (!str?.trim()) return undefined;
-  try {
-    const parsed: unknown = JSON.parse(str);
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return undefined;
-    const result: Record<string, string> = {};
-    for (const [key, value] of Object.entries(parsed)) {
-      result[key] = String(value);
-    }
-    return result;
-  } catch {
-    return undefined;
+function normalizeParams(value: unknown): CustomJsxRuntimeParams | null {
+  if (value === undefined) return {};
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const result: CustomJsxRuntimeParams = {};
+  for (const [key, param] of Object.entries(value)) {
+    if (key === "constructor" || key === "prototype" || key === "__proto__") return null;
+    if (typeof param !== "string" && typeof param !== "number" && typeof param !== "boolean") return null;
+    result[key] = param;
   }
+  return result;
 }
 
 function getByPath(obj: unknown, path?: string): unknown {
   if (!path?.trim()) return obj;
   return path.split(".").reduce<unknown>((acc, key) => {
     if (acc == null || typeof acc !== "object") return undefined;
-    return (acc as Record<string, unknown>)[key];
+    if (key === "constructor" || key === "prototype" || key === "__proto__") return undefined;
+    return Object.hasOwn(acc, key) ? (acc as Record<string, unknown>)[key] : undefined;
   }, obj);
 }
 
@@ -84,145 +74,165 @@ function formatDisplayValue(value: unknown): string {
   return String(value);
 }
 
-function useSubFetchExecutor() {
-  const definitionId = useWidgetDefinitionId();
-  const mutation = clientApi.widget.customApi.subFetch.useMutation();
-
-  const execute = useCallback(
-    async (params: { url: string; method?: string; body?: string; headers?: string }): Promise<SubFetchResult> => {
-      if (!definitionId) {
-        return { ok: false as const, status: 0, data: null, error: "Widget definition not available" };
-      }
-      if (!checkRateLimit(definitionId)) {
-        return { ok: false as const, status: 0, data: null, error: "Rate limit exceeded (10 calls/minute)" };
-      }
-
-      return mutation.mutateAsync({
-        definitionId,
-        url: params.url,
-        method: parseMethod(params.method),
-        body: params.body,
-        headers: parseJsonRecord(params.headers),
-      });
-    },
-    [definitionId, mutation],
+function MigrationRequiredAlert() {
+  const t = useScopedI18n("widget.customApi.customJsx");
+  return (
+    <Alert color="yellow" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
+      <Text size="xs">{t("migrationRequired")}</Text>
+    </Alert>
   );
-
-  return { execute, isPending: mutation.isPending };
 }
 
 export interface SubFetchProps {
-  url: string;
-  method?: string;
-  body?: string;
-  headers?: string;
-  trigger?: "auto" | "manual";
-  label?: string;
-  color?: string;
-  variant?: string;
+  requestId?: string;
+  params?: CustomJsxRuntimeParams;
+  refreshInterval?: number;
   children?: ReactNode;
-  loadingText?: string;
-  errorText?: string;
-  display?: "json" | "text";
+  render?: (data: unknown, metadata: SubFetchMetadata) => ReactNode;
+  loadingLabel?: string;
+  errorMessage?: string;
+  fallback?: ReactNode;
   path?: string;
+  as?: "json" | "text";
+  /** @deprecated Inline targets are inert in JSX API v2. */
+  url?: string;
+  /** @deprecated The method is defined by the named request manifest. */
+  method?: string;
+  /** @deprecated The body is defined by the named request manifest. */
+  body?: string;
+  /** @deprecated Headers are defined by the named request manifest. */
+  headers?: string;
+  /** Set to manual to wait for an explicit user gesture before the first query. */
+  trigger?: "auto" | "manual";
 }
 
 export function SubFetch({
-  url,
-  method,
-  body,
-  headers,
-  trigger = "auto",
-  label = "Fetch",
-  color = "blue",
-  variant = "filled",
+  requestId,
+  params,
+  refreshInterval,
   children,
-  loadingText = "Loading...",
-  errorText,
-  display,
+  render,
+  loadingLabel,
+  errorMessage,
+  fallback,
   path,
+  as,
+  trigger = "auto",
 }: SubFetchProps) {
-  const { execute, isPending } = useSubFetchExecutor();
-  const [subData, setSubData] = useState<unknown>(undefined);
-  const [error, setError] = useState<string | null>(null);
-  const [fetched, setFetched] = useState(false);
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const { itemId, previewSessionId } = useCustomJsxRuntime();
+  const [manualRun, setManualRun] = useState(false);
+  const normalizedParams = useMemo(() => normalizeParams(params), [params]);
+  const requestKey = useMemo(() => JSON.stringify(normalizedParams), [normalizedParams]);
+  useEffect(() => setManualRun(false), [requestId, requestKey, trigger]);
+  const canRun = Boolean((itemId || previewSessionId) && requestId && normalizedParams);
+  const boardQuery = clientApi.widget.customApi.queryRequest.useQuery(
+    {
+      itemId: itemId ?? "",
+      requestId: requestId ?? "",
+      params: normalizedParams ?? {},
+    },
+    {
+      enabled: Boolean(itemId) && canRun && (trigger === "auto" || manualRun),
+      retry: 2,
+      refetchInterval:
+        refreshInterval && Number.isFinite(refreshInterval) && refreshInterval > 0
+          ? Math.max(1_000, refreshInterval * 1_000)
+          : false,
+    },
+  );
+  const previewQuery = clientApi.customWidget.previewQuery.useQuery(
+    {
+      sessionId: previewSessionId ?? "",
+      requestId: requestId ?? "",
+      params: normalizedParams ?? {},
+    },
+    {
+      enabled: Boolean(previewSessionId && !itemId) && canRun && (trigger === "auto" || manualRun),
+      retry: 2,
+      refetchInterval:
+        refreshInterval && Number.isFinite(refreshInterval) && refreshInterval > 0
+          ? Math.max(1_000, refreshInterval * 1_000)
+          : false,
+    },
+  );
+  const query = itemId ? boardQuery : previewQuery;
 
-  const runFetch = useCallback(async () => {
-    setError(null);
-    const result = await execute({ url, method, body, headers });
-    if (result.ok) {
-      setSubData(result.data);
-      setFetched(true);
-    } else {
-      setError(result.error ?? errorText ?? `Request failed (${result.status})`);
-      setFetched(true);
-    }
-  }, [execute, url, method, body, headers, errorText]);
-
-  useEffect(() => {
-    if (trigger === "auto") {
-      void runFetch();
-    }
-  }, [trigger, runFetch]);
-
-  if (trigger === "manual" && !fetched && !isPending) {
+  if (!requestId) return <MigrationRequiredAlert />;
+  if (!itemId && !previewSessionId) {
     return (
-      <Button color={color} variant={variant as never} onClick={() => void runFetch()} loading={isPending}>
-        {label}
+      fallback ?? (
+        <Text size="xs" c="dimmed">
+          {t("unsavedPreview")}
+        </Text>
+      )
+    );
+  }
+  if (!normalizedParams) {
+    return (
+      <Alert color="red" variant="light" p="xs">
+        <Text size="xs">{t("invalidParams")}</Text>
+      </Alert>
+    );
+  }
+  if (trigger === "manual" && !manualRun) {
+    return (
+      <Button size="compact-sm" variant="light" onClick={() => setManualRun(true)}>
+        {t("loadRequest")}
       </Button>
     );
   }
 
-  if (isPending) {
+  const result = query.data as RequestResult | undefined;
+  const requestError =
+    (query.error ? t("requestFailed") : null) ??
+    (!result?.ok ? (result?.error ?? `${t("requestFailed")} (${result?.status ?? 0})`) : null);
+
+  if (!result && query.isPending) {
     return (
-      <div>
-        <Skeleton height={8} radius="xl" mb="xs" />
-        <Text size="xs" c="dimmed">
-          {loadingText}
-        </Text>
-      </div>
+      fallback ?? (
+        <div>
+          <Skeleton height={8} radius="xl" mb="xs" />
+          <Text size="xs" c="dimmed">
+            {loadingLabel ?? t("loading")}
+          </Text>
+        </div>
+      )
     );
   }
 
-  if (error) {
+  if (requestError) {
     return (
       <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
-        <Text size="xs">{error}</Text>
+        <Text size="xs">{errorMessage ?? requestError}</Text>
+        <Button
+          size="compact-xs"
+          variant="subtle"
+          mt={4}
+          onClick={() => void query.refetch()}
+          loading={query.isFetching}
+        >
+          {t("retry")}
+        </Button>
       </Alert>
     );
   }
 
-  const contextValue = subData;
-
-  if (display === "json") {
-    return (
-      <SubFetchDataContext.Provider value={contextValue}>
-        <Code block style={{ fontSize: 11 }}>
-          {JSON.stringify(subData, null, 2)}
-        </Code>
-      </SubFetchDataContext.Provider>
+  const subData = result?.data;
+  let content = render
+    ? render(subData, { ok: result?.ok ?? false, status: result?.status ?? 0, statusText: result?.statusText })
+    : children;
+  if (!render && (as === "json" || (!children && as !== "text"))) {
+    content = (
+      <Code block style={{ fontSize: 11 }}>
+        {JSON.stringify(path ? getByPath(subData, path) : subData, null, 2)}
+      </Code>
     );
+  } else if (!render && as === "text") {
+    content = <Text size="sm">{formatDisplayValue(getByPath(subData, path))}</Text>;
   }
 
-  if (display === "text" && path) {
-    return (
-      <SubFetchDataContext.Provider value={contextValue}>
-        <Text size="sm">{formatDisplayValue(getByPath(subData, path))}</Text>
-      </SubFetchDataContext.Provider>
-    );
-  }
-
-  if (!children) {
-    return (
-      <SubFetchDataContext.Provider value={contextValue}>
-        <Code block style={{ fontSize: 11 }}>
-          {JSON.stringify(subData, null, 2)}
-        </Code>
-      </SubFetchDataContext.Provider>
-    );
-  }
-
-  return <SubFetchDataContext.Provider value={contextValue}>{children}</SubFetchDataContext.Provider>;
+  return <SubFetchDataContext.Provider value={subData}>{content}</SubFetchDataContext.Provider>;
 }
 
 export interface SubDataProps {
@@ -234,6 +244,11 @@ export interface SubDataProps {
   variant?: string;
   fw?: number;
   c?: string;
+  alt?: string;
+  fit?: string;
+  w?: string | number;
+  h?: string | number;
+  radius?: string | number;
 }
 
 export function SubData({ path, as = "Text", ...props }: SubDataProps) {
@@ -266,8 +281,14 @@ export function SubData({ path, as = "Text", ...props }: SubDataProps) {
     );
   }
 
-  if (as === "Code") {
-    return <Code block>{displayValue}</Code>;
+  if (as === "Code") return <Code block>{displayValue}</Code>;
+
+  if (as === "Image") {
+    const src = safeDisplayImageUrl(value);
+    if (!src) return null;
+    return (
+      <Image src={src} alt={props.alt ?? ""} fit={props.fit as never} w={props.w} h={props.h} radius={props.radius} />
+    );
   }
 
   return (
@@ -277,64 +298,158 @@ export function SubData({ path, as = "Text", ...props }: SubDataProps) {
   );
 }
 
+function safeDisplayImageUrl(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  if (value.startsWith("/") && !value.startsWith("//")) return value;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function useActionExecutor() {
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const runtime = useCustomJsxRuntime();
+  const boardMutation = clientApi.widget.customApi.executeAction.useMutation();
+  const previewMutation = clientApi.customWidget.previewAction.useMutation();
+
+  const execute = useCallback(
+    async (requestId: string, params: CustomJsxRuntimeParams, confirmed: boolean): Promise<RequestResult> => {
+      if (!runtime.itemId && !runtime.previewSessionId) {
+        return { ok: false, status: 0, data: null, error: t("widgetItemUnavailable") };
+      }
+      if (runtime.isEditMode) {
+        return { ok: false, status: 0, data: null, error: t("actionsDisabledEditMode") };
+      }
+      if (runtime.itemId) {
+        return boardMutation.mutateAsync({ itemId: runtime.itemId, requestId, params, confirmed });
+      }
+      return previewMutation.mutateAsync({
+        sessionId: runtime.previewSessionId ?? "",
+        requestId,
+        params,
+        confirmed,
+      });
+    },
+    [boardMutation, previewMutation, runtime.isEditMode, runtime.itemId, runtime.previewSessionId, t],
+  );
+
+  return {
+    execute,
+    isPending: boardMutation.isPending || previewMutation.isPending,
+    itemId: runtime.itemId,
+    previewSessionId: runtime.previewSessionId,
+    canExecute: Boolean(runtime.itemId || runtime.previewSessionId),
+    isEditMode: runtime.isEditMode,
+    requestCapabilities: runtime.requestCapabilities ?? [],
+  };
+}
+
+async function invalidateAfterAction(
+  utils: ReturnType<typeof clientApi.useUtils>,
+  itemId: string | undefined,
+  previewSessionId: string | undefined,
+  invalidate: readonly string[] | undefined,
+) {
+  if (!invalidate?.length) return;
+  if (previewSessionId) {
+    await utils.customWidget.previewQuery.invalidate();
+    return;
+  }
+  if (!itemId) return;
+  if (invalidate.includes("parent")) await utils.widget.customApi.getData.invalidate({ itemId });
+  if (invalidate.some((entry) => entry !== "parent")) await utils.widget.customApi.queryRequest.invalidate();
+}
+
 export interface ActionButtonProps {
-  url: string;
-  method?: string;
-  body?: string;
-  headers?: string;
+  requestId?: string;
+  params?: CustomJsxRuntimeParams;
   label: string;
   color?: string;
   variant?: string;
   size?: string;
   confirmMessage?: string;
   successMessage?: string;
+  errorMessage?: string;
   icon?: string;
-  fullWidth?: boolean | string;
+  invalidate?: string[];
   disabled?: boolean | string;
+  /** @deprecated Inline targets are inert in JSX API v2. */
+  url?: string;
+  /** @deprecated The method is defined by the named request manifest. */
+  method?: string;
+  /** @deprecated The body is defined by the named request manifest. */
+  body?: string;
+  /** @deprecated Headers are defined by the named request manifest. */
+  headers?: string;
+  /** @deprecated Use normal Mantine sizing props. */
+  fullWidth?: boolean | string;
 }
 
 export function ActionButton({
-  url,
-  method = "POST",
-  body,
-  headers,
+  requestId,
+  params,
   label,
   color = "blue",
   variant = "filled",
   size = "sm",
   confirmMessage,
   successMessage,
+  errorMessage,
   icon,
-  fullWidth,
+  invalidate,
   disabled,
 }: ActionButtonProps) {
-  const { execute, isPending } = useSubFetchExecutor();
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const { execute, isPending, itemId, previewSessionId, canExecute, isEditMode, requestCapabilities } =
+    useActionExecutor();
+  const utils = clientApi.useUtils();
   const { openConfirmModal } = useConfirmModal();
   const Icon = icon ? ICON_MAP[icon.toLowerCase()] : undefined;
+  const normalizedParams = normalizeParams(params);
+  const requiresConfirmation = requestCapabilities.some(
+    (capability) => capability.id === requestId && capability.kind === "action" && capability.method === "DELETE",
+  );
 
-  const runAction = async () => {
-    const result = await execute({ url, method, body, headers });
-    if (result.ok) {
-      if (successMessage) {
-        showSuccessNotification({ title: label, message: successMessage });
+  const runAction = async (confirmed: boolean) => {
+    if (!requestId || !normalizedParams) return;
+    try {
+      const result = await execute(requestId, normalizedParams, confirmed);
+      if (result.ok) {
+        showSuccessNotification({
+          title: label,
+          message: successMessage ?? (result.simulated ? t("actionSimulated") : t("actionCompleted")),
+        });
+        await invalidateAfterAction(utils, itemId, previewSessionId, invalidate);
+      } else {
+        showErrorNotification({
+          title: label,
+          message: errorMessage ?? result.error ?? `${t("requestFailed")} (${result.status})`,
+        });
       }
-    } else {
-      showErrorNotification({ title: label, message: result.error ?? `Request failed (${result.status})` });
+    } catch {
+      showErrorNotification({
+        title: label,
+        message: errorMessage ?? t("requestFailed"),
+      });
     }
   };
 
   const handleClick = () => {
-    if (confirmMessage) {
+    if (confirmMessage || requiresConfirmation) {
       openConfirmModal({
         title: label,
-        children: confirmMessage,
-        onConfirm: () => void runAction(),
+        children: confirmMessage ?? t("confirmDelete"),
+        onConfirm: () => void runAction(true),
       });
     } else {
-      void runAction();
+      void runAction(false);
     }
   };
 
+  if (!requestId) return <MigrationRequiredAlert />;
   return (
     <Button
       color={color}
@@ -343,8 +458,7 @@ export function ActionButton({
       onClick={handleClick}
       loading={isPending}
       leftSection={Icon ? <Icon size={16} /> : undefined}
-      fullWidth={parseBool(fullWidth)}
-      disabled={parseBool(disabled)}
+      disabled={parseBool(disabled) || isEditMode || !canExecute || !normalizedParams}
     >
       {label}
     </Button>
@@ -352,51 +466,81 @@ export function ActionButton({
 }
 
 export interface ToggleSwitchProps {
-  url: string;
-  method?: string;
-  onBody?: string;
-  offBody?: string;
+  requestId?: string;
+  onParams?: CustomJsxRuntimeParams;
+  offParams?: CustomJsxRuntimeParams;
   initialValue?: boolean | string;
   label?: string;
   color?: string;
   size?: string;
+  errorMessage?: string;
+  invalidate?: string[];
   disabled?: boolean | string;
+  /** @deprecated Inline targets are inert in JSX API v2. */
+  url?: string;
+  /** @deprecated The method is defined by the named request manifest. */
+  method?: string;
+  /** @deprecated Use onParams. */
+  onBody?: string;
+  /** @deprecated Use offParams. */
+  offBody?: string;
 }
 
 export function ToggleSwitch({
-  url,
-  method = "POST",
-  onBody,
-  offBody,
+  requestId,
+  onParams,
+  offParams,
   initialValue = false,
   label,
   color = "blue",
   size = "sm",
+  errorMessage,
+  invalidate,
   disabled,
 }: ToggleSwitchProps) {
-  const { execute, isPending } = useSubFetchExecutor();
-  const [checked, setChecked] = useState(parseBool(initialValue));
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const { execute, isPending, itemId, previewSessionId, canExecute, isEditMode } = useActionExecutor();
+  const utils = clientApi.useUtils();
+  const initial = parseBool(initialValue);
+  const [checked, setChecked] = useState(initial);
   const pendingRef = useRef(false);
+  const normalizedOnParams = normalizeParams(onParams);
+  const normalizedOffParams = normalizeParams(offParams);
+
+  useEffect(() => {
+    if (!pendingRef.current) setChecked(initial);
+  }, [initial]);
 
   const handleChange = async (next: boolean) => {
-    if (pendingRef.current) return;
+    if (!requestId || pendingRef.current) return;
+    const requestParams = next ? normalizedOnParams : normalizedOffParams;
+    if (!requestParams) return;
     pendingRef.current = true;
-    const prev = checked;
+    const previous = checked;
     setChecked(next);
-
-    const result = await execute({
-      url,
-      method,
-      body: next ? onBody : offBody,
-    });
-
-    pendingRef.current = false;
-    if (!result.ok) {
-      setChecked(prev);
-      showErrorNotification({ title: label ?? "Toggle", message: result.error ?? "Request failed" });
+    try {
+      const result = await execute(requestId, requestParams, false);
+      if (!result.ok) {
+        setChecked(previous);
+        showErrorNotification({
+          title: label ?? t("toggle"),
+          message: errorMessage ?? result.error ?? t("requestFailed"),
+        });
+        return;
+      }
+      await invalidateAfterAction(utils, itemId, previewSessionId, invalidate);
+    } catch {
+      setChecked(previous);
+      showErrorNotification({
+        title: label ?? t("toggle"),
+        message: errorMessage ?? t("requestFailed"),
+      });
+    } finally {
+      pendingRef.current = false;
     }
   };
 
+  if (!requestId) return <MigrationRequiredAlert />;
   return (
     <Switch
       label={label}
@@ -404,7 +548,9 @@ export function ToggleSwitch({
       size={size as never}
       checked={checked}
       onChange={(event) => void handleChange(event.currentTarget.checked)}
-      disabled={parseBool(disabled) || isPending}
+      disabled={
+        parseBool(disabled) || isPending || isEditMode || !canExecute || !normalizedOnParams || !normalizedOffParams
+      }
     />
   );
 }
@@ -416,21 +562,22 @@ export interface RefreshButtonProps {
   size?: string;
 }
 
-export function RefreshButton({
-  label = "Refresh",
-  color = "blue",
-  variant = "light",
-  size = "sm",
-}: RefreshButtonProps) {
-  const definitionId = useWidgetDefinitionId();
+export function RefreshButton({ label, color = "blue", variant = "light", size = "sm" }: RefreshButtonProps) {
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const { itemId, previewSessionId, isEditMode } = useCustomJsxRuntime();
   const utils = clientApi.useUtils();
   const [loading, setLoading] = useState(false);
 
   const handleRefresh = async () => {
-    if (!definitionId) return;
+    if (!itemId && !previewSessionId) return;
     setLoading(true);
     try {
-      await utils.widget.customApi.getData.invalidate({ definitionId });
+      if (previewSessionId) await utils.customWidget.previewQuery.invalidate();
+      else
+        await Promise.all([
+          utils.widget.customApi.getData.invalidate({ itemId: itemId ?? "" }),
+          utils.widget.customApi.queryRequest.invalidate(),
+        ]);
     } finally {
       setLoading(false);
     }
@@ -444,8 +591,9 @@ export function RefreshButton({
       leftSection={<IconRefresh size={16} />}
       onClick={() => void handleRefresh()}
       loading={loading}
+      disabled={(!itemId && !previewSessionId) || isEditMode}
     >
-      {label}
+      {label ?? t("refresh")}
     </Button>
   );
 }

@@ -62,6 +62,9 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
     confirmText: "",
     successMessage: "",
     template: "",
+    jsxApiVersion: "2",
+    networkScope: "public",
+    requestManifest: "[]",
   };
 
   const typeOverrides: Record<string, () => Record<string, unknown>> = {
@@ -137,6 +140,9 @@ function buildDisplayInitialValues(displayType: string, config: Record<string, u
     }),
     customJsx: () => ({
       template: (config.template as string) ?? "",
+      jsxApiVersion: String((config.jsxApiVersion as number | undefined) ?? 1),
+      networkScope: (config.networkScope as string) ?? "public",
+      requestManifest: JSON.stringify((config.requests as unknown[] | undefined) ?? [], null, 2),
     }),
   };
 

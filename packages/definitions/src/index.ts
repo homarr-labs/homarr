@@ -18,3 +18,5 @@ export * from "./hotkeys";
 export * from "./docker-integration-match";
 export * from "./integration-url-template";
 export * from "./release-provider";
+export * from "./custom-jsx";
+export * from "./custom-jsx-examples";

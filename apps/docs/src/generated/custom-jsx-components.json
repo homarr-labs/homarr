@@ -1,0 +1,2491 @@
+[
+  {
+    "name": "Box",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/box/"
+  },
+  {
+    "name": "Stack",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/stack/"
+  },
+  {
+    "name": "Group",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/group/"
+  },
+  {
+    "name": "Flex",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/flex/"
+  },
+  {
+    "name": "Grid",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/grid/"
+  },
+  {
+    "name": "Grid.Col",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/grid/"
+  },
+  {
+    "name": "SimpleGrid",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/simplegrid/"
+  },
+  {
+    "name": "Center",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/center/"
+  },
+  {
+    "name": "Space",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/space/"
+  },
+  {
+    "name": "Container",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/container/"
+  },
+  {
+    "name": "AspectRatio",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/aspectratio/"
+  },
+  {
+    "name": "ScrollArea",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/scrollarea/"
+  },
+  {
+    "name": "Paper",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/paper/"
+  },
+  {
+    "name": "Card",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/card/"
+  },
+  {
+    "name": "Card.Section",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/card/"
+  },
+  {
+    "name": "Divider",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/divider/"
+  },
+  {
+    "name": "Fieldset",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/fieldset/"
+  },
+  {
+    "name": "VisuallyHidden",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/visuallyhidden/"
+  },
+  {
+    "name": "Typography",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/typography/"
+  },
+  {
+    "name": "FloatingIndicator",
+    "package": "@mantine/core",
+    "category": "layout",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/floatingindicator/"
+  },
+  {
+    "name": "Text",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/text/"
+  },
+  {
+    "name": "Title",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/title/"
+  },
+  {
+    "name": "Code",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/code/"
+  },
+  {
+    "name": "Highlight",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/highlight/"
+  },
+  {
+    "name": "Mark",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/mark/"
+  },
+  {
+    "name": "Kbd",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/kbd/"
+  },
+  {
+    "name": "Blockquote",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/blockquote/"
+  },
+  {
+    "name": "NumberFormatter",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/numberformatter/"
+  },
+  {
+    "name": "Badge",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/badge/"
+  },
+  {
+    "name": "ThemeIcon",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/themeicon/"
+  },
+  {
+    "name": "ColorSwatch",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/colorswatch/"
+  },
+  {
+    "name": "Table",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Thead",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Tbody",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Tfoot",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Caption",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Tr",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Th",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "Table.Td",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/table/"
+  },
+  {
+    "name": "List",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/list/"
+  },
+  {
+    "name": "List.Item",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/list/"
+  },
+  {
+    "name": "Timeline",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/timeline/"
+  },
+  {
+    "name": "Timeline.Item",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/timeline/"
+  },
+  {
+    "name": "Indicator",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/indicator/"
+  },
+  {
+    "name": "Pill",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/pill/"
+  },
+  {
+    "name": "Image",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/image/"
+  },
+  {
+    "name": "Avatar",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/avatar/"
+  },
+  {
+    "name": "Avatar.Group",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/avatar/"
+  },
+  {
+    "name": "BackgroundImage",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/backgroundimage/"
+  },
+  {
+    "name": "DataList",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/datalist/"
+  },
+  {
+    "name": "DataList.Item",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/datalist/"
+  },
+  {
+    "name": "DataList.ItemLabel",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/datalist/"
+  },
+  {
+    "name": "DataList.ItemValue",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/datalist/"
+  },
+  {
+    "name": "EmptyState",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/emptystate/"
+  },
+  {
+    "name": "EmptyState.Indicator",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/emptystate/"
+  },
+  {
+    "name": "EmptyState.Title",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/emptystate/"
+  },
+  {
+    "name": "EmptyState.Description",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/emptystate/"
+  },
+  {
+    "name": "EmptyState.Actions",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/emptystate/"
+  },
+  {
+    "name": "Marquee",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/marquee/"
+  },
+  {
+    "name": "RollingNumber",
+    "package": "@mantine/core",
+    "category": "content",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/rollingnumber/"
+  },
+  {
+    "name": "Alert",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/alert/"
+  },
+  {
+    "name": "Progress",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/progress/"
+  },
+  {
+    "name": "Progress.Section",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/progress/"
+  },
+  {
+    "name": "RingProgress",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/ringprogress/"
+  },
+  {
+    "name": "SemiCircleProgress",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/semicircleprogress/"
+  },
+  {
+    "name": "Skeleton",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/skeleton/"
+  },
+  {
+    "name": "Loader",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/loader/"
+  },
+  {
+    "name": "Notification",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/notification/"
+  },
+  {
+    "name": "LoadingOverlay",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/loadingoverlay/"
+  },
+  {
+    "name": "Overlay",
+    "package": "@mantine/core",
+    "category": "feedback",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/overlay/"
+  },
+  {
+    "name": "Accordion",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/accordion/"
+  },
+  {
+    "name": "Accordion.Item",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/accordion/"
+  },
+  {
+    "name": "Accordion.Control",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/accordion/"
+  },
+  {
+    "name": "Accordion.Panel",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/accordion/"
+  },
+  {
+    "name": "Tabs",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/tabs/"
+  },
+  {
+    "name": "Tabs.List",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/tabs/"
+  },
+  {
+    "name": "Tabs.Tab",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/tabs/"
+  },
+  {
+    "name": "Tabs.Panel",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/tabs/"
+  },
+  {
+    "name": "Stepper.Step",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/stepper/"
+  },
+  {
+    "name": "HoverCard",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/hovercard/"
+  },
+  {
+    "name": "HoverCard.Target",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/hovercard/"
+  },
+  {
+    "name": "HoverCard.Dropdown",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/hovercard/"
+  },
+  {
+    "name": "Menu",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Menu.Target",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Menu.Dropdown",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Menu.Item",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Menu.Label",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Menu.Divider",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/menu/"
+  },
+  {
+    "name": "Tooltip",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/tooltip/"
+  },
+  {
+    "name": "Spoiler",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/spoiler/"
+  },
+  {
+    "name": "Collapse",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/collapse/"
+  },
+  {
+    "name": "Transition",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/core/transition/"
+  },
+  {
+    "name": "Anchor",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/anchor/"
+  },
+  {
+    "name": "NavLink",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/navlink/"
+  },
+  {
+    "name": "Breadcrumbs",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/breadcrumbs/"
+  },
+  {
+    "name": "Stepper",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/stepper/"
+  },
+  {
+    "name": "Tree",
+    "package": "@mantine/core",
+    "category": "navigation",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/tree/"
+  },
+  {
+    "name": "Button",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/button/"
+  },
+  {
+    "name": "ActionIcon",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/actionicon/"
+  },
+  {
+    "name": "Burger",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/burger/"
+  },
+  {
+    "name": "CloseButton",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/closebutton/"
+  },
+  {
+    "name": "Chip",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/chip/"
+  },
+  {
+    "name": "Chip.Group",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/chip/"
+  },
+  {
+    "name": "CopyButton",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/copybutton/"
+  },
+  {
+    "name": "Pagination",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/pagination/"
+  },
+  {
+    "name": "Rating",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/rating/"
+  },
+  {
+    "name": "SegmentedControl",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/segmentedcontrol/"
+  },
+  {
+    "name": "Slider",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/slider/"
+  },
+  {
+    "name": "Switch",
+    "package": "@mantine/core",
+    "category": "interaction",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/core/switch/"
+  },
+  {
+    "name": "AreaChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/areachart/"
+  },
+  {
+    "name": "BarChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/barchart/"
+  },
+  {
+    "name": "BarsList",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/barslist/"
+  },
+  {
+    "name": "BubbleChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/bubblechart/"
+  },
+  {
+    "name": "ChartLegend",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/chartlegend/"
+  },
+  {
+    "name": "ChartTooltip",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/charttooltip/"
+  },
+  {
+    "name": "CompositeChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/compositechart/"
+  },
+  {
+    "name": "DonutChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/donutchart/"
+  },
+  {
+    "name": "FunnelChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/funnelchart/"
+  },
+  {
+    "name": "Heatmap",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/heatmap/"
+  },
+  {
+    "name": "LineChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/linechart/"
+  },
+  {
+    "name": "PieChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/piechart/"
+  },
+  {
+    "name": "RadarChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/radarchart/"
+  },
+  {
+    "name": "RadialBarChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/radialbarchart/"
+  },
+  {
+    "name": "SankeyChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/sankeychart/"
+  },
+  {
+    "name": "ScatterChart",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/scatterchart/"
+  },
+  {
+    "name": "Sparkline",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/sparkline/"
+  },
+  {
+    "name": "Treemap",
+    "package": "@mantine/charts",
+    "category": "charts",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/charts/treemap/"
+  },
+  {
+    "name": "Calendar",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/calendar/"
+  },
+  {
+    "name": "MiniCalendar",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/minicalendar/"
+  },
+  {
+    "name": "DatePicker",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/datepicker/"
+  },
+  {
+    "name": "Day",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/day/"
+  },
+  {
+    "name": "WeekdaysRow",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/weekdaysrow/"
+  },
+  {
+    "name": "Month",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/month/"
+  },
+  {
+    "name": "CalendarHeader",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/calendarheader/"
+  },
+  {
+    "name": "YearPicker",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/yearpicker/"
+  },
+  {
+    "name": "MonthPicker",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/monthpicker/"
+  },
+  {
+    "name": "TimeGrid",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/timegrid/"
+  },
+  {
+    "name": "PickerControl",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/pickercontrol/"
+  },
+  {
+    "name": "YearsList",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/yearslist/"
+  },
+  {
+    "name": "MonthsList",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/monthslist/"
+  },
+  {
+    "name": "DecadeLevel",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/decadelevel/"
+  },
+  {
+    "name": "YearLevel",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/yearlevel/"
+  },
+  {
+    "name": "MonthLevel",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/monthlevel/"
+  },
+  {
+    "name": "LevelsGroup",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/levelsgroup/"
+  },
+  {
+    "name": "DecadeLevelGroup",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/decadelevelgroup/"
+  },
+  {
+    "name": "YearLevelGroup",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/yearlevelgroup/"
+  },
+  {
+    "name": "MonthLevelGroup",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "wrapped",
+    "documentationUrl": "https://mantine.dev/dates/monthlevelgroup/"
+  },
+  {
+    "name": "TimeValue",
+    "package": "@mantine/dates",
+    "category": "dates",
+    "safety": "allowed",
+    "documentationUrl": "https://mantine.dev/dates/timevalue/"
+  },
+  {
+    "name": "PaginatedList",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "TabsContainer",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "TabPanel",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "Collapsible",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "StatBar",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "TypeBadge",
+    "package": "@homarr/widgets",
+    "category": "interaction",
+    "safety": "allowed",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "SubFetch",
+    "package": "@homarr/widgets",
+    "category": "network",
+    "safety": "wrapped",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "SubData",
+    "package": "@homarr/widgets",
+    "category": "network",
+    "safety": "wrapped",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "ActionButton",
+    "package": "@homarr/widgets",
+    "category": "network",
+    "safety": "wrapped",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "ToggleSwitch",
+    "package": "@homarr/widgets",
+    "category": "network",
+    "safety": "wrapped",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "RefreshButton",
+    "package": "@homarr/widgets",
+    "category": "network",
+    "safety": "wrapped",
+    "documentationUrl": "https://homarr.dev/docs/management/custom-widgets/"
+  },
+  {
+    "name": "AppShell",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/appshell/"
+  },
+  {
+    "name": "Affix",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/affix/"
+  },
+  {
+    "name": "ComboboxPopover",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/comboboxpopover/"
+  },
+  {
+    "name": "Dialog",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/dialog/"
+  },
+  {
+    "name": "Drawer",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/drawer/"
+  },
+  {
+    "name": "FloatingWindow",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/floatingwindow/"
+  },
+  {
+    "name": "FocusTrap",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/focustrap/"
+  },
+  {
+    "name": "Menubar",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/menubar/"
+  },
+  {
+    "name": "Modal",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/modal/"
+  },
+  {
+    "name": "ModalBase",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/modalbase/"
+  },
+  {
+    "name": "Portal",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/portal/"
+  },
+  {
+    "name": "Popover",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/popover/"
+  },
+  {
+    "name": "RemoveScroll",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Escapes the widget layout or focus boundary",
+    "documentationUrl": "https://mantine.dev/core/removescroll/"
+  },
+  {
+    "name": "AngleSlider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/angleslider/"
+  },
+  {
+    "name": "Autocomplete",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/autocomplete/"
+  },
+  {
+    "name": "Checkbox",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/checkbox/"
+  },
+  {
+    "name": "ColorInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/colorinput/"
+  },
+  {
+    "name": "ColorPicker",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/colorpicker/"
+  },
+  {
+    "name": "Combobox",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/combobox/"
+  },
+  {
+    "name": "FileButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/filebutton/"
+  },
+  {
+    "name": "FileInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/fileinput/"
+  },
+  {
+    "name": "Input",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/input/"
+  },
+  {
+    "name": "InputBase",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/inputbase/"
+  },
+  {
+    "name": "JsonInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/jsoninput/"
+  },
+  {
+    "name": "MaskInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/maskinput/"
+  },
+  {
+    "name": "MultiSelect",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/multiselect/"
+  },
+  {
+    "name": "NativeSelect",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/nativeselect/"
+  },
+  {
+    "name": "NumberInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/numberinput/"
+  },
+  {
+    "name": "PasswordInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/passwordinput/"
+  },
+  {
+    "name": "PillsInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/pillsinput/"
+  },
+  {
+    "name": "PinInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/pininput/"
+  },
+  {
+    "name": "Radio",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/radio/"
+  },
+  {
+    "name": "Select",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/select/"
+  },
+  {
+    "name": "TagsInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/tagsinput/"
+  },
+  {
+    "name": "Textarea",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/textarea/"
+  },
+  {
+    "name": "TextInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/textinput/"
+  },
+  {
+    "name": "TreeSelect",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/treeselect/"
+  },
+  {
+    "name": "UnstyledButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Arbitrary form controls are not connected to the declarative action model",
+    "documentationUrl": "https://mantine.dev/core/unstyledbutton/"
+  },
+  {
+    "name": "OverflowList",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Requires callback, document, or layout capabilities that are not exposed to templates",
+    "documentationUrl": "https://mantine.dev/core/overflowlist/"
+  },
+  {
+    "name": "Scroller",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Requires callback, document, or layout capabilities that are not exposed to templates",
+    "documentationUrl": "https://mantine.dev/core/scroller/"
+  },
+  {
+    "name": "Splitter",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Requires callback, document, or layout capabilities that are not exposed to templates",
+    "documentationUrl": "https://mantine.dev/core/splitter/"
+  },
+  {
+    "name": "TableOfContents",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Requires callback, document, or layout capabilities that are not exposed to templates",
+    "documentationUrl": "https://mantine.dev/core/tableofcontents/"
+  },
+  {
+    "name": "AccordionChevron",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/accordionchevron/"
+  },
+  {
+    "name": "ActionIconGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/actionicongroup/"
+  },
+  {
+    "name": "ActionIconGroupSection",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/actionicongroupsection/"
+  },
+  {
+    "name": "AlphaSlider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/alphaslider/"
+  },
+  {
+    "name": "AppShellAside",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellaside/"
+  },
+  {
+    "name": "AppShellFooter",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellfooter/"
+  },
+  {
+    "name": "AppShellHeader",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellheader/"
+  },
+  {
+    "name": "AppShellMain",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellmain/"
+  },
+  {
+    "name": "AppShellNavbar",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellnavbar/"
+  },
+  {
+    "name": "AppShellSection",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/appshellsection/"
+  },
+  {
+    "name": "ButtonGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/buttongroup/"
+  },
+  {
+    "name": "ButtonGroupSection",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/buttongroupsection/"
+  },
+  {
+    "name": "CheckIcon",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/checkicon/"
+  },
+  {
+    "name": "CheckboxCard",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/checkboxcard/"
+  },
+  {
+    "name": "CheckboxGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/checkboxgroup/"
+  },
+  {
+    "name": "CheckboxIndicator",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/checkboxindicator/"
+  },
+  {
+    "name": "CloseIcon",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/closeicon/"
+  },
+  {
+    "name": "ColorSchemeScript",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/colorschemescript/"
+  },
+  {
+    "name": "ComboboxChevron",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxchevron/"
+  },
+  {
+    "name": "ComboboxClearButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxclearbutton/"
+  },
+  {
+    "name": "ComboboxDropdown",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxdropdown/"
+  },
+  {
+    "name": "ComboboxDropdownTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxdropdowntarget/"
+  },
+  {
+    "name": "ComboboxEmpty",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxempty/"
+  },
+  {
+    "name": "ComboboxEventsTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxeventstarget/"
+  },
+  {
+    "name": "ComboboxFooter",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxfooter/"
+  },
+  {
+    "name": "ComboboxGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxgroup/"
+  },
+  {
+    "name": "ComboboxHeader",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxheader/"
+  },
+  {
+    "name": "ComboboxHiddenInput",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxhiddeninput/"
+  },
+  {
+    "name": "ComboboxOption",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxoption/"
+  },
+  {
+    "name": "ComboboxOptions",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxoptions/"
+  },
+  {
+    "name": "ComboboxPopoverTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxpopovertarget/"
+  },
+  {
+    "name": "ComboboxSearch",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxsearch/"
+  },
+  {
+    "name": "ComboboxTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/comboboxtarget/"
+  },
+  {
+    "name": "DirectionProvider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/directionprovider/"
+  },
+  {
+    "name": "DrawerBody",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawerbody/"
+  },
+  {
+    "name": "DrawerCloseButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawerclosebutton/"
+  },
+  {
+    "name": "DrawerContent",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawercontent/"
+  },
+  {
+    "name": "DrawerHeader",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawerheader/"
+  },
+  {
+    "name": "DrawerOverlay",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/draweroverlay/"
+  },
+  {
+    "name": "DrawerRoot",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawerroot/"
+  },
+  {
+    "name": "DrawerStack",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawerstack/"
+  },
+  {
+    "name": "DrawerTitle",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/drawertitle/"
+  },
+  {
+    "name": "FlatTreeNode",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/flattreenode/"
+  },
+  {
+    "name": "FloatingArrow",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/floatingarrow/"
+  },
+  {
+    "name": "FocusTrapInitialFocus",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/focustrapinitialfocus/"
+  },
+  {
+    "name": "HeadlessMantineProvider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/headlessmantineprovider/"
+  },
+  {
+    "name": "HoverCardGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/hovercardgroup/"
+  },
+  {
+    "name": "HueSlider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/hueslider/"
+  },
+  {
+    "name": "InlineStyles",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inlinestyles/"
+  },
+  {
+    "name": "InputClearButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputclearbutton/"
+  },
+  {
+    "name": "InputClearSection",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputclearsection/"
+  },
+  {
+    "name": "InputDescription",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputdescription/"
+  },
+  {
+    "name": "InputError",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputerror/"
+  },
+  {
+    "name": "InputLabel",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputlabel/"
+  },
+  {
+    "name": "InputPlaceholder",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputplaceholder/"
+  },
+  {
+    "name": "InputSuccess",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputsuccess/"
+  },
+  {
+    "name": "InputWrapper",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/inputwrapper/"
+  },
+  {
+    "name": "MantineProvider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/mantineprovider/"
+  },
+  {
+    "name": "MantineThemeProvider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/mantinethemeprovider/"
+  },
+  {
+    "name": "MenuCheckboxGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menucheckboxgroup/"
+  },
+  {
+    "name": "MenuCheckboxItem",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menucheckboxitem/"
+  },
+  {
+    "name": "MenuContextMenu",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menucontextmenu/"
+  },
+  {
+    "name": "MenuRadioGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menuradiogroup/"
+  },
+  {
+    "name": "MenuRadioItem",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menuradioitem/"
+  },
+  {
+    "name": "MenuSearch",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menusearch/"
+  },
+  {
+    "name": "MenuSub",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menusub/"
+  },
+  {
+    "name": "MenuSubDropdown",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menusubdropdown/"
+  },
+  {
+    "name": "MenuSubItem",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menusubitem/"
+  },
+  {
+    "name": "MenuSubTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menusubtarget/"
+  },
+  {
+    "name": "MenubarDropdown",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menubardropdown/"
+  },
+  {
+    "name": "MenubarMenu",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menubarmenu/"
+  },
+  {
+    "name": "MenubarTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/menubartarget/"
+  },
+  {
+    "name": "ModalBaseBody",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbasebody/"
+  },
+  {
+    "name": "ModalBaseCloseButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbaseclosebutton/"
+  },
+  {
+    "name": "ModalBaseContent",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbasecontent/"
+  },
+  {
+    "name": "ModalBaseHeader",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbaseheader/"
+  },
+  {
+    "name": "ModalBaseOverlay",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbaseoverlay/"
+  },
+  {
+    "name": "ModalBaseTitle",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbasetitle/"
+  },
+  {
+    "name": "ModalBody",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalbody/"
+  },
+  {
+    "name": "ModalCloseButton",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalclosebutton/"
+  },
+  {
+    "name": "ModalContent",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalcontent/"
+  },
+  {
+    "name": "ModalHeader",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalheader/"
+  },
+  {
+    "name": "ModalOverlay",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modaloverlay/"
+  },
+  {
+    "name": "ModalRoot",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalroot/"
+  },
+  {
+    "name": "ModalStack",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modalstack/"
+  },
+  {
+    "name": "ModalTitle",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/modaltitle/"
+  },
+  {
+    "name": "NativeScrollArea",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/nativescrollarea/"
+  },
+  {
+    "name": "OptionalPortal",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/optionalportal/"
+  },
+  {
+    "name": "OptionsDropdown",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/optionsdropdown/"
+  },
+  {
+    "name": "PaginationControl",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationcontrol/"
+  },
+  {
+    "name": "PaginationDots",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationdots/"
+  },
+  {
+    "name": "PaginationFirst",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationfirst/"
+  },
+  {
+    "name": "PaginationItems",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationitems/"
+  },
+  {
+    "name": "PaginationLabel",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationlabel/"
+  },
+  {
+    "name": "PaginationLast",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationlast/"
+  },
+  {
+    "name": "PaginationNext",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationnext/"
+  },
+  {
+    "name": "PaginationPrevious",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationprevious/"
+  },
+  {
+    "name": "PaginationRoot",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/paginationroot/"
+  },
+  {
+    "name": "PillGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/pillgroup/"
+  },
+  {
+    "name": "PillsInputField",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/pillsinputfield/"
+  },
+  {
+    "name": "PopoverContextMenu",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/popovercontextmenu/"
+  },
+  {
+    "name": "PopoverDropdown",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/popoverdropdown/"
+  },
+  {
+    "name": "PopoverTarget",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/popovertarget/"
+  },
+  {
+    "name": "ProgressLabel",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/progresslabel/"
+  },
+  {
+    "name": "ProgressRoot",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/progressroot/"
+  },
+  {
+    "name": "RadioCard",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/radiocard/"
+  },
+  {
+    "name": "RadioGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/radiogroup/"
+  },
+  {
+    "name": "RadioIcon",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/radioicon/"
+  },
+  {
+    "name": "RadioIndicator",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/radioindicator/"
+  },
+  {
+    "name": "RangeSlider",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/rangeslider/"
+  },
+  {
+    "name": "ScrollAreaAutosize",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/scrollareaautosize/"
+  },
+  {
+    "name": "SplitterPane",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/splitterpane/"
+  },
+  {
+    "name": "StepperCompleted",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/steppercompleted/"
+  },
+  {
+    "name": "SwitchGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/switchgroup/"
+  },
+  {
+    "name": "TableScrollContainer",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/tablescrollcontainer/"
+  },
+  {
+    "name": "TooltipFloating",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/tooltipfloating/"
+  },
+  {
+    "name": "TooltipGroup",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/tooltipgroup/"
+  },
+  {
+    "name": "TreeSelectOption",
+    "package": "@mantine/core",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Internal, provider, compound-control, form, portal, or document-level export outside the safe declarative surface",
+    "documentationUrl": "https://mantine.dev/core/treeselectoption/"
+  },
+  {
+    "name": "AreaGradient",
+    "package": "@mantine/charts",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Low-level chart implementation helper that is not a standalone declarative display component",
+    "documentationUrl": "https://mantine.dev/charts/areagradient/"
+  },
+  {
+    "name": "DatesProvider",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/datesprovider/"
+  },
+  {
+    "name": "HiddenDatesInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/hiddendatesinput/"
+  },
+  {
+    "name": "TimeInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/timeinput/"
+  },
+  {
+    "name": "TimePicker",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/timepicker/"
+  },
+  {
+    "name": "PickerInputBase",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/pickerinputbase/"
+  },
+  {
+    "name": "DateInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/dateinput/"
+  },
+  {
+    "name": "DateTimePicker",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/datetimepicker/"
+  },
+  {
+    "name": "InlineDateTimePicker",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/inlinedatetimepicker/"
+  },
+  {
+    "name": "YearPickerInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/yearpickerinput/"
+  },
+  {
+    "name": "MonthPickerInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/monthpickerinput/"
+  },
+  {
+    "name": "DatePickerInput",
+    "package": "@mantine/dates",
+    "category": "blocked",
+    "safety": "denied",
+    "reason": "Input and provider components are outside the read-only template surface",
+    "documentationUrl": "https://mantine.dev/dates/datepickerinput/"
+  }
+]

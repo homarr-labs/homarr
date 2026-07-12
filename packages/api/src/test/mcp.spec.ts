@@ -3,6 +3,7 @@ import { extractToolsFromProcedures } from "trpc-to-mcp";
 
 import { appRouter } from "../router/app";
 import { boardRouter } from "../router/board";
+import { customWidgetRouter } from "../router/custom-widget/custom-widget-router";
 import { infoRouter } from "../router/info";
 import { inviteRouter } from "../router/invite";
 import { serverSettingsRouter } from "../router/serverSettings";
@@ -13,6 +14,7 @@ vi.mock("@homarr/auth", () => ({}));
 const mcpTestRouter = createTRPCRouter({
   app: appRouter,
   board: boardRouter,
+  customWidget: customWidgetRouter,
   info: infoRouter,
   invite: inviteRouter,
   serverSettings: serverSettingsRouter,
@@ -34,6 +36,19 @@ test("MCP tools should contain expected procedures", () => {
   expect(toolNames).toContain("app_create");
   expect(toolNames).toContain("board_savePartialBoardSettings");
   expect(toolNames).toContain("board_duplicateBoard");
+  expect(toolNames).toContain("customWidget_schema");
+  expect(toolNames).toContain("customWidget_validate");
+  expect(toolNames).toContain("customWidget_all");
+  expect(toolNames).toContain("customWidget_byId");
+  expect(toolNames).toContain("customWidget_readTemplate");
+  expect(toolNames).toContain("customWidget_writeTemplate");
+  expect(toolNames).toContain("customWidget_patchTemplate");
+  expect(toolNames).toContain("customWidget_create");
+  expect(toolNames).toContain("customWidget_import");
+  expect(toolNames).toContain("customWidget_update");
+  expect(toolNames).toContain("customWidget_preview");
+  expect(toolNames).toContain("customWidget_previewQuery");
+  expect(toolNames).toContain("customWidget_simulatePreviewAction");
   expect(toolNames).toContain("info_getInfo");
   expect(toolNames).toContain("invite_getAll");
   expect(toolNames).toContain("serverSettings_getBoardSettings");

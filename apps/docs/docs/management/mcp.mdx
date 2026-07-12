@@ -73,13 +73,7 @@ Replace `<your-api-key>` with your actual API key. Never commit API keys to vers
   "mcpServers": {
     "homarr": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://your-homarr-instance.com/api/mcp/mcp",
-        "--header",
-        "ApiKey:<your-api-key>"
-      ]
+      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp/mcp", "--header", "ApiKey:<your-api-key>"]
     }
   }
 }
@@ -126,25 +120,26 @@ curl -s -X POST \
 
 Homarr exposes 50+ tools organized by namespace. Each tool is either a **query** (GET, read-only) or **mutation** (POST, write action).
 
-| Namespace          | Example Tools                                            | Type       |
-| ------------------ | -------------------------------------------------------- | ---------- |
-| `app`              | List all apps, get app by ID, create/update/delete app   | GET + POST |
-| `apiKeys`          | List API keys                                            | GET        |
-| `beszel`           | Systems status, alerts, historical system metrics        | GET        |
-| `board`            | List boards, get board by ID, create/update/delete board | GET + POST |
-| `docker`           | List containers, inspect container, start/stop/restart   | GET + POST |
-| `icon`             | Search icons                                             | GET        |
-| `info`             | Server health, version info                              | GET        |
-| `integration`      | List integrations, test connection, delete integration   | GET + POST |
-| `invite`           | List invitations, delete invite                          | GET + POST |
-| `calendar`         | Calendar events from media servers                       | GET        |
-| `dnsHole`          | DNS hole summary, toggle blocking                        | GET + POST |
-| `downloads`        | Active downloads, pause/resume/delete                    | GET + POST |
-| `healthMonitoring` | Resource usage stats                                     | GET        |
-| `patchmon`         | Host patch and security update statistics                | GET        |
-| `mediaRequests`    | Approve/decline media requests                           | GET + POST |
-| `mediaServer`      | Media server sessions and stats                          | GET        |
-| `smartHome`        | Execute automations, device states                       | GET + POST |
+| Namespace          | Example Tools                                             | Type       |
+| ------------------ | --------------------------------------------------------- | ---------- |
+| `app`              | List all apps, get app by ID, create/update/delete app    | GET + POST |
+| `apiKeys`          | List API keys                                             | GET        |
+| `beszel`           | Systems status, alerts, historical system metrics         | GET        |
+| `board`            | List boards, get board by ID, create/update/delete board  | GET + POST |
+| `docker`           | List containers, inspect container, start/stop/restart    | GET + POST |
+| `icon`             | Search icons                                              | GET        |
+| `info`             | Server health, version info                               | GET        |
+| `integration`      | List integrations, test connection, delete integration    | GET + POST |
+| `invite`           | List invitations, delete invite                           | GET + POST |
+| `calendar`         | Calendar events from media servers                        | GET        |
+| `customWidget`     | Validate, preview, create, and iteratively update widgets | GET + POST |
+| `dnsHole`          | DNS hole summary, toggle blocking                         | GET + POST |
+| `downloads`        | Active downloads, pause/resume/delete                     | GET + POST |
+| `healthMonitoring` | Resource usage stats                                      | GET        |
+| `patchmon`         | Host patch and security update statistics                 | GET        |
+| `mediaRequests`    | Approve/decline media requests                            | GET + POST |
+| `mediaServer`      | Media server sessions and stats                           | GET        |
+| `smartHome`        | Execute automations, device states                        | GET + POST |
 
 The tools table on the MCP tab is dynamically generated - it always reflects the latest available procedures from your Homarr instance.
 
@@ -154,6 +149,8 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - Tools inherit the permissions of the API key's owner
 - OAuth endpoints are rate-limited to prevent abuse
 - Tool execution errors are contained - a failing tool call does not crash the MCP server
+- Custom-widget MCP actions are simulation-only; live preview actions must be enabled explicitly in the browser workbench
+- Custom-widget secret values are never returned through MCP
 - All communication uses HTTPS (configure HTTP → HTTPS redirects on your reverse proxy)
 
 ## Use Cases
@@ -165,3 +162,58 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
 - **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
 - **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
+- **"Build and refine a custom widget for this API"** - AI validates the draft, tests GET data and named queries, simulates actions, and creates or updates the widget
+
+## Custom Widget Workflow for AI Agents
+
+AI agents can create and iterate on custom widgets using these tools in sequence.
+
+:::tip Editing an existing widget?
+Skip to step 5. Use `customWidget_byId` to fetch it and `customWidget_readTemplate` / `customWidget_writeTemplate` to edit its template directly.
+:::
+
+### 1. Get the schema
+
+Call `customWidget_schema` to receive the JSON Schema for the `homarr-custom-widget-v3` format. This tells the agent what fields are required and their types.
+
+### 2. Draft and validate
+
+Build a widget JSON object and call `customWidget_validate` with it. The tool returns structured issues (path + message) so the agent can fix and re-validate until the draft is clean.
+
+### 3. Create the widget
+
+Call `customWidget_import` with the validated `homarr-custom-widget-v3` draft. This returns the new widget `id`. Use `customWidget_create` only when you intentionally need its lower-level creation input, including secret fields.
+
+### 4. Test with real data
+
+Call `customWidget_preview` with the widget's connection info. This makes a real GET request through Homarr's hardened executor and returns the sanitized response plus a preview session ID.
+
+For Custom JSX v2 widgets with named requests, use `customWidget_previewQuery` to test each named GET query, and `customWidget_simulatePreviewAction` to dry-run actions without network calls.
+
+### 5. Iterate on the template
+
+Use `customWidget_readTemplate` to get the current JSX template as plain text, then `customWidget_writeTemplate` to push updates. The write tool accepts either:
+
+- `template` — a single string (newlines as `\n`)
+- `templateLines` — an array of strings (joined with newlines server-side, avoids `\n` escaping)
+
+Both options validate the template AST before saving. This avoids re-sending the full widget JSON for template-only edits.
+
+For small changes, prefer `customWidget_patchTemplate`. Pass the `revision` returned by `customWidget_readTemplate` and one or more line edits. Homarr rejects stale revisions, applies all edits atomically, and validates the complete template against its named request manifest before saving.
+
+### 6. Update non-template fields
+
+Call `customWidget_byId` to get the full widget, modify fields, and call `customWidget_update` with only the changed fields.
+
+### Available components in templates
+
+Custom JSX templates support 100+ Mantine components plus:
+
+- `<TablerIcon name="server" size={20} color="blue" />` — 100+ curated Tabler icons by kebab-case name (e.g. `"player-play"`, `"alert-triangle"`)
+- `<SubFetch>` / `<ActionButton>` / `<ToggleSwitch>` — network-capable components for named requests
+- Array methods: `map`, `filter`, `find`, `findIndex`, `some`, `every`, `reduce`, `sort`, `slice`, `flat`, `reverse`, `at`, `pop`, `join`, `includes`, `indexOf` (note: `pop` returns last element without mutating)
+- String methods: `toUpperCase`, `toLowerCase`, `trim`, `trimStart`, `trimEnd`, `slice`, `substring`, `includes`, `startsWith`, `endsWith`, `split`, `replace`, `replaceAll`, `repeat`, `padStart`, `padEnd`, `charAt`, `indexOf`, `lastIndexOf`
+
+:::note
+All `customWidget_*` tools require admin-level API key permissions. The preview executor enforces rate limits (60 queries/min, 10 actions/min).
+:::

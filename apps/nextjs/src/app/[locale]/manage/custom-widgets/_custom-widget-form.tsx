@@ -4,28 +4,52 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ActionIcon,
+  Alert,
+  Badge,
   Box,
   Button,
   Fieldset,
   Group,
   NumberInput,
+  Paper,
   PasswordInput,
   SegmentedControl,
   Select,
+  SimpleGrid,
   Stack,
+  Stepper,
   Switch,
   Text,
   TextInput,
   Textarea,
+  ThemeIcon,
+  UnstyledButton,
 } from "@mantine/core";
-import { IconPlayerPlay, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  Icon123,
+  IconActivityHeartbeat,
+  IconAlertTriangle,
+  IconBraces,
+  IconCheck,
+  IconCode,
+  IconHash,
+  IconLayoutGrid,
+  IconListDetails,
+  IconPlayerPlay,
+  IconPointer,
+  IconProgress,
+  IconTable,
+  IconTrash,
+  IconPlus,
+} from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
+import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type {
   CustomWidgetAuthType,
@@ -36,9 +60,23 @@ import type {
 import type { displayConfigSchema } from "@homarr/validation/custom-widget";
 import { JsonPathTreePicker } from "@homarr/widgets/_inputs/json-path-tree-picker";
 
+import {
+  analyzeJsxTemplate,
+  analyzeRequestManifest,
+  CodeEditor,
+  CUSTOM_JSX_TEMPLATE_LIMIT,
+  parseRequestManifest,
+} from "./_code-editor";
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 import { CustomWidgetPreview } from "./_custom-widget-preview";
 import type { PreviewFetchResult } from "./_custom-widget-preview";
+import {
+  buildDisplayFormValues,
+  CUSTOM_JSX_STARTER,
+  getImportReview,
+  parseCustomWidgetClipboard,
+} from "./_custom-widget-import-utils";
+import classes from "./_custom-widget-form.module.css";
 
 const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ctx: z.core.$RefinementCtx) => void> = {
   singleValue: (data, ctx) => {
@@ -240,15 +278,23 @@ const requiredFieldValidators: Record<string, (data: Record<string, unknown>, ct
         input: data.template,
         path: ["template"],
       });
+    if (data.jsxApiVersion === "2" && analyzeRequestManifest(String(data.requestManifest ?? "[]")).length > 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "invalidRequestManifest",
+        input: data.requestManifest,
+        path: ["requestManifest"],
+      });
+    }
   },
 };
 
 const formSchema = z
   .object({
-    name: z.string().min(1).max(128),
+    name: z.string().trim().min(1).max(128),
     description: z.string(),
     iconUrl: z.string(),
-    url: z.string().min(1),
+    url: z.string().trim().min(1),
     authType: z.string(),
     headerName: z.string(),
     method: z.string(),
@@ -306,6 +352,9 @@ const formSchema = z
     confirmText: z.string(),
     successMessage: z.string(),
     template: z.string(),
+    jsxApiVersion: z.string(),
+    networkScope: z.string(),
+    requestManifest: z.string(),
     secrets: z.array(
       z.object({
         kind: z.string(),
@@ -374,7 +423,10 @@ const defaultCreateValues: z.infer<typeof formSchema> = {
   buttonColor: "blue",
   confirmText: "",
   successMessage: "",
-  template: "",
+  template: CUSTOM_JSX_STARTER,
+  jsxApiVersion: "2",
+  networkScope: "public",
+  requestManifest: "[]",
   secrets: [],
 };
 
@@ -451,7 +503,16 @@ const displayConfigBuilders: Record<string, (values: z.infer<typeof formSchema>)
     confirmText: v.confirmText || undefined,
     successMessage: v.successMessage || undefined,
   }),
-  customJsx: (v) => ({ type: "customJsx", template: v.template }),
+  customJsx: (v) =>
+    v.jsxApiVersion === "2"
+      ? {
+          type: "customJsx",
+          jsxApiVersion: 2,
+          template: v.template.trim() || CUSTOM_JSX_STARTER,
+          networkScope: v.networkScope,
+          requests: parseRequestManifest(v.requestManifest),
+        }
+      : { type: "customJsx", template: v.template.trim() || CUSTOM_JSX_STARTER },
 };
 
 const serverToFormFieldMap: Record<string, Record<string, string>> = {
@@ -464,7 +525,7 @@ const serverToFormFieldMap: Record<string, Record<string, string>> = {
   singleValue: { jsonPath: "jsonPath", label: "label", unit: "unit" },
   raw: { jsonPath: "rawJsonPath" },
   actionButton: { buttonLabel: "buttonLabel" },
-  customJsx: { template: "template" },
+  customJsx: { template: "template", requests: "requestManifest", networkScope: "networkScope" },
 };
 
 function extractServerErrors(err: unknown, displayType: string): Record<string, string> {
@@ -539,6 +600,19 @@ const ALL_DISPLAY_TYPES = [
   "actionButton",
   "customJsx",
 ] as const;
+
+const DISPLAY_TYPE_ICONS: Record<(typeof ALL_DISPLAY_TYPES)[number], typeof Icon123> = {
+  singleValue: Icon123,
+  keyValue: IconListDetails,
+  table: IconTable,
+  statGrid: IconLayoutGrid,
+  progressBars: IconProgress,
+  statusIndicator: IconActivityHeartbeat,
+  countGrid: IconHash,
+  raw: IconBraces,
+  actionButton: IconPointer,
+  customJsx: IconCode,
+};
 const MANTINE_COLORS = [
   "blue",
   "teal",
@@ -554,23 +628,165 @@ const MANTINE_COLORS = [
   "lime",
 ] as const;
 
+const REQUEST_MANIFEST_STARTER = `[
+  {
+    "id": "details",
+    "kind": "query",
+    "method": "GET",
+    "pathTemplate": "/api/details/{id}",
+    "parameters": { "id": "string" },
+    "auth": "inherit",
+    "minimumBoardPermission": "view",
+    "cacheTtlSeconds": 30
+  }
+]`;
+
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
   const router = useRouter();
+  const globalT = useI18n();
   const t = useScopedI18n("customWidget");
+  const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.preview.useMutation();
+  const setPreviewLiveActionsMutation = clientApi.customWidget.setPreviewLiveActions.useMutation();
   const [previewRefreshSignal, setPreviewRefreshSignal] = useState(0);
   const [previewJson, setPreviewJson] = useState<unknown>(null);
   const [previewFetchResult, setPreviewFetchResult] = useState<PreviewFetchResult | null>(null);
+  const [lastPreviewFingerprint, setLastPreviewFingerprint] = useState<string | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
   const hasTestedRef = useRef(false);
 
-  const form = useZodForm(formSchema, {
-    initialValues: { ...defaultCreateValues, ...initialValues },
-  });
+  const mergedInitialValues = { ...defaultCreateValues, ...initialValues };
+  if (mergedInitialValues.displayType === "customJsx" && !mergedInitialValues.template.trim()) {
+    mergedInitialValues.template = CUSTOM_JSX_STARTER;
+  }
+  const form = useZodForm(formSchema, { initialValues: mergedInitialValues });
+
+  const queueClipboardReplacement = useCallback(
+    (widget: Record<string, unknown>) => {
+      const review = getImportReview(widget);
+      if (!review) return;
+      openConfirmModal({
+        title: t("importReview.replaceTitle"),
+        children: (
+          <Stack gap="sm">
+            <Text size="sm">{t("importReview.replaceDescription", { name: review.name, origin: review.origin })}</Text>
+            <Group gap={6}>
+              {review.methods.map((method) => (
+                <Badge key={method} color={{ DELETE: "red", GET: "blue" }[method] ?? "orange"}>
+                  {method}
+                </Badge>
+              ))}
+            </Group>
+            {review.hasActions && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+                <Text size="sm">{t("importReview.actionWarning.description")}</Text>
+              </Alert>
+            )}
+          </Stack>
+        ),
+        labels: { confirm: t("importReview.replaceConfirm"), cancel: t("importReview.cancel") },
+        onConfirm: () => {
+          const displayType = String(widget.displayType);
+          const displayConfig = widget.displayConfig as Record<string, unknown>;
+          const authType = typeof widget.authType === "string" ? widget.authType : "none";
+          const secrets = (authTypeSecretFields[authType] ?? []).map((field) => {
+            const existing = form.values.secrets.find((secret) => secret.kind === field.kind);
+            return { kind: field.kind, value: existing?.value ?? "", hasValue: existing?.hasValue ?? false };
+          });
+          form.setValues({
+            ...form.values,
+            name: String(widget.name),
+            description: typeof widget.description === "string" ? widget.description : "",
+            iconUrl: typeof widget.iconUrl === "string" ? widget.iconUrl : "",
+            url: String(widget.url),
+            authType,
+            headerName: typeof widget.headerName === "string" ? widget.headerName : "",
+            method: typeof widget.method === "string" ? widget.method : "GET",
+            requestBody: typeof widget.requestBody === "string" ? widget.requestBody : "",
+            ...buildDisplayFormValues(displayType, displayConfig),
+            secrets,
+          });
+          setPreviewJson(null);
+          setPreviewFetchResult(null);
+          setLastPreviewFingerprint(null);
+          showSuccessNotification({ title: t("action.import"), message: t("notification.pastedForReplacement") });
+        },
+      });
+    },
+    [form, openConfirmModal, t],
+  );
+
+  useEffect(() => {
+    if (mode !== "edit") return;
+    const handlePaste = (event: ClipboardEvent) => {
+      const widget = parseCustomWidgetClipboard(event.clipboardData?.getData("text/plain") ?? "");
+      if (!widget) return;
+      event.preventDefault();
+      queueClipboardReplacement(widget);
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [mode, queueClipboardReplacement]);
+
+  const requestManifest = parseRequestManifest(form.values.requestManifest);
+  const requestIds = requestManifest
+    .map((request) => (request && typeof request === "object" && "id" in request ? request.id : null))
+    .filter((id): id is string => typeof id === "string");
+  const editorDiagnostics =
+    form.values.displayType === "customJsx"
+      ? analyzeJsxTemplate(form.values.template, {
+          apiVersion: form.values.jsxApiVersion === "2" ? 2 : 1,
+          requestIds,
+        })
+      : [];
+  const requestDiagnostics =
+    form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2"
+      ? analyzeRequestManifest(form.values.requestManifest)
+      : [];
+  const hasEditorErrors = [...editorDiagnostics, ...requestDiagnostics].some(
+    (diagnostic) => diagnostic.severity === "error",
+  );
+  const isDirtyRef = useRef(false);
+  isDirtyRef.current = form.isDirty();
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) event.preventDefault();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  useEffect(() => {
+    if (form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2" && form.values.method !== "GET") {
+      form.setFieldValue("method", "GET");
+      form.setFieldValue("requestBody", "");
+    }
+  }, [form, form.values.displayType, form.values.jsxApiVersion, form.values.method]);
+
+  const focusStepForErrors = (errors: Record<string, unknown>) => {
+    const fields = Object.keys(errors);
+    if (fields.some((field) => ["name", "description", "iconUrl", "displayType"].includes(field.split(".")[0] ?? ""))) {
+      setActiveStep(0);
+      return;
+    }
+    if (
+      fields.some((field) =>
+        ["url", "method", "authType", "headerName", "requestBody", "secrets"].includes(field.split(".")[0] ?? ""),
+      )
+    ) {
+      setActiveStep(1);
+      return;
+    }
+    setActiveStep(2);
+  };
 
   const handleSubmit = form.onSubmit(async (values) => {
+    if (hasEditorErrors) return;
     const buildConfig = displayConfigBuilders[values.displayType] ?? displayConfigBuilders.singleValue;
     const displayConfig = buildConfig?.(values);
 
@@ -611,12 +827,15 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
-        await utils.widget.customApi.getData.invalidate({ definitionId });
+        await utils.widget.customApi.getData.invalidate();
+        form.setInitialValues(values);
+        form.resetDirty();
       }
     } catch (err) {
       const serverErrors = extractServerErrors(err, values.displayType);
       if (Object.keys(serverErrors).length > 0) {
         form.setErrors(serverErrors);
+        focusStepForErrors(serverErrors);
       }
       const errorKey = mode === "create" ? "notification.createError" : "notification.updateError";
       showErrorNotification({
@@ -624,9 +843,21 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         message: t(errorKey as never),
       });
     }
-  });
+  }, focusStepForErrors);
 
   const secretFields = authTypeSecretFields[form.values.authType] ?? [];
+  const authTypeOptions = ["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"].map((value) => ({
+    value,
+    label: t(`authType.${value}` as never),
+  }));
+  const handleAuthTypeChange = (value: string) => {
+    form.setFieldValue("authType", value);
+    const newSecrets = (authTypeSecretFields[value] ?? []).map((field) => ({
+      kind: field.kind,
+      value: form.values.secrets.find((secret) => secret.kind === field.kind)?.value ?? "",
+    }));
+    form.setFieldValue("secrets", newSecrets);
+  };
 
   const getPreviewInput = useCallback(() => {
     const values = form.values;
@@ -651,7 +882,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
 
   const handlePreviewTest = useCallback(async () => {
     const input = getPreviewInput();
-    if (!input.url) return;
+    if (!input.url || input.method !== "GET") return;
+    setMobilePane("preview");
+    setLastPreviewFingerprint(JSON.stringify(input));
     try {
       const res = await previewMutation.mutateAsync(input);
       hasTestedRef.current = true;
@@ -660,6 +893,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         error: res.success ? undefined : res.error,
         responseInfo: res.responseInfo,
         rawResponse: res.rawResponse,
+        previewSession: res.previewSession,
       });
       if (res.success && res.rawResponse) {
         try {
@@ -676,202 +910,408 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         error: t("notification.previewError"),
         responseInfo: null,
         rawResponse: null,
+        previewSession: null,
       });
       setPreviewJson(null);
     }
-  }, [getPreviewInput, previewMutation]);
+  }, [getPreviewInput, previewMutation, t]);
+
+  const handleSetPreviewLiveActions = useCallback(
+    async (enabled: boolean) => {
+      const sessionId = previewFetchResult?.previewSession?.id;
+      if (!sessionId) return;
+      try {
+        const previewSession = await setPreviewLiveActionsMutation.mutateAsync({ sessionId, enabled });
+        setPreviewFetchResult((current) => (current ? { ...current, previewSession } : current));
+      } catch {
+        showErrorNotification({
+          title: t("preview.capabilities.liveActions"),
+          message: t("notification.previewActionsError"),
+        });
+      }
+    },
+    [previewFetchResult?.previewSession?.id, setPreviewLiveActionsMutation, t],
+  );
+
+  const handlePreviewTestRef = useRef(handlePreviewTest);
+  handlePreviewTestRef.current = handlePreviewTest;
+  const getPreviewInputRef = useRef(getPreviewInput);
+  getPreviewInputRef.current = getPreviewInput;
+  const pendingRefreshRef = useRef(false);
 
   useEffect(() => {
     if (previewRefreshSignal > 0 && hasTestedRef.current) {
-      void handlePreviewTest();
+      if (previewMutation.isPending) {
+        pendingRefreshRef.current = true;
+        return;
+      }
+      const input = getPreviewInputRef.current();
+      if (input.method === "GET") {
+        void handlePreviewTestRef.current();
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only react to signal changes
   }, [previewRefreshSignal]);
 
+  useEffect(() => {
+    if (!previewMutation.isPending && pendingRefreshRef.current) {
+      pendingRefreshRef.current = false;
+      const input = getPreviewInputRef.current();
+      if (input.method === "GET" && hasTestedRef.current) {
+        void handlePreviewTestRef.current();
+      }
+    }
+  }, [previewMutation.isPending]);
+
   const previewInput = getPreviewInput();
+  const isPreviewStale = lastPreviewFingerprint !== null && lastPreviewFingerprint !== JSON.stringify(previewInput);
+  const handleInsertDataPath = useCallback(
+    (path: string) => {
+      if (form.values.displayType !== "customJsx") return;
+      const template = form.values.template.trimEnd();
+      const snippet = `<Text>{${path}}</Text>`;
+      form.setFieldValue("template", template.length > 0 ? `${template}\n${snippet}` : snippet);
+    },
+    [form],
+  );
+  const handleSampleDataChange = useCallback((value: unknown) => {
+    const rawResponse = JSON.stringify(value, null, 2);
+    setPreviewJson(value);
+    setPreviewFetchResult({
+      success: true,
+      responseInfo: null,
+      rawResponse,
+      previewSession: null,
+    });
+    setLastPreviewFingerprint(null);
+  }, []);
+
+  const NEXT_STEP_LABELS: Record<number, string> = {
+    0: t("steps.connection.label"),
+    1: t("steps.configure.label"),
+  };
+
+  const STEP_FIELDS: Record<number, string[]> = {
+    0: ["name"],
+    1: ["url"],
+  };
+
+  const handleNextStep = () => {
+    const fieldsToValidate = STEP_FIELDS[activeStep];
+    if (!fieldsToValidate) {
+      setActiveStep((step) => Math.min(2, step + 1));
+      return;
+    }
+    const hasErrors = fieldsToValidate.some((field) => form.validateField(field).hasError);
+    if (hasErrors) return;
+    setActiveStep((step) => Math.min(2, step + 1));
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Group align="start" wrap="nowrap" gap="lg">
-        <Stack gap="lg" style={{ flex: 1, minWidth: 0 }}>
-          <Fieldset legend={t("fieldset.general")}>
-            <Stack gap="sm">
-              <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
-              <Textarea label={t("field.description")} {...form.getInputProps("description")} />
-              <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
-            </Stack>
-          </Fieldset>
+    <form onSubmit={handleSubmit} className={classes.form}>
+      <SegmentedControl
+        className={classes.paneSwitcher}
+        fullWidth
+        value={mobilePane}
+        onChange={(value) => setMobilePane(value as "configure" | "preview")}
+        data={[
+          { value: "configure", label: t("workbench.configure") },
+          { value: "preview", label: t("workbench.preview") },
+        ]}
+      />
+      <div className={classes.workbench} data-mobile-pane={mobilePane}>
+        <Stack gap="xl" className={classes.configuration}>
+          <Stepper
+            active={activeStep}
+            onStepClick={(target) => {
+              if (target <= activeStep) {
+                setActiveStep(target);
+                return;
+              }
+              for (let step = activeStep; step < target; step++) {
+                const fields = STEP_FIELDS[step];
+                if (fields?.some((field) => form.validateField(field).hasError)) return;
+              }
+              setActiveStep(target);
+            }}
+            allowNextStepsSelect
+            keepMounted
+            size="sm"
+            completedIcon={<IconCheck size={16} />}
+          >
+            <Stepper.Step label={t("steps.format.label")}>
+              <Stack gap="xl" mt="xl">
+                <Fieldset legend={t("fieldset.general")}>
+                  <Stack gap="sm">
+                    <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
+                    <Textarea label={t("field.description")} {...form.getInputProps("description")} />
+                    <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
+                  </Stack>
+                </Fieldset>
+                <Fieldset legend={t("field.displayType")}>
+                  <Stack gap="sm">
+                    <Text size="sm" c="dimmed">
+                      {t("steps.format.help")}
+                    </Text>
+                    <DisplayTypePicker
+                      value={form.values.displayType}
+                      onChange={(value) => {
+                        form.setFieldValue("displayType", value);
+                        if (value === "customJsx" && !form.values.template.trim()) {
+                          form.setFieldValue("template", CUSTOM_JSX_STARTER);
+                        }
+                      }}
+                      t={t}
+                    />
+                  </Stack>
+                </Fieldset>
+              </Stack>
+            </Stepper.Step>
 
-          <Fieldset legend={t("fieldset.connection")}>
-            <Stack gap="sm">
-              <Group align="end" wrap="nowrap" gap="xs">
-                <Select
-                  label={t("field.method")}
-                  data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({
-                    value,
-                    label: t(`method.${value}` as never),
-                  }))}
-                  w={110}
-                  {...form.getInputProps("method")}
-                  allowDeselect={false}
-                />
-                <TextInput
-                  label={t("field.url")}
-                  required
-                  placeholder={t("placeholder.url")}
-                  style={{ flex: 1 }}
-                  {...form.getInputProps("url")}
-                />
-                <Button
-                  size="sm"
-                  variant="light"
-                  leftSection={<IconPlayerPlay size={16} />}
-                  onClick={() => void handlePreviewTest()}
-                  loading={previewMutation.isPending}
-                  disabled={!form.values.url}
-                >
-                  {t("preview.test")}
-                </Button>
-              </Group>
-              <div>
-                <Text size="sm" fw={500} mb={4}>
-                  {t("field.authType")}
-                </Text>
-                <SegmentedControl
-                  fullWidth
-                  data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"].map((value) => ({
-                    value,
-                    label: t(`authType.${value}` as never),
-                  }))}
-                  {...form.getInputProps("authType")}
-                  onChange={(value) => {
-                    form.setFieldValue("authType", value);
-                    const newSecrets = (authTypeSecretFields[value] ?? []).map((f) => ({
-                      kind: f.kind,
-                      value: form.values.secrets.find((s) => s.kind === f.kind)?.value ?? "",
-                    }));
-                    form.setFieldValue("secrets", newSecrets);
-                  }}
-                />
-              </div>
-              {showHeaderName[form.values.authType] && (
-                <TextInput
-                  label={t("field.headerName")}
-                  placeholder={t("placeholder.headerName")}
-                  {...form.getInputProps("headerName")}
-                />
-              )}
-              {secretFields.map((field) => {
-                const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
-                if (secretIndex === -1) return null;
-                const secret = form.values.secrets[secretIndex];
-                if (!secret) return null;
-                const placeholder =
-                  secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
-                return field.isPassword ? (
-                  <PasswordInput
-                    key={field.kind}
-                    label={t(`secret.${field.labelKey}` as never)}
-                    placeholder={placeholder}
-                    {...form.getInputProps(`secrets.${secretIndex}.value`)}
-                  />
-                ) : (
-                  <TextInput
-                    key={field.kind}
-                    label={t(`secret.${field.labelKey}` as never)}
-                    placeholder={placeholder}
-                    {...form.getInputProps(`secrets.${secretIndex}.value`)}
-                  />
-                );
-              })}
-              {form.values.method !== "GET" && (
-                <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
-              )}
-            </Stack>
-          </Fieldset>
+            <Stepper.Step label={t("steps.connection.label")}>
+              <Fieldset legend={t("fieldset.connection")} mt="xl">
+                <Stack gap="sm">
+                  <Group align="end" wrap="wrap" gap="xs">
+                    <Select
+                      label={t("field.method")}
+                      data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({
+                        value,
+                        label: t(`method.${value}` as never),
+                      }))}
+                      w={110}
+                      {...form.getInputProps("method")}
+                      allowDeselect={false}
+                      disabled={form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2"}
+                    />
+                    <TextInput
+                      label={t("field.url")}
+                      required
+                      placeholder={t("placeholder.url")}
+                      style={{ flex: "1 1 260px" }}
+                      {...form.getInputProps("url")}
+                    />
+                    <Button
+                      size="sm"
+                      variant="light"
+                      leftSection={<IconPlayerPlay size={16} />}
+                      onClick={() => void handlePreviewTest()}
+                      loading={previewMutation.isPending}
+                      disabled={!form.values.url || form.values.method !== "GET"}
+                    >
+                      {t("preview.test")}
+                    </Button>
+                  </Group>
+                  <div>
+                    <Text size="sm" fw={500} mb={4}>
+                      {t("field.authType")}
+                    </Text>
+                    <Select
+                      hiddenFrom="sm"
+                      value={form.values.authType}
+                      data={authTypeOptions}
+                      onChange={(value) => handleAuthTypeChange(value ?? "none")}
+                      allowDeselect={false}
+                      aria-label={t("field.authType")}
+                    />
+                    <SegmentedControl
+                      visibleFrom="sm"
+                      fullWidth
+                      value={form.values.authType}
+                      data={authTypeOptions}
+                      onChange={handleAuthTypeChange}
+                    />
+                  </div>
+                  {showHeaderName[form.values.authType] && (
+                    <TextInput
+                      label={t("field.headerName")}
+                      placeholder={t("placeholder.headerName")}
+                      {...form.getInputProps("headerName")}
+                    />
+                  )}
+                  {secretFields.map((field) => {
+                    const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
+                    if (secretIndex === -1) return null;
+                    const secret = form.values.secrets[secretIndex];
+                    if (!secret) return null;
+                    const placeholder =
+                      secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
+                    return field.isPassword ? (
+                      <PasswordInput
+                        key={field.kind}
+                        label={t(`secret.${field.labelKey}` as never)}
+                        placeholder={placeholder}
+                        {...form.getInputProps(`secrets.${secretIndex}.value`)}
+                      />
+                    ) : (
+                      <TextInput
+                        key={field.kind}
+                        label={t(`secret.${field.labelKey}` as never)}
+                        placeholder={placeholder}
+                        {...form.getInputProps(`secrets.${secretIndex}.value`)}
+                      />
+                    );
+                  })}
+                  {form.values.method !== "GET" && (
+                    <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
+                  )}
+                </Stack>
+              </Fieldset>
+            </Stepper.Step>
 
-          <Fieldset legend={t("fieldset.display")}>
-            <Stack gap="sm">
-              <Select
-                label={t("field.displayType")}
-                data={ALL_DISPLAY_TYPES.map((value) => ({
-                  value,
-                  label: t(`displayType.${value}` as never),
-                }))}
-                {...form.getInputProps("displayType")}
-                allowDeselect={false}
-              />
-              <Text size="xs" c="dimmed">
-                {t(`displayTypeDescription.${form.values.displayType}` as never)}
-              </Text>
+            <Stepper.Step label={t("steps.configure.label")}>
+              <Fieldset legend={t("fieldset.display")} mt="xl">
+                <Stack gap="sm">
+                  <Group gap="xs">
+                    <ThemeIcon variant="light" size="lg">
+                      {(() => {
+                        const SelectedIcon =
+                          DISPLAY_TYPE_ICONS[form.values.displayType as keyof typeof DISPLAY_TYPE_ICONS];
+                        return SelectedIcon ? <SelectedIcon size={20} /> : null;
+                      })()}
+                    </ThemeIcon>
+                    <div>
+                      <Text fw={600}>{t(`displayType.${form.values.displayType}` as never)}</Text>
+                      <Text size="xs" c="dimmed">
+                        {t(`displayTypeDescription.${form.values.displayType}` as never)}
+                      </Text>
+                    </div>
+                  </Group>
+                  <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
+                </Stack>
+              </Fieldset>
+            </Stepper.Step>
+          </Stepper>
 
-              <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
-            </Stack>
-          </Fieldset>
-
-          <Box hiddenFrom="md">
-            <CustomWidgetPreview
-              getFormValues={getPreviewInput}
-              formValues={previewInput}
-              fetchResult={previewFetchResult}
-              cachedJson={previewJson}
-              onTest={() => void handlePreviewTest()}
-              isTesting={previewMutation.isPending}
-              testError={previewMutation.error?.message ?? null}
-            />
-          </Box>
-
-          <Group justify="end">
-            <Button type="submit" loading={createMutation.isPending || updateMutation.isPending}>
-              {mode === "create" ? t("action.create") : t("action.save")}
+          <Group justify="space-between" mt="md">
+            <Button
+              variant="default"
+              size="md"
+              onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
+              disabled={activeStep === 0}
+            >
+              {t("steps.back")}
+            </Button>
+            <Button
+              variant="light"
+              size="md"
+              onClick={handleNextStep}
+              disabled={activeStep === 2}
+            >
+              {NEXT_STEP_LABELS[activeStep] ?? t("steps.next")}
             </Button>
           </Group>
+          <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
+            <Group justify="space-between" wrap="nowrap">
+              <Text size="sm" fw={600}>
+                {form.isDirty() ? globalT("common.unsavedChanges") : t("action.readyToSave")}
+              </Text>
+              <Button
+                type="submit"
+                size="md"
+                loading={createMutation.isPending || updateMutation.isPending}
+                disabled={hasEditorErrors}
+              >
+                {mode === "create" ? t("action.create") : t("action.save")}
+              </Button>
+            </Group>
+          </Paper>
         </Stack>
 
-        <Box
-          w={480}
-          style={{
-            flexShrink: 0,
-            position: "sticky",
-            top: 80,
-            alignSelf: "start",
-            maxHeight: "calc(100vh - 100px)",
-            overflow: "auto",
-          }}
-          visibleFrom="md"
-        >
-          <Stack gap="sm">
-            <Button type="submit" fullWidth loading={createMutation.isPending || updateMutation.isPending}>
-              {mode === "create" ? t("action.create") : t("action.save")}
-            </Button>
-            <CopyAiPromptButton
-              rawResponse={previewFetchResult?.rawResponse}
-              currentConfig={{
-                $schema: "homarr-custom-widget-v2",
-                name: form.values.name,
-                description: form.values.description,
-                iconUrl: form.values.iconUrl,
-                url: form.values.url,
-                authType: form.values.authType,
-                headerName: form.values.headerName,
-                method: form.values.method,
-                requestBody: form.values.requestBody,
-                displayType: form.values.displayType,
-                displayConfig: previewInput.displayConfig,
-              }}
-            />
-            <CustomWidgetPreview
-              getFormValues={getPreviewInput}
-              formValues={previewInput}
-              fetchResult={previewFetchResult}
-              cachedJson={previewJson}
-              onTest={() => void handlePreviewTest()}
-              isTesting={previewMutation.isPending}
-              testError={previewMutation.error?.message ?? null}
-            />
-          </Stack>
+        <Box component="aside" className={classes.previewPane} aria-label={t("preview.title")}>
+          <Paper p="md" className={classes.actionBar} shadow="sm">
+            <Group justify="space-between" wrap="nowrap">
+              <div>
+                <Text size="sm" fw={600}>
+                  {form.isDirty() ? globalT("common.unsavedChanges") : t("action.readyToSave")}
+                </Text>
+                <Text size="xs" c="dimmed" visibleFrom="sm">
+                  {hasEditorErrors ? t("editor.saveBlocked") : t("editor.saveReady")}
+                </Text>
+              </div>
+              <Button
+                type="submit"
+                size="md"
+                loading={createMutation.isPending || updateMutation.isPending}
+                disabled={hasEditorErrors}
+                miw={160}
+              >
+                {mode === "create" ? t("action.create") : t("action.save")}
+              </Button>
+            </Group>
+          </Paper>
+          <CopyAiPromptButton
+            rawResponse={previewFetchResult?.rawResponse}
+            currentConfig={{
+              $schema: "homarr-custom-widget-v3",
+              name: form.values.name,
+              description: form.values.description,
+              iconUrl: form.values.iconUrl,
+              url: form.values.url,
+              authType: form.values.authType,
+              headerName: form.values.headerName,
+              method: form.values.method,
+              requestBody: form.values.requestBody,
+              displayType: form.values.displayType,
+              displayConfig: previewInput.displayConfig,
+            }}
+          />
+          <CustomWidgetPreview
+            getFormValues={getPreviewInput}
+            formValues={previewInput}
+            fetchResult={previewFetchResult}
+            cachedJson={previewJson}
+            onTest={() => void handlePreviewTest()}
+            isTesting={previewMutation.isPending}
+            isSampleStale={isPreviewStale}
+            testError={previewMutation.error ? t("notification.previewError") : null}
+            onInsertDataPath={form.values.displayType === "customJsx" ? handleInsertDataPath : undefined}
+            onSetPreviewLiveActions={handleSetPreviewLiveActions}
+            isUpdatingPreviewActions={setPreviewLiveActionsMutation.isPending}
+            onSampleDataChange={handleSampleDataChange}
+          />
         </Box>
-      </Group>
+      </div>
     </form>
+  );
+}
+
+function DisplayTypePicker({
+  value,
+  onChange,
+  t,
+}: {
+  value: string;
+  onChange: (value: (typeof ALL_DISPLAY_TYPES)[number]) => void;
+  t: ReturnType<typeof useScopedI18n<"customWidget">>;
+}) {
+  return (
+    <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm">
+      {ALL_DISPLAY_TYPES.map((displayType) => {
+        const Icon = DISPLAY_TYPE_ICONS[displayType];
+        const selected = value === displayType;
+        return (
+          <UnstyledButton
+            key={displayType}
+            className={classes.displayTypeOption}
+            data-selected={selected || undefined}
+            onClick={() => onChange(displayType)}
+            aria-pressed={selected}
+          >
+            <ThemeIcon variant={selected ? "filled" : "light"} size={42} radius="md">
+              <Icon size={22} />
+            </ThemeIcon>
+            <div className={classes.displayTypeCopy}>
+              <Text fw={600} size="sm">
+                {t(`displayType.${displayType}` as never)}
+              </Text>
+              <Text size="xs" c="dimmed" lineClamp={3}>
+                {t(`displayTypeDescription.${displayType}` as never)}
+              </Text>
+            </div>
+          </UnstyledButton>
+        );
+      })}
+    </SimpleGrid>
   );
 }
 
@@ -1385,20 +1825,81 @@ function DisplayTypeFields({
   }
 
   if (dt === "customJsx") {
+    const parsedRequests = parseRequestManifest(form.values.requestManifest);
+    const requestIds = parsedRequests
+      .map((request) => (request && typeof request === "object" && "id" in request ? request.id : null))
+      .filter((id): id is string => typeof id === "string");
+    const templateDiagnostics = analyzeJsxTemplate(form.values.template, {
+      apiVersion: form.values.jsxApiVersion === "2" ? 2 : 1,
+      requestIds,
+    });
+    const manifestDiagnostics =
+      form.values.jsxApiVersion === "2" ? analyzeRequestManifest(form.values.requestManifest) : [];
+
     return (
-      <Textarea
-        label={t("field.template.label")}
-        description={t("field.template.description")}
-        placeholder={
-          '<Stack gap="sm">\n  <Title order={3}>{data.name}</Title>\n  <Text>{data.description}</Text>\n</Stack>'
-        }
-        minRows={8}
-        maxRows={30}
-        autosize
-        maxLength={50000}
-        styles={{ input: { fontFamily: "monospace" } }}
-        {...form.getInputProps("template")}
-      />
+      <Stack gap="md">
+        <div>
+          <Text size="sm" fw={500} mb={4}>
+            {t("field.jsxApiVersion.label")}
+          </Text>
+          <SegmentedControl
+            fullWidth
+            value={form.values.jsxApiVersion}
+            onChange={(value) => form.setFieldValue("jsxApiVersion", value)}
+            data={[
+              { value: "2", label: t("field.jsxApiVersion.v2") },
+              { value: "1", label: t("field.jsxApiVersion.v1") },
+            ]}
+          />
+        </div>
+
+        {form.values.jsxApiVersion === "1" ? (
+          <Alert color="yellow" variant="light" icon={<IconAlertTriangle size={16} />}>
+            <Text size="sm">{t("field.jsxApiVersion.legacyWarning")}</Text>
+          </Alert>
+        ) : (
+          <Stack gap="sm">
+            <Select
+              label={t("field.networkScope.label")}
+              description={t(`field.networkScope.description.${form.values.networkScope}` as never)}
+              value={form.values.networkScope}
+              onChange={(value) => form.setFieldValue("networkScope", value ?? "public")}
+              data={(["public", "private", "loopback"] as const).map((value) => ({
+                value,
+                label: t(`field.networkScope.option.${value}` as never),
+              }))}
+              allowDeselect={false}
+            />
+            <CodeEditor
+              id="custom-widget-request-manifest"
+              language="json"
+              label={t("field.requestManifest.label")}
+              description={t("field.requestManifest.description")}
+              value={form.values.requestManifest}
+              onChange={(value) => form.setFieldValue("requestManifest", value)}
+              placeholder={REQUEST_MANIFEST_STARTER}
+              starter={REQUEST_MANIFEST_STARTER}
+              diagnostics={manifestDiagnostics}
+              error={form.errors.requestManifest ? t("field.requestManifest.invalid") : undefined}
+            />
+          </Stack>
+        )}
+
+        <CodeEditor
+          id="custom-widget-jsx-template"
+          language="jsx"
+          label={t("field.template.label")}
+          description={t("field.template.description")}
+          value={form.values.template}
+          onChange={(value) => form.setFieldValue("template", value)}
+          placeholder={CUSTOM_JSX_STARTER}
+          starter={CUSTOM_JSX_STARTER}
+          diagnostics={templateDiagnostics}
+          error={form.errors.template}
+          required
+          maxLength={CUSTOM_JSX_TEMPLATE_LIMIT}
+        />
+      </Stack>
     );
   }
 

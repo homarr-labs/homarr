@@ -1,213 +1,271 @@
 import { TRPCError } from "@trpc/server";
-import superjson from "superjson";
+import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
-import { customWidgetDefinitions } from "@homarr/db/schema";
-import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { applyAuth } from "../custom-widget/auth";
+import { eq } from "@homarr/db";
+import { boards, customWidgetDefinitions, items } from "@homarr/db/schema";
+import type { BoardPermission } from "@homarr/definitions";
+import { customJsxDisplayConfigV2Schema, displayConfigSchema } from "@homarr/validation/custom-widget";
+import type { CustomJsxRequest, CustomWidgetMethod, DisplayConfig } from "@homarr/validation/custom-widget";
+
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { extractActionButtonDisplay, extractDisplayDataWithFallback } from "../custom-widget/display-data";
+import { executeCustomWidgetRequest } from "../custom-widget/request-executor";
+import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "../custom-widget/request-manifest";
+import { acquireCustomWidgetRequestLimit } from "../custom-widget/request-limits";
 
 const logger = createLogger({ module: "widget:customApi" });
 
-const FETCH_TIMEOUT_MS = 10_000;
-const MAX_BODY_SIZE = 10_000;
+const runtimeParamsSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
+const itemInputSchema = z.object({ itemId: z.string().min(1) });
+const namedRequestInputSchema = itemInputSchema.extend({
+  requestId: z.string().min(1).max(64),
+  params: runtimeParamsSchema.default({}),
+});
 
-const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"] as const;
+type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0];
+type ResolvedDefinition = Awaited<ReturnType<typeof resolvePlacedDefinitionAsync>>;
 
-const validateUrl = (urlString: string): URL => new URL(urlString);
+const parseItemOptions = (raw: string): { definitionId: string } => {
+  try {
+    const options = parseSuperJson(raw) as Record<string, unknown>;
+    if (typeof options.definitionId !== "string" || options.definitionId.length === 0) throw new Error();
+    return { definitionId: options.definitionId };
+  } catch {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget item not found" });
+  }
+};
 
-const resolveTargetUrl = (definitionUrl: string, targetUrl: string): URL =>
-  new URL(targetUrl, validateUrl(definitionUrl));
-
-const assertSameOrigin = (definitionUrl: string, targetUrl: URL): void => {
-  const definitionOrigin = validateUrl(definitionUrl).origin;
-  if (targetUrl.origin !== definitionOrigin) {
+const parseDisplayConfig = (raw: string): DisplayConfig => {
+  try {
+    return displayConfigSchema.parse(parseSuperJson(raw));
+  } catch (error) {
+    logger.error("Invalid custom widget display configuration", { error });
     throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "URL must be on the same domain as the widget definition",
+      code: "PRECONDITION_FAILED",
+      message: "Custom widget network access needs review",
     });
   }
 };
 
-const parseResponseData = async (response: Response): Promise<unknown> => {
-  const contentType = response.headers.get("content-type") ?? "";
-  if (contentType.includes("application/json")) {
-    return response.json();
+async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) {
+  const item = await ctx.db.query.items.findFirst({
+    where: eq(items.id, itemId),
+    columns: { id: true, boardId: true, kind: true, options: true },
+  });
+  if (!item || item.kind !== "customApi") {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget item not found" });
   }
-  const text = await response.text();
+
+  await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+  const { definitionId } = parseItemOptions(item.options);
+  const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+    where: eq(customWidgetDefinitions.id, definitionId),
+    with: { secrets: true },
+  });
+  if (!definition) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+  }
+  if (!definition.enabled) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
+  }
+
+  return { item, definition, displayConfig: parseDisplayConfig(definition.displayConfig) };
+}
+
+const getDecryptedSecrets = (resolved: ResolvedDefinition) =>
+  resolved.definition.secrets.map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.value) }));
+
+const getAuth = (resolved: ResolvedDefinition, mode: "inherit" | "none" = "inherit") =>
+  mode === "none"
+    ? undefined
+    : {
+        type: resolved.definition.authType,
+        secrets: getDecryptedSecrets(resolved),
+        headerName: resolved.definition.headerName,
+      };
+
+const getNetworkScope = (displayConfig: DisplayConfig) =>
+  displayConfig.type === "customJsx" && "jsxApiVersion" in displayConfig && displayConfig.jsxApiVersion === 2
+    ? displayConfig.networkScope
+    : ("private" as const);
+
+const getV2Config = (resolved: ResolvedDefinition) => {
+  const parsed = customJsxDisplayConfigV2Schema.safeParse(resolved.displayConfig);
+  if (!parsed.success) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "This template must be reviewed and migrated to named requests",
+    });
+  }
+  return parsed.data;
+};
+
+const findNamedRequest = (resolved: ResolvedDefinition, requestId: string, kind: "query" | "action") => {
+  const request = getV2Config(resolved).requests.find((candidate) => candidate.id === requestId);
+  if (!request || request.kind !== kind) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Named request not found" });
+  }
+  return request;
+};
+
+const getCacheKey = (
+  resolved: ResolvedDefinition,
+  request: CustomJsxRequest,
+  params: Record<string, string | number | boolean>,
+) => {
+  const digest = hashRuntimeParams(params);
+  return `custom-jsx:${resolved.item.id}:${request.id}:${digest}`;
+};
+
+const assertUpstreamSuccess = (response: { ok: boolean; status: number; statusText: string }) => {
+  if (!response.ok) {
+    throw new TRPCError({ code: "BAD_GATEWAY", message: `API returned ${response.status}: ${response.statusText}` });
+  }
+};
+
+const withRequestLimit = async <T>(
+  ctx: RouterContext,
+  resolved: ResolvedDefinition,
+  category: "query" | "action" | "delete",
+  callback: () => Promise<T>,
+) => {
+  const release = await acquireCustomWidgetRequestLimit({
+    category,
+    userId: ctx.session?.user.id,
+    itemId: resolved.item.id,
+    definitionId: resolved.definition.id,
+  });
   try {
-    return JSON.parse(text);
-  } catch {
-    return text;
+    return await callback();
+  } finally {
+    await release();
   }
 };
 
 export const customApiRouter = createTRPCRouter({
-  getData: protectedProcedure.input(z.object({ definitionId: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.definitionId),
-      with: { secrets: true },
-    });
-
-    if (!definition) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-    }
-
-    if (!definition.enabled) {
-      return { type: "disabled" };
-    }
-
-    let displayConfig: Record<string, unknown>;
-    try {
-      displayConfig = superjson.parse(definition.displayConfig) as Record<string, unknown>;
-    } catch {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Widget has corrupt display configuration" });
-    }
+  getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const { definition, displayConfig } = resolved;
 
     if (definition.displayType === "actionButton") {
-      return extractActionButtonDisplay(displayConfig);
+      return {
+        ...(extractActionButtonDisplay(displayConfig) as Record<string, unknown>),
+        requiresConfirmation: definition.method === "DELETE",
+      };
+    }
+    if (definition.method !== "GET") {
+      return { type: "networkAccessNeedsReview" as const };
     }
 
-    const decryptedSecrets = definition.secrets.map((s) => ({
-      kind: s.kind,
-      value: decryptSecret(s.value),
-    }));
-
-    const url = validateUrl(definition.url);
-    const headers = new Headers({ Accept: "application/json" });
-
-    if (definition.method !== "GET" && definition.requestBody) {
-      headers.set("Content-Type", "application/json");
-    }
-
-    applyAuth(headers, url, definition.authType, decryptedSecrets, definition.headerName);
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-    try {
-      const response = await fetch(url.toString(), {
-        method: definition.method,
-        headers,
-        body: definition.method !== "GET" ? definition.requestBody : undefined,
-        redirect: "follow",
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `API returned ${response.status}: ${response.statusText}`,
-        });
-      }
-
-      const json: unknown = await response.json();
-      return extractDisplayDataWithFallback(json, definition.displayType, displayConfig);
-    } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      logger.error("Failed to fetch custom API data", { definitionId: input.definitionId, error });
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: error instanceof Error ? error.message : "Failed to fetch data from external API",
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
+    const response = await withRequestLimit(ctx, resolved, "query", () =>
+      executeCustomWidgetRequest({
+        baseUrl: definition.url,
+        method: "GET",
+        auth: getAuth(resolved),
+        networkScope: getNetworkScope(displayConfig),
+        kind: "query",
+        cacheKey: `custom-widget:base:${resolved.item.id}`,
+      }),
+    );
+    assertUpstreamSuccess(response);
+    return extractDisplayDataWithFallback(response.data, definition.displayType, displayConfig);
   }),
 
-  subFetch: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Proxy an HTTP request from a custom JSX widget to an external API on the same domain as the widget definition. Applies the definition's auth credentials. Requires definitionId from the widget configuration.",
-      },
-    })
-    .input(
-      z.object({
-        definitionId: z.string(),
-        url: z.string().min(1).max(2048),
-        method: z.enum(HTTP_METHODS).default("GET"),
-        body: z.string().max(MAX_BODY_SIZE).optional(),
-        headers: z.record(z.string(), z.string()).optional(),
+  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const request = findNamedRequest(resolved, input.requestId, "query");
+    const targetUrl = renderRequestTarget(resolved.definition.url, request, input.params);
+    const response = await withRequestLimit(ctx, resolved, "query", () =>
+      executeCustomWidgetRequest({
+        baseUrl: resolved.definition.url,
+        targetUrl,
+        method: "GET",
+        staticHeaders: request.staticHeaders,
+        auth: getAuth(resolved, request.auth),
+        networkScope: getV2Config(resolved).networkScope,
+        kind: "query",
+        cacheKey: getCacheKey(resolved, request, input.params),
+        cacheTtlSeconds: request.cacheTtlSeconds,
       }),
-    )
+    );
+    return {
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+    };
+  }),
+
+  executeBaseAction: protectedProcedure
+    .input(itemInputSchema.extend({ confirmed: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
-      if (input.body && input.body.length > MAX_BODY_SIZE) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Request body exceeds 10KB limit" });
+      const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+      const { definition } = resolved;
+      if (definition.displayType !== "actionButton") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Only actionButton widgets can use this action" });
       }
 
-      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-        where: eq(customWidgetDefinitions.id, input.definitionId),
-        with: { secrets: true },
-      });
-
-      if (!definition) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      const permission: BoardPermission = definition.method === "DELETE" ? "full" : "modify";
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), permission);
+      if (definition.method === "DELETE" && input.confirmed !== true) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "DELETE actions require confirmation" });
       }
 
-      if (!definition.enabled) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
+      const response = await withRequestLimit(ctx, resolved, definition.method === "DELETE" ? "delete" : "action", () =>
+        executeCustomWidgetRequest({
+          baseUrl: definition.url,
+          method: definition.method,
+          body: definition.method === "GET" ? undefined : (definition.requestBody ?? undefined),
+          auth: getAuth(resolved),
+          networkScope: getNetworkScope(resolved.displayConfig),
+          kind: definition.method === "GET" ? "query" : "action",
+        }),
+      );
+      return {
+        success: response.ok,
+        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+        responseInfo: { status: response.status, statusText: response.statusText },
+      };
+    }),
+
+  executeAction: protectedProcedure
+    .input(namedRequestInputSchema.extend({ confirmed: z.boolean().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+      const request = findNamedRequest(resolved, input.requestId, "action");
+      if (request.method === "DELETE" && input.confirmed !== true) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "DELETE actions require confirmation" });
       }
 
-      const decryptedSecrets = definition.secrets.map((s) => ({
-        kind: s.kind,
-        value: decryptSecret(s.value),
-      }));
-
-      const targetUrl = resolveTargetUrl(definition.url, input.url);
-      assertSameOrigin(definition.url, targetUrl);
-
-      const headers = new Headers({ Accept: "application/json" });
-      if (input.headers) {
-        for (const [key, value] of Object.entries(input.headers)) {
-          headers.set(key, value);
-        }
-      }
-
-      if (input.method !== "GET" && input.body) {
-        headers.set("Content-Type", "application/json");
-      }
-
-      applyAuth(headers, targetUrl, definition.authType, decryptedSecrets, definition.headerName);
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-      try {
-        const response = await fetch(targetUrl.toString(), {
-          method: input.method,
-          headers,
-          body: input.method !== "GET" ? input.body : undefined,
-          redirect: "follow",
-          signal: controller.signal,
-        });
-
-        const data = await parseResponseData(response);
-
-        if (!response.ok) {
-          return {
-            ok: false as const,
-            status: response.status,
-            data,
-            error: `HTTP ${response.status}: ${response.statusText}`,
-          };
-        }
-
-        return { ok: true as const, status: response.status, data };
-      } catch (error) {
-        logger.error("SubFetch proxy request failed", { definitionId: input.definitionId, url: input.url, error });
-        return {
-          ok: false as const,
-          status: 0,
-          data: null,
-          error: error instanceof Error ? error.message : "Request failed",
-        };
-      } finally {
-        clearTimeout(timeout);
-      }
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, resolved.item.boardId),
+        request.minimumBoardPermission as BoardPermission,
+      );
+      const targetUrl = renderRequestTarget(resolved.definition.url, request, input.params);
+      const response = await withRequestLimit(ctx, resolved, request.method === "DELETE" ? "delete" : "action", () =>
+        executeCustomWidgetRequest({
+          baseUrl: resolved.definition.url,
+          targetUrl,
+          method: request.method as CustomWidgetMethod,
+          body: renderRequestBody(request.bodyTemplate, input.params),
+          staticHeaders: request.staticHeaders,
+          auth: getAuth(resolved, request.auth),
+          networkScope: getV2Config(resolved).networkScope,
+          kind: "action",
+        }),
+      );
+      return {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+      };
     }),
 });

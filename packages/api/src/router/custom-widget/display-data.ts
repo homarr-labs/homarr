@@ -122,6 +122,16 @@ const extractors: Record<string, Extractor> = {
     type: "customJsx" as const,
     template: config.template as string,
     data: json,
+    jsxApiVersion: config.jsxApiVersion === 2 ? 2 : 1,
+    requestCapabilities:
+      config.jsxApiVersion === 2 && Array.isArray(config.requests)
+        ? (config.requests as Array<Record<string, unknown>>).map((request) => ({
+            id: request.id,
+            kind: request.kind,
+            method: request.method,
+            minimumBoardPermission: request.minimumBoardPermission,
+          }))
+        : [],
   }),
 };
 
