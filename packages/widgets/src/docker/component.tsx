@@ -9,7 +9,7 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { humanFileSize, useTimeAgo } from "@homarr/common";
+import { formatBytes, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -110,7 +110,7 @@ const createColumns = (
 
       return (
         <Text size="xs" c={memoryUsageColor(bytesUsage, row.original.state)}>
-          {humanFileSize(bytesUsage)}
+          {formatBytes(bytesUsage)}
         </Text>
       );
     },
@@ -297,7 +297,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
             </Text>
 
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
+              {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
             </Text>
 
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
