@@ -23,6 +23,9 @@ type OptionMapping = {
 const optionMapping: OptionMapping = {
   "mediaRequests-requestList": {
     linksTargetNewTab: (oldOptions) => oldOptions.openInNewTab,
+    statusFilter: () => undefined,
+    recentDays: () => undefined,
+    recentUnit: () => undefined,
   },
   "mediaRequests-requestStats": {},
   bookmarks: {

@@ -3195,6 +3195,21 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Open links in new tab"
+        },
+        "statusFilter": {
+          "label": "Statuses to show",
+          "description": "Only requests with these statuses will be shown"
+        },
+        "recentDays": {
+          "label": "Show only recent requests",
+          "description": "Limit to requests created within this amount of time. Set to 0 to disable the time filter"
+        },
+        "recentUnit": {
+          "label": "Time unit",
+          "options": {
+            "days": "Days",
+            "weeks": "Weeks"
+          }
         }
       },
       "pending": {

@@ -1,41 +1,44 @@
 ---
-title: 'Media Request List'
-description: 'See a list of all media requests from your integration'
+title: "Media Request List"
+description: "See a list of all media requests from your integration"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { mediaRequestListWidget } from '.';
-import { jellyseerrIntegration } from '@site/docs/integrations/jellyseerr';
-import { overseerrIntegration } from '@site/docs/integrations/overseerr';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import { mediaRequestListWidget } from ".";
+import { jellyseerrIntegration } from "@site/docs/integrations/jellyseerr";
+import { overseerrIntegration } from "@site/docs/integrations/overseerr";
 
-
-<WidgetHeader
-  widget={mediaRequestListWidget}
-  categories={['Media requests']}
-/>
+<WidgetHeader widget={mediaRequestListWidget} categories={["Media requests"]} />
 
 Provides a list of all open and recently closed requests. It also provides the functionality to approve or reject requests.
 
+You can limit the list to specific request statuses (for example, only show `pending` and `processing`) and restrict it to requests created within a configurable time window (for example, the last 2 weeks).
+
 ### Screenshots
 
-import mediaRequestList from './img/list.png';
+import mediaRequestList from "./img/list.png";
 
 <img src={mediaRequestList} alt="media-request-list" width={256} height={256} />
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: jellyseerrIntegration,
-}, {
-  integration: overseerrIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: jellyseerrIntegration,
+    },
+    {
+      integration: overseerrIntegration,
+    },
+  ]}
+/>
 
 ### Interactions
 
@@ -47,4 +50,5 @@ import mediaRequestList from './img/list.png';
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={mediaRequestListWidget.configuration} />

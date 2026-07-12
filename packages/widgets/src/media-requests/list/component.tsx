@@ -38,6 +38,11 @@ export default function MediaServerWidget({
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
     integrationIds,
+    statuses:
+      options.statusFilter.length > 0
+        ? options.statusFilter
+        : ["pending", "approved", "declined", "failed", "completed"],
+    recentDays: options.recentDays > 0 ? options.recentDays * (options.recentUnit === "weeks" ? 7 : 1) : 0,
   });
 
   if (!mediaRequests) return <WidgetEmptyState />;
