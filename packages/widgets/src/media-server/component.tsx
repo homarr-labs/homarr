@@ -100,7 +100,12 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
                 )}
               </Group>
               {progressPercent !== null && (
-                <Progress value={progressPercent} size={4} color={isPaused ? "gray" : "green"} />
+                <Progress
+                  value={progressPercent}
+                  size={4}
+                  color={isPaused ? "yellow" : "green"}
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+                />
               )}
             </Stack>
           );
