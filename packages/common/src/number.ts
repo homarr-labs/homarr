@@ -74,6 +74,14 @@ const pickUnitIndex = (bytes: number, base: number, lastIndex: number): number =
 
 const sanitizeBytes = (bytes: number): number => (Number.isFinite(bytes) && bytes > 0 ? bytes : 0);
 
+const resolveUnitConfig = (options: FormatBytesOptions) => {
+  const { unit = "binary" } = options;
+  return {
+    units: unit === "binary" ? BINARY_UNITS : DECIMAL_UNITS,
+    base: unit === "binary" ? 1024 : 1000,
+  };
+};
+
 /**
  * Format a byte value as a human-readable string with a unit suffix.
  *
@@ -88,9 +96,7 @@ const sanitizeBytes = (bytes: number): number => (Number.isFinite(bytes) && byte
  * formatBytes(985828802560, { unit: "decimal" }); // "985.8 GB"
  */
 export const formatBytes = (bytes: number, options: FormatBytesOptions = {}): string => {
-  const { unit = "binary" } = options;
-  const units = unit === "binary" ? BINARY_UNITS : DECIMAL_UNITS;
-  const base = unit === "binary" ? 1024 : 1000;
+  const { units, base } = resolveUnitConfig(options);
   const safe = sanitizeBytes(bytes);
   const index = pickUnitIndex(safe, base, units.length - 1);
   const scaled = safe / base ** index;
@@ -111,9 +117,7 @@ export const formatBytesPair = (
   available: number,
   options: FormatBytesOptions = {},
 ): { used: string; available: string } => {
-  const { unit = "binary" } = options;
-  const units = unit === "binary" ? BINARY_UNITS : DECIMAL_UNITS;
-  const base = unit === "binary" ? 1024 : 1000;
+  const { units, base } = resolveUnitConfig(options);
   const safeUsed = sanitizeBytes(used);
   const safeAvailable = sanitizeBytes(available);
   const index = pickUnitIndex(safeUsed + safeAvailable, base, units.length - 1);
