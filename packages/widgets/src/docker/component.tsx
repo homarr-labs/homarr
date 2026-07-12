@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { ActionIcon, Avatar, Badge, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
-import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
+import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise } from "@tabler/icons-react";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -184,7 +184,11 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
 
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
+  const {
+    data,
+    refetch,
+    isFetching,
+  } = clientApi.docker.getContainers.useQuery(undefined, {
     refetchInterval: 30_000,
   });
   const containers = data?.containers ?? [];
@@ -300,9 +304,20 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
               {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
             </Text>
 
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.updated", { when: relativeTime })}
-            </Text>
+            <Tooltip
+              label={t("table.refresh.lastUpdated", { when: relativeTime })}
+            >
+              <ActionIcon
+                size="sm"
+                variant="transparent"
+                c="var(--mantine-color-text)"
+                loading={isFetching}
+                onClick={() => void refetch()}
+                aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
+              >
+                <IconRefresh style={actionIconIconStyle} />
+              </ActionIcon>
+            </Tooltip>
           </Group>
         </Group>
       )}
