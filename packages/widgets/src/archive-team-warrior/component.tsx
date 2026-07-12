@@ -3,7 +3,7 @@
 import { Avatar, Badge, Card, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { humanFileSize } from "@homarr/common";
+import { formatByteRate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../definition";
@@ -84,4 +84,4 @@ const Metric = ({ label, value }: { label: string; value: number | string }) => 
   </Stack>
 );
 
-const formatBandwidth = (value?: number) => humanFileSize(Math.round(value ?? 0), "/s");
+const formatBandwidth = (value?: number) => formatByteRate(Math.round(value ?? 0));
