@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatBytes, formatBytesPair } from "../number";
+import { formatByteRate, formatBytes, formatBytesPair } from "../number";
 
 describe("formatBytes", () => {
   it("returns bytes for small values", () => {
@@ -68,5 +68,23 @@ describe("formatBytesPair", () => {
     const { used, available } = formatBytesPair(500_000_000_000, 1_500_000_000_000, { unit: "decimal" });
     expect(used).toBe("0.5 TB");
     expect(available).toBe("1.5 TB");
+  });
+});
+
+describe("formatByteRate", () => {
+  it("appends a /s suffix to the formatted value", () => {
+    expect(formatByteRate(0)).toBe("0.0 B/s");
+    expect(formatByteRate(1024)).toBe("1.0 KiB/s");
+    expect(formatByteRate(1024 ** 3)).toBe("1.0 GiB/s");
+  });
+
+  it("honours the decimal unit option", () => {
+    expect(formatByteRate(1000, { unit: "decimal" })).toBe("1.0 KB/s");
+    expect(formatByteRate(1000 ** 2, { unit: "decimal" })).toBe("1.0 MB/s");
+  });
+
+  it("returns zero for invalid input", () => {
+    expect(formatByteRate(-1)).toBe("0.0 B/s");
+    expect(formatByteRate(Number.NaN)).toBe("0.0 B/s");
   });
 });

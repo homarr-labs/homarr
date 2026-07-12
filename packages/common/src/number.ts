@@ -128,6 +128,19 @@ export const formatBytesPair = (
   };
 };
 
+/**
+ * Format a byte-per-second rate (e.g. network throughput) as a human-readable
+ * string with a `/s` suffix. The value is formatted with the same rules as
+ * `formatBytes` and a trailing `/s` is appended.
+ *
+ * @example
+ * formatByteRate(0);                          // "0.0 B/s"
+ * formatByteRate(1024);                       // "1.0 KiB/s"
+ * formatByteRate(985828802560, { unit: "decimal" }); // "985.8 GB/s"
+ */
+export const formatByteRate = (bytes: number, options: FormatBytesOptions = {}): string =>
+  `${formatBytes(bytes, options)}/s`;
+
 const IMPERIAL_MULTIPLIER = 1.609344;
 
 export const metricToImperial = (metricValue: number) => metricValue / IMPERIAL_MULTIPLIER;

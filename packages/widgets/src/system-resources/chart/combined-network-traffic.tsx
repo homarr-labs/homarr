@@ -1,7 +1,7 @@
 import { Box, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
-import { humanFileSize } from "@homarr/common";
+import { formatByteRate } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
@@ -47,7 +47,7 @@ export const CombinedNetworkTrafficChart = ({
                       {payloadData.value === undefined ? (
                         <>N/A</>
                       ) : (
-                        <>{humanFileSize(Math.round(Number(payloadData.value)))}/s</>
+                        formatByteRate(Math.round(Number(payloadData.value)))
                       )}
                     </Text>
                   </Group>
