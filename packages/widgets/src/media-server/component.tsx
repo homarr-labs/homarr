@@ -221,7 +221,8 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       },
       py: 4,
       style: {
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "visible",
       },
     }),
   });
