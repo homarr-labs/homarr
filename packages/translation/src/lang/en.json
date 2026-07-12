@@ -892,7 +892,8 @@
         "description": "Fields and behavior"
       },
       "back": "Back",
-      "next": "Continue"
+      "next": "Continue",
+      "continueTo": "Continue to {step}"
     },
     "workbench": {
       "configure": "Configure",

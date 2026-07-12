@@ -2,8 +2,6 @@
 
 import { Component as ReactComponent, useEffect, useMemo, useState } from "react";
 import type { ErrorInfo, ReactNode } from "react";
-import dynamic from "next/dynamic";
-import { json } from "@codemirror/lang-json";
 import {
   ActionIcon,
   Alert,
@@ -29,7 +27,6 @@ import {
   Textarea,
   Title,
   Tree,
-  useComputedColorScheme,
   useTree,
 } from "@mantine/core";
 import type { RenderTreeNodePayload, TreeNodeData } from "@mantine/core";
@@ -54,11 +51,6 @@ import { displayComponents } from "@homarr/widgets/custom-api/component";
 import { extractDisplayData } from "@homarr/widgets/custom-api/extract-display-data";
 
 import { analyzeJsxTemplate } from "./_code-editor";
-
-const JsonEditor = dynamic(() => import("@uiw/react-codemirror").then((m) => m.default), {
-  ssr: false,
-  loading: () => <Loader size="sm" />,
-});
 
 interface PreviewInput {
   url: string;
@@ -514,7 +506,6 @@ function CustomWidgetPreviewContent({
                   <ScrollArea h={360} type="auto">
                     <ResponseTree value={cachedJson} onInsertDataPath={onInsertDataPath} />
                   </ScrollArea>
-                  <ResponseJsonViewer json={responseJson} label={t("preview.response.raw")} />
                   {fetchResult?.rawResponse && (
                     <Button
                       size="xs"
@@ -786,31 +777,6 @@ function formatTreeValue(value: unknown) {
   if (typeof value === "string") return JSON.stringify(value);
   if (value === undefined) return "undefined";
   return String(value);
-}
-
-const JSON_EXTENSIONS = [json()];
-
-function ResponseJsonViewer({ json: jsonStr, label }: { json: string; label: string }) {
-  const colorScheme = useComputedColorScheme();
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <Stack gap={4}>
-      <Button size="compact-xs" variant="subtle" onClick={() => setExpanded((v) => !v)}>
-        {label}
-      </Button>
-      {expanded && (
-        <JsonEditor
-          value={jsonStr}
-          readOnly
-          editable={false}
-          extensions={JSON_EXTENSIONS}
-          height="280px"
-          theme={colorScheme === "dark" ? "dark" : "light"}
-          basicSetup={{ lineNumbers: true, foldGutter: true, highlightActiveLine: false }}
-        />
-      )}
-    </Stack>
-  );
 }
 
 function EmptyPreview({ icon, text }: { icon: React.ReactNode; text: string }) {

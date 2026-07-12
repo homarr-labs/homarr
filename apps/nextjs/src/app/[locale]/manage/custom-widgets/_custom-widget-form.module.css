@@ -48,6 +48,40 @@
   background: var(--mantine-color-body);
 }
 
+.formFlow {
+  --flow-marker-size: 2.5rem;
+}
+
+.formSection {
+  position: relative;
+  padding: 0 0 var(--mantine-spacing-xl) calc(var(--flow-marker-size) + var(--mantine-spacing-lg));
+  scroll-margin-top: 5rem;
+  outline: none;
+}
+
+.formSection:not(:last-child)::before {
+  position: absolute;
+  top: var(--flow-marker-size);
+  bottom: 0;
+  left: calc(var(--flow-marker-size) / 2);
+  width: 1px;
+  background: var(--mantine-color-default-border);
+  content: "";
+}
+
+.formSection:focus-visible {
+  border-radius: var(--mantine-radius-md);
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 4px;
+}
+
+.sectionMarker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .displayTypeOption {
   display: flex;
   align-items: flex-start;

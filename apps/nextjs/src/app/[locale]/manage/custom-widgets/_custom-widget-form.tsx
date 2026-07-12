@@ -17,7 +17,6 @@ import {
   Select,
   SimpleGrid,
   Stack,
-  Stepper,
   Switch,
   Text,
   TextInput,
@@ -30,7 +29,6 @@ import {
   IconActivityHeartbeat,
   IconAlertTriangle,
   IconBraces,
-  IconCheck,
   IconCode,
   IconHash,
   IconLayoutGrid,
@@ -655,8 +653,16 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [previewJson, setPreviewJson] = useState<unknown>(null);
   const [previewFetchResult, setPreviewFetchResult] = useState<PreviewFetchResult | null>(null);
   const [lastPreviewFingerprint, setLastPreviewFingerprint] = useState<string | null>(null);
-  const [activeStep, setActiveStep] = useState(0);
   const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
+  const formatSectionRef = useRef<HTMLElement>(null);
+  const connectionSectionRef = useRef<HTMLElement>(null);
+  const configureSectionRef = useRef<HTMLElement>(null);
+  const scrollToSection = useCallback((section: number) => {
+    const element = [formatSectionRef.current, connectionSectionRef.current, configureSectionRef.current][section];
+    if (!element) return;
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.setTimeout(() => element.focus({ preventScroll: true }), 250);
+  }, []);
   const hasTestedRef = useRef(false);
 
   const mergedInitialValues = { ...defaultCreateValues, ...initialValues };
@@ -771,7 +777,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const focusStepForErrors = (errors: Record<string, unknown>) => {
     const fields = Object.keys(errors);
     if (fields.some((field) => ["name", "description", "iconUrl", "displayType"].includes(field.split(".")[0] ?? ""))) {
-      setActiveStep(0);
+      scrollToSection(0);
       return;
     }
     if (
@@ -779,10 +785,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         ["url", "method", "authType", "headerName", "requestBody", "secrets"].includes(field.split(".")[0] ?? ""),
       )
     ) {
-      setActiveStep(1);
+      scrollToSection(1);
       return;
     }
-    setActiveStep(2);
+    scrollToSection(2);
   };
 
   const handleSubmit = form.onSubmit(async (values) => {
@@ -986,25 +992,12 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     setLastPreviewFingerprint(null);
   }, []);
 
-  const NEXT_STEP_LABELS: Record<number, string> = {
-    0: t("steps.connection.label"),
-    1: t("steps.configure.label"),
-  };
-
-  const STEP_FIELDS: Record<number, string[]> = {
-    0: ["name"],
-    1: ["url"],
-  };
-
-  const handleNextStep = () => {
-    const fieldsToValidate = STEP_FIELDS[activeStep];
-    if (!fieldsToValidate) {
-      setActiveStep((step) => Math.min(2, step + 1));
+  const continueToSection = (currentSection: number, field: string, nextSection: number) => {
+    if (form.validateField(field).hasError) {
+      scrollToSection(currentSection);
       return;
     }
-    const hasErrors = fieldsToValidate.some((field) => form.validateField(field).hasError);
-    if (hasErrors) return;
-    setActiveStep((step) => Math.min(2, step + 1));
+    scrollToSection(nextSection);
   };
 
   return (
@@ -1021,26 +1014,20 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       />
       <div className={classes.workbench} data-mobile-pane={mobilePane}>
         <Stack gap="xl" className={classes.configuration}>
-          <Stepper
-            active={activeStep}
-            onStepClick={(target) => {
-              if (target <= activeStep) {
-                setActiveStep(target);
-                return;
-              }
-              for (let step = activeStep; step < target; step++) {
-                const fields = STEP_FIELDS[step];
-                if (fields?.some((field) => form.validateField(field).hasError)) return;
-              }
-              setActiveStep(target);
-            }}
-            allowNextStepsSelect
-            keepMounted
-            size="sm"
-            completedIcon={<IconCheck size={16} />}
-          >
-            <Stepper.Step label={t("steps.format.label")}>
-              <Stack gap="xl" mt="xl">
+          <Stack gap={0} className={classes.formFlow}>
+            <section ref={formatSectionRef} className={classes.formSection} tabIndex={-1}>
+              <ThemeIcon className={classes.sectionMarker} variant="filled" size={40} radius="xl">
+                <IconLayoutGrid size={20} />
+              </ThemeIcon>
+              <Stack gap="xl">
+                <div>
+                  <Text fw={700} size="lg">
+                    {t("steps.format.label")}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {t("steps.format.description")}
+                  </Text>
+                </div>
                 <Fieldset legend={t("fieldset.general")}>
                   <Stack gap="sm">
                     <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
@@ -1065,141 +1052,158 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
                     />
                   </Stack>
                 </Fieldset>
+                <Group justify="flex-end">
+                  <Button variant="light" size="md" onClick={() => continueToSection(0, "name", 1)}>
+                    {t("steps.continueTo", { step: t("steps.connection.label") })}
+                  </Button>
+                </Group>
               </Stack>
-            </Stepper.Step>
+            </section>
 
-            <Stepper.Step label={t("steps.connection.label")}>
-              <Fieldset legend={t("fieldset.connection")} mt="xl">
-                <Stack gap="sm">
-                  <Group align="end" wrap="wrap" gap="xs">
-                    <Select
-                      label={t("field.method")}
-                      data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({
-                        value,
-                        label: t(`method.${value}` as never),
-                      }))}
-                      w={110}
-                      {...form.getInputProps("method")}
-                      allowDeselect={false}
-                      disabled={form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2"}
-                    />
-                    <TextInput
-                      label={t("field.url")}
-                      required
-                      placeholder={t("placeholder.url")}
-                      style={{ flex: "1 1 260px" }}
-                      {...form.getInputProps("url")}
-                    />
-                    <Button
-                      size="sm"
-                      variant="light"
-                      leftSection={<IconPlayerPlay size={16} />}
-                      onClick={() => void handlePreviewTest()}
-                      loading={previewMutation.isPending}
-                      disabled={!form.values.url || form.values.method !== "GET"}
-                    >
-                      {t("preview.test")}
-                    </Button>
-                  </Group>
-                  <div>
-                    <Text size="sm" fw={500} mb={4}>
-                      {t("field.authType")}
-                    </Text>
-                    <Select
-                      hiddenFrom="sm"
-                      value={form.values.authType}
-                      data={authTypeOptions}
-                      onChange={(value) => handleAuthTypeChange(value ?? "none")}
-                      allowDeselect={false}
-                      aria-label={t("field.authType")}
-                    />
-                    <SegmentedControl
-                      visibleFrom="sm"
-                      fullWidth
-                      value={form.values.authType}
-                      data={authTypeOptions}
-                      onChange={handleAuthTypeChange}
-                    />
-                  </div>
-                  {showHeaderName[form.values.authType] && (
-                    <TextInput
-                      label={t("field.headerName")}
-                      placeholder={t("placeholder.headerName")}
-                      {...form.getInputProps("headerName")}
-                    />
-                  )}
-                  {secretFields.map((field) => {
-                    const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
-                    if (secretIndex === -1) return null;
-                    const secret = form.values.secrets[secretIndex];
-                    if (!secret) return null;
-                    const placeholder =
-                      secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
-                    return field.isPassword ? (
-                      <PasswordInput
-                        key={field.kind}
-                        label={t(`secret.${field.labelKey}` as never)}
-                        placeholder={placeholder}
-                        {...form.getInputProps(`secrets.${secretIndex}.value`)}
+            <section ref={connectionSectionRef} className={classes.formSection} tabIndex={-1}>
+              <ThemeIcon className={classes.sectionMarker} variant="light" size={40} radius="xl">
+                <IconPlayerPlay size={20} />
+              </ThemeIcon>
+              <Stack gap="xl">
+                <div>
+                  <Text fw={700} size="lg">
+                    {t("steps.connection.label")}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {t("steps.connection.description")}
+                  </Text>
+                </div>
+                <Fieldset legend={t("fieldset.connection")}>
+                  <Stack gap="sm">
+                    <Group align="end" wrap="wrap" gap="xs">
+                      <Select
+                        label={t("field.method")}
+                        data={["GET", "POST", "PUT", "DELETE", "PATCH"].map((value) => ({
+                          value,
+                          label: t(`method.${value}` as never),
+                        }))}
+                        w={110}
+                        {...form.getInputProps("method")}
+                        allowDeselect={false}
+                        disabled={form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2"}
                       />
-                    ) : (
                       <TextInput
-                        key={field.kind}
-                        label={t(`secret.${field.labelKey}` as never)}
-                        placeholder={placeholder}
-                        {...form.getInputProps(`secrets.${secretIndex}.value`)}
+                        label={t("field.url")}
+                        required
+                        placeholder={t("placeholder.url")}
+                        style={{ flex: "1 1 260px" }}
+                        {...form.getInputProps("url")}
                       />
-                    );
-                  })}
-                  {form.values.method !== "GET" && (
-                    <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
-                  )}
-                </Stack>
-              </Fieldset>
-            </Stepper.Step>
-
-            <Stepper.Step label={t("steps.configure.label")}>
-              <Fieldset legend={t("fieldset.display")} mt="xl">
-                <Stack gap="sm">
-                  <Group gap="xs">
-                    <ThemeIcon variant="light" size="lg">
-                      {(() => {
-                        const SelectedIcon =
-                          DISPLAY_TYPE_ICONS[form.values.displayType as keyof typeof DISPLAY_TYPE_ICONS];
-                        return SelectedIcon ? <SelectedIcon size={20} /> : null;
-                      })()}
-                    </ThemeIcon>
+                      <Button
+                        size="sm"
+                        variant="light"
+                        leftSection={<IconPlayerPlay size={16} />}
+                        onClick={() => void handlePreviewTest()}
+                        loading={previewMutation.isPending}
+                        disabled={!form.values.url || form.values.method !== "GET"}
+                      >
+                        {t("preview.test")}
+                      </Button>
+                    </Group>
                     <div>
-                      <Text fw={600}>{t(`displayType.${form.values.displayType}` as never)}</Text>
-                      <Text size="xs" c="dimmed">
-                        {t(`displayTypeDescription.${form.values.displayType}` as never)}
+                      <Text size="sm" fw={500} mb={4}>
+                        {t("field.authType")}
                       </Text>
+                      <Select
+                        hiddenFrom="sm"
+                        value={form.values.authType}
+                        data={authTypeOptions}
+                        onChange={(value) => handleAuthTypeChange(value ?? "none")}
+                        allowDeselect={false}
+                        aria-label={t("field.authType")}
+                      />
+                      <SegmentedControl
+                        visibleFrom="sm"
+                        fullWidth
+                        value={form.values.authType}
+                        data={authTypeOptions}
+                        onChange={handleAuthTypeChange}
+                      />
                     </div>
-                  </Group>
-                  <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
-                </Stack>
-              </Fieldset>
-            </Stepper.Step>
-          </Stepper>
+                    {showHeaderName[form.values.authType] && (
+                      <TextInput
+                        label={t("field.headerName")}
+                        placeholder={t("placeholder.headerName")}
+                        {...form.getInputProps("headerName")}
+                      />
+                    )}
+                    {secretFields.map((field) => {
+                      const secretIndex = form.values.secrets.findIndex((s) => s.kind === field.kind);
+                      if (secretIndex === -1) return null;
+                      const secret = form.values.secrets[secretIndex];
+                      if (!secret) return null;
+                      const placeholder =
+                        secret.hasValue && !secret.value ? t("secret.savedPlaceholder" as never) : undefined;
+                      return field.isPassword ? (
+                        <PasswordInput
+                          key={field.kind}
+                          label={t(`secret.${field.labelKey}` as never)}
+                          placeholder={placeholder}
+                          {...form.getInputProps(`secrets.${secretIndex}.value`)}
+                        />
+                      ) : (
+                        <TextInput
+                          key={field.kind}
+                          label={t(`secret.${field.labelKey}` as never)}
+                          placeholder={placeholder}
+                          {...form.getInputProps(`secrets.${secretIndex}.value`)}
+                        />
+                      );
+                    })}
+                    {form.values.method !== "GET" && (
+                      <Textarea label={t("field.requestBody")} minRows={3} {...form.getInputProps("requestBody")} />
+                    )}
+                  </Stack>
+                </Fieldset>
+                <Group justify="flex-end">
+                  <Button variant="light" size="md" onClick={() => continueToSection(1, "url", 2)}>
+                    {t("steps.continueTo", { step: t("steps.configure.label") })}
+                  </Button>
+                </Group>
+              </Stack>
+            </section>
 
-          <Group justify="space-between" mt="md">
-            <Button
-              variant="default"
-              size="md"
-              onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
-              disabled={activeStep === 0}
-            >
-              {t("steps.back")}
-            </Button>
-            <Button
-              variant="light"
-              size="md"
-              onClick={handleNextStep}
-              disabled={activeStep === 2}
-            >
-              {NEXT_STEP_LABELS[activeStep] ?? t("steps.next")}
-            </Button>
-          </Group>
+            <section ref={configureSectionRef} className={classes.formSection} tabIndex={-1}>
+              <ThemeIcon className={classes.sectionMarker} variant="light" size={40} radius="xl">
+                <IconCode size={20} />
+              </ThemeIcon>
+              <Stack gap="xl">
+                <div>
+                  <Text fw={700} size="lg">
+                    {t("steps.configure.label")}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {t("steps.configure.description")}
+                  </Text>
+                </div>
+                <Fieldset legend={t("fieldset.display")}>
+                  <Stack gap="sm">
+                    <Group gap="xs">
+                      <ThemeIcon variant="light" size="lg">
+                        {(() => {
+                          const SelectedIcon =
+                            DISPLAY_TYPE_ICONS[form.values.displayType as keyof typeof DISPLAY_TYPE_ICONS];
+                          return SelectedIcon ? <SelectedIcon size={20} /> : null;
+                        })()}
+                      </ThemeIcon>
+                      <div>
+                        <Text fw={600}>{t(`displayType.${form.values.displayType}` as never)}</Text>
+                        <Text size="xs" c="dimmed">
+                          {t(`displayTypeDescription.${form.values.displayType}` as never)}
+                        </Text>
+                      </div>
+                    </Group>
+                    <DisplayTypeFields form={form} t={t} previewJson={previewJson} />
+                  </Stack>
+                </Fieldset>
+              </Stack>
+            </section>
+          </Stack>
           <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
             <Group justify="space-between" wrap="nowrap">
               <Text size="sm" fw={600}>
