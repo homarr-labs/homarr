@@ -305,18 +305,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
             </Text>
 
             <Tooltip
-              multiline
-              withArrow
-              label={
-                <Stack gap={0} py={2}>
-                  <Text size="xs" fw={600}>
-                    {t("table.refresh.action")}
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    {t("table.refresh.lastUpdated", { when: relativeTime })}
-                  </Text>
-                </Stack>
-              }
+              label={t("table.refresh.lastUpdated", { when: relativeTime })}
             >
               <ActionIcon
                 size="sm"
@@ -324,7 +313,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
                 c="var(--mantine-color-text)"
                 loading={isFetching}
                 onClick={() => void refetch()}
-                aria-label={`${t("table.refresh.action")} - ${t("table.refresh.lastUpdated", { when: relativeTime })}`}
+                aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
                 <IconRefresh style={actionIconIconStyle} />
               </ActionIcon>
