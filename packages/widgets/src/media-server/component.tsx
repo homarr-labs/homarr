@@ -36,23 +36,25 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
     () => [
       {
-        accessorKey: "sessionName",
-        header: t("items.name"),
-
-        Cell: ({ row }) => (
-          <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-            {row.original.sessionName}
-          </Text>
-        ),
-      },
-      {
         accessorKey: "user.username",
         header: t("items.user"),
+        size: 160,
 
         Cell: ({ row }) => (
-          <Group gap="xs">
-            <Avatar size={20} src={row.original.user.profilePictureUrl} />
-            <Text size="xs">{row.original.user.username}</Text>
+          <Group gap="xs" wrap="nowrap">
+            <Avatar size={28} src={row.original.user.profilePictureUrl} />
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {row.original.user.username}
+              </Text>
+              <Text
+                size="10px"
+                c="dimmed"
+                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+              >
+                {row.original.sessionName}
+              </Text>
+            </Stack>
           </Group>
         ),
       },
@@ -76,19 +78,23 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
             positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
 
           return (
-            <Stack gap={4}>
-              <Group gap="xs" align="center" wrap="nowrap">
-                <Icon size={16} color={isPaused ? "var(--mantine-color-yellow-6)" : undefined} />
-                <Text size="xs" lineClamp={1}>
+            <Stack gap={4} style={{ minWidth: 0 }}>
+              <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
+                <Icon
+                  size={16}
+                  color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
+                  style={{ flexShrink: 0 }}
+                />
+                <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
                   {currentlyPlaying.name}
                 </Text>
                 {isPaused && (
-                  <Text size="xs" c="yellow">
+                  <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
                     {t("items.paused")}
                   </Text>
                 )}
                 {!isPaused && remainingMinutes !== null && (
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
                     {t("items.remaining", { minutes: remainingMinutes.toString() })}
                   </Text>
                 )}
@@ -103,6 +109,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       {
         id: "status",
         header: t("items.status"),
+        size: 110,
 
         Cell: ({ row }) => {
           const currentlyPlaying = row.original.currentlyPlaying;
@@ -208,6 +215,9 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         );
       },
       py: 4,
+      style: {
+        overflow: "hidden",
+      },
     }),
   });
 
