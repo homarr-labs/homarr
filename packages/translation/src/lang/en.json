@@ -5204,7 +5204,6 @@
     "table": {
       "updated": "Updated {when}",
       "refresh": {
-        "action": "Press to refresh",
         "lastUpdated": "Last refresh {when}"
       },
       "search": "Seach {count} containers",
