@@ -32,7 +32,7 @@ import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -277,7 +277,7 @@ export const progressColor = (percentage: number) => {
 // them (e.g. Unraid, dashdot). Format the former and pass the latter through untouched.
 const formatFileSize = (value: string) => {
   const bytes = Number(value);
-  return Number.isFinite(bytes) ? humanFileSize(Math.round(bytes)) : value;
+  return Number.isFinite(bytes) ? formatBytes(Math.round(bytes)) : value;
 };
 
 interface FileSystem {

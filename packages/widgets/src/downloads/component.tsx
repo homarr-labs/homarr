@@ -43,7 +43,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
-import { humanFileSize, useIntegrationConnected } from "@homarr/common";
+import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -386,7 +386,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const downSpeed = cell.getValue<ExtendedDownloadClientItem["downSpeed"]>();
-          return downSpeed ? <Text size="xs">{humanFileSize(downSpeed, "/s")}</Text> : null;
+          return downSpeed ? <Text size="xs">{formatByteRate(downSpeed)}</Text> : null;
         },
       },
       {
@@ -466,7 +466,7 @@ export default function DownloadClientsWidget({
         ...columnsDefBase({ key: "received", showHeader: true }),
         Cell: ({ cell }) => {
           const received = cell.getValue<ExtendedDownloadClientItem["received"]>();
-          return <Text size="xs">{humanFileSize(received)}</Text>;
+          return <Text size="xs">{formatBytes(received)}</Text>;
         },
       },
       {
@@ -474,14 +474,14 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const sent = cell.getValue<ExtendedDownloadClientItem["sent"]>();
-          return sent && <Text size="xs">{humanFileSize(sent)}</Text>;
+          return sent && <Text size="xs">{formatBytes(sent)}</Text>;
         },
       },
       {
         ...columnsDefBase({ key: "size", showHeader: true }),
         Cell: ({ cell }) => {
           const size = cell.getValue<ExtendedDownloadClientItem["size"]>();
-          return <Text size="xs">{humanFileSize(size)}</Text>;
+          return <Text size="xs">{formatBytes(size)}</Text>;
         },
       },
       {
@@ -521,7 +521,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
-          return upSpeed && <Text size="xs">{humanFileSize(upSpeed, "/s")}</Text>;
+          return upSpeed && <Text size="xs">{formatByteRate(upSpeed)}</Text>;
         },
       },
     ],
@@ -669,21 +669,21 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           {item.type !== "miscellaneous" && (
             <NormalizedLine
               itemKey="upSpeed"
-              values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
+              values={item.upSpeed === undefined ? undefined : formatByteRate(item.upSpeed)}
             />
           )}
 
           <NormalizedLine
             itemKey="downSpeed"
-            values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")}
+            values={item.downSpeed === undefined ? undefined : formatByteRate(item.downSpeed)}
           />
 
           {item.type !== "miscellaneous" && (
-            <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
+            <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : formatBytes(item.sent)} />
           )}
 
-          <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
-          <NormalizedLine itemKey="size" values={humanFileSize(item.size)} />
+          <NormalizedLine itemKey="received" values={formatBytes(item.received)} />
+          <NormalizedLine itemKey="size" values={formatBytes(item.size)} />
           <NormalizedLine
             itemKey="progress"
             values={new Intl.NumberFormat("en", {
@@ -744,10 +744,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
     { paused: [] as string[], active: [] as string[] },
   );
   const someInteract = clients.some(({ interact }) => interact);
-  const totalSpeed = humanFileSize(
-    clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
-    "/s",
-  );
+  const totalSpeed = formatByteRate(clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0));
 
   const utils = clientApi.useUtils();
   const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
@@ -849,21 +846,21 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
                           {client.status.rates.up !== undefined ? (
                             <Group display="flex" justify="center" c="green" w="100%" gap={5}>
                               <Text flex={1} ta="right">
-                                {`↑ ${humanFileSize(client.status.rates.up, "/s")}`}
+                                {`↑ ${formatByteRate(client.status.rates.up)}`}
                               </Text>
                               <Text>{"-"}</Text>
                               <Text flex={1} ta="left">
-                                {humanFileSize(client.status.totalUp ?? 0)}
+                                {formatBytes(client.status.totalUp ?? 0)}
                               </Text>
                             </Group>
                           ) : undefined}
                           <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
                             <Text flex={1} ta="right">
-                              {`↓ ${humanFileSize(client.status.rates.down, "/s")}`}
+                              {`↓ ${formatByteRate(client.status.rates.down)}`}
                             </Text>
                             <Text>{"-"}</Text>
                             <Text flex={1} ta="left">
-                              {humanFileSize(Math.floor(client.status.totalDown ?? 0))}
+                              {formatBytes(Math.floor(client.status.totalDown ?? 0))}
                             </Text>
                           </Group>
                         </Stack>
