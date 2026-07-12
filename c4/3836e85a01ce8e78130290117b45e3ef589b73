@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css
+  s_909110c6d23990::t_f5c8066db18a96 51-84
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_909110c6d23990::t_92cd50e8b5032e 657-665,780,788,791,995-997,1000,1017-1030,1055-1059,1061,1063-1088,1091-1095,1097-1107,1109-1110,1112-1126,1128-1169,1171-1206
+packages/translation/src/lang/en.json
+  s_909110c6d23990::t_5b42f0f29dd05a 895-896
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "c43836e85a01ce8e78130290117b45e3ef589b73",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
