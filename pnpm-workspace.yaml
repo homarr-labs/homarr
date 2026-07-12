@@ -151,7 +151,7 @@ catalog:
   next-intl: 4.13.1
   node-loader: ^2.1.0
   octokit: ^5.0.5
-  oxfmt: ^0.57.0
+  oxfmt: ^0.58.0
   oxlint: ^1.72.0
   pg: ^8.22.0
   postcss-preset-mantine: ^1.18.0
