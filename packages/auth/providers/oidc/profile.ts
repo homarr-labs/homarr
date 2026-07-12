@@ -12,10 +12,10 @@ export const getProfileValueByPath = (profile: Profile, path: string): unknown =
   }, profile);
 };
 
-export const extractProfileName = (profile: Profile) => {
+export const extractProfileName = (profile: Profile): string | undefined => {
   if (!env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE) {
     // Use the name as the username if the preferred_username is an email address
-    return profile.preferred_username?.includes("@") ? profile.name : profile.preferred_username;
+    return (profile.preferred_username?.includes("@") ? profile.name : profile.preferred_username) ?? undefined;
   }
 
   const profileName = getProfileValueByPath(profile, env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE);
