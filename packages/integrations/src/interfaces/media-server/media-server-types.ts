@@ -13,6 +13,12 @@ export interface StreamSession {
     episodeName?: string | null;
     albumName?: string | null;
     episodeCount?: number | null;
+    playback: {
+      state: "playing" | "paused" | "buffering" | null;
+      positionMs: number | null;
+      durationMs: number | null;
+    };
+    location: "lan" | "wan" | null;
     metadata: {
       video: {
         resolution: {
