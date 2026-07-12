@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import type { TdarrQueue } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 
@@ -72,7 +72,7 @@ export function QueuePanel(props: QueuePanelProps) {
                 </Group>
               </TableTd>
               <TableTd py={2}>
-                <Text size="xs">{humanFileSize(item.fileSize)}</Text>
+                <Text size="xs">{formatBytes(item.fileSize)}</Text>
               </TableTd>
             </TableTr>
           ))}

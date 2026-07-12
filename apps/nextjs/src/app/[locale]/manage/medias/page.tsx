@@ -18,7 +18,7 @@ import { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
@@ -125,7 +125,7 @@ const Row = async ({ media }: RowProps) => {
         />
       </TableTd>
       <TableTd>{media.name}</TableTd>
-      <TableTd>{humanFileSize(media.size)}</TableTd>
+      <TableTd>{formatBytes(media.size)}</TableTd>
       <TableTd>
         {media.creator ? (
           <Group gap="sm">
