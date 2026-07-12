@@ -66,6 +66,14 @@ describe("extractProfileName", () => {
     expect(extractProfileName(profile)).toBeUndefined();
   });
 
+  test("returns undefined when preferred_username is missing", () => {
+    const profile = {
+      sub: "user-id",
+    } satisfies Profile;
+
+    expect(extractProfileName(profile)).toBeUndefined();
+  });
+
   test("uses a nested name claim when configured", () => {
     mockEnv.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE = "user.profile.display_name";
     const profile = {
