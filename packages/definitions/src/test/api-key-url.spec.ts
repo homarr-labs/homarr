@@ -15,6 +15,12 @@ describe("getIntegrationApiKeyUrl", () => {
     );
   });
 
+  it("builds URL for patchmon", () => {
+    expect(getIntegrationApiKeyUrl("http://patchmon.local:3413", "patchmon")).toBe(
+      "http://patchmon.local:3413/settings/integrations",
+    );
+  });
+
   it("returns null for integrations without apiKeySettingsPath", () => {
     expect(getIntegrationApiKeyUrl("http://localhost", "plex")).toBeNull();
   });
