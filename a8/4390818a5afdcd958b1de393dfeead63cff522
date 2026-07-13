@@ -1,0 +1,47 @@
+.github/workflows/deployment-weekly-release.yml
+  s_65e312ad8bac75::t_7950f9b7e6ba0c 21-25
+  s_65e312ad8bac75::t_9b88899f4578ad 20,26-36
+.github/workflows/deployment-release.yml
+  s_65e312ad8bac75::t_12c0dac26ee304 223-224
+  s_65e312ad8bac75::t_082f8d8609da45 18-20
+  s_65e312ad8bac75::t_b6e96780bae5a0 205-206
+  s_65e312ad8bac75::t_41be8a9aa356ef 66-68
+  s_65e312ad8bac75::t_40cf8927cee7ad 240-242
+  s_65e312ad8bac75::t_d2220270185225 159
+  s_65e312ad8bac75::t_72ed1dd553dfe8 111,113
+  s_65e312ad8bac75::t_81a5325ba16a31 37-38
+  s_65e312ad8bac75::t_bf431e58a3df9a 112
+  s_65e312ad8bac75::t_152c1be22d4bc4 158,160
+.github/workflows/update-contributors.yml
+  s_65e312ad8bac75::t_d73915dabc2daf 33-34,36-37
+.github/workflows/ci.yml
+  s_65e312ad8bac75::t_f2aa5820c3de78 188
+  s_65e312ad8bac75::t_757802fcb52ebd 170
+  s_65e312ad8bac75::t_2240e4229a9561 320
+.github/workflows/deployment-beta-release.yml
+  s_65e312ad8bac75::t_01742a9dda7999 17,23-31
+  s_65e312ad8bac75::t_933fcad43c2ee7 18-22
+Dockerfile
+  s_65e312ad8bac75::t_ebe649afaa81b4 11-15,18-19
+  s_65e312ad8bac75::t_7865a30cc7ed1d 1
+.github/workflows/deployment-release-pr.yml
+  s_65e312ad8bac75::t_d57d50e44abf5a 1-155
+tooling/github/setup/action.yml
+  s_65e312ad8bac75::t_a9d634c2a59d44 7-20,22-25,27-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "a84390818a5afdcd958b1de393dfeead63cff522",
+  "prompts": {},
+  "sessions": {
+    "s_65e312ad8bac75": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "23571639-eed5-4be9-81a1-3c960050a36f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
