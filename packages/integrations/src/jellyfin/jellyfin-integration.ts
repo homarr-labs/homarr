@@ -17,6 +17,10 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
+function ticksToMs(ticks: number | null | undefined): number | null {
+  return ticks ? Math.round(ticks / 10_000) : null;
+}
+
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
@@ -50,12 +54,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
         if (sessionInfo.NowPlayingItem) {
-          const positionMs = sessionInfo.PlayState?.PositionTicks
-            ? Math.round(sessionInfo.PlayState.PositionTicks / 10_000)
-            : null;
-          const durationMs = sessionInfo.NowPlayingItem.RunTimeTicks
-            ? Math.round(sessionInfo.NowPlayingItem.RunTimeTicks / 10_000)
-            : null;
+          const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
+          const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
 
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
