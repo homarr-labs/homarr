@@ -1,24 +1,31 @@
+# syntax=docker/dockerfile:1.10
+
 FROM node:24.18.0-alpine AS base
 
 FROM base AS builder
-RUN apk add --no-cache libc6-compat
-RUN apk update
-
-# Set working directory
 WORKDIR /app
-RUN apk add --no-cache libc6-compat curl bash
-RUN apk update
+RUN apk add --no-cache libc6-compat curl bash && apk update
+
+RUN corepack enable pnpm
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY patches ./patches
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && pnpm fetch
+
 COPY . .
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --recursive --offline --frozen-lockfile
 
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
-
-# Copy static data as it is not part of the build
-COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
+ARG TARGETPLATFORM
 
-RUN corepack enable pnpm && pnpm build
+RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
+    --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
+    --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
+    --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" pnpm build
 
 FROM base AS runner
 WORKDIR /app
