@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+project="homarr-workshop-integration"
+port="${WORKSHOP_TEST_PORT:-18091}"
+email="integration@homarr.test"
+password="WorkshopIntegrationPassword123!"
+
+cleanup() {
+  PB_EXPOSE_PORT="$port" docker compose --file apps/store/docker-compose.yml --project-name "$project" down --volumes >/dev/null 2>&1 || true
+}
+trap cleanup EXIT INT TERM
+cleanup
+
+PB_EXPOSE_PORT="$port" \
+PB_SUPERUSER_EMAIL="$email" \
+PB_SUPERUSER_PASSWORD="$password" \
+docker compose --file apps/store/docker-compose.yml --project-name "$project" up --detach --build --wait
+
+if ! WORKSHOP_TEST_URL="http://127.0.0.1:$port" \
+  WORKSHOP_TEST_SUPERUSER_EMAIL="$email" \
+  WORKSHOP_TEST_SUPERUSER_PASSWORD="$password" \
+  node apps/store/tests/workshop.integration.mjs; then
+  docker compose --file apps/store/docker-compose.yml --project-name "$project" logs --no-color workshop
+  exit 1
+fi

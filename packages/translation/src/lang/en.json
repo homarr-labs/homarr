@@ -4454,6 +4454,61 @@
       }
     }
   },
+  "workshop": {
+    "title": "Workshop",
+    "loading": "Loading submission",
+    "by": "By {name} · revision {revision}",
+    "type": {
+      "widget": "Widget",
+      "css": "CSS theme"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Search community creations"
+    },
+    "filter": {
+      "type": "Type",
+      "sort": "Sort",
+      "all": "All",
+      "widgets": "Widgets",
+      "css": "CSS themes",
+      "top": "Top rated",
+      "newest": "Newest"
+    },
+    "safety": {
+      "title": "Community content",
+      "description": "Workshop content is provided by community members. Inspect it before installing and keep a current backup.",
+      "inspect": "Review this source before using it. Widget endpoints and CSS can change how your instance behaves."
+    },
+    "empty": {
+      "title": "No creations found",
+      "description": "Adjust the filters or check back after the community has shared more."
+    },
+    "error": {
+      "loadTitle": "Workshop could not load",
+      "publish": "The creation could not be published",
+      "install": "The creation could not be used",
+      "wrongType": "This creation does not match the requested type"
+    },
+    "publish": {
+      "title": "Share in Workshop",
+      "name": "Title",
+      "description": "Description",
+      "changelog": "Changelog"
+    },
+    "action": {
+      "retry": "Try again",
+      "inspect": "Inspect source",
+      "download": "Download",
+      "website": "Open website",
+      "use": "Use creation",
+      "share": "Share in Workshop",
+      "cancel": "Cancel",
+      "publish": "Publish creation",
+      "install": "Install widget",
+      "useCss": "Use CSS"
+    }
+  },
   "management": {
     "metaTitle": "Management",
     "title": {
@@ -4477,6 +4532,7 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
+        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {

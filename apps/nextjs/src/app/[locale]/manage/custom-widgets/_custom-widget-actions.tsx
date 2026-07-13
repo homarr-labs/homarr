@@ -6,6 +6,7 @@ import {
   IconCopy,
   IconDots,
   IconDownload,
+  IconShare3,
   IconToggleLeft,
   IconToggleRight,
   IconTrash,
@@ -19,6 +20,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { PublishToWorkshopButton } from "~/components/workshop/workshop-browser";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -30,6 +32,7 @@ interface WidgetRef {
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useScopedI18n("customWidget");
+  const workshopT = useScopedI18n("workshop");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
@@ -141,6 +144,16 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
         <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
           {t("action.export")}
         </Menu.Item>
+        <PublishToWorkshopButton
+          type="widget"
+          defaultTitle={widget.name}
+          getContent={async () => JSON.stringify(await utils.customWidget.export.fetch({ id: widget.id }), null, 2)}
+          renderTrigger={(open) => (
+            <Menu.Item onClick={open} leftSection={<IconShare3 {...iconProps} />}>
+              {workshopT("action.share")}
+            </Menu.Item>
+          )}
+        />
         <Menu.Divider />
         <Menu.Item
           color="red"

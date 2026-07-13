@@ -16,6 +16,9 @@ const config: Config = {
     defaultLocale: "en",
     locales: ["en"],
   },
+  customFields: {
+    workshopApiUrl: process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? "https://store.homarr.dev",
+  },
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
@@ -123,6 +126,11 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
+        },
+        {
+          label: "Workshop",
+          position: "left",
+          to: "/workshop",
         },
         {
           label: "About us",
@@ -306,6 +314,18 @@ const config: Config = {
               concatenateModules: process.env.CI != null && process.env.CI !== "false" ? !isServer : false,
             },
           };
+        },
+      };
+    },
+    function workshopRoutesPlugin() {
+      return {
+        name: "workshop-routes",
+        async contentLoaded({ actions }) {
+          actions.addRoute({
+            path: "/workshop/:id",
+            component: "@site/src/components/workshop/WorkshopDetailRoutePage",
+            exact: true,
+          });
         },
       };
     },

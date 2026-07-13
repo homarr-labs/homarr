@@ -1,0 +1,45 @@
+# Homarr Workshop backend
+
+PocketBase provides the central Workshop API at `store.homarr.dev`. It is not a per-instance Homarr service. Local deployment is for development and integration testing.
+
+## Local startup
+
+1. Copy `.env.example` to `.env` and create a GitHub OAuth app.
+2. Set its callback URL to `http://localhost:8090/api/oauth2-redirect`.
+3. Set `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `PB_SUPERUSER_EMAIL`, and `PB_SUPERUSER_PASSWORD`.
+4. Run `docker compose up --build` from this directory.
+
+The API is at `http://localhost:8090`; the emergency PocketBase dashboard is at `http://localhost:8090/_/`. Day-to-day moderation belongs in `/workshop/admin`, not the PocketBase dashboard.
+
+The image downloads the official PocketBase `0.39.6` release and verifies it against that release's `checksums.txt`. Migrations and hooks are mounted read-only.
+
+## Roles and account states
+
+- `member`: publish, update/delete owned submissions, vote, and report.
+- `moderator`: report queue, submission removal, posting bans, and account disable/restore.
+- `admin`: moderator actions plus role changes.
+- `posting_banned`: cannot create or update submissions; can browse, vote, and report.
+- `disabled`: cannot authenticate or write.
+
+Bootstrap the first admin through the PocketBase dashboard by changing a GitHub-authenticated user's role. All later staff actions use the restricted Workshop back office and are recorded in `moderation_actions`.
+
+## Backup and restore
+
+PocketBase stores records and uploads in `/pb_data`. Stop writes or stop the container, then archive the named volume:
+
+```sh
+docker compose stop workshop
+docker run --rm -v store_workshop_data:/data -v "$PWD":/backup alpine tar czf /backup/workshop-backup.tgz -C /data .
+docker compose start workshop
+```
+
+Restore only into the same PocketBase version after preserving the current volume. Extract the archive into an empty `workshop_data` volume, start the service, and verify `/api/health`, collection migrations, a listing request, and an authenticated write.
+
+## Production checklist
+
+- Terminate TLS at the reverse proxy and forward the real client IP.
+- Keep superuser credentials outside Compose and rotate them after bootstrap.
+- Restrict the dashboard path to operators; GitHub users never need it.
+- Review the versioned default rate limits for OAuth, submissions, votes, reports, moderation, and general API traffic against production load before launch.
+- Back up `/pb_data` before every PocketBase or migration upgrade and test restore regularly.
+- Monitor health, authentication failures, 429/5xx responses, moderation actions, disk use, and backup age.

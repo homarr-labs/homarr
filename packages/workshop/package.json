@@ -1,0 +1,46 @@
+{
+  "name": "@homarr/workshop",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "import": "./dist/client.js"
+    },
+    "./schema": {
+      "types": "./src/schema.ts",
+      "import": "./dist/schema.js"
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/index.ts src/client.ts src/schema.ts --bundle --format=esm --platform=browser --external:pocketbase --external:zod --external:zod/* --outdir=dist",
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "postinstall": "pnpm build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/validation": "workspace:^0.1.0",
+    "pocketbase": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "esbuild": "catalog:",
+    "typescript": "catalog:"
+  }
+}

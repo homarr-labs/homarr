@@ -50,6 +50,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/websocket": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
+    "@homarr/workshop": "workspace:^0.1.0",
     "@mantine/colors-generator": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dropzone": "catalog:",
