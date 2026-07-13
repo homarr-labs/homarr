@@ -14,7 +14,7 @@ Workshop behavior is defined once: one typed contract, one client, versioned Poc
 
 ## Baseline audit
 
-The abandoned prototype is preserved at `origin/feat/widget-store-prototype-backup` (`89260b875`). This rewrite is rebased onto `dev` commit `d52d9cfed`.
+The abandoned prototype is preserved at `origin/feat/widget-store-prototype-backup` (`89260b875`). The rewritten branch is rebased onto the current `origin/dev` before each final push.
 
 | Area          | Severity | Baseline finding                                                                                                                    | V2 resolution                                                                                                      |
 | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -66,7 +66,7 @@ The baseline has three P0, seven P1, and one P2 findings. The rewrite closes eve
 
 | Gate                        | Result  | Evidence                                                                                                                                                                                          |
 | --------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Branch ancestry             | Pass    | Rebuilt from `dev` at `d52d9cfed`; prototype preserved at `origin/feat/widget-store-prototype-backup`.                                                                                            |
+| Branch ancestry             | Pass    | Current `origin/dev` is an ancestor; the prototype remains preserved at `origin/feat/widget-store-prototype-backup`.                                                                              |
 | Contract                    | Pass    | Five Vitest cases cover widget/CSS fixtures, filenames, limits, screenshot validation, and round trips.                                                                                           |
 | Backend                     | Pass    | Disposable PocketBase integration matrix covers roles, account states, ownership forgery, schema rejection, duplicate votes, private reports, escalation, deletion cascades, and audit snapshots. |
 | Backend operations          | Pass    | PocketBase 0.39.6 runs unprivileged and builds with checksum verification; clean boot and a cloned legacy SQLite volume both migrate and become healthy.                                          |
