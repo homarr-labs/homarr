@@ -9,8 +9,18 @@ RUN apk add --no-cache libc6-compat curl bash && apk update
 RUN corepack enable pnpm
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY patches ./patches
+# Workaround for pnpm/pnpm#5268: pnpm fetch crashes when patchedDependencies
+# are configured with nodeLinker: hoisted. The applyPatchToDir function tries
+# to chdir into node_modules/<pkg> which doesn't exist during fetch (only the
+# content-addressable store is populated). By temporarily switching to the
+# isolated linker, patches apply inside the virtual store (node_modules/.pnpm/...)
+# which IS created by pnpm fetch. The original hoisted linker is restored
+# before the install step so the final node_modules layout stays flat.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && pnpm fetch
+    pnpm config set store-dir /pnpm/store && \
+    sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml && \
+    pnpm fetch && \
+    sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
 
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
