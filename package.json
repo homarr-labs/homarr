@@ -23,7 +23,7 @@
     "dev:docs": "pnpm -F @homarr/docs dev",
     "dev:workshop": "concurrently --kill-others --names workshop-api,workshop-web \"pnpm dev:workshop:backend\" \"pnpm dev:workshop:website\"",
     "dev:workshop:backend": "docker compose -f apps/store/docker-compose.yml up --build --remove-orphans",
-    "dev:workshop:website": "cross-env NEXT_PUBLIC_WORKSHOP_API_URL=http://localhost:8090 pnpm -F @homarr/docs dev",
+    "dev:workshop:website": "pnpm -F @homarr/workshop build && pnpm -F @homarr/docs clear && cross-env WORKSHOP_API_URL=http://localhost:8090 NEXT_PUBLIC_WORKSHOP_API_URL=http://localhost:8090 pnpm -F @homarr/docs dev",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",

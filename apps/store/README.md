@@ -1,6 +1,6 @@
 # Homarr Workshop backend
 
-PocketBase provides the central Workshop API at `store.homarr.dev`. It is not a per-instance Homarr service. Local deployment is for development and integration testing.
+PocketBase provides the central Workshop API at `workshop.homarr.dev`. It is not a per-instance Homarr service. Local deployment is for development and integration testing.
 
 ## Local startup
 
@@ -14,6 +14,8 @@ Open the Workshop at `http://localhost:3003/workshop`. The API is at `http://loc
 Use `pnpm dev:workshop:backend` when only the API is needed. If port 8090 is unavailable, set `PB_EXPOSE_PORT` in `apps/store/.env` and run the website separately with a matching `NEXT_PUBLIC_WORKSHOP_API_URL`.
 
 The image downloads the official PocketBase `0.39.6` release and verifies it against that release's `checksums.txt`. Migrations and hooks are mounted read-only.
+
+GitHub OAuth configuration is synchronized from the environment on every boot, including for an existing development volume. Local CORS is restricted to the Docusaurus origins in `PB_ALLOWED_ORIGINS`; production must set it to `https://homarr.dev`.
 
 ## Roles and account states
 

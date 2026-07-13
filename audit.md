@@ -36,7 +36,7 @@ The abandoned prototype is preserved at `origin/feat/widget-store-prototype-back
 - Launch content: custom widgets (`homarr-custom-widget-v2`) and CSS (`homarr-custom-css-v1`).
 - Identity: GitHub OAuth only.
 - Community features: votes and reports; comments are removed.
-- Hosting: one Homarr-operated service at `store.homarr.dev`; overrides are development-only.
+- Hosting: one Homarr-operated service at `workshop.homarr.dev`; overrides are development-only.
 - Publishing: immediate, with source inspection, reporting, and staff removal.
 - Staff: GitHub-authenticated moderators/admins use `/workshop/admin`; PocketBase superusers are bootstrap/emergency access.
 

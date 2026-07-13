@@ -15,6 +15,8 @@ cleanup
 PB_EXPOSE_PORT="$port" \
 PB_SUPERUSER_EMAIL="$email" \
 PB_SUPERUSER_PASSWORD="$password" \
+GITHUB_CLIENT_ID="integration-client" \
+GITHUB_CLIENT_SECRET="integration-secret" \
 docker compose --file apps/store/docker-compose.yml --project-name "$project" up --detach --build --wait
 
 if ! WORKSHOP_TEST_URL="http://127.0.0.1:$port" \

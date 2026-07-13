@@ -1,5 +1,15 @@
 /// <reference path="../pb_data/types.d.ts" />
 
+onBootstrap((e) => {
+  e.next();
+  const users = e.app.findCollectionByNameOrId("users");
+  const clientId = $os.getenv("GITHUB_CLIENT_ID");
+  const clientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
+  users.oauth2.enabled = Boolean(clientId && clientSecret);
+  users.oauth2.providers = clientId && clientSecret ? [{ name: "github", clientId, clientSecret }] : [];
+  e.app.save(users);
+});
+
 onRecordAuthWithOAuth2Request((e) => {
   const utils = require(`${__hooks}/workshop-utils.js`);
   if (e.record && e.record.getString("state") === "disabled")

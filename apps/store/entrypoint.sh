@@ -12,6 +12,7 @@ echo "Workshop website: http://localhost:3003/workshop"
 
 exec su-exec pocketbase pocketbase serve \
   --http=0.0.0.0:8090 \
+  --origins="${PB_ALLOWED_ORIGINS:-*}" \
   --dir=/pb_data \
   --hooksDir=/pb_hooks \
   --migrationsDir=/pb_migrations

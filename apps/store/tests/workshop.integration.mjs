@@ -9,6 +9,12 @@ assert(baseUrl && superuserEmail && superuserPassword, "Workshop integration tes
 
 const root = new PocketBase(baseUrl);
 await root.collection("_superusers").authWithPassword(superuserEmail, superuserPassword);
+const authMethods = await root.collection("users").listAuthMethods();
+assert.equal(authMethods.oauth2.enabled, true, "GitHub OAuth must be configured from the runtime environment");
+assert.deepEqual(
+  authMethods.oauth2.providers.map((provider) => provider.name),
+  ["github"],
+);
 
 const createUser = async (name, role = "member", state = "active") => {
   const password = `Workshop${name}Password123!`;

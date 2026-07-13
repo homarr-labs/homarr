@@ -109,6 +109,18 @@ export class WorkshopClient {
   }
 
   async signInWithGitHub() {
+    let methods: Awaited<ReturnType<ReturnType<PocketBase["collection"]>["listAuthMethods"]>>;
+    try {
+      methods = await this.pocketBase.collection("users").listAuthMethods();
+    } catch (error) {
+      throw asWorkshopError(error, "Failed to load Workshop authentication methods");
+    }
+    if (!methods.oauth2.providers.some((provider) => provider.name === "github")) {
+      throw new WorkshopError(
+        "unavailable",
+        "GitHub login is not configured. Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET, then restart Workshop.",
+      );
+    }
     try {
       await this.pocketBase.collection("users").authWithOAuth2({ provider: "github" });
       return this.currentUser;

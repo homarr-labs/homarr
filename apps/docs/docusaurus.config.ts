@@ -17,7 +17,8 @@ const config: Config = {
     locales: ["en"],
   },
   customFields: {
-    workshopApiUrl: process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? "https://store.homarr.dev",
+    workshopApiUrl:
+      process.env.WORKSHOP_API_URL ?? process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? "https://workshop.homarr.dev",
   },
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",

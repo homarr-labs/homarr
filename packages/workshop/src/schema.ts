@@ -1,7 +1,7 @@
 import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 import { z } from "zod";
 
-export const WORKSHOP_API_URL = "https://store.homarr.dev";
+export const WORKSHOP_API_URL = "https://workshop.homarr.dev";
 export const WORKSHOP_WEB_URL = "https://homarr.dev/workshop";
 export const WIDGET_SCHEMA_VERSION = "homarr-custom-widget-v2";
 export const CSS_SCHEMA_VERSION = "homarr-custom-css-v1";
