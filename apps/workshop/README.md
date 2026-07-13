@@ -4,14 +4,14 @@ PocketBase provides the central Workshop API at `workshop.homarr.dev`. It is not
 
 ## Local startup
 
-1. Copy `.env.example` to `.env` and create a GitHub OAuth app.
+1. Copy the repository-root `.env.example` to `.env` and create a GitHub OAuth app.
 2. Set its callback URL to `http://localhost:8090/api/oauth2-redirect`.
 3. Set `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `PB_SUPERUSER_EMAIL`, and `PB_SUPERUSER_PASSWORD`.
 4. Run `pnpm dev:workshop` from the repository root. It starts PocketBase and the Docusaurus Workshop together and removes obsolete Compose containers.
 
 Open the Workshop at `http://localhost:3003/workshop`. The API is at `http://localhost:8090`; the emergency PocketBase dashboard is at `http://localhost:8090/_/`. `0.0.0.0` in PocketBase's server log is its container bind address, not a browser URL. Day-to-day moderation belongs in `/workshop/admin`, not the PocketBase dashboard.
 
-Use `pnpm dev:workshop:backend` when only the API is needed. If port 8090 is unavailable, set `PB_EXPOSE_PORT` in `apps/store/.env` and run the website separately with a matching `NEXT_PUBLIC_WORKSHOP_API_URL`.
+Use `pnpm dev:workshop:backend` when only the API is needed. All Workshop configuration is read from the repository-root `.env`; there is no app-specific environment file. If port 8090 is unavailable, set `PB_EXPOSE_PORT` there. The website derives its local API URL from that port unless `WORKSHOP_API_URL` is explicitly set.
 
 The image downloads the official PocketBase `0.39.6` release and verifies it against that release's `checksums.txt`. Migrations and hooks are mounted read-only.
 
@@ -32,9 +32,9 @@ Bootstrap the first admin through the PocketBase dashboard by changing a GitHub-
 PocketBase stores records and uploads in `/pb_data`. Stop writes or stop the container, then archive the named volume:
 
 ```sh
-docker compose stop workshop
-docker run --rm -v store_workshop_data:/data -v "$PWD":/backup alpine tar czf /backup/workshop-backup.tgz -C /data .
-docker compose start workshop
+docker compose --env-file .env --file apps/workshop/docker-compose.yml stop workshop
+docker run --rm -v homarr-workshop_workshop_data:/data -v "$PWD":/backup alpine tar czf /backup/workshop-backup.tgz -C /data .
+docker compose --env-file .env --file apps/workshop/docker-compose.yml start workshop
 ```
 
 Restore only into the same PocketBase version after preserving the current volume. Extract the archive into an empty `workshop_data` volume, start the service, and verify `/api/health`, collection migrations, a listing request, and an authenticated write.
