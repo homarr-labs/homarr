@@ -442,7 +442,7 @@ catalogs:
       specifier: ^1.18.0
       version: 1.18.0
     posthog-js:
-      specifier: ^1.398.2
+      specifier: ^1.398.7
       version: 1.399.0
     posthog-node:
       specifier: ^5.39.2
