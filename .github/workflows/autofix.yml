@@ -23,14 +23,17 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
 
       - name: Get changed files
         id: changed
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          git diff --name-only --diff-filter=ACMR origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
+          git diff --name-only --diff-filter=ACMR "origin/${BASE_REF}...HEAD" -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
           echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
 
       - name: Auto-fix lint + format
