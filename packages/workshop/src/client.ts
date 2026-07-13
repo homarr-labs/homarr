@@ -60,7 +60,11 @@ const errorCodeForStatus = (status: number) => {
 };
 
 const workshopRequestSignal = (signal?: AbortSignal) =>
-  AbortSignal.any(signal ? [signal, AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)] : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)]);
+  AbortSignal.any(
+    signal
+      ? [signal, AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)]
+      : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)],
+  );
 
 const asWorkshopError = (error: unknown, fallback: string) => {
   if (error instanceof WorkshopError) return error;
