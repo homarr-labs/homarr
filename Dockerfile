@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.10
+# syntax=docker/dockerfile:1.25
 
 FROM node:24.18.0-alpine AS base
 
@@ -7,14 +7,9 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat curl bash && apk update
 
 RUN corepack enable pnpm
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-COPY patches ./patches
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && pnpm fetch
-
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --recursive --offline --frozen-lockfile
+    pnpm config set store-dir /pnpm/store && pnpm install --recursive --frozen-lockfile
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
