@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.10
+# syntax=docker/dockerfile:1.25
 
 FROM node:24.18.0-alpine AS base
 
