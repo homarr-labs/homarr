@@ -18,6 +18,7 @@ import {
   IconHomeFilled,
   IconLayoutDashboardFilled,
   IconMailForward,
+  IconBuildingStore,
   IconPhotoFilled,
   IconPointerFilled,
   IconSearch,
@@ -79,6 +80,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
       hidden: !session,
+    },
+    {
+      icon: IconBuildingStore,
+      href: "/manage/workshop",
+      label: t("items.workshop"),
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       icon: IconSearch,

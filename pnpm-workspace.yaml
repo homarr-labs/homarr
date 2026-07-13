@@ -95,6 +95,7 @@ catalog:
   "@types/xml2js": ^0.4.14
   posthog-js: ^1.398.2
   posthog-node: ^5.39.2
+  pocketbase: ^0.26.2
   "@vitejs/plugin-react": ^6.0.3
   "@vitest/coverage-v8": ^4.1.9
   "@vitest/ui": ^4.1.9

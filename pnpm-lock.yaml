@@ -438,6 +438,9 @@ catalogs:
     pg:
       specifier: ^8.22.0
       version: 8.22.0
+    pocketbase:
+      specifier: ^0.26.2
+      version: 0.26.9
     postcss-preset-mantine:
       specifier: ^1.18.0
       version: 1.18.0
@@ -694,6 +697,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../../packages/definitions
+      '@homarr/workshop':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/workshop
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.17)(react@19.2.7)
@@ -890,6 +896,9 @@ importers:
       '@homarr/widgets':
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
+      '@homarr/workshop':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/workshop
       '@mantine/colors-generator':
         specifier: 'catalog:'
         version: 9.4.1(chroma-js@3.2.0)
@@ -2696,6 +2705,28 @@ importers:
       '@types/video.js':
         specifier: 'catalog:'
         version: 7.3.58
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/workshop:
+    dependencies:
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
+      pocketbase:
+        specifier: 'catalog:'
+        version: 0.26.9
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      esbuild:
+        specifier: 'catalog:'
+        version: 0.28.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -12679,6 +12710,9 @@ packages:
 
   po-parser@2.1.1:
     resolution: {integrity: sha512-ECF4zHLbUItpUgE3OTtLKlPjeBN+fKEczj2zYjDfCGOzicNs0GK3Vg2IoAYwx7LH/XYw43fZQP6xnZ4TkNxSLQ==}
+
+  pocketbase@0.26.9:
+    resolution: {integrity: sha512-Tiv1/hNuUzRdvT0d8hF03dfzuefQ1WdSRp1A1q3wzFC/WYhQcbU/Qlaubl/3ZDo6xvFXBS8JAgBS/L+ms7nkVQ==}
 
   points-on-curve@0.2.0:
     resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
@@ -27000,6 +27034,8 @@ snapshots:
       fsevents: 2.3.2
 
   po-parser@2.1.1: {}
+
+  pocketbase@0.26.9: {}
 
   points-on-curve@0.2.0: {}
 
