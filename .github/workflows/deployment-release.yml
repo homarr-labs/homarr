@@ -15,9 +15,9 @@ on:
         default: true
         description: Send notifications
 
+# Least-privilege default; each job widens only what it needs.
 permissions:
-  contents: write # Required to update package.json version
-  packages: write # Required for pushing to GHCR
+  contents: read
 
 env:
   SKIP_ENV_VALIDATION: true
@@ -34,6 +34,8 @@ jobs:
     name: Create tag and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # commit package.json/changelog, push tags, update dev/next
     env:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' || github.ref_name == 'next' }}
     outputs:
@@ -61,19 +63,9 @@ jobs:
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@v6
+      - name: Setup
         if: env.SKIP_RELEASE == 'false'
-      - uses: actions/setup-node@v6
-        if: env.SKIP_RELEASE == 'false'
-        with:
-          node-version: 24.18.0
-          package-manager-cache: false
-      - run: npm i -g pnpm
-        if: env.SKIP_RELEASE == 'false'
-      - name: Install dependencies
-        if: env.SKIP_RELEASE == 'false'
-        run: |
-          pnpm install
+        uses: ./tooling/github/setup
       - name: Run Semantic Release
         if: env.SKIP_RELEASE == 'false'
         env:
@@ -116,6 +108,9 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read # checkout the repository
+      packages: write # push image by digest to GHCR
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
@@ -160,6 +155,9 @@ jobs:
     needs: release
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    permissions:
+      contents: read # checkout the repository
+      packages: write # push image by digest to GHCR
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
@@ -204,6 +202,8 @@ jobs:
     needs: [release, build-amd64]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # upload build artifacts as release assets
     steps:
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
@@ -220,6 +220,8 @@ jobs:
     needs: [release, build-arm64]
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
+    permissions:
+      contents: write # upload build artifacts as release assets
     steps:
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'
@@ -235,6 +237,9 @@ jobs:
     needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # mark GitHub release as published (undraft)
+      packages: write # create multi-arch image tags in GHCR
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}

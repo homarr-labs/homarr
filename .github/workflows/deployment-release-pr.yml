@@ -1,0 +1,155 @@
+name: "[Deployment] Release PR (reusable)"
+
+# Reusable workflow that opens a release PR from `head` into `base`, auto-approves
+# it and (for non-major bumps) merges it. Used by the beta and weekly release
+# workflows, which differ only in branch, version suffix and notification wording.
+
+on:
+  workflow_call:
+    inputs:
+      release-label:
+        description: 'Human label used in notifications, e.g. "Beta release"'
+        required: true
+        type: string
+      title-prefix:
+        description: 'Text inserted before "release" in the PR title/commit, e.g. "automatic "'
+        required: false
+        default: ""
+        type: string
+      version-suffix:
+        description: 'Suffix appended to the computed version, e.g. "-beta"'
+        required: false
+        default: ""
+        type: string
+      body-prefix:
+        description: "Extra HTML prepended to the PR body"
+        required: false
+        default: ""
+        type: string
+      semver-branch:
+        description: "Branch used to compute the next version"
+        required: true
+        type: string
+      head:
+        description: "PR head branch"
+        required: true
+        type: string
+      base:
+        description: "PR base branch"
+        required: true
+        type: string
+      send-notifications:
+        description: "Whether to send Discord notifications"
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  create-and-merge-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Discord notification
+        if: inputs.send-notifications
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "${{ inputs.release-label }} has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: ${{ inputs.semver-branch }}
+
+      - name: Create pull request
+        id: create-pull-request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: "${{ steps.semver.outputs.next }}${{ inputs.version-suffix }}"
+        run: >-
+          gh pr create
+          --title "chore(release): ${{ inputs.title-prefix }}release ${VERSION}"
+          --body "${{ inputs.body-prefix }}Detected change to be \`${{ steps.semver.outputs.bump }}\`<br/>Bump version from \`${{ steps.semver.outputs.current }}\` to \`${VERSION}\`"
+          --base ${{ inputs.base }}
+          --head ${{ inputs.head }}
+          --label automerge
+
+      - name: Discord notification
+        if: inputs.send-notifications
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }}${{ inputs.version-suffix }} (new behaviour: ${{ steps.semver.outputs.bump }})"
+
+      - name: Obtain token
+        id: obtainApprovalToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          client-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          permission-pull-requests: write
+
+      - name: Approve PR
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
+        run: |
+          gh pr review --approve --body "Automatically approved by GitHub Action"
+
+      - name: Obtain token
+        id: obtainMergeToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          permission-contents: write # write to the base branch (due to merge)
+          permission-pull-requests: write # merge pull request
+
+      - id: automerge
+        if: ${{ steps.semver.outputs.bump != 'major' }}
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.16.4"
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainMergeToken.outputs.token }}
+          MERGE_METHOD: merge # we prefer merge commits for release branches
+          MERGE_COMMIT_MESSAGE: "chore(release): ${{ inputs.title-prefix }}release ${{ steps.semver.outputs.next }}${{ inputs.version-suffix }}"
+          MERGE_DELETE_BRANCH: false # never set to true!
+          PULL_REQUEST: "${{ steps.create-pull-request.outputs.pr_number }}"
+          MERGE_RETRIES: 20 # 20 retries * MERGE_RETRY_SLEEP until step fails
+          MERGE_RETRY_SLEEP: 10000 # 10 seconds * MERGE_RETRIES until step fails
+          MERGE_REQUIRED_APPROVALS: 0 # do not require approvals
+
+      - name: Merged Discord notification
+        if: ${{ steps.automerge.outputs.mergeResult == 'merged' && inputs.send-notifications }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "Merged PR ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}${{ inputs.version-suffix }}"
+
+      - name: Major Bump Discord notification
+        if: ${{ steps.semver.outputs.bump == 'major' && inputs.send-notifications }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "The release PR must be manually merged because the next version is a major version: ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}${{ inputs.version-suffix }}"
+
+      - name: Discord Fail Notification
+        if: failure() && inputs.send-notifications
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "The ${{ inputs.release-label }} workflow [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) has failed"

@@ -15,9 +15,6 @@ jobs:
   update-contributors:
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    strategy:
-      matrix:
-        node-version: [22]
     steps:
       - name: Obtain token
         id: obtainToken
@@ -33,13 +30,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
-      - uses: pnpm/action-setup@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
+      - name: Install Node with mise
+        uses: jdx/mise-action@v4
 
+      # This script only uses Node built-ins (fs/promises), so no dependency
+      # install is needed.
       - name: Run update script
         run: node ./scripts/update-contributors.mjs
 

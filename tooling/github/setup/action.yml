@@ -4,11 +4,26 @@ description: "Common setup steps for Actions"
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v6
-    - uses: actions/setup-node@v6
-      with:
-        node-version: 24.18.0
-        cache: "pnpm"
+    # Node (and any other tools) are provisioned from mise.toml, the single
+    # source of truth for tool versions.
+    - name: Install tools with mise
+      uses: jdx/mise-action@v4
 
-    - shell: bash
+    - name: Install pnpm
+      uses: pnpm/action-setup@v6
+
+    - name: Locate pnpm store
+      shell: bash
+      run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+    - name: Cache pnpm store
+      uses: actions/cache@v6
+      with:
+        path: ${{ env.PNPM_STORE_PATH }}
+        key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          pnpm-store-${{ runner.os }}-
+
+    - name: Install dependencies
+      shell: bash
       run: pnpm install --frozen-lockfile
