@@ -21,7 +21,9 @@ export const CpuRing = ({ cpuUtilization, isTiny }: { cpuUtilization: number; is
       }
       sections={[
         {
-          value: Number(cpuUtilization.toFixed(2)),
+          // cpuUtilization is a total-system share (0-100) by convention; the
+          // clamp only guards the ring geometry against misreporting sources.
+          value: Math.min(100, Number(cpuUtilization.toFixed(2))),
           color: progressColor(Number(cpuUtilization.toFixed(2))),
         },
       ]}

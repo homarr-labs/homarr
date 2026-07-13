@@ -3,6 +3,14 @@ import type { LxcResource, NodeResource, QemuResource, StorageResource } from ".
 export interface SystemHealthMonitoring {
   version: string;
   cpuModelName: string;
+  /**
+   * CPU usage as a share of the WHOLE machine, in percent (0-100).
+   *
+   * This is the homarr-wide convention for every CPU reading: a machine with
+   * 3 of 4 cores fully busy reports 75, never 300. Integrations must convert
+   * per-core readings (sums, or docker-stats style values that can exceed
+   * 100) into the total-system share before returning them here.
+   */
   cpuUtilization: number;
   memUsedInBytes: number;
   memAvailableInBytes: number;

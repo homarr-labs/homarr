@@ -39,7 +39,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
 
     return {
-      cpuUtilization: cpuLoad.sumLoad,
+      cpuUtilization: cpuLoad.averageLoad,
       memUsedInBytes: memoryLoad.loadInBytes,
       memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
       network: networkLoad,
@@ -97,7 +97,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     // we convert it to text as the response is either valid json or empty if cpu widget is disabled.
     if (result.length === 0) {
       return {
-        sumLoad: 0,
+        averageLoad: 0,
         averageTemperature: 0,
       };
     }
@@ -105,7 +105,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const data = await cpuLoadPerCoreApiList.parseAsync(JSON.parse(result));
     await channel.pushAsync(data);
     return {
-      sumLoad: this.getAverageOfCpu(data),
+      averageLoad: this.getAverageOfCpu(data),
       averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / data.length,
     };
   }
