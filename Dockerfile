@@ -23,8 +23,11 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
 
 COPY . .
+# Follow the pnpm fetch pattern from https://pnpm.io/cli/fetch
+# --offline enforces no registry access (all packages are in the store from fetch)
+# --frozen-lockfile is omitted as recommended by the pnpm fetch docs
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --recursive --offline --frozen-lockfile
+    pnpm install --recursive --offline
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
