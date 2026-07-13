@@ -7,9 +7,11 @@ PocketBase provides the central Workshop API at `store.homarr.dev`. It is not a 
 1. Copy `.env.example` to `.env` and create a GitHub OAuth app.
 2. Set its callback URL to `http://localhost:8090/api/oauth2-redirect`.
 3. Set `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `PB_SUPERUSER_EMAIL`, and `PB_SUPERUSER_PASSWORD`.
-4. Run `docker compose up --build` from this directory.
+4. Run `pnpm dev:workshop` from the repository root. It starts PocketBase and the Docusaurus Workshop together and removes obsolete Compose containers.
 
-The API is at `http://localhost:8090`; the emergency PocketBase dashboard is at `http://localhost:8090/_/`. Day-to-day moderation belongs in `/workshop/admin`, not the PocketBase dashboard.
+Open the Workshop at `http://localhost:3003/workshop`. The API is at `http://localhost:8090`; the emergency PocketBase dashboard is at `http://localhost:8090/_/`. `0.0.0.0` in PocketBase's server log is its container bind address, not a browser URL. Day-to-day moderation belongs in `/workshop/admin`, not the PocketBase dashboard.
+
+Use `pnpm dev:workshop:backend` when only the API is needed. If port 8090 is unavailable, set `PB_EXPOSE_PORT` in `apps/store/.env` and run the website separately with a matching `NEXT_PUBLIC_WORKSHOP_API_URL`.
 
 The image downloads the official PocketBase `0.39.6` release and verifies it against that release's `checksums.txt`. Migrations and hooks are mounted read-only.
 

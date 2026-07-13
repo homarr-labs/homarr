@@ -4,6 +4,7 @@ FROM node:24.18.0-alpine AS base
 
 FROM base AS builder
 WORKDIR /app
+ARG CI='true'
 RUN apk add --no-cache libc6-compat curl bash && apk update
 
 RUN corepack enable pnpm
@@ -30,7 +31,6 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --recursive --offline
 
 ARG SKIP_ENV_VALIDATION='true'
-ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 ARG TARGETPLATFORM
 
@@ -82,7 +82,6 @@ COPY nginx.conf /etc/nginx/templates/nginx.conf
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'
-ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 

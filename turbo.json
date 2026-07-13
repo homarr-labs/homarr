@@ -35,6 +35,9 @@
     "@homarr/db#build": {
       "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]
     },
+    "@homarr/workshop#build": {
+      "outputs": ["dist/**"]
+    },
     "@homarr/docs#build": {
       "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
       "outputs": ["build/**", ".docusaurus/**"]
