@@ -1,0 +1,33 @@
+apps/workshop/docker-compose.yml
+  s_969e77f6bcbd27::t_b619e57e7ad2bc 1-28
+apps/workshop/tests/run-integration.sh
+  s_969e77f6bcbd27::t_b619e57e7ad2bc 1-28
+apps/workshop/README.md
+  s_969e77f6bcbd27::t_b619e57e7ad2bc 1-13,15-34,36,38-49
+  s_969e77f6bcbd27::t_726eedac5d1a13 14
+  s_969e77f6bcbd27::t_36795f1e9611dd 35,37
+apps/workshop/.gitignore
+  s_969e77f6bcbd27::t_eae9d3f4fe950b 1
+package.json
+  s_969e77f6bcbd27::t_d9b6ad6cdded3e 26
+  s_969e77f6bcbd27::t_b619e57e7ad2bc 25,39
+.env.example
+  s_969e77f6bcbd27::t_b619e57e7ad2bc 73-81
+  s_969e77f6bcbd27::t_726eedac5d1a13 72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "3a89a3b29944ab26b94063ffa96e017daf0da39c",
+  "prompts": {},
+  "sessions": {
+    "s_969e77f6bcbd27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c47-020a-7a12-b6b9-f3305b2e6beb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
