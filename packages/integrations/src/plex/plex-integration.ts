@@ -17,6 +17,32 @@ import type { PlexResponse } from "./interface";
 
 const logger = createLogger({ module: "plexIntegration" });
 
+function parseOptionalNumber(value: string | undefined): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function parseLocation(value: string | undefined): "lan" | "wan" | null {
+  return value === "lan" || value === "wan" ? value : null;
+}
+
+function parsePlaybackState(value: string | undefined): "playing" | "paused" | "buffering" | null {
+  return value === "playing" || value === "paused" || value === "buffering" ? value : null;
+}
+
+function parseResolution(
+  width: string | undefined,
+  height: string | undefined,
+): { width: number; height: number } | null {
+  const parsedWidth = parseOptionalNumber(width);
+  const parsedHeight = parseOptionalNumber(height);
+  return parsedWidth !== null && parsedHeight !== null ? { width: parsedWidth, height: parsedHeight } : null;
+}
+
 export class PlexIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
@@ -50,14 +76,12 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           return undefined;
         }
 
-        const positionMs = mediaElement.$.viewOffset ? Number(mediaElement.$.viewOffset) : null;
-        const durationMs = mediaElement.$.duration ? Number(mediaElement.$.duration) : null;
+        const positionMs = parseOptionalNumber(mediaElement.$.viewOffset);
+        const durationMs = parseOptionalNumber(mediaElement.$.duration);
 
-        const playerState = playerElement.$.state;
-        const playbackState =
-          playerState === "playing" || playerState === "paused" || playerState === "buffering" ? playerState : null;
+        const playbackState = parsePlaybackState(playerElement.$.state);
 
-        const location = sessionElement?.$.location === "wan" ? "wan" : sessionElement?.$.location === "lan" ? "lan" : null;
+        const location = parseLocation(sessionElement?.$.location);
 
         const streams = mediaInfoElement?.Part?.[0]?.Stream ?? [];
         const videoStream = streams.find((stream) => stream.$.streamType === "1");
@@ -86,28 +110,16 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
             location,
             metadata: {
               video: {
-                resolution:
-                  videoStream?.$.width && videoStream.$.height
-                    ? {
-                        width: Number(videoStream.$.width),
-                        height: Number(videoStream.$.height),
-                      }
-                    : null,
-                frameRate: videoStream?.$.frameRate ? Number(videoStream.$.frameRate) : null,
+                resolution: parseResolution(videoStream?.$.width, videoStream?.$.height),
+                frameRate: parseOptionalNumber(videoStream?.$.frameRate),
               },
               audio: {
-                channelCount: audioStream?.$.channels ? Number(audioStream.$.channels) : null,
+                channelCount: parseOptionalNumber(audioStream?.$.channels),
                 codec: audioStream?.$.codec ?? mediaInfoElement?.$.audioCodec ?? null,
               },
               transcoding: {
                 container: transcodeElement?.$.container ?? null,
-                resolution:
-                  transcodeElement?.$.width && transcodeElement.$.height
-                    ? {
-                        width: Number(transcodeElement.$.width),
-                        height: Number(transcodeElement.$.height),
-                      }
-                    : null,
+                resolution: parseResolution(transcodeElement?.$.width, transcodeElement?.$.height),
                 target: {
                   audioCodec: transcodeElement?.$.audioCodec ?? null,
                   videoCodec: transcodeElement?.$.videoCodec ?? null,
