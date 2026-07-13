@@ -12,8 +12,7 @@ run_migrations() {
   fi
 
   echo "Running DB migrations"
-  DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
-  if [ $? -ne 0 ]; then
+  if ! DISABLE_REDIS_LOGS=true node "./db/migrations/${DB_DIALECT}/migrate.cjs" "./db/migrations/${DB_DIALECT}"; then
     echo "ERROR: DB migrations failed, aborting startup"
     exit 1
   fi
