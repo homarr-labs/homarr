@@ -3,7 +3,10 @@ import { z } from "zod/v4";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
-import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import {
+  mediaRequestListInputSchema,
+  mediaRequestListRequestHandler,
+} from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -16,13 +19,14 @@ export const mediaRequestsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get latest media requests from Overseerr/Jellyseerr with their status (pending, approved, declined, available). REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all)",
+          "Get latest media requests from Overseerr/Jellyseerr with their status (pending, approved, declined, failed, completed). REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all). OPTIONAL: statuses (array of statuses to include, must be non-empty) and recentDays (number 0-365; 0 disables the time filter).",
       },
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
-    .query(async ({ ctx }) => {
+    .input(mediaRequestListInputSchema)
+    .query(async ({ ctx, input }) => {
       const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data } = await mediaRequestListRequestHandler.handler(integration, {}).getDataAsync();
+        const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
         return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
       });
       return results

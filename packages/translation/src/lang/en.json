@@ -3195,6 +3195,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Open links in new tab"
+        },
+        "statusFilter": {
+          "label": "Statuses to show"
+        },
+        "recentDays": {
+          "label": "Show only recent requests"
         }
       },
       "pending": {
