@@ -1,0 +1,32 @@
+turbo.json
+  s_969e77f6bcbd27::t_2f7656bbefe554 38-40
+package.json
+  s_969e77f6bcbd27::t_7ed09fce408bfa 24-25
+  s_969e77f6bcbd27::t_3c1843ad3cacfd 26
+apps/store/docker-compose.yml
+  s_969e77f6bcbd27::t_7ed09fce408bfa 14,16
+apps/store/README.md
+  s_969e77f6bcbd27::t_7ed09fce408bfa 10,12-13
+  s_969e77f6bcbd27::t_3c1843ad3cacfd 14
+Dockerfile
+  s_969e77f6bcbd27::t_c86149d00d59f0 14-16
+  s_969e77f6bcbd27::t_b50624b2c36054 7
+apps/store/entrypoint.sh
+  s_969e77f6bcbd27::t_7ed09fce408bfa 10-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "61f6e574c413bcb95a2299e003bdac05f50d4c22",
+  "prompts": {},
+  "sessions": {
+    "s_969e77f6bcbd27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c47-020a-7a12-b6b9-f3305b2e6beb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

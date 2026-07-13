@@ -1,0 +1,44 @@
+apps/store/.env.example
+  s_969e77f6bcbd27::t_d5fa665f4a70fb 6
+packages/workshop/src/schema.ts
+  s_969e77f6bcbd27::t_a1098ed67f98ad 4
+apps/docs/docusaurus.config.ts
+  s_969e77f6bcbd27::t_a1098ed67f98ad 20-21
+package.json
+  s_969e77f6bcbd27::t_e26b7d9c9c23c0 26
+apps/store/tests/run-integration.sh
+  s_969e77f6bcbd27::t_3ca30b296896c3 18-19
+apps/store/README.md
+  s_969e77f6bcbd27::t_d5fa665f4a70fb 18-19
+  s_969e77f6bcbd27::t_a1098ed67f98ad 3
+apps/docs/docs/management/workshop/index.mdx
+  s_969e77f6bcbd27::t_a1098ed67f98ad 40
+apps/store/entrypoint.sh
+  s_969e77f6bcbd27::t_d5fa665f4a70fb 15
+audit.md
+  s_969e77f6bcbd27::t_a1098ed67f98ad 39
+apps/store/pb_hooks/workshop.pb.js
+  s_969e77f6bcbd27::t_d5fa665f4a70fb 3-12
+packages/workshop/src/client.ts
+  s_969e77f6bcbd27::t_e0706fb9cd60a6 112-123
+apps/store/tests/workshop.integration.mjs
+  s_969e77f6bcbd27::t_3ca30b296896c3 12-17
+apps/store/docker-compose.yml
+  s_969e77f6bcbd27::t_d5fa665f4a70fb 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "d2f03367a7470de86d91fedf20f27a6633b3fbc7",
+  "prompts": {},
+  "sessions": {
+    "s_969e77f6bcbd27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c47-020a-7a12-b6b9-f3305b2e6beb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
