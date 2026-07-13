@@ -21,7 +21,7 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
-    "dev:workshop": "concurrently --kill-others --names workshop-api,workshop-web \"pnpm dev:workshop:backend\" \"pnpm dev:workshop:website\"",
+    "dev:workshop": "pnpm dev:workshop:backend",
     "dev:workshop:backend": "docker compose --env-file .env -f apps/workshop/docker-compose.yml up --build --remove-orphans",
     "dev:workshop:website": "pnpm -F @homarr/workshop build && pnpm -F @homarr/docs clear && pnpm with-env sh -c 'WORKSHOP_API_URL=${WORKSHOP_API_URL:-http://localhost:${PB_EXPOSE_PORT:-8090}} pnpm -F @homarr/docs dev'",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",

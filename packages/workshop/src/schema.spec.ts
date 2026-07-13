@@ -57,6 +57,8 @@ describe("Workshop contracts", () => {
     expect(schemaVersionForType("widget")).toBe(WIDGET_SCHEMA_VERSION);
     expect(schemaVersionForType("css")).toBe(CSS_SCHEMA_VERSION);
     expect(workshopExportFilename("My / Theme!", "css")).toBe("my-theme.css");
+    expect(workshopExportFilename("---My---Widget---", "widget")).toBe("my-widget.json");
+    expect(workshopExportFilename("-".repeat(100_000), "css")).toBe("homarr-workshop.css");
   });
 
   it("validates screenshot count, MIME type, and size", () => {

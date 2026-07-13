@@ -1,7 +1,7 @@
 import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 import { z } from "zod";
 
-export const WORKSHOP_API_URL = "https://workshop.homarr.dev";
+export const WORKSHOP_API_URL = "https://homarr.dev";
 export const WORKSHOP_WEB_URL = "https://homarr.dev/workshop";
 export const WIDGET_SCHEMA_VERSION = "homarr-custom-widget-v2";
 export const CSS_SCHEMA_VERSION = "homarr-custom-css-v1";
@@ -9,6 +9,7 @@ export const MAX_CSS_LENGTH = 16_384;
 export const MAX_CONTENT_LENGTH = 1_000_000;
 export const MAX_SCREENSHOTS = 5;
 export const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024;
+export const WORKSHOP_REQUEST_TIMEOUT_MS = 8_000;
 export const WORKSHOP_SCREENSHOT_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
 export const workshopSubmissionTypeSchema = z.enum(["widget", "css"]);
@@ -165,11 +166,21 @@ export const schemaVersionForType = (type: WorkshopSubmissionType) =>
   type === "widget" ? WIDGET_SCHEMA_VERSION : CSS_SCHEMA_VERSION;
 
 export function workshopExportFilename(title: string, type: WorkshopSubmissionType) {
-  const safeTitle =
-    title
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "homarr-workshop";
+  let safeTitle = "";
+  let separatorPending = false;
+
+  for (const character of title.trim().toLowerCase()) {
+    const isLetter = character >= "a" && character <= "z";
+    const isNumber = character >= "0" && character <= "9";
+    if (isLetter || isNumber || character === "_") {
+      if (separatorPending && safeTitle.length > 0) safeTitle += "-";
+      safeTitle += character;
+      separatorPending = false;
+    } else {
+      separatorPending = safeTitle.length > 0;
+    }
+  }
+
+  safeTitle ||= "homarr-workshop";
   return `${safeTitle}.${type === "widget" ? "json" : "css"}`;
 }

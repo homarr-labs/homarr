@@ -1,4 +1,26 @@
-FROM alpine:3.22 AS download
+# syntax=docker/dockerfile:1.10
+
+FROM node:24.18.0-alpine AS website
+WORKDIR /app
+
+RUN corepack enable pnpm
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+COPY patches ./patches
+RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm --config.node-linker=isolated fetch --ignore-scripts && \
+    rm -rf node_modules
+
+COPY apps/docs ./apps/docs
+COPY packages/definitions ./packages/definitions
+COPY packages/validation ./packages/validation
+COPY packages/workshop ./packages/workshop
+COPY tooling/typescript ./tooling/typescript
+RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store \
+    pnpm install --recursive --offline --frozen-lockfile && \
+    CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
+
+FROM alpine:3.22 AS pocketbase
 
 ARG TARGETARCH
 ARG POCKETBASE_VERSION=0.39.6
@@ -20,10 +42,15 @@ RUN case "${TARGETARCH}" in \
 FROM alpine:3.22
 
 RUN apk add --no-cache ca-certificates tzdata && addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
-COPY --from=download /out/pocketbase /usr/local/bin/pocketbase
-COPY entrypoint.sh /usr/local/bin/workshop-entrypoint
+COPY --from=pocketbase /out/pocketbase /usr/local/bin/pocketbase
+COPY --from=website /app/apps/docs/build /pb_public
+COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint
+COPY apps/workshop/pb_hooks /pb_hooks
+COPY apps/workshop/pb_migrations /pb_migrations
 
-RUN chmod +x /usr/local/bin/workshop-entrypoint && mkdir -p /pb_data /pb_hooks /pb_migrations && chown -R pocketbase:pocketbase /pb_data /pb_hooks /pb_migrations
+RUN chmod +x /usr/local/bin/workshop-entrypoint && \
+    mkdir -p /pb_data && \
+    chown -R pocketbase:pocketbase /pb_data /pb_hooks /pb_migrations /pb_public
 
 USER pocketbase
 EXPOSE 8090

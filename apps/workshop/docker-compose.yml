@@ -3,24 +3,23 @@ name: homarr-workshop
 services:
   workshop:
     build:
-      context: .
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
       args:
         POCKETBASE_VERSION: 0.39.6
-    image: homarr/workshop-pocketbase:0.39.6
+    image: homarr/workshop:0.39.6
     restart: unless-stopped
     environment:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
       PB_SUPERUSER_EMAIL: ${PB_SUPERUSER_EMAIL:-}
       PB_SUPERUSER_PASSWORD: ${PB_SUPERUSER_PASSWORD:-}
-      PB_PUBLIC_URL: http://localhost:${PB_EXPOSE_PORT:-8090}
-      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:3003,http://127.0.0.1:3003,http://localhost:7575,http://127.0.0.1:7575}
+      PB_PUBLIC_URL: ${PB_PUBLIC_URL:-http://localhost:${PB_EXPOSE_PORT:-8090}}
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
     ports:
       - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:8090"
     volumes:
       - workshop_data:/pb_data
-      - ./pb_hooks:/pb_hooks:ro
-      - ./pb_migrations:/pb_migrations:ro
     security_opt:
       - no-new-privileges:true
 

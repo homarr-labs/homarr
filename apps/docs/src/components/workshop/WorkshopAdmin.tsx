@@ -1,16 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import {
-  WORKSHOP_API_URL,
-  WorkshopClient,
-  type WorkshopAccountState,
-  type WorkshopRole,
-  type WorkshopUser,
-} from "@homarr/workshop";
+import { WorkshopClient, type WorkshopAccountState, type WorkshopRole, type WorkshopUser } from "@homarr/workshop";
 
 import { WorkshopQueryProvider } from "./WorkshopQueryProvider";
+import { WorkshopDialog, WorkshopServiceState } from "./WorkshopUi";
 import styles from "./workshop.module.css";
 
 type PendingAction =
@@ -29,9 +24,10 @@ export function WorkshopAdmin() {
 function WorkshopAdminContent() {
   const { siteConfig } = useDocusaurusContext();
   const client = useMemo(
-    () => new WorkshopClient((siteConfig.customFields?.workshopApiUrl as string | undefined) ?? WORKSHOP_API_URL),
+    () => new WorkshopClient((siteConfig.customFields?.workshopApiUrl as string | undefined) || window.location.origin),
     [siteConfig],
   );
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [pending, setPending] = useState<PendingAction | null>(null);
   const [error, setError] = useState("");
@@ -53,6 +49,24 @@ function WorkshopAdminContent() {
   const reports = moderationQuery.data?.reports ?? [];
   const users = moderationQuery.data?.users ?? [];
   const actions = moderationQuery.data?.actions ?? [];
+  const actionMutation = useMutation({
+    mutationKey: ["workshop", "moderation", "action"],
+    mutationFn: async ({ action, reason }: { action: PendingAction; reason: string }) => {
+      if (action.kind === "report") await client.resolveReport(action.id, action.status, reason);
+      else if (action.kind === "state") await client.updateAccountState(action.id, action.state, reason);
+      else await client.updateRole(action.id, action.role, reason);
+    },
+    onSuccess: async () => {
+      setPending(null);
+      await queryClient.invalidateQueries({ queryKey: ["workshop", "moderation"] });
+    },
+  });
+  const signInMutation = useMutation({
+    mutationKey: ["workshop", "auth", "moderator"],
+    mutationFn: () => client.signInWithGitHub(),
+    onSuccess: setUser,
+    onError: (caught) => setError(caught instanceof Error ? caught.message : "GitHub sign-in is unavailable"),
+  });
 
   useEffect(() => client.subscribeToAuth(setUser), [client]);
   useEffect(() => {
@@ -83,16 +97,13 @@ function WorkshopAdminContent() {
         )}
         <button
           className="button button--primary"
-          onClick={async () => {
+          disabled={signInMutation.isPending}
+          onClick={() => {
             setError("");
-            try {
-              setUser(await client.signInWithGitHub());
-            } catch (caught) {
-              setError(caught instanceof Error ? caught.message : "GitHub sign-in is unavailable");
-            }
+            signInMutation.mutate();
           }}
         >
-          Sign in with GitHub
+          {signInMutation.isPending ? "Connecting…" : "Sign in with GitHub"}
         </button>
       </main>
     );
@@ -115,10 +126,11 @@ function WorkshopAdminContent() {
         </div>
       </header>
       {(error || moderationQuery.isError) && (
-        <div className={styles.error} role="alert">
-          {error || "Moderation data is unavailable. Try again when Workshop reconnects."}{" "}
-          {moderationQuery.isError && <button onClick={() => void moderationQuery.refetch()}>Try again</button>}
-        </div>
+        <WorkshopServiceState
+          cached={Boolean(moderationQuery.data)}
+          message={error || "Moderation data is unavailable. No action can be applied until Workshop reconnects."}
+          onRetry={() => void moderationQuery.refetch()}
+        />
       )}
       <section className={styles.adminSection}>
         <h2>Open reports</h2>
@@ -258,13 +270,7 @@ function WorkshopAdminContent() {
         <ReasonDialog
           action={pending}
           onClose={() => setPending(null)}
-          onConfirm={async (reason) => {
-            if (pending.kind === "report") await client.resolveReport(pending.id, pending.status, reason);
-            else if (pending.kind === "state") await client.updateAccountState(pending.id, pending.state, reason);
-            else await client.updateRole(pending.id, pending.role, reason);
-            setPending(null);
-            await moderationQuery.refetch();
-          }}
+          onConfirm={(reason) => actionMutation.mutateAsync({ action: pending, reason })}
         />
       )}
     </main>
@@ -293,45 +299,43 @@ function ReasonDialog({
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   return (
-    <div className={styles.overlay}>
-      <dialog className={styles.dialog} open aria-labelledby="moderation-reason-title">
-        <h2 id="moderation-reason-title">Confirm moderation action</h2>
-        <p>
-          This will apply <strong>{action.kind}</strong> to the selected record.
-        </p>
-        <form
-          onSubmit={async (event) => {
-            event.preventDefault();
-            setSaving(true);
-            try {
-              await onConfirm(reason);
-            } catch (caught) {
-              setError(caught instanceof Error ? caught.message : "Action failed");
-              setSaving(false);
-            }
-          }}
-        >
-          <label>
-            Reason
-            <textarea
-              required
-              minLength={3}
-              maxLength={1000}
-              value={reason}
-              onChange={(event) => setReason(event.target.value)}
-            />
-          </label>
-          {error && <p className={styles.error}>{error}</p>}
-          <div className={styles.formActions}>
-            <button type="button" className="button button--secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button disabled={saving} className="button button--danger">
-              {saving ? "Applying…" : "Apply action"}
-            </button>
-          </div>
-        </form>
-      </dialog>
-    </div>
+    <WorkshopDialog titleId="moderation-reason-title" onClose={onClose}>
+      <h2 id="moderation-reason-title">Confirm moderation action</h2>
+      <p>
+        This will apply <strong>{action.kind}</strong> to the selected record.
+      </p>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          setSaving(true);
+          try {
+            await onConfirm(reason);
+          } catch (caught) {
+            setError(caught instanceof Error ? caught.message : "Action failed");
+            setSaving(false);
+          }
+        }}
+      >
+        <label>
+          Reason
+          <textarea
+            required
+            minLength={3}
+            maxLength={1000}
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+          />
+        </label>
+        {error && <p className={styles.error}>{error}</p>}
+        <div className={styles.formActions}>
+          <button type="button" className="button button--secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button disabled={saving} className="button button--danger">
+            {saving ? "Applying…" : "Apply action"}
+          </button>
+        </div>
+      </form>
+    </WorkshopDialog>
   );
 }

@@ -15,6 +15,7 @@ import type {
 
 import {
   WORKSHOP_API_URL,
+  WORKSHOP_REQUEST_TIMEOUT_MS,
   WorkshopError,
   schemaVersionForType,
   workshopAccountStateSchema,
@@ -58,6 +59,9 @@ const errorCodeForStatus = (status: number) => {
   return "unknown" as const;
 };
 
+const workshopRequestSignal = (signal?: AbortSignal) =>
+  AbortSignal.any(signal ? [signal, AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)] : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)]);
+
 const asWorkshopError = (error: unknown, fallback: string) => {
   if (error instanceof WorkshopError) return error;
   if (error instanceof ClientResponseError) {
@@ -74,6 +78,9 @@ const asWorkshopError = (error: unknown, fallback: string) => {
   }
   if (error instanceof TypeError) {
     return new WorkshopError("unavailable", fallback);
+  }
+  if (error instanceof DOMException && (error.name === "AbortError" || error.name === "TimeoutError")) {
+    return new WorkshopError("unavailable", `${fallback}. The request timed out.`);
   }
   return new WorkshopError("unknown", error instanceof Error ? error.message : fallback);
 };
@@ -150,7 +157,7 @@ export class WorkshopClient {
         .getList(options.page ?? 1, options.perPage ?? 24, {
           filter: filters.join(" && "),
           sort: options.sort === "newest" ? "-created" : "-score,-created",
-          signal: options.signal,
+          signal: workshopRequestSignal(options.signal),
         });
       return { ...result, items: result.items.map((item) => workshopSubmissionSummarySchema.parse(item)) };
     } catch (error) {
@@ -161,7 +168,7 @@ export class WorkshopClient {
   async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
     try {
       return workshopSubmissionDetailSchema.parse(
-        await this.pocketBase.collection("submissions").getOne(id, { signal }),
+        await this.pocketBase.collection("submissions").getOne(id, { signal: workshopRequestSignal(signal) }),
       );
     } catch (error) {
       throw asWorkshopError(error, "Submission not found");

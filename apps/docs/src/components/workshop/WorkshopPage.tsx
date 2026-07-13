@@ -8,14 +8,16 @@ import {
   IconCopy,
   IconDownload,
   IconFlag,
+  IconHeart,
+  IconPackage,
   IconSearch,
+  IconSparkles,
   IconUpload,
 } from "@tabler/icons-react";
 
 import {
   MAX_CONTENT_LENGTH,
   MAX_SCREENSHOTS,
-  WORKSHOP_API_URL,
   WorkshopClient,
   type WorkshopSubmissionDetail,
   type WorkshopSubmissionInput,
@@ -27,11 +29,12 @@ import {
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { WorkshopQueryProvider } from "./WorkshopQueryProvider";
+import { WorkshopDialog, WorkshopServiceState } from "./WorkshopUi";
 import styles from "./workshop.module.css";
 
 const useWorkshop = () => {
   const { siteConfig } = useDocusaurusContext();
-  const apiUrl = (siteConfig.customFields?.workshopApiUrl as string | undefined) ?? WORKSHOP_API_URL;
+  const apiUrl = (siteConfig.customFields?.workshopApiUrl as string | undefined) || window.location.origin;
   return useMemo(() => new WorkshopClient(apiUrl), [apiUrl]);
 };
 
@@ -66,6 +69,12 @@ function WorkshopAppContent() {
   const [mine, setMine] = useState(false);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const signInMutation = useMutation({
+    mutationKey: ["workshop", "auth", "sign-in"],
+    mutationFn: () => client.signInWithGitHub(),
+    onSuccess: async () => queryClient.invalidateQueries({ queryKey: ["workshop"] }),
+    onError: (caught) => setError(caught instanceof Error ? caught.message : "Sign-in failed"),
+  });
 
   useEffect(() => client.subscribeToAuth(setUser), [client]);
   useEffect(() => {
@@ -92,21 +101,24 @@ function WorkshopAppContent() {
   const items = listQuery.data?.items ?? [];
   const totalPages = listQuery.data?.totalPages ?? 1;
 
-  const signIn = async () => {
-    try {
-      await client.signInWithGitHub();
-      await queryClient.invalidateQueries({ queryKey: ["workshop"] });
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Sign-in failed");
-    }
-  };
-
   return (
     <main className={styles.page}>
       <header className={styles.hero}>
         <div>
+          <span className={styles.eyebrow}>Made by the Homarr community</span>
           <h1>Workshop</h1>
-          <p>Community widgets and CSS themes, ready to inspect and use in Homarr.</p>
+          <p>Discover useful creations, inspect every line, then bring the ones you trust into Homarr.</p>
+          <ul className={styles.heroPromises} aria-label="Workshop principles">
+            <li>
+              <IconSparkles size={16} /> Community-made
+            </li>
+            <li>
+              <IconPackage size={16} /> Ready to export
+            </li>
+            <li>
+              <IconHeart size={16} /> Ranked by members
+            </li>
+          </ul>
         </div>
         <div className={styles.accountActions}>
           {user ? (
@@ -124,8 +136,12 @@ function WorkshopAppContent() {
               </button>
             </>
           ) : (
-            <button className="button button--primary" onClick={() => void signIn()}>
-              <IconBrandGithub size={18} /> Sign in with GitHub
+            <button
+              className="button button--primary"
+              disabled={signInMutation.isPending}
+              onClick={() => signInMutation.mutate()}
+            >
+              <IconBrandGithub size={18} /> {signInMutation.isPending ? "Connecting…" : "Sign in with GitHub"}
             </button>
           )}
         </div>
@@ -194,14 +210,11 @@ function WorkshopAppContent() {
       </div>
 
       {(error || listQuery.isError || listQuery.fetchStatus === "paused") && (
-        <div className={styles.error} role="alert">
-          <strong>{items.length ? "Showing saved Workshop results." : "Workshop is unavailable."}</strong>{" "}
-          {error ||
-            (items.length
-              ? "Some details and actions may be unavailable until the service reconnects."
-              : "Homarr and the documentation remain available while the community service is offline.")}{" "}
-          <button onClick={() => void listQuery.refetch()}>Try again</button>
-        </div>
+        <WorkshopServiceState
+          cached={items.length > 0}
+          message={error || undefined}
+          onRetry={() => void listQuery.refetch()}
+        />
       )}
       {listQuery.isPending ? (
         <WorkshopSkeleton />
@@ -213,8 +226,20 @@ function WorkshopAppContent() {
         </div>
       ) : listQuery.isError || listQuery.fetchStatus === "paused" ? null : (
         <section className={styles.empty}>
+          <IconSearch size={32} aria-hidden />
           <h2>No creations found</h2>
-          <p>Adjust the filters, or share the first creation in this category.</p>
+          <p>Try a broader search or clear the filters to explore everything the community has shared.</p>
+          <button
+            className="button button--secondary button--sm"
+            onClick={() => {
+              setSearch("");
+              setType("all");
+              setSort("top");
+              setPage(1);
+            }}
+          >
+            Clear filters
+          </button>
         </section>
       )}
 
@@ -265,7 +290,9 @@ function WorkshopCard({ client, item }: { client: WorkshopClient; item: Workshop
           </span>
         </div>
         <h2>
-          <Link to={`/workshop/${item.id}`}>{item.title}</Link>
+          <Link className={styles.cardLink} to={`/workshop/${item.id}`}>
+            {item.title}
+          </Link>
         </h2>
         <p>{item.description || "No description provided."}</p>
         <small>
@@ -463,51 +490,49 @@ function ModerationRemovalForm({
   onRemoved: () => void;
 }) {
   const [reason, setReason] = useState("");
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
+  const removeMutation = useMutation({
+    mutationKey: ["workshop", "moderation", "remove", submission.id],
+    mutationFn: () => client.removeSubmission(submission.id, reason),
+    onSuccess: onRemoved,
+  });
   return (
-    <div className={styles.overlay}>
-      <dialog className={styles.dialog} open aria-labelledby="remove-submission-title">
-        <h2 id="remove-submission-title">Remove {submission.title}</h2>
-        <p>
-          This permanently deletes the submission, files, votes, and reports. A metadata snapshot is retained in
-          moderation history.
-        </p>
-        <form
-          onSubmit={async (event) => {
-            event.preventDefault();
-            setPending(true);
-            try {
-              await client.removeSubmission(submission.id, reason);
-              onRemoved();
-            } catch (caught) {
-              setError(caught instanceof Error ? caught.message : "Removal failed");
-              setPending(false);
-            }
-          }}
-        >
-          <label>
-            Reason
-            <textarea
-              required
-              minLength={3}
-              maxLength={1000}
-              value={reason}
-              onChange={(event) => setReason(event.target.value)}
-            />
-          </label>
-          {error && <p className={styles.error}>{error}</p>}
-          <div className={styles.formActions}>
-            <button type="button" className="button button--secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button disabled={pending} className="button button--danger">
-              {pending ? "Removing…" : "Remove permanently"}
-            </button>
-          </div>
-        </form>
-      </dialog>
-    </div>
+    <WorkshopDialog titleId="remove-submission-title" onClose={onClose}>
+      <h2 id="remove-submission-title">Remove {submission.title}</h2>
+      <p>
+        This permanently deletes the submission, files, votes, and reports. A metadata snapshot is retained in
+        moderation history.
+      </p>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          removeMutation.mutate();
+        }}
+      >
+        <label>
+          Reason
+          <textarea
+            required
+            minLength={3}
+            maxLength={1000}
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+          />
+        </label>
+        {removeMutation.error && (
+          <p className={styles.error} role="alert">
+            {removeMutation.error instanceof Error ? removeMutation.error.message : "Removal failed"}
+          </p>
+        )}
+        <div className={styles.formActions}>
+          <button type="button" className="button button--secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button disabled={removeMutation.isPending} className="button button--danger">
+            {removeMutation.isPending ? "Removing…" : "Remove permanently"}
+          </button>
+        </div>
+      </form>
+    </WorkshopDialog>
   );
 }
 
@@ -529,125 +554,112 @@ function SubmissionForm({
   const [changelog, setChangelog] = useState(existing?.changelog ?? "");
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [removedScreenshots, setRemovedScreenshots] = useState<string[]>([]);
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
   const retainedScreenshotCount = (existing?.screenshots.length ?? 0) - removedScreenshots.length;
   const remainingScreenshotSlots = Math.max(0, MAX_SCREENSHOTS - retainedScreenshotCount);
   useEffect(() => {
     setScreenshots((current) => current.slice(0, remainingScreenshotSlots));
   }, [remainingScreenshotSlots]);
-  const submit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setPending(true);
-    setError("");
-    const input: WorkshopSubmissionInput = { type, title, description, content, changelog };
-    try {
+  const saveMutation = useMutation({
+    mutationKey: ["workshop", existing ? "update" : "create", existing?.id],
+    mutationFn: async (input: WorkshopSubmissionInput) => {
       if (!client.currentUser) await client.signInWithGitHub();
       if (existing) {
-        await client.update(existing.id, input, screenshots, removedScreenshots);
-      } else {
-        await client.create(input, screenshots);
+        return client.update(existing.id, input, screenshots, removedScreenshots);
       }
-      await onSaved();
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not save submission");
-    } finally {
-      setPending(false);
-    }
-  };
+      return client.create(input, screenshots);
+    },
+    onSuccess: onSaved,
+  });
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <dialog className={styles.dialog} open aria-labelledby="submission-form-title">
-        <h2 id="submission-form-title">{existing ? "Update creation" : "Share with the community"}</h2>
-        <form onSubmit={(event) => void submit(event)}>
-          <label>
-            Type
-            <select
-              disabled={Boolean(existing)}
-              value={type}
-              onChange={(event) => setType(event.target.value as WorkshopSubmissionType)}
-            >
-              <option value="widget">Custom widget</option>
-              <option value="css">CSS theme</option>
-            </select>
-          </label>
-          <label>
-            Title
+    <WorkshopDialog titleId="submission-form-title" onClose={onClose}>
+      <h2 id="submission-form-title">{existing ? "Update creation" : "Share with the community"}</h2>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          saveMutation.mutate({ type, title, description, content, changelog });
+        }}
+      >
+        <label>
+          Type
+          <select
+            disabled={Boolean(existing)}
+            value={type}
+            onChange={(event) => setType(event.target.value as WorkshopSubmissionType)}
+          >
+            <option value="widget">Custom widget</option>
+            <option value="css">CSS theme</option>
+          </select>
+        </label>
+        <label>
+          Title
+          <input
+            required
+            minLength={3}
+            maxLength={100}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </label>
+        <label>
+          Description
+          <textarea maxLength={2000} value={description} onChange={(event) => setDescription(event.target.value)} />
+        </label>
+        <label>
+          {type === "widget" ? "Widget JSON" : "CSS source"}
+          <textarea
+            className={styles.editor}
+            required
+            maxLength={MAX_CONTENT_LENGTH}
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+          />
+        </label>
+        <label>
+          Changelog
+          <textarea maxLength={2000} value={changelog} onChange={(event) => setChangelog(event.target.value)} />
+        </label>
+        <label>
+          Screenshots (PNG, JPG, or WebP, {remainingScreenshotSlots} available)
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            multiple
+            onChange={(event) =>
+              setScreenshots(Array.from(event.target.files ?? []).slice(0, remainingScreenshotSlots))
+            }
+          />
+        </label>
+        {existing?.screenshots.map((screenshot) => (
+          <label className={styles.checkbox} key={screenshot}>
             <input
-              required
-              minLength={3}
-              maxLength={100}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
-          </label>
-          <label>
-            Description
-            <textarea maxLength={2000} value={description} onChange={(event) => setDescription(event.target.value)} />
-          </label>
-          <label>
-            {type === "widget" ? "Widget JSON" : "CSS source"}
-            <textarea
-              className={styles.editor}
-              required
-              maxLength={MAX_CONTENT_LENGTH}
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-            />
-          </label>
-          <label>
-            Changelog
-            <textarea maxLength={2000} value={changelog} onChange={(event) => setChangelog(event.target.value)} />
-          </label>
-          <label>
-            Screenshots (PNG, JPG, or WebP, {remainingScreenshotSlots} available)
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              multiple
+              type="checkbox"
+              checked={removedScreenshots.includes(screenshot)}
               onChange={(event) =>
-                setScreenshots(Array.from(event.target.files ?? []).slice(0, remainingScreenshotSlots))
+                setRemovedScreenshots((current) =>
+                  event.target.checked
+                    ? [...current, screenshot]
+                    : current.filter((filename) => filename !== screenshot),
+                )
               }
             />
+            Remove existing screenshot {screenshot}
           </label>
-          {existing?.screenshots.map((screenshot) => (
-            <label className={styles.checkbox} key={screenshot}>
-              <input
-                type="checkbox"
-                checked={removedScreenshots.includes(screenshot)}
-                onChange={(event) =>
-                  setRemovedScreenshots((current) =>
-                    event.target.checked
-                      ? [...current, screenshot]
-                      : current.filter((filename) => filename !== screenshot),
-                  )
-                }
-              />
-              Remove existing screenshot {screenshot}
-            </label>
-          ))}
-          {error && (
-            <p className={styles.error} role="alert">
-              {error}
-            </p>
-          )}
-          <div className={styles.formActions}>
-            <button type="button" className="button button--secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button disabled={pending} className="button button--primary">
-              {pending ? "Saving…" : existing ? "Save update" : "Publish creation"}
-            </button>
-          </div>
-        </form>
-      </dialog>
-    </div>
+        ))}
+        {saveMutation.error && (
+          <p className={styles.error} role="alert">
+            {saveMutation.error instanceof Error ? saveMutation.error.message : "Could not save submission"}
+          </p>
+        )}
+        <div className={styles.formActions}>
+          <button type="button" className="button button--secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button disabled={saveMutation.isPending} className="button button--primary">
+            {saveMutation.isPending ? "Saving…" : existing ? "Save update" : "Publish creation"}
+          </button>
+        </div>
+      </form>
+    </WorkshopDialog>
   );
 }
 
@@ -662,53 +674,58 @@ function ReportForm({
 }) {
   const [category, setCategory] = useState<"malicious" | "spam" | "copyright" | "inappropriate" | "other">("malicious");
   const [explanation, setExplanation] = useState("");
-  const [error, setError] = useState("");
+  const reportMutation = useMutation({
+    mutationKey: ["workshop", "report", submissionId],
+    mutationFn: async () => {
+      if (!client.currentUser) await client.signInWithGitHub();
+      return client.report(submissionId, category, explanation);
+    },
+    onSuccess: onClose,
+  });
   return (
-    <div className={styles.overlay}>
-      <dialog className={styles.dialog} open aria-labelledby="report-title">
-        <h2 id="report-title">Report submission</h2>
-        <form
-          onSubmit={async (event) => {
-            event.preventDefault();
-            try {
-              if (!client.currentUser) await client.signInWithGitHub();
-              await client.report(submissionId, category, explanation);
-              onClose();
-            } catch (caught) {
-              setError(caught instanceof Error ? caught.message : "Could not send report");
-            }
-          }}
-        >
-          <label>
-            Reason
-            <select value={category} onChange={(event) => setCategory(event.target.value as typeof category)}>
-              <option value="malicious">Malicious</option>
-              <option value="spam">Spam</option>
-              <option value="copyright">Copyright</option>
-              <option value="inappropriate">Inappropriate</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-          <label>
-            Details
-            <textarea
-              required
-              minLength={3}
-              maxLength={1000}
-              value={explanation}
-              onChange={(event) => setExplanation(event.target.value)}
-            />
-          </label>
-          {error && <p className={styles.error}>{error}</p>}
-          <div className={styles.formActions}>
-            <button type="button" className="button button--secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button className="button button--primary">Submit report</button>
-          </div>
-        </form>
-      </dialog>
-    </div>
+    <WorkshopDialog titleId="report-title" onClose={onClose}>
+      <h2 id="report-title">Report submission</h2>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          reportMutation.mutate();
+        }}
+      >
+        <label>
+          Reason
+          <select value={category} onChange={(event) => setCategory(event.target.value as typeof category)}>
+            <option value="malicious">Malicious</option>
+            <option value="spam">Spam</option>
+            <option value="copyright">Copyright</option>
+            <option value="inappropriate">Inappropriate</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>
+          Details
+          <textarea
+            required
+            minLength={3}
+            maxLength={1000}
+            value={explanation}
+            onChange={(event) => setExplanation(event.target.value)}
+          />
+        </label>
+        {reportMutation.error && (
+          <p className={styles.error} role="alert">
+            {reportMutation.error instanceof Error ? reportMutation.error.message : "Could not send report"}
+          </p>
+        )}
+        <div className={styles.formActions}>
+          <button type="button" className="button button--secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button disabled={reportMutation.isPending} className="button button--primary">
+            {reportMutation.isPending ? "Sending…" : "Submit report"}
+          </button>
+        </div>
+      </form>
+    </WorkshopDialog>
   );
 }
 

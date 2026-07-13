@@ -12,6 +12,7 @@ import {
   Group,
   Image,
   Modal,
+  Paper,
   Pagination,
   Select,
   SimpleGrid,
@@ -25,6 +26,7 @@ import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import {
   IconAlertTriangle,
   IconBrandGithub,
+  IconBuildingStore,
   IconDownload,
   IconExternalLink,
   IconSearch,
@@ -113,10 +115,34 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
 
   return (
     <Stack gap="lg">
+      <Paper withBorder p="lg" radius="md">
+        <Group justify="space-between" align="flex-start" wrap="wrap">
+          <Group align="flex-start" wrap="nowrap">
+            <Box
+              p="sm"
+              bg="var(--mantine-color-default-hover)"
+              style={{ borderRadius: "var(--mantine-radius-md)", lineHeight: 0 }}
+            >
+              <IconBuildingStore size={24} aria-hidden />
+            </Box>
+            <Box>
+              <Text fw={700} size="lg">
+                {t("intro.title")}
+              </Text>
+              <Text c="dimmed" size="sm" maw={620}>
+                {t("intro.description")}
+              </Text>
+            </Box>
+          </Group>
+          <Badge color={online ? "green" : "yellow"} variant="light">
+            {online ? t("status.connected") : t("status.offline")}
+          </Badge>
+        </Group>
+      </Paper>
       <Alert icon={<IconAlertTriangle size={18} />} color="yellow" title={t("safety.title")}>
         {t("safety.description")}
       </Alert>
-      <Group align="end">
+      <SimpleGrid cols={{ base: 1, sm: lockedType ? 2 : 3 }} spacing="sm">
         <TextInput
           label={t("search.label")}
           placeholder={t("search.placeholder")}
@@ -126,7 +152,6 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
             setSearch(event.currentTarget.value);
             setPage(1);
           }}
-          style={{ flex: 1 }}
         />
         <Select
           label={t("filter.type")}
@@ -154,7 +179,7 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
             { value: "newest", label: t("filter.newest") },
           ]}
         />
-      </Group>
+      </SimpleGrid>
       {(query.isError || query.fetchStatus === "paused") && (
         <Alert
           icon={<IconWifiOff size={18} />}
@@ -169,11 +194,17 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
                   ? t("offline.unavailableDescription")
                   : t("offline.description")}
             </Text>
-            <Group>
+            <Group wrap="wrap">
               <Button size="xs" variant="light" onClick={() => void query.refetch()}>
                 {t("action.retry")}
               </Button>
-              <Button size="xs" variant="subtle" component="a" href={WORKSHOP_WEB_URL} target="_blank">
+              <Button
+                size="xs"
+                variant="subtle"
+                component="a"
+                href="https://homarr.dev/docs/management/workshop"
+                target="_blank"
+              >
                 {t("action.website")}
               </Button>
             </Group>
@@ -269,6 +300,18 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
               </Text>
             </Group>
             <Text>{selected.description}</Text>
+            {selected.screenshots.length > 0 && (
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                {selected.screenshots.map((screenshot, index) => (
+                  <Image
+                    key={screenshot}
+                    src={client.fileUrl(selected.id, screenshot, "960x640")}
+                    radius="sm"
+                    alt={t("screenshotAlt", { title: selected.title, number: index + 1 })}
+                  />
+                ))}
+              </SimpleGrid>
+            )}
             <Alert icon={<IconAlertTriangle size={18} />} color="yellow">
               {t("safety.inspect")}
             </Alert>

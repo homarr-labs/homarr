@@ -21,6 +21,8 @@ In Homarr, open **Management → Workshop** to browse, search, filter, inspect, 
 
 Recently loaded listings and details are saved in the browser for up to 24 hours. If Workshop is temporarily unreachable, Homarr shows the saved catalog with a clear offline notice; browsing the rest of Homarr is unaffected. Publishing, voting, reporting, and installation remain unavailable until the connection returns.
 
+The public site also caches pages you have visited. If your network drops, a previously opened Workshop or documentation page can still load while the saved catalog remains on the device. Use **Check again** after connectivity returns.
+
 - Widgets are validated against `homarr-custom-widget-v2` before installation. API keys and other secrets are not included and must be configured locally.
 - CSS is loaded into the board editor for review. It is not saved until you choose **Save changes**.
 - The public website never executes submitted widget templates or CSS.
@@ -39,4 +41,4 @@ Signed-in members can vote to help useful creations rank higher. Report maliciou
 
 Workshop accounts use GitHub OAuth and are separate from users in a self-hosted Homarr instance. Workshop moderators can remove submissions, prevent an account from publishing, disable an account, and resolve reports. These actions require a reason and are recorded.
 
-The Workshop is a central service operated by Homarr at `workshop.homarr.dev`. Running the backend locally is supported for contributors developing or testing this feature, not as a private production marketplace.
+The Workshop is a central service operated by Homarr at `homarr.dev`. The documentation website and Workshop API ship in one image and use the same origin. Running it locally is supported for contributors developing or testing this feature, not as a private production marketplace.

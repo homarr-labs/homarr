@@ -4461,6 +4461,15 @@
   "workshop": {
     "title": "Workshop",
     "loading": "Loading submission",
+    "intro": {
+      "title": "Community Workshop",
+      "description": "Discover widgets and CSS themes made by other Homarr users. Inspect the source before bringing anything into this instance."
+    },
+    "status": {
+      "connected": "Connected",
+      "offline": "Saved catalog"
+    },
+    "screenshotAlt": "{title} screenshot {number}",
     "by": "By {name} · revision {revision}",
     "type": {
       "widget": "Widget",

@@ -2738,7 +2738,7 @@ importers:
         version: 0.28.0
       typescript:
         specifier: 'catalog:'
-        version: 6.0.3
+        version: 7.0.2
 
   tooling/github: {}
 

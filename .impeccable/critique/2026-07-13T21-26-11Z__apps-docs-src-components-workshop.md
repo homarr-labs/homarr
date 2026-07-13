@@ -1,3 +1,10 @@
+---
+score: 9
+p0: 0
+p1: 1
+timestamp: 2026-07-13T21-26-11Z
+slug: apps-docs-src-components-workshop
+---
 # Workshop V2 audit
 
 ## Purpose
@@ -14,7 +21,7 @@ Workshop behavior is defined once: one typed contract, one client, versioned Poc
 
 ## Baseline audit
 
-The abandoned prototype is preserved at `origin/feat/widget-store-prototype-backup` (`89260b875`). This rewrite is rebased onto `dev` commit `93325642a`.
+The abandoned prototype is preserved at `origin/feat/widget-store-prototype-backup` (`89260b875`). This rewrite starts at `dev` commit `ba7718bde`.
 
 | Area          | Severity | Baseline finding                                                                                                                    | V2 resolution                                                                                                      |
 | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -66,7 +73,7 @@ The baseline has three P0, seven P1, and one P2 findings. The rewrite closes eve
 
 | Gate                        | Result  | Evidence                                                                                                                                                                                          |
 | --------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Branch ancestry             | Pass    | Rebuilt from `dev` at `93325642a`; prototype preserved at `origin/feat/widget-store-prototype-backup`.                                                                                            |
+| Branch ancestry             | Pass    | Rebuilt from `dev` at `ba7718bde`; prototype preserved at `origin/feat/widget-store-prototype-backup`.                                                                                            |
 | Contract                    | Pass    | Five Vitest cases cover widget/CSS fixtures, filenames, limits, screenshot validation, and round trips.                                                                                           |
 | Backend                     | Pass    | Disposable PocketBase integration matrix covers roles, account states, ownership forgery, schema rejection, duplicate votes, private reports, escalation, deletion cascades, and audit snapshots. |
 | Backend operations          | Pass    | PocketBase 0.39.6 runs unprivileged and builds with checksum verification; clean boot and a cloned legacy SQLite volume both migrate and become healthy.                                          |
@@ -74,7 +81,7 @@ The baseline has three P0, seven P1, and one P2 findings. The rewrite closes eve
 | Lint                        | Pass    | Scoped lint exits clean; remaining warnings predate the rewrite. Workshop has zero warnings.                                                                                                      |
 | Format                      | Pass    | Every changed supported file passes `oxfmt --check`; repository-wide Docs formatting still reports pre-existing drift.                                                                            |
 | Production builds           | Pass    | Docusaurus and Next.js production builds pass under Node 24.18.0.                                                                                                                                 |
-| Browser smoke               | Pass    | Desktop/mobile discovery, disconnected API recovery, and a first-visit online-to-offline reload render without uncaught errors.                                                                   |
+| Browser smoke               | Pass    | Desktop/mobile discovery and the disconnected API state render without uncaught errors; cached data remains readable and retry is explicit.                                                       |
 | Automated cross-surface E2E | Open P1 | Authenticated website-to-Homarr publish/install and moderator flows still need browser automation.                                                                                                |
 
 Final implementation scores (10 is best): security 9, architecture/DX 9, moderation 9, performance 9, responsive UI 9, theming 9, accessibility 8, automated testing 7. Accessibility remains below 9 until authenticated dialogs and destructive flows receive a full keyboard/screen-reader pass.
