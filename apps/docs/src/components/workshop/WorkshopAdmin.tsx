@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   WORKSHOP_API_URL,
   WorkshopClient,
   type WorkshopAccountState,
-  type WorkshopModerationAction,
-  type WorkshopReport,
   type WorkshopRole,
   type WorkshopUser,
 } from "@homarr/workshop";
 
+import { WorkshopQueryProvider } from "./WorkshopQueryProvider";
 import styles from "./workshop.module.css";
 
 type PendingAction =
@@ -19,50 +19,77 @@ type PendingAction =
   | { kind: "role"; id: string; role: WorkshopRole };
 
 export function WorkshopAdmin() {
+  return (
+    <WorkshopQueryProvider>
+      <WorkshopAdminContent />
+    </WorkshopQueryProvider>
+  );
+}
+
+function WorkshopAdminContent() {
   const { siteConfig } = useDocusaurusContext();
   const client = useMemo(
     () => new WorkshopClient((siteConfig.customFields?.workshopApiUrl as string | undefined) ?? WORKSHOP_API_URL),
     [siteConfig],
   );
   const [user, setUser] = useState<WorkshopUser | null>(null);
-  const [reports, setReports] = useState<WorkshopReport[]>([]);
-  const [users, setUsers] = useState<WorkshopUser[]>([]);
-  const [actions, setActions] = useState<WorkshopModerationAction[]>([]);
   const [pending, setPending] = useState<PendingAction | null>(null);
   const [error, setError] = useState("");
+  const [authLoading, setAuthLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    const current = await client.refreshAuth();
-    setUser(current);
-    if (!current || (current.role !== "moderator" && current.role !== "admin")) return;
-    try {
-      const [nextReports, nextUsers, nextActions] = await Promise.all([
+  const canModerate = user?.role === "moderator" || user?.role === "admin";
+  const moderationQuery = useQuery({
+    queryKey: ["workshop", "moderation"],
+    queryFn: async () => {
+      const [reports, users, actions] = await Promise.all([
         client.listReports(),
         client.listUsers(),
         client.listModerationActions(),
       ]);
-      setReports(nextReports);
-      setUsers(nextUsers);
-      setActions(nextActions);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not load moderation data");
-    }
-  }, [client]);
+      return { reports, users, actions };
+    },
+    enabled: canModerate,
+  });
+  const reports = moderationQuery.data?.reports ?? [];
+  const users = moderationQuery.data?.users ?? [];
+  const actions = moderationQuery.data?.actions ?? [];
+
   useEffect(() => client.subscribeToAuth(setUser), [client]);
   useEffect(() => {
-    void load();
-  }, [load]);
+    void client
+      .refreshAuth()
+      .then(setUser)
+      .catch((caught: unknown) =>
+        setError(caught instanceof Error ? caught.message : "Workshop authentication is unavailable"),
+      )
+      .finally(() => setAuthLoading(false));
+  }, [client]);
 
+  if (authLoading)
+    return (
+      <main className={styles.page}>
+        <WorkshopAdminSkeleton />
+      </main>
+    );
   if (!user)
     return (
       <main className={styles.page}>
         <h1>Workshop moderation</h1>
         <p>Sign in with a promoted GitHub account to continue.</p>
+        {error && (
+          <div className={styles.error} role="alert">
+            {error}
+          </div>
+        )}
         <button
           className="button button--primary"
           onClick={async () => {
-            await client.signInWithGitHub();
-            await load();
+            setError("");
+            try {
+              setUser(await client.signInWithGitHub());
+            } catch (caught) {
+              setError(caught instanceof Error ? caught.message : "GitHub sign-in is unavailable");
+            }
           }}
         >
           Sign in with GitHub
@@ -87,9 +114,10 @@ export function WorkshopAdmin() {
           <p>Review reports and apply the smallest action needed. Every action requires a reason and is recorded.</p>
         </div>
       </header>
-      {error && (
+      {(error || moderationQuery.isError) && (
         <div className={styles.error} role="alert">
-          {error}
+          {error || "Moderation data is unavailable. Try again when Workshop reconnects."}{" "}
+          {moderationQuery.isError && <button onClick={() => void moderationQuery.refetch()}>Try again</button>}
         </div>
       )}
       <section className={styles.adminSection}>
@@ -235,11 +263,20 @@ export function WorkshopAdmin() {
             else if (pending.kind === "state") await client.updateAccountState(pending.id, pending.state, reason);
             else await client.updateRole(pending.id, pending.role, reason);
             setPending(null);
-            await load();
+            await moderationQuery.refetch();
           }}
         />
       )}
     </main>
+  );
+}
+
+function WorkshopAdminSkeleton() {
+  return (
+    <div aria-label="Loading Workshop moderation">
+      <h1>Workshop moderation</h1>
+      <p>Loading account and moderation data…</p>
+    </div>
   );
 }
 

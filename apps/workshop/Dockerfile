@@ -19,13 +19,13 @@ RUN case "${TARGETARCH}" in \
 
 FROM alpine:3.22
 
-RUN apk add --no-cache ca-certificates su-exec tzdata && addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
+RUN apk add --no-cache ca-certificates tzdata && addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY --from=download /out/pocketbase /usr/local/bin/pocketbase
 COPY entrypoint.sh /usr/local/bin/workshop-entrypoint
 
 RUN chmod +x /usr/local/bin/workshop-entrypoint && mkdir -p /pb_data /pb_hooks /pb_migrations && chown -R pocketbase:pocketbase /pb_data /pb_hooks /pb_migrations
 
-USER root
+USER pocketbase
 EXPOSE 8090
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider http://127.0.0.1:8090/api/health || exit 1
 ENTRYPOINT ["workshop-entrypoint"]

@@ -9,13 +9,13 @@ migrate(
       users = new Collection({
         type: "auth",
         name: "users",
-        listRule: "@request.auth.role = 'moderator' || @request.auth.role = 'admin'",
-        viewRule: "id = @request.auth.id || @request.auth.role = 'moderator' || @request.auth.role = 'admin'",
-        updateRule: "id = @request.auth.id && @request.auth.state != 'disabled'",
-        deleteRule: null,
-        passwordAuth: { enabled: false },
       });
     }
+    users.listRule = "@request.auth.role = 'moderator' || @request.auth.role = 'admin'";
+    users.viewRule = "id = @request.auth.id || @request.auth.role = 'moderator' || @request.auth.role = 'admin'";
+    users.updateRule = "id = @request.auth.id && @request.auth.state != 'disabled'";
+    users.deleteRule = null;
+    users.passwordAuth = { enabled: false };
     // PocketBase creates a default users auth collection on first boot, so
     // Workshop fields must be added to the existing collection explicitly.
     users.fields.add(
@@ -216,14 +216,22 @@ migrate(
     app.save(listings);
 
     const settings = app.settings();
-    settings.rateLimits.enabled = true;
-    settings.rateLimits.rules = [
-      { label: "*:auth", audience: "", duration: 60, maxRequests: 10 },
+    const workshopRateLimitLabels = [
+      "submissions:create",
+      "votes:create",
+      "reports:create",
+      "/api/workshop/moderation/",
+    ];
+    const workshopRateLimits = [
       { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
       { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
       { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
       { label: "/api/workshop/moderation/", audience: "@auth", duration: 60, maxRequests: 30 },
-      { label: "/api/", audience: "", duration: 10, maxRequests: 300 },
+    ];
+    settings.rateLimits.enabled = true;
+    settings.rateLimits.rules = [
+      ...settings.rateLimits.rules.filter((rule) => !workshopRateLimitLabels.includes(rule.label)),
+      ...workshopRateLimits,
     ];
     settings.logs.maxDays = 30;
     settings.logs.logAuthId = true;
@@ -241,8 +249,15 @@ migrate(
       }
     }
     const settings = app.settings();
-    settings.rateLimits.enabled = false;
-    settings.rateLimits.rules = [];
+    const workshopRateLimitLabels = [
+      "submissions:create",
+      "votes:create",
+      "reports:create",
+      "/api/workshop/moderation/",
+    ];
+    settings.rateLimits.rules = settings.rateLimits.rules.filter(
+      (rule) => !workshopRateLimitLabels.includes(rule.label),
+    );
     app.save(settings);
   },
 );

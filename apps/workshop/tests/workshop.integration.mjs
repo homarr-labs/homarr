@@ -11,6 +11,7 @@ const root = new PocketBase(baseUrl);
 await root.collection("_superusers").authWithPassword(superuserEmail, superuserPassword);
 const authMethods = await root.collection("users").listAuthMethods();
 assert.equal(authMethods.oauth2.enabled, true, "GitHub OAuth must be configured from the runtime environment");
+assert.equal(authMethods.password.enabled, false, "password authentication must remain disabled");
 assert.deepEqual(
   authMethods.oauth2.providers.map((provider) => provider.name),
   ["github"],
@@ -48,6 +49,8 @@ const disabled = await root.collection("users").impersonate(disabledRecord.id, 3
 const moderator = await root.collection("users").impersonate(moderatorRecord.id, 3600);
 const admin = await root.collection("users").impersonate(adminRecord.id, 3600);
 
+assert.equal((await member.collection("users").getList()).totalItems, 0, "members must not list Workshop accounts");
+
 const forgedMember = await member.collection("users").update(memberRecord.id, {
   role: "admin",
   state: "posting_banned",
@@ -63,11 +66,20 @@ await admin.send(`/api/workshop/moderation/users/${disabledRecord.id}/state`, {
 });
 
 const submission = await member.collection("submissions").create({
-  type: "css",
-  title: "Integration theme",
+  type: "widget",
+  title: "Integration widget",
   description: "A backend integration fixture",
   schemaVersion: "forged-version",
-  content: ":root { --homarr-test: #fff; }",
+  content: JSON.stringify({
+    $schema: "homarr-custom-widget-v2",
+    name: "Integration widget",
+    url: "https://example.com/status",
+    authType: "none",
+    method: "GET",
+    displayType: "raw",
+    displayConfig: { type: "raw" },
+    integrationTestPadding: "x".repeat(150_000),
+  }),
   author: secondMemberRecord.id,
   authorName: "Forged",
   revision: 99,
@@ -75,7 +87,7 @@ const submission = await member.collection("submissions").create({
 assert.equal(submission.author, memberRecord.id, "server must enforce ownership");
 assert.equal(submission.authorName, "Member", "server must snapshot the authenticated author name");
 assert.equal(submission.revision, 1, "server must own the initial revision");
-assert.equal(submission.schemaVersion, "homarr-custom-css-v1", "server must own schemaVersion");
+assert.equal(submission.schemaVersion, "homarr-custom-widget-v2", "server must own schemaVersion");
 
 await expectStatus(
   () => banned.collection("submissions").create({ type: "css", title: "Blocked theme", content: "body {}" }),
@@ -161,7 +173,9 @@ assert.deepEqual(
   actions.map((action) => action.action),
   ["set_account_state", "set_role", "resolve_report", "remove_submission"],
 );
-assert(actions.at(-1)?.snapshot.includes("Integration theme"), "removal audit must retain a target snapshot");
+assert(actions.at(-1)?.snapshot.includes("Integration widget"), "removal audit must retain a target snapshot");
+assert(!actions.at(-1)?.snapshot.includes("integrationTestPadding"), "removal audit must omit large source content");
+assert(actions.at(-1)?.snapshot.includes('"contentLength"'), "removal audit must retain the source length");
 
 const anonymous = new PocketBase(baseUrl);
 const listings = await anonymous.collection("workshop_listings").getList();

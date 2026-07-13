@@ -69,7 +69,12 @@ function validateSubmission(record) {
 }
 
 function snapshot(record) {
-  return JSON.stringify(record.publicExport());
+  const exported = record.publicExport();
+  if (typeof exported.content === "string") {
+    exported.contentLength = exported.content.length;
+    delete exported.content;
+  }
+  return JSON.stringify(exported);
 }
 
 function requireStaff(app, auth) {

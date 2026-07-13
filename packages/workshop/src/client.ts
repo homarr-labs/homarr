@@ -37,6 +37,7 @@ export interface WorkshopListOptions {
   sort?: "top" | "newest";
   search?: string;
   author?: string;
+  signal?: AbortSignal;
 }
 
 export interface WorkshopPage<T> {
@@ -70,6 +71,9 @@ const asWorkshopError = (error: unknown, fallback: string) => {
     const parsedCode = workshopErrorCodeSchema.safeParse(messageCode ?? error.data?.data?.code ?? error.data?.code);
     const code = parsedCode.success ? parsedCode.data : errorCodeForStatus(error.status);
     return new WorkshopError(code, message, error.status);
+  }
+  if (error instanceof TypeError) {
+    return new WorkshopError("unavailable", fallback);
   }
   return new WorkshopError("unknown", error instanceof Error ? error.message : fallback);
 };
@@ -146,6 +150,7 @@ export class WorkshopClient {
         .getList(options.page ?? 1, options.perPage ?? 24, {
           filter: filters.join(" && "),
           sort: options.sort === "newest" ? "-created" : "-score,-created",
+          signal: options.signal,
         });
       return { ...result, items: result.items.map((item) => workshopSubmissionSummarySchema.parse(item)) };
     } catch (error) {
@@ -153,9 +158,11 @@ export class WorkshopClient {
     }
   }
 
-  async get(id: string): Promise<WorkshopSubmissionDetail> {
+  async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
     try {
-      return workshopSubmissionDetailSchema.parse(await this.pocketBase.collection("submissions").getOne(id));
+      return workshopSubmissionDetailSchema.parse(
+        await this.pocketBase.collection("submissions").getOne(id, { signal }),
+      );
     } catch (error) {
       throw asWorkshopError(error, "Submission not found");
     }

@@ -14,7 +14,7 @@ services:
       PB_SUPERUSER_EMAIL: ${PB_SUPERUSER_EMAIL:-}
       PB_SUPERUSER_PASSWORD: ${PB_SUPERUSER_PASSWORD:-}
       PB_PUBLIC_URL: http://localhost:${PB_EXPOSE_PORT:-8090}
-      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-http://localhost:3003,http://127.0.0.1:3003}
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:3003,http://127.0.0.1:3003,http://localhost:7575,http://127.0.0.1:7575}
     ports:
       - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:8090"
     volumes:

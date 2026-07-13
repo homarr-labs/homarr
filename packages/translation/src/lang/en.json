@@ -896,6 +896,10 @@
         "search": "Search integrations",
         "noResults": {
           "title": "There are no integrations yet"
+        },
+        "outdated": {
+          "title": "Some integrations need a database update",
+          "description": "{count} outdated integrations were hidden to keep this page available. Restart Homarr to apply pending data migrations."
         }
       },
       "create": {
@@ -4484,8 +4488,18 @@
       "title": "No creations found",
       "description": "Adjust the filters or check back after the community has shared more."
     },
+    "offline": {
+      "title": "Workshop is offline",
+      "description": "You can keep using Homarr. Reconnect to browse or install community creations.",
+      "unavailableDescription": "Homarr could not reach Workshop. The rest of your instance is still available.",
+      "cachedTitle": "Showing saved Workshop results",
+      "cachedDescription": "These results were saved on this device. Some details and actions may be unavailable until Workshop reconnects.",
+      "actionUnavailable": "Reconnect before installing or applying this creation."
+    },
     "error": {
       "loadTitle": "Workshop could not load",
+      "detailTitle": "This creation is unavailable",
+      "detailDescription": "Its source is not saved on this device and Workshop could not be reached.",
       "publish": "The creation could not be published",
       "install": "The creation could not be used",
       "wrongType": "This creation does not match the requested type"
@@ -5715,6 +5729,9 @@
             "label": "Flow"
           }
         }
+      },
+      "workshop": {
+        "label": "Workshop"
       },
       "users": {
         "label": "Users",

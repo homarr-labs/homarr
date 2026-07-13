@@ -497,6 +497,9 @@ export const integrationDefs = {
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
+export const isIntegrationKind = (integration: string): integration is IntegrationKind =>
+  Object.hasOwn(integrationDefs, integration);
+
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;

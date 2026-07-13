@@ -149,7 +149,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           defaultTitle={widget.name}
           getContent={async () => JSON.stringify(await utils.customWidget.export.fetch({ id: widget.id }), null, 2)}
           renderTrigger={(open) => (
-            <Menu.Item onClick={open} leftSection={<IconShare3 {...iconProps} />}>
+            <Menu.Item closeMenuOnClick={false} onClick={open} leftSection={<IconShare3 {...iconProps} />}>
               {workshopT("action.share")}
             </Menu.Item>
           )}

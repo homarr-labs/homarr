@@ -179,8 +179,8 @@ export async function POST(req: Request) {
     }
 
     setTimeout(() => {
-      console.log("Database restored, restarting server...");
-      process.exit(0);
+      console.log("Database restored, restarting server and applying migrations...");
+      process.exit(101);
     }, 500);
 
     return NextResponse.json({ success: true, message: "Database restored. Server is restarting..." });

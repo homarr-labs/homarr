@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   ActionIcon,
   ActionIconGroup,
+  Alert,
   Anchor,
   Divider,
   Group,
@@ -18,14 +19,14 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
-import { IconPencil, IconPlugX } from "@tabler/icons-react";
+import { IconAlertTriangle, IconPencil, IconPlugX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
-import { getIntegrationName } from "@homarr/definitions";
+import { getIntegrationName, isIntegrationKind } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
@@ -87,11 +88,14 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
   const session = await auth();
   const hasFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
 
-  if (integrations.length === 0) {
+  const supportedIntegrations = integrations.filter((integration) => isIntegrationKind(integration.kind));
+  const unsupportedCount = integrations.length - supportedIntegrations.length;
+
+  if (supportedIntegrations.length === 0 && unsupportedCount === 0) {
     return <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />;
   }
 
-  const groupedIntegrations = integrations.reduce(
+  const groupedIntegrations = supportedIntegrations.reduce(
     (acc, integration) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[integration.kind]) {
@@ -108,88 +112,105 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
   const entries = objectEntries(groupedIntegrations);
 
   return (
-    <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
-      {entries.map(([kind, kindIntegrations], index) => (
-        <AccordionItem key={kind} value={kind} data-first={index === 0} data-last={index === entries.length - 1}>
-          <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
-            <Group>
-              <Text>{getIntegrationName(kind)}</Text>
-              <CountBadge count={kindIntegrations.length} />
-            </Group>
-          </AccordionControl>
-          <AccordionPanel>
-            <Table visibleFrom="md">
-              <TableThead>
-                <TableTr>
-                  <TableTh>{t("field.name.label")}</TableTh>
-                  <TableTh>{t("field.url.label")}</TableTh>
-                  <TableTh />
-                </TableTr>
-              </TableThead>
-              <TableTbody>
-                {kindIntegrations.map((integration) => (
-                  <TableTr key={integration.id}>
-                    <TableTd>{integration.name}</TableTd>
-                    <TableTd>
-                      <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
-                        {integration.url}
-                      </Anchor>
-                    </TableTd>
-                    <TableTd>
-                      <Group justify="end">
-                        {(hasFullAccess || integration.permissions.hasFullAccess) && (
-                          <ActionIconGroup>
-                            <ActionIcon
-                              component={Link}
-                              href={`/manage/integrations/edit/${integration.id}`}
-                              variant="subtle"
-                              color="gray"
-                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                            >
-                              <IconPencil size={16} stroke={1.5} />
-                            </ActionIcon>
-                            <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
-                          </ActionIconGroup>
-                        )}
-                      </Group>
-                    </TableTd>
-                  </TableTr>
-                ))}
-              </TableTbody>
-            </Table>
+    <Stack>
+      {unsupportedCount > 0 && (
+        <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("page.list.outdated.title")}>
+          {t("page.list.outdated.description", { count: unsupportedCount })}
+        </Alert>
+      )}
+      {supportedIntegrations.length === 0 ? (
+        <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />
+      ) : (
+        <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
+          {entries.map(([kind, kindIntegrations], index) => (
+            <AccordionItem key={kind} value={kind} data-first={index === 0} data-last={index === entries.length - 1}>
+              <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
+                <Group>
+                  <Text>{getIntegrationName(kind)}</Text>
+                  <CountBadge count={kindIntegrations.length} />
+                </Group>
+              </AccordionControl>
+              <AccordionPanel>
+                <Table visibleFrom="md">
+                  <TableThead>
+                    <TableTr>
+                      <TableTh>{t("field.name.label")}</TableTh>
+                      <TableTh>{t("field.url.label")}</TableTh>
+                      <TableTh />
+                    </TableTr>
+                  </TableThead>
+                  <TableTbody>
+                    {kindIntegrations.map((integration) => (
+                      <TableTr key={integration.id}>
+                        <TableTd>{integration.name}</TableTd>
+                        <TableTd>
+                          <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
+                            {integration.url}
+                          </Anchor>
+                        </TableTd>
+                        <TableTd>
+                          <Group justify="end">
+                            {(hasFullAccess || integration.permissions.hasFullAccess) && (
+                              <ActionIconGroup>
+                                <ActionIcon
+                                  component={Link}
+                                  href={`/manage/integrations/edit/${integration.id}`}
+                                  variant="subtle"
+                                  color="gray"
+                                  aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                                >
+                                  <IconPencil size={16} stroke={1.5} />
+                                </ActionIcon>
+                                <DeleteIntegrationActionButton
+                                  integration={integration}
+                                  count={kindIntegrations.length}
+                                />
+                              </ActionIconGroup>
+                            )}
+                          </Group>
+                        </TableTd>
+                      </TableTr>
+                    ))}
+                  </TableTbody>
+                </Table>
 
-            <Stack gap="xs" hiddenFrom="md">
-              {kindIntegrations.map((integration, integrationIndex) => (
-                <Fragment key={integration.id}>
-                  {integrationIndex !== 0 && <Divider />}
-                  <Stack gap={0}>
-                    <Group justify="space-between" align="center" wrap="nowrap">
-                      <Text>{integration.name}</Text>
-                      {(hasFullAccess || integration.permissions.hasFullAccess) && (
-                        <ActionIconGroup>
-                          <ActionIcon
-                            component={Link}
-                            href={`/manage/integrations/edit/${integration.id}`}
-                            variant="subtle"
-                            color="gray"
-                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                          >
-                            <IconPencil size={16} stroke={1.5} />
-                          </ActionIcon>
-                          <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
-                        </ActionIconGroup>
-                      )}
-                    </Group>
-                    <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
-                      {integration.url}
-                    </Anchor>
-                  </Stack>
-                </Fragment>
-              ))}
-            </Stack>
-          </AccordionPanel>
-        </AccordionItem>
-      ))}
-    </ActiveTabAccordion>
+                <Stack gap="xs" hiddenFrom="md">
+                  {kindIntegrations.map((integration, integrationIndex) => (
+                    <Fragment key={integration.id}>
+                      {integrationIndex !== 0 && <Divider />}
+                      <Stack gap={0}>
+                        <Group justify="space-between" align="center" wrap="nowrap">
+                          <Text>{integration.name}</Text>
+                          {(hasFullAccess || integration.permissions.hasFullAccess) && (
+                            <ActionIconGroup>
+                              <ActionIcon
+                                component={Link}
+                                href={`/manage/integrations/edit/${integration.id}`}
+                                variant="subtle"
+                                color="gray"
+                                aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                              >
+                                <IconPencil size={16} stroke={1.5} />
+                              </ActionIcon>
+                              <DeleteIntegrationActionButton
+                                integration={integration}
+                                count={kindIntegrations.length}
+                              />
+                            </ActionIconGroup>
+                          )}
+                        </Group>
+                        <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
+                          {integration.url}
+                        </Anchor>
+                      </Stack>
+                    </Fragment>
+                  ))}
+                </Stack>
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </ActiveTabAccordion>
+      )}
+    </Stack>
   );
 };

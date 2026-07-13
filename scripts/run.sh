@@ -5,17 +5,21 @@ mkdir -p /appdata/db
 mkdir -p /appdata/redis
 mkdir -p /appdata/trusted-certificates
 
-# Run migrations
-if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
-  echo "DB migrations are disabled, skipping"
-else
-    echo "Running DB migrations"
-    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
-    if [ $? -ne 0 ]; then
-        echo "ERROR: DB migrations failed, aborting startup"
-        exit 1
-    fi
-fi
+run_migrations() {
+  if [ "${DB_MIGRATIONS_DISABLED:-false}" = "true" ]; then
+    echo "DB migrations are disabled, skipping"
+    return
+  fi
+
+  echo "Running DB migrations"
+  DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+  if [ $? -ne 0 ]; then
+    echo "ERROR: DB migrations failed, aborting startup"
+    exit 1
+  fi
+}
+
+run_migrations
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
@@ -67,6 +71,11 @@ while true; do
 
     if [ "$SHUTTING_DOWN" = true ]; then
         break
+    fi
+
+    if [ "$EXIT_CODE" -eq 101 ]; then
+        echo "Database was restored, applying migrations before restart"
+        run_migrations
     fi
 
     echo "Next.js exited with code $EXIT_CODE, restarting in 1s..."

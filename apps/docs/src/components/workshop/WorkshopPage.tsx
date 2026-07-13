@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "@docusaurus/Link";
 import { useHistory, useLocation } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -13,6 +13,8 @@ import {
 } from "@tabler/icons-react";
 
 import {
+  MAX_CONTENT_LENGTH,
+  MAX_SCREENSHOTS,
   WORKSHOP_API_URL,
   WorkshopClient,
   type WorkshopSubmissionDetail,
@@ -22,7 +24,9 @@ import {
   type WorkshopUser,
   workshopExportFilename,
 } from "@homarr/workshop";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { WorkshopQueryProvider } from "./WorkshopQueryProvider";
 import styles from "./workshop.module.css";
 
 const useWorkshop = () => {
@@ -43,45 +47,55 @@ const saveContent = (submission: WorkshopSubmissionDetail) => {
 };
 
 export function WorkshopApp() {
+  return (
+    <WorkshopQueryProvider>
+      <WorkshopAppContent />
+    </WorkshopQueryProvider>
+  );
+}
+
+function WorkshopAppContent() {
   const client = useWorkshop();
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<WorkshopUser | null>(null);
-  const [items, setItems] = useState<WorkshopSubmissionSummary[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [type, setType] = useState<WorkshopSubmissionType | "all">("all");
   const [sort, setSort] = useState<"top" | "newest">("top");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [mine, setMine] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => client.subscribeToAuth(setUser), [client]);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      await client.refreshAuth();
-      const result = await client.list({ page, type, sort, search, author: mine ? client.currentUser?.id : undefined });
-      setItems(result.items);
-      setTotalPages(result.totalPages);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Workshop is unavailable");
-    } finally {
-      setLoading(false);
-    }
-  }, [client, mine, page, search, sort, type]);
-
   useEffect(() => {
-    const timeout = window.setTimeout(() => void load(), 250);
+    void client.refreshAuth().catch(() => undefined);
+  }, [client]);
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedSearch(search), 250);
     return () => window.clearTimeout(timeout);
-  }, [load]);
+  }, [search]);
+
+  const listQuery = useQuery({
+    queryKey: ["workshop", "list", page, type, sort, debouncedSearch, mine ? user?.id : null],
+    queryFn: ({ signal }) =>
+      client.list({
+        page,
+        type,
+        sort,
+        search: debouncedSearch,
+        author: mine ? user?.id : undefined,
+        signal,
+      }),
+    placeholderData: keepPreviousData,
+  });
+  const items = listQuery.data?.items ?? [];
+  const totalPages = listQuery.data?.totalPages ?? 1;
 
   const signIn = async () => {
     try {
       await client.signInWithGitHub();
-      await load();
+      await queryClient.invalidateQueries({ queryKey: ["workshop"] });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Sign-in failed");
     }
@@ -179,12 +193,17 @@ export function WorkshopApp() {
         )}
       </div>
 
-      {error && (
+      {(error || listQuery.isError || listQuery.fetchStatus === "paused") && (
         <div className={styles.error} role="alert">
-          {error} <button onClick={() => void load()}>Try again</button>
+          <strong>{items.length ? "Showing saved Workshop results." : "Workshop is unavailable."}</strong>{" "}
+          {error ||
+            (items.length
+              ? "Some details and actions may be unavailable until the service reconnects."
+              : "Homarr and the documentation remain available while the community service is offline.")}{" "}
+          <button onClick={() => void listQuery.refetch()}>Try again</button>
         </div>
       )}
-      {loading ? (
+      {listQuery.isPending ? (
         <WorkshopSkeleton />
       ) : items.length ? (
         <div className={styles.grid}>
@@ -192,7 +211,7 @@ export function WorkshopApp() {
             <WorkshopCard client={client} item={item} key={item.id} />
           ))}
         </div>
-      ) : (
+      ) : listQuery.isError || listQuery.fetchStatus === "paused" ? null : (
         <section className={styles.empty}>
           <h2>No creations found</h2>
           <p>Adjust the filters, or share the first creation in this category.</p>
@@ -218,7 +237,7 @@ export function WorkshopApp() {
           onClose={() => setShowForm(false)}
           onSaved={async () => {
             setShowForm(false);
-            await load();
+            await queryClient.invalidateQueries({ queryKey: ["workshop"] });
           }}
         />
       )}
@@ -258,42 +277,64 @@ function WorkshopCard({ client, item }: { client: WorkshopClient; item: Workshop
 }
 
 export function WorkshopDetailRoute() {
+  return (
+    <WorkshopQueryProvider>
+      <WorkshopDetailRouteContent />
+    </WorkshopQueryProvider>
+  );
+}
+
+function WorkshopDetailRouteContent() {
   const client = useWorkshop();
+  const queryClient = useQueryClient();
   const location = useLocation();
   const id = location.pathname.split("/").filter(Boolean).at(-1) ?? "";
   const history = useHistory();
   const [user, setUser] = useState<WorkshopUser | null>(null);
-  const [submission, setSubmission] = useState<WorkshopSubmissionDetail | null>(null);
-  const [error, setError] = useState("");
   const [reporting, setReporting] = useState(false);
   const [editing, setEditing] = useState(false);
   const [moderating, setModerating] = useState(false);
+  const [actionError, setActionError] = useState("");
 
-  const load = useCallback(async () => {
-    try {
-      setSubmission(await client.get(id));
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Submission not found");
-    }
-  }, [client, id]);
+  const detailQuery = useQuery({
+    queryKey: ["workshop", "detail", id],
+    queryFn: ({ signal }) => client.get(id, signal),
+    enabled: id.length > 0,
+  });
+  const voteMutation = useMutation({
+    mutationKey: ["workshop", "vote", id],
+    mutationFn: async () => {
+      await (client.currentUser ?? client.signInWithGitHub());
+      return client.vote(id, 1);
+    },
+    onSuccess: async () => queryClient.invalidateQueries({ queryKey: ["workshop", "detail", id] }),
+    onError: (caught) => setActionError(caught instanceof Error ? caught.message : "The vote could not be saved."),
+  });
+  const deleteMutation = useMutation({
+    mutationKey: ["workshop", "delete", id],
+    mutationFn: () => client.delete(id),
+    onSuccess: () => history.push("/workshop"),
+    onError: (caught) =>
+      setActionError(caught instanceof Error ? caught.message : "The submission could not be deleted."),
+  });
   useEffect(() => client.subscribeToAuth(setUser), [client]);
   useEffect(() => {
     void client.refreshAuth();
-    void load();
-  }, [client, load]);
+  }, [client]);
 
-  if (error)
+  if (detailQuery.isError)
     return (
       <main className={styles.page}>
         <div className={styles.error} role="alert">
-          {error}
+          This creation is not saved on this device and Workshop could not be reached.{" "}
+          <button onClick={() => void detailQuery.refetch()}>Try again</button>
         </div>
         <Link to="/workshop">Back to Workshop</Link>
       </main>
     );
-  if (!submission) return <WorkshopSkeleton />;
+  if (!detailQuery.data) return <WorkshopSkeleton />;
 
-  const requireAuth = async () => client.currentUser ?? client.signInWithGitHub();
+  const submission = detailQuery.data;
   return (
     <main className={styles.page}>
       <Link to="/workshop">← Back to Workshop</Link>
@@ -329,10 +370,10 @@ export function WorkshopDetailRoute() {
           </button>
           <button
             className="button button--secondary"
-            onClick={async () => {
-              await requireAuth();
-              await client.vote(submission.id, 1);
-              await load();
+            disabled={voteMutation.isPending}
+            onClick={() => {
+              setActionError("");
+              voteMutation.mutate();
             }}
           >
             Upvote ({submission.upvotes})
@@ -347,10 +388,11 @@ export function WorkshopDetailRoute() {
               </button>
               <button
                 className="button button--danger"
-                onClick={async () => {
+                disabled={deleteMutation.isPending}
+                onClick={() => {
                   if (window.confirm("Delete this submission permanently?")) {
-                    await client.delete(submission.id);
-                    history.push("/workshop");
+                    setActionError("");
+                    deleteMutation.mutate();
                   }
                 }}
               >
@@ -364,6 +406,11 @@ export function WorkshopDetailRoute() {
             </button>
           )}
         </div>
+        {actionError && (
+          <div className={styles.error} role="alert">
+            {actionError}
+          </div>
+        )}
         <section>
           <h2>Source</h2>
           <p className={styles.sourceHint}>
@@ -388,7 +435,7 @@ export function WorkshopDetailRoute() {
           onClose={() => setEditing(false)}
           onSaved={async () => {
             setEditing(false);
-            await load();
+            await queryClient.invalidateQueries({ queryKey: ["workshop", "detail", id] });
           }}
         />
       )}
@@ -484,6 +531,11 @@ function SubmissionForm({
   const [removedScreenshots, setRemovedScreenshots] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const retainedScreenshotCount = (existing?.screenshots.length ?? 0) - removedScreenshots.length;
+  const remainingScreenshotSlots = Math.max(0, MAX_SCREENSHOTS - retainedScreenshotCount);
+  useEffect(() => {
+    setScreenshots((current) => current.slice(0, remainingScreenshotSlots));
+  }, [remainingScreenshotSlots]);
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setPending(true);
@@ -544,6 +596,7 @@ function SubmissionForm({
             <textarea
               className={styles.editor}
               required
+              maxLength={MAX_CONTENT_LENGTH}
               value={content}
               onChange={(event) => setContent(event.target.value)}
             />
@@ -553,12 +606,14 @@ function SubmissionForm({
             <textarea maxLength={2000} value={changelog} onChange={(event) => setChangelog(event.target.value)} />
           </label>
           <label>
-            Screenshots (PNG, JPG, or WebP, up to 5)
+            Screenshots (PNG, JPG, or WebP, {remainingScreenshotSlots} available)
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"
               multiple
-              onChange={(event) => setScreenshots(Array.from(event.target.files ?? []).slice(0, 5))}
+              onChange={(event) =>
+                setScreenshots(Array.from(event.target.files ?? []).slice(0, remainingScreenshotSlots))
+              }
             />
           </label>
           {existing?.screenshots.map((screenshot) => (

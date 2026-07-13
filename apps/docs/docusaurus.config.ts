@@ -3,6 +3,11 @@ import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
 
+const workshopApiUrl =
+  process.env.NODE_ENV !== "production"
+    ? (process.env.WORKSHOP_API_URL ?? process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? "https://workshop.homarr.dev")
+    : "https://workshop.homarr.dev";
+
 const config: Config = {
   title: "Homarr documentation",
   tagline: "A simple yet powerful dashboard for your server.",
@@ -17,8 +22,7 @@ const config: Config = {
     locales: ["en"],
   },
   customFields: {
-    workshopApiUrl:
-      process.env.WORKSHOP_API_URL ?? process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? "https://workshop.homarr.dev",
+    workshopApiUrl,
   },
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",

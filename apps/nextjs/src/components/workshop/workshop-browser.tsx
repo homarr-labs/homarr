@@ -22,13 +22,22 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
-import { IconAlertTriangle, IconBrandGithub, IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
+import {
+  IconAlertTriangle,
+  IconBrandGithub,
+  IconDownload,
+  IconExternalLink,
+  IconSearch,
+  IconWifiOff,
+} from "@tabler/icons-react";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 
 import type { WorkshopSubmissionDetail, WorkshopSubmissionType } from "@homarr/workshop";
 
 import { WORKSHOP_API_URL, WORKSHOP_WEB_URL, WorkshopClient, workshopExportFilename } from "@homarr/workshop";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import { WorkshopQueryProvider } from "./workshop-query-provider";
 
 const apiUrl = process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? WORKSHOP_API_URL;
 
@@ -39,7 +48,15 @@ export interface WorkshopBrowserProps {
   useLabel?: string;
 }
 
-export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLabel }: WorkshopBrowserProps) {
+export function WorkshopBrowser(props: WorkshopBrowserProps) {
+  return (
+    <WorkshopQueryProvider>
+      <WorkshopBrowserContent {...props} />
+    </WorkshopQueryProvider>
+  );
+}
+
+function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLabel }: WorkshopBrowserProps) {
   const t = useScopedI18n("workshop");
   const client = useMemo(() => new WorkshopClient(apiUrl), []);
   const [page, setPage] = useState(1);
@@ -47,24 +64,41 @@ export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLab
   const [sort, setSort] = useState<"top" | "newest">("top");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 250);
-  const [selected, setSelected] = useState<WorkshopSubmissionDetail | null>(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [usePending, setUsePending] = useState(false);
-  const [useError, setUseError] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [online, setOnline] = useState(true);
+
+  useEffect(() => {
+    const updateOnline = () => setOnline(window.navigator.onLine);
+    updateOnline();
+    window.addEventListener("online", updateOnline);
+    window.addEventListener("offline", updateOnline);
+    return () => {
+      window.removeEventListener("online", updateOnline);
+      window.removeEventListener("offline", updateOnline);
+    };
+  }, []);
 
   const query = useQuery({
     queryKey: ["workshop", "list", page, type, sort, debouncedSearch],
-    queryFn: () => client.list({ page, type, sort, search: debouncedSearch, perPage: 12 }),
+    queryFn: ({ signal }) => client.list({ page, type, sort, search: debouncedSearch, perPage: 12, signal }),
+    placeholderData: keepPreviousData,
   });
-
-  const openDetail = async (id: string) => {
-    setDetailLoading(true);
-    try {
-      setSelected(await client.get(id));
-    } finally {
-      setDetailLoading(false);
-    }
-  };
+  const detailQuery = useQuery({
+    queryKey: ["workshop", "detail", selectedId],
+    queryFn: ({ signal }) => client.get(selectedId ?? "", signal),
+    enabled: selectedId !== null,
+  });
+  const useMutationState = useMutation({
+    mutationKey: ["workshop", "use"],
+    mutationFn: async (submission: WorkshopSubmissionDetail) => {
+      if (lockedType && submission.type !== lockedType) throw new Error(t("error.wrongType"));
+      if (!onUse) return;
+      await onUse(submission);
+    },
+    onSuccess: () => setSelectedId(null),
+  });
+  const selected = detailQuery.data ?? null;
+  const hasCachedResults = Boolean(query.data?.items.length);
 
   const download = (submission: WorkshopSubmissionDetail) => {
     const url = URL.createObjectURL(
@@ -121,12 +155,29 @@ export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLab
           ]}
         />
       </Group>
-      {query.error && (
-        <Alert color="red" title={t("error.loadTitle")}>
-          {query.error.message}
-          <Button variant="subtle" onClick={() => void query.refetch()}>
-            {t("action.retry")}
-          </Button>
+      {(query.isError || query.fetchStatus === "paused") && (
+        <Alert
+          icon={<IconWifiOff size={18} />}
+          color={hasCachedResults ? "yellow" : "red"}
+          title={hasCachedResults ? t("offline.cachedTitle") : t("offline.title")}
+        >
+          <Stack gap="sm">
+            <Text size="sm">
+              {hasCachedResults
+                ? t("offline.cachedDescription")
+                : online
+                  ? t("offline.unavailableDescription")
+                  : t("offline.description")}
+            </Text>
+            <Group>
+              <Button size="xs" variant="light" onClick={() => void query.refetch()}>
+                {t("action.retry")}
+              </Button>
+              <Button size="xs" variant="subtle" component="a" href={WORKSHOP_WEB_URL} target="_blank">
+                {t("action.website")}
+              </Button>
+            </Group>
+          </Stack>
         </Alert>
       )}
       {query.isLoading ? (
@@ -173,14 +224,14 @@ export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLab
                 <Text size="xs" c="dimmed">
                   {t("by", { name: item.authorName, revision: item.revision })}
                 </Text>
-                <Button variant="light" onClick={() => void openDetail(item.id)}>
+                <Button variant="light" onClick={() => setSelectedId(item.id)}>
                   {t("action.inspect")}
                 </Button>
               </Stack>
             </Card>
           ))}
         </SimpleGrid>
-      ) : (
+      ) : query.isError || query.fetchStatus === "paused" ? null : (
         <Stack align="center" py="xl">
           <Text fw={600}>{t("empty.title")}</Text>
           <Text c="dimmed">{t("empty.description")}</Text>
@@ -190,13 +241,25 @@ export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLab
         <Pagination total={query.data?.totalPages ?? 1} value={page} onChange={setPage} mx="auto" />
       )}
       <Modal
-        opened={Boolean(selected) || detailLoading}
-        onClose={() => setSelected(null)}
+        opened={selectedId !== null}
+        onClose={() => {
+          setSelectedId(null);
+          useMutationState.reset();
+        }}
         title={selected?.title ?? t("loading")}
         size="xl"
       >
-        {detailLoading || !selected ? (
+        {detailQuery.isPending ? (
           <Skeleton h={400} />
+        ) : detailQuery.isError || !selected ? (
+          <Alert icon={<IconWifiOff size={18} />} color="red" title={t("error.detailTitle")}>
+            <Stack gap="sm">
+              <Text size="sm">{t("error.detailDescription")}</Text>
+              <Button size="xs" variant="light" onClick={() => void detailQuery.refetch()}>
+                {t("action.retry")}
+              </Button>
+            </Stack>
+          </Alert>
         ) : (
           <Stack>
             <Group>
@@ -229,26 +292,20 @@ export function WorkshopBrowser({ initialType = "all", lockedType, onUse, useLab
               </Group>
               {onUse && (
                 <Button
-                  loading={usePending}
-                  onClick={async () => {
-                    setUsePending(true);
-                    setUseError("");
-                    try {
-                      if (lockedType && selected.type !== lockedType) throw new Error(t("error.wrongType"));
-                      await onUse(selected);
-                      setSelected(null);
-                    } catch (caught) {
-                      setUseError(caught instanceof Error ? caught.message : t("error.install"));
-                    } finally {
-                      setUsePending(false);
-                    }
-                  }}
+                  loading={useMutationState.isPending}
+                  disabled={!online}
+                  onClick={() => useMutationState.mutate(selected)}
                 >
                   {useLabel ?? t("action.use")}
                 </Button>
               )}
             </Group>
-            {useError && <Alert color="red">{useError}</Alert>}
+            {!online && onUse && <Alert color="yellow">{t("offline.actionUnavailable")}</Alert>}
+            {useMutationState.error && (
+              <Alert color="red">
+                {useMutationState.error instanceof Error ? useMutationState.error.message : t("error.install")}
+              </Alert>
+            )}
           </Stack>
         )}
       </Modal>
@@ -275,22 +332,15 @@ export function PublishToWorkshopButton({
   const [title, setTitle] = useState(defaultTitle);
   const [description, setDescription] = useState("");
   const [changelog, setChangelog] = useState("");
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
   useEffect(() => setTitle(defaultTitle), [defaultTitle]);
-  const publish = async () => {
-    setPending(true);
-    setError("");
-    try {
+  const publishMutation = useMutation({
+    mutationKey: ["workshop", "publish", type],
+    mutationFn: async () => {
       if (!client.currentUser) await client.signInWithGitHub();
-      await client.create({ type, title, description, changelog, content: await getContent() });
-      close();
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : t("error.publish"));
-    } finally {
-      setPending(false);
-    }
-  };
+      return client.create({ type, title, description, changelog, content: await getContent() });
+    },
+    onSuccess: close,
+  });
   return (
     <>
       {renderTrigger ? (
@@ -305,7 +355,14 @@ export function PublishToWorkshopButton({
           {t("action.share")}
         </Button>
       )}
-      <Modal opened={opened} onClose={close} title={t("publish.title")}>
+      <Modal
+        opened={opened}
+        onClose={() => {
+          close();
+          publishMutation.reset();
+        }}
+        title={t("publish.title")}
+      >
         <Stack>
           <TextInput
             required
@@ -323,12 +380,20 @@ export function PublishToWorkshopButton({
             value={changelog}
             onChange={(event) => setChangelog(event.currentTarget.value)}
           />
-          {error && <Alert color="red">{error}</Alert>}
+          {publishMutation.error && (
+            <Alert color="red">
+              {publishMutation.error instanceof Error ? publishMutation.error.message : t("error.publish")}
+            </Alert>
+          )}
           <Group justify="end">
             <Button variant="default" onClick={close}>
               {t("action.cancel")}
             </Button>
-            <Button loading={pending} disabled={title.trim().length < 3} onClick={() => void publish()}>
+            <Button
+              loading={publishMutation.isPending}
+              disabled={title.trim().length < 3}
+              onClick={() => publishMutation.mutate()}
+            >
               {t("action.publish")}
             </Button>
           </Group>

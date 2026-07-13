@@ -4,7 +4,7 @@ set -eu
 project="homarr-workshop-integration"
 port="${WORKSHOP_TEST_PORT:-18091}"
 email="integration@homarr.test"
-password="WorkshopIntegrationPassword123!"
+password="${WORKSHOP_TEST_PASSWORD:-WorkshopIntegrationPassword123!}"
 
 cleanup() {
   PB_EXPOSE_PORT="$port" docker compose --env-file .env.example --file apps/workshop/docker-compose.yml --project-name "$project" down --volumes >/dev/null 2>&1 || true
