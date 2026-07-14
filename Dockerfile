@@ -24,10 +24,9 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
 
 COPY . .
 # Follow the pnpm fetch pattern from https://pnpm.io/cli/fetch
-# --offline enforces no registry access (all packages are in the store from fetch)
 # --frozen-lockfile is omitted as recommended by the pnpm fetch docs
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --recursive --offline
+    pnpm install --recursive
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
