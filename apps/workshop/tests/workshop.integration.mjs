@@ -5,17 +5,31 @@ import PocketBase, { ClientResponseError } from "pocketbase";
 const baseUrl = process.env.WORKSHOP_TEST_URL;
 const superuserEmail = process.env.WORKSHOP_TEST_SUPERUSER_EMAIL;
 const superuserPassword = process.env.WORKSHOP_TEST_SUPERUSER_PASSWORD;
+const verifyConfigurationOnly = process.env.WORKSHOP_VERIFY_CONFIGURATION_ONLY === "true";
 assert(baseUrl && superuserEmail && superuserPassword, "Workshop integration test environment is incomplete");
 
 const root = new PocketBase(baseUrl);
 await root.collection("_superusers").authWithPassword(superuserEmail, superuserPassword);
+if (!verifyConfigurationOnly) {
+  await root.collections.update("users", {
+    oauth2: {
+      enabled: true,
+      providers: [{ name: "github", clientId: "integration-client", clientSecret: "integration-secret" }],
+    },
+  });
+}
 const authMethods = await root.collection("users").listAuthMethods();
-assert.equal(authMethods.oauth2.enabled, true, "GitHub OAuth must be configured from the runtime environment");
+assert.equal(authMethods.oauth2.enabled, true, "GitHub OAuth must retain its persisted PocketBase configuration");
 assert.equal(authMethods.password.enabled, false, "password authentication must remain disabled");
 assert.deepEqual(
   authMethods.oauth2.providers.map((provider) => provider.name),
   ["github"],
 );
+
+if (verifyConfigurationOnly) {
+  console.log("Workshop PocketBase configuration persisted across restart");
+  process.exit(0);
+}
 
 const createUser = async (name, role = "member", state = "active") => {
   const password = `Workshop${name}Password123!`;
@@ -37,28 +51,29 @@ const expectStatus = async (operation, status) => {
 
 const memberRecord = await createUser("Member");
 const secondMemberRecord = await createUser("SecondMember");
-const bannedRecord = await createUser("Banned", "member", "posting_banned");
 const disabledRecord = await createUser("Disabled");
 const moderatorRecord = await createUser("Moderator", "moderator");
 const adminRecord = await createUser("Admin", "admin");
+await root.collection("workshop_staff").create({ user: moderatorRecord.id, role: "moderator" });
+await root.collection("workshop_staff").create({ user: adminRecord.id, role: "admin" });
 
 const member = await root.collection("users").impersonate(memberRecord.id, 3600);
 const secondMember = await root.collection("users").impersonate(secondMemberRecord.id, 3600);
-const banned = await root.collection("users").impersonate(bannedRecord.id, 3600);
 const disabled = await root.collection("users").impersonate(disabledRecord.id, 3600);
 const moderator = await root.collection("users").impersonate(moderatorRecord.id, 3600);
 const admin = await root.collection("users").impersonate(adminRecord.id, 3600);
 
 assert.equal((await member.collection("users").getList()).totalItems, 0, "members must not list Workshop accounts");
 
-const forgedMember = await member.collection("users").update(memberRecord.id, {
-  role: "admin",
-  state: "posting_banned",
-  moderationReason: "self escalation",
-});
-assert.equal(forgedMember.role, "member", "members must not change their own role");
-assert.equal(forgedMember.state, "active", "members must not change their own account state");
-assert.equal(forgedMember.moderationReason, "", "members must not change protected moderation fields");
+await expectStatus(
+  () =>
+    member.collection("users").update(memberRecord.id, {
+      role: "admin",
+      state: "disabled",
+      moderationReason: "self escalation",
+    }),
+  [403, 404],
+);
 
 await admin.send(`/api/workshop/moderation/users/${disabledRecord.id}/state`, {
   method: "POST",
@@ -89,10 +104,6 @@ assert.equal(submission.authorName, "Member", "server must snapshot the authenti
 assert.equal(submission.revision, 1, "server must own the initial revision");
 assert.equal(submission.schemaVersion, "homarr-custom-widget-v2", "server must own schemaVersion");
 
-await expectStatus(
-  () => banned.collection("submissions").create({ type: "css", title: "Blocked theme", content: "body {}" }),
-  403,
-);
 await expectStatus(() => disabled.collection("votes").create({ submission: submission.id, value: 1 }), [400, 403]);
 await expectStatus(
   () =>
@@ -127,7 +138,7 @@ await expectStatus(
   () =>
     member.send(`/api/workshop/moderation/users/${secondMemberRecord.id}/state`, {
       method: "POST",
-      body: { state: "posting_banned", reason: "No permission" },
+      body: { state: "disabled", reason: "No permission" },
     }),
   403,
 );
@@ -153,6 +164,10 @@ await admin.send(`/api/workshop/moderation/users/${secondMemberRecord.id}/role`,
   body: { role: "moderator", reason: "Integration promotion" },
 });
 assert.equal((await root.collection("users").getOne(secondMemberRecord.id)).role, "moderator");
+assert.equal(
+  (await root.collection("workshop_staff").getFirstListItem(`user = '${secondMemberRecord.id}'`)).role,
+  "moderator",
+);
 
 await moderator.send(`/api/workshop/moderation/reports/${report.id}/resolve`, {
   method: "POST",

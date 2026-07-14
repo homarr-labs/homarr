@@ -70,12 +70,7 @@ const asWorkshopError = (error: unknown, fallback: string) => {
   if (error instanceof WorkshopError) return error;
   if (error instanceof ClientResponseError) {
     const message = error.data?.message || error.message || fallback;
-    const messageCode =
-      message === "Account is disabled"
-        ? "account_disabled"
-        : message === "Account cannot publish submissions"
-          ? "posting_banned"
-          : undefined;
+    const messageCode = message === "Account is disabled" ? "account_disabled" : undefined;
     const parsedCode = workshopErrorCodeSchema.safeParse(messageCode ?? error.data?.data?.code ?? error.data?.code);
     const code = parsedCode.success ? parsedCode.data : errorCodeForStatus(error.status);
     return new WorkshopError(code, message, error.status);
@@ -108,6 +103,20 @@ export class WorkshopClient {
     });
   }
 
+  private async currentUserWithStaffRole() {
+    const user = this.currentUser;
+    if (!user) return null;
+    try {
+      const staff = await this.pocketBase
+        .collection("workshop_staff")
+        .getFirstListItem(this.pocketBase.filter("user = {:user}", { user: user.id }));
+      return { ...user, role: workshopRoleSchema.parse(staff.role) };
+    } catch (error) {
+      if (error instanceof ClientResponseError && error.status === 404) return { ...user, role: "member" as const };
+      return user;
+    }
+  }
+
   subscribeToAuth(listener: (user: WorkshopUser | null) => void) {
     return this.pocketBase.authStore.onChange(() => listener(this.currentUser), true);
   }
@@ -116,7 +125,7 @@ export class WorkshopClient {
     if (!this.pocketBase.authStore.isValid) return null;
     try {
       await this.pocketBase.collection("users").authRefresh();
-      return this.currentUser;
+      return this.currentUserWithStaffRole();
     } catch {
       this.pocketBase.authStore.clear();
       return null;
@@ -133,12 +142,19 @@ export class WorkshopClient {
     if (!methods.oauth2.providers.some((provider) => provider.name === "github")) {
       throw new WorkshopError(
         "unavailable",
-        "GitHub login is not configured. Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET, then restart Workshop.",
+        "GitHub login is not configured. Configure the GitHub provider once in the PocketBase users collection.",
       );
     }
     try {
-      await this.pocketBase.collection("users").authWithOAuth2({ provider: "github" });
-      return this.currentUser;
+      await this.pocketBase.collection("users").authWithOAuth2({
+        provider: "github",
+        createData: {
+          displayName: "Community member",
+          role: "member",
+          state: "active",
+        },
+      });
+      return this.currentUserWithStaffRole();
     } catch (error) {
       throw asWorkshopError(error, "GitHub sign-in failed");
     }

@@ -13,7 +13,8 @@ migrate(
     }
     users.listRule = "@request.auth.role = 'moderator' || @request.auth.role = 'admin'";
     users.viewRule = "id = @request.auth.id || @request.auth.role = 'moderator' || @request.auth.role = 'admin'";
-    users.updateRule = "id = @request.auth.id && @request.auth.state != 'disabled'";
+    users.updateRule =
+      "id = @request.auth.id && @request.auth.state != 'disabled' && @request.body.role:changed = false && @request.body.state:changed = false && @request.body.moderationReason:changed = false";
     users.deleteRule = null;
     users.passwordAuth = { enabled: false };
     // PocketBase creates a default users auth collection on first boot, so
@@ -26,20 +27,35 @@ migrate(
         name: "state",
         required: true,
         maxSelect: 1,
-        values: ["active", "posting_banned", "disabled"],
+        values: ["active", "disabled"],
       }),
       new TextField({ name: "moderationReason", max: 1000 }),
     );
-    const githubClientId = $os.getenv("GITHUB_CLIENT_ID");
-    const githubClientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
-    users.oauth2.enabled = Boolean(githubClientId && githubClientSecret);
-    users.oauth2.providers =
-      githubClientId && githubClientSecret
-        ? [{ name: "github", clientId: githubClientId, clientSecret: githubClientSecret }]
-        : [];
     app.save(users);
 
-    const staffRule = "@request.auth.role = 'moderator' || @request.auth.role = 'admin'";
+    const workshopStaff = new Collection({
+      type: "base",
+      name: "workshop_staff",
+      listRule: "user = @request.auth.id",
+      viewRule: "user = @request.auth.id",
+      createRule: null,
+      updateRule: null,
+      deleteRule: null,
+      fields: [
+        { type: "relation", name: "user", required: true, maxSelect: 1, collectionId: users.id, cascadeDelete: true },
+        { type: "select", name: "role", required: true, maxSelect: 1, values: ["moderator", "admin"] },
+        { type: "autodate", name: "created", onCreate: true },
+        { type: "autodate", name: "updated", onCreate: true, onUpdate: true },
+      ],
+    });
+    workshopStaff.addIndex("idx_workshop_staff_user", true, "user", "");
+    app.save(workshopStaff);
+
+    const staffRule = "@collection.workshop_staff.user ?= @request.auth.id";
+    users.listRule = staffRule;
+    users.viewRule = `id = @request.auth.id || ${staffRule}`;
+    app.save(users);
+
     const writableRule = "@request.auth.id != '' && @request.auth.state != 'disabled'";
     const authorRule = "author = @request.auth.id && @request.auth.state = 'active'";
 
@@ -241,7 +257,14 @@ migrate(
   (app) => {
     // PocketBase creates the users auth collection before this migration. Keep
     // it intact on rollback so reverting Workshop can never delete accounts.
-    for (const name of ["workshop_listings", "moderation_actions", "reports", "votes", "submissions"]) {
+    for (const name of [
+      "workshop_listings",
+      "moderation_actions",
+      "reports",
+      "votes",
+      "submissions",
+      "workshop_staff",
+    ]) {
       try {
         app.delete(app.findCollectionByNameOrId(name));
       } catch {

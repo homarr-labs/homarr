@@ -20,12 +20,10 @@ function fail(ErrorType, _code, message) {
   throw new ErrorType(message);
 }
 
-function requireWritableAccount(app, auth, posting) {
+function requireWritableAccount(app, auth) {
   if (!auth) fail(UnauthorizedError, "authentication_required", "Authentication is required");
   const account = app.findRecordById("users", auth.id);
   if (account.getString("state") === "disabled") fail(ForbiddenError, "account_disabled", "Account is disabled");
-  if (posting && account.getString("state") === "posting_banned")
-    fail(ForbiddenError, "posting_banned", "Account cannot publish submissions");
   return account;
 }
 
@@ -78,10 +76,31 @@ function snapshot(record) {
 }
 
 function requireStaff(app, auth) {
-  const account = requireWritableAccount(app, auth, false);
-  const role = account.getString("role");
-  if (role !== "moderator" && role !== "admin") fail(ForbiddenError, "forbidden", "Staff access is required");
-  return role;
+  requireWritableAccount(app, auth);
+  let staff;
+  try {
+    staff = app.findFirstRecordByFilter("workshop_staff", "user = {:user}", { user: auth.id });
+  } catch {
+    fail(ForbiddenError, "forbidden", "Staff access is required");
+  }
+  return staff.getString("role");
+}
+
+function setStaffRole(app, user, role) {
+  let staff = null;
+  try {
+    staff = app.findFirstRecordByFilter("workshop_staff", "user = {:user}", { user: user.id });
+  } catch {
+    // Members do not have a staff record.
+  }
+  if (role === "member") {
+    if (staff) app.delete(staff);
+    return;
+  }
+  if (!staff) staff = new Record(app.findCollectionByNameOrId("workshop_staff"));
+  staff.set("user", user.id);
+  staff.set("role", role);
+  app.save(staff);
 }
 
 function body(e) {
@@ -104,4 +123,13 @@ function audit(app, actor, action, targetType, targetId, reason, targetSnapshot)
   app.save(record);
 }
 
-module.exports = { audit, body, fail, requireStaff, requireWritableAccount, snapshot, validateSubmission };
+module.exports = {
+  audit,
+  body,
+  fail,
+  requireStaff,
+  requireWritableAccount,
+  setStaffRole,
+  snapshot,
+  validateSubmission,
+};

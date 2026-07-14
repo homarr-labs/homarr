@@ -37,6 +37,9 @@ The abandoned prototype is preserved at `origin/feat/widget-store-prototype-back
 - Identity: GitHub OAuth only.
 - Community features: votes and reports; comments are removed.
 - Hosting: one Homarr-operated image and origin at `homarr.dev`; PocketBase serves both compiled docs and `/api`.
+- Deployment: the Workshop image is built locally from this repository by Compose or the Homarr deployment pipeline; no separate registry publication is maintained.
+- Configuration: PocketBase superusers and GitHub OAuth are configured once in each persistent volume and are never rewritten from startup environment variables.
+- Local development: PocketBase runs alone in Docker with a gitignored bind-mounted database; Docusaurus and contract watchers run on the host, and the production-like preview reuses the same data.
 - Resilience: the public shell and successfully loaded query data are cached independently; the rest of Homarr never depends on Workshop availability.
 - Publishing: immediate, with source inspection, reporting, and staff removal.
 - Staff: GitHub-authenticated moderators/admins use `/workshop/admin`; PocketBase superusers are bootstrap/emergency access.
@@ -69,11 +72,11 @@ The baseline has three P0, seven P1, and one P2 findings. The rewrite closes eve
 | Branch ancestry             | Pass    | Current `origin/dev` is an ancestor; the prototype remains preserved at `origin/feat/widget-store-prototype-backup`.                                                                              |
 | Contract                    | Pass    | Five Vitest cases cover widget/CSS fixtures, filenames, limits, screenshot validation, and round trips.                                                                                           |
 | Backend                     | Pass    | Disposable PocketBase integration matrix covers roles, account states, ownership forgery, schema rejection, duplicate votes, private reports, escalation, deletion cascades, and audit snapshots. |
-| Backend operations          | Pass    | PocketBase 0.39.6 runs unprivileged and builds with checksum verification; clean boot and a cloned legacy SQLite volume both migrate and become healthy.                                          |
+| Backend operations          | Pass    | PocketBase 0.39.6 builds with checksum verification; clean dev boot, persistence, disposable integration tests, and the combined production preview migrate and become healthy.                   |
 | Type safety                 | Pass    | Scoped Turbo typecheck passes for Workshop, Docs, and Next.js.                                                                                                                                    |
 | Lint                        | Pass    | Scoped lint exits clean; remaining warnings predate the rewrite. Workshop has zero warnings.                                                                                                      |
 | Format                      | Pass    | Every changed supported file passes `oxfmt --check`; repository-wide Docs formatting still reports pre-existing drift.                                                                            |
-| Production builds           | Pass    | Docusaurus and Next.js production builds pass under Node 24.18.0.                                                                                                                                 |
+| Production builds           | Pass    | Docusaurus, Workshop contracts, the combined PocketBase preview image, and Next.js build under Node 24.18.0; path-filtered CI smoke-tests the combined image.                                     |
 | Browser smoke               | Pass    | Desktop/mobile discovery, disconnected API recovery, and a first-visit online-to-offline reload render without uncaught errors.                                                                   |
 | Automated cross-surface E2E | Open P1 | Authenticated website-to-Homarr publish/install and moderator flows still need browser automation.                                                                                                |
 

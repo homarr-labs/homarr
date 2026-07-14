@@ -11,7 +11,6 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { useForm } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { PublishToWorkshopButton } from "~/components/workshop/workshop-browser";
 import { UseCssFromWorkshopButton } from "~/components/workshop/workshop-actions";
 
 import type { Board } from "../../_types";
@@ -49,10 +48,7 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
         </Alert>
 
         <Group justify="space-between">
-          <Group>
-            <UseCssFromWorkshopButton onUse={(css) => form.setFieldValue("customCss", css)} />
-            <PublishToWorkshopButton type="css" defaultTitle={board.name} getContent={() => form.values.customCss} />
-          </Group>
+          <UseCssFromWorkshopButton onUse={(css) => form.setFieldValue("customCss", css)} />
           <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>

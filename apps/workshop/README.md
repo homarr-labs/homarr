@@ -1,50 +1,74 @@
 # Homarr Workshop service
 
-The Workshop image serves the compiled Homarr documentation and the PocketBase community API from one origin: `https://homarr.dev`. It is not a per-instance Homarr service. Local deployment is for development and integration testing.
+Workshop combines the public Docusaurus experience with a PocketBase community API. Development keeps the two processes separate; the production image serves both from one origin.
 
-## Local startup
+## Development
 
-1. Copy the repository-root `.env.example` to `.env` and create a GitHub OAuth app.
-2. Set its callback URL to `http://localhost:<PB_EXPOSE_PORT>/api/oauth2-redirect` (port `8090` by default).
-3. Set `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `PB_SUPERUSER_EMAIL`, and `PB_SUPERUSER_PASSWORD`.
-4. Run `pnpm dev:workshop` from the repository root. It builds the single Workshop image, starts it, and removes obsolete Compose containers.
-
-Open the Workshop at `http://localhost:<PB_EXPOSE_PORT>/workshop`. The API is at `/api` on the same origin and the emergency PocketBase dashboard is at `/_/` (port `8090` by default). `0.0.0.0` in PocketBase's server log is its container bind address, not a browser URL. Day-to-day moderation belongs in `/workshop/admin`, not the PocketBase dashboard.
-
-All Workshop configuration is read from the repository-root `.env`; there is no app-specific environment file. If port 8090 is unavailable, set `PB_EXPOSE_PORT` there. `pnpm dev:workshop:website` remains available for Docusaurus HMR and connects to the local container through `WORKSHOP_API_URL`.
-
-The multi-stage image builds Docusaurus, downloads the official PocketBase `0.39.6` release, verifies it against that release's `checksums.txt`, and copies the versioned migrations, hooks, and static website into the runtime image.
-
-GitHub OAuth configuration is synchronized from the environment on every boot, including for an existing development volume. `PB_ALLOWED_ORIGINS` defaults to `*` because arbitrary self-hosted Homarr origins consume the central API. PocketBase authenticates writes with bearer tokens and does not use cookies; CORS is not an authorization boundary.
-
-## Roles and account states
-
-- `member`: publish, update/delete owned submissions, vote, and report.
-- `moderator`: report queue, submission removal, posting bans, and account disable/restore.
-- `admin`: moderator actions plus role changes.
-- `posting_banned`: cannot create or update submissions; can browse, vote, and report.
-- `disabled`: cannot authenticate or write.
-
-Bootstrap the first admin through the PocketBase dashboard by changing a GitHub-authenticated user's role. All later staff actions use the restricted Workshop back office and are recorded in `moderation_actions`.
-
-## Backup and restore
-
-PocketBase stores records and uploads in `/pb_data`. Stop writes or stop the container, then archive the named volume:
+From the repository root, run:
 
 ```sh
-docker compose --env-file .env --file apps/workshop/docker-compose.yml stop workshop
-docker run --rm -v homarr-workshop_workshop_data:/data -v "$PWD":/backup alpine tar czf /backup/workshop-backup.tgz -C /data .
-docker compose --env-file .env --file apps/workshop/docker-compose.yml start workshop
+pnpm dev:workshop
 ```
 
-Restore only into the same PocketBase version after preserving the current volume. Extract the archive into an empty `workshop_data` volume, start the service, and verify `/api/health`, collection migrations, a listing request, and an authenticated write.
+This starts:
 
-## Production checklist
+- PocketBase in Docker with `--dev` at `http://localhost:8090`;
+- the PocketBase dashboard at `http://localhost:8090/_/`;
+- `@homarr/workshop` in watch mode on the host;
+- Docusaurus with HMR at `http://localhost:3003/workshop`.
 
-- Run `ghcr.io/homarr-labs/workshop:dev` behind the `homarr.dev` TLS endpoint; the image owns both the website and `/api`.
-- Terminate TLS at the reverse proxy and forward the real client IP.
-- Keep superuser credentials outside Compose and rotate them after bootstrap.
-- Restrict the dashboard path to operators; GitHub users never need it.
-- Review the versioned default rate limits for OAuth, submissions, votes, reports, moderation, and general API traffic against production load before launch.
-- Back up `/pb_data` before every PocketBase or migration upgrade and test restore regularly.
-- Monitor health, authentication failures, 429/5xx responses, moderation actions, disk use, and backup age.
+PocketBase data is bind-mounted at `apps/workshop/pb_data/`. The directory is gitignored and survives container rebuilds. Hooks and migrations are mounted read-only and PocketBase reloads them in development mode.
+
+No users, superusers, OAuth providers, or submissions are seeded. Create the first superuser manually in the PocketBase dashboard, configure GitHub OAuth on the `users` collection, and use `http://localhost:8090/api/oauth2-redirect` as the local callback URL. OAuth account creation is handled by PocketBase directly. Promote moderators and administrators by creating a `workshop_staff` record for the user; that record is the authorization source of truth.
+
+Optional ports and CORS behavior are configured only in the repository-root `.env`:
+
+```dotenv
+PB_EXPOSE_PORT=8090
+WORKSHOP_WEB_PORT=3003
+PB_ALLOWED_ORIGINS=*
+```
+
+## Production-like preview
+
+Run the exact combined image shape used for deployment:
+
+```sh
+pnpm preview:workshop
+```
+
+The multi-stage image builds Docusaurus, verifies and installs PocketBase `0.39.6`, copies the hooks and migrations, and serves everything from `http://localhost:8090`:
+
+- website: `http://localhost:8090/workshop`;
+- API: `http://localhost:8090/api`;
+- dashboard: `http://localhost:8090/_/`.
+
+The preview reuses `apps/workshop/pb_data/`, so OAuth configuration and local records remain available when switching between development and preview. `--remove-orphans` replaces the previous service shape without deleting data.
+
+## Reset local data
+
+Resetting is always explicit:
+
+```sh
+pnpm reset:workshop
+```
+
+The command asks for confirmation, stops both service variants, and clears `apps/workshop/pb_data/`. For automation, use `pnpm reset:workshop -- --force`.
+
+Authentication failures for an old email are requests made by the PocketBase dashboard against the persisted database; Workshop startup never attempts to authenticate or seed that account.
+
+## Build and validation
+
+`pnpm build` builds both `@homarr/workshop` and Docusaurus as part of the monorepo build. The production image can be validated locally with:
+
+```sh
+pnpm test:workshop-preview
+```
+
+The test uses a temporary database, builds and starts the production image, checks the website, API, service worker, and migrated collections, then removes all test state. The dedicated Workshop CI workflow runs this test only when Workshop-related sources or build inputs change; it does not publish an image.
+
+## Operations
+
+The live service uses the production target behind the `homarr.dev` TLS proxy. PocketBase superuser access is bootstrap/emergency access only; normal moderation belongs in `/workshop/admin`.
+
+Back up `/pb_data` before PocketBase or schema upgrades. It contains records, uploads, OAuth settings, and credentials. Production must also restrict `/_/`, monitor health and authentication failures, and validate backup restoration regularly.

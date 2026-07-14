@@ -1,0 +1,50 @@
+name: Workshop
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths: &workshop-paths
+      - "apps/workshop/**"
+      - "apps/docs/docusaurus.config.ts"
+      - "apps/docs/package.json"
+      - "apps/docs/src/components/workshop/**"
+      - "apps/docs/src/pages/workshop/**"
+      - "apps/docs/src/theme/Root.tsx"
+      - "apps/docs/static/workshop-*"
+      - "apps/docs/docs/management/workshop/**"
+      - "packages/workshop/**"
+      - "packages/validation/**"
+      - "packages/definitions/**"
+      - "patches/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - ".github/workflows/workshop.yml"
+  push:
+    branches: [dev]
+    paths: *workshop-paths
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-${{ github.ref }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  production-preview:
+    name: Production preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Copy environment defaults
+        run: cp .env.example .env
+      - name: Test Workshop backend
+        run: pnpm test:workshop-backend
+      - name: Build and smoke-test Workshop
+        run: pnpm test:workshop-preview

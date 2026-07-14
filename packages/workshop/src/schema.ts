@@ -18,7 +18,7 @@ export type WorkshopSubmissionType = z.infer<typeof workshopSubmissionTypeSchema
 export const workshopRoleSchema = z.enum(["member", "moderator", "admin"]);
 export type WorkshopRole = z.infer<typeof workshopRoleSchema>;
 
-export const workshopAccountStateSchema = z.enum(["active", "posting_banned", "disabled"]);
+export const workshopAccountStateSchema = z.enum(["active", "disabled"]);
 export type WorkshopAccountState = z.infer<typeof workshopAccountStateSchema>;
 
 export const workshopReportCategorySchema = z.enum(["malicious", "spam", "copyright", "inappropriate", "other"]);
@@ -112,7 +112,6 @@ export type WorkshopModerationAction = z.infer<typeof workshopModerationActionSc
 export const workshopErrorCodeSchema = z.enum([
   "authentication_required",
   "account_disabled",
-  "posting_banned",
   "forbidden",
   "not_found",
   "invalid_submission",

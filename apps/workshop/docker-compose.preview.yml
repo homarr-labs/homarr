@@ -5,7 +5,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/workshop/Dockerfile
-      target: development
+      target: production
       args:
         POCKETBASE_VERSION: 0.39.6
     restart: unless-stopped
@@ -15,7 +15,5 @@ services:
       - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:8090"
     volumes:
       - ${WORKSHOP_DATA_DIR:-./pb_data}:/pb_data
-      - ./pb_hooks:/pb_hooks:ro
-      - ./pb_migrations:/pb_migrations:ro
     security_opt:
       - no-new-privileges:true

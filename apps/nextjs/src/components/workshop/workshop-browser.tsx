@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
@@ -20,12 +19,10 @@ import {
   Stack,
   Text,
   TextInput,
-  Textarea,
 } from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangle,
-  IconBrandGithub,
   IconBuildingStore,
   IconDownload,
   IconExternalLink,
@@ -353,95 +350,5 @@ function WorkshopBrowserContent({ initialType = "all", lockedType, onUse, useLab
         )}
       </Modal>
     </Stack>
-  );
-}
-
-export function PublishToWorkshopButton({
-  type,
-  getContent,
-  defaultTitle,
-  compact = false,
-  renderTrigger,
-}: {
-  type: WorkshopSubmissionType;
-  getContent: () => Promise<string> | string;
-  defaultTitle: string;
-  compact?: boolean;
-  renderTrigger?: (open: () => void) => ReactNode;
-}) {
-  const t = useScopedI18n("workshop");
-  const client = useMemo(() => new WorkshopClient(apiUrl), []);
-  const [opened, { open, close }] = useDisclosure(false);
-  const [title, setTitle] = useState(defaultTitle);
-  const [description, setDescription] = useState("");
-  const [changelog, setChangelog] = useState("");
-  useEffect(() => setTitle(defaultTitle), [defaultTitle]);
-  const publishMutation = useMutation({
-    mutationKey: ["workshop", "publish", type],
-    mutationFn: async () => {
-      if (!client.currentUser) await client.signInWithGitHub();
-      return client.create({ type, title, description, changelog, content: await getContent() });
-    },
-    onSuccess: close,
-  });
-  return (
-    <>
-      {renderTrigger ? (
-        renderTrigger(open)
-      ) : (
-        <Button
-          size={compact ? "xs" : undefined}
-          variant="default"
-          leftSection={<IconBrandGithub size={16} />}
-          onClick={open}
-        >
-          {t("action.share")}
-        </Button>
-      )}
-      <Modal
-        opened={opened}
-        onClose={() => {
-          close();
-          publishMutation.reset();
-        }}
-        title={t("publish.title")}
-      >
-        <Stack>
-          <TextInput
-            required
-            label={t("publish.name")}
-            value={title}
-            onChange={(event) => setTitle(event.currentTarget.value)}
-          />
-          <Textarea
-            label={t("publish.description")}
-            value={description}
-            onChange={(event) => setDescription(event.currentTarget.value)}
-          />
-          <Textarea
-            label={t("publish.changelog")}
-            value={changelog}
-            onChange={(event) => setChangelog(event.currentTarget.value)}
-          />
-          {publishMutation.error && (
-            <Alert color="red">
-              {publishMutation.error instanceof Error ? publishMutation.error.message : t("error.publish")}
-            </Alert>
-          )}
-          <Group justify="end">
-            <Button variant="default" onClick={close}>
-              {t("action.cancel")}
-            </Button>
-            <Button
-              loading={publishMutation.isPending}
-              disabled={title.trim().length < 3}
-              onClick={() => publishMutation.mutate()}
-            >
-              {t("action.publish")}
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
-    </>
   );
 }

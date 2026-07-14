@@ -200,17 +200,6 @@ function WorkshopAdminContent() {
                             setPending({
                               kind: "state",
                               id: account.id,
-                              state: account.state === "posting_banned" ? "active" : "posting_banned",
-                            })
-                          }
-                        >
-                          {account.state === "posting_banned" ? "Lift posting ban" : "Posting ban"}
-                        </button>
-                        <button
-                          onClick={() =>
-                            setPending({
-                              kind: "state",
-                              id: account.id,
                               state: account.state === "disabled" ? "active" : "disabled",
                             })
                           }

@@ -1,42 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-onBootstrap((e) => {
-  e.next();
-  const users = e.app.findCollectionByNameOrId("users");
-  const clientId = $os.getenv("GITHUB_CLIENT_ID");
-  const clientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
-  users.oauth2.enabled = Boolean(clientId && clientSecret);
-  users.oauth2.providers = clientId && clientSecret ? [{ name: "github", clientId, clientSecret }] : [];
-  e.app.save(users);
-});
-
-onRecordAuthWithOAuth2Request((e) => {
-  const utils = require(`${__hooks}/workshop-utils.js`);
-  if (e.record && e.record.getString("state") === "disabled")
-    utils.fail(ForbiddenError, "account_disabled", "Account is disabled");
-  if (e.isNewRecord) {
-    e.createData.displayName = e.oAuth2User.name || e.oAuth2User.username || "Community member";
-    e.createData.avatarUrl = e.oAuth2User.avatarUrl || "";
-    e.createData.role = "member";
-    e.createData.state = "active";
-  }
-  e.next();
-}, "users");
-
-onRecordAuthRequest((e) => {
-  const utils = require(`${__hooks}/workshop-utils.js`);
-  if (e.record.getString("state") === "disabled") utils.fail(ForbiddenError, "account_disabled", "Account is disabled");
-  e.next();
-}, "users");
-
-onRecordUpdateRequest((e) => {
-  const original = e.app.findRecordById("users", e.record.id);
-  e.record.set("role", original.get("role"));
-  e.record.set("state", original.get("state"));
-  e.record.set("moderationReason", original.get("moderationReason"));
-  e.next();
-}, "users");
-
 onRecordCreateRequest((e) => {
   const utils = require(`${__hooks}/workshop-utils.js`);
   const account = utils.requireWritableAccount(e.app, e.auth, true);
@@ -116,8 +79,7 @@ routerAdd(
     const utils = require(`${__hooks}/workshop-utils.js`);
     const actorRole = utils.requireStaff(e.app, e.auth);
     const data = utils.body(e);
-    if (!["active", "posting_banned", "disabled"].includes(data.state))
-      throw new BadRequestError("Invalid account state");
+    if (!["active", "disabled"].includes(data.state)) throw new BadRequestError("Invalid account state");
     const id = e.request.pathValue("id");
     if (id === e.auth.id) throw new BadRequestError("You cannot moderate your own account");
     e.app.runInTransaction((tx) => {
@@ -149,6 +111,7 @@ routerAdd(
       const previous = utils.snapshot(target);
       target.set("role", data.role);
       tx.save(target);
+      utils.setStaffRole(tx, target, data.role);
       utils.audit(tx, e.auth, "set_role", "user", id, data.reason, previous);
     });
     return e.json(200, { success: true });

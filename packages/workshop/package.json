@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "esbuild src/index.ts src/client.ts src/schema.ts --bundle --format=esm --platform=browser --external:pocketbase --external:zod --external:zod/* --outdir=dist",
+    "dev": "pnpm build --watch=forever",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",

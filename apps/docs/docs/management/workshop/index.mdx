@@ -29,7 +29,7 @@ The public site also caches pages you have visited. If your network drops, a pre
 
 ## Share a creation
 
-Use **Share in Workshop** beside a custom widget or in a board's custom CSS settings. Sign in with GitHub, provide a public title and description, inspect the exported source, and publish it. You can also publish from the Workshop website by pasting an exported widget or CSS source.
+Export a custom widget from Homarr, then choose or drop the JSON file in the Workshop submission form. CSS themes can be pasted into the same form. Sign in with GitHub, provide a public title and description, inspect the source, and publish it.
 
 Submissions are public immediately. Authors can update or delete their own submissions. Updating content increases its revision and shows the supplied changelog.
 
@@ -39,6 +39,8 @@ Signed-in members can vote to help useful creations rank higher. Report maliciou
 
 ## Accounts and moderation
 
-Workshop accounts use GitHub OAuth and are separate from users in a self-hosted Homarr instance. Workshop moderators can remove submissions, prevent an account from publishing, disable an account, and resolve reports. These actions require a reason and are recorded.
+Workshop accounts use GitHub OAuth and are separate from users in a self-hosted Homarr instance. PocketBase creates OAuth accounts directly; staff privileges come only from the server-managed `workshop_staff` collection. Workshop moderators can remove submissions, disable an account, and resolve reports. These actions require a reason and are recorded.
 
 The Workshop is a central service operated by Homarr at `homarr.dev`. The documentation website and Workshop API ship in one image and use the same origin. Running it locally is supported for contributors developing or testing this feature, not as a private production marketplace.
+
+The service image is built directly from the Homarr repository rather than published separately. Contributors can run `pnpm dev:workshop` to start PocketBase in Docker while Docusaurus and the Workshop contracts watch on the host. Use `pnpm preview:workshop` to build the combined production image, or `pnpm reset:workshop` to explicitly clear the gitignored local PocketBase database. Superusers and GitHub OAuth are configured once in the persistent dashboard instead of being passed as environment variables.

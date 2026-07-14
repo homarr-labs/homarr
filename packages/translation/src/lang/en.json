@@ -4509,15 +4509,8 @@
       "loadTitle": "Workshop could not load",
       "detailTitle": "This creation is unavailable",
       "detailDescription": "Its source is not saved on this device and Workshop could not be reached.",
-      "publish": "The creation could not be published",
       "install": "The creation could not be used",
       "wrongType": "This creation does not match the requested type"
-    },
-    "publish": {
-      "title": "Share in Workshop",
-      "name": "Title",
-      "description": "Description",
-      "changelog": "Changelog"
     },
     "action": {
       "retry": "Try again",
@@ -4525,9 +4518,6 @@
       "download": "Download",
       "website": "Open website",
       "use": "Use creation",
-      "share": "Share in Workshop",
-      "cancel": "Cancel",
-      "publish": "Publish creation",
       "install": "Install widget",
       "useCss": "Use CSS"
     }

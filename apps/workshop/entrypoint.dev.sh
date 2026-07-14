@@ -1,10 +1,12 @@
 #!/bin/sh
 set -eu
 
-echo "Workshop is listening on port 8090"
-echo "Workshop API is available at /api"
+echo "Workshop development API: http://localhost:8090/api"
+echo "PocketBase dashboard: http://localhost:8090/_/"
 
 exec pocketbase serve \
+  --dev \
+  --automigrate=false \
   --http=0.0.0.0:8090 \
   --origins="${PB_ALLOWED_ORIGINS:-*}" \
   --dir=/pb_data \

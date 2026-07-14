@@ -6,6 +6,8 @@
 !patches/**
 !apps/docs/**
 !apps/workshop/entrypoint.sh
+!apps/workshop/entrypoint.dev.sh
+!apps/workshop/dev-public/**
 !apps/workshop/pb_hooks/**
 !apps/workshop/pb_migrations/**
 !packages/definitions/**

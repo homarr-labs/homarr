@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1.10
 
-FROM node:24.18.0-alpine AS website
+FROM node:24.18.0-alpine AS dependencies
 WORKDIR /app
+ENV COREPACK_HOME=/corepack
 
-RUN corepack enable pnpm
+RUN mkdir -p /corepack && \
+    corepack enable pnpm && \
+    corepack install --global pnpm@11.10.0
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store \
@@ -17,8 +20,11 @@ COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store \
-    pnpm install --recursive --offline --frozen-lockfile && \
-    CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
+    pnpm install --recursive --offline --frozen-lockfile
+
+FROM dependencies AS website
+
+RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
 
 FROM alpine:3.22 AS pocketbase
 
@@ -39,7 +45,20 @@ RUN case "${TARGETARCH}" in \
     cd /tmp && grep " ${ARCHIVE}$" checksums.txt | sha256sum -c - && \
     unzip "/tmp/${ARCHIVE}" pocketbase -d /out
 
-FROM alpine:3.22
+FROM alpine:3.22 AS development
+
+RUN apk add --no-cache ca-certificates tzdata
+COPY --from=pocketbase /out/pocketbase /usr/local/bin/pocketbase
+COPY apps/workshop/entrypoint.dev.sh /usr/local/bin/workshop-dev-entrypoint
+COPY apps/workshop/dev-public /pb_public
+RUN chmod +x /usr/local/bin/workshop-dev-entrypoint && \
+    mkdir -p /pb_data /pb_hooks /pb_migrations
+
+EXPOSE 8090
+HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=6 CMD wget -q --spider http://127.0.0.1:8090/api/health || exit 1
+ENTRYPOINT ["workshop-dev-entrypoint"]
+
+FROM alpine:3.22 AS production
 
 RUN apk add --no-cache ca-certificates tzdata && addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY --from=pocketbase /out/pocketbase /usr/local/bin/pocketbase
