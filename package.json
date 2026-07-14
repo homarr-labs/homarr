@@ -6,6 +6,8 @@
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
+    "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
+    "check:custom-widget-bundle": "node ./scripts/check-custom-widget-bundle.mjs",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
@@ -27,11 +29,14 @@
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
-    "test": "cross-env NODE_ENV=development CI=true vitest run --exclude e2e --coverage.enabled ",
-    "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
+    "test": "cross-env NODE_ENV=development CI=true vitest run --project api-node --project dom --coverage.enabled",
+    "test:e2e": "cross-env NODE_ENV=development CI=true vitest run --project e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
+  },
+  "dependencies": {
+    "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
@@ -64,8 +69,5 @@
     "node": ">=24.18.0",
     "pnpm": ">=11.10.0"
   },
-  "packageManager": "pnpm@11.10.0",
-  "dependencies": {
-    "jsonpath-plus": "catalog:"
-  }
+  "packageManager": "pnpm@11.10.0"
 }

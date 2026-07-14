@@ -8,37 +8,15 @@ import { redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { linter } from "@codemirror/lint";
-import type { EditorView } from "@codemirror/view";
-import {
-  Alert,
-  Badge,
-  Button,
-  Group,
-  Input,
-  Loader,
-  Popover,
-  ScrollArea,
-  Stack,
-  Text,
-  TextInput,
-  UnstyledButton,
-  useComputedColorScheme,
-} from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconArrowBackUp,
-  IconArrowForwardUp,
-  IconCheck,
-  IconCode,
-  IconComponents,
-  IconFileCode,
-  IconSearch,
-  IconWand,
-} from "@tabler/icons-react";
-import { enabledCustomJsxComponents } from "@homarr/definitions";
+import { EditorView } from "@codemirror/view";
+import { Badge, Button, Group, Input, Loader, Text, useComputedColorScheme } from "@mantine/core";
+import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCode, IconFileCode, IconWand } from "@tabler/icons-react";
+import { enabledCustomJsxComponents } from "@homarr/custom-widgets/core";
+import { ComponentReference } from "@homarr/custom-widgets/workbench";
+import type { EditorDiagnostic } from "@homarr/custom-widgets/workbench";
 import { useScopedI18n } from "@homarr/translation/client";
-import { validateCustomJsxTemplate } from "@homarr/validation/custom-jsx-template";
 
+import { CodeEditorDiagnostics } from "./_code-editor-diagnostics";
 import classes from "./_code-editor.module.css";
 
 const Editor = dynamic(() => import("@uiw/react-codemirror").then((module) => module.default), {
@@ -49,43 +27,6 @@ const Editor = dynamic(() => import("@uiw/react-codemirror").then((module) => mo
     </Group>
   ),
 });
-
-export const CUSTOM_JSX_TEMPLATE_LIMIT = 50_000;
-
-export type EditorDiagnosticCode =
-  | "ast"
-  | "dangerousProperty"
-  | "dynamicRequestId"
-  | "eventHandler"
-  | "invalidRequestManifest"
-  | "legacyNetworkProps"
-  | "missingRequestId"
-  | "templateEmpty"
-  | "templateTooLong"
-  | "unknownRequest"
-  | "unsafeTag";
-
-export interface EditorDiagnostic {
-  code: EditorDiagnosticCode;
-  severity: "error" | "warning";
-  line?: number;
-  column?: number;
-  index?: number;
-  value?: string;
-}
-
-interface AnalyzeJsxTemplateOptions {
-  apiVersion?: 1 | 2;
-  requestIds?: string[];
-}
-
-const unsafeTagPattern = /<\s*\/?\s*(script|iframe|object|embed|form|style|link|meta|base)\b/giu;
-const eventHandlerPattern = /\s(on[A-Z][\w]*)\s*=/gu;
-const dangerousPropertyPattern =
-  /(?:\.|\[\s*["'])(constructor|prototype|__proto__|caller|callee|arguments|bind|call|apply)(?:["']\s*\])?/giu;
-const networkComponentPattern = /<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/giu;
-
-const getLine = (source: string, index: number) => source.slice(0, index).split("\n").length;
 
 const customJsxCompletionSource: CompletionSource = (context) => {
   const word = context.matchBefore(/[A-Z][\w.]*/u);
@@ -99,111 +40,6 @@ const customJsxCompletionSource: CompletionSource = (context) => {
     })),
   };
 };
-
-export function analyzeJsxTemplate(
-  template: string,
-  { apiVersion = 1, requestIds = [] }: AnalyzeJsxTemplateOptions = {},
-): EditorDiagnostic[] {
-  const diagnostics: EditorDiagnostic[] = [];
-
-  if (template.trim().length === 0) {
-    diagnostics.push({ code: "templateEmpty", severity: "error", line: 1, column: 1, index: 0 });
-  }
-  if (template.length > CUSTOM_JSX_TEMPLATE_LIMIT) {
-    diagnostics.push({ code: "templateTooLong", severity: "error", line: 1, column: 1, index: 0 });
-  }
-
-  for (const diagnostic of validateCustomJsxTemplate(template)) {
-    diagnostics.push({
-      code: "ast",
-      severity: diagnostic.severity,
-      line: diagnostic.line,
-      column: diagnostic.column,
-      index: diagnostic.index,
-      value: diagnostic.message,
-    });
-  }
-
-  for (const match of template.matchAll(unsafeTagPattern)) {
-    diagnostics.push({
-      code: "unsafeTag",
-      severity: "error",
-      line: getLine(template, match.index),
-      index: match.index,
-      value: match[1],
-    });
-  }
-  for (const match of template.matchAll(eventHandlerPattern)) {
-    if (match[1] === "onParams") continue;
-    diagnostics.push({
-      code: "eventHandler",
-      severity: "error",
-      line: getLine(template, match.index),
-      index: match.index,
-      value: match[1],
-    });
-  }
-  for (const match of template.matchAll(dangerousPropertyPattern)) {
-    diagnostics.push({
-      code: "dangerousProperty",
-      severity: "error",
-      line: getLine(template, match.index),
-      index: match.index,
-      value: match[1],
-    });
-  }
-
-  if (apiVersion === 2) {
-    const knownRequestIds = new Set(requestIds);
-    for (const match of template.matchAll(networkComponentPattern)) {
-      const props = match[2] ?? "";
-      const line = getLine(template, match.index);
-      if (/\b(?:url|method|headers|body|onBody|offBody)\s*=/iu.test(props)) {
-        diagnostics.push({ code: "legacyNetworkProps", severity: "error", line, index: match.index });
-      }
-
-      const staticRequest = props.match(/\brequestId\s*=\s*["']([^"']+)["']/iu);
-      if (staticRequest?.[1]) {
-        if (!knownRequestIds.has(staticRequest[1])) {
-          diagnostics.push({
-            code: "unknownRequest",
-            severity: "error",
-            line,
-            index: match.index,
-            value: staticRequest[1],
-          });
-        }
-      } else if (/\brequestId\s*=/iu.test(props)) {
-        diagnostics.push({ code: "dynamicRequestId", severity: "error", line, index: match.index });
-      } else {
-        diagnostics.push({ code: "missingRequestId", severity: "error", line, index: match.index });
-      }
-    }
-  }
-
-  return diagnostics;
-}
-
-export function analyzeRequestManifest(value: string): EditorDiagnostic[] {
-  try {
-    const parsed: unknown = JSON.parse(value);
-    if (!Array.isArray(parsed)) {
-      return [{ code: "invalidRequestManifest", severity: "error", line: 1 }];
-    }
-    return [];
-  } catch {
-    return [{ code: "invalidRequestManifest", severity: "error", line: 1 }];
-  }
-}
-
-export function parseRequestManifest(value: string): unknown[] {
-  try {
-    const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 interface CodeEditorProps {
   id: string;
@@ -251,10 +87,19 @@ export function CodeEditor({
         };
       }),
     );
+    const accessibilityExtension = EditorView.contentAttributes.of({
+      id,
+      "aria-label": label,
+    });
     return language === "jsx"
-      ? [javascript({ jsx: true }), autocompletion({ override: [customJsxCompletionSource] }), diagnosticsExtension]
-      : [json(), diagnosticsExtension];
-  }, [diagnostics, language, t]);
+      ? [
+          javascript({ jsx: true }),
+          autocompletion({ override: [customJsxCompletionSource] }),
+          diagnosticsExtension,
+          accessibilityExtension,
+        ]
+      : [json(), diagnosticsExtension, accessibilityExtension];
+  }, [diagnostics, id, label, language, t]);
   const errorCount = diagnostics.filter((diagnostic) => diagnostic.severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
 
@@ -293,6 +138,7 @@ export function CodeEditor({
           </Group>
           <Group gap={6}>
             <Button
+              type="button"
               size="compact-xs"
               variant="subtle"
               leftSection={<IconArrowBackUp size={14} />}
@@ -302,6 +148,7 @@ export function CodeEditor({
               {t("action.undo")}
             </Button>
             <Button
+              type="button"
               size="compact-xs"
               variant="subtle"
               leftSection={<IconArrowForwardUp size={14} />}
@@ -310,9 +157,19 @@ export function CodeEditor({
             >
               {t("action.redo")}
             </Button>
-            {language === "jsx" && <ComponentReference />}
+            {language === "jsx" && (
+              <ComponentReference
+                messages={{
+                  action: t("action.components"),
+                  search: t("componentReference.search"),
+                  empty: t("componentReference.empty"),
+                  count: (count) => t("componentReference.count", { count }),
+                }}
+              />
+            )}
             {starter && value.trim().length === 0 && (
               <Button
+                type="button"
                 size="compact-xs"
                 variant="subtle"
                 leftSection={<IconFileCode size={14} />}
@@ -322,6 +179,7 @@ export function CodeEditor({
               </Button>
             )}
             <Button
+              type="button"
               size="compact-xs"
               variant="subtle"
               leftSection={<IconWand size={14} />}
@@ -335,7 +193,7 @@ export function CodeEditor({
 
         <div className={classes.viewport}>
           <Editor
-            id={id}
+            id={`${id}-root`}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
@@ -397,94 +255,17 @@ export function CodeEditor({
         </Group>
       </div>
 
-      {diagnostics.length > 0 && (
-        <Stack component="ul" gap={6} mt="xs" pl={0} style={{ listStyle: "none" }} aria-label={t("diagnostics.title")}>
-          {diagnostics.map((diagnostic, index) => (
-            <li key={`${diagnostic.code}-${diagnostic.line ?? 0}-${index}`}>
-              <UnstyledButton
-                w="100%"
-                className={classes.diagnosticButton}
-                onClick={() => {
-                  if (!editorView || diagnostic.index === undefined) return;
-                  const anchor = Math.min(diagnostic.index, editorView.state.doc.length);
-                  editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
-                  editorView.focus();
-                }}
-              >
-                <Alert
-                  color={diagnostic.severity === "error" ? "red" : "yellow"}
-                  variant="light"
-                  p="xs"
-                  icon={<IconAlertTriangle size={15} />}
-                >
-                  <Text size="xs">
-                    {diagnostic.line ? `${t("diagnostics.line", { line: diagnostic.line })}: ` : ""}
-                    {t(`diagnostics.${diagnostic.code}` as never, { value: diagnostic.value ?? "" } as never)}
-                  </Text>
-                </Alert>
-              </UnstyledButton>
-            </li>
-          ))}
-        </Stack>
-      )}
+      <CodeEditorDiagnostics
+        diagnostics={diagnostics}
+        editorView={editorView}
+        title={t("diagnostics.title")}
+        formatDiagnostic={(diagnostic) =>
+          `${diagnostic.line ? `${t("diagnostics.line", { line: diagnostic.line })}: ` : ""}${t(
+            `diagnostics.${diagnostic.code}` as never,
+            { value: diagnostic.value ?? "" } as never,
+          )}`
+        }
+      />
     </Input.Wrapper>
-  );
-}
-
-function ComponentReference() {
-  const t = useScopedI18n("customWidget.editor");
-  const [query, setQuery] = useState("");
-  const components = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase();
-    return enabledCustomJsxComponents.filter(
-      (component) =>
-        normalizedQuery.length === 0 ||
-        component.name.toLocaleLowerCase().includes(normalizedQuery) ||
-        component.category.toLocaleLowerCase().includes(normalizedQuery),
-    );
-  }, [query]);
-
-  return (
-    <Popover width={320} position="bottom-end" withinPortal shadow="md">
-      <Popover.Target>
-        <Button size="compact-xs" variant="subtle" leftSection={<IconComponents size={14} />}>
-          {t("action.components")}
-        </Button>
-      </Popover.Target>
-      <Popover.Dropdown p="xs">
-        <Stack gap="xs">
-          <TextInput
-            size="xs"
-            value={query}
-            onChange={(event) => setQuery(event.currentTarget.value)}
-            placeholder={t("componentReference.search")}
-            aria-label={t("componentReference.search")}
-            leftSection={<IconSearch size={14} />}
-          />
-          <ScrollArea.Autosize mah={300} type="auto">
-            <Stack gap={4}>
-              {components.map((component) => (
-                <Group key={component.name} justify="space-between" wrap="nowrap" py={3} px={4}>
-                  <Text size="xs" ff="monospace" fw={600}>
-                    {component.name}
-                  </Text>
-                  <Badge size="xs" variant="light" color={component.safety === "wrapped" ? "yellow" : "gray"}>
-                    {component.category}
-                  </Badge>
-                </Group>
-              ))}
-              {components.length === 0 && (
-                <Text size="xs" c="dimmed" ta="center" py="md">
-                  {t("componentReference.empty")}
-                </Text>
-              )}
-            </Stack>
-          </ScrollArea.Autosize>
-          <Text size="xs" c="dimmed">
-            {t("componentReference.count", { count: enabledCustomJsxComponents.length })}
-          </Text>
-        </Stack>
-      </Popover.Dropdown>
-    </Popover>
   );
 }

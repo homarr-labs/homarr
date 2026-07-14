@@ -1,31 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ActionIcon,
-  Alert,
-  Badge,
-  Button,
-  Code,
-  Group,
-  Menu,
-  Modal,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconAlertTriangle, IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
+import { IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { getImportReview, parseCustomWidgetClipboard } from "@homarr/custom-widgets/core";
+import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { getImportReview, parseCustomWidgetClipboard } from "./_custom-widget-import-utils";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -214,80 +202,28 @@ export const ImportCustomWidgetButton = () => {
         onChange={handleImport}
         aria-label={t("importReview.fileLabel")}
       />
-      <Modal opened={reviewOpened} onClose={closeReview} title={t("importReview.title")} centered size="lg">
-        {pendingImport && review && (
-          <Stack gap="md">
-            <Text size="sm" c="dimmed">
-              {t("importReview.description")}
-            </Text>
-            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
-              <ImportFact label={t("importReview.name")} value={review.name} />
-              <ImportFact label={t("importReview.origin")} value={review.origin} />
-              <ImportFact label={t("importReview.authentication")} value={review.authType} />
-              <ImportFact label={t("importReview.networkScope")} value={review.networkScope} />
-            </SimpleGrid>
-
-            <div>
-              <Text size="sm" fw={600} mb={6}>
-                {t("importReview.methods")}
-              </Text>
-              <Group gap={6}>
-                {review.methods.map((method) => (
-                  <Badge
-                    key={method}
-                    color={method === "DELETE" ? "red" : method === "GET" ? "blue" : "orange"}
-                    variant="light"
-                  >
-                    {method}
-                  </Badge>
-                ))}
-              </Group>
-            </div>
-
-            <div>
-              <Text size="sm" fw={600} mb={6}>
-                {t("importReview.permissions")}
-              </Text>
-              <Group gap={6}>
-                {review.permissions.map((permission) => (
-                  <Badge key={permission} color="gray" variant="light">
-                    {t(`preview.request.permission.${permission}` as never)}
-                  </Badge>
-                ))}
-              </Group>
-            </div>
-
-            {review.hasActions && (
-              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-                <Text size="sm" fw={600}>
-                  {t("importReview.actionWarning.title")}
-                </Text>
-                <Text size="sm">{t("importReview.actionWarning.description")}</Text>
-              </Alert>
-            )}
-
-            <Group justify="flex-end">
-              <Button variant="default" onClick={closeReview} disabled={importMutation.isPending}>
-                {t("importReview.cancel")}
-              </Button>
-              <Button onClick={() => importMutation.mutate(pendingImport as never)} loading={importMutation.isPending}>
-                {t("importReview.confirm")}
-              </Button>
-            </Group>
-          </Stack>
-        )}
-      </Modal>
+      <ImportReviewDialog
+        opened={reviewOpened}
+        review={review}
+        pending={importMutation.isPending}
+        onClose={closeReview}
+        onConfirm={() => pendingImport && importMutation.mutate(pendingImport as never)}
+        messages={{
+          title: t("importReview.title"),
+          description: t("importReview.description"),
+          name: t("importReview.name"),
+          origin: t("importReview.origin"),
+          authentication: t("importReview.authentication"),
+          networkScope: t("importReview.networkScope"),
+          methods: t("importReview.methods"),
+          permissions: t("importReview.permissions"),
+          actionWarningTitle: t("importReview.actionWarning.title"),
+          actionWarningDescription: t("importReview.actionWarning.description"),
+          cancel: t("importReview.cancel"),
+          confirm: t("importReview.confirm"),
+          permission: (permission) => t(`preview.request.permission.${permission}` as never),
+        }}
+      />
     </>
   );
 };
-
-function ImportFact({ label, value }: { label: string; value: string }) {
-  return (
-    <Paper withBorder p="xs">
-      <Text size="xs" c="dimmed">
-        {label}
-      </Text>
-      <Code>{value || "—"}</Code>
-    </Paper>
-  );
-}

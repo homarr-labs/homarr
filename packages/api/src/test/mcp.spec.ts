@@ -62,3 +62,31 @@ test("MCP tools should have descriptions", () => {
     expect(tool.description, `Tool ${tool.name} should have a description`).toBeTruthy();
   }
 });
+
+test("custom widget public procedures remain available", () => {
+  expect(Object.keys(customWidgetRouter._def.procedures)).toEqual(
+    expect.arrayContaining([
+      "all",
+      "byId",
+      "available",
+      "create",
+      "update",
+      "toggleEnabled",
+      "delete",
+      "duplicate",
+      "export",
+      "import",
+      "schema",
+      "validate",
+      "readTemplate",
+      "writeTemplate",
+      "patchTemplate",
+      "preview",
+      "previewQuery",
+      "previewAction",
+      "simulatePreviewAction",
+      "setPreviewLiveActions",
+      "previewJournal",
+    ]),
+  );
+});

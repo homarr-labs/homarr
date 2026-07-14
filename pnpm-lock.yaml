@@ -860,6 +860,9 @@ importers:
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
+      '@homarr/custom-widgets':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/custom-widgets
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -1314,6 +1317,9 @@ importers:
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
+      '@homarr/custom-widgets':
+        specifier: workspace:^0.1.0
+        version: link:../custom-widgets
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -1371,9 +1377,6 @@ importers:
       '@trpc/tanstack-react-query':
         specifier: 'catalog:'
         version: 11.18.0(@tanstack/react-query@5.101.2(react@19.2.7))(@trpc/client@11.18.0(@trpc/server@11.18.0(typescript@6.0.3))(typescript@6.0.3))(@trpc/server@11.18.0(typescript@6.0.3))(react@19.2.7)(typescript@6.0.3)
-      jsonpath-plus:
-        specifier: 'catalog:'
-        version: 10.4.0
       lodash.clonedeep:
         specifier: 'catalog:'
         version: 4.5.0
@@ -1708,6 +1711,70 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  packages/custom-widgets:
+    dependencies:
+      '@mantine/charts':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.9.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
+      '@mantine/core':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks':
+        specifier: 'catalog:'
+        version: 9.4.1(react@19.2.7)
+      '@tabler/icons-react':
+        specifier: 'catalog:'
+        version: 3.44.0(react@19.2.7)
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.101.2(react@19.2.7)
+      acorn:
+        specifier: 'catalog:'
+        version: 8.16.0
+      acorn-jsx:
+        specifier: 'catalog:'
+        version: 5.3.2(acorn@8.16.0)
+      jsonpath-plus:
+        specifier: 'catalog:'
+        version: 10.4.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      undici:
+        specifier: 'catalog:'
+        version: 7.28.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.1.1(@noble/hashes@2.0.1)
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+
   packages/db:
     dependencies:
       '@auth/core':
@@ -1719,6 +1786,9 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      '@homarr/custom-widgets':
+        specifier: workspace:^0.1.0
+        version: link:../custom-widgets
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
@@ -1792,6 +1862,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/custom-widgets':
+        specifier: workspace:^0.1.0
+        version: link:../custom-widgets
       fast-xml-parser:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2587,6 +2660,9 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      '@homarr/custom-widgets':
+        specifier: workspace:^0.1.0
+        version: link:../custom-widgets
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -2713,9 +2789,6 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
-      jsonpath-plus:
-        specifier: 'catalog:'
-        version: 10.4.0
       lucide-react:
         specifier: 'catalog:'
         version: 1.23.0(react@19.2.7)
@@ -4320,11 +4393,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.25.12':
     resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
@@ -10937,9 +11010,6 @@ packages:
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
 
-  immer@11.1.4:
-    resolution: {integrity: sha512-XREFCPo6ksxVzP4E0ekD5aMdf8WMwmdNaz6vuvxgI40UaEiu6q3p8X52aU6GdyvLY3XXX/8R7JOTXStz/nBbRw==}
-
   immer@11.1.9:
     resolution: {integrity: sha512-sc/z0Cyti70bZa0ZU4sWfAElfovFb9Ni8tArJZLuklYWxegPiK3pDOql1Rq5H0FIRAW9LSQRG6OX4KqBldbhBA==}
 
@@ -13748,9 +13818,6 @@ packages:
 
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-
-  reselect@5.1.1:
-    resolution: {integrity: sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==}
 
   reselect@5.2.0:
     resolution: {integrity: sha512-AgZ3UOZm3YndfrJ4OYjgrT7bmCm/1iqkjvEfH/oYjzh6PD2qw4QuT3jjnXIrpdt4MTpMXclMT3lXbmRY+XRakw==}
@@ -20071,10 +20138,10 @@ snapshots:
     dependencies:
       '@standard-schema/spec': 1.1.0
       '@standard-schema/utils': 0.3.0
-      immer: 11.1.4
+      immer: 11.1.9
       redux: 5.0.1
       redux-thunk: 3.1.0(redux@5.0.1)
-      reselect: 5.1.1
+      reselect: 5.2.0
     optionalDependencies:
       react: 19.2.7
       react-redux: 9.2.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
@@ -25086,8 +25153,6 @@ snapshots:
 
   immediate@3.0.6: {}
 
-  immer@11.1.4: {}
-
   immer@11.1.9: {}
 
   immutable@5.1.5: {}
@@ -28307,8 +28372,6 @@ snapshots:
   require-like@0.1.2: {}
 
   requires-port@1.0.0: {}
-
-  reselect@5.1.1: {}
 
   reselect@5.2.0: {}
 

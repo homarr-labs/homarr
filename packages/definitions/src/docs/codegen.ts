@@ -7,7 +7,7 @@ import { z } from "zod/v4";
 import { createDocumentationLink } from "./index";
 import { integrationDocSlugs } from "./integration-doc-slugs";
 import { widgetDocSlugs } from "./widget-doc-slugs";
-import { customJsxComponentRegistry } from "../custom-jsx";
+import { customJsxComponentRegistry } from "@homarr/custom-widgets/core";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

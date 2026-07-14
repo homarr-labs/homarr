@@ -1,0 +1,36 @@
+---
+sidebar_label: Authoring workbench
+---
+
+# Authoring workbench
+
+The Custom Widget form is a continuous workflow: choose a display, configure the HTTP connection, configure the display, then test it in the adjacent preview. Each section stays visible so you can revisit earlier choices without losing context.
+
+## Choose a display
+
+The display grid is the first product decision. Built-in displays are best for common metrics, tables, statuses, and actions. Choose Custom JSX when the layout needs multiple Mantine components, conditional presentation, charts, dates, or named requests.
+
+Changing display type preserves shared connection fields and initializes safe display defaults. A Custom JSX template is never blank; new and migrated forms receive the tested starter fixture.
+
+## Test and preview
+
+The preview has four tabs:
+
+- **Widget** renders at compact, standard, or wide board-like sizes.
+- **Response** uses a tree to inspect data, copy paths, and insert paths into JSX. The external-response action opens a temporary local blob and never publishes the response.
+- **Request** shows the redacted base request, named capabilities, status, duration, and preview journal.
+- **Diagnostics** shows template size, named requests, network scope, and blocking or advisory issues.
+
+Only GET base requests run automatically. Preview actions are simulated until an administrator explicitly enables live actions for the five-minute preview session. DELETE still requires confirmation.
+
+## Keyboard and clipboard
+
+The JSX and JSON editors support native Ctrl/Cmd+Z and redo, plus visible toolbar controls. Cursor position, character count, and the 50,000-character limit remain visible.
+
+On the list page, paste a complete v3 export with Ctrl+V or Command+V to import it as new. On an edit page, pasting opens a replacement review. Nothing is applied before the origin, methods, credential inheritance, and permissions are shown.
+
+For AI output, prefer the authoring bundle format: a JSON block containing `"template": "__HOMARR_TEMPLATE__"`, followed by a JSX block. This keeps multiline JSX readable and avoids JSON escape errors.
+
+## Save behavior
+
+Errors block save; warnings do not. Server validation runs again on every create or update. Leaving with dirty changes triggers protection. Secrets omitted during edit remain unchanged, and secrets are never exported.

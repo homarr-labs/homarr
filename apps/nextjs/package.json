@@ -31,6 +31,7 @@
     "@homarr/boards": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",

@@ -1,175 +1,79 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
-
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createRedisClient } from "@homarr/core/infrastructure/redis";
 import type { RedisClient } from "@homarr/core/infrastructure/redis";
-import {
-  customJsxNetworkScopes,
-  customJsxRequestSchema,
-  customWidgetAuthTypes,
-  customWidgetSecretKinds,
-} from "@homarr/validation/custom-widget";
-import type { CustomJsxNetworkScope, CustomJsxRequest, CustomWidgetAuthType } from "@homarr/validation/custom-widget";
+import { CustomWidgetPreviewSessionService } from "@homarr/custom-widgets/server";
+import type {
+  CreatePreviewSessionInput,
+  CustomWidgetPreviewJournalEntry,
+  CustomWidgetPreviewSession,
+  PreviewSessionStore,
+} from "@homarr/custom-widgets/server";
 
-const PREVIEW_SESSION_TTL_MS = 5 * 60_000;
-const PREVIEW_SESSION_PREFIX = "custom-widget:preview-session:";
-const PREVIEW_JOURNAL_PREFIX = "custom-widget:preview-journal:";
-const MAX_PREVIEW_JOURNAL_ENTRIES = 50;
+import { toTrpcError } from "./domain-error";
 
-const storedPreviewSessionSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  expiresAt: z.number(),
-  baseUrl: z.string(),
-  authType: z.enum(customWidgetAuthTypes),
-  headerName: z.string().nullable(),
-  secrets: z.array(z.object({ kind: z.enum(customWidgetSecretKinds), value: z.string() })),
-  networkScope: z.enum(customJsxNetworkScopes),
-  requests: z.array(customJsxRequestSchema),
-  definitionId: z.string().optional(),
-  liveActions: z.boolean(),
-});
+const SESSION_PREFIX = "custom-widget:preview-session:";
+const JOURNAL_PREFIX = "custom-widget:preview-journal:";
 
-export type CustomWidgetPreviewSession = z.infer<typeof storedPreviewSessionSchema>;
+class RedisPreviewSessionStore implements PreviewSessionStore {
+  public constructor(private readonly redis: RedisClient) {}
 
-const previewJournalEntrySchema = z.object({
-  id: z.string(),
-  requestId: z.string(),
-  kind: z.enum(["query", "action"]),
-  method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
-  pathTemplate: z.string(),
-  status: z.number().nullable(),
-  durationMs: z.number().nonnegative(),
-  simulated: z.boolean(),
-  timestamp: z.number(),
-});
-export type CustomWidgetPreviewJournalEntry = z.infer<typeof previewJournalEntrySchema>;
+  public async saveSession(id: string, value: unknown, ttlMs: number) {
+    await this.redis.set(`${SESSION_PREFIX}${id}`, JSON.stringify(value), "PX", ttlMs);
+  }
 
-export interface CreatePreviewSessionInput {
-  userId: string;
-  baseUrl: string;
-  authType: CustomWidgetAuthType;
-  headerName?: string;
-  secrets: Array<{ kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
-  networkScope: CustomJsxNetworkScope;
-  requests: CustomJsxRequest[];
-  definitionId?: string;
+  public getSession(id: string) {
+    return this.redis.get(`${SESSION_PREFIX}${id}`);
+  }
+  public async deleteSession(id: string) {
+    await this.redis.del(`${SESSION_PREFIX}${id}`);
+  }
+
+  public async appendJournal(id: string, value: unknown, maxEntries: number, ttlMs: number) {
+    const key = `${JOURNAL_PREFIX}${id}`;
+    await this.redis
+      .multi()
+      .lpush(key, JSON.stringify(value))
+      .ltrim(key, 0, maxEntries - 1)
+      .pexpire(key, ttlMs)
+      .exec();
+  }
+
+  public getJournal(id: string, maxEntries: number) {
+    return this.redis.lrange(`${JOURNAL_PREFIX}${id}`, 0, maxEntries - 1);
+  }
 }
 
-let redisClient: RedisClient | null | undefined;
-const localSessions = new Map<string, CustomWidgetPreviewSession>();
-const localJournals = new Map<string, CustomWidgetPreviewJournalEntry[]>();
+let service: CustomWidgetPreviewSessionService | undefined;
+function getService() {
+  if (service) return service;
+  const useLocal = process.env.CI !== undefined || process.env.NODE_ENV === "test";
+  service = new CustomWidgetPreviewSessionService({
+    createId,
+    encrypt: encryptSecret,
+    decrypt: (value) => decryptSecret(value as `${string}.${string}`),
+    store: useLocal ? undefined : new RedisPreviewSessionStore(createRedisClient()),
+  });
+  return service;
+}
 
-const getRedisClient = () => {
-  if (process.env.CI !== undefined || process.env.NODE_ENV === "test") return null;
-  redisClient ??= createRedisClient();
-  return redisClient;
-};
-
-const sessionKey = (id: string) => `${PREVIEW_SESSION_PREFIX}${id}`;
-const journalKey = (id: string) => `${PREVIEW_JOURNAL_PREFIX}${id}`;
-
-const saveSession = async (session: CustomWidgetPreviewSession) => {
-  const ttlMs = Math.max(0, session.expiresAt - Date.now());
-  if (ttlMs === 0) throw new TRPCError({ code: "NOT_FOUND", message: "Preview session expired" });
-  const redis = getRedisClient();
-  if (!redis) {
-    localSessions.set(session.id, session);
-    return;
+async function call<T>(operation: () => Promise<T>): Promise<T> {
+  try {
+    return await operation();
+  } catch (error) {
+    toTrpcError(error);
   }
-  await redis.set(sessionKey(session.id), JSON.stringify(session), "PX", ttlMs);
-};
+}
 
-export const createPreviewSession = async (input: CreatePreviewSessionInput) => {
-  const session: CustomWidgetPreviewSession = {
-    id: createId(),
-    userId: input.userId,
-    expiresAt: Date.now() + PREVIEW_SESSION_TTL_MS,
-    baseUrl: input.baseUrl,
-    authType: input.authType,
-    headerName: input.headerName ?? null,
-    secrets: input.secrets.map((secret) => ({ kind: secret.kind, value: encryptSecret(secret.value) })),
-    networkScope: input.networkScope,
-    requests: input.requests,
-    definitionId: input.definitionId,
-    liveActions: false,
-  };
-  await saveSession(session);
-  return { id: session.id, expiresAt: session.expiresAt, liveActions: false as const };
-};
+export type { CreatePreviewSessionInput, CustomWidgetPreviewJournalEntry, CustomWidgetPreviewSession };
 
-export const getPreviewSession = async (id: string, userId: string): Promise<CustomWidgetPreviewSession> => {
-  const redis = getRedisClient();
-  const raw = redis ? await redis.get(sessionKey(id)) : localSessions.get(id);
-  let candidate: unknown = raw;
-  if (typeof raw === "string") {
-    try {
-      candidate = JSON.parse(raw) as unknown;
-    } catch {
-      candidate = null;
-    }
-  }
-  const parsed = storedPreviewSessionSchema.safeParse(candidate);
-  if (!parsed.success || parsed.data.userId !== userId || parsed.data.expiresAt <= Date.now()) {
-    if (!redis) localSessions.delete(id);
-    throw new TRPCError({ code: "NOT_FOUND", message: "Preview session expired or was not found" });
-  }
-  return parsed.data;
-};
-
-export const setPreviewSessionLiveActions = async (id: string, userId: string, enabled: boolean) => {
-  const session = await getPreviewSession(id, userId);
-  const updated = { ...session, liveActions: enabled };
-  await saveSession(updated);
-  return { id, expiresAt: updated.expiresAt, liveActions: enabled };
-};
-
-export const appendPreviewJournal = async (
+export const createPreviewSession = (input: CreatePreviewSessionInput) => call(() => getService().create(input));
+export const getPreviewSession = (id: string, userId: string) => call(() => getService().get(id, userId));
+export const setPreviewSessionLiveActions = (id: string, userId: string, enabled: boolean) =>
+  call(() => getService().setLiveActions(id, userId, enabled));
+export const appendPreviewJournal = (
   session: CustomWidgetPreviewSession,
   entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "timestamp">,
-) => {
-  const value = previewJournalEntrySchema.parse({ ...entry, id: createId(), timestamp: Date.now() });
-  const redis = getRedisClient();
-  if (!redis) {
-    localJournals.set(
-      session.id,
-      [value, ...(localJournals.get(session.id) ?? [])].slice(0, MAX_PREVIEW_JOURNAL_ENTRIES),
-    );
-    return;
-  }
-  const ttlMs = Math.max(1, session.expiresAt - Date.now());
-  await redis
-    .multi()
-    .lpush(journalKey(session.id), JSON.stringify(value))
-    .ltrim(journalKey(session.id), 0, MAX_PREVIEW_JOURNAL_ENTRIES - 1)
-    .pexpire(journalKey(session.id), ttlMs)
-    .exec();
-};
-
-export const getPreviewJournal = async (id: string, userId: string) => {
-  await getPreviewSession(id, userId);
-  const redis = getRedisClient();
-  const entries = redis
-    ? await redis.lrange(journalKey(id), 0, MAX_PREVIEW_JOURNAL_ENTRIES - 1)
-    : (localJournals.get(id) ?? []);
-  return entries.flatMap((entry) => {
-    let candidate: unknown = entry;
-    if (typeof entry === "string") {
-      try {
-        candidate = JSON.parse(entry) as unknown;
-      } catch {
-        return [];
-      }
-    }
-    const parsed = previewJournalEntrySchema.safeParse(candidate);
-    return parsed.success ? [parsed.data] : [];
-  });
-};
-
-export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession) =>
-  session.secrets.map((secret) => ({
-    kind: secret.kind,
-    value: decryptSecret(secret.value as `${string}.${string}`),
-  }));
+) => call(() => getService().appendJournal(session, entry));
+export const getPreviewJournal = (id: string, userId: string) => call(() => getService().getJournal(id, userId));
+export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession) => getService().getSecrets(session);

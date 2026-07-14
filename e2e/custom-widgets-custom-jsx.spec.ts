@@ -3,7 +3,7 @@ import { describe, test } from "vitest";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
-import { startMockApiServerAsync } from "./shared/mock-api-server";
+import { startMockApiContainerAsync } from "./shared/mock-api-container";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const adminCredentials = {
@@ -18,7 +18,7 @@ const updatedTemplate = '<Stack gap="xs"><Text>{data.title}</Text><Badge color="
 
 describe("Custom JSX custom widgets", () => {
   test("creates, previews, and edits a customJsx widget", async () => {
-    const mockApi = await startMockApiServerAsync({
+    const mockApi = await startMockApiContainerAsync({
       title: "E2E Widget",
       status: "online",
       value: 42,
@@ -52,12 +52,13 @@ describe("Custom JSX custom widgets", () => {
       await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });
       await page.getByRole("textbox", { name: "Name" }).fill("E2E Custom JSX");
       await page.getByRole("textbox", { name: "URL", exact: true }).fill(`${mockApi.url}/status`);
-      await page.getByRole("combobox", { name: "Display Type" }).click();
-      await page.getByRole("option", { name: "Custom JSX" }).click();
+      await page.getByRole("button", { name: /Custom JSX/u }).click();
+      await page.getByRole("combobox", { name: "Network scope" }).click();
+      await page.getByRole("option", { name: "Private networks" }).click();
       await page.getByLabel("JSX Template").fill(initialTemplate);
 
-      await page.getByRole("button", { name: "Test" }).first().click();
-      const previewPanel = page.locator(".mantine-Card-root").filter({ hasText: "Preview" });
+      const previewPanel = page.getByRole("complementary", { name: "Preview" });
+      await previewPanel.getByRole("button", { name: "Test" }).click();
       await expect(previewPanel.getByRole("heading", { name: "E2E Widget" }).first()).toBeVisible({
         timeout: 15_000,
       });
@@ -65,18 +66,18 @@ describe("Custom JSX custom widgets", () => {
       await page.getByRole("button", { name: "Create" }).first().click();
       await expect(page.getByText('Widget "E2E Custom JSX" created successfully.')).toBeVisible({ timeout: 15_000 });
       await page.waitForURL("**/manage/custom-widgets/edit/**", { timeout: 15_000 });
-      await expect(page.getByLabel("JSX Template")).toHaveValue(initialTemplate);
+      await expect(page.getByLabel("JSX Template")).toHaveText(initialTemplate);
 
       await page.getByLabel("JSX Template").fill(updatedTemplate);
-      await expect(page.getByLabel("JSX Template")).toHaveValue(updatedTemplate);
+      await expect(page.getByLabel("JSX Template")).toHaveText(updatedTemplate);
 
       await page.getByRole("button", { name: "Save" }).first().click();
       await expect(page.getByText('Widget "E2E Custom JSX" updated successfully.')).toBeVisible({ timeout: 15_000 });
-      await expect(page.getByLabel("JSX Template")).toHaveValue(updatedTemplate);
+      await expect(page.getByLabel("JSX Template")).toHaveText(updatedTemplate);
     } finally {
       await browser.close();
       await homarrContainer.stop();
-      await mockApi.close();
+      await mockApi.stop();
     }
   }, 120_000);
 });

@@ -9,11 +9,13 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import type { Root } from "react-dom/client";
 
-import { customJsxComponentRegistry, customJsxExamples, enabledCustomJsxComponents } from "@homarr/definitions";
+import { customJsxComponentRegistry, customJsxExamples, enabledCustomJsxComponents } from "@homarr/custom-widgets/core";
+import { renderSafeJsx, SafeJsxError, sanitizeCustomJsxProps } from "@homarr/custom-widgets/jsx";
 
 import CustomJsxDisplay from "./custom-jsx-display";
-import { SAFE_BINDINGS, WHITELISTED_COMPONENTS } from "./jsx-whitelist";
-import { renderSafeJsx, SafeJsxError, sanitizeCustomJsxProps } from "./safe-jsx-interpreter";
+import { createWhitelistedComponents, SAFE_BINDINGS } from "./jsx-whitelist";
+
+const WHITELISTED_COMPONENTS = createWhitelistedComponents({ copy: "Copy", copied: "Copied" });
 
 vi.mock("@homarr/translation/client", () => ({
   useScopedI18n: () => (key: string, params?: Record<string, string>) =>
@@ -377,6 +379,9 @@ describe("Custom JSX component registry", () => {
   });
 });
 
+const renderTemplate = (template: string, data: Record<string, unknown> = {}) =>
+  renderSafeJsx({ template, components: WHITELISTED_COMPONENTS, bindings: SAFE_BINDINGS(data) });
+
 describe("new collection/string methods", () => {
   let container: HTMLDivElement;
   let root: Root;
@@ -395,9 +400,6 @@ describe("new collection/string methods", () => {
     });
     return container.textContent ?? "";
   };
-
-  const render = (template: string, data: Record<string, unknown> = {}) =>
-    renderSafeJsx({ template, components: WHITELISTED_COMPONENTS, bindings: SAFE_BINDINGS(data) });
 
   it("find returns the first matching item", async () => {
     const text = await renderAndGetText(`<Text>{data.items.find((x) => x.id === 2).name}</Text>`, {
@@ -450,7 +452,7 @@ describe("new collection/string methods", () => {
   });
 
   it("flat(2) throws SafeJsxError", () => {
-    expect(() => render(`<Text>{data.items.flat(2)}</Text>`, { items: [[1, [2]]] })).toThrow(SafeJsxError);
+    expect(() => renderTemplate(`<Text>{data.items.flat(2)}</Text>`, { items: [[1, [2]]] })).toThrow(SafeJsxError);
   });
 
   it("flat(1) flattens one level", async () => {

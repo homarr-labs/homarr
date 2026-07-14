@@ -12,6 +12,17 @@ import { CustomJsxComponentReference } from "@site/src/components/custom-jsx-com
 
 Custom widgets connect a dashboard item to an HTTP API without compiling a new Homarr widget. Administrators choose the endpoint and authentication, then use a built-in display type or a Custom JSX template to render the response.
 
+## Guides
+
+- [Authoring workbench](./authoring): create, edit, preview, paste, undo, import, and export.
+- [Custom JSX language](./custom-jsx): supported syntax, components, bindings, diagnostics, and limits.
+- [Named requests and security](./requests-and-security): permissions, network scopes, request manifests, and server protections.
+- [AI and MCP authoring](./agent-authoring): an iterative agent workflow that validates and previews before saving.
+- [Compatibility and migration](./migration): v1/v2 JSX and v2/v3 import behavior.
+- [Troubleshooting](./troubleshooting): common editor, preview, permission, and networking failures.
+- [Maintainer architecture](./architecture): package boundaries, extension points, and required tests.
+- [Extension recipes](./extension-recipes): step-by-step changes for displays, JSX components, requests, and workbench features.
+
 :::caution
 
 A custom widget can expose data or perform actions with the credentials configured for it. Import definitions only from sources you trust and review every network capability before using the widget on a shared board.

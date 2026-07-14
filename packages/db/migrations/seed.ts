@@ -1,7 +1,7 @@
 import SuperJSON from "superjson";
 
 import { createId, objectKeys } from "@homarr/common";
-import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
+import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
   credentialsAdminGroup,

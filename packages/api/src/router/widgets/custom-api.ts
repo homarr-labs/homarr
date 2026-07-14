@@ -7,12 +7,16 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq } from "@homarr/db";
 import { boards, customWidgetDefinitions, items } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
-import { customJsxDisplayConfigV2Schema, displayConfigSchema } from "@homarr/validation/custom-widget";
-import type { CustomJsxRequest, CustomWidgetMethod, DisplayConfig } from "@homarr/validation/custom-widget";
+import {
+  customJsxDisplayConfigV2Schema,
+  displayConfigSchema,
+  extractActionButtonDisplay,
+  extractDisplayDataWithFallback,
+} from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest, CustomWidgetMethod, DisplayConfig } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
-import { extractActionButtonDisplay, extractDisplayDataWithFallback } from "../custom-widget/display-data";
 import { executeCustomWidgetRequest } from "../custom-widget/request-executor";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "../custom-widget/request-manifest";
 import { acquireCustomWidgetRequestLimit } from "../custom-widget/request-limits";

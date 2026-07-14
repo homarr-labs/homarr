@@ -699,6 +699,12 @@
         "title": "Edit Custom Widget"
       }
     },
+    "betaBanner": {
+      "title": "Custom Widgets are in Beta",
+      "description": "This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the",
+      "link": "official discussion thread",
+      "closing": "Your feedback directly shapes what comes next. Happy hacking!"
+    },
     "action": {
       "create": "Create",
       "import": "Import",
@@ -4060,6 +4066,8 @@
       "noDefinition": "No definition selected",
       "definitionNotFound": "Widget definition not found. It may have been deleted.",
       "noDisplayOutput": "No display output",
+      "openJson": "Open in browser JSON viewer",
+      "execute": "Execute",
       "executeConfirm": "Are you sure you want to execute this action?",
       "executing": "Executing...",
       "executeSuccess": "Action executed successfully",

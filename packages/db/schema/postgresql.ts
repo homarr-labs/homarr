@@ -43,7 +43,7 @@ import type {
   CustomWidgetDisplayType,
   CustomWidgetMethod,
   CustomWidgetSecretKind,
-} from "@homarr/validation/custom-widget";
+} from "@homarr/custom-widgets/core";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
