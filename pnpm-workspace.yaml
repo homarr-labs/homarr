@@ -178,7 +178,7 @@ catalog:
   tsx: 4.20.4
   turbo: ^2.10.4
   typescript: ^7.0.2
-  vite: ^8.1.2
+  vite: ^8.1.4
   undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.9
