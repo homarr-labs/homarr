@@ -442,8 +442,8 @@ catalogs:
       specifier: ^1.18.0
       version: 1.18.0
     posthog-js:
-      specifier: ^1.399.0
-      version: 1.399.0
+      specifier: ^1.399.1
+      version: 1.399.2
     posthog-node:
       specifier: ^5.40.0
       version: 5.41.0
@@ -1012,7 +1012,7 @@ importers:
         version: 1.18.0(postcss@8.5.16)
       posthog-js:
         specifier: 'catalog:'
-        version: 1.399.0(preact-render-to-string@6.5.11)
+        version: 1.399.2(preact-render-to-string@6.5.11)
       prismjs:
         specifier: 'catalog:'
         version: 1.30.0
@@ -6403,9 +6403,6 @@ packages:
 
   '@polka/url@1.0.0-next.25':
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
-
-  '@posthog/core@1.40.0':
-    resolution: {integrity: sha512-oGDbIwlTquNwdHbEL5ZLEkuW4UFkkEanfx3QAxDgyVbISv+OAA6YGQwrvo0JD3MUJEbJZvyh8XsX+WYDGw9XHw==}
 
   '@posthog/core@1.40.2':
     resolution: {integrity: sha512-H12j7O9iHGvpK9t2ko8W4pvfbV1pBDxrsWC1LA6yp2RhzwvC4T3sWhu+AekDQJSRSrJEWlB0t/Ueq9QhPSq7FQ==}
@@ -13139,8 +13136,8 @@ packages:
     resolution: {integrity: sha512-Ray65LYEJrMMqDtsBUBXunEVP/g4wtATvq/xz9rchUoLy/9mSkkFgUko/8DVtGxgiP3vivpFMgfb9HpCuDrBHg==}
     engines: {node: '>=10.15.1'}
 
-  posthog-js@1.399.0:
-    resolution: {integrity: sha512-8l+uZJZM3+OAc0D0+iLBMDRVfWF9s26Rt0jv8EC3kMJcA/9oyOets0zDgqIZk2TTfUs3H96ycLE6Lwj1wWG16Q==}
+  posthog-js@1.399.2:
+    resolution: {integrity: sha512-xcvrGEgUYtIVcWPRlVfc/NkMo0IP9nwnM/dzJIAzjDOSewkdDk/9T4Vz1+gooEhXdQCPfG44jSK95mVJsoySqA==}
 
   posthog-node@5.41.0:
     resolution: {integrity: sha512-jOkX6THOr5WD+FGUEaTxekas8c7NOC3TqJ2Byfe2KMimQdL/F/osz17uSbkNzR4V9WFZoe8YaGP3Xp0EUpPKGg==}
@@ -19906,10 +19903,6 @@ snapshots:
       config-chain: 1.1.13
 
   '@polka/url@1.0.0-next.25': {}
-
-  '@posthog/core@1.40.0':
-    dependencies:
-      '@posthog/types': 1.393.0
 
   '@posthog/core@1.40.2':
     dependencies:
@@ -27474,9 +27467,9 @@ snapshots:
 
   posthog-docusaurus@2.0.5: {}
 
-  posthog-js@1.399.0(preact-render-to-string@6.5.11):
+  posthog-js@1.399.2(preact-render-to-string@6.5.11):
     dependencies:
-      '@posthog/core': 1.40.0
+      '@posthog/core': 1.40.2
       '@posthog/types': 1.393.0
       core-js: 3.49.0
       dompurify: 3.4.11
