@@ -743,8 +743,8 @@ importers:
         specifier: 'catalog:'
         version: 19.2.7(react@19.2.7)
       swiper:
-        specifier: ^14.0.2
-        version: 14.0.2
+        specifier: ^14.0.5
+        version: 14.0.5
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.2
@@ -14306,8 +14306,8 @@ packages:
       '@swc/core': ^1.2.147
       webpack: '>=2'
 
-  swiper@14.0.2:
-    resolution: {integrity: sha512-KRFQZP0zXUh6MEmSQOJKSw27ARqS884OX/dfBz4i2/It9aixL7svh7/Ng0yZ0FE+PrjrW5vzBcjCfmNnq109XQ==}
+  swiper@14.0.5:
+    resolution: {integrity: sha512-SMSKS0sj+lPIFzngfIKb5cyBtzmAuJw7rXgXdyYiDReb+pSpJXuNljHYgT4DXa5Stnl2Ew2/Lam5ipv4PIqZ7A==}
     engines: {node: '>= 4.7.0'}
 
   swrv@1.2.0:
@@ -28973,7 +28973,7 @@ snapshots:
       '@swc/counter': 0.1.3
       webpack: 5.107.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
-  swiper@14.0.2: {}
+  swiper@14.0.5: {}
 
   swrv@1.2.0(vue@3.5.35(@typescript/typescript6@6.0.2)):
     dependencies:
