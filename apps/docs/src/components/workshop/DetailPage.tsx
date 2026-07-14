@@ -15,9 +15,9 @@ import {
 } from "@tabler/icons-react";
 import type { ClientResponseError } from "pocketbase";
 
-import type { StoreSubmission, StoreVote } from "@site/src/lib/pocketbase";
+import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 import { getPocketBase, getSubmissionFileUrl } from "@site/src/lib/pocketbase";
-import type { SubmissionType } from "@site/src/lib/store-schema";
+import type { SubmissionType } from "@site/src/lib/workshop-schema";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ import { cn, errorMessage } from "@site/src/lib/utils";
 import { CommentsSection } from "./DetailComments";
 import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } from "./DetailSections";
 import { formatRelativeTime } from "./format";
-import { downloadSubmissionJson, voteDelta } from "./store-utils";
+import { downloadSubmissionJson, voteDelta } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
 const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
@@ -53,13 +53,13 @@ const parseSubmissionId = (pathname: string) => {
 const isNotFound = (caught: unknown) =>
   typeof caught === "object" && caught !== null && "status" in caught && (caught as ClientResponseError).status === 404;
 
-const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
+const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const location = useLocation();
   const submissionId = parseSubmissionId(location.pathname);
-  const pb = useMemo(() => getPocketBase(storeUrl), [storeUrl]);
+  const pb = useMemo(() => getPocketBase(workshopUrl), [workshopUrl]);
 
-  const [submission, setSubmission] = useState<StoreSubmission | null>(null);
-  const [userVote, setUserVote] = useState<StoreVote | undefined>();
+  const [submission, setSubmission] = useState<WorkshopSubmission | null>(null);
+  const [userVote, setUserVote] = useState<WorkshopVote | undefined>();
   const [user, setUser] = useState(pb.authStore.record);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -120,12 +120,12 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
     const load = async () => {
       try {
-        const record = await pb.collection("marketplace").getOne<StoreSubmission>(submissionId);
+        const record = await pb.collection("marketplace").getOne<WorkshopSubmission>(submissionId);
         if (cancelled) return;
         setSubmission(record);
 
         if (pb.authStore.isValid && pb.authStore.record) {
-          const votes = await pb.collection("votes").getFullList<StoreVote>({
+          const votes = await pb.collection("votes").getFullList<WorkshopVote>({
             filter: pb.filter("user = {:uid} && submission = {:sid}", {
               uid: pb.authStore.record.id,
               sid: submissionId,
@@ -170,7 +170,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
     setUserVote(
       isToggleOff
         ? undefined
-        : ({ ...(prev ?? { id: "", submission: submission.id, user: userId }), value } as StoreVote),
+        : ({ ...(prev ?? { id: "", submission: submission.id, user: userId }), value } as WorkshopVote),
     );
     setSubmission((s) => (s ? { ...s, upvotes: s.upvotes + upD, downvotes: s.downvotes + downD } : s));
 
@@ -178,7 +178,7 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
       if (!prev) {
         const created = await pb
           .collection("votes")
-          .create<StoreVote>({ submission: submission.id, value, user: userId });
+          .create<WorkshopVote>({ submission: submission.id, value, user: userId });
         setUserVote(created);
       } else if (isToggleOff) {
         await pb.collection("votes").delete(prev.id);
@@ -347,12 +347,14 @@ const MarketplaceDetail = ({ storeUrl }: { storeUrl: string }) => {
 
 export default function MarketplaceDetailPage() {
   const { siteConfig } = useDocusaurusContext();
-  const storeUrl = (siteConfig.customFields?.storeUrl as string | undefined) ?? "http://localhost:8090";
+  const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
 
   return (
     <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
       <main className="marketplace bg-background text-foreground min-h-[80vh]">
-        <BrowserOnly fallback={<DetailSkeleton />}>{() => <MarketplaceDetail storeUrl={storeUrl} />}</BrowserOnly>
+        <BrowserOnly fallback={<DetailSkeleton />}>
+          {() => <MarketplaceDetail workshopUrl={configuredWorkshopUrl || window.location.origin} />}
+        </BrowserOnly>
       </main>
     </Layout>
   );

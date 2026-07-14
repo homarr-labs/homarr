@@ -23,8 +23,8 @@ import {
 import { IconChevronLeft, IconChevronRight, IconExternalLink } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
-import type { StoreSubmission } from "./store-api";
-import { fetchStoreSubmissions, getStoreFileUrl } from "./store-api";
+import type { WorkshopSubmission } from "./workshop-api";
+import { fetchWorkshopSubmissions, getWorkshopFileUrl } from "./workshop-api";
 
 const WORKSHOP_URL = process.env.NEXT_PUBLIC_WORKSHOP_URL || "https://homarr.dev/workshop";
 
@@ -32,22 +32,22 @@ interface Props {
   type: "css" | "widget";
   opened: boolean;
   onClose: () => void;
-  onSelect: (submission: StoreSubmission) => void;
+  onSelect: (submission: WorkshopSubmission) => void;
   actionLabel: string;
   pendingId?: string | null;
 }
 
-const displayName = (submission: StoreSubmission) => submission.authorName;
+const displayName = (submission: WorkshopSubmission) => submission.authorName;
 
-export const StoreBrowserModal = ({ type, opened, onClose, onSelect, actionLabel, pendingId }: Props) => {
+export const WorkshopBrowserModal = ({ type, opened, onClose, onSelect, actionLabel, pendingId }: Props) => {
   const [page, setPage] = useState(1);
   const handleClose = () => {
     setPage(1);
     onClose();
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: ["store-submissions", type, page],
-    queryFn: () => fetchStoreSubmissions(type, page),
+    queryKey: ["workshop-submissions", type, page],
+    queryFn: () => fetchWorkshopSubmissions(type, page),
     enabled: opened,
   });
 
@@ -121,7 +121,7 @@ const SubmissionCard = ({
   pending,
   onSelect,
 }: {
-  submission: StoreSubmission;
+  submission: WorkshopSubmission;
   actionLabel: string;
   pending: boolean;
   onSelect: () => void;
@@ -136,7 +136,7 @@ const SubmissionCard = ({
       {screenshots.length > 0 && (
         <Box pos="relative">
           <Image
-            src={screenshots[imgIdx] ? getStoreFileUrl(submission, screenshots[imgIdx]) : undefined}
+            src={screenshots[imgIdx] ? getWorkshopFileUrl(submission, screenshots[imgIdx]) : undefined}
             alt={submission.title}
             h={180}
             fit="cover"

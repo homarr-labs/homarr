@@ -12,8 +12,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import type { SubmissionType } from "@site/src/lib/store-schema";
-import { validateSubmissionContent } from "@site/src/lib/store-schema";
+import type { SubmissionType } from "@site/src/lib/workshop-schema";
+import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn, errorMessage } from "@/lib/utils";
 
-import type { SubmitInput } from "./useStore";
+import type { SubmitInput } from "./useWorkshop";
 
 interface Props {
   onClose: () => void;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBuildingStore } from "@tabler/icons-react";
+import { IconUsersGroup } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -12,7 +12,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { StoreBrowserModal } from "./store-browser-modal";
+import { WorkshopBrowserModal } from "./workshop-browser-modal";
 
 function parseWidgetContent(content: string) {
   let parsed: unknown;
@@ -28,7 +28,7 @@ function parseWidgetContent(content: string) {
   return { ok: true as const, data: result.data };
 }
 
-export const InstallWidgetFromStoreButton = () => {
+export const InstallWidgetFromWorkshopButton = () => {
   const t = useScopedI18n("customWidget.workshop");
   const [opened, { open, close }] = useDisclosure(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -59,10 +59,10 @@ export const InstallWidgetFromStoreButton = () => {
 
   return (
     <>
-      <MobileAffixButton variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
+      <MobileAffixButton variant="default" leftSection={<IconUsersGroup size={16} />} onClick={open}>
         {t("action.installFromWorkshop")}
       </MobileAffixButton>
-      <StoreBrowserModal
+      <WorkshopBrowserModal
         type="widget"
         opened={opened}
         onClose={close}
@@ -74,16 +74,16 @@ export const InstallWidgetFromStoreButton = () => {
   );
 };
 
-export const InstallCssFromStoreButton = ({ onSelect }: { onSelect: (css: string) => void }) => {
+export const InstallCssFromWorkshopButton = ({ onSelect }: { onSelect: (css: string) => void }) => {
   const t = useScopedI18n("customWidget.workshop");
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <>
-      <Button variant="default" leftSection={<IconBuildingStore size={16} />} onClick={open}>
+      <Button variant="default" leftSection={<IconUsersGroup size={16} />} onClick={open}>
         {t("action.installFromWorkshop")}
       </Button>
-      <StoreBrowserModal
+      <WorkshopBrowserModal
         type="css"
         opened={opened}
         onClose={close}

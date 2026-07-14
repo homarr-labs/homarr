@@ -1,6 +1,6 @@
-export const STORE_URL = process.env.NEXT_PUBLIC_WIDGET_STORE_URL || "https://store.homarr.dev";
+export const WORKSHOP_API_URL = process.env.NEXT_PUBLIC_WORKSHOP_API_URL || "https://workshop.homarr.dev";
 
-export interface StoreSubmission {
+export interface WorkshopSubmission {
   id: string;
   collectionId: string;
   collectionName: string;
@@ -24,13 +24,13 @@ interface PBListResponse {
   perPage: number;
   totalPages: number;
   totalItems: number;
-  items: StoreSubmission[];
+  items: WorkshopSubmission[];
 }
 
-export const getStoreFileUrl = (submission: StoreSubmission, filename: string) =>
-  `${STORE_URL}/api/files/submissions/${submission.id}/${encodeURIComponent(filename)}`;
+export const getWorkshopFileUrl = (submission: WorkshopSubmission, filename: string) =>
+  `${WORKSHOP_API_URL}/api/files/submissions/${submission.id}/${encodeURIComponent(filename)}`;
 
-export const fetchStoreSubmissions = async (
+export const fetchWorkshopSubmissions = async (
   type: "css" | "widget",
   page = 1,
   perPage = 50,
@@ -41,7 +41,7 @@ export const fetchStoreSubmissions = async (
     sort: "-upvotes",
     filter: `(type='${type}')`,
   });
-  const response = await fetch(`${STORE_URL}/api/collections/marketplace/records?${params}`);
-  if (!response.ok) throw new Error(`Store request failed (${response.status})`);
+  const response = await fetch(`${WORKSHOP_API_URL}/api/collections/marketplace/records?${params}`);
+  if (!response.ok) throw new Error(`Workshop request failed (${response.status})`);
   return response.json() as Promise<PBListResponse>;
 };

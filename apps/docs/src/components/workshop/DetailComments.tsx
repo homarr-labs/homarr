@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IconCheck, IconEdit, IconSend, IconTrash, IconX } from "@tabler/icons-react";
 
-import type { StoreComment } from "@site/src/lib/pocketbase";
+import type { WorkshopComment } from "@site/src/lib/pocketbase";
 import { getPocketBase } from "@site/src/lib/pocketbase";
 import { errorMessage } from "@site/src/lib/utils";
 
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 
 import { formatRelativeTime } from "./format";
 
-const commentAuthorName = (comment: StoreComment) =>
+const commentAuthorName = (comment: WorkshopComment) =>
   comment.expand?.author?.name || comment.expand?.author?.username || "unknown";
 
 interface CommentsSectionProps {
@@ -22,7 +22,7 @@ interface CommentsSectionProps {
 }
 
 export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth, onError }: CommentsSectionProps) => {
-  const [rows, setRows] = useState<StoreComment[]>([]);
+  const [rows, setRows] = useState<WorkshopComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -34,7 +34,7 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
     setLoading(true);
     setFetchError(false);
     pb.collection("comments")
-      .getFullList<StoreComment>({
+      .getFullList<WorkshopComment>({
         filter: pb.filter("submission = {:id}", { id: submissionId }),
         sort: "-created",
         expand: "author",
@@ -61,7 +61,7 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
     try {
       const created = await pb
         .collection("comments")
-        .create<StoreComment>({ submission: submissionId, content: trimmed, author: userId }, { expand: "author" });
+        .create<WorkshopComment>({ submission: submissionId, content: trimmed, author: userId }, { expand: "author" });
       setRows((prev) => [created, ...prev]);
       setNewComment("");
     } catch (caught) {
@@ -75,7 +75,7 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
     try {
       const updated = await pb
         .collection("comments")
-        .update<StoreComment>(id, { content: trimmed }, { expand: "author" });
+        .update<WorkshopComment>(id, { content: trimmed }, { expand: "author" });
       setRows((prev) => prev.map((comment) => (comment.id === id ? updated : comment)));
       setEditingId(null);
     } catch (caught) {

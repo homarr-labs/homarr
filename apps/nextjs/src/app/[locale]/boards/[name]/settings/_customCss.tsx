@@ -11,7 +11,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { useForm } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { InstallCssFromStoreButton } from "~/components/store-install/install-from-store-buttons";
+import { InstallCssFromWorkshopButton } from "~/components/workshop-install/install-from-workshop-buttons";
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
 import classes from "./customcss.module.css";
@@ -47,7 +47,7 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
         </Alert>
 
         <Group justify="space-between">
-          <InstallCssFromStoreButton onSelect={(css) => form.setFieldValue("customCss", css)} />
+          <InstallCssFromWorkshopButton onSelect={(css) => form.setFieldValue("customCss", css)} />
           <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>

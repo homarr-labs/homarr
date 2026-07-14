@@ -14,7 +14,7 @@ export const getPocketBase = (url: string): PocketBase => {
 export const getSubmissionFileUrl = (baseUrl: string, submissionId: string, filename: string) =>
   `${baseUrl}/api/files/submissions/${submissionId}/${encodeURIComponent(filename)}`;
 
-export interface StoreSubmission {
+export interface WorkshopSubmission {
   id: string;
   collectionId: string;
   collectionName: string;
@@ -34,14 +34,14 @@ export interface StoreSubmission {
   created: string;
 }
 
-export interface StoreVote {
+export interface WorkshopVote {
   id: string;
   submission: string;
   user: string;
   value: 1 | -1;
 }
 
-export interface StoreComment {
+export interface WorkshopComment {
   id: string;
   submission: string;
   author: string;

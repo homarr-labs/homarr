@@ -2,6 +2,15 @@
 
 migrate(
   (app) => {
+    // Keep databases created by the original prototype valid after the
+    // migration file was renamed with the feature.
+    try {
+      app.findCollectionByNameOrId("marketplace");
+      return;
+    } catch {
+      // Fresh database; create the public view below.
+    }
+
     const collection = new Collection({
       name: "marketplace",
       type: "view",

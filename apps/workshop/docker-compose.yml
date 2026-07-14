@@ -1,0 +1,28 @@
+name: homarr-workshop
+
+services:
+  workshop:
+    image: ghcr.io/homarr-labs/workshop:${WORKSHOP_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+    restart: unless-stopped
+    environment:
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    ports:
+      - "127.0.0.1:${WORKSHOP_PORT:-8090}:8090"
+    volumes:
+      - workshop_data:/pb_data
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8090/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  workshop_data:
+    name: homarr_workshop_deployment_data

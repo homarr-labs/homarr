@@ -21,7 +21,8 @@ const config: Config = {
   onDuplicateRoutes: "throw",
 
   customFields: {
-    storeUrl: process.env.STORE_URL ?? "http://localhost:8090",
+    // Empty means same-origin, which is the production Workshop image shape.
+    workshopUrl: process.env.WORKSHOP_URL ?? "",
   },
 
   future: {
@@ -310,7 +311,7 @@ const config: Config = {
         async contentLoaded({ actions }) {
           actions.addRoute({
             path: "/workshop/:id",
-            component: "@site/src/components/store/DetailPage",
+            component: "@site/src/components/workshop/DetailPage",
             exact: true,
           });
         },

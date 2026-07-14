@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
-import type { StoreComment, StoreSubmission, StoreVote } from "@site/src/lib/pocketbase";
+import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 import { getPocketBase } from "@site/src/lib/pocketbase";
-import type { SubmissionType } from "@site/src/lib/store-schema";
-import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/store-schema";
+import type { SubmissionType } from "@site/src/lib/workshop-schema";
+import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { errorMessage } from "@site/src/lib/utils";
 
-import { voteDelta } from "./store-utils";
+import { voteDelta } from "./workshop-utils";
 
 export type SortKey = "top" | "new";
 export type TypeFilter = "all" | "yours" | SubmissionType;
@@ -21,13 +21,13 @@ export interface SubmitInput {
 }
 
 export interface CommentActions {
-  fetch: (submissionId: string) => Promise<StoreComment[]>;
-  add: (submissionId: string, content: string) => Promise<StoreComment | null>;
-  update: (commentId: string, content: string) => Promise<StoreComment | null>;
+  fetch: (submissionId: string) => Promise<WorkshopComment[]>;
+  add: (submissionId: string, content: string) => Promise<WorkshopComment | null>;
+  update: (commentId: string, content: string) => Promise<WorkshopComment | null>;
   delete: (commentId: string) => Promise<boolean>;
 }
 
-const sorters: Record<SortKey, (a: StoreSubmission, b: StoreSubmission) => number> = {
+const sorters: Record<SortKey, (a: WorkshopSubmission, b: WorkshopSubmission) => number> = {
   top: (a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes),
   new: (a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
 };
@@ -35,10 +35,10 @@ const sorters: Record<SortKey, (a: StoreSubmission, b: StoreSubmission) => numbe
 const isNotFoundError = (error: unknown) =>
   typeof error === "object" && error !== null && "status" in error && error.status === 404;
 
-export const useStore = (storeUrl: string) => {
-  const pb = useMemo(() => getPocketBase(storeUrl), [storeUrl]);
-  const [submissions, setSubmissions] = useState<StoreSubmission[]>([]);
-  const [votes, setVotes] = useState<Record<string, StoreVote>>({});
+export const useWorkshop = (workshopUrl: string) => {
+  const pb = useMemo(() => getPocketBase(workshopUrl), [workshopUrl]);
+  const [submissions, setSubmissions] = useState<WorkshopSubmission[]>([]);
+  const [votes, setVotes] = useState<Record<string, WorkshopVote>>({});
   const [user, setUser] = useState(pb.authStore.record);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export const useStore = (storeUrl: string) => {
       setVotes({});
       return;
     }
-    const rows = await pb.collection("votes").getFullList<StoreVote>({
+    const rows = await pb.collection("votes").getFullList<WorkshopVote>({
       filter: pb.filter("user = {:id}", { id: pb.authStore.record.id }),
     });
     setVotes(Object.fromEntries(rows.map((row) => [row.submission, row])));
@@ -59,7 +59,7 @@ export const useStore = (storeUrl: string) => {
     setLoading(true);
     setError(null);
     try {
-      setSubmissions(await pb.collection("marketplace").getFullList<StoreSubmission>({ sort: "-created" }));
+      setSubmissions(await pb.collection("marketplace").getFullList<WorkshopSubmission>({ sort: "-created" }));
       await refreshVotes();
     } catch (caught) {
       setError(errorMessage(caught, "Failed to load the workshop"));
@@ -162,7 +162,7 @@ export const useStore = (storeUrl: string) => {
           next[submissionId] = {
             ...(prev ?? { id: "", submission: submissionId, user: userId, created: "", updated: "" }),
             value,
-          } as StoreVote;
+          } as WorkshopVote;
         return next;
       });
       setSubmissions((s) =>
@@ -176,7 +176,7 @@ export const useStore = (storeUrl: string) => {
         if (!existing) {
           const created = await pb
             .collection("votes")
-            .create<StoreVote>({ submission: submissionId, value, user: userId });
+            .create<WorkshopVote>({ submission: submissionId, value, user: userId });
           setVotes((current) => ({ ...current, [submissionId]: created }));
         } else if (isToggleOff) {
           try {
@@ -186,13 +186,13 @@ export const useStore = (storeUrl: string) => {
           }
         } else {
           try {
-            const updated = await pb.collection("votes").update<StoreVote>(existing.id, { value });
+            const updated = await pb.collection("votes").update<WorkshopVote>(existing.id, { value });
             setVotes((current) => ({ ...current, [submissionId]: updated }));
           } catch (caught) {
             if (!isNotFoundError(caught)) throw caught;
             const created = await pb
               .collection("votes")
-              .create<StoreVote>({ submission: submissionId, value, user: userId });
+              .create<WorkshopVote>({ submission: submissionId, value, user: userId });
             setVotes((current) => ({ ...current, [submissionId]: created }));
           }
         }
@@ -268,7 +268,7 @@ export const useStore = (storeUrl: string) => {
 
   const fetchComments = useCallback(
     (submissionId: string) =>
-      pb.collection("comments").getFullList<StoreComment>({
+      pb.collection("comments").getFullList<WorkshopComment>({
         filter: pb.filter("submission = {:id}", { id: submissionId }),
         sort: "-created",
         expand: "author",
@@ -283,7 +283,7 @@ export const useStore = (storeUrl: string) => {
       try {
         return await pb
           .collection("comments")
-          .create<StoreComment>({ submission: submissionId, content, author: userId }, { expand: "author" });
+          .create<WorkshopComment>({ submission: submissionId, content, author: userId }, { expand: "author" });
       } catch (caught) {
         setError(errorMessage(caught, "Failed to post comment"));
         return null;
@@ -295,7 +295,7 @@ export const useStore = (storeUrl: string) => {
   const updateComment = useCallback(
     async (commentId: string, content: string) => {
       try {
-        return await pb.collection("comments").update<StoreComment>(commentId, { content }, { expand: "author" });
+        return await pb.collection("comments").update<WorkshopComment>(commentId, { content }, { expand: "author" });
       } catch (caught) {
         setError(errorMessage(caught, "Failed to update comment"));
         return null;

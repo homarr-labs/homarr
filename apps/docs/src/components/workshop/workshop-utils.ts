@@ -1,6 +1,6 @@
-import type { StoreSubmission } from "@site/src/lib/pocketbase";
+import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
 
-export const downloadSubmissionJson = (submission: StoreSubmission) => {
+export const downloadSubmissionJson = (submission: WorkshopSubmission) => {
   const url = URL.createObjectURL(new Blob([submission.content], { type: "application/json" }));
   Object.assign(document.createElement("a"), {
     href: url,

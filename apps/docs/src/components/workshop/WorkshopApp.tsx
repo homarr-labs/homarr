@@ -20,8 +20,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { getSubmissionFileUrl, type StoreSubmission } from "@site/src/lib/pocketbase";
-import type { SubmissionType } from "@site/src/lib/store-schema";
+import { getSubmissionFileUrl, type WorkshopSubmission } from "@site/src/lib/pocketbase";
+import type { SubmissionType } from "@site/src/lib/workshop-schema";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,9 +38,9 @@ import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
 import { formatRelativeTime } from "./format";
-import { downloadSubmissionJson } from "./store-utils";
-import type { SortKey, TypeFilter } from "./useStore";
-import { useStore } from "./useStore";
+import { downloadSubmissionJson } from "./workshop-utils";
+import type { SortKey, TypeFilter } from "./useWorkshop";
+import { useWorkshop } from "./useWorkshop";
 
 const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
 const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
@@ -76,34 +76,34 @@ const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
   event.stopPropagation();
 };
 
-export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
-  const store = useStore(storeUrl);
+export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
+  const workshop = useWorkshop(workshopUrl);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [sort, setSort] = useState<SortKey>("top");
   const [search, setSearch] = useState("");
   const [showSubmit, setShowSubmit] = useState(false);
 
   // Stable sort order: only re-sort when filter/sort/search or submission set changes (not vote counts)
-  const submissionIds = useMemo(() => store.submissions.map((s) => s.id).join(","), [store.submissions]);
+  const submissionIds = useMemo(() => workshop.submissions.map((s) => s.id).join(","), [workshop.submissions]);
   const sortedIds = useMemo(() => {
     const q = search.toLowerCase();
-    return store.submissions
+    return workshop.submissions
       .filter((item) => {
-        if (typeFilter === "yours") return item.author === store.user?.id;
+        if (typeFilter === "yours") return item.author === workshop.user?.id;
         return typeFilter === "all" || item.type === typeFilter;
       })
       .filter((item) => !q || item.title.toLowerCase().includes(q))
-      .toSorted(store.sorters[sort])
+      .toSorted(workshop.sorters[sort])
       .map((s) => s.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally keyed on submissionIds string, not the array
-  }, [submissionIds, store.sorters, typeFilter, sort, search, store.user?.id]);
+  }, [submissionIds, workshop.sorters, typeFilter, sort, search, workshop.user?.id]);
 
   const visible = useMemo(() => {
-    const byId = new Map(store.submissions.map((s) => [s.id, s]));
-    return sortedIds.map((id) => byId.get(id)).filter(Boolean) as StoreSubmission[];
-  }, [store.submissions, sortedIds]);
+    const byId = new Map(workshop.submissions.map((s) => [s.id, s]));
+    return sortedIds.map((id) => byId.get(id)).filter(Boolean) as WorkshopSubmission[];
+  }, [workshop.submissions, sortedIds]);
 
-  const empty = emptyState[store.submissions.length === 0 ? "none" : "filtered"];
+  const empty = emptyState[workshop.submissions.length === 0 ? "none" : "filtered"];
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-16">
@@ -113,18 +113,18 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
           <p className="mt-1 text-sm text-muted-foreground">Community custom widgets and CSS themes for Homarr.</p>
         </div>
         <div className="flex items-center gap-2">
-          {store.user ? (
+          {workshop.user ? (
             <>
               <Button onClick={() => setShowSubmit(true)}>
                 <IconPlus size={14} /> Share yours
               </Button>
-              <Button variant="ghost" size="sm" onClick={store.logout}>
-                <IconLogout size={14} /> {store.user?.name || store.user?.username || "Account"}
+              <Button variant="ghost" size="sm" onClick={workshop.logout}>
+                <IconLogout size={14} /> {workshop.user?.name || workshop.user?.username || "Account"}
               </Button>
             </>
           ) : (
             <div className="flex flex-col items-end gap-0.5">
-              <Button onClick={() => void store.login()}>
+              <Button onClick={() => void workshop.login()}>
                 <IconBrandGithub size={14} /> Sign in with GitHub
               </Button>
               <p className="text-xs text-muted-foreground">Vote and share your creations</p>
@@ -175,13 +175,13 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
         </div>
       </div>
 
-      {store.error && (
+      {workshop.error && (
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
-          {store.error}
+          {workshop.error}
         </div>
       )}
 
-      {store.loading && (
+      {workshop.loading && (
         <div className="columns-1 gap-4 lg:columns-2 xl:columns-3 2xl:columns-4 [&>*]:mb-4">
           {Array.from({ length: 6 }, (_, i) => (
             <SkeletonCard key={i} hasImage={i % 3 === 0} />
@@ -189,14 +189,14 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
         </div>
       )}
 
-      {!store.loading && visible.length === 0 && (
+      {!workshop.loading && visible.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-16">
           <IconPackage size={28} stroke={1.5} className="text-muted-foreground" />
           <div className="text-center">
             <p className="text-sm font-medium">{empty.title}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{empty.hint}</p>
           </div>
-          {store.user && store.submissions.length === 0 && (
+          {workshop.user && workshop.submissions.length === 0 && (
             <Button size="sm" onClick={() => setShowSubmit(true)}>
               <IconPlus size={14} /> Create submission
             </Button>
@@ -209,12 +209,12 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
           <SubmissionCard
             key={submission.id}
             submission={submission}
-            pb={store.pb}
-            userVote={store.votes[submission.id]?.value}
-            currentUserId={store.user?.id}
-            onVote={store.vote}
-            onReport={store.report}
-            onDelete={store.deleteSubmission}
+            pb={workshop.pb}
+            userVote={workshop.votes[submission.id]?.value}
+            currentUserId={workshop.user?.id}
+            onVote={workshop.vote}
+            onReport={workshop.report}
+            onDelete={workshop.deleteSubmission}
           />
         ))}
       </div>
@@ -223,7 +223,7 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
         <SubmitForm
           onClose={() => setShowSubmit(false)}
           onSubmit={async (input) => {
-            if (await store.submit(input)) setShowSubmit(false);
+            if (await workshop.submit(input)) setShowSubmit(false);
           }}
         />
       )}
@@ -232,8 +232,8 @@ export const StoreApp = ({ storeUrl }: { storeUrl: string }) => {
 };
 
 interface SubmissionCardProps {
-  submission: StoreSubmission;
-  pb: ReturnType<typeof useStore>["pb"];
+  submission: WorkshopSubmission;
+  pb: ReturnType<typeof useWorkshop>["pb"];
   userVote?: 1 | -1;
   currentUserId?: string;
   onVote: (submissionId: string, value: 1 | -1) => void;

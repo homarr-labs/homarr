@@ -572,8 +572,8 @@ catalogs:
       version: 5.0.0
 
 overrides:
-  '@babel/helpers@<7.26.10': '>=7.29.7'
-  '@babel/runtime@<7.26.10': '>=7.29.7'
+  '@babel/helpers@<7.26.10': ^7.29.7
+  '@babel/runtime@<7.26.10': ^7.29.7
   axios@>=1.0.0 <1.8.2: '>=1.18.1'
   brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.7'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.7'
@@ -3450,9 +3450,6 @@ packages:
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@8.0.0':
-    resolution: {integrity: sha512-sL6cvO2IfkSu/iU+zs2S/w01B7A8V7suXSIKEN4hPFFdZoiPGxrj5pAG0lCaqLWiEIrjKzdznIWuaLcxPR53qw==}
-
   '@babel/template@7.29.7':
     resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
     engines: {node: '>=6.9.0'}
@@ -4278,11 +4275,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.25.12':
     resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
@@ -16209,8 +16206,6 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@babel/runtime@8.0.0': {}
-
   '@babel/template@7.29.7':
     dependencies:
       '@babel/code-frame': 7.29.7
@@ -16879,7 +16874,7 @@ snapshots:
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-react': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       '@babel/traverse': 7.29.7
       '@docusaurus/logger': 3.10.1
       '@docusaurus/utils': 3.10.1(@swc/core@1.15.43(@swc/helpers@0.5.23))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -20359,7 +20354,7 @@ snapshots:
 
   '@slorber/react-helmet-async@1.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       invariant: 2.2.4
       prop-types: 15.8.1
       react: 19.2.7
@@ -21585,7 +21580,7 @@ snapshots:
 
   '@videojs/http-streaming@3.17.5(video.js@8.23.9)':
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       '@videojs/vhs-utils': 4.1.2
       aes-decrypter: 4.0.2
       global: 4.4.0
@@ -21596,12 +21591,12 @@ snapshots:
 
   '@videojs/vhs-utils@4.1.2':
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       global: 4.4.0
 
   '@videojs/xhr@2.7.0':
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       global: 4.4.0
       is-function: 1.0.2
 
@@ -21912,7 +21907,7 @@ snapshots:
 
   aes-decrypter@4.0.2:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       '@videojs/vhs-utils': 4.1.2
       global: 4.4.0
       pkcs7: 1.0.4
@@ -23437,7 +23432,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       csstype: 3.2.3
 
   dom-serializer@1.4.1:
@@ -24604,7 +24599,7 @@ snapshots:
 
   history@4.10.1:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       loose-envify: 1.4.0
       resolve-pathname: 3.0.0
       tiny-invariant: 1.3.3
@@ -25413,7 +25408,7 @@ snapshots:
 
   m3u8-parser@7.2.0:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       '@videojs/vhs-utils': 4.1.2
       global: 4.4.0
 
@@ -26169,7 +26164,7 @@ snapshots:
 
   mpd-parser@1.4.0:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       '@videojs/vhs-utils': 4.1.2
       '@xmldom/xmldom': 0.8.13
       global: 4.4.0
@@ -26244,7 +26239,7 @@ snapshots:
 
   mux.js@7.1.0:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       global: 4.4.0
 
   mysql2@3.22.5(@types/node@24.13.2):
@@ -26843,7 +26838,7 @@ snapshots:
 
   pkcs7@1.0.4:
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
 
   pkg-conf@2.1.0:
     dependencies:
@@ -27702,7 +27697,7 @@ snapshots:
 
   react-loadable-ssr-addon-v5-slorber@1.0.3(@docusaurus/react-loadable@6.0.0(react@19.2.7))(webpack@5.108.3(@swc/core@1.15.43(@swc/helpers@0.5.23))(esbuild@0.28.1)(postcss@8.5.16)):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       react-loadable: '@docusaurus/react-loadable@6.0.0(react@19.2.7)'
       webpack: 5.108.3(@swc/core@1.15.43(@swc/helpers@0.5.23))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
@@ -27767,13 +27762,13 @@ snapshots:
 
   react-router-config@5.1.1(react-router@5.3.4(react@19.2.7))(react@19.2.7):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       react: 19.2.7
       react-router: 5.3.4(react@19.2.7)
 
   react-router-dom@5.3.4(react@19.2.7):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       history: 4.10.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -27784,7 +27779,7 @@ snapshots:
 
   react-router@5.3.4(react@19.2.7):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
@@ -27810,7 +27805,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -29410,7 +29405,7 @@ snapshots:
 
   use-deep-compare-effect@1.8.1(react@19.2.7):
     dependencies:
-      '@babel/runtime': 8.0.0
+      '@babel/runtime': 7.29.7
       dequal: 2.0.3
       react: 19.2.7
 

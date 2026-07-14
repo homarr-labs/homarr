@@ -11,7 +11,7 @@ The [Community Workshop](pathname:///workshop) is where Homarr users share and d
 **custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
 you like, report abuse, and install entries directly into your own Homarr instance.
 
-:::warn
+:::warning
 
 The workshop contains community-made content. Widgets may contain unwanted or malicious content and it is your duty to check & verify safety of the content. While we try to remove malicious content as best as we can, we take no responsibility. Always review the widget JSON and all CSS before installing it on your instance and take frequent backups as prevention measures.
 
@@ -52,10 +52,8 @@ You can install workshop entries without leaving Homarr:
 Alternatively, use **Copy** (or **Download** for widgets) on any submission and import it
 manually.
 
-## Self-hosting the workshop backend
+## Workshop deployment
 
-The workshop is powered by a [PocketBase](https://pocketbase.io) instance (GitHub OAuth, database,
-file uploads, and an admin moderation dashboard). The deployment lives in `apps/store/` with a
-`docker-compose.yml`, version-controlled collection migrations, and vote-counter hooks. See the
-app's `README.md` for GitHub OAuth setup and the `STORE_URL` / `NEXT_PUBLIC_WIDGET_STORE_URL`
-configuration.
+Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile, Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
+
+Homarr instances use `NEXT_PUBLIC_WORKSHOP_API_URL` to reach the central API and `NEXT_PUBLIC_WORKSHOP_URL` for links to the public page. Docusaurus uses `WORKSHOP_URL` only when its development server runs separately; the combined production image always uses its own origin.

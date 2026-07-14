@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateSubmissionContent } from "./store-schema";
+import { validateSubmissionContent } from "./workshop-schema";
 
 const validWidget = {
   $schema: "homarr-custom-widget-v2",

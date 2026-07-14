@@ -7,7 +7,7 @@ export const CSS_SCHEMA_VERSION = "homarr-custom-css-v1";
 
 export const MAX_CSS_LENGTH = 16384;
 
-export type StoreValidationResult = { success: true; data: unknown } | { success: false; error: string };
+export type WorkshopValidationResult = { success: true; data: unknown } | { success: false; error: string };
 
 const authTypes = ["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"] as const;
 const methods = ["GET", "POST", "PUT", "DELETE", "PATCH"] as const;
@@ -38,7 +38,7 @@ const widgetSchema = z
     message: "displayConfig.type must match displayType",
   });
 
-const validateWidgetContent = (raw: string): StoreValidationResult => {
+const validateWidgetContent = (raw: string): WorkshopValidationResult => {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -54,7 +54,7 @@ const validateWidgetContent = (raw: string): StoreValidationResult => {
   return { success: true, data: result.data };
 };
 
-const validateCssContent = (raw: string): StoreValidationResult => {
+const validateCssContent = (raw: string): WorkshopValidationResult => {
   if (raw.trim().length === 0) {
     return { success: false, error: "CSS cannot be empty" };
   }
@@ -67,12 +67,12 @@ const validateCssContent = (raw: string): StoreValidationResult => {
 export const submissionValidators = {
   widget: validateWidgetContent,
   css: validateCssContent,
-} satisfies Record<SubmissionType, (raw: string) => StoreValidationResult>;
+} satisfies Record<SubmissionType, (raw: string) => WorkshopValidationResult>;
 
 export const schemaVersionByType = {
   widget: WIDGET_SCHEMA_VERSION,
   css: CSS_SCHEMA_VERSION,
 } satisfies Record<SubmissionType, string>;
 
-export const validateSubmissionContent = (type: SubmissionType, raw: string): StoreValidationResult =>
+export const validateSubmissionContent = (type: SubmissionType, raw: string): WorkshopValidationResult =>
   submissionValidators[type](raw);
