@@ -1599,7 +1599,7 @@
     "menu": {
       "label": {
         "settings": "Impostazioni",
-        "refresh": "",
+        "refresh": "Aggiorna",
         "options": "Opzioni",
         "actions": "Azioni"
       }
@@ -1904,7 +1904,7 @@
       "noStation": "Nessuna stazione selezionata",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Url Search.ch"
         },
         "station": {
           "label": "Stazione"
@@ -2283,6 +2283,11 @@
         },
         "fileSystem": {
           "label": "Mostra Informazioni Filesystem"
+        },
+        "visibleStorageVolumes": {
+          "label": "Volumi di archiviazione visibili",
+          "description": "Disponibile solo se tutte le integrazioni selezionate sono Synology. Lasciare vuoto per visualizzare tutti i volumi di archiviazione rilevati.",
+          "placeholder": "Selezionare volumi di archiviazione"
         },
         "defaultTab": {
           "label": "Scheda predefinita"
@@ -2791,8 +2796,8 @@
           "description": "Visualizza la data dell'immagine e l'indice corrente nella parte inferiore della presentazione"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Immagini casuali",
+          "description": "Mostra le foto in ordine casuale invece di iniziare sempre con lo stesso ordine degli album."
         }
       },
       "description": "Presentazione delle immagini nel tuo album Immich",
@@ -3158,7 +3163,7 @@
             "label": "Provider"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL Provider"
           },
           "identifier": {
             "label": "Identificatore",
@@ -3209,10 +3214,10 @@
             "tooltip": "Impossibile analizzare il provider, impostarlo manualmente dopo aver importato le immagini"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
+            "label": "Token Provider",
+            "token": "Token",
+            "configured": "Token configurato",
+            "notConfigured": "Nessun token impostato",
             "save": "Salva"
           }
         }
@@ -3236,9 +3241,9 @@
           "invalidIdentifier": "Identificatore non valido",
           "noMatchingVersion": "Nessuna versione corrispondente trovata",
           "noReleasesFound": "Nessun rilascio trovato",
-          "noProviderSelected": "",
+          "noProviderSelected": "Nessun provider selezionato",
           "noProviderResponse": "Nessuna risposta dal provider",
-          "unexpected": ""
+          "unexpected": "Errore provider inaspettato"
         }
       }
     },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Mostra barra di utilizzo in background"
+        },
+        "visibleStorageVolumes": {
+          "label": "Volumi di archiviazione visibili",
+          "description": "Disponibile solo se tutte le integrazioni selezionate sono Synology. Lasciare vuoto per visualizzare tutti i volumi di archiviazione rilevati.",
+          "placeholder": "Selezionare volumi di archiviazione"
         }
       },
       "status": {

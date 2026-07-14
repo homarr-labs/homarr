@@ -1,0 +1,371 @@
+.root {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(6px, 3cqi, 14px);
+  gap: clamp(4px, 2cqi, 10px);
+  overflow: hidden;
+}
+
+.compactRoot {
+  padding: clamp(4px, 3cqi, 8px);
+  gap: 2px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 8px);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(8px, 3cqi, 18px);
+  flex-shrink: 0;
+  padding-bottom: clamp(4px, 2cqi, 10px);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.heroExpanded {
+  flex: 1;
+  border-bottom: none;
+  justify-content: center;
+  padding-bottom: 0;
+}
+
+.heroTextOnly {
+  justify-content: center;
+}
+
+.heroRingOnly {
+  justify-content: center;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.heroWithText {
+  justify-content: center;
+  width: 100%;
+}
+
+.heroWithText .heroText {
+  flex: 0 1 auto;
+}
+
+.heroExpanded.heroRingOnly {
+  flex: 1;
+}
+
+.heroTextOnly .heroText {
+  align-items: center;
+  text-align: center;
+}
+
+.heroTextOnly .heroValue {
+  font-size: clamp(22px, 10cqi, 36px);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 1cqi, 4px);
+  min-width: 0;
+  flex: 1;
+}
+
+.heroLabel {
+  font-size: clamp(9px, 2.8cqi, 13px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+}
+
+.heroValue {
+  font-size: clamp(18px, 8cqi, 32px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ring {
+  flex-shrink: 0;
+}
+
+.compactPrimary {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+}
+
+.statsSection {
+  flex: 1;
+  min-height: 0;
+}
+
+.statsSectionCompact {
+  flex: 0 1 auto;
+}
+
+.grid {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 10px);
+  grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+}
+
+.statTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+  gap: clamp(2px, 1.5cqmin, 5px);
+  padding: clamp(4px, 2.5cqi, 10px);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--stat-bg, light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)));
+  overflow: hidden;
+}
+
+.statIcon {
+  flex-shrink: 0;
+}
+
+.statLabel {
+  font-size: clamp(8px, 2.5cqmin, 12px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statValue {
+  font-size: clamp(14px, 5.5cqmin, 24px);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.compactStatGrid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(var(--compact-stat-cols, 1), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(3px, 2cqi, 6px);
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+
+.compactStatTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(4px, 3cqi, 8px);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--stat-bg, light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)));
+  overflow: hidden;
+}
+
+.compactStatValue {
+  font-size: clamp(22px, 17cqmin, 42px);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.compactStatLabel {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--mantine-color-dimmed);
+  font-size: clamp(8px, 2.4cqmin, 11px);
+  line-height: 1.1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyState {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: clamp(11px, 3cqi, 14px);
+  text-align: center;
+}
+
+.osSectionWrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.osSectionWithStats {
+  padding-top: clamp(4px, 2cqi, 8px);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.osSection {
+  min-height: 0;
+}
+
+.osHeading {
+  flex-shrink: 0;
+}
+
+.osScroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.osRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.osLabel {
+  font-size: clamp(9px, 2.5cqmin, 12px);
+  line-height: 1.2;
+}
+
+.osBarGroup {
+  width: 100%;
+  min-width: 0;
+}
+
+.osBar {
+  flex: 1;
+  min-width: 0;
+}
+
+.osCount {
+  flex: 0 0 auto;
+  min-width: 1.5rem;
+  text-align: right;
+  font-size: clamp(9px, 2.5cqmin, 12px);
+}
+
+.compactOsBars {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(3px, 2cqmin, 5px);
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+
+.compactOsBar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.compactOsLabel {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(9px, 2.5cqmin, 12px);
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.osDonutContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.osDonutContentWithLegend {
+  justify-content: space-evenly;
+  gap: clamp(8px, 3cqi, 16px);
+}
+
+.osDonut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.osLegend {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  max-width: 50%;
+}
+
+.osLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: clamp(9px, 2.2cqmin, 12px);
+  line-height: 1.2;
+}
+
+.osLegendSwatch {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: var(--mantine-radius-xl);
+  background-color: var(--os-color);
+}
+
+.osLegendLabel {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.osLegendValue {
+  flex: 0 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(9px, 2.2cqmin, 12px);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compactFooter {
+  font-size: clamp(8px, 2.2cqmin, 10px);
+}

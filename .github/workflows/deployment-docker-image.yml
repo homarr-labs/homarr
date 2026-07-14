@@ -57,7 +57,7 @@ jobs:
           client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
@@ -119,7 +119,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -148,6 +148,11 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         env:
           SKIP_ENV_VALIDATION: true
   build-arm64:
@@ -158,7 +163,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -187,6 +192,11 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         env:
           SKIP_ENV_VALIDATION: true
   extract-asset-amd64:

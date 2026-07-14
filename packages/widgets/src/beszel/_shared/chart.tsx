@@ -30,6 +30,7 @@ function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod) {
 }
 
 function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod) {
+  if (timePeriod === "1m") return padLiveTimeGrid(data);
   const days = periodDays[timePeriod];
   if (!days) return data;
 
@@ -48,6 +49,38 @@ function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeri
   }
 
   return result.toSorted((a, b) => new Date(a.rawTime as string).getTime() - new Date(b.rawTime as string).getTime());
+}
+
+export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60) {
+  if (data.length === 0) return data;
+
+  const end = dayjs(
+    data.reduce((latest, point) => {
+      const timestamp = new Date(point.rawTime as string).getTime();
+      return Number.isFinite(timestamp) ? Math.max(latest, timestamp) : latest;
+    }, 0),
+  ).startOf("second");
+  const pointsBySecond = new Map(
+    data.map(
+      (point) =>
+        [
+          dayjs(point.rawTime as string)
+            .startOf("second")
+            .valueOf(),
+          point,
+        ] as const,
+    ),
+  );
+
+  return Array.from({ length: pointCount }, (_, index) => {
+    const timestamp = end.subtract(pointCount - index - 1, "second");
+    return (
+      pointsBySecond.get(timestamp.valueOf()) ?? {
+        time: timestamp.format(timeFormats["1m"]),
+        rawTime: timestamp.toISOString(),
+      }
+    );
+  });
 }
 
 const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
@@ -172,6 +205,40 @@ const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
   memory: (c) => (c?.m ?? 0) * MB,
   network: (c) => (c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0)),
+};
+
+export const useDiskChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  efsPaths: string[],
+  rootSeriesName: string,
+  timePeriod: BeszelTimePeriod = "1h",
+) =>
+  useMemo(
+    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod),
+    [systemStats, efsPaths, rootSeriesName, timePeriod],
+  );
+
+export const buildDiskChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  efsPaths: string[],
+  rootSeriesName: string,
+  timePeriod: BeszelTimePeriod = "1h",
+) => {
+  if (!systemStats?.length) return [];
+  const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+  const mapped = ordered.map((record) => {
+    const point: Record<string, unknown> = {
+      time: fmt(record.created),
+      rawTime: record.created,
+      [rootSeriesName]: record.stats.du,
+    };
+    const efs = record.stats.efs ?? {};
+    for (const path of efsPaths) {
+      point[path] = efs[path]?.du ?? 0;
+    }
+    return point;
+  });
+  return padTimeGrid(mapped, timePeriod);
 };
 
 export const useDockerChartData = (

@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { BeszelIntegration } from "../beszel/beszel-integration";
+import { BazarrIntegration } from "../bazarr/bazarr-integration";
 import { AnchorIntegration } from "../anchor/anchor-integration";
 import { AudiobookshelfIntegration } from "../audiobookshelf/audiobookshelf-integration";
 import { CoolifyIntegration } from "../coolify/coolify-integration";
@@ -36,6 +37,7 @@ import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-inte
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PaperlessNgxIntegration } from "../paperless-ngx/paperless-ngx-integration";
+import { PatchMonIntegration } from "../patchmon/patchmon-integration";
 import { PeaNutIntegration } from "../peanut/peanut-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { createTechnitiumDnsIntegrationAsync } from "../technitium/technitium-integration-factory";
@@ -45,6 +47,8 @@ import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { SeerrIntegration } from "../seerr/seerr-integration";
 import { SpeedtestTrackerIntegration } from "../speedtest-tracker/speedtest-tracker-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
+import { TraefikIntegration } from "../traefik/traefik-integration";
+import { SynologyIntegration } from "../synology/synology-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UmamiIntegration } from "../umami/umami-integration";
 import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
@@ -110,12 +114,14 @@ export const integrationCreators = {
   gotify: GotifyIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
+  synology: SynologyIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
   immich: ImmichIntegration,
   paperlessNgx: PaperlessNgxIntegration,
+  patchmon: PatchMonIntegration,
   speedtestTracker: SpeedtestTrackerIntegration,
   audiobookshelf: AudiobookshelfIntegration,
   navidrome: NavidromeIntegration,
@@ -125,6 +131,8 @@ export const integrationCreators = {
   uptimeKuma: UptimeKumaIntegration,
   peaNut: PeaNutIntegration,
   beszel: BeszelIntegration,
+  bazarr: BazarrIntegration,
+  traefik: TraefikIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

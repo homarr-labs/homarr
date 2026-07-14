@@ -6,7 +6,14 @@ npm-debug.log
 README.md
 .next
 .turbo
+.pnpm-store
+**/.pnpm-store
+coverage
+**/coverage
+**/.docusaurus
+**/build
 .git
+.github
 dev
 .build
 e2e

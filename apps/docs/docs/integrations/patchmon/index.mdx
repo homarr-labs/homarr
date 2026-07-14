@@ -1,0 +1,43 @@
+---
+title: 'PatchMon'
+description: "PatchMon is a patch management and monitoring solution for Linux hosts."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { patchmonIntegration } from '.';
+import { patchmonWidget } from '@site/docs/widgets/patchmon';
+
+
+<IntegrationHeader
+    integration={patchmonIntegration}
+    categories={['Health Monitoring']}
+/>
+
+PatchMon provides host and package update statistics including total hosts, hosts needing updates, and security update counts.
+
+The PatchMon widget requires users to be **signed in to Homarr**; see the [PatchMon widget documentation](/docs/widgets/patchmon#authentication) for details on authentication and public boards.
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[
+        { widget: patchmonWidget },
+    ]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['patchmonApiKey', 'patchmonApiSecret'],
+    steps: [
+        'Open your PatchMon instance',
+        'Navigate to Settings and create a new GetHomepage API key',
+        'Copy the API key and secret from the success dialog',
+        'Paste them into Homarr — Basic authentication is handled automatically',
+    ]
+}]} />

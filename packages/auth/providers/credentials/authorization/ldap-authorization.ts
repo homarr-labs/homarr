@@ -1,5 +1,5 @@
 import { CredentialsSignin } from "@auth/core/errors";
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -7,6 +7,7 @@ import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import type { ldapSignInSchema } from "@homarr/validation/user";
+import { utf8EmailSchema } from "@homarr/validation/email";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
@@ -52,8 +53,7 @@ export const authorizeWithLdapCredentialsAsync = async (
     throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
   }
 
-  // Validate email
-  const mailResult = await z.string().email().safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
+  const mailResult = await utf8EmailSchema.safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
 
   if (!mailResult.success) {
     logger.error("User found in LDAP but with invalid or non-existing Email", {

@@ -5,11 +5,12 @@ import { Box, Card, Group, Stack, Tooltip, useMantineColorScheme } from "@mantin
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { humanFileSize } from "@homarr/common";
+import { formatBytesPair } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { filterStorageVolumes } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
@@ -19,11 +20,13 @@ const getDisplayText = (item: { used: string; available: string; percentage: num
     case "percentage":
       return `${Math.round(item.percentage)}%`;
     case "absolute": {
+      const usedInBytes = Number(item.used);
       const availableInBytes = Number(item.available);
-      const availableText = Number.isFinite(availableInBytes)
-        ? humanFileSize(Math.round(availableInBytes))
-        : item.available;
-      return `${item.used} / ${availableText}`;
+      if (Number.isFinite(usedInBytes) && Number.isFinite(availableInBytes)) {
+        const { used, available } = formatBytesPair(usedInBytes, availableInBytes);
+        return `${used} / ${available}`;
+      }
+      return `${item.used} / ${item.available}`;
     }
     case "free":
       return `${Math.round(100 - item.percentage)}% free`;
@@ -123,11 +126,16 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const lastItem = data.at(-1);
 
   if (!lastItem) return <WidgetEmptyState />;
-  const { fileSystem, smart } = lastItem.healthInfo;
 
-  if (fileSystem.length === 0) {
+  const rawFileSystem = lastItem.healthInfo.fileSystem;
+  if (rawFileSystem.length === 0) {
     throw new NoIntegrationDataError();
   }
+
+  const fileSystem = filterStorageVolumes(rawFileSystem, options.visibleStorageVolumes, lastItem.integrationId);
+  const smart = filterStorageVolumes(lastItem.healthInfo.smart, options.visibleStorageVolumes, lastItem.integrationId);
+
+  if (fileSystem.length === 0) return <WidgetEmptyState />;
 
   return (
     <Stack gap="xs" p="xs" h="100%">

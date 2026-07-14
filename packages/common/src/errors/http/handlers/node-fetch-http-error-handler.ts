@@ -30,7 +30,7 @@ export class NodeFetchHttpErrorHandler extends HttpErrorHandler {
 
     return new RequestError(requestErrorInput, {
       cause: error,
-    });
+    }) as AnyRequestError;
   }
 
   /**

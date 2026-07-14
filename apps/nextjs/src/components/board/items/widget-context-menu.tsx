@@ -2,10 +2,10 @@
 
 import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Group, Menu, Switch, Text } from "@mantine/core";
+import { Group, Loader, Menu, Switch, Text } from "@mantine/core";
 import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
-import type { QueryClient } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -49,9 +49,13 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
-  const widgetQueryKey = useMemo(() => [["widget", item.kind]], [item.kind]);
+  const widgetQueryKey = useMemo(
+    () => ("queryKey" in currentDefinition ? (currentDefinition.queryKey as QueryKey) : [["widget", item.kind]]),
+    [currentDefinition, item.kind],
+  );
+  const isWidgetFetching = useIsFetching({ queryKey: widgetQueryKey }) > 0;
   const handleRefetch = useCallback(() => {
-    void queryClient.invalidateQueries({ queryKey: widgetQueryKey });
+    void queryClient.refetchQueries({ queryKey: widgetQueryKey, type: "all" });
   }, [queryClient, widgetQueryKey]);
 
   const options = useMemo(
@@ -223,11 +227,15 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
         <>
           {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
-          <Menu.Item closeMenuOnClick leftSection={<IconRefresh size={16} />} onClick={handleRefetch}>
+          <Menu.Item
+            leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+            onClick={handleRefetch}
+            disabled={isWidgetFetching}
+          >
             <Group justify="space-between" wrap="nowrap">
               {tMenu("refresh")}
               <Text size="xs" c="dimmed">
-                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} />
+                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} isFetching={isWidgetFetching} />
               </Text>
             </Group>
           </Menu.Item>
@@ -265,12 +273,23 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const WidgetCacheAge = ({ queryClient, queryKey }: { queryClient: QueryClient; queryKey: unknown[] }) => {
+const WidgetCacheAge = ({
+  queryClient,
+  queryKey,
+  isFetching,
+}: {
+  queryClient: QueryClient;
+  queryKey: QueryKey;
+  isFetching: boolean;
+}) => {
+  // 1s tick for "just now" → "1s ago" label transition; isFetching prop handles refetch reactivity
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(id);
   }, []);
+
+  if (isFetching) return <Loader size={12} />;
 
   const timestamps = queryClient
     .getQueryCache()
@@ -279,8 +298,8 @@ const WidgetCacheAge = ({ queryClient, queryKey }: { queryClient: QueryClient; q
     .filter(Boolean);
   if (timestamps.length === 0) return null;
 
-  const oldest = Math.min(...timestamps);
-  const seconds = Math.floor((Date.now() - oldest) / 1000);
+  const latest = Math.max(...timestamps);
+  const seconds = Math.floor((Date.now() - latest) / 1000);
   if (seconds < 5) return "just now";
   if (seconds < 60) return `${seconds}s ago`;
   return `${Math.floor(seconds / 60)}m ago`;

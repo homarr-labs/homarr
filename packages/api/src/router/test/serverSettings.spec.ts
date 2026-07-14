@@ -1,9 +1,9 @@
-import SuperJSON from "superjson";
+import { stringify } from "superjson";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
-import { serverSettings } from "@homarr/db/schema";
+import { boards, serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
@@ -33,7 +33,7 @@ describe("getAll server settings", () => {
     await db.insert(serverSettings).values([
       {
         settingKey: defaultServerSettingsKeys[0],
-        value: SuperJSON.stringify(defaultServerSettings.analytics),
+        value: stringify(defaultServerSettings.analytics),
       },
     ]);
 
@@ -67,7 +67,7 @@ describe("saveSettings", () => {
     await db.insert(serverSettings).values([
       {
         settingKey: defaultServerSettingsKeys[0],
-        value: SuperJSON.stringify(defaultServerSettings.analytics),
+        value: stringify(defaultServerSettings.analytics),
       },
     ]);
 
@@ -82,11 +82,99 @@ describe("saveSettings", () => {
     expect(dbSettings).toStrictEqual([
       {
         settingKey: "analytics",
-        value: SuperJSON.stringify({
+        value: stringify({
           enableGeneral: true,
           instanceId: null,
         }),
       },
     ]);
+  });
+});
+
+describe("board settings API", () => {
+  test("getBoardSettings should return board defaults", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    await expect(caller.getBoardSettings()).resolves.toStrictEqual(defaultServerSettings.board);
+  });
+
+  test("updateBoardSettings should insert settings when defaults are not persisted", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "default", isPublic: true });
+
+    const result = await caller.updateBoardSettings({
+      homeBoardId: boardId,
+      forceDisableStatus: true,
+    });
+
+    expect(result).toStrictEqual({
+      ...defaultServerSettings.board,
+      homeBoardId: boardId,
+      forceDisableStatus: true,
+    });
+    const dbSettings = await db.select().from(serverSettings);
+    expect(dbSettings).toStrictEqual([
+      {
+        settingKey: "board",
+        value: stringify(result),
+      },
+    ]);
+  });
+
+  test("updateBoardSettings should update existing settings", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "default", isPublic: true });
+
+    await caller.updateBoardSettings({ homeBoardId: boardId });
+    const result = await caller.updateBoardSettings({
+      mobileHomeBoardId: boardId,
+      enableStatusByDefault: false,
+    });
+
+    expect(result).toStrictEqual({
+      ...defaultServerSettings.board,
+      homeBoardId: boardId,
+      mobileHomeBoardId: boardId,
+      enableStatusByDefault: false,
+    });
+    const dbSettings = await db.select().from(serverSettings);
+    expect(dbSettings).toStrictEqual([
+      {
+        settingKey: "board",
+        value: stringify(result),
+      },
+    ]);
+  });
+
+  test("updateBoardSettings should reject private home boards", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "private", isPublic: false });
+
+    const actAsync = async () => await caller.updateBoardSettings({ homeBoardId: boardId });
+
+    await expect(actAsync()).rejects.toThrow("must reference public boards");
   });
 });

@@ -6,6 +6,7 @@ import { appRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { infoRouter } from "./router/info";
 import { inviteRouter } from "./router/invite";
+import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
 import { createTRPCRouter } from "./trpc";
 
@@ -14,13 +15,14 @@ export const openApiRouter = createTRPCRouter({
   boardRouter,
   infoRouter,
   inviteRouter,
+  serverSettingsRouter,
   userRouter,
 });
 
 export const openApiDocument = (base: string) =>
   generateOpenApiDocument(openApiRouter, {
     title: "Homarr API documentation",
-    version: "1.0.0",
+    version: "1.1.0",
     baseUrl: base,
     docsUrl: "https://homarr.dev",
     securitySchemes: {

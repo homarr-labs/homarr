@@ -1599,7 +1599,7 @@
     "menu": {
       "label": {
         "settings": "Ustawienia",
-        "refresh": "",
+        "refresh": "Odśwież",
         "options": "Opcje",
         "actions": "Akcje"
       }
@@ -1904,7 +1904,7 @@
       "noStation": "Nie wybrano stacji",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Szukaj adresu URL"
         },
         "station": {
           "label": "Stacja"
@@ -2283,6 +2283,11 @@
         },
         "fileSystem": {
           "label": "Pokaż informacje o systemie plików"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": "Domyślna karta"
@@ -2791,8 +2796,8 @@
           "description": "Wyświetl datę zdjęcia oraz bieżący indeks na dole pokazu slajdów"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Losowe zdjęcia",
+          "description": "Pokaż zdjęcia w losowej kolejności, zamiast zawsze rozpoczynać się od tej samej kolejności albumu."
         }
       },
       "description": "Pokaz slajdów zdjęć z Twojego albumu w Immich",
@@ -3158,7 +3163,7 @@
             "label": "Dostawca"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL dostawcy"
           },
           "identifier": {
             "label": "Identyfikator",
@@ -3209,11 +3214,11 @@
             "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Tokeny dostawcy",
+            "token": "Token",
+            "configured": "Token skonfigurowany",
+            "notConfigured": "Brak ustawionych tokenów",
+            "save": "Zapisz"
           }
         }
       },
@@ -3236,9 +3241,9 @@
           "invalidIdentifier": "Nieprawidłowy identyfikator",
           "noMatchingVersion": "Nie znaleziono pasującej wersji",
           "noReleasesFound": "Nie znaleziono wydań!",
-          "noProviderSelected": "",
+          "noProviderSelected": "Nie wybrano dostawcy",
           "noProviderResponse": "Brak odpowiedzi od dostawcy",
-          "unexpected": ""
+          "unexpected": "Nieoczekiwany błąd dostawcy"
         }
       }
     },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Pokaż pasek wykorzystania w tle"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

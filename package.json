@@ -1,11 +1,15 @@
 {
   "name": "homarr",
-  "version": "1.69.1",
+  "version": "1.70.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
+    "ci:act:all": "bash scripts/ci/act.sh all",
+    "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
+    "ci:act:docker": "bash scripts/ci/act.sh docker",
+    "ci:act:fast": "bash scripts/ci/act.sh fast",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
@@ -32,6 +36,9 @@
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
+  },
+  "dependencies": {
+    "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
@@ -62,10 +69,7 @@
   },
   "engines": {
     "node": ">=24.18.0",
-    "pnpm": ">=11.9.0"
+    "pnpm": ">=11.10.0"
   },
-  "packageManager": "pnpm@11.9.0",
-  "dependencies": {
-    "jsonpath-plus": "catalog:"
-  }
+  "packageManager": "pnpm@11.10.0"
 }

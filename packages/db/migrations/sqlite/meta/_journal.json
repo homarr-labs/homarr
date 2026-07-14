@@ -281,6 +281,13 @@
       "when": 1780764500000,
       "tag": "0039_merge_custom_widget_url",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "6",
+      "when": 1783176100870,
+      "tag": "0040_add_widget_secret",
+      "breakpoints": true
     }
   ]
 }
