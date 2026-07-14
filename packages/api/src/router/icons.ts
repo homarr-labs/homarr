@@ -6,9 +6,18 @@ import { iconForUrlSchema, iconsFindSchema } from "@homarr/validation/icons";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const iconsRouter = createTRPCRouter({
-  getIconForUrl: protectedProcedure.input(iconForUrlSchema).query(async ({ input }) => {
-    return { url: await fetchBestIconUrlForAppAsync(input.href) };
-  }),
+  getIconForUrl: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          'Detect the icon of a web app by inspecting the page it links to (<link rel="icon"> / <link rel="apple-touch-icon"> tags, falling back to /favicon.ico). REQUIRED: href (http or https URL of the app). Returns { url: string | null }, null when no usable icon was found',
+      },
+    })
+    .input(iconForUrlSchema)
+    .query(async ({ input }) => {
+      return { url: await fetchBestIconUrlForAppAsync(input.href) };
+    }),
   findIcons: publicProcedure
     .meta({
       mcp: {

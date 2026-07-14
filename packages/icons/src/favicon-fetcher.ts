@@ -6,7 +6,10 @@ const requestTimeoutMilliseconds = 5000;
 const maximumHtmlBytes = 512 * 1024;
 
 // Relations that point at a page icon, ordered from most to least preferred.
-// Apple touch icons are usually the highest resolution, so they win ties.
+// The relation is deliberately the primary ranking signal: apple touch icons are
+// designed as app tile artwork, and the sizes attribute is omitted far too often
+// (parseSizeArea then yields 0) to compare candidates across relation types by
+// size. The declared size only breaks ties within the same relation.
 const iconRelationScores: Record<string, number> = {
   "apple-touch-icon-precomposed": 4,
   "apple-touch-icon": 3,
