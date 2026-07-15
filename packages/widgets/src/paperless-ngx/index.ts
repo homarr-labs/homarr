@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconFileText, IconServerOff } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -5,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
   icon: IconFileText,
+  refetchInterval: widgetRefetchInterval.never,
   supportedIntegrations: ["paperlessNgx"],
   integrationsRequired: true,
   createOptions() {

@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconGraphFilled } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../../definition";
@@ -5,6 +6,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
   icon: IconGraphFilled,
+  queryKey: [["widget", "immich"]],
+  refetchInterval: widgetRefetchInterval.never,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
   createOptions() {

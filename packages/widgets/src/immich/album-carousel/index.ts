@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconPhoto } from "@tabler/icons-react";
 import z from "zod";
 
@@ -8,6 +9,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
+  queryKey: [["widget", "immich"]],
+  refetchInterval: widgetRefetchInterval.never,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
   createOptions() {

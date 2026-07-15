@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconVideo } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -7,6 +8,7 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showOnlyPlaying: factory.switch({ defaultValue: true, withDescription: true }),

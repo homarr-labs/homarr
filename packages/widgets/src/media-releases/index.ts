@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconTicket } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -5,6 +6,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
   icon: IconTicket,
+  queryKey: [["widget", "mediaRelease"]],
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       layout: factory.select({

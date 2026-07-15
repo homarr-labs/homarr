@@ -67,9 +67,17 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
   withDynamicImport: createWithDynamicImport(kind, definition),
 });
 
+export const widgetRefetchInterval = {
+  fiveSeconds: 5,
+  never: false,
+} as const;
+
+export type WidgetRefetchInterval = (typeof widgetRefetchInterval)[keyof typeof widgetRefetchInterval];
+
 export interface WidgetDefinition {
   icon: TablerIcon;
   queryKey?: QueryKey;
+  refetchInterval?: WidgetRefetchInterval;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
   maxIntegrations?: number;

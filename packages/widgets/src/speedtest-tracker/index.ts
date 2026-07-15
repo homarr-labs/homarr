@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconServerOff, IconSpeedboat } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -5,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("speedtestTracker", {
   icon: IconSpeedboat,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

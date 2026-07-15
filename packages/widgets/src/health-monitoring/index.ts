@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -8,6 +9,7 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconServer2 } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -6,6 +7,8 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
   icon: IconServer2,
+  queryKey: [["widget", "healthMonitoring"]],
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   createOptions() {
     return optionsBuilder.from(

@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -14,6 +15,7 @@ const relativeDateSchema = z
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   icon: IconRocket,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({

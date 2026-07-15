@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -33,6 +34,7 @@ const columnsSort = columnsList.filter((column) =>
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

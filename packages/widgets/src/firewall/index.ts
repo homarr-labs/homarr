@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconWall, IconWallOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -7,6 +8,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },

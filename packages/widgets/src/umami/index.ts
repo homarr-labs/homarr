@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconChartBar, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -8,6 +9,7 @@ export const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth
 
 export const { definition, componentLoader } = createWidgetDefinition("umami", {
   icon: IconChartBar,
+  refetchInterval: widgetRefetchInterval.never,
   supportedIntegrations: ["umami"],
   createOptions() {
     return optionsBuilder.from(

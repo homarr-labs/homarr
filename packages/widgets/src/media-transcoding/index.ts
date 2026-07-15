@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconTransform } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -11,6 +12,7 @@ export const views = ["workers", "queue", "statistics"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
   icon: IconTransform,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       defaultView: factory.select({

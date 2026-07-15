@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconAd, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -9,6 +10,8 @@ export const widgetKind = "dnsHoleSummary";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconAd,
+  queryKey: [["widget", "dnsHole"]],
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       usePiHoleColors: factory.switch({

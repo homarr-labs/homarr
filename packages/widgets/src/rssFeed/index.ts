@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconRss } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -12,6 +13,7 @@ import { optionsBuilder } from "../options";
  */
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       feedUrls: factory.multiText({

@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconBrandMinecraft } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -6,6 +7,8 @@ import { optionsBuilder } from "../../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("minecraftServerStatus", {
   icon: IconBrandMinecraft,
+  queryKey: [["widget", "minecraft"]],
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text({ defaultValue: "" }),

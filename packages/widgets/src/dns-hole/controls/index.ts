@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconDeviceGamepad, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -9,6 +10,8 @@ export const widgetKind = "dnsHoleControls";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
+  queryKey: [["widget", "dnsHole"]],
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showToggleAllButtons: factory.switch({

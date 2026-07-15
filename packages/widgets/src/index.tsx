@@ -70,7 +70,9 @@ export type {
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,
+  WidgetRefetchInterval,
 } from "./definition";
+export { widgetRefetchInterval } from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 

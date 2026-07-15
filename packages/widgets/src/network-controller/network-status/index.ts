@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../../definition";
 import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -7,6 +8,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerStatus", {
   icon: IconTopologyFull,
+  queryKey: [["widget", "networkController"]],
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       content: factory.select({

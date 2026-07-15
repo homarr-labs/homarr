@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconBuildingBank } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -13,6 +14,7 @@ const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
   icon: IconBuildingBank,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       stock: factory.text({

@@ -2,6 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
+import type { QueryKey } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
@@ -33,6 +34,7 @@ import {
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
+import { widgetImports } from "@homarr/widgets";
 
 import { createWidgetQueryPersister } from "./query-cache-persister";
 
@@ -90,6 +92,13 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       },
     });
     client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
+    for (const { definition } of Object.values(widgetImports)) {
+      const def = definition as { refetchInterval?: number | false; queryKey?: QueryKey; kind: string };
+      if (def.refetchInterval === undefined) continue;
+      const key = def.queryKey ?? [["widget", def.kind]];
+      const interval = def.refetchInterval === false ? false : def.refetchInterval * 1000;
+      client.setQueryDefaults(key, { refetchInterval: interval });
+    }
     return client;
   });
 

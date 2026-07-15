@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconReportSearch, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -7,6 +8,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
+  refetchInterval: widgetRefetchInterval.never,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       openIndexerSiteInNewTab: factory.switch({

@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
@@ -14,6 +15,8 @@ const labelDisplayModeOptions = {
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
+  queryKey: [["widget", "healthMonitoring"]],
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   createOptions() {
     return optionsBuilder.from((factory) => ({

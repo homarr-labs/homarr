@@ -1,3 +1,4 @@
+import { widgetRefetchInterval } from "../definition";
 import { IconActivityHeartbeat, IconServerOff } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
@@ -5,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("tracearr", {
   icon: IconActivityHeartbeat,
+  refetchInterval: widgetRefetchInterval.fiveSeconds,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showStreams: factory.switch({
