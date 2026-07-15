@@ -1,7 +1,7 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
 import {
   IconAlertTriangle,
@@ -19,6 +19,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useTimeAgo } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
@@ -293,13 +294,10 @@ interface WidgetQueryStatusProps {
 }
 
 const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQueryStatusProps) => {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setTick((n) => n + 1), 1000);
-    return () => clearInterval(id);
-  }, []);
-
   const queries = queryClient.getQueryCache().findAll({ queryKey });
+  const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
+  const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
+  const ageLabel = useTimeAgo(new Date(latest));
 
   if (isFetching) {
     return (
@@ -321,10 +319,6 @@ const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQuery
   }
 
   const hasError = queries.some((q) => q.state.status === "error");
-  const timestamps = queries.map((q) => q.state.dataUpdatedAt).filter(Boolean);
-  const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
-  const seconds = Math.floor((Date.now() - latest) / 1000);
-  const ageLabel = seconds < 5 ? "just now" : seconds < 60 ? `${seconds}s ago` : `${Math.floor(seconds / 60)}m ago`;
 
   if (hasError) {
     const errorQuery = queries.find((q) => q.state.status === "error");
