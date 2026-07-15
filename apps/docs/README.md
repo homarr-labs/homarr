@@ -71,7 +71,7 @@ Each integration/widget doc follows a consistent pattern:
 The docs app has `@homarr/definitions` as a workspace dependency. You can import integration kinds, widget kinds, and other definitions directly:
 
 ```typescript
-import { IntegrationKind } from '@homarr/definitions';
+import { IntegrationKind } from "@homarr/definitions";
 ```
 
 This enables type-safe references to homarr domain concepts within documentation code.
@@ -90,15 +90,15 @@ pnpm verify:search
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
+| Layer          | Technology                                  |
+| -------------- | ------------------------------------------- |
 | Site generator | Docusaurus 3 (`@docusaurus/preset-classic`) |
-| Styling | Tailwind CSS 3 + Docusaurus Infima |
-| Icons | `@tabler/icons-react` |
-| Diagrams | Mermaid (`@docusaurus/theme-mermaid`) |
-| Search | Algolia DocSearch |
-| Analytics | PostHog |
-| Charts | @nivo/line |
+| Styling        | Tailwind CSS 3 + Docusaurus Infima          |
+| Icons          | `@tabler/icons-react`                       |
+| Diagrams       | Mermaid (`@docusaurus/theme-mermaid`)       |
+| Search         | Algolia DocSearch                           |
+| Analytics      | PostHog                                     |
+| Charts         | @nivo/line                                  |
 
 ## Contributing
 

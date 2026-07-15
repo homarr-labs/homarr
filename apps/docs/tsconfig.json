@@ -16,15 +16,8 @@
     "incremental": true,
     "paths": {
       "@site/*": ["./*"]
-    },
+    }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.jsx",
-    "**/*.js",
-    "**/*.tsx",
-    "**/*.md",
-    "**/*.mdx",
-  ],
-  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.jsx", "**/*.js", "**/*.tsx", "**/*.md", "**/*.mdx"],
+  "exclude": ["node_modules"]
 }
