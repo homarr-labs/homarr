@@ -14,6 +14,18 @@ export const mediaRequestListWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "yes",
       },
+      {
+        name: "Statuses to show",
+        description: "Only requests with these statuses will be shown. Defaults to all statuses.",
+        values: "List of: 'pending', 'approved', 'declined', 'failed', 'completed'",
+        defaultValue: "All statuses",
+      },
+      {
+        name: "Show only recent requests",
+        description: "Limit to requests created within this many days. Set to 0 to disable the time filter.",
+        values: "0-365",
+        defaultValue: "0",
+      },
     ],
   },
 };
