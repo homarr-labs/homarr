@@ -2,8 +2,8 @@
 
 import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Group, Loader, Menu, Switch, Text } from "@mantine/core";
-import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
+import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
+import { IconAlertTriangle, IconCircleCheck, IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
@@ -15,6 +15,7 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { TranslationFunction } from "@homarr/translation";
 import type { WidgetContextMenuAction } from "@homarr/widgets";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
@@ -232,11 +233,9 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
             onClick={handleRefetch}
             disabled={isWidgetFetching}
           >
-            <Group justify="space-between" wrap="nowrap">
+            <Group justify="space-between" wrap="nowrap" gap="sm">
               {tMenu("refresh")}
-              <Text size="xs" c="dimmed">
-                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} isFetching={isWidgetFetching} />
-              </Text>
+              <WidgetQueryStatus queryClient={queryClient} queryKey={widgetQueryKey} isFetching={isWidgetFetching} t={t} />
             </Group>
           </Menu.Item>
           <Menu.Item
@@ -273,34 +272,67 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const WidgetCacheAge = ({
-  queryClient,
-  queryKey,
-  isFetching,
-}: {
+interface WidgetQueryStatusProps {
   queryClient: QueryClient;
   queryKey: QueryKey;
   isFetching: boolean;
-}) => {
-  // 1s tick for "just now" → "1s ago" label transition; isFetching prop handles refetch reactivity
+  t: TranslationFunction;
+}
+
+const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQueryStatusProps) => {
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(id);
   }, []);
 
-  if (isFetching) return <Loader size={12} />;
+  const queries = queryClient.getQueryCache().findAll({ queryKey });
 
-  const timestamps = queryClient
-    .getQueryCache()
-    .findAll({ queryKey })
-    .map((q) => q.state.dataUpdatedAt)
-    .filter(Boolean);
-  if (timestamps.length === 0) return null;
+  if (isFetching) {
+    return (
+      <Group gap={4} wrap="nowrap">
+        <Loader size={12} />
+        <Text size="xs" c="dimmed">
+          {t("item.menu.status.loading")}
+        </Text>
+      </Group>
+    );
+  }
 
-  const latest = Math.max(...timestamps);
+  if (queries.length === 0) {
+    return <Text size="xs" c="dimmed">{t("item.menu.status.idle")}</Text>;
+  }
+
+  const hasError = queries.some((q) => q.state.status === "error");
+  const timestamps = queries.map((q) => q.state.dataUpdatedAt).filter(Boolean);
+  const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
   const seconds = Math.floor((Date.now() - latest) / 1000);
-  if (seconds < 5) return "just now";
-  if (seconds < 60) return `${seconds}s ago`;
-  return `${Math.floor(seconds / 60)}m ago`;
+  const ageLabel = seconds < 5 ? "just now" : seconds < 60 ? `${seconds}s ago` : `${Math.floor(seconds / 60)}m ago`;
+
+  if (hasError) {
+    const errorQuery = queries.find((q) => q.state.status === "error");
+    const errorMessage = errorQuery?.state.error instanceof Error
+      ? errorQuery.state.error.message
+      : String(errorQuery?.state.error ?? "Unknown error");
+
+    return (
+      <Tooltip label={errorMessage} multiline position="left" w={250}>
+        <Group gap={4} wrap="nowrap">
+          <IconAlertTriangle size={12} color="var(--mantine-color-red-6)" />
+          <Text size="xs" c="red.6">
+            {t("item.menu.status.error")} · {ageLabel}
+          </Text>
+        </Group>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Group gap={4} wrap="nowrap">
+      <IconCircleCheck size={12} color="var(--mantine-color-green-6)" />
+      <Text size="xs" c="dimmed">
+        {t("item.menu.status.success")} · {ageLabel}
+      </Text>
+    </Group>
+  );
 };

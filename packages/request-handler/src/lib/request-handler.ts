@@ -1,6 +1,7 @@
 interface Options<TData, TInput extends Record<string, unknown>> {
   requestAsync: (input: TInput) => Promise<TData>;
   cacheTtlMs?: number;
+  fallbackToStaleOnError?: boolean;
 }
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
@@ -35,7 +36,6 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         if (cached && Date.now() < cached.expiresAt) {
           return { data: cached.data, timestamp: cached.timestamp };
         }
-        if (cached) cache.delete(key);
 
         const existing = inflight.get(key);
         if (existing) return existing;
@@ -55,6 +55,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
           })
           .catch((err) => {
             inflight.delete(key);
+            if (options.fallbackToStaleOnError && cached) {
+              return cached;
+            }
             throw err;
           });
 
