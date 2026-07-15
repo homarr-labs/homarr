@@ -17,6 +17,9 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
+    "dev:workshop": "docker compose -f ./apps/workshop/docker-compose.yml up --build",
+    "test:workshop-image": "bash ./apps/workshop/scripts/smoke-test.sh",
+    "ci:act:workshop": "bash ./scripts/ci/workshop-act.sh",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
@@ -32,6 +35,9 @@
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
+  },
+  "dependencies": {
+    "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
@@ -64,8 +70,5 @@
     "node": ">=24.18.0",
     "pnpm": ">=11.10.0"
   },
-  "packageManager": "pnpm@11.10.0",
-  "dependencies": {
-    "jsonpath-plus": "catalog:"
-  }
+  "packageManager": "pnpm@11.10.0"
 }

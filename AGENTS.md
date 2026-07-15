@@ -81,3 +81,5 @@ When modifying user-facing code, you MUST also update the corresponding document
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
+- Use `dayjs` for date/time formatting or comparisons; do not hand-roll relative time or date math.
+- Extract shared helpers/components when the same logic appears in multiple workshop/store files.
