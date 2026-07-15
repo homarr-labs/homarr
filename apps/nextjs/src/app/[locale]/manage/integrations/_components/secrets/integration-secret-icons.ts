@@ -26,6 +26,8 @@ export const integrationSecretIcons = {
   url: IconLink,
   opnsenseApiKey: IconKey,
   opnsenseApiSecret: IconPassword,
+  patchmonApiKey: IconKey,
+  patchmonApiSecret: IconPassword,
   githubAppId: IconCode,
   githubInstallationId: IconPlug,
   privateKey: IconKey,

@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "crwdns1082:0crwdne1082:0"
         },
+        "visibleStorageVolumes": {
+          "label": "crwdns5741:0crwdne5741:0",
+          "description": "crwdns5743:0crwdne5743:0",
+          "placeholder": "crwdns5745:0crwdne5745:0"
+        },
         "defaultTab": {
           "label": "crwdns2636:0crwdne2636:0"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "crwdns3842:0crwdne3842:0"
+        },
+        "visibleStorageVolumes": {
+          "label": "crwdns5747:0crwdne5747:0",
+          "description": "crwdns5749:0crwdne5749:0",
+          "placeholder": "crwdns5751:0crwdne5751:0"
         }
       },
       "status": {

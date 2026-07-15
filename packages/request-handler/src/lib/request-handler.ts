@@ -22,6 +22,10 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   const inflight = new Map<string, Promise<CacheEntry<TData>>>();
 
   return {
+    invalidateCache: () => {
+      cache.clear();
+      inflight.clear();
+    },
     handler: (input: TInput) => ({
       async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;

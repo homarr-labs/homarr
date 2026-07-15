@@ -1,6 +1,6 @@
 import type React from "react";
 import type { LoaderComponent } from "next/dynamic";
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -69,6 +69,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 
 export interface WidgetDefinition {
   icon: TablerIcon;
+  queryKey?: QueryKey;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
   maxIntegrations?: number;

@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Fájlrendszer-információk megjelenítése"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Alapértelmezett fül"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Háttérhasználati sáv megjelenítése"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

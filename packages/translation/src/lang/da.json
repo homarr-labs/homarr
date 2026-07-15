@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Vis information om filsystemet"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Standard fane"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Vis forbrugslinje i baggrunden"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

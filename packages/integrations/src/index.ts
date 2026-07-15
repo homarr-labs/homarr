@@ -29,6 +29,7 @@ export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { TrueNasIntegration } from "./truenas/truenas-integration";
+export { SynologyIntegration } from "./synology/synology-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
@@ -41,6 +42,8 @@ export { NavidromeIntegration } from "./navidrome/navidrome-integration";
 export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
 export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
+export { BazarrIntegration } from "./bazarr/bazarr-integration";
+export { TraefikIntegration } from "./traefik/traefik-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -67,6 +70,7 @@ export type {
 export type { Notification } from "./interfaces/notifications/notification-types";
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 export type { PaperlessNgxStats } from "./paperless-ngx/paperless-ngx-types";
+export type { PatchMonStats, PatchMonOsDistributionEntry } from "./patchmon/patchmon-types";
 export type {
   AnchorNote,
   AnchorNotePermission,
@@ -80,6 +84,8 @@ export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshel
 export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
 export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
+export type { BazarrBadges } from "./bazarr/bazarr-types";
+export type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "./traefik/traefik-types";
 export type {
   ArchiveTeamWarriorBandwidth,
   ArchiveTeamWarriorItem,

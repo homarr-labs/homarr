@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "כרטיסיית ברירת מחדל"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": ""
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

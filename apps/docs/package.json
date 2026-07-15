@@ -46,7 +46,7 @@
     "random-word-slugs": "^0.1.7",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "swiper": "^14.0.1",
+    "swiper": "^14.0.2",
     "tailwind-merge": "catalog:",
     "tailwindcss": "^4.3.2",
     "zod": "catalog:"

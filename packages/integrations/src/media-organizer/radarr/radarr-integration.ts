@@ -10,11 +10,13 @@ import type { TestingResult } from "../../base/test-connection/test-connection-s
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { radarrReleaseTypes } from "../../interfaces/calendar/calendar-types";
+import type { IMediaOrganizerIntegration } from "../../interfaces/media-organizer/media-organizer-integration";
+import type { MissingMediaItem, QueuedMediaItem } from "../../interfaces/media-organizer/media-organizer-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 const logger = createLogger({ module: "radarrIntegration" });
 
-export class RadarrIntegration extends Integration implements ICalendarIntegration {
+export class RadarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date
@@ -111,6 +113,79 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     return bestImage.remoteUrl;
   };
 
+  async getMissingAsync(pageSize = 10): Promise<{ items: MissingMediaItem[]; totalCount: number }> {
+    const url = this.url("/api/v3/wanted/missing", {
+      page: 1,
+      pageSize,
+      sortKey: "title",
+      sortDirection: "ascending",
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+    });
+    const data = await z
+      .object({
+        totalRecords: z.number(),
+        records: z.array(radarrMissingMovieSchema),
+      })
+      .parseAsync(await response.json());
+
+    return {
+      totalCount: data.totalRecords,
+      items: data.records.map(
+        (movie): MissingMediaItem => ({
+          id: movie.id,
+          title: movie.title,
+          type: "movie",
+          year: movie.year,
+          imageUrl: movie.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
+          link: this.externalUrl(`/movie/${movie.titleSlug}`).toString(),
+        }),
+      ),
+    };
+  }
+
+  async getMediaQueueAsync(pageSize = 10): Promise<{ items: QueuedMediaItem[]; totalCount: number }> {
+    const url = this.url("/api/v3/queue", {
+      page: 1,
+      pageSize,
+      includeMovie: true,
+    });
+
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+    });
+    const data = await z
+      .object({
+        totalRecords: z.number(),
+        records: z.array(radarrQueueItemSchema),
+      })
+      .parseAsync(await response.json());
+
+    return {
+      totalCount: data.totalRecords,
+      items: data.records.map((item): QueuedMediaItem => {
+        const sizeLeft = item.sizeleft ?? 0;
+        const sizeTotal = item.size ?? 0;
+        const percentComplete = sizeTotal > 0 ? Math.round(((sizeTotal - sizeLeft) / sizeTotal) * 100) : 0;
+        return {
+          id: item.id,
+          title: item.movie?.title ?? item.title,
+          type: "movie",
+          status: item.status,
+          timeLeft: item.timeleft ?? null,
+          percentComplete,
+          year: item.movie?.year,
+          imageUrl: item.movie?.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
+          link: item.movie?.titleSlug
+            ? this.externalUrl(`/movie/${item.movie.titleSlug}`).toString()
+            : this.externalUrl("/activity/queue").toString(),
+        };
+      }),
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
@@ -130,6 +205,41 @@ const radarrCalendarEventImageSchema = z.array(
     remoteUrl: z.string().url(),
   }),
 );
+
+const radarrMissingMovieSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  year: z.number().optional(),
+  titleSlug: z.string(),
+  images: z.array(
+    z.object({
+      coverType: z.string(),
+      remoteUrl: z.string().url(),
+    }),
+  ),
+});
+
+const radarrQueueItemSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  status: z.string(),
+  timeleft: z.string().optional(),
+  size: z.number().optional(),
+  sizeleft: z.number().optional(),
+  movie: z
+    .object({
+      title: z.string(),
+      year: z.number().optional(),
+      titleSlug: z.string(),
+      images: z.array(
+        z.object({
+          coverType: z.string(),
+          remoteUrl: z.string().url(),
+        }),
+      ),
+    })
+    .optional(),
+});
 
 const radarrCalendarEventSchema = z.object({
   title: z.string(),

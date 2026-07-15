@@ -142,7 +142,7 @@ export default async function Layout(props: {
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>
-      <body className={["font-sans", fontSans.variable].join(" ")}>
+      <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
         <Analytics enabled={serverSettings.analytics.enableGeneral} />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />

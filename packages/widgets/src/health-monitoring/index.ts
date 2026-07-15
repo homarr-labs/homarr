@@ -4,6 +4,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
@@ -28,6 +29,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         fileSystem: factory.switch({
           defaultValue: true,
         }),
+        visibleStorageVolumes: factory.integrationMultiSelect(createStorageVolumeMultiSelectOptions()),
         visibleClusterSections: factory.multiSelect({
           options: [
             {
@@ -77,6 +79,11 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
             return integrationKinds.every((kind) => kind === "proxmox") || integrationKinds.length === 0;
           },
         },
+        visibleStorageVolumes: {
+          shouldHide(_, integrationKinds) {
+            return integrationKinds.length === 0 || !integrationKinds.every((kind) => kind === "synology");
+          },
+        },
         showUptime: {
           shouldHide(_, integrationKinds) {
             // Uptime is only shown on cluster health tab
@@ -104,7 +111,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring"),
+  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

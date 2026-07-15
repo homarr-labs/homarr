@@ -31,8 +31,11 @@ const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = 
   audiobookshelf: ["audiobookshelf"],
   navidrome: ["navidrome"],
   paperlessNgx: ["paperless-ngx", "paperless"],
+  patchmon: ["patchmon", "patch-mon"],
   coolify: ["coolify"],
   truenas: ["truenas"],
+  bazarr: ["bazarr"],
+  synology: ["synology", "diskstation"],
 };
 
 export const matchIntegrationKind = (search: string): IntegrationKind | null => {

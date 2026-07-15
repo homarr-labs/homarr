@@ -1,0 +1,57 @@
+---
+title: "Traefik"
+description: "Cloud-native reverse proxy and load balancer"
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { traefikIntegration } from ".";
+import { traefikWidget } from "../../widgets/traefik";
+
+<IntegrationHeader integration={traefikIntegration} categories={["Reverse proxy", "Monitoring"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: traefikWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+:::info URL configuration
+Use the URL where Traefik exposes its dashboard/API, for example `http://traefik:8080` or `https://traefik.example.com`. Homarr calls Traefik endpoints under `/api` automatically.
+:::
+
+:::warning API requirement
+Traefik must have the API enabled. For local or internal setups this is commonly exposed through `api.insecure=true`; for production setups, expose the `api@internal` service through an authenticated router.
+:::
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [
+        "Choose this option when the Traefik API is only reachable from a trusted internal network and does not require authentication.",
+      ],
+    },
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Use this option when your Traefik dashboard route is protected by Basic Auth.",
+        "Enter the same username and password required to open the Traefik dashboard.",
+      ],
+    },
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Use this option when your Traefik dashboard route accepts a bearer token.",
+        "Paste the token into the API Key field in Homarr.",
+      ],
+    },
+  ]}
+/>

@@ -25,6 +25,7 @@ const columnTranslationKeyMap = {
 
 export const { definition, componentLoader } = createWidgetDefinition("dockerContainers", {
   icon: IconBrandDocker,
+  queryKey: [["docker", "getContainers"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       columns: factory.multiSelect({

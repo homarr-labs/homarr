@@ -3,7 +3,7 @@ import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tool
 import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import { useRequiredBoard } from "@homarr/boards/context";
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -41,7 +41,7 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
         <StatisticItem
           icon={IconDatabaseHeart}
           label={t("savedSpace")}
-          value={humanFileSize(Math.floor(allLibs.totalSavedSpace))}
+          value={formatBytes(Math.floor(allLibs.totalSavedSpace))}
         />
       </Group>
       <Group justify="center" wrap="wrap" grow>
