@@ -1,0 +1,23 @@
+.github/workflows/ci.yml
+  s_971ba7dba4c953::t_5814da670ab0f5 63,110,119,123,164,315
+.github/workflows/autofix.yml
+  s_971ba7dba4c953::t_681ad3a8d46ddb 47
+  s_971ba7dba4c953::t_8467593ccfc0dc 44-46
+  s_971ba7dba4c953::t_bb359bbf986bff 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "06db42129c87f0a5bb8b42e754d5af982d0e86b8",
+  "prompts": {},
+  "sessions": {
+    "s_971ba7dba4c953": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_09a1b1b2affep65dsiP526omBU",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
