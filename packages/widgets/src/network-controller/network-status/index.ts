@@ -7,6 +7,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerStatus", {
   icon: IconTopologyFull,
+  queryKey: [["widget", "networkController"]],
+  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       content: factory.select({
