@@ -188,9 +188,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     data,
     refetch,
     isFetching,
-  } = clientApi.docker.getContainers.useQuery(undefined, {
-    refetchInterval: 30_000,
-  });
+  } = clientApi.docker.getContainers.useQuery();
   const containers = data?.containers ?? [];
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
