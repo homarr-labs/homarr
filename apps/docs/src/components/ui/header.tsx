@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Badge } from "../ui/badge";
 
 interface DocsHeaderProps {
@@ -18,7 +18,7 @@ export const DocsHeader = (props: DocsHeaderProps) => {
           <h1 className="!mb-0 text-4xl">{props.title}</h1>
           <div className="flex gap-2">
             {props.categories.map((category) => (
-              <Badge key={category}>{category}</Badge>
+              <Badge>{category}</Badge>
             ))}
           </div>
         </div>
