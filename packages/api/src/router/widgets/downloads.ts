@@ -22,10 +22,20 @@ export const downloadsRouter = createTRPCRouter({
       },
     })
     .concat(createDownloadClientIntegrationMiddleware("query"))
-    .input(z.object({ limitPerIntegration: z.number().default(50) }))
+    .input(
+      z.object({
+        limitPerIntegration: z.number().default(50),
+        qbittorrentSort: z.string().optional(),
+        qbittorrentSortReverse: z.boolean().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+        const innerHandler = downloadClientRequestHandler.handler(integration, {
+          limit: input.limitPerIntegration,
+          qbittorrentSort: input.qbittorrentSort,
+          qbittorrentSortReverse: input.qbittorrentSortReverse,
+        });
         const { data, timestamp } = await innerHandler.getDataAsync();
         return {
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },

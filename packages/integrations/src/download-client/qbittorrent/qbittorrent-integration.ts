@@ -27,10 +27,18 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
     };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    qbittorrentSort?: string;
+    qbittorrentSortReverse?: boolean;
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
-    const torrents = await client.listTorrents({ limit: input.limit });
+    const torrents = await client.listTorrents({
+      limit: input.limit,
+      sort: input.qbittorrentSort,
+      reverse: input.qbittorrentSortReverse,
+    });
     const rates = torrents.reduce(
       ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
       { down: 0, up: 0 },

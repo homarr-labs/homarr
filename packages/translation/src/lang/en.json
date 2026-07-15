@@ -3064,8 +3064,28 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
-        }
-      },
+        },
+        "qbittorrentSort": {
+          "label": "qBittorrent sort order",
+          "option": {
+            "added_on": "Date Added",
+            "completion_on": "Completion Date",
+            "dlspeed": "Download Speed",
+            "eta": "ETA",
+            "name": "Name",
+            "priority": "Priority",
+            "progress": "Progress",
+            "ratio": "Ratio",
+            "size": "Size",
+            "state": "State",
+            "time_active": "Time Active",
+            "upspeed": "Upload Speed",
+            "uploaded": "Uploaded"
+          }
+        },
+        "qbittorrentSortReverse": {
+          "label": "Reverse qBittorrent sort order"
+        },
       "errors": {
         "noColumns": "Select Columns in Items",
         "noCommunications": "Can't load data from integration"

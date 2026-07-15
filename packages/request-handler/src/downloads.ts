@@ -7,7 +7,7 @@ import { createIntegrationRequestHandler } from "./lib/integration-request-handl
 export const downloadClientRequestHandler = createIntegrationRequestHandler<
   DownloadClientJobsAndStatus,
   IntegrationKindByCategory<"downloadClient">,
-  { limit: number }
+  { limit: number; qbittorrentSort?: string; qbittorrentSortReverse?: boolean }
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);

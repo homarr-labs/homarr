@@ -91,6 +91,8 @@ export default function DownloadClientsWidget({
   const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
+    qbittorrentSort: options.qbittorrentSort,
+    qbittorrentSortReverse: options.qbittorrentSortReverse,
   });
 
   const t = useScopedI18n("widget.downloads");

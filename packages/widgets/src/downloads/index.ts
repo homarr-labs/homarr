@@ -88,6 +88,30 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           validate: z.number().min(1),
           withDescription: true,
         }),
+        qbittorrentSort: factory.select({
+          defaultValue: "added_on",
+          options: [
+            "added_on",
+            "completion_on",
+            "dlspeed",
+            "eta",
+            "name",
+            "priority",
+            "progress",
+            "ratio",
+            "size",
+            "state",
+            "time_active",
+            "upspeed",
+            "uploaded",
+          ].map((value) => ({
+            value,
+            label: (t) => t(`widget.downloads.option.qbittorrentSort.option.${value}`),
+          })),
+        }),
+        qbittorrentSortReverse: factory.switch({
+          defaultValue: false,
+        }),
       }),
       {
         defaultSort: {
@@ -113,6 +137,14 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
             !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
         },
         applyFilterToRatio: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+        },
+        qbittorrentSort: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+        },
+        qbittorrentSortReverse: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
         },
