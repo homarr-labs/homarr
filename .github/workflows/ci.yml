@@ -35,7 +35,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: false
 
 env:
   FORCE_COLOR: 3
@@ -91,7 +91,7 @@ jobs:
           echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
 
       - name: Check formatting on changed files
-        if: steps.changed.outputs.count != '0'
+        if: steps.changed.outcome == 'success' && steps.changed.outputs.count != '0'
         continue-on-error: true
         run: xargs -r -a /tmp/changed-files pnpm exec oxfmt --check
 
