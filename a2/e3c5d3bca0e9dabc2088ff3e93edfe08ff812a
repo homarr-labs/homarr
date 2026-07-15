@@ -1,0 +1,23 @@
+packages/integrations/src/plex/test/plex-integration.spec.ts
+  s_971ba7dba4c953::t_339a5120d37190 140
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_971ba7dba4c953::t_c07de25dfbf0c7 47
+packages/integrations/src/patchmon/patchmon-types.ts
+  s_971ba7dba4c953::t_339a5120d37190 55-57,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a2e3c5d3bca0e9dabc2088ff3e93edfe08ff812a",
+  "prompts": {},
+  "sessions": {
+    "s_971ba7dba4c953": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_09a1b1b2affep65dsiP526omBU",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
