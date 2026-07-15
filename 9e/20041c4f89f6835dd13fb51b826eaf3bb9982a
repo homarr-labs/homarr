@@ -1,0 +1,23 @@
+apps/nextjs/package.json
+  s_909110c6d23990::t_def968081447cd 35
+.github/workflows/code-quality.yml
+  s_909110c6d23990::t_def968081447cd 103
+packages/api/package.json
+  s_909110c6d23990::t_def968081447cd 32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9e20041c4f89f6835dd13fb51b826eaf3bb9982a",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
