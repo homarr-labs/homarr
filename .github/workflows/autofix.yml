@@ -23,7 +23,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
-          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
