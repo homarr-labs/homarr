@@ -28,6 +28,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
       entries: result.entries?.map((entry) => ({ ...entry, feedUrl: input.url })).slice(0, input.count) ?? [],
     };
   },
+  cacheTtlMs: 300_000,
 });
 
 const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {

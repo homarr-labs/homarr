@@ -12,4 +12,5 @@ export const paperlessNgxStatsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getStatsAsync();
   },
+  cacheTtlMs: 900_000,
 });

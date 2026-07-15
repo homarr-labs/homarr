@@ -13,4 +13,5 @@ export const upsSummariesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getUpsSummariesAsync();
   },
+  cacheTtlMs: 60_000,
 });

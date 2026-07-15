@@ -177,6 +177,7 @@ export const dockerContainersRequestHandler = createWidgetRequestHandler({
     }
     return await getContainersWithStatsAsync();
   },
+  cacheTtlMs: 20_000,
 });
 
 const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);

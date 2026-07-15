@@ -13,6 +13,7 @@ export const systemInfoRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getSystemInfoAsync();
   },
+  cacheTtlMs: 5_000,
 });
 
 export const clusterInfoRequestHandler = createIntegrationRequestHandler<
@@ -24,4 +25,5 @@ export const clusterInfoRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getClusterInfoAsync();
   },
+  cacheTtlMs: 5_000,
 });

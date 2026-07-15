@@ -69,4 +69,5 @@ export const duckDuckGoBangsRequestHandler = createRequestHandler({
 
     return normalized;
   },
+  cacheTtlMs: 86_400_000,
 });

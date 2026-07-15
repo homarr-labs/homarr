@@ -13,4 +13,5 @@ export const dnsHoleRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getSummaryAsync();
   },
+  cacheTtlMs: 5_000,
 });

@@ -12,4 +12,5 @@ export const tracearrRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
+  cacheTtlMs: 5_000,
 });

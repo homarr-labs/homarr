@@ -14,6 +14,7 @@ export const minecraftServerStatusRequestHandler = createWidgetRequestHandler({
     );
     return responseSchema.parse(await response.json());
   },
+  cacheTtlMs: 300_000,
 });
 
 const responseSchema = z

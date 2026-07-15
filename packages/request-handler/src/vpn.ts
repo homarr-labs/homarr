@@ -25,4 +25,5 @@ export const vpnSummaryHandler = createIntegrationRequestHandler<
       return null;
     }
   },
+  cacheTtlMs: 300_000,
 });

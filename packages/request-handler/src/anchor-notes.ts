@@ -12,6 +12,7 @@ export const anchorNotesListRequestHandler = createIntegrationRequestHandler<
     const instance = await createIntegrationAsync(integration);
     return instance.listNotesAsync(input);
   },
+  cacheTtlMs: 15_000,
 });
 
 export const anchorNoteRequestHandler = createIntegrationRequestHandler<AnchorNote, "anchor", { noteId: string }>({
@@ -19,4 +20,5 @@ export const anchorNoteRequestHandler = createIntegrationRequestHandler<AnchorNo
     const instance = await createIntegrationAsync(integration);
     return instance.getNoteAsync(input.noteId);
   },
+  cacheTtlMs: 15_000,
 });

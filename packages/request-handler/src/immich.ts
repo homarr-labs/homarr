@@ -13,6 +13,7 @@ export const immichStatsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getServerStatsAsync();
   },
+  cacheTtlMs: 900_000,
 });
 
 export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
@@ -28,6 +29,7 @@ export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumsAsync();
   },
+  cacheTtlMs: 900_000,
 });
 
 export const immichAlbumRequestHandler = createIntegrationRequestHandler<
@@ -39,4 +41,5 @@ export const immichAlbumRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getAlbumAsync(input.albumId);
   },
+  cacheTtlMs: 900_000,
 });

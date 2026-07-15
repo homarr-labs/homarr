@@ -12,4 +12,5 @@ export const navidromeRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
+  cacheTtlMs: 600_000,
 });

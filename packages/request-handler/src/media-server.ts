@@ -15,4 +15,5 @@ export const mediaServerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getCurrentSessionsAsync({ showOnlyPlaying: input.showOnlyPlaying });
   },
+  cacheTtlMs: 5_000,
 });

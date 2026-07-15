@@ -18,6 +18,7 @@ export const firewallCpuRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return integrationInstance.getFirewallCpuAsync();
   },
+  cacheTtlMs: 5_000,
 });
 
 export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
@@ -29,6 +30,7 @@ export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallMemoryAsync();
   },
+  cacheTtlMs: 15_000,
 });
 
 export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
@@ -40,6 +42,7 @@ export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallInterfacesAsync();
   },
+  cacheTtlMs: 30_000,
 });
 
 export const firewallVersionRequestHandler = createIntegrationRequestHandler<
@@ -51,4 +54,5 @@ export const firewallVersionRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallVersionAsync();
   },
+  cacheTtlMs: 3_600_000,
 });

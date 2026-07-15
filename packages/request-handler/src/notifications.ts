@@ -13,4 +13,5 @@ export const notificationsRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNotificationsAsync();
   },
+  cacheTtlMs: 300_000,
 });

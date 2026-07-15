@@ -39,6 +39,7 @@ export const fetchStockPriceHandler = createWidgetRequestHandler({
       shortName: firstResult.meta.shortName,
     };
   },
+  cacheTtlMs: 300_000,
 });
 
 const dataSchema = z

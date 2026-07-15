@@ -29,6 +29,7 @@ import {
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
+  widgetRefetchIntervalOverrides,
 } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
@@ -90,6 +91,9 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       },
     });
     client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
+    for (const [path, interval] of Object.entries(widgetRefetchIntervalOverrides)) {
+      client.setQueryDefaults([path.split(".")], { refetchInterval: interval });
+    }
     return client;
   });
 
