@@ -1,29 +1,39 @@
 ---
-title: 'Custom API'
-description: 'Displays data from a custom API endpoint using configurable display types and optional JSX templates.'
+title: "Custom API"
+description: "Displays data from an administrator-defined HTTP API using built-in renderers or safe Custom JSX."
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { customApiWidget } from '.';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { customApiWidget } from ".";
 
+<WidgetHeader widget={customApiWidget} categories={["Custom", "API"]} />
 
-<WidgetHeader
-  widget={customApiWidget}
-  categories={['Custom', 'API']}
-/>
+The Custom API widget displays an API definition created by an administrator in [Management → Custom Widgets](/docs/management/custom-widgets). A definition owns the endpoint, credentials, display configuration, and any named network capabilities used by Custom JSX.
 
-This widget fetches data from a custom API endpoint defined in [Custom Widgets management](/docs/management/custom-widgets) and renders it using configurable display types.
-
-Custom API widgets are created and configured through the admin management page. Each widget definition specifies the API endpoint, authentication, display type, and refresh interval.
-
-See the [Custom Widgets documentation](/docs/management/custom-widgets) for full details on creating and configuring custom widgets.
-
-### Adding the widget
+### Add the widget
 
 <AddingWidget />
 
+Choose a custom-widget definition and a refresh interval. The board item stores only the selected definition and display options; credentials remain server-side.
+
 :::note
-Custom API widgets must first be created in **Management → Custom Widgets** before they appear in the widget picker.
+
+A definition must be enabled and available to the board before it appears in the widget picker.
+
 :::
+
+### Permissions and actions
+
+The base response and named query requests require permission to view the board. Named POST, PUT, and PATCH actions require permission to modify the board by default. DELETE requires full board permission and a confirmation. Anonymous viewers cannot execute actions.
+
+Interactive controls are disabled while the board is in edit mode. Actions run only after an explicit user gesture and are never triggered by mounting, refresh polling, or automatic retries. Authoring previews simulate actions unless an administrator explicitly enables live actions for the short-lived preview session.
+
+### Refresh behavior
+
+The refresh interval applies to the base GET response. A Custom JSX query can declare its own cache duration and can be refreshed manually. Named actions can invalidate the parent response or related named queries after they succeed.
+
+If the definition needs a non-GET base request, migrate it to a GET base response plus a named action. Existing non-GET Custom JSX definitions require review before network access is enabled.
+
+See [Custom Widgets management](/docs/management/custom-widgets) for the editor, display types, named-request manifest, network scopes, security limits, and migration guidance.

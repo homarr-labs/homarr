@@ -1,74 +1,47 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import JsxParser from "react-jsx-parser";
-import { Alert, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { useMemo } from "react";
 
-import { WHITELISTED_COMPONENTS, SAFE_BINDINGS } from "./jsx-whitelist";
+import { useScopedI18n } from "@homarr/translation/client";
+import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
-const MAX_PARSE_ERRORS = 5;
+import { createWhitelistedComponents, SAFE_BINDINGS } from "./jsx-whitelist";
+import { WidgetDefinitionProvider } from "./widget-definition-context";
 
-function appendParseError(prev: string[], message: string): string[] {
-  if (prev.length >= MAX_PARSE_ERRORS) return prev;
-  if (prev.includes(message)) return prev;
-  return [...prev, message];
-}
+export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
-  const template = String(data.template ?? "");
-  const apiData = data.data;
-  const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const bindings = useMemo(() => SAFE_BINDINGS(apiData), [apiData]);
-
-  useEffect(() => {
-    setParseErrors([]);
-  }, [template, bindings]);
-
-  const handleError = useCallback((error: Error) => {
-    setParseErrors((prev) => appendParseError(prev, error.message));
-  }, []);
-
-  if (!template.trim()) {
-    return (
-      <Alert color="gray" variant="light" p="xs">
-        <Text size="xs" c="dimmed">
-          No JSX template configured
-        </Text>
-      </Alert>
-    );
-  }
-
-  return (
-    <Stack gap={0} h="100%">
-      <JsxParser
-        jsx={template}
-        components={WHITELISTED_COMPONENTS as never}
-        bindings={bindings}
-        disableKeyGeneration
-        componentsOnly
-        allowUnknownElements={false}
-        blacklistedAttrs={[/^on.+/i, /^dangerously/i]}
-        blacklistedTags={["script", "iframe", "object", "embed", "form", "style", "link", "meta", "base"]}
-        onError={handleError}
-        renderError={({ error }) => (
-          <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs">{String(error)}</Text>
-          </Alert>
-        )}
-      />
-      {parseErrors.length > 0 && (
-        <Alert color="yellow" variant="light" p="xs" mt="xs">
-          <Text size="xs" c="dimmed">
-            {parseErrors.length} template warning(s):
-          </Text>
-          {parseErrors.map((msg) => (
-            <Text key={msg} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
-              {msg}
-            </Text>
-          ))}
-        </Alert>
-      )}
-    </Stack>
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
+  const components = useMemo(() => createWhitelistedComponents({ copy: t("copy"), copied: t("copied") }), [t]);
+  const renderer = (
+    <CustomJsxRenderer
+      template={String(data.template ?? "")}
+      data={data.data}
+      requestCapabilities={capabilities}
+      components={components}
+      createBindings={SAFE_BINDINGS}
+      messages={{
+        noTemplate: t("noTemplate"),
+        interactive: t("interactive"),
+        networkCapabilities: t("networkCapabilities"),
+        templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
+      }}
+    />
+  );
+  const hasRuntime = typeof data.widgetItemId === "string" || typeof data.previewSessionId === "string";
+  return hasRuntime ? (
+    <WidgetDefinitionProvider
+      definitionId={String(data.widgetDefinitionId ?? "")}
+      itemId={typeof data.widgetItemId === "string" ? data.widgetItemId : undefined}
+      previewSessionId={typeof data.previewSessionId === "string" ? data.previewSessionId : undefined}
+      previewLiveActions={data.previewLiveActions === true}
+      isEditMode={data.isEditMode === true}
+      requestCapabilities={capabilities}
+    >
+      {renderer}
+    </WidgetDefinitionProvider>
+  ) : (
+    renderer
   );
 }

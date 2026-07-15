@@ -1,0 +1,104 @@
+import { Alert, Badge, Button, Code, Group, Modal, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
+
+import type { ImportReview } from "../core/import";
+
+export interface ImportReviewMessages {
+  title: string;
+  description: string;
+  name: string;
+  origin: string;
+  authentication: string;
+  networkScope: string;
+  methods: string;
+  permissions: string;
+  actionWarningTitle: string;
+  actionWarningDescription: string;
+  cancel: string;
+  confirm: string;
+  permission(permission: string): string;
+}
+
+export interface ImportReviewDialogProps {
+  opened: boolean;
+  review: ImportReview | null;
+  pending: boolean;
+  messages: ImportReviewMessages;
+  onClose(): void;
+  onConfirm(): void;
+}
+
+function ImportFact({ label, value }: { label: string; value: string }) {
+  return (
+    <Paper withBorder p="xs">
+      <Text size="xs" c="dimmed">
+        {label}
+      </Text>
+      <Code>{value || "—"}</Code>
+    </Paper>
+  );
+}
+
+export function ImportReviewDialog({ opened, review, pending, messages, onClose, onConfirm }: ImportReviewDialogProps) {
+  return (
+    <Modal opened={opened} onClose={onClose} title={messages.title} centered size="lg">
+      {review && (
+        <Stack gap="md">
+          <Text size="sm" c="dimmed">
+            {messages.description}
+          </Text>
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+            <ImportFact label={messages.name} value={review.name} />
+            <ImportFact label={messages.origin} value={review.origin} />
+            <ImportFact label={messages.authentication} value={review.authType} />
+            <ImportFact label={messages.networkScope} value={review.networkScope} />
+          </SimpleGrid>
+          <div>
+            <Text size="sm" fw={600} mb={6}>
+              {messages.methods}
+            </Text>
+            <Group gap={6}>
+              {review.methods.map((method) => (
+                <Badge
+                  key={method}
+                  color={method === "DELETE" ? "red" : method === "GET" ? "blue" : "orange"}
+                  variant="light"
+                >
+                  {method}
+                </Badge>
+              ))}
+            </Group>
+          </div>
+          <div>
+            <Text size="sm" fw={600} mb={6}>
+              {messages.permissions}
+            </Text>
+            <Group gap={6}>
+              {review.permissions.map((permission) => (
+                <Badge key={permission} color="gray" variant="light">
+                  {messages.permission(permission)}
+                </Badge>
+              ))}
+            </Group>
+          </div>
+          {review.hasActions && (
+            <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+              <Text size="sm" fw={600}>
+                {messages.actionWarningTitle}
+              </Text>
+              <Text size="sm">{messages.actionWarningDescription}</Text>
+            </Alert>
+          )}
+          <Group justify="flex-end">
+            <Button type="button" variant="default" onClick={onClose} disabled={pending}>
+              {messages.cancel}
+            </Button>
+            <Button type="button" onClick={onConfirm} loading={pending}>
+              {messages.confirm}
+            </Button>
+          </Group>
+        </Stack>
+      )}
+    </Modal>
+  );
+}

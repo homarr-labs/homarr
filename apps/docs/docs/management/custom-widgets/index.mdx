@@ -6,203 +6,199 @@ tags:
   - JSX
 ---
 
+import { CustomJsxComponentReference } from "@site/src/components/custom-jsx-component-reference";
+
 # Custom Widgets
 
-:::warning
+Custom widgets connect a dashboard item to an HTTP API without compiling a new Homarr widget. Administrators choose the endpoint and authentication, then use a built-in display type or a Custom JSX template to render the response.
 
-Custom widgets are a new feature. Share feedback, ask questions, and discuss ideas in our [GitHub Discussions](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets).
+## Guides
+
+- [Authoring workbench](./authoring): create, edit, preview, paste, undo, import, and export.
+- [Custom JSX language](./custom-jsx): supported syntax, components, bindings, diagnostics, and limits.
+- [Named requests and security](./requests-and-security): permissions, network scopes, request manifests, and server protections.
+- [AI and MCP authoring](./agent-authoring): an iterative agent workflow that validates and previews before saving.
+- [Compatibility and migration](./migration): v1/v2 JSX and v2/v3 import behavior.
+- [Troubleshooting](./troubleshooting): common editor, preview, permission, and networking failures.
+- [Maintainer architecture](./architecture): package boundaries, extension points, and required tests.
+- [Extension recipes](./extension-recipes): step-by-step changes for displays, JSX components, requests, and workbench features.
+
+:::caution
+
+A custom widget can expose data or perform actions with the credentials configured for it. Import definitions only from sources you trust and review every network capability before using the widget on a shared board.
 
 :::
 
-Custom widgets allow you to fetch data from any HTTP API and display it on your Homarr dashboard. You define the API endpoint, authentication, and how the response should be rendered - no code compilation or server restart required.
+## Create a widget
 
-## Creating a Custom Widget
+Open **Management → Custom Widgets**, select **Add**, and configure:
 
-To create a custom widget, navigate to the **Custom Widgets** section in the management sidebar and click the **Add** button. Fill in the configuration:
+- **Name, description, and icon**: identify the widget in management and the widget picker.
+- **URL**: the full HTTP or HTTPS base endpoint.
+- **Authentication**: none, bearer token, basic authentication, API-key header, or API-key query parameter.
+- **Display type**: a built-in renderer or Custom JSX.
 
-- **Name** - Display name shown in the widget picker and on the dashboard
-- **Description** - Optional description shown in tooltips and management UI
-- **Icon URL** - Optional URL to an icon image for the widget
-- **URL** - The API endpoint to fetch data from (must include protocol, e.g. `https://api.example.com/stats`)
-- **Authentication** - How the API request is authenticated:
-  - `none` - Public APIs with no authentication
-  - `bearer` - Bearer token authentication
-  - `basic` - HTTP Basic auth (username + password)
-  - `apiKeyHeader` - API key sent as a custom HTTP header
-  - `apiKeyQuery` - API key sent as a query parameter
-- **Header Name** - Custom header or query parameter name for API key auth (e.g. `X-API-Key`)
-- **HTTP Method** - `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`
-- **Request Body** - JSON string body for `POST`/`PUT`/`PATCH` requests
-- **Display Type** - How the API response is rendered (see below)
+Use **Test** to run the current GET request. The preview workbench separates the rendered widget, sanitized response tree, redacted request journal, and diagnostics. It marks sample data as stale whenever the connection or display configuration changes after a test.
 
-## Display Types
+Testing creates a five-minute, administrator-bound preview session for unsaved named queries. Action controls are simulated by default. An administrator can explicitly enable live actions for that session; DELETE still requires confirmation.
 
-| Display Type         | Description                                          | Best For                                 |
-| -------------------- | ---------------------------------------------------- | ---------------------------------------- |
-| **Single Value**     | Extracts a single value with a label and unit        | Metrics: temperature, uptime, user count |
-| **Key Value**        | Multiple labeled key-value pairs with optional units | System stats: CPU, memory, disk          |
-| **Table**            | API array data rendered as a sortable table          | Lists of items with columns              |
-| **Stat Grid**        | Labeled values in colored stat cards                 | Counts: movies, series, albums           |
-| **Progress Bars**    | Values as progress bars with percentages             | Usage: disk, quota, capacity             |
-| **Status Indicator** | Green/red status dots for health checks              | Service monitoring                       |
-| **Count Grid**       | Simple counts in a grid (no colors)                  | Library counts                           |
-| **Raw**              | Pretty-prints the raw JSON response                  | Debugging                                |
-| **Action Button**    | Clickable button executing the API request           | Triggers: restart, clear cache           |
-| **Custom JSX**       | Custom JSX template with Mantine v9 components       | Full layout control                      |
+## Display types
 
-### AI-Powered JSX Generation
+| Display type     | Use it for                                                |
+| ---------------- | --------------------------------------------------------- |
+| Single Value     | One metric with a label and unit                          |
+| Key Value        | Several labeled values                                    |
+| Table            | Arrays of records                                         |
+| Stat Grid        | Compact colored metrics                                   |
+| Progress Bars    | Capacity, quota, and completion                           |
+| Status Indicator | Health and availability                                   |
+| Count Grid       | Compact counters                                          |
+| Raw              | Sanitized JSON inspection                                 |
+| Action Button    | One explicit API action                                   |
+| Custom JSX       | A declarative Mantine layout with optional named requests |
 
-When editing or creating a custom widget with the **Custom JSX** display type, you'll find a **Copy Prompt** button. Clicking it copies a pre-formatted prompt describing your widget's name, API endpoint, and available Mantine components. Paste this into your preferred AI assistant (ChatGPT, Claude, Copilot, etc.) to generate a JSX template tailored to your data.
+## Custom JSX workbench
 
-<details>
-<summary>Example: Pokédex widget using Custom JSX</summary>
+The JSX editor provides syntax highlighting, formatting, undo/redo buttons and Ctrl/Cmd+Z shortcuts, a searchable component reference, character and cursor status, and diagnostics. Errors block saving; warnings identify behavior that still receives server-side validation. Templates can contain up to 50,000 characters and render up to 10,000 nodes.
+
+The template reads the base GET response from `data`:
+
+```jsx
+<Stack gap="xs" p="sm">
+  <Text fw={600}>{data.name}</Text>
+  <Badge color={data.online ? "green" : "red"}>{data.status}</Badge>
+</Stack>
+```
+
+The **Copy AI prompt** action is available on desktop and mobile. Its prompt, component list, and examples are generated from the same metadata used by the renderer, so the reference stays aligned with the installed Homarr version.
+
+### JSX API versions
+
+- **Version 2** is the default. Network access is declared in a named-request manifest and enforced by the server.
+- **Version 1** remains available for display-only templates. Inline network components are disabled until the definition is reviewed and migrated.
+
+Definitions without `jsxApiVersion` are treated as version 1. Display-only templates can be migrated by selecting version 2 and saving an empty request list.
+
+## Named requests
+
+Version 2 templates never choose an arbitrary URL, method, header, or body at runtime. An administrator declares each allowed operation once, and the template references its `requestId` with typed parameters.
 
 ```json
 {
-  "$schema": "homarr-custom-widget-v2",
-  "name": "Pokédex",
-  "description": "Browseable Pokémon list",
-  "iconUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-  "url": "https://pokeapi.co/api/v2/pokemon?limit=75",
-  "authType": "none",
-  "method": "GET",
-  "displayType": "customJsx",
-  "displayConfig": {
-    "type": "customJsx",
-    "template": "<Stack gap=\"md\" p=\"xs\">\n  <Card withBorder radius=\"xl\" p=\"md\" shadow=\"md\">\n    <Group justify=\"space-between\">\n      <Title order={3}>Pokédex</Title>\n    </Group>\n  </Card>\n  <PaginatedList pageSize={12}>\n    <Grid gutter=\"sm\">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target=\"_blank\" underline=\"never\">\n            <Card withBorder radius=\"xl\" p=\"xs\" shadow=\"md\">\n              <Stack gap=\"sm\" align=\"center\">\n                <Group justify=\"space-between\" style={{ width: \"100%\" }}>\n                  <Badge size=\"sm\" color=\"red\">#{i + 1}</Badge>\n                  <Text fw={800} tt=\"capitalize\">{pokemon.name}</Text>\n                </Group>\n                <Avatar\n                  src={\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\" + (i + 1) + \".png\"}\n                  size={92}\n                  radius=\"xl\"\n                />\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>"
-  }
+  "type": "customJsx",
+  "jsxApiVersion": 2,
+  "networkScope": "public",
+  "template": "<SubFetch requestId=\"service-detail\" params={{ id: data.id }}><SubData path=\"status\" as=\"Badge\" /></SubFetch>",
+  "requests": [
+    {
+      "id": "service-detail",
+      "kind": "query",
+      "method": "GET",
+      "pathTemplate": "/api/services/{id}",
+      "parameters": { "id": "string" },
+      "auth": "inherit",
+      "minimumBoardPermission": "view",
+      "cacheTtlSeconds": 30
+    }
+  ]
 }
 ```
 
-</details>
+Path placeholders use `{parameter}` and are URL-encoded by the server. JSON body placeholders use `{ "$param": "parameter" }` and preserve the declared string, number, or boolean type.
 
-## Importing and Exporting
+`SubData` remains available for simple paths. For richer nested output, pass an interpreter-created render child; it receives the response data and safe status metadata:
 
-Custom widgets can be exported and imported as JSON files. To export, select the widget in the list and click the export button. To import, click the import button and paste the JSON. Secrets (API keys, passwords) are never included in exports and must be configured after import.
+```jsx
+<SubFetch requestId="service-detail" params={{ id: data.id }}>
+  {(detail, meta) => (
+    <Stack gap="xs">
+      <Badge color={detail.online ? "green" : "red"}>{detail.status}</Badge>
+      <Text size="xs">HTTP {meta.status}</Text>
+    </Stack>
+  )}
+</SubFetch>
+```
 
-The import format uses `"$schema": "homarr-custom-widget-v2"` to identify the widget version.
+| Component       | Request kind | Behavior                                                      |
+| --------------- | ------------ | ------------------------------------------------------------- |
+| `SubFetch`      | `query`      | Loads a named GET request automatically or manually           |
+| `ActionButton`  | `action`     | Runs a named POST, PUT, PATCH, or DELETE after a user gesture |
+| `ToggleSwitch`  | `action`     | Passes declared on/off parameters and rolls back on failure   |
+| `RefreshButton` | None         | Refreshes the parent GET response                             |
 
-## Available Mantine Components for Custom JSX
+Queries require board **view** permission. POST, PUT, and PATCH actions require **modify** by default. DELETE requires **full** permission and confirmation. Allowing viewers to execute a non-DELETE action requires explicit administrator approval. Anonymous viewers cannot execute actions.
 
-When using the `customJsx` display type, your template has access to a whitelist of [Mantine v9](https://mantine.dev) components. Unrecognized components, event handlers, and dangerous tags are stripped for security.
+### Network scopes
 
-### Layout
+| Scope      | Allowed destinations                                         |
+| ---------- | ------------------------------------------------------------ |
+| `public`   | Public IP addresses only                                     |
+| `private`  | Public addresses plus RFC1918 and IPv6 ULA private addresses |
+| `loopback` | Public, private, and loopback addresses                      |
 
-| Component           | Doc                                           |
-| ------------------- | --------------------------------------------- |
-| `Stack`             | [docs](https://mantine.dev/core/stack)        |
-| `Group`             | [docs](https://mantine.dev/core/group)        |
-| `Flex`              | [docs](https://mantine.dev/core/flex)         |
-| `Grid` / `Grid.Col` | [docs](https://mantine.dev/core/grid)         |
-| `SimpleGrid`        | [docs](https://mantine.dev/core/simple-grid)  |
-| `Center`            | [docs](https://mantine.dev/core/center)       |
-| `Container`         | [docs](https://mantine.dev/core/container)    |
-| `Space`             | [docs](https://mantine.dev/core/space)        |
-| `AspectRatio`       | [docs](https://mantine.dev/core/aspect-ratio) |
+Link-local, cloud-metadata, unspecified, multicast, documentation, carrier-grade NAT, and IPv4-mapped bypass addresses remain blocked in every scope.
 
-### Typography & Content
+### Example with a named query
 
-| Component         | Doc                                               |
-| ----------------- | ------------------------------------------------- |
-| `Text`            | [docs](https://mantine.dev/core/text)             |
-| `Title`           | [docs](https://mantine.dev/core/title)            |
-| `Code`            | [docs](https://mantine.dev/core/code)             |
-| `Highlight`       | [docs](https://mantine.dev/core/highlight)        |
-| `Mark`            | [docs](https://mantine.dev/core/mark)             |
-| `Kbd`             | [docs](https://mantine.dev/core/kbd)              |
-| `Blockquote`      | [docs](https://mantine.dev/core/blockquote)       |
-| `Anchor`          | [docs](https://mantine.dev/core/anchor)           |
-| `NumberFormatter` | [docs](https://mantine.dev/core/number-formatter) |
+The editor and AI prompt include a shared Pokédex fixture that loads details only for the visible page. Its named request is equivalent to:
 
-### Data Display
+```json
+{
+  "id": "pokemon-detail",
+  "kind": "query",
+  "method": "GET",
+  "pathTemplate": "/api/v2/pokemon/{name}",
+  "parameters": { "name": "string" },
+  "auth": "none",
+  "minimumBoardPermission": "view",
+  "cacheTtlSeconds": 300
+}
+```
 
-| Component                 | Doc                                               |
-| ------------------------- | ------------------------------------------------- |
-| `Badge`                   | [docs](https://mantine.dev/core/badge)            |
-| `Card` / `Card.Section`   | [docs](https://mantine.dev/core/card)             |
-| `Paper`                   | [docs](https://mantine.dev/core/paper)            |
-| `Alert`                   | [docs](https://mantine.dev/core/alert)            |
-| `ThemeIcon`               | [docs](https://mantine.dev/core/theme-icon)       |
-| `ColorSwatch`             | [docs](https://mantine.dev/core/color-swatch)     |
-| `Avatar` / `Avatar.Group` | [docs](https://mantine.dev/core/avatar)           |
-| `Image`                   | [docs](https://mantine.dev/core/image)            |
-| `BackgroundImage`         | [docs](https://mantine.dev/core/background-image) |
-| `Indicator`               | [docs](https://mantine.dev/core/indicator)        |
-| `Pill`                    | [docs](https://mantine.dev/core/pill)             |
-| `Spoiler`                 | [docs](https://mantine.dev/core/spoiler)          |
+## Agent authoring through MCP
 
-### Tables
+Administrators can use Homarr's MCP server to iterate on custom widgets without bypassing validation or network controls. A typical agent workflow is:
 
-| Component                               | Doc                                    |
-| --------------------------------------- | -------------------------------------- |
-| `Table` / `Table.Thead` / `Table.Tbody` | [docs](https://mantine.dev/core/table) |
-| `Table.Tr` / `Table.Th` / `Table.Td`    | [docs](https://mantine.dev/core/table) |
+1. Call `customWidget_schema` to inspect the current import format.
+2. Generate a complete `homarr-custom-widget-v3` draft.
+3. Call `customWidget_validate` and correct every returned issue.
+4. Call `customWidget_preview` to test the base GET request through Homarr's hardened executor.
+5. Use `customWidget_previewQuery` for named queries and `customWidget_simulatePreviewAction` to verify action parameters without sending mutations.
+6. Inspect `customWidget_previewJournal`, then validate again.
+7. Call `customWidget_import`, or read an existing widget with `customWidget_byId` and apply a focused `customWidget_update`.
 
-### Lists
+MCP preview actions are simulation-only. Enabling live preview actions remains an explicit administrator choice in the browser workbench. Stored secret values are never returned by MCP; omit `secrets` when updating an existing widget to preserve them.
 
-| Component                    | Doc                                       |
-| ---------------------------- | ----------------------------------------- |
-| `List` / `List.Item`         | [docs](https://mantine.dev/core/list)     |
-| `Timeline` / `Timeline.Item` | [docs](https://mantine.dev/core/timeline) |
+## Component reference
 
-### Feedback & Loading
+Custom JSX exposes a classified subset of Mantine Core, Charts, Dates, and Homarr components. Allowed components render directly. Wrapped components receive safe props or read-only behavior. Denied components remain in the registry so dependency upgrades cannot silently expand the template surface.
 
-| Component                       | Doc                                            |
-| ------------------------------- | ---------------------------------------------- |
-| `Progress` / `Progress.Section` | [docs](https://mantine.dev/core/progress)      |
-| `RingProgress`                  | [docs](https://mantine.dev/core/ring-progress) |
-| `Skeleton`                      | [docs](https://mantine.dev/core/skeleton)      |
-| `Loader`                        | [docs](https://mantine.dev/core/loader)        |
+<CustomJsxComponentReference />
 
-### Navigation & Overlay
+This table and the searchable component list in the editor are generated from Homarr's runtime registry.
 
-| Component                                                                | Doc                                          |
-| ------------------------------------------------------------------------ | -------------------------------------------- |
-| `TabsContainer` / `TabPanel`                                             | Custom interactive component                 |
-| `Accordion` / `Accordion.Item` / `Accordion.Control` / `Accordion.Panel` | [docs](https://mantine.dev/core/accordion)   |
-| `ScrollArea`                                                             | [docs](https://mantine.dev/core/scroll-area) |
-| `Tooltip`                                                                | [docs](https://mantine.dev/core/tooltip)     |
+Component props are filtered. Polymorphic roots, portals, refs, unsafe positioning, raw event handlers, and `dangerouslySetInnerHTML` are not exposed. Direct browser globals and direct `fetch` calls are unavailable, while ordinary text containing the word “fetch” is valid.
 
-### Charts
+Safe bindings include conversion helpers, a restricted `Math` and `JSON` surface, object and array helpers, URI encoding helpers, and pure date formatting helpers. Collection callbacks and rendered output are subject to interpreter budgets.
 
-| Component        | Doc                                                 |
-| ---------------- | --------------------------------------------------- |
-| `AreaChart`      | [docs](https://mantine.dev/charts/area-chart)       |
-| `BarChart`       | [docs](https://mantine.dev/charts/bar-chart)        |
-| `LineChart`      | [docs](https://mantine.dev/charts/line-chart)       |
-| `DonutChart`     | [docs](https://mantine.dev/charts/donut-chart)      |
-| `PieChart`       | [docs](https://mantine.dev/charts/pie-chart)        |
-| `RadarChart`     | [docs](https://mantine.dev/charts/radar-chart)      |
-| `RadialBarChart` | [docs](https://mantine.dev/charts/radial-bar-chart) |
-| `Sparkline`      | [docs](https://mantine.dev/charts/sparkline)        |
+## HTTP protections and limits
 
-### Interactive Components
+All base, preview, query, and action requests use the same server executor:
 
-| Component       | Description                              |
-| --------------- | ---------------------------------------- |
-| `PaginatedList` | Client-side pagination wrapper           |
-| `Collapsible`   | Expandable/collapsible section           |
-| `StatBar`       | Horizontal stat bar                      |
-| `TypeBadge`     | Type-styled badge                        |
-| `Divider`       | [docs](https://mantine.dev/core/divider) |
+- Only HTTP and HTTPS are accepted. URL credentials and fragments are rejected.
+- Named paths must stay on the base endpoint origin.
+- DNS results are validated against the selected network scope and pinned for the request.
+- Queries can follow up to three revalidated same-origin redirects. Actions do not follow redirects.
+- Authorization, cookie, host, forwarding, proxy, content-length, and hop-by-hop headers cannot be supplied by a template.
+- Request bodies are limited to 10 KiB. Decompressed responses are limited to 1 MiB, 32 JSON levels, and 50,000 JSON nodes.
+- GET requests can be cached and deduplicated. Actions are never cached, polled, or retried automatically.
 
-## Template Bindings
+## Import and export
 
-Your template receives:
+New exports use `"$schema": "homarr-custom-widget-v3"`. Version 2 imports remain accepted. Secrets are never exported and must be entered again after import.
 
-- `data` - The sanitized API response object. Access fields via `data.fieldName` or `data.results[0].name`.
-- `String(v)` - Type-safe string conversion
-- `Number(v)` - Type-safe number conversion
-- `Boolean(v)` - Type-safe boolean conversion
-- `Math` - Safe subset: `round`, `floor`, `ceil`, `abs`, `min`, `max`, `pow`, `sqrt`, `PI`
-- `JSON.stringify(v)` - JSON serialization
-- `Array.isArray(v)` - Array type check
-- `Object.keys(v)`, `Object.values(v)`, `Object.entries(v)` - Object utilities
+Review the base origin, network scope, named request methods, inherited authentication, and required permissions before saving an imported widget. A version 1 template that contains inline network components stays disabled until it is converted to named requests.
 
-## Security Constraints
+AI-generated Custom JSX can also be pasted as a Homarr authoring bundle: one fenced JSON block with `"template": "__HOMARR_TEMPLATE__"`, followed by one fenced JSX block containing the readable multiline template. Homarr combines the blocks before validation, avoiding JSON newline and quote escaping. Raw JSON imports remain supported.
 
-- Event handlers (`onClick`, `onChange`, etc.) are stripped
-- Dangerous HTML attributes (`dangerouslySetInnerHTML`) are stripped
-- `script`, `iframe`, `object`, `embed`, `form`, `style`, `link`, `meta`, `base` tags are forbidden
-- Template strings containing `eval`, `Function`, `import`, `require`, `globalThis`, `window`, `document`, `fetch` are rejected
-- Anchor `href` attributes are validated to only allow `https://`, relative (`/`), and hash (`#`) URLs
+On the custom-widget list, paste a complete export with Ctrl+V or Command+V to open the import review and create it as a new definition. On an edit page, the same shortcut opens a replacement review and fills the existing form after confirmation. Pasted definitions never include secrets.

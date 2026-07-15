@@ -1,0 +1,26 @@
+---
+sidebar_label: AI and MCP authoring
+---
+
+# AI and MCP authoring
+
+Homarr exposes an iterative, validation-first workflow to authenticated administrators. Agents should continue until validation, preview, and diagnostics are clean; they must not invent inline network access.
+
+## Recommended loop
+
+1. Read `customWidget_schema` and the generated component/capability reference.
+2. Read an existing definition with `customWidget_byId`, or create a v3 draft.
+3. Call `customWidget_validate`; fix every issue using its exact path.
+4. Call `customWidget_preview` for the base GET and retain the preview session ID.
+5. Test each named query with `customWidget_previewQuery`.
+6. Dry-run every action with `customWidget_simulatePreviewAction`.
+7. Inspect `customWidget_previewJournal` for status, duration, and method coverage.
+8. Revalidate, then call import/create or a focused update/patch operation.
+
+Stored secret values are never readable. Omitting secrets during an update preserves them. MCP actions are simulation-only; enabling live preview actions remains a browser-only administrator decision.
+
+## Template format
+
+Use multiline JSX when reading or patching templates. Prefer focused template read/write/patch tools over rewriting an escaped one-line JSON string. When a complete portable artifact is needed, use the authoring bundle placeholder plus a separate fenced JSX block.
+
+The AI prompt is generated from the same registry, examples, request rules, and limits as the validator. Agents should still trust validation output over prompt memory because the installed Homarr version is authoritative.

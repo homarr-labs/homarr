@@ -1,0 +1,29 @@
+---
+sidebar_label: Maintainer architecture
+---
+
+# Maintainer architecture
+
+Reusable Custom Widget behavior belongs to `@homarr/custom-widgets`:
+
+- `core` owns schemas, descriptors, migrations, import/export, examples, diagnostics metadata, and prompt generation.
+- `jsx` owns AST parsing, shared policy, interpreter, bindings, registry, wrappers, and analysis.
+- `runtime` owns renderers and named-request controls through injected ports.
+- `server` owns manifests, network execution, caching, limits, preview sessions, and typed domain errors.
+- `workbench` owns form contracts, editor analysis, preview UI, response tree, and import review through injected ports.
+
+The API package retains persistence and board authorization adapters. Widgets retain board registration and runtime transport wiring. Next.js routes retain navigation and shells. The domain package must never import API, widgets, or route modules.
+
+## Add a display type
+
+Extend the typed descriptor and discriminated schema, defaults/hydration/serialization, renderer, workbench section, preview, import round-trip fixtures, docs, and translations. Create, edit, import, export, MCP, and preview must all use the same transform.
+
+## Add a JSX component
+
+Classify the upstream export, document safety mode and supported props, add a wrapper if behavior needs constraining, and update registry tests. CI fails when a Mantine upgrade introduces an unclassified export.
+
+## Change networking
+
+Implement policy below the framework-neutral server boundary and expose infrastructure through a typed port. Add tests for permissions, typed substitution, DNS classes, redirects, headers, timeouts, limits, redaction, cache behavior, and action non-retry semantics before wiring the tRPC adapter.
+
+Production files target 300 lines. Algorithmic AST/network modules may use a documented 400-line ceiling. Dependency-boundary, cycle, file-size, translation, generated-artifact, component-classification, focused unit, integration, E2E, accessibility, and docs-build gates protect the architecture. After a Next.js production build, `pnpm check:custom-widget-bundle` also enforces a 768 KiB gzip ceiling across the client chunks referenced by Custom JSX.
