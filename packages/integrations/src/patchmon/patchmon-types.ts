@@ -82,5 +82,5 @@ export const mapPatchMonStats = (data: z.infer<typeof patchmonStatsResponseSchem
   totalOutdatedPackages: data.total_outdated_packages,
   totalRepos: data.total_repos,
   lastUpdated: data.last_updated,
-  osDistribution: [...data.os_distribution].map(mapOsDistributionEntry).sort((a, b) => b.count - a.count),
+  osDistribution: [...data.os_distribution].map(mapOsDistributionEntry).toSorted((a, b) => b.count - a.count),
 });
