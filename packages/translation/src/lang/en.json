@@ -699,7 +699,7 @@
         "title": "Edit Custom Widget"
       }
     },
-    "betaBanner": {
+"betaBanner": {
       "title": "Custom Widgets are in Beta",
       "description": "This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the",
       "link": "official discussion thread",
@@ -723,7 +723,7 @@
       "addBar": "Add Bar",
       "duplicate": "Duplicate",
       "copyAiPrompt": "Copy AI prompt",
-      "readyToSave": "Ready to save",
+"readyToSave": "Ready to save",
       "enable": "Enable",
       "disable": "Disable",
       "menu": "Actions"

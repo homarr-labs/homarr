@@ -44,10 +44,11 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
   }
 
   return (
-    <Stack gap="sm">
+<Stack gap="sm">
       {definitions.map((def) => (
         <CustomWidgetCard key={def.id} widget={def} />
       ))}
+    </Stack>
     </Stack>
   );
 };
