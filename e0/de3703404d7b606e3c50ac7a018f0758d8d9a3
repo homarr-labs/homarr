@@ -1,0 +1,30 @@
+pnpm-workspace.yaml
+  s_971ba7dba4c953::t_342d723834b506 23
+package.json
+  s_971ba7dba4c953::t_6f1d1d745280dd 9
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_971ba7dba4c953::t_342d723834b506 35-204
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_971ba7dba4c953::t_6e0ced22e2eeb0 47
+packages/translation/src/lang/en.json
+  s_971ba7dba4c953::t_81d522f5f2d34a 726
+  s_971ba7dba4c953::t_71e1b0cefc0613 702
+pnpm-lock.yaml
+  s_971ba7dba4c953::t_01cf6c6dc2ea66 43-44,465-467,799,1329-1331,2653-2655,2674-2676,4970-4971,7904-7906,7913-7917,7932-7934,10864-10866,13388-13394,13692-13694,18414,18770,20001,20004,20347,21322,21326,21337,21341,21487,21493,21504,21536,21566,21597-21599,21604-21608,21630-21635,21644,21651,21660,21670,21674,21678,21690,21715,23948,24997-24998,25256,25270,27662,27794-27803,28240-28241
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e0de3703404d7b606e3c50ac7a018f0758d8d9a3",
+  "prompts": {},
+  "sessions": {
+    "s_971ba7dba4c953": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_09a1b1b2affep65dsiP526omBU",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
