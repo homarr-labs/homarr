@@ -19,12 +19,14 @@ Homarr uses https://mantine.dev/ under the hood. You can change the look & feel 
 using custom CSS, that extends or overwrites the styles from Mantine.
 
 ## Getting into CSS
+
 If you don't have any experience with CSS,
 we strongly recommend you to go through the courses here: https://www.w3schools.com/css/.
 Due to the infinite scenarios and setups possible with custom CSS,
 our support team will not provide any support with your own written CSS.
 
 ## Limitations and dangers
+
 When using custom CSS, you can break the page or certain functionalities.
 Although CSS can improve the design & feel of the page, it **<ins>cannot do any of the following</ins>**:
 
@@ -33,21 +35,23 @@ Although CSS can improve the design & feel of the page, it **<ins>cannot do any 
 - Completely revamp the design of the page, only smaller changes are possible
 
 Here are some dangers of using custom CSS:
+
 - Updates may contain breaking changes in the structure, built-in styling or how styling is processed. Therefore,
-custom CSS may break unexpectedly without any warning
+  custom CSS may break unexpectedly without any warning
 - Custom CSS may make certain elements invisible or not possible to click / interact with
 - Custom CSS could make readability and accessibility worse for impaired people
 
 ## How to inspect the page
-When styling the page, you can use the ``Inspector`` to inspect elements on the page and try out styles.
+
+When styling the page, you can use the `Inspector` to inspect elements on the page and try out styles.
 This may vary depending on your browser and operating system, but the workflow usually goes like this:
 
 - Open the Homarr page
-- Press ``Ctrl`` + ``Shift`` + ``I`` at the same time.
-Alternatively, right-click on the page and choose ``Inspect`` or ``Inspect element``.
-- Open the tab ``Elements`` if it isn't open yet.
+- Press `Ctrl` + `Shift` + `I` at the same time.
+  Alternatively, right-click on the page and choose `Inspect` or `Inspect element`.
+- Open the tab `Elements` if it isn't open yet.
 - Search the element you want to change in the DOM tree or use the element picker (usually at the top left)
-to select it by clicking on the page.
+  to select it by clicking on the page.
 - Experiment by changing the CSS code on the right side
 
 When writing custom CSS, it is important to also remember or create a selector, which tells the browser
@@ -55,17 +59,19 @@ which element to apply the styles to. If you accidentally broke something or wan
 simply reload the page.
 
 ## Using Homarr's classes
+
 Homarr's elements will already have a lot of classes and styles pre-applied.
 You can reuse those classes to apply additional styles or overwrite them.
-When overwriting, remember to add the ``!important`` flag  to your CSS property to tell the browser to use our instruction instead.
+When overwriting, remember to add the `!important` flag to your CSS property to tell the browser to use our instruction instead.
 
-Classes with random number suffixes, such as ``mantine-Card-x2fske``, should be avoided, since those are dynamic
+Classes with random number suffixes, such as `mantine-Card-x2fske`, should be avoided, since those are dynamic
 CSS classes that will change with every build. This means, every time you update Homarr,
 your styles will no longer apply to them
 
 ## Defining custom classes for widgets
+
 If you want to apply the styles only for one widget, you can define custom class names only for that widget.
-To do that, enter edit mode on your board, click the three dots of your widget, click ``Edit item`` and click ``Advanced options``.
+To do that, enter edit mode on your board, click the three dots of your widget, click `Edit item` and click `Advanced options`.
 Then, you can enter as many custom classes as you'd like:
 
 ![](./img/widget-custom-classes.png)
@@ -73,6 +79,7 @@ Then, you can enter as many custom classes as you'd like:
 To save them, click `Save changes` on both modals and exit edit mode.
 
 ## Where to enter custom CSS
+
 After you wrote your custom CSS, it is time to permanently save it, so you don't need to use the inspector anymore.
 To do this, enter the board settings:
 
@@ -84,11 +91,12 @@ Here you can enter your CSS code, which will be applied on the respective board 
 ![](./img/custom-css-setting.png)
 
 ## Using variables
+
 You can also change the values of the theme variables, which are located here: https://mantine.dev/styles/css-variables-list/.
 To do this, see the following example CSS:
 
 ```css
 :root {
-    --mantine-primary-color-filled: #ffbb00;
+  --mantine-primary-color-filled: #ffbb00;
 }
 ```

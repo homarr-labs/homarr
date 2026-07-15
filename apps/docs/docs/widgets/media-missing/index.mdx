@@ -1,29 +1,26 @@
 ---
-title: 'Media Missing & Queue'
-description: 'Track missing media and active downloads from Radarr and Sonarr'
+title: "Media Missing & Queue"
+description: "Track missing media and active downloads from Radarr and Sonarr"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { mediaMissingWidget } from '.';
-import { radarrIntegration } from '@site/docs/integrations/radarr';
-import { sonarrIntegration } from '@site/docs/integrations/sonarr';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { mediaMissingWidget } from ".";
+import { radarrIntegration } from "@site/docs/integrations/radarr";
+import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 
-<WidgetHeader
-  widget={mediaMissingWidget}
-  categories={['Media', 'Downloads']}
-/>
+<WidgetHeader widget={mediaMissingWidget} categories={["Media", "Downloads"]} />
 
 Monitor which movies and episodes are missing from your library, and track what is currently being downloaded. The widget pulls data from Radarr and Sonarr and groups results by type in two tabs.
 
 ### Screenshots
 
-import widgetMissing from './img/missing.png';
-import widgetQueued from './img/queued.png';
-import widgetCompact from './img/compact.png';
+import widgetMissing from "./img/missing.png";
+import widgetQueued from "./img/queued.png";
+import widgetCompact from "./img/compact.png";
 
 <div className="flex gap-2 flex-wrap">
   <img src={widgetMissing} alt="media-missing widget showing missing movies and episodes in a grid" width={360} />
@@ -33,18 +30,23 @@ import widgetCompact from './img/compact.png';
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: radarrIntegration,
-}, {
-  integration: sonarrIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: radarrIntegration,
+    },
+    {
+      integration: sonarrIntegration,
+    },
+  ]}
+/>
 
 ### Tabs
 
-| Tab | Description |
-|---|---|
+| Tab         | Description                                                                                           |
+| ----------- | ----------------------------------------------------------------------------------------------------- |
 | **Missing** | Lists movies (Radarr) and episodes (Sonarr) that are monitored but not yet available in your library. |
-| **Queued** | Shows items currently being downloaded with a progress bar and estimated time remaining. |
+| **Queued**  | Shows items currently being downloaded with a progress bar and estimated time remaining.              |
 
 ### Sizing
 

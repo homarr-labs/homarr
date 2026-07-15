@@ -1,14 +1,14 @@
-import { z } from 'zod';
-import fs from 'fs/promises';
+import { z } from "zod";
+import fs from "fs/promises";
 
 const sources = {
   crowdin: [
-    { projectId: 534422, tokenName: 'HOMARR_CROWDIN_TOKEN' },
-    { projectId: 742587, tokenName: 'HOMARR_LABS_CROWDIN_TOKEN' },
+    { projectId: 534422, tokenName: "HOMARR_CROWDIN_TOKEN" },
+    { projectId: 742587, tokenName: "HOMARR_LABS_CROWDIN_TOKEN" },
   ],
   github: [
-    { repository: 'homarr', slug: 'ajnart' },
-    { repository: 'homarr', slug: 'homarr-labs' },
+    { repository: "homarr", slug: "ajnart" },
+    { repository: "homarr", slug: "homarr-labs" },
   ],
 };
 
@@ -23,11 +23,11 @@ const env = schema.parse(process.env);
 const fetchGithubContributors = async (slug, repository) => {
   const url = `https://api.github.com/repos/${slug}/${repository}/contributors?per_page=999`;
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
       Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
     },
   };
 
@@ -39,7 +39,7 @@ const fetchGithubContributors = async (slug, repository) => {
       login: z.string(),
       avatar_url: z.string().url(),
       contributions: z.number(),
-    })
+    }),
   );
 
   return dataSchema.parse(data);
@@ -48,9 +48,9 @@ const fetchGithubContributors = async (slug, repository) => {
 const fetchCrowdinMembers = async (projectId, tokenName) => {
   const url = `https://crowdin.com/api/v2/projects/${projectId}/members`;
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      Accept: 'application/json',
+      Accept: "application/json",
       Authorization: `Bearer ${env[tokenName]}`,
     },
   };
@@ -65,7 +65,7 @@ const fetchCrowdinMembers = async (projectId, tokenName) => {
           username: z.string(),
           avatarUrl: z.string().url(),
         }),
-      })
+      }),
     ),
   });
 
@@ -88,16 +88,11 @@ const distinctGithubContributors = githubContributors
   .filter(distinctBy((contributor) => contributor.login))
   .sort((a, b) => b.contributions - a.contributions)
   .map(({ contributions, ...props }) => props)
-  .filter((contributor) => !contributor.login.includes('[bot]'));
-await fs.writeFile('./static/data/contributions.json', JSON.stringify(distinctGithubContributors));
+  .filter((contributor) => !contributor.login.includes("[bot]"));
+await fs.writeFile("./static/data/contributions.json", JSON.stringify(distinctGithubContributors));
 
 for (const { projectId, tokenName } of sources.crowdin) {
   crowdinContributors.push(...(await fetchCrowdinMembers(projectId, tokenName)));
 }
-const distinctCrowdinContributors = crowdinContributors.filter(
-  distinctBy((contributor) => contributor.username)
-);
-await fs.writeFile(
-  './static/data/translation-contributions.json',
-  JSON.stringify(distinctCrowdinContributors)
-);
+const distinctCrowdinContributors = crowdinContributors.filter(distinctBy((contributor) => contributor.username));
+await fs.writeFile("./static/data/translation-contributions.json", JSON.stringify(distinctCrowdinContributors));
