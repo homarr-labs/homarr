@@ -13,4 +13,5 @@ export const downloadClientRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getClientJobsAndStatusAsync(input);
   },
+  cacheTtlMs: 5_000,
 });

@@ -31,6 +31,7 @@ export const weatherRequestHandler = createWidgetRequestHandler({
       }),
     } satisfies Weather;
   },
+  cacheTtlMs: 60_000,
 });
 
 const atLocationOutput = z.object({

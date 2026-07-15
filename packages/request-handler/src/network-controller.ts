@@ -13,4 +13,5 @@ export const networkControllerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNetworkSummaryAsync();
   },
+  cacheTtlMs: 300_000,
 });

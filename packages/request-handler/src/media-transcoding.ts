@@ -17,6 +17,7 @@ export const mediaTranscodingRequestHandler = createIntegrationRequestHandler<
       statistics: await integrationInstance.getStatisticsAsync(),
     };
   },
+  cacheTtlMs: 300_000,
 });
 
 export interface MediaTranscoding {

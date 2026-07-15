@@ -12,6 +12,7 @@ export const umamiRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getVisitorStatsAsync(input.websiteId, input.timeFrame, input.eventName);
   },
+  cacheTtlMs: 300_000,
 });
 
 export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<string[], "umami", { websiteId: string }>({
@@ -19,6 +20,7 @@ export const umamiEventNamesRequestHandler = createIntegrationRequestHandler<str
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getEventNamesAsync(input.websiteId);
   },
+  cacheTtlMs: 300_000,
 });
 
 export const umamiTopPagesRequestHandler = createIntegrationRequestHandler<
@@ -30,6 +32,7 @@ export const umamiTopPagesRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopPagesAsync(input.websiteId, input.timeFrame, input.limit);
   },
+  cacheTtlMs: 300_000,
 });
 
 export const umamiTopReferrersRequestHandler = createIntegrationRequestHandler<
@@ -41,6 +44,7 @@ export const umamiTopReferrersRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getTopReferrersAsync(input.websiteId, input.timeFrame, input.limit);
   },
+  cacheTtlMs: 300_000,
 });
 
 export const umamiMultiEventRequestHandler = createIntegrationRequestHandler<
@@ -52,6 +56,7 @@ export const umamiMultiEventRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getMultiEventTimeSeriesAsync(input.websiteId, input.timeFrame, input.eventNames);
   },
+  cacheTtlMs: 300_000,
 });
 
 export const umamiActiveVisitorsRequestHandler = createIntegrationRequestHandler<
@@ -63,4 +68,5 @@ export const umamiActiveVisitorsRequestHandler = createIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getActiveVisitorsAsync(input.websiteId);
   },
+  cacheTtlMs: 30_000,
 });

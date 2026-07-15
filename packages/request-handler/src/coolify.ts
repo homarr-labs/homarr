@@ -12,4 +12,5 @@ export const coolifyRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getInstanceInfoAsync();
   },
+  cacheTtlMs: 30_000,
 });

@@ -12,4 +12,5 @@ export const uptimeKumaRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();
   },
+  cacheTtlMs: 60_000,
 });

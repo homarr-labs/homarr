@@ -18,4 +18,5 @@ export const smartHomeEntityStateRequestHandler = createIntegrationRequestHandle
 
     return result.data.state;
   },
+  cacheTtlMs: 60_000,
 });

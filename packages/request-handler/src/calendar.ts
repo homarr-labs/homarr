@@ -23,4 +23,5 @@ export const calendarMonthRequestHandler = createIntegrationRequestHandler<
       input.showUnmonitored,
     );
   },
+  cacheTtlMs: 60_000,
 });

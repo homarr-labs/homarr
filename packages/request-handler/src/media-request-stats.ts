@@ -16,4 +16,5 @@ export const mediaRequestStatsRequestHandler = createIntegrationRequestHandler<
       users: await integrationInstance.getUsersAsync(),
     };
   },
+  cacheTtlMs: 60_000,
 });

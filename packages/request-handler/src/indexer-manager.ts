@@ -13,4 +13,5 @@ export const indexerManagerRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getIndexersAsync();
   },
+  cacheTtlMs: 300_000,
 });
