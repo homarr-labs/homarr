@@ -8,6 +8,10 @@
     "clean:workspaces": "turbo clean",
     "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
     "check:custom-widget-bundle": "node ./scripts/check-custom-widget-bundle.mjs",
+    "ci:act:all": "bash scripts/ci/act.sh all",
+    "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
+    "ci:act:docker": "bash scripts/ci/act.sh docker",
+    "ci:act:fast": "bash scripts/ci/act.sh fast",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
@@ -67,7 +71,7 @@
   },
   "engines": {
     "node": ">=24.18.0",
-    "pnpm": ">=11.10.0"
+    "pnpm": ">=11.11.0"
   },
-  "packageManager": "pnpm@11.10.0"
+  "packageManager": "pnpm@11.11.0"
 }
