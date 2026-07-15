@@ -3,7 +3,15 @@
 import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
-import { IconAlertTriangle, IconCircleCheck, IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconCopy,
+  IconLayoutKanban,
+  IconRefresh,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
@@ -235,7 +243,12 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
           >
             <Group justify="space-between" wrap="nowrap" gap="sm">
               {tMenu("refresh")}
-              <WidgetQueryStatus queryClient={queryClient} queryKey={widgetQueryKey} isFetching={isWidgetFetching} t={t} />
+              <WidgetQueryStatus
+                queryClient={queryClient}
+                queryKey={widgetQueryKey}
+                isFetching={isWidgetFetching}
+                t={t}
+              />
             </Group>
           </Menu.Item>
           <Menu.Item
@@ -300,7 +313,11 @@ const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQuery
   }
 
   if (queries.length === 0) {
-    return <Text size="xs" c="dimmed">{t("item.menu.status.idle")}</Text>;
+    return (
+      <Text size="xs" c="dimmed">
+        {t("item.menu.status.idle")}
+      </Text>
+    );
   }
 
   const hasError = queries.some((q) => q.state.status === "error");
@@ -311,9 +328,10 @@ const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQuery
 
   if (hasError) {
     const errorQuery = queries.find((q) => q.state.status === "error");
-    const errorMessage = errorQuery?.state.error instanceof Error
-      ? errorQuery.state.error.message
-      : String(errorQuery?.state.error ?? "Unknown error");
+    const errorMessage =
+      errorQuery?.state.error instanceof Error
+        ? errorQuery.state.error.message
+        : String(errorQuery?.state.error ?? "Unknown error");
 
     return (
       <Tooltip label={errorMessage} multiline position="left" w={250}>
