@@ -136,14 +136,24 @@ const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
     request: { fetch: fetchWithTrustedCertificatesAsync },
     throttle: {
       enabled: true,
-      onRateLimit: (retryAfter: number, options: { url?: string; method?: string }, _octokit: unknown, retryCount: number) => {
+      onRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
         logger.warn(`GitHub rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
           url: options.url,
           method: options.method,
         });
         return retryCount < 1;
       },
-      onSecondaryRateLimit: (retryAfter: number, options: { url?: string; method?: string }, _octokit: unknown, retryCount: number) => {
+      onSecondaryRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
         logger.warn(`GitHub secondary rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
           url: options.url,
           method: options.method,
