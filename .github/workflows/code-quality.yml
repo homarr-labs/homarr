@@ -100,7 +100,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Typecheck
-        run: pnpm turbo typecheck --affected
+        run: pnpm turbo typecheck --affected --concurrency=2
 
   test:
     runs-on: ubuntu-latest
