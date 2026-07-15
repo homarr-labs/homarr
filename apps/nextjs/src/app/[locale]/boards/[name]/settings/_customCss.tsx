@@ -12,6 +12,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
+import { InstallCssFromWorkshopButton } from "~/components/workshop-install/install-from-workshop-buttons";
 import type { FormValues } from "./_settings-form";
 import classes from "./customcss.module.css";
 
@@ -30,6 +31,8 @@ export const CustomCssSettingsContent = ({ form }: Props) => {
       <Alert variant="light" color="cyan" title={customCssT("customClassesAlert.title")} icon={<IconInfoCircle />}>
         {customCssT("customClassesAlert.description")}
       </Alert>
+
+      <InstallCssFromWorkshopButton onSelect={(css) => form.setFieldValue("customCss", css)} />
     </SectionCard>
   );
 };

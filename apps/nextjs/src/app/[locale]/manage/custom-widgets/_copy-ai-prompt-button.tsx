@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button, Popover, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCopy, IconSparkles } from "@tabler/icons-react";
@@ -296,7 +297,10 @@ interface CopyAiPromptButtonProps {
 export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptButtonProps) => {
   const t = useScopedI18n("customWidget");
   const [opened, { open, close }] = useDisclosure(false);
+  const [mounted, setMounted] = useState(false);
   const { data: schema, isLoading } = clientApi.customWidget.schema.useQuery();
+
+  useEffect(() => setMounted(true), []);
 
   const handleCopy = async () => {
     if (!schema) return;
@@ -317,8 +321,8 @@ export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptB
           variant="light"
           leftSection={<IconSparkles size={16} />}
           onClick={open}
-          loading={isLoading}
-          disabled={!schema}
+          loading={!mounted || isLoading}
+          disabled={!mounted || isLoading || !schema}
           fullWidth
           size="sm"
         >
