@@ -3,6 +3,7 @@ import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
@@ -10,6 +11,8 @@ import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+
+const logger = createLogger({ module: "releasesRouter" });
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
@@ -71,13 +74,13 @@ export const releasesRouter = createTRPCRouter({
             for (const secret of secrets) {
               try {
                 tokensByProvider.set(secret.kind, decryptSecret(secret.value));
-              } catch {
-                // Skip corrupt secrets
+              } catch (error) {
+                logger.warn("Failed to decrypt widget secret", { itemId: input.itemId, kind: secret.kind, error });
               }
             }
           }
-        } catch {
-          // Access denied or table not yet migrated -- proceed without tokens
+        } catch (error) {
+          logger.warn("Failed to load release widget tokens", { itemId: input.itemId, error });
         }
       }
 
