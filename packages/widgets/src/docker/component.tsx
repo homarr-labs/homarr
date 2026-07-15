@@ -184,11 +184,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
 
-  const {
-    data,
-    refetch,
-    isFetching,
-  } = clientApi.docker.getContainers.useQuery(undefined, {});
+  const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {});
   const containers = data?.containers ?? [];
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -302,9 +298,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
               {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
             </Text>
 
-            <Tooltip
-              label={t("table.refresh.lastUpdated", { when: relativeTime })}
-            >
+            <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
                 size="sm"
                 variant="transparent"
