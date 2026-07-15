@@ -8,10 +8,34 @@ export interface ImportReview {
   hasActions: boolean;
 }
 
+function extractFencedBlock(text: string, acceptedLanguages: readonly string[]): string | undefined {
+  let cursor = 0;
+
+  while (cursor < text.length) {
+    const fenceStart = text.indexOf("```", cursor);
+    if (fenceStart === -1) return undefined;
+
+    const headerStart = fenceStart + 3;
+    const headerEnd = text.indexOf("\n", headerStart);
+    if (headerEnd === -1) return undefined;
+
+    const contentStart = headerEnd + 1;
+    const fenceEnd = text.indexOf("```", contentStart);
+    if (fenceEnd === -1) return undefined;
+
+    const language = text.slice(headerStart, headerEnd).trim().toLowerCase();
+    if (acceptedLanguages.includes(language)) return text.slice(contentStart, fenceEnd);
+
+    cursor = fenceEnd + 3;
+  }
+
+  return undefined;
+}
+
 export function parseCustomWidgetClipboard(text: string): Record<string, unknown> | null {
   try {
-    const jsonBlock = text.match(/```(?:json)?\s*([\s\S]*?)```/iu)?.[1];
-    const jsxBlock = text.match(/```(?:jsx|tsx)\s*([\s\S]*?)```/iu)?.[1]?.trim();
+    const jsonBlock = extractFencedBlock(text, ["", "json"]);
+    const jsxBlock = extractFencedBlock(text, ["jsx", "tsx"])?.trim();
     const value: unknown = JSON.parse(jsonBlock ?? text);
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     const widget = value as Record<string, unknown>;

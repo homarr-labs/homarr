@@ -53,4 +53,16 @@ ${JSON.stringify(widget, null, 2)}
       '<Stack gap="sm">\n  <Text>{data.name}</Text>\n</Stack>',
     );
   });
+
+  it("accepts case-insensitive fenced languages and CRLF line endings", () => {
+    const result = parseCustomWidgetClipboard(
+      `\`\`\`JSON\r\n${JSON.stringify(widget)}\r\n\`\`\`\r\n\`\`\`TSX\r\n<Text>{data.name}</Text>\r\n\`\`\``,
+    );
+
+    expect((result?.displayConfig as Record<string, unknown> | undefined)?.template).toBe("<Text>{data.name}</Text>");
+  });
+
+  it("rejects an unterminated fence with a large whitespace payload", () => {
+    expect(parseCustomWidgetClipboard(`\`\`\`json\n${" ".repeat(250_000)}`)).toBeNull();
+  });
 });
