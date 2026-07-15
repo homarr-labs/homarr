@@ -70,6 +70,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   queryKey?: QueryKey;
+  refetchIntervalSeconds?: number;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
   maxIntegrations?: number;

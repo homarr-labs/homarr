@@ -9,6 +9,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
+  refetchIntervalSeconds: 60,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       releaseType: factory.multiSelect({

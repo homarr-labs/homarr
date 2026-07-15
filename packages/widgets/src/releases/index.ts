@@ -14,6 +14,7 @@ const relativeDateSchema = z
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   icon: IconRocket,
+  refetchIntervalSeconds: 300,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({

@@ -9,6 +9,8 @@ export const widgetKind = "dnsHoleControls";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
+  queryKey: [["widget", "dnsHole"]],
+  refetchIntervalSeconds: 5,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showToggleAllButtons: factory.switch({

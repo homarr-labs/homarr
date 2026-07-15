@@ -6,6 +6,7 @@ import { optionsBuilder } from "../../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("minecraftServerStatus", {
   icon: IconBrandMinecraft,
+  refetchIntervalSeconds: 300,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text({ defaultValue: "" }),

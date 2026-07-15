@@ -7,6 +7,8 @@ import { createWidgetDefinition } from "../../definition";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestStats", {
   icon: IconChartBar,
+  queryKey: [["widget", "mediaRequests"]],
+  refetchIntervalSeconds: 60,
   createOptions() {
     return {};
   },

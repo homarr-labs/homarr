@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("ups", {
   icon: IconBatteryCharging,
+  refetchIntervalSeconds: 60,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showBattery: factory.switch({

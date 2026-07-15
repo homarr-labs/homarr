@@ -8,6 +8,7 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
+  refetchIntervalSeconds: 60,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       baseUrl: factory.text({

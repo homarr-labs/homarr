@@ -5,6 +5,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("anchorNote", {
   icon: IconNotes,
+  queryKey: [["widget", "anchorNotes"]],
+  refetchIntervalSeconds: 15,
   supportedIntegrations: ["anchor"],
   createOptions() {
     return optionsBuilder.from((factory) => ({

@@ -5,6 +5,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
   icon: IconGraphFilled,
+  queryKey: [["widget", "immich"]],
+  refetchIntervalSeconds: 900,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
   createOptions() {

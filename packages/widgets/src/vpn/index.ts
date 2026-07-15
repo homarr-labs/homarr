@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("vpn", {
   icon: IconShieldLock,
+  refetchIntervalSeconds: 300,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },

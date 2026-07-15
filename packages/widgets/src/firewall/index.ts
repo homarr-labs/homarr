@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
+  refetchIntervalSeconds: 5,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },

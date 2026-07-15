@@ -7,6 +7,7 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerSummary", {
   icon: IconTopologyFull,
+  refetchIntervalSeconds: 300,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },

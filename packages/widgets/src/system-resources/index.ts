@@ -14,6 +14,8 @@ const labelDisplayModeOptions = {
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
+  queryKey: [["widget", "healthMonitoring"]],
+  refetchIntervalSeconds: 5,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   createOptions() {
     return optionsBuilder.from((factory) => ({

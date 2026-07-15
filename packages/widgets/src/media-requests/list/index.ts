@@ -8,6 +8,8 @@ import { optionsBuilder } from "../../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   icon: IconZoomQuestion,
+  queryKey: [["widget", "mediaRequests"]],
+  refetchIntervalSeconds: 60,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       linksTargetNewTab: factory.switch({
