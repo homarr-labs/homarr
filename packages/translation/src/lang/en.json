@@ -2156,6 +2156,8 @@
         "clear": "Clear formatting",
         "heading": "Heading {level}",
         "align": "Align text: {position}",
+        "directionLtr": "Set text direction left to right",
+        "directionRtl": "Set text direction right to left",
         "blockquote": "Blockquote",
         "horizontalLine": "Horizontal line",
         "bulletList": "Bullet list",
@@ -5428,6 +5430,9 @@
     "title": "Containers",
     "table": {
       "updated": "Updated {when}",
+      "refresh": {
+        "lastUpdated": "Last refresh {when}"
+      },
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
       "footer": "Total {count} containers",

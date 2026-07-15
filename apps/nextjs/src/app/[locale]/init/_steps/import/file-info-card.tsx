@@ -2,7 +2,7 @@ import { ActionIcon, Button, Group, Text } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 import { IconPencil } from "@tabler/icons-react";
 
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { InitStepCard } from "../../_components/init-step-card";
@@ -22,7 +22,7 @@ export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
             {file.name}
           </Text>
           <Text visibleFrom="md" c="gray.6" size="sm">
-            {humanFileSize(file.size)}
+            {formatBytes(file.size)}
           </Text>
         </Group>
         <Button

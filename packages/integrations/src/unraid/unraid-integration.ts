@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import type { fetch as undiciFetch } from "undici/types/fetch";
 
-import { humanFileSize } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -59,7 +58,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       cpuTemp: undefined, // Not implemented, see https://github.com/unraid/api/issues/1597
       fileSystem: systemInfo.array.disks.map((disk) => ({
         deviceName: disk.name,
-        used: humanFileSize(disk.fsUsed * 1024), // API is in KiB (kibibytes), convert to bytes
+        used: `${disk.fsUsed * 1024}`, // API is in KiB (kibibytes), convert to bytes
         available: `${(disk.size - disk.fsUsed) * 1024}`, // free space left on the disk, API is in KiB (kibibytes)
         percentage: (disk.fsUsed / disk.size) * 100, // The units are the same, therefore the actual unit is irrelevant
       })),
