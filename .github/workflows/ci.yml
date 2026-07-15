@@ -60,7 +60,7 @@ jobs:
       TURBO_PLATFORM: linux/amd64
     steps:
       - uses: actions/checkout@v7
-        if: "!env.ACT"
+        if: '!env.ACT'
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -93,6 +93,10 @@ jobs:
       - name: Run unit tests
         run: pnpm test
 
+      - name: Report coverage
+        if: always() && !env.ACT
+        uses: davelosert/vitest-coverage-report-action@v2
+
   container:
     name: Container, E2E, and memory
     needs: fast-gate
@@ -107,7 +111,7 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v7
-        if: "!env.ACT"
+        if: '!env.ACT'
         with:
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
@@ -116,11 +120,11 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Set up Docker Buildx
-        if: "!env.ACT"
+        if: '!env.ACT'
         uses: docker/setup-buildx-action@v4
 
       - name: Build container once
-        if: "!env.ACT"
+        if: '!env.ACT'
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -161,7 +165,7 @@ jobs:
             --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
 
       - name: Cache Playwright browsers
-        if: "!env.ACT"
+        if: '!env.ACT'
         id: playwright-cache
         uses: actions/cache@v6
         with:
@@ -312,7 +316,7 @@ jobs:
         run: test -n "$PR_NUMBER" || { echo "pr_number is required for cleanup"; exit 1; }
 
       - name: Delete GHCR package version
-        if: "!env.ACT"
+        if: '!env.ACT'
         uses: actions/github-script@v8
         with:
           script: |

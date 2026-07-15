@@ -1,34 +1,32 @@
 ---
-title: "Prowlarr"
+title: 'Prowlarr'
 description: "Prowlarr is an indexer manager for Usenet and BitTorrent, providing a unified interface to manage your indexers."
 hide_title: true
 ---
 
-import { IntegrationHeader } from "@site/src/components/integrations/header";
-import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
-import { AddingIntegration } from "@site/src/components/integrations/adding";
-import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
 import { IconHeartRateMonitor } from "@tabler/icons-react";
-import { prowlarrIntegration } from ".";
-import { indexerManagerWidget } from "@site/docs/widgets/indexer-manager";
+import { prowlarrIntegration } from '.';
+import { indexerManagerWidget } from '@site/docs/widgets/indexer-manager';
 
-<IntegrationHeader integration={prowlarrIntegration} categories={["Indexer"]} />
+<IntegrationHeader
+  integration={prowlarrIntegration}
+  categories={['Indexer']}
+/>
 
 ### Widgets & Capabilities
-
-<IntegrationCapabilites items={[{ widget: indexerManagerWidget }]} />
+<IntegrationCapabilites
+    items={[{ widget: indexerManagerWidget }]}
+/>
 
 ### Adding the integration
-
 <AddingIntegration />
 
 ### Secrets
-
-<IntegrationSecrets
-  secrets={[
-    {
-      credentials: ["apiKey"],
-      steps: [],
-    },
-  ]}
-/>
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: []
+}]} />
