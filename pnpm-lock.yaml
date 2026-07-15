@@ -508,8 +508,8 @@ catalogs:
       specifier: ^3.3.0
       version: 3.3.0
     tsdav:
-      specifier: ^2.3.0
-      version: 2.3.0
+      specifier: ^2.3.1
+      version: 2.3.1
     tsx:
       specifier: 4.20.4
       version: 4.20.4
@@ -1956,7 +1956,7 @@ importers:
         version: 2.2.1
       tsdav:
         specifier: 'catalog:'
-        version: 2.3.0
+        version: 2.3.1
       undici:
         specifier: 'catalog:'
         version: 7.28.0
@@ -14584,8 +14584,8 @@ packages:
       typescript:
         optional: true
 
-  tsdav@2.3.0:
-    resolution: {integrity: sha512-1zxaMcHw/ISDZc+owPykCZqXtJjZSWZr1Vz1ycw/X+8h48pYbUVmTFLl5hRKFx+pMWSYpCsq8rxdYdlpRep7Mw==}
+  tsdav@2.3.1:
+    resolution: {integrity: sha512-hrVYM0CCn8JmIXy7pPnA2VIw5MXtjBLDVtZMumBcXRXBVQranD5IRZ1AWV4Ig+RzrqQqFGnHJi94VB+J/aGwTw==}
     engines: {node: '>=18'}
 
   tslib@1.14.1:
@@ -29277,7 +29277,7 @@ snapshots:
     optionalDependencies:
       typescript: '@typescript/typescript6@6.0.2'
 
-  tsdav@2.3.0:
+  tsdav@2.3.1:
     dependencies:
       debug: 4.4.3
       xml-js: 1.6.11
