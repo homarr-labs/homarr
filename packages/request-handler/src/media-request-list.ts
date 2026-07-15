@@ -13,4 +13,6 @@ export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getRequestsAsync();
   },
+  cacheTtlMs: 60_000,
+  fallbackToStaleOnError: true,
 });
