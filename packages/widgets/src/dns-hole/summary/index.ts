@@ -9,6 +9,8 @@ export const widgetKind = "dnsHoleSummary";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconAd,
+  queryKey: [["widget", "dnsHole"]],
+  refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       usePiHoleColors: factory.switch({

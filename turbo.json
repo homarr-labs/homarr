@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "remoteCache": { "signature": false },
+  "remoteCache": { "signature": true },
   "globalEnv": ["CI", "NODE_ENV", "SKIP_ENV_VALIDATION"],
   "ui": "stream",
   "futureFlags": {
@@ -13,6 +13,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
+      "env": ["TURBO_PLATFORM"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.test.ts",

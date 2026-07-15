@@ -20,11 +20,6 @@ const config: Config = {
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
 
-  customFields: {
-    // Empty means same-origin, which is the production Workshop image shape.
-    workshopUrl: process.env.WORKSHOP_URL ?? "",
-  },
-
   future: {
     v4: {
       removeLegacyPostBuildHeadAttribute: true,
@@ -128,11 +123,6 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
-        },
-        {
-          label: "Workshop",
-          position: "left",
-          to: "/workshop",
         },
         {
           label: "About us",
@@ -288,12 +278,7 @@ const config: Config = {
       return {
         name: "resolve-homarr-packages",
         configureWebpack() {
-          return {
-            resolve: {
-              symlinks: false,
-              alias: { "@": require("path").resolve(__dirname, "src") },
-            },
-          };
+          return { resolve: { symlinks: false } };
         },
       };
     },
@@ -321,18 +306,6 @@ const config: Config = {
               concatenateModules: process.env.CI != null && process.env.CI !== "false" ? !isServer : false,
             },
           };
-        },
-      };
-    },
-    function workshopDetailRoutePlugin() {
-      return {
-        name: "workshop-detail-route",
-        async contentLoaded({ actions }) {
-          actions.addRoute({
-            path: "/workshop/:id",
-            component: "@site/src/components/workshop/DetailPage",
-            exact: true,
-          });
         },
       };
     },

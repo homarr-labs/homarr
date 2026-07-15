@@ -6,6 +6,10 @@
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
+    "ci:act:all": "bash scripts/ci/act.sh all",
+    "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
+    "ci:act:docker": "bash scripts/ci/act.sh docker",
+    "ci:act:fast": "bash scripts/ci/act.sh fast",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
@@ -17,9 +21,6 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
-    "dev:workshop": "docker compose -f ./apps/workshop/docker-compose.yml up --build",
-    "test:workshop-image": "bash ./apps/workshop/scripts/smoke-test.sh",
-    "ci:act:workshop": "bash ./scripts/ci/workshop-act.sh",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
@@ -68,7 +69,7 @@
   },
   "engines": {
     "node": ">=24.18.0",
-    "pnpm": ">=11.10.0"
+    "pnpm": ">=11.11.0"
   },
-  "packageManager": "pnpm@11.10.0"
+  "packageManager": "pnpm@11.11.0"
 }
