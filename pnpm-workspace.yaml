@@ -154,6 +154,7 @@ catalog:
   oxfmt: ^0.58.0
   oxlint: ^1.73.0
   pg: ^8.22.0
+  pocketbase: ^0.26.2
   postcss-preset-mantine: ^1.18.0
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
@@ -191,7 +192,10 @@ catalog:
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
-
+  class-variance-authority: ^0.7.1
+  tailwind-merge: ^3.6.0
+  framer-motion: ^12.40.0
+  "@base-ui/react": ^1.5.0
 catalogMode: strict
 nodeLinker: hoisted
 strictPeerDependencies: false
@@ -211,8 +215,8 @@ minimumReleaseAgeExclude:
   # Renovate security update: esbuild@0.28.1
   - esbuild@0.28.1
 overrides:
-  "@babel/helpers@<7.26.10": ">=7.29.7"
-  "@babel/runtime@<7.26.10": ">=7.29.7"
+  "@babel/helpers@<7.26.10": "^7.29.7"
+  "@babel/runtime@<7.26.10": "^7.29.7"
   "axios@>=1.0.0 <1.8.2": ">=1.18.1"
   "brace-expansion@>=2.0.0 <=2.0.1": ">=5.0.7"
   "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.7"
@@ -252,3 +256,4 @@ allowBuilds:
   msw: false
   protobufjs: false
   vue-demi: false
+  "@parcel/watcher": true

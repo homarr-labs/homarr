@@ -1,0 +1,15 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+**/.docusaurus
+**/.next
+**/.turbo
+**/build
+**/coverage
+**/dist
+**/node_modules
+**/pb_data
+.pnpm-store
+e2e

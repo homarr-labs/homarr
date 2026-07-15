@@ -1,0 +1,349 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import dayjs from "dayjs";
+
+import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
+import { getPocketBase } from "@site/src/lib/pocketbase";
+import type { SubmissionType } from "@site/src/lib/workshop-schema";
+import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { errorMessage } from "@site/src/lib/utils";
+
+import { voteDelta } from "./workshop-utils";
+
+export type SortKey = "top" | "new";
+export type TypeFilter = "all" | "yours" | SubmissionType;
+
+export interface SubmitInput {
+  type: SubmissionType;
+  title: string;
+  description: string;
+  content: string;
+  screenshots: File[];
+}
+
+export interface CommentActions {
+  fetch: (submissionId: string) => Promise<WorkshopComment[]>;
+  add: (submissionId: string, content: string) => Promise<WorkshopComment | null>;
+  update: (commentId: string, content: string) => Promise<WorkshopComment | null>;
+  delete: (commentId: string) => Promise<boolean>;
+}
+
+const sorters: Record<SortKey, (a: WorkshopSubmission, b: WorkshopSubmission) => number> = {
+  top: (a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes),
+  new: (a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
+};
+
+const isNotFoundError = (error: unknown) =>
+  typeof error === "object" && error !== null && "status" in error && error.status === 404;
+
+export const useWorkshop = (workshopUrl: string) => {
+  const pb = useMemo(() => getPocketBase(workshopUrl), [workshopUrl]);
+  const [submissions, setSubmissions] = useState<WorkshopSubmission[]>([]);
+  const [votes, setVotes] = useState<Record<string, WorkshopVote>>({});
+  const [user, setUser] = useState(pb.authStore.record);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const votingIds = useRef(new Set<string>());
+
+  const refreshVotes = useCallback(async () => {
+    if (!pb.authStore.isValid || !pb.authStore.record) {
+      setVotes({});
+      return;
+    }
+    const rows = await pb.collection("votes").getFullList<WorkshopVote>({
+      filter: pb.filter("user = {:id}", { id: pb.authStore.record.id }),
+    });
+    setVotes(Object.fromEntries(rows.map((row) => [row.submission, row])));
+  }, [pb]);
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setSubmissions(await pb.collection("marketplace").getFullList<WorkshopSubmission>({ sort: "-created" }));
+      await refreshVotes();
+    } catch (caught) {
+      setError(errorMessage(caught, "Failed to load the workshop"));
+    } finally {
+      setLoading(false);
+    }
+  }, [pb, refreshVotes]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const unsubscribe = pb.authStore.onChange(() => {
+      setUser(pb.authStore.record);
+      if (!pb.authStore.isValid) setVotes({});
+    });
+
+    const load = async () => {
+      if (pb.authStore.isValid) {
+        try {
+          await pb.collection("users").authRefresh();
+        } catch {
+          pb.authStore.clear();
+        }
+      }
+      if (!cancelled) await refresh();
+    };
+
+    void load();
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [pb, refresh]);
+
+  const ensureAuth = useCallback(async () => {
+    if (pb.authStore.isValid) {
+      try {
+        await pb.collection("users").authRefresh();
+        return true;
+      } catch {
+        pb.authStore.clear();
+      }
+    }
+    await pb.collection("users").authWithOAuth2({ provider: "github" });
+    await refreshVotes();
+    return pb.authStore.isValid;
+  }, [pb, refreshVotes]);
+
+  const requireUserId = useCallback(
+    async (action: string) => {
+      let authenticated = false;
+      try {
+        authenticated = await ensureAuth();
+      } catch (caught) {
+        setError(errorMessage(caught, `Sign in to ${action}`));
+        return null;
+      }
+
+      if (!authenticated) {
+        setError(`Sign in to ${action}`);
+        return null;
+      }
+      const userId = pb.authStore.record?.id;
+      if (!userId) {
+        setError(`Sign in to ${action}`);
+        return null;
+      }
+      return userId;
+    },
+    [pb, ensureAuth],
+  );
+
+  const login = useCallback(async () => {
+    try {
+      await ensureAuth();
+      setError(null);
+    } catch (caught) {
+      setError(errorMessage(caught, "Sign in failed"));
+    }
+  }, [ensureAuth]);
+
+  const vote = useCallback(
+    async (submissionId: string, value: 1 | -1) => {
+      if (votingIds.current.has(submissionId)) return;
+      votingIds.current.add(submissionId);
+
+      const userId = await requireUserId("vote");
+      if (!userId) {
+        votingIds.current.delete(submissionId);
+        return;
+      }
+
+      const prev = votes[submissionId];
+      const isToggleOff = prev?.value === value;
+      const [upD, downD] = voteDelta(prev?.value, value);
+
+      setVotes((v) => {
+        const next = { ...v };
+        if (isToggleOff) delete next[submissionId];
+        else
+          next[submissionId] = {
+            ...(prev ?? { id: "", submission: submissionId, user: userId, created: "", updated: "" }),
+            value,
+          } as WorkshopVote;
+        return next;
+      });
+      setSubmissions((s) =>
+        s.map((sub) =>
+          sub.id === submissionId ? { ...sub, upvotes: sub.upvotes + upD, downvotes: sub.downvotes + downD } : sub,
+        ),
+      );
+
+      try {
+        const existing = prev?.id ? prev : undefined;
+        if (!existing) {
+          const created = await pb
+            .collection("votes")
+            .create<WorkshopVote>({ submission: submissionId, value, user: userId });
+          setVotes((current) => ({ ...current, [submissionId]: created }));
+        } else if (isToggleOff) {
+          try {
+            await pb.collection("votes").delete(existing.id);
+          } catch (caught) {
+            if (!isNotFoundError(caught)) throw caught;
+          }
+        } else {
+          try {
+            const updated = await pb.collection("votes").update<WorkshopVote>(existing.id, { value });
+            setVotes((current) => ({ ...current, [submissionId]: updated }));
+          } catch (caught) {
+            if (!isNotFoundError(caught)) throw caught;
+            const created = await pb
+              .collection("votes")
+              .create<WorkshopVote>({ submission: submissionId, value, user: userId });
+            setVotes((current) => ({ ...current, [submissionId]: created }));
+          }
+        }
+      } catch (caught) {
+        setVotes((v) => {
+          const next = { ...v };
+          if (prev) next[submissionId] = prev;
+          else delete next[submissionId];
+          return next;
+        });
+        setSubmissions((s) =>
+          s.map((sub) =>
+            sub.id === submissionId ? { ...sub, upvotes: sub.upvotes - upD, downvotes: sub.downvotes - downD } : sub,
+          ),
+        );
+        setError(errorMessage(caught, "Failed to register your vote"));
+      } finally {
+        votingIds.current.delete(submissionId);
+      }
+    },
+    [pb, votes, requireUserId],
+  );
+
+  const report = useCallback(
+    async (submissionId: string, reason: string) => {
+      try {
+        const userId = await requireUserId("report");
+        if (!userId) return;
+        await pb.collection("reports").create({ submission: submissionId, reason, user: userId });
+      } catch (caught) {
+        setError(errorMessage(caught, "Failed to submit your report"));
+      }
+    },
+    [pb, requireUserId],
+  );
+
+  const deleteSubmission = useCallback(
+    async (submissionId: string) => {
+      try {
+        await pb.collection("submissions").delete(submissionId);
+        setSubmissions((prev) => prev.filter((s) => s.id !== submissionId));
+        return true;
+      } catch (caught) {
+        setError(errorMessage(caught, "Failed to delete submission"));
+        return false;
+      }
+    },
+    [pb],
+  );
+
+  const submit = useCallback(
+    async (input: SubmitInput): Promise<boolean> => {
+      const validation = validateSubmissionContent(input.type, input.content);
+      if (!validation.success) throw new Error(validation.error);
+      if (!(await ensureAuth())) throw new Error("Sign in required to submit");
+      const userId = pb.authStore.record?.id;
+      if (!userId) throw new Error("Sign in required to submit");
+
+      const data = new FormData();
+      data.set("type", input.type);
+      data.set("title", input.title);
+      data.set("description", input.description);
+      data.set("schemaVersion", schemaVersionByType[input.type]);
+      data.set("content", input.content);
+      data.set("author", userId);
+      for (const file of input.screenshots) data.append("screenshots", file);
+      await pb.collection("submissions").create(data);
+      await refresh();
+      return true;
+    },
+    [pb, ensureAuth, refresh],
+  );
+
+  const fetchComments = useCallback(
+    (submissionId: string) =>
+      pb.collection("comments").getFullList<WorkshopComment>({
+        filter: pb.filter("submission = {:id}", { id: submissionId }),
+        sort: "-created",
+        expand: "author",
+      }),
+    [pb],
+  );
+
+  const addComment = useCallback(
+    async (submissionId: string, content: string) => {
+      const userId = await requireUserId("comment");
+      if (!userId) return null;
+      try {
+        return await pb
+          .collection("comments")
+          .create<WorkshopComment>({ submission: submissionId, content, author: userId }, { expand: "author" });
+      } catch (caught) {
+        setError(errorMessage(caught, "Failed to post comment"));
+        return null;
+      }
+    },
+    [pb, requireUserId],
+  );
+
+  const updateComment = useCallback(
+    async (commentId: string, content: string) => {
+      try {
+        return await pb.collection("comments").update<WorkshopComment>(commentId, { content }, { expand: "author" });
+      } catch (caught) {
+        setError(errorMessage(caught, "Failed to update comment"));
+        return null;
+      }
+    },
+    [pb],
+  );
+
+  const deleteComment = useCallback(
+    async (commentId: string) => {
+      try {
+        await pb.collection("comments").delete(commentId);
+        return true;
+      } catch (caught) {
+        setError(errorMessage(caught, "Failed to delete comment"));
+        return false;
+      }
+    },
+    [pb],
+  );
+
+  const logout = useCallback(() => pb.authStore.clear(), [pb]);
+
+  const comments = useMemo<CommentActions>(
+    () => ({
+      fetch: fetchComments,
+      add: addComment,
+      update: updateComment,
+      delete: deleteComment,
+    }),
+    [fetchComments, addComment, updateComment, deleteComment],
+  );
+
+  return {
+    pb,
+    submissions,
+    votes,
+    user,
+    loading,
+    error,
+    sorters,
+    comments,
+    refresh,
+    login,
+    logout,
+    vote,
+    report,
+    submit,
+    deleteSubmission,
+  };
+};
