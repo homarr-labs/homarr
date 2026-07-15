@@ -7,6 +7,7 @@ import { z } from "zod/v4";
 import { createDocumentationLink } from "./index";
 import { integrationDocSlugs } from "./integration-doc-slugs";
 import { widgetDocSlugs } from "./widget-doc-slugs";
+import { customJsxComponentRegistry } from "@homarr/custom-widgets/core";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -69,8 +70,28 @@ const slugMapPaths = [
 ];
 
 const outputPath = path.join(__dirname, "homarr-docs-sitemap.ts");
+const customJsxRegistryOutputPath = path.join(
+  __dirname,
+  "../../../../apps/docs/src/generated/custom-jsx-components.json",
+);
+
+const updateCustomJsxRegistryAsync = async () => {
+  await fs.mkdir(dirname(customJsxRegistryOutputPath), { recursive: true });
+  const documentationRegistry = customJsxComponentRegistry.map(
+    ({ name, package: packageName, category, safety, reason, documentationUrl }) => ({
+      name,
+      package: packageName,
+      category,
+      safety,
+      reason,
+      documentationUrl,
+    }),
+  );
+  await fs.writeFile(customJsxRegistryOutputPath, `${JSON.stringify(documentationRegistry, null, 2)}\n`);
+};
 
 const main = async () => {
+  await updateCustomJsxRegistryAsync();
   let paths: string[];
   try {
     const sitemapXml = await fetchSitemapAsync();

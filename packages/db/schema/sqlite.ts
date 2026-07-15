@@ -32,7 +32,7 @@ import type {
   CustomWidgetDisplayType,
   CustomWidgetMethod,
   CustomWidgetSecretKind,
-} from "@homarr/validation/custom-widget";
+} from "@homarr/custom-widgets/core";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 

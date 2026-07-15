@@ -17,7 +17,6 @@
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
-    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
     "./mcp": "./src/mcp.ts"
   },
   "scripts": {
@@ -33,6 +32,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
@@ -52,7 +52,6 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
-    "jsonpath-plus": "catalog:",
     "lodash.clonedeep": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
@@ -60,6 +59,7 @@
     "superjson": "catalog:",
     "trpc-to-mcp": "catalog:",
     "trpc-to-openapi": "catalog:",
+    "undici": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

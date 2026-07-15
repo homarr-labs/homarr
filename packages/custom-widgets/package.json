@@ -1,0 +1,53 @@
+{
+  "name": "@homarr/custom-widgets",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    "./core": "./src/core/index.ts",
+    "./jsx": "./src/jsx/index.ts",
+    "./runtime": "./src/runtime/index.ts",
+    "./server": "./src/server/index.ts",
+    "./workbench": "./src/workbench/index.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "check:architecture": "node ./scripts/check-architecture.mjs",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mantine/charts": "catalog:",
+    "@mantine/core": "catalog:",
+    "@mantine/dates": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "acorn": "catalog:",
+    "acorn-jsx": "catalog:",
+    "jsonpath-plus": "catalog:",
+    "react": "catalog:",
+    "undici": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "jsdom": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -715,9 +715,16 @@
         "widgetInstallFailed": "Failed to install the custom widget"
       }
     },
+    "betaBanner": {
+      "title": "Custom Widgets are in Beta",
+      "description": "This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the",
+      "link": "official discussion thread",
+      "closing": "Your feedback directly shapes what comes next. Happy hacking!"
+    },
     "action": {
       "create": "Create",
       "import": "Import",
+      "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
       "save": "Save",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
@@ -733,6 +740,7 @@
       "duplicate": "Duplicate",
       "copyAiPrompt": "Copy AI prompt",
       "paste": "Paste JSON",
+      "readyToSave": "Ready to save",
       "enable": "Enable",
       "disable": "Disable",
       "menu": "Actions"
@@ -782,7 +790,74 @@
       "enabled": "Enabled",
       "template": {
         "label": "JSX Template",
-        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+        "description": "Mantine JSX template. Read the base response from data and call named requests with SubFetch, ActionButton, or ToggleSwitch."
+      },
+      "jsxApiVersion": {
+        "label": "JSX API version",
+        "v2": "Version 2 (recommended)",
+        "v1": "Version 1 (legacy)",
+        "legacyWarning": "Version 1 is display-only. Inline network components are disabled until this widget is migrated to named requests."
+      },
+      "networkScope": {
+        "label": "Network scope",
+        "option": {
+          "public": "Public networks",
+          "private": "Private networks",
+          "loopback": "Loopback"
+        },
+        "description": {
+          "public": "Allow public HTTP and HTTPS destinations only.",
+          "private": "Allow public and RFC1918 or ULA private destinations.",
+          "loopback": "Allow loopback destinations for trusted local services."
+        }
+      },
+      "requestManifest": {
+        "label": "Named requests",
+        "description": "JSON array of same-origin query and action capabilities. Templates reference entries by requestId and pass only declared parameters.",
+        "invalid": "Named requests must be a valid JSON array."
+      }
+    },
+    "editor": {
+      "saveBlocked": "Resolve the editor errors before saving.",
+      "saveReady": "The configuration is ready to save.",
+      "language": {
+        "jsx": "JSX",
+        "json": "JSON"
+      },
+      "action": {
+        "components": "Components",
+        "format": "Format",
+        "insertStarter": "Insert starter",
+        "undo": "Undo",
+        "redo": "Redo"
+      },
+      "componentReference": {
+        "search": "Search components",
+        "empty": "No matching components",
+        "count": "{count, number} components available"
+      },
+      "status": {
+        "errors": "{count, number} errors",
+        "warnings": "{count, number} warnings",
+        "ready": "No issues found",
+        "position": "Ln {line, number}, Col {column, number}",
+        "characters": "{count, number} characters",
+        "charactersWithLimit": "{count, number} / {limit, number}"
+      },
+      "diagnostics": {
+        "title": "Template diagnostics",
+        "line": "Line {line, number}",
+        "ast": "{value}",
+        "dangerousProperty": "Reflective property \"{value}\" is not available in templates.",
+        "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
+        "eventHandler": "Event handler \"{value}\" is not allowed. Use the declarative action components.",
+        "invalidRequestManifest": "Named requests must be a valid JSON array.",
+        "legacyNetworkProps": "Version 2 network components accept requestId and params, not inline URL, method, header, or body props.",
+        "missingRequestId": "This network component requires a literal requestId.",
+        "templateEmpty": "Enter a JSX template.",
+        "templateTooLong": "The template exceeds the 50,000 character limit.",
+        "unknownRequest": "No named request with ID \"{value}\" exists.",
+        "unsafeTag": "The <{value}> element is not available in templates."
       }
     },
     "placeholder": {
@@ -824,6 +899,28 @@
       "general": "General",
       "connection": "API Connection",
       "display": "Display Configuration"
+    },
+    "steps": {
+      "format": {
+        "label": "Choose format",
+        "description": "Purpose and presentation",
+        "help": "Choose how this widget should communicate its data. This determines which configuration options are available next."
+      },
+      "connection": {
+        "label": "Connect data",
+        "description": "Endpoint and authentication"
+      },
+      "configure": {
+        "label": "Configure",
+        "description": "Fields and behavior"
+      },
+      "back": "Back",
+      "next": "Continue",
+      "continueTo": "Continue to {step}"
+    },
+    "workbench": {
+      "configure": "Configure",
+      "preview": "Preview and test"
     },
     "displayTypeDescription": {
       "singleValue": "Show one extracted value with a label and unit",
@@ -871,9 +968,90 @@
     },
     "preview": {
       "title": "Preview",
+      "errorBoundary": {
+        "title": "The preview could not be rendered",
+        "description": "Your form is still safe. Reset the preview, then review the Checks tab if the problem returns.",
+        "retry": "Reset preview"
+      },
       "test": "Test",
+      "execute": "Execute",
       "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Raw JSON response"
+      "rawResponse": "Open raw JSON",
+      "mutationDisabled": "Preview only runs GET requests. Named actions are executed from an explicit widget control after the widget is saved.",
+      "tab": {
+        "widget": "Widget",
+        "response": "Response",
+        "request": "Request",
+        "diagnostics": "Checks"
+      },
+      "size": {
+        "compact": "Compact",
+        "standard": "Standard",
+        "wide": "Wide"
+      },
+      "empty": {
+        "title": "No preview data yet"
+      },
+      "stale": {
+        "title": "Sample data is out of date",
+        "description": "The connection or display configuration changed after the last test. Test again before relying on this preview."
+      },
+      "capabilities": {
+        "interactive": "Interactive",
+        "title": "Network capabilities",
+        "description": "This widget declares the following HTTP methods. Actions still require board permission and an explicit user gesture.",
+        "liveActions": "Enable live preview actions",
+        "liveActionsDescription": "Off runs action controls as simulations. On sends real requests for this short-lived preview session.",
+        "runTestFirst": "Run a GET test to create a short-lived preview session.",
+        "simulated": "Actions simulated"
+      },
+      "response": {
+        "copy": "Copy response",
+        "copied": "Copied",
+        "addSample": "Add sample JSON",
+        "editSample": "Edit sample JSON",
+        "sampleLabel": "Sample response",
+        "sampleDescription": "Use local JSON to design and test the display without calling the API.",
+        "sampleHint": "Inspect the response or replace it with local sample data.",
+        "applySample": "Apply sample data",
+        "cancelSample": "Cancel",
+        "invalidSample": "Enter valid JSON before applying the sample.",
+        "localSample": "Local sample data",
+        "raw": "Raw JSON",
+        "copyPath": "Copy data path",
+        "pathCopied": "Data path copied",
+        "insertPath": "Insert data path into the JSX template",
+        "expand": "Expand value",
+        "collapse": "Collapse value",
+        "empty": "Run a GET test to inspect the sanitized JSON response."
+      },
+      "request": {
+        "method": "Base method",
+        "authentication": "Authentication",
+        "endpoint": "Endpoint",
+        "status": "Last status",
+        "notRun": "Not tested",
+        "named": "{count, number} named requests",
+        "journal": "Redacted request journal",
+        "journalEmpty": "Run the preview or use an interactive control to populate the request journal.",
+        "duration": "{duration, number} ms",
+        "simulated": "Simulated",
+        "redacted": "Secret values and query parameter values are hidden from this summary.",
+        "permission": {
+          "view": "View",
+          "modify": "Modify",
+          "full": "Full"
+        }
+      },
+      "diagnostics": {
+        "templateSize": "Template size",
+        "characters": "{count, number} characters",
+        "namedRequests": "Named requests",
+        "methods": "HTTP methods",
+        "networkScope": "Network scope",
+        "legacy": "Legacy",
+        "ready": "The editor checks did not find any blocking template issues."
+      }
     },
     "notification": {
       "created": "Widget \"{name}\" created successfully.",
@@ -897,8 +1075,30 @@
       "toggleError": "Failed to toggle widget status.",
       "deleteError": "Failed to delete widget.",
       "previewError": "Failed to fetch preview. Check the URL and try again.",
+      "previewActionsError": "Failed to update live preview actions. Run the GET test again if the session expired.",
+      "pastedForReplacement": "The pasted widget configuration is ready to review and save.",
       "executed": "Action executed successfully.",
       "executeError": "Action failed: {error}"
+    },
+    "importReview": {
+      "title": "Review custom widget import",
+      "description": "Check where this widget connects and what board access its controls require before importing it.",
+      "replaceTitle": "Replace with pasted widget",
+      "replaceDescription": "Replace this form with \"{name}\" from {origin}? Stored credentials are preserved only when the authentication method is unchanged.",
+      "replaceConfirm": "Replace form",
+      "fileLabel": "Choose a custom widget JSON file",
+      "name": "Name",
+      "origin": "Base origin",
+      "authentication": "Authentication",
+      "networkScope": "Network scope",
+      "methods": "HTTP methods",
+      "permissions": "Required board permissions",
+      "actionWarning": {
+        "title": "This widget can change remote data",
+        "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
+      },
+      "cancel": "Cancel import",
+      "confirm": "Import widget"
     },
     "table": {
       "name": "Name",
@@ -3966,6 +4166,29 @@
     "customApi": {
       "name": "Custom API",
       "description": "Display data from any external API with custom configuration.",
+      "customJsx": {
+        "noTemplate": "No JSX template is configured.",
+        "interactive": "Interactive",
+        "templateWarnings": "{count} template warnings:",
+        "migrationRequired": "This template must be migrated to Custom JSX version 2 before it can use network requests.",
+        "unsavedPreview": "Run a GET test in the editor before testing named requests.",
+        "invalidParams": "The request parameters are invalid.",
+        "loading": "Loading request...",
+        "loadRequest": "Load request",
+        "requestFailed": "The request failed.",
+        "retry": "Retry request",
+        "actionCompleted": "Action completed successfully.",
+        "actionSimulated": "Action simulated; no request was sent.",
+        "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
+        "widgetItemUnavailable": "This widget item is not available.",
+        "toggle": "Toggle",
+        "refresh": "Refresh",
+        "copy": "Copy",
+        "copied": "Copied",
+        "networkCapabilities": "Network capabilities",
+        "confirmDelete": "Confirm this destructive action.",
+        "networkAccessNeedsReview": "Network access needs review before this template can run."
+      },
       "option": {
         "definitionId": {
           "label": "Definition ID"
@@ -3978,6 +4201,8 @@
       "noDefinition": "No definition selected",
       "definitionNotFound": "Widget definition not found. It may have been deleted.",
       "noDisplayOutput": "No display output",
+      "openJson": "Open in browser JSON viewer",
+      "execute": "Execute",
       "executeConfirm": "Are you sure you want to execute this action?",
       "executing": "Executing...",
       "executeSuccess": "Action executed successfully",

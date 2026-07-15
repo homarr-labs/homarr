@@ -1,0 +1,49 @@
+---
+sidebar_label: Custom JSX language
+---
+
+# Custom JSX language
+
+Custom JSX is a declarative expression language, not browser JavaScript. Homarr parses an explicit AST subset and emits React elements from a classified component registry. Templates cannot access browser globals, native prototypes, constructors, refs, portals, raw event handlers, or direct `fetch`.
+
+## Data and rendering
+
+The base GET response is available as `data`. Safe member access, conditionals, arrays, object literals, and interpreter-created collection callbacks can compose displays:
+
+```jsx
+<Stack gap="xs">
+  {data.services
+    .filter((service) => service.visible)
+    .map((service) => (
+      <Group key={service.id} justify="space-between">
+        <Text>{service.name}</Text>
+        <Badge color={service.online ? "green" : "red"}>{service.status}</Badge>
+      </Group>
+    ))}
+</Stack>
+```
+
+Properties are resolved own-only. Reflective names such as `constructor`, `prototype`, `__proto__`, `caller`, `callee`, `arguments`, `bind`, `call`, and `apply` are rejected even when computed or Unicode escaped.
+
+## Components and props
+
+Every Mantine export is classified as allowed, wrapped, or denied. The [generated component reference](./#component-reference) is authoritative. Props are allowlisted per component; unsupported props produce warnings and are ignored. Polymorphic roots, unsafe URLs, portals, positioning escapes, refs, and function props are stripped.
+
+`SubData` is a convenience for simple response paths. Prefer the render-child pattern for rich nested results:
+
+```jsx
+<SubFetch requestId="detail" params={{ id: data.selectedId }}>
+  {(detail, meta) => (
+    <Stack>
+      <Title>{detail.name}</Title>
+      <Text>HTTP {meta.status}</Text>
+    </Stack>
+  )}
+</SubFetch>
+```
+
+## Safe helpers and budgets
+
+Bindings include restricted conversion, string, array, object, JSON, math, URI, and pure date helpers. Native `Date` objects and native prototypes are not exposed.
+
+Templates are limited to 50,000 characters, 10,000 rendered nodes, and explicit AST-depth, operation, collection, and string budgets. Budget errors stop only the Custom JSX renderer and are contained by its error boundary.

@@ -219,7 +219,7 @@ const ItemSelectModalContent = ({
                   </Text>
                 </Group>
                 <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? def.url}
+                  {def.description ?? ""}
                 </Text>
               </Stack>
               <Box
