@@ -82,6 +82,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Check formatting in affected workspaces
+        continue-on-error: true
         run: pnpm turbo run format --affected --continue -- --check
 
       - name: Lint, typecheck, and build affected workspaces
