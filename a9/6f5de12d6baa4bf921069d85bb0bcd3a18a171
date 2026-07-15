@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_971ba7dba4c953::t_866198b8ab56c3 63,85,111,120,124,165,316
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a96f5de12d6baa4bf921069d85bb0bcd3a18a171",
+  "prompts": {},
+  "sessions": {
+    "s_971ba7dba4c953": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_09a1b1b2affep65dsiP526omBU",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
