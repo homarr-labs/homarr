@@ -41,6 +41,11 @@ jobs:
           xargs -r -a /tmp/changed-files pnpm exec oxlint --fix || true
           xargs -r -a /tmp/changed-files pnpm exec oxfmt --write
 
+      - name: Format all files in affected workspaces
+        if: steps.changed.outputs.count != '0'
+        run: |
+          pnpm turbo run format --continue
+
       - name: Commit fixes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
