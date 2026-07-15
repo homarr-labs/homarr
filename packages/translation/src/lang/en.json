@@ -2717,6 +2717,11 @@
         "user": "User",
         "name": "Name",
         "id": "Id",
+        "status": "Status",
+        "directPlay": "Direct play",
+        "transcoding": "Transcoding",
+        "paused": "Paused",
+        "remaining": "{minutes} min left",
         "metadata": {
           "title": "Stats for nerds",
           "video": {
