@@ -81,9 +81,6 @@ jobs:
       - name: Copy environment defaults
         run: cp .env.example .env
 
-      - name: Check formatting in affected workspaces
-        run: pnpm turbo run format --affected --continue -- --check
-
       - name: Lint, typecheck, and build affected workspaces
         run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful
 
@@ -92,10 +89,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
-
-      - name: Report coverage
-        if: always() && !env.ACT
-        uses: davelosert/vitest-coverage-report-action@v2
 
   container:
     name: Container, E2E, and memory

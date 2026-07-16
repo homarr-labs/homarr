@@ -239,7 +239,7 @@ allowBuilds:
   "@tree-sitter-grammars/tree-sitter-yaml": true
   bcrypt: true
   better-sqlite3: true
-  cpu-features: true
+  cpu-features: false
   esbuild: true
   sharp: true
   ssh2: true
