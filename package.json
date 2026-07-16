@@ -6,7 +6,7 @@
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-"check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
+    "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
     "check:custom-widget-bundle": "node ./scripts/check-custom-widget-bundle.mjs",
     "ci:act:all": "bash scripts/ci/act.sh all",
     "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
