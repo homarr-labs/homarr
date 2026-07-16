@@ -187,7 +187,7 @@ jobs:
       - name: Run memory regression test
         env:
           CONTAINER_NAME: homarr-mem-${{ github.run_id }}-${{ github.run_attempt }}
-          SECRET_ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000000
+          SECRET_ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
         run: |
           docker run -d --name "$CONTAINER_NAME" -p 127.0.0.1::7575 \
             -e NO_EXTERNAL_CONNECTION=true \
