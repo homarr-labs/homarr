@@ -391,8 +391,8 @@ catalogs:
       specifier: ^3.10.1
       version: 3.10.1
     ldapts:
-      specifier: 8.1.8
-      version: 8.1.8
+      specifier: 9.0.0
+      version: 9.0.0
     lodash.clonedeep:
       specifier: ^4.5.0
       version: 4.5.0
@@ -1392,7 +1392,7 @@ importers:
         version: 0.9.1
       ldapts:
         specifier: 'catalog:'
-        version: 8.1.8
+        version: 9.0.0
       next:
         specifier: 'catalog:'
         version: 16.2.10(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
@@ -11361,9 +11361,9 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@8.1.8:
-    resolution: {integrity: sha512-Wpdvo+/0DREIynYf2he2efHtjptr5zD7dpesSkZWJqfQdMEgSTytEIsSZVuoDSiiE1+SpXf3emZ7ewxGBTo7Pw==}
-    engines: {node: '>=20'}
+  ldapts@9.0.0:
+    resolution: {integrity: sha512-OaaoYBSuan7g0Nm2e1wsRl+9xol41zY+pDlRRSsBq36iKCd2tG/K8WifevNRDjyEfhz4bvkxKdDvJ6xHXwj7+Q==}
+    engines: {node: '>=22'}
 
   leader-line-new@1.1.9:
     resolution: {integrity: sha512-x56aRYaqJTA4aAS2fgbSpvWKY3IxRXDSFeGkNBmCQ3LX44B3F1HEjcBTkCiK5I3W0nPWeUTWe7dTt59VtdfFWw==}
@@ -25428,7 +25428,7 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@8.1.8:
+  ldapts@9.0.0:
     dependencies:
       strict-event-emitter-types: 2.0.0
 

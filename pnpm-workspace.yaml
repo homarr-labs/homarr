@@ -137,7 +137,7 @@ catalog:
   jsdom: ^29.1.1
   json5: ^2.2.3
   jsonpath-plus: ^10.4.0
-  ldapts: 8.1.8
+  ldapts: 9.0.0
   lodash.clonedeep: ^4.5.0
   lucide-react: ^1.24.0
   "mantine-contextmenu": ^9.3.1
