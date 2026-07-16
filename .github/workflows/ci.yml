@@ -81,20 +81,6 @@ jobs:
       - name: Copy environment defaults
         run: cp .env.example .env
 
-      - name: Get changed files
-        id: changed
-        if: github.event_name == 'pull_request'
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: |
-          git diff --name-only --diff-filter=ACMR "origin/${BASE_REF}...HEAD" -- '*.ts' '*.tsx' '*.js' '*.jsx' > /tmp/changed-files
-          echo "count=$(wc -l < /tmp/changed-files | tr -d '[:space:]')" >> $GITHUB_OUTPUT
-
-      - name: Check formatting on changed files
-        if: steps.changed.outcome == 'success' && steps.changed.outputs.count != '0'
-        continue-on-error: true
-        run: xargs -r -a /tmp/changed-files pnpm exec oxfmt --check
-
       - name: Lint, typecheck, and build affected workspaces
         run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful
 

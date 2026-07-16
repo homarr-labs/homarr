@@ -17,6 +17,32 @@ import type { PlexResponse } from "./interface";
 
 const logger = createLogger({ module: "plexIntegration" });
 
+function parseOptionalNumber(value: string | undefined): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function parseLocation(value: string | undefined): "lan" | "wan" | null {
+  return value === "lan" || value === "wan" ? value : null;
+}
+
+function parsePlaybackState(value: string | undefined): "playing" | "paused" | "buffering" | null {
+  return value === "playing" || value === "paused" || value === "buffering" ? value : null;
+}
+
+function parseResolution(
+  width: string | undefined,
+  height: string | undefined,
+): { width: number; height: number } | null {
+  const parsedWidth = parseOptionalNumber(width);
+  const parsedHeight = parseOptionalNumber(height);
+  return parsedWidth !== null && parsedHeight !== null ? { width: parsedWidth, height: parsedHeight } : null;
+}
+
 export class PlexIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
@@ -43,10 +69,23 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         const userElement = mediaElement.User ? mediaElement.User[0] : undefined;
         const playerElement = mediaElement.Player ? mediaElement.Player[0] : undefined;
         const sessionElement = mediaElement.Session ? mediaElement.Session[0] : undefined;
+        const transcodeElement = mediaElement.TranscodeSession ? mediaElement.TranscodeSession[0] : undefined;
+        const mediaInfoElement = mediaElement.Media ? mediaElement.Media[0] : undefined;
 
         if (!playerElement) {
           return undefined;
         }
+
+        const positionMs = parseOptionalNumber(mediaElement.$.viewOffset);
+        const durationMs = parseOptionalNumber(mediaElement.$.duration);
+
+        const playbackState = parsePlaybackState(playerElement.$.state);
+
+        const location = parseLocation(sessionElement?.$.location);
+
+        const streams = mediaInfoElement?.Part?.[0]?.Stream ?? [];
+        const videoStream = streams.find((stream) => stream.$.streamType === "1");
+        const audioStream = streams.find((stream) => stream.$.streamType === "2");
 
         return {
           sessionId: sessionElement?.$.id ?? "unknown",
@@ -63,7 +102,30 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
             episodeName: mediaElement.$.title ?? null,
             albumName: mediaElement.$.type === "track" ? (mediaElement.$.parentTitle ?? null) : null,
             episodeCount: mediaElement.$.index ?? null,
-            metadata: null,
+            playback: {
+              state: playbackState,
+              positionMs,
+              durationMs,
+            },
+            location,
+            metadata: {
+              video: {
+                resolution: parseResolution(videoStream?.$.width, videoStream?.$.height),
+                frameRate: parseOptionalNumber(videoStream?.$.frameRate),
+              },
+              audio: {
+                channelCount: parseOptionalNumber(audioStream?.$.channels),
+                codec: audioStream?.$.codec ?? mediaInfoElement?.$.audioCodec ?? null,
+              },
+              transcoding: {
+                container: transcodeElement?.$.container ?? null,
+                resolution: parseResolution(transcodeElement?.$.width, transcodeElement?.$.height),
+                target: {
+                  audioCodec: transcodeElement?.$.audioCodec ?? null,
+                  videoCodec: transcodeElement?.$.videoCodec ?? null,
+                },
+              },
+            },
           },
         };
       })
