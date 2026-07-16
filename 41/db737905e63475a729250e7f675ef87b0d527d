@@ -1,0 +1,22 @@
+.github/workflows/ci.yml
+  s_909110c6d23990::t_a9135a37fedea3 105,189,202-221,227-240,242-243,245-249,251-257,259-262,264-293,295-301,303-305,307,310-313
+  s_909110c6d23990::t_cf40620a6bdecc 106,241,308-309
+  s_909110c6d23990::t_880d8943f9b20f 244,250,258,263,294,302,306
+  s_909110c6d23990::t_2644245be3a5de 314
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "41db737905e63475a729250e7f675ef87b0d527d",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
