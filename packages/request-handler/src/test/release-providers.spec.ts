@@ -246,7 +246,117 @@ describe("getLatestMatchingReleaseAsync for LinuxServer.io", () => {
     });
     expect(mockedFetch.mock.calls.length).toBeGreaterThan(1);
   });
+
+  test("delegates to GitHub so a version filter can surface an older release while keeping LSIO metadata", async () => {
+    mockLinuxServerIOResponses({
+      image: {
+        name: "radarr",
+        github_url: "https://github.com/linuxserver/docker-radarr",
+        description: "A LinuxServer.io image of Radarr",
+        version: "5.14.0",
+        version_timestamp: "2026-06-01T00:00:00.000Z",
+        initial_date: "2020-01-01T00:00:00.000Z",
+        stars: 300,
+        deprecated: false,
+      },
+      githubRepo: "linuxserver/docker-radarr",
+      githubReleases: [
+        { tag_name: "5.14.0", published_at: "2026-06-01T00:00:00.000Z" },
+        { tag_name: "5.13.0", published_at: "2026-05-01T00:00:00.000Z" },
+        { tag_name: "5.12.0", published_at: "2026-04-01T00:00:00.000Z" },
+      ],
+      // GitHub metadata is intentionally different so the assertions prove LSIO's own values win.
+      githubDetails: {
+        html_url: "https://github.com/linuxserver/docker-radarr",
+        description: "GitHub description that must be overridden by LSIO",
+        fork: false,
+        archived: true,
+        created_at: "2015-01-01T00:00:00.000Z",
+        stargazers_count: 999,
+        open_issues_count: 7,
+        forks_count: 42,
+      },
+    });
+
+    const result = await getLatestMatchingReleaseAsync({
+      id: "radarr",
+      provider: "linuxServerIO",
+      identifier: "lscr.io/linuxserver/radarr:latest",
+      // The latest LSIO version is 5.14.0; this filter can only match via GitHub's release history.
+      versionRegex: "^5\\.12\\.[0-9]+$",
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    // Version filtering picked the older release that LSIO's /api/v1/images alone could not expose.
+    expect(result.data.latestRelease).toBe("5.12.0");
+    expect(result.data.latestReleaseAt).toEqual(new Date("2026-04-01T00:00:00.000Z"));
+    // LSIO image metadata is preserved over GitHub's.
+    expect(result.data.projectUrl).toBe("https://github.com/linuxserver/docker-radarr");
+    expect(result.data.projectDescription).toBe("A LinuxServer.io image of Radarr");
+    expect(result.data.isArchived).toBe(false);
+    expect(result.data.starsCount).toBe(300);
+    expect(result.data.createdAt).toEqual(new Date("2020-01-01T00:00:00.000Z"));
+  });
 });
+
+interface MockLinuxServerIOResponsesInput {
+  image: {
+    name: string;
+    github_url: string;
+    description: string;
+    version: string;
+    version_timestamp: string;
+    initial_date?: string;
+    stars: number;
+    deprecated: boolean;
+  };
+  githubRepo: string;
+  githubReleases: { tag_name: string; published_at: string }[];
+  githubDetails: {
+    html_url: string;
+    description: string;
+    fork: boolean;
+    archived: boolean;
+    created_at: string;
+    stargazers_count: number;
+    open_issues_count: number;
+    forks_count: number;
+  };
+}
+
+const mockLinuxServerIOResponses = ({
+  image,
+  githubRepo,
+  githubReleases,
+  githubDetails,
+}: MockLinuxServerIOResponsesInput) => {
+  mockedFetch.mockImplementation(async (input) => {
+    const url = new URL(input.toString());
+    const path = url.pathname;
+
+    if (url.hostname === "api.linuxserver.io" && path === "/api/v1/images") {
+      return createJsonResponse({ data: { repositories: { linuxserver: [image] } } });
+    }
+
+    if (url.hostname === "api.github.com" && path === `/repos/${githubRepo}/releases`) {
+      return createJsonResponse(
+        githubReleases.map((release) => ({
+          ...release,
+          html_url: `https://github.com/${githubRepo}/releases/tag/${release.tag_name}`,
+          body: null,
+          prerelease: false,
+        })),
+      );
+    }
+
+    if (url.hostname === "api.github.com" && path === `/repos/${githubRepo}`) {
+      return createJsonResponse(githubDetails);
+    }
+
+    return createJsonResponse({ error: "not found" }, { status: 404, statusText: "Not Found" });
+  });
+};
 
 interface MockGhcrResponsesInput {
   registryOrigin?: string;
