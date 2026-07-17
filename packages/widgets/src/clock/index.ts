@@ -55,6 +55,20 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           defaultValue: "",
           withDescription: true,
         }),
+        showWeather: factory.switch({
+          defaultValue: false,
+          withDescription: true,
+        }),
+        weatherLocation: factory.location({
+          defaultValue: {
+            name: "Brisbane",
+            latitude: -27.4698,
+            longitude: 153.0251,
+          },
+        }),
+        isWeatherFormatFahrenheit: factory.switch({
+          defaultValue: false,
+        }),
       }),
       {
         customTitle: {
@@ -65,6 +79,12 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
         },
         dateFormat: {
           shouldHide: (options) => !options.showDate,
+        },
+        weatherLocation: {
+          shouldHide: (options) => !options.showWeather,
+        },
+        isWeatherFormatFahrenheit: {
+          shouldHide: (options) => !options.showWeather,
         },
       },
     );
