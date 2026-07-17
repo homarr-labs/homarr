@@ -62,4 +62,16 @@ describe("custom-widget display form contracts", () => {
       requests: [{ id: "status", kind: "query", method: "GET" }],
     });
   });
+
+  test("does not throw on invalid request manifest JSON while serializing v2 form state", () => {
+    const values = requiredFormValues("customJsx");
+    values.jsxApiVersion = "2";
+
+    for (const invalidManifest of ["[invalid", "{not an array}", "", '{"id":1}', "null"]) {
+      values.requestManifest = invalidManifest;
+      expect(() => buildDisplayConfigFromFormValues(values)).not.toThrow();
+      const config = buildDisplayConfigFromFormValues(values) as { requests?: unknown };
+      expect(config.requests).toEqual([]);
+    }
+  });
 });

@@ -129,7 +129,7 @@ function CustomApiWidgetInner({
   const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
     { itemId: itemId ?? "" },
     {
-      enabled: Boolean(itemId),
+      enabled: Boolean(itemId) && !isEditMode,
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
         if (
@@ -170,7 +170,18 @@ function CustomApiWidgetInner({
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+    if (isEditMode) {
+      return (
+        <Center h="100%">
+          <Text c="dimmed" size="sm" ta="center">
+            {t("editModePending")}
+          </Text>
+        </Center>
+      );
+    }
+    return null;
+  }
 
   const widgetData = data as Record<string, unknown>;
   const dataType = widgetData.type as string | undefined;
