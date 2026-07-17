@@ -803,6 +803,10 @@
     "editor": {
       "saveBlocked": "Resolve the editor errors before saving.",
       "saveReady": "The configuration is ready to save.",
+      "errorBoundary": {
+        "title": "Something went wrong",
+        "retry": "Try again"
+      },
       "language": {
         "jsx": "JSX",
         "json": "JSON"
@@ -4084,6 +4088,7 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "editModePending": "Save the board to load this widget.",
       "noDisplayOutput": "No display output",
       "openJson": "Open in browser JSON viewer",
       "execute": "Execute",
