@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Enable right-click on widgets",
+        "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
+      },
       "defaultSearchEngine": {
         "label": "Default search engine"
       },
@@ -5950,6 +5954,14 @@
                 "children": {
                   "detail": {
                     "title": "Use icons for pings"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "Enable right-click on widgets",
+                "children": {
+                  "detail": {
+                    "title": "Enable right-click on widgets"
                   }
                 }
               },

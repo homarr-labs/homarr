@@ -288,6 +288,13 @@
       "when": 1783176100870,
       "tag": "0040_add_widget_secret",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "6",
+      "when": 1783786658943,
+      "tag": "0041_add_right_click_preference",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,7 @@
 import {
   IconActivity,
   IconCalendarWeek,
+  IconClick,
   IconDeviceDesktop,
   IconExternalLink,
   IconHome,
@@ -46,6 +47,7 @@ export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
   homeBoardId: IconHome,
   mobileHomeBoardId: IconLayoutBoard,
   pingIconsEnabled: IconActivity,
+  enableRightClickOnWidgets: IconClick,
   fullPreferencesPage: IconSettings,
 };
 
