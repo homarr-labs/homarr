@@ -80,4 +80,71 @@ describe("Custom JSX custom widgets", () => {
       await mockApi.stop();
     }
   }, 120_000);
+
+  test("newly added custom widget does not show definition not found before reload", async () => {
+    const mockApi = await startMockApiContainerAsync({
+      title: "Board Widget",
+      status: "running",
+      value: 7,
+    });
+
+    const { db, localMountPath } = await createSqliteDbFileAsync();
+    await seedAdminUserAsync(db, adminCredentials);
+
+    const homarrContainer = await createHomarrContainer({
+      environment: {
+        AUTH_PROVIDERS: "credentials",
+      },
+      mounts: {
+        "/appdata": localMountPath,
+      },
+    }).start();
+
+    const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    try {
+      await page.goto(`${baseUrl}/auth/login`);
+      await page.getByLabel("Username").fill(adminCredentials.username);
+      await page.locator("#password").fill(adminCredentials.password);
+      await page.locator("css=button[type='submit']").click();
+      await page.waitForURL(baseUrl, { timeout: 15_000 });
+
+      await page.goto(`${baseUrl}/manage/custom-widgets/new`);
+      await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });
+      await page.getByRole("textbox", { name: "Name" }).fill("Board Widget");
+      await page.getByRole("textbox", { name: "URL", exact: true }).fill(`${mockApi.url}/status`);
+      await page.getByRole("button", { name: /Custom JSX/u }).click();
+      await page.getByRole("combobox", { name: "Network scope" }).click();
+      await page.getByRole("option", { name: "Private networks" }).click();
+      await page.getByLabel("JSX Template").fill(initialTemplate);
+      await page.getByRole("button", { name: "Create" }).first().click();
+      await expect(page.getByText(/created successfully/u)).toBeVisible({ timeout: 15_000 });
+
+      await page.goto(baseUrl);
+      await page.waitForLoadState("networkidle");
+
+      await page.getByRole("button", { name: /edit mode|Edit mode|pencil/iu }).first().click();
+
+      await page.getByRole("button", { name: /Add widget|Add item/iu }).first().click();
+      await page.getByRole("button", { name: /Custom API|Custom Widget/iu }).first().click();
+
+      const addDialog = page.getByRole("dialog").last();
+      await addDialog.getByText("Board Widget").first().click();
+
+      await expect(page.getByText("Widget definition not found")).not.toBeVisible({ timeout: 10_000 });
+
+      await page.getByRole("button", { name: /edit mode|Edit mode|pencil/iu }).first().click();
+      await page.waitForLoadState("networkidle");
+
+      await expect(page.getByText("Board Widget")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("Widget definition not found")).not.toBeVisible({ timeout: 10_000 });
+    } finally {
+      await browser.close();
+      await homarrContainer.stop();
+      await mockApi.stop();
+    }
+  }, 180_000);
 });
