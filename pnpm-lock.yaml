@@ -569,7 +569,7 @@ overrides:
   form-data@>=4.0.0 <4.0.4: '>=4.0.6'
   hono@<4.6.5: '>=4.12.28'
   linkifyjs@<4.3.2: '>=4.3.3'
-  nanoid@>=4.0.0 <5.0.9: '>=5.1.16'
+  nanoid@>=4.0.0 <5.0.9: '>=6.0.0'
   prismjs@<1.30.0: '>=1.30.0'
   proxmox-api>undici: 7.28.0
   react-is: ^19.2.7
@@ -12033,6 +12033,11 @@ packages:
   nanoid@5.1.16:
     resolution: {integrity: sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ==}
     engines: {node: ^18 || >=20}
+    hasBin: true
+
+  nanoid@6.0.0:
+    resolution: {integrity: sha512-mkUH+rPkwU2qPadJ0oJZOjeZ5Mxn8Q1UhevwkTRWNuUZzyia3h4rhzK39hxaHTk0o2OxB8W2SQ6A8k23ZDi1pQ==}
+    engines: {node: ^22 || ^24 || >=26}
     hasBin: true
 
   nanostores@1.3.0:
@@ -26387,6 +26392,8 @@ snapshots:
 
   nanoid@5.1.16: {}
 
+  nanoid@6.0.0: {}
+
   nanostores@1.3.0: {}
 
   napi-build-utils@1.0.2: {}
@@ -27729,7 +27736,7 @@ snapshots:
       aria-hidden: 1.2.6
       defu: 6.1.7
       fast-deep-equal: 3.1.3
-      nanoid: 5.1.16
+      nanoid: 6.0.0
       vue: 3.5.35(@typescript/typescript6@6.0.2)
     transitivePeerDependencies:
       - '@vue/composition-api'
