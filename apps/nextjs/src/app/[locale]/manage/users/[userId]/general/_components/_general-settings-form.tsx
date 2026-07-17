@@ -31,6 +31,7 @@ import {
   userChangeHomeBoardsSchema,
   userChangeSearchPreferencesSchema,
   userEditProfileSchema,
+  userEnableRightClickOnWidgetsSchema,
   userFirstDayOfWeekSchema,
   userPingIconsEnabledSchema,
 } from "@homarr/validation/user";
@@ -51,6 +52,7 @@ const userGeneralSettingsSchema = z.object({
   ddgBangsEnabled: userChangeSearchPreferencesSchema.shape.ddgBangsEnabled,
   firstDayOfWeek: userFirstDayOfWeekSchema.shape.firstDayOfWeek,
   pingIconsEnabled: userPingIconsEnabledSchema.shape.pingIconsEnabled,
+  enableRightClickOnWidgets: userEnableRightClickOnWidgetsSchema.shape.enableRightClickOnWidgets,
 });
 
 type FormValues = z.infer<typeof userGeneralSettingsSchema>;
@@ -78,6 +80,7 @@ const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues 
   ddgBangsEnabled: user.ddgBangs,
   firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
   pingIconsEnabled: user.pingIconsEnabled,
+  enableRightClickOnWidgets: user.enableRightClickOnWidgets,
 });
 
 export const UserGeneralSettingsForm = ({
@@ -95,6 +98,7 @@ export const UserGeneralSettingsForm = ({
   const changeSearchPreferencesMutation = clientApi.user.changeSearchPreferences.useMutation();
   const changeFirstDayOfWeekMutation = clientApi.user.changeFirstDayOfWeek.useMutation();
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
+  const changeEnableRightClickOnWidgetsMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation();
 
   const initialValues = buildInitialValues(user);
   const initialValuesRef = useRef(initialValues);
@@ -114,6 +118,7 @@ export const UserGeneralSettingsForm = ({
     changeSearchPreferencesMutation,
     changeFirstDayOfWeekMutation,
     changePingIconsEnabledMutation,
+    changeEnableRightClickOnWidgetsMutation,
   ];
   const isPending = mutations.some((m) => m.isPending);
 
@@ -168,6 +173,14 @@ export const UserGeneralSettingsForm = ({
         when: changed("pingIconsEnabled"),
         action: () =>
           changePingIconsEnabledMutation.mutateAsync({ id: user.id, pingIconsEnabled: parsed.data.pingIconsEnabled }),
+      },
+      {
+        when: changed("enableRightClickOnWidgets"),
+        action: () =>
+          changeEnableRightClickOnWidgetsMutation.mutateAsync({
+            id: user.id,
+            enableRightClickOnWidgets: parsed.data.enableRightClickOnWidgets,
+          }),
       },
     ];
 
@@ -304,6 +317,11 @@ export const UserGeneralSettingsForm = ({
               <Switch
                 label={t("user.field.pingIconsEnabled.label")}
                 {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })}
+              />
+              <Switch
+                label={t("user.field.enableRightClickOnWidgets.label")}
+                description={t("user.field.enableRightClickOnWidgets.description")}
+                {...form.getInputProps("enableRightClickOnWidgets", { type: "checkbox" })}
               />
             </Stack>
           </Card>
