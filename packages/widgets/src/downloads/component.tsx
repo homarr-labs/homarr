@@ -291,6 +291,10 @@ export default function DownloadClientsWidget({
         accessorKey: key,
         header: key,
         size: columnsRatios[key],
+        // Also pin minSize to the ratio: mantine-react-table clamps size up to the
+        // default minSize (40px), which flattens every column to equal width and
+        // nullifies columnsRatios (e.g. the wide "name" column). See #4157.
+        minSize: columnsRatios[key],
         Header: () =>
           showHeader ? (
             <Text fz="xs" fw={700}>
