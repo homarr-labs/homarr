@@ -1,0 +1,340 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: ["*"]
+  pull_request_target:
+    types: [closed]
+    branches: ["*"]
+  push:
+    branches: [main, dev, beta, next]
+  merge_group:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Operation to run
+        required: true
+        default: validate
+        type: choice
+        options:
+          - validate
+          - publish
+          - cleanup
+      pr_number:
+        description: PR number for publish or cleanup
+        required: false
+        type: number
+      ref:
+        description: Git ref to validate or publish
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  FORCE_COLOR: 3
+  SKIP_ENV_VALIDATION: true
+  TURBO_TELEMETRY_DISABLED: 1
+  REGISTRY: ghcr.io
+  PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
+
+jobs:
+  fast-gate:
+    name: Fast gate
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TURBO_API: ${{ secrets.TURBO_API }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
+      TURBO_SCM_HEAD: ${{ github.sha }}
+      TURBO_PLATFORM: linux/amd64
+    steps:
+      - uses: actions/checkout@v7
+        if: '!env.ACT'
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Validate manual inputs
+        if: github.event_name == 'workflow_dispatch' && inputs.operation == 'publish'
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          BUILD_REF: ${{ inputs.ref }}
+        run: |
+          test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
+          test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy environment defaults
+        run: cp .env.example .env
+
+      - name: Lint, typecheck, and build affected workspaces
+        run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful
+
+      - name: Validate workspace configuration
+        run: pnpm lint:ws
+
+      - name: Run unit tests
+        run: pnpm test
+
+  container:
+    name: Container, E2E, and memory
+    needs: fast-gate
+    if: |
+      github.event_name == 'merge_group' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
+      (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+        if: '!env.ACT'
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Set up Docker Buildx
+        if: '!env.ACT'
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build container once
+        if: '!env.ACT'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          network: host
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: |
+            homarr-ci
+            homarr-e2e
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
+          cache-from: type=gha,scope=homarr-linux-amd64
+          cache-to: type=gha,scope=homarr-linux-amd64,mode=max
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+
+      - name: Build container once with Act
+        if: env.ACT
+        env:
+          TURBO_API: ${{ secrets.TURBO_API }}
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        run: |
+          secret_args=()
+          for secret in TURBO_API TURBO_TEAM TURBO_TOKEN TURBO_REMOTE_CACHE_SIGNATURE_KEY; do
+            if [ -n "${!secret:-}" ]; then
+              secret_args+=(--secret "id=${secret},env=${secret}")
+            fi
+          done
+          DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
+            --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
+
+      - name: Cache Playwright browsers
+        if: '!env.ACT'
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload E2E artifacts
+        if: failure() && !env.ACT
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 7
+
+      - name: Run memory regression test
+        env:
+          CONTAINER_NAME: homarr-mem-${{ github.run_id }}-${{ github.run_attempt }}
+          SECRET_ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000000
+        run: |
+          docker run -d --name "$CONTAINER_NAME" -p 127.0.0.1::7575 \
+            -e NO_EXTERNAL_CONNECTION=true \
+            -e SECRET_ENCRYPTION_KEY="$SECRET_ENCRYPTION_KEY" \
+            homarr-ci
+          PORT=$(docker port "$CONTAINER_NAME" 7575/tcp | sed 's/.*://')
+          [[ "$PORT" =~ ^[0-9]+$ ]] || { echo "ERROR: invalid port mapping: '$PORT'"; exit 1; }
+          URL="http://127.0.0.1:${PORT}"
+
+          healthy=false
+          for i in $(seq 1 30); do
+            if curl -sf "$URL/api/health/ready" >/dev/null 2>&1; then
+              echo "Container healthy after $((i * 2))s"
+              healthy=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$healthy" != "true" ]; then
+            echo "ERROR: Container never became healthy"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          fi
+
+          warmup_ok=0
+          for _ in $(seq 1 5); do
+            curl -sf "$URL/" >/dev/null 2>&1 && warmup_ok=$((warmup_ok + 1))
+            sleep 2
+          done
+          if [ "$warmup_ok" -eq 0 ]; then
+            echo "ERROR: All warmup requests failed"
+            docker logs "$CONTAINER_NAME" --tail 50
+            exit 1
+          fi
+
+          docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" | grep -qx true || {
+            echo "ERROR: Container died before memory measurement"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          }
+
+          RAW_MEMORY=$(docker stats --no-stream --format '{{.MemUsage}}' "$CONTAINER_NAME" | sed 's| /.*||')
+          MEMORY_MB=$(echo "$RAW_MEMORY" | awk '
+            /GiB/ { gsub(/GiB/, ""); print $1 * 1024; next }
+            /MiB/ { gsub(/MiB/, ""); print $1; next }
+            /KiB/ { gsub(/KiB/, ""); print $1 / 1024; next }
+            { print $1 / 1048576 }
+          ')
+
+          echo "Memory usage: ${MEMORY_MB} MB (${RAW_MEMORY})"
+          [[ "$MEMORY_MB" =~ ^[0-9]+(\.[0-9]+)?$ ]] || {
+            echo "ERROR: non-numeric memory value: '$MEMORY_MB' (raw: '$RAW_MEMORY')"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          }
+          if awk "BEGIN { exit !($MEMORY_MB < 50) }"; then
+            echo "ERROR: Memory suspiciously low (${MEMORY_MB} MB) — container may have crashed"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          elif awk "BEGIN { exit !($MEMORY_MB > 700) }"; then
+            echo "ERROR: Memory usage ${MEMORY_MB} MB exceeds 700 MB"
+            docker logs "$CONTAINER_NAME" --tail 100
+            exit 1
+          fi
+
+      - name: Clean up memory test container
+        if: always()
+        env:
+          CONTAINER_NAME: homarr-mem-${{ github.run_id }}-${{ github.run_attempt }}
+        run: docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+
+      - name: Determine preview tag
+        id: preview
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: echo "tag=pr-${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        if: steps.preview.outputs.tag != ''
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push preview image
+        if: steps.preview.outputs.tag != ''
+        env:
+          PREVIEW_TAG: ${{ steps.preview.outputs.tag }}
+        run: |
+          docker tag homarr-ci "${PREVIEW_IMAGE}:${PREVIEW_TAG}"
+          docker push "${PREVIEW_IMAGE}:${PREVIEW_TAG}"
+
+      - name: Show Act publication result
+        if: env.ACT
+        run: echo "Act validated the publication path; external GHCR writes are disabled locally."
+
+  cleanup:
+    name: Clean up preview image
+    if: github.event_name == 'pull_request_target' || (github.event_name == 'workflow_dispatch' && inputs.operation == 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      packages: write
+    env:
+      IMAGE_TAG: pr-${{ github.event.pull_request.number || inputs.pr_number }}
+    steps:
+      - name: Validate cleanup input
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: test -n "$PR_NUMBER" || { echo "pr_number is required for cleanup"; exit 1; }
+
+      - name: Delete GHCR package version
+        if: '!env.ACT'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const packageName = "homarr-test";
+            const org = context.repo.owner;
+            const tag = process.env.IMAGE_TAG;
+            const versions = await github.paginate(
+              github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
+              { package_type: "container", package_name: packageName, org, per_page: 100 },
+            );
+            const target = versions.find((version) =>
+              version.metadata?.container?.tags?.includes(tag),
+            );
+            if (!target) {
+              core.info(`No package version found with tag "${tag}"`);
+              return;
+            }
+            await github.rest.packages.deletePackageVersionForOrg({
+              package_type: "container",
+              package_name: packageName,
+              org,
+              package_version_id: target.id,
+            });
+            core.info(`Deleted package version ${target.id} (${tag})`);
+
+      - name: Show Act cleanup result
+        if: env.ACT
+        run: echo "Act validated cleanup for ${IMAGE_TAG}; external GHCR writes are disabled locally."

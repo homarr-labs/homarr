@@ -29,14 +29,22 @@ export const formatStorageBytes = (bytes: number): string => formatScaled(bytes,
 
 export const formatGB = (value: number): string => {
   if (!value || !Number.isFinite(value)) return "0 GB";
+  if (Math.abs(value) >= 1024) return `${(value / 1024).toFixed(2)} TB`;
   return `${value.toFixed(2)} GB`;
 };
 
 export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
+export const getProgressTrackSize = (size: "xs" | "sm"): number => (size === "xs" ? 6 : 9);
+
 export const chartAxisFormatters = {
   percent: formatPercent,
-  gb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}G`),
+  gb: (value: number) => {
+    const numericValue = Number(value);
+    if (!numericValue) return "0";
+    if (Math.abs(numericValue) >= 1024) return `${(numericValue / 1024).toFixed(1)}T`;
+    return `${numericValue.toFixed(0)}G`;
+  },
   mb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}M`),
   bytes: (value: number) => formatScaledCompact(Number(value), byteUnits, "0"),
   rate: (value: number) => formatScaledCompact(Number(value), rateUnits, "0"),

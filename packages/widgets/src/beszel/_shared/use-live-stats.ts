@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { skipToken } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-// 120 records at ~1 per second = 2 minutes of rolling data for charts
-const MAX_BUFFER = 120;
+// Beszel emits roughly one record per second. Keep a sliding one-minute window
+// without synthesizing points for missed updates.
+const MAX_BUFFER = 60;
 
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
   const [systemStats, setSystemStats] = useState<BeszelSystemStatsRecord[]>([]);
@@ -29,9 +31,8 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
   }, []);
 
   clientApi.widget.beszel.subscribeSystemStats.useSubscription(
-    { integrationIds, systemId },
+    enabled && systemId !== "" ? { integrationIds, systemId } : skipToken,
     {
-      enabled: enabled && systemId !== "",
       onData(event) {
         setError(null);
         if (event.type === "system_stats") {
@@ -48,7 +49,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
 
   // Reset buffers when system changes or integration changes
   const prevKeyRef = useRef<string>("");
-  const currentKey = `${integrationIds.join(",")}:${systemId}`;
+  const currentKey = `${integrationIds.join(",")}:${systemId}:${enabled}`;
   useEffect(() => {
     if (prevKeyRef.current !== currentKey) {
       prevKeyRef.current = currentKey;

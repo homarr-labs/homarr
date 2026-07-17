@@ -207,6 +207,13 @@ export const beszelRouter = createTRPCRouter({
       return observable<LiveStatsEvent>((emit) => {
         const controller = new AbortController();
         let isActive = true;
+        let emittedEventCount = 0;
+
+        logger.debug("Beszel realtime subscription started", {
+          userId: ctx.session?.user?.id,
+          integrationIds: ctx.integrations.map((integration) => integration.id),
+          systemId: input.systemId,
+        });
 
         void (async () => {
           const integration = ctx.integrations[0];
@@ -223,7 +230,19 @@ export const beszelRouter = createTRPCRouter({
               await instance.subscribeRealtimeMetrics(
                 input.systemId,
                 (event) => {
-                  if (isActive) emit.next(event);
+                  if (!isActive) return;
+                  emittedEventCount += 1;
+                  if (emittedEventCount <= 2 || emittedEventCount % 60 === 0) {
+                    logger.debug("Forwarding Beszel realtime events", {
+                      userId: ctx.session?.user?.id,
+                      integrationId: integration.id,
+                      systemId: input.systemId,
+                      eventType: event.type,
+                      emittedEventCount,
+                      statsCount: Array.isArray(event.record.stats) ? event.record.stats.length : undefined,
+                    });
+                  }
+                  emit.next(event);
                 },
                 controller.signal,
               );
@@ -237,6 +256,13 @@ export const beszelRouter = createTRPCRouter({
             }
           } catch (error) {
             if (isActive) {
+              logger.warn("Beszel realtime subscription failed", {
+                userId: ctx.session?.user?.id,
+                integrationId: integration.id,
+                systemId: input.systemId,
+                emittedEventCount,
+                error: errorMessage(error),
+              });
               emit.error(
                 error instanceof TRPCError
                   ? error
@@ -249,12 +275,24 @@ export const beszelRouter = createTRPCRouter({
           }
 
           if (isActive) {
+            logger.debug("Beszel realtime subscription completed", {
+              userId: ctx.session?.user?.id,
+              integrationId: integration.id,
+              systemId: input.systemId,
+              emittedEventCount,
+            });
             emit.complete();
           }
         })();
 
         return () => {
           isActive = false;
+          logger.debug("Beszel realtime subscription cancelled", {
+            userId: ctx.session?.user?.id,
+            integrationIds: ctx.integrations.map((integration) => integration.id),
+            systemId: input.systemId,
+            emittedEventCount,
+          });
           controller.abort();
         };
       });

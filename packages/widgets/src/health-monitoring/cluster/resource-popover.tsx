@@ -16,7 +16,7 @@ import {
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import { capitalize, humanFileSize } from "@homarr/common";
+import { capitalize, formatBytes, formatBytesPair } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -93,16 +93,18 @@ const RightSection = ({ label, value }: RightSectionProps) => {
 
 const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
   const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
+  const memory = formatBytesPair(item.memory.used, item.memory.total);
+  const storage = formatBytesPair(item.storage.used, item.storage.total);
   return (
     <List>
       <List.Item icon={<IconCpu size={16} />}>
         {t("cpu")} - {item.cpu.cores}
       </List.Item>
       <List.Item icon={<IconBrain size={16} />}>
-        {t("memory")} - {humanFileSize(item.memory.used)} / {humanFileSize(item.memory.total)}
+        {t("memory")} - {memory.used} / {memory.available}
       </List.Item>
       <List.Item icon={<IconDatabase size={16} />}>
-        {t("storage")} - {humanFileSize(item.storage.used)} / {humanFileSize(item.storage.total)}
+        {t("storage")} - {storage.used} / {storage.available}
       </List.Item>
       <List.Item icon={<IconClockHour3 size={16} />}>
         {t("uptime")} - {dayjs(dayjs().add(-item.uptime, "seconds")).fromNow(true)}
@@ -121,6 +123,7 @@ const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
 const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
   const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
   const storagePercent = item.total ? (item.used / item.total) * 100 : 0;
+  const storage = formatBytesPair(item.used, item.total);
   return (
     <Stack gap={0}>
       <Center>
@@ -133,7 +136,7 @@ const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
         />
         <Group align="center" gap={0}>
           <Text>
-            {t("storage")} - {humanFileSize(item.used)} / {humanFileSize(item.total)}
+            {t("storage")} - {storage.used} / {storage.available}
           </Text>
         </Group>
       </Center>
@@ -152,11 +155,11 @@ const DiskStats = ({ item }: { item: ComputeResource }) => {
     <List.Item icon={<IconDatabase size={16} />}>
       <Group gap="sm">
         <Group gap={0}>
-          <Text>{humanFileSize(item.storage.write)}</Text>
+          <Text>{formatBytes(item.storage.write)}</Text>
           <IconArrowNarrowDown size={14} />
         </Group>
         <Group gap={0}>
-          <Text>{humanFileSize(item.storage.read)}</Text>
+          <Text>{formatBytes(item.storage.read)}</Text>
           <IconArrowNarrowUp size={14} />
         </Group>
       </Group>
@@ -172,11 +175,11 @@ const NetStats = ({ item }: { item: ComputeResource }) => {
     <List.Item icon={<IconNetwork size={16} />}>
       <Group gap="sm">
         <Group gap={0}>
-          <Text>{humanFileSize(item.network.in)}</Text>
+          <Text>{formatBytes(item.network.in)}</Text>
           <IconArrowNarrowDown size={14} />
         </Group>
         <Group gap={0}>
-          <Text>{humanFileSize(item.network.out)}</Text>
+          <Text>{formatBytes(item.network.out)}</Text>
           <IconArrowNarrowUp size={14} />
         </Group>
       </Group>

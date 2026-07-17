@@ -134,7 +134,33 @@ const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
     baseUrl,
     auth: token,
     request: { fetch: fetchWithTrustedCertificatesAsync },
-    throttle: { enabled: true },
+    throttle: {
+      enabled: true,
+      onRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
+        logger.warn(`GitHub rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
+          url: options.url,
+          method: options.method,
+        });
+        return retryCount < 1;
+      },
+      onSecondaryRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
+        logger.warn(`GitHub secondary rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
+          url: options.url,
+          method: options.method,
+        });
+        return retryCount < 1;
+      },
+    },
     userAgent,
   });
 
@@ -719,6 +745,19 @@ const linuxServerIOReleasesSchema = z.object({
   }),
 });
 
+// Parse a github.com project URL (as returned by the LSIO registry) into an
+// "owner/repo" identifier, or null if it is not a github.com repository URL.
+const parseGithubRepo = (url: string): string | null => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== "github.com") return null;
+    const [owner, repo] = parsed.pathname.replace(/^\/+/, "").split("/");
+    return owner && repo ? `${owner}/${repo}` : null;
+  } catch {
+    return null;
+  }
+};
+
 const getLinuxServerIOReleaseAsync = async (
   baseUrl: string,
   identifier: string,
@@ -747,6 +786,29 @@ const getLinuxServerIOReleaseAsync = async (
       success: false,
       error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` },
     };
+
+  // LSIO's /api/v1/images only exposes the single latest version, so a version
+  // filter can never surface an older release (#4351). When the image has a GitHub
+  // repository, delegate to the GitHub release provider to fetch the real release
+  // history and apply the filter, while keeping LSIO's own image metadata. Any
+  // GitHub failure (no repo, no releases, rate limit) falls back to the LSIO latest.
+  const githubRepo = parseGithubRepo(release.github_url);
+  if (githubRepo) {
+    const githubResult = await getGithubReleaseAsync(getReleaseProviderDefaultUrl("github"), githubRepo, versionRegex);
+    if (githubResult.success) {
+      return {
+        success: true,
+        data: {
+          ...githubResult.data,
+          projectUrl: release.github_url,
+          projectDescription: release.description,
+          isArchived: release.deprecated,
+          starsCount: release.stars,
+          createdAt: release.initial_date ?? githubResult.data.createdAt,
+        },
+      };
+    }
+  }
 
   const regex = compileVersionRegex(versionRegex);
   if (versionRegex && !regex) {

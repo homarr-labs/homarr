@@ -1,7 +1,7 @@
 import { Paper, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
-import { humanFileSize } from "@homarr/common";
+import { formatByteRate } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
@@ -32,7 +32,7 @@ export const NetworkTrafficChart = ({
       title={isUp ? t("up") : t("down")}
       icon={isUp ? IconArrowUp : IconArrowDown}
       yAxisProps={{ domain: [0, upperBound] }}
-      lastValue={`${humanFileSize(Math.round(max))}/s`}
+      lastValue={formatByteRate(Math.round(max))}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{
@@ -41,7 +41,7 @@ export const NetworkTrafficChart = ({
           return (
             <Paper px={3} py={2} shadow="md">
               <Text c="dimmed" size="xs">
-                {humanFileSize(Math.round(value))}/s
+                {formatByteRate(Math.round(value))}
               </Text>
             </Paper>
           );

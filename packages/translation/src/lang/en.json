@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Enable right-click on widgets",
+        "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
+      },
       "defaultSearchEngine": {
         "label": "Default search engine"
       },
@@ -1622,6 +1626,12 @@
         "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
+      },
+      "status": {
+        "success": "OK",
+        "error": "Error",
+        "loading": "Loading",
+        "idle": "Idle"
       }
     },
     "create": {
@@ -1956,6 +1966,8 @@
         "clear": "Clear formatting",
         "heading": "Heading {level}",
         "align": "Align text: {position}",
+        "directionLtr": "Set text direction left to right",
+        "directionRtl": "Set text direction right to left",
         "blockquote": "Blockquote",
         "horizontalLine": "Horizontal line",
         "bulletList": "Bullet list",
@@ -2709,6 +2721,11 @@
         "user": "User",
         "name": "Name",
         "id": "Id",
+        "status": "Status",
+        "directPlay": "Direct play",
+        "transcoding": "Transcoding",
+        "paused": "Paused",
+        "remaining": "{minutes} min left",
         "metadata": {
           "title": "Stats for nerds",
           "video": {
@@ -3193,6 +3210,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Open links in new tab"
+        },
+        "statusFilter": {
+          "label": "Statuses to show"
+        },
+        "recentDays": {
+          "label": "Show only recent requests"
         }
       },
       "pending": {
@@ -4031,9 +4054,6 @@
         },
         "showDockerNetwork": {
           "label": "Show Docker network chart"
-        },
-        "showStorage": {
-          "label": "Show storage chart"
         }
       },
       "selectSystem": "Select system",
@@ -4060,8 +4080,8 @@
         },
         "disk": {
           "title": "Disk Usage",
-          "subtitle": "Usage of root partition",
-          "series": "Used"
+          "subtitle": "Usage by filesystem",
+          "series": "Root"
         },
         "diskIO": {
           "title": "Disk I/O",
@@ -5206,6 +5226,9 @@
     "title": "Containers",
     "table": {
       "updated": "Updated {when}",
+      "refresh": {
+        "lastUpdated": "Last refresh {when}"
+      },
       "search": "Seach {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
       "footer": "Total {count} containers",
@@ -5931,6 +5954,14 @@
                 "children": {
                   "detail": {
                     "title": "Use icons for pings"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "Enable right-click on widgets",
+                "children": {
+                  "detail": {
+                    "title": "Enable right-click on widgets"
                   }
                 }
               },

@@ -57,6 +57,13 @@ export const userPreferenceDefinitions = [
     aliases: ["ping", "icon", "status"],
   },
   {
+    key: "enableRightClickOnWidgets",
+    kind: "boolean",
+    guest: false,
+    mutationGroup: "enableRightClickOnWidgets",
+    aliases: ["right click", "context menu", "tile", "widget menu"],
+  },
+  {
     key: "fullPreferencesPage",
     kind: "link",
     guest: false,

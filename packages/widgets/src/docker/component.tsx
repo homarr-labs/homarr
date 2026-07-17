@@ -3,13 +3,13 @@
 import { useMemo } from "react";
 import { ActionIcon, Avatar, Badge, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
-import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
+import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise } from "@tabler/icons-react";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { humanFileSize, useTimeAgo } from "@homarr/common";
+import { formatBytes, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -110,7 +110,7 @@ const createColumns = (
 
       return (
         <Text size="xs" c={memoryUsageColor(bytesUsage, row.original.state)}>
-          {humanFileSize(bytesUsage)}
+          {formatBytes(bytesUsage)}
         </Text>
       );
     },
@@ -184,9 +184,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
 
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
-    refetchInterval: 30_000,
-  });
+  const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
   const containers = data?.containers ?? [];
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -297,12 +295,21 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
             </Text>
 
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalMemory", { memory: humanFileSize(totals.memory) })}
+              {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
             </Text>
 
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.updated", { when: relativeTime })}
-            </Text>
+            <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
+              <ActionIcon
+                size="sm"
+                variant="transparent"
+                c="var(--mantine-color-text)"
+                loading={isFetching}
+                onClick={() => void refetch()}
+                aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
+              >
+                <IconRefresh style={actionIconIconStyle} />
+              </ActionIcon>
+            </Tooltip>
           </Group>
         </Group>
       )}

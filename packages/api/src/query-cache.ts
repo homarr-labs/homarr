@@ -16,7 +16,7 @@ export const setActiveQueryCacheBoardId = (boardId: string | null) => {
 export const getActiveQueryCacheBoardId = () => activeQueryCacheBoardId;
 
 const persistableQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const excludedWidgetPaths = new Set(["widget.app.ping"]);
+const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
 
 const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
   const first = queryKey[0];

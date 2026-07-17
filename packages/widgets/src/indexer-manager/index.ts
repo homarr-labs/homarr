@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
+  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       openIndexerSiteInNewTab: factory.switch({
