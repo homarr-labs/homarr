@@ -126,17 +126,29 @@ describe("Custom JSX custom widgets", () => {
       await page.goto(baseUrl);
       await page.waitForLoadState("networkidle");
 
-      await page.getByRole("button", { name: /edit mode|Edit mode|pencil/iu }).first().click();
+      await page
+        .getByRole("button", { name: /edit mode|Edit mode|pencil/iu })
+        .first()
+        .click();
 
-      await page.getByRole("button", { name: /Add widget|Add item/iu }).first().click();
-      await page.getByRole("button", { name: /Custom API|Custom Widget/iu }).first().click();
+      await page
+        .getByRole("button", { name: /Add widget|Add item/iu })
+        .first()
+        .click();
+      await page
+        .getByRole("button", { name: /Custom API|Custom Widget/iu })
+        .first()
+        .click();
 
       const addDialog = page.getByRole("dialog").last();
       await addDialog.getByText("Board Widget").first().click();
 
       await expect(page.getByText("Widget definition not found")).not.toBeVisible({ timeout: 10_000 });
 
-      await page.getByRole("button", { name: /edit mode|Edit mode|pencil/iu }).first().click();
+      await page
+        .getByRole("button", { name: /edit mode|Edit mode|pencil/iu })
+        .first()
+        .click();
       await page.waitForLoadState("networkidle");
 
       await expect(page.getByText("Board Widget")).toBeVisible({ timeout: 15_000 });
