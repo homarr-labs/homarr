@@ -9,6 +9,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { CustomWidgetBetaBanner } from "../../_beta-banner";
 import { CustomWidgetForm } from "../../_custom-widget-form";
+import { FormErrorBoundary } from "../../_form-error-boundary";
 
 const authTypeExpectedSecrets: Record<string, string[]> = {
   bearer: ["apiKey"],
@@ -52,22 +53,24 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
         <Stack>
           <Title>{definition.name}</Title>
           <CustomWidgetBetaBanner />
-          <CustomWidgetForm
-            mode="edit"
-            definitionId={params.id}
-            initialValues={{
-              name: definition.name,
-              description: definition.description ?? "",
-              iconUrl: definition.iconUrl ?? "",
-              url: definition.url,
-              authType: definition.authType,
-              headerName: definition.headerName ?? "",
-              method: definition.method,
-              requestBody: definition.requestBody ?? "",
-              ...displayValues,
-              secrets: buildInitialSecrets(definition.authType, definition.secrets),
-            }}
-          />
+          <FormErrorBoundary>
+            <CustomWidgetForm
+              mode="edit"
+              definitionId={params.id}
+              initialValues={{
+                name: definition.name,
+                description: definition.description ?? "",
+                iconUrl: definition.iconUrl ?? "",
+                url: definition.url,
+                authType: definition.authType,
+                headerName: definition.headerName ?? "",
+                method: definition.method,
+                requestBody: definition.requestBody ?? "",
+                ...displayValues,
+                secrets: buildInitialSecrets(definition.authType, definition.secrets),
+              }}
+            />
+          </FormErrorBoundary>
         </Stack>
       </Container>
     </>

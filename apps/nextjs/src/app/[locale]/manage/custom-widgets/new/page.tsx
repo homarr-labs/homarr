@@ -7,6 +7,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CustomWidgetBetaBanner } from "../_beta-banner";
 import { CustomWidgetForm } from "../_custom-widget-form";
+import { FormErrorBoundary } from "../_form-error-boundary";
 
 export default async function NewCustomWidgetPage() {
   const session = await auth();
@@ -28,7 +29,9 @@ export default async function NewCustomWidgetPage() {
             </Text>
           </div>
           <CustomWidgetBetaBanner />
-          <CustomWidgetForm mode="create" />
+          <FormErrorBoundary>
+            <CustomWidgetForm mode="create" />
+          </FormErrorBoundary>
         </Stack>
       </Container>
     </>

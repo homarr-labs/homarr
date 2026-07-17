@@ -253,6 +253,12 @@ export function buildDisplayConfigFromFormValues(values: CustomWidgetDisplayForm
 }
 
 function parseRequestManifest(value: string) {
-  const parsed: unknown = JSON.parse(value);
-  return customJsxRequestSchema.array().parse(parsed);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(value);
+  } catch {
+    return [];
+  }
+  const result = customJsxRequestSchema.array().safeParse(parsed);
+  return result.success ? result.data : [];
 }
