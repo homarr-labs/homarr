@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { asc, eq, like } from "@homarr/db";
+import { and, asc, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
@@ -130,9 +130,15 @@ export const searchEngineRouter = createTRPCRouter({
 
     return null;
   }),
-  search: protectedProcedure.input(searchSchema).query(async ({ ctx, input }) => {
+  search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
-      where: like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
+      // Public dashboards have no session: restrict anonymous users to generic
+      // (non-integration) engines so custom search engines work there too (#4132),
+      // while integration-backed engines stay available only when signed in.
+      where: and(
+        like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
+        ctx.session?.user ? undefined : eq(searchEngines.type, "generic"),
+      ),
       with: {
         integration: {
           columns: {
