@@ -50,7 +50,7 @@ describe("Custom JSX custom widgets", () => {
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
       await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });
-      await page.getByRole("textbox", { name: "Name" }).fill("E2E Custom JSX");
+      await page.getByLabel("Name *").fill("E2E Custom JSX");
       await page.getByRole("textbox", { name: "URL", exact: true }).fill(`${mockApi.url}/status`);
       await page.getByRole("button", { name: /Custom JSX/u }).click();
       await page.getByRole("combobox", { name: "Network scope" }).click();
@@ -114,7 +114,7 @@ describe("Custom JSX custom widgets", () => {
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
       await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });
-      await page.getByRole("textbox", { name: "Name" }).fill("Board Widget");
+      await page.getByLabel("Name *").fill("Board Widget");
       await page.getByRole("textbox", { name: "URL", exact: true }).fill(`${mockApi.url}/status`);
       await page.getByRole("button", { name: /Custom JSX/u }).click();
       await page.getByRole("combobox", { name: "Network scope" }).click();
