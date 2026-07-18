@@ -1,0 +1,20 @@
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_b5e2e7a656a5f4::t_3e3b25b95d874d 53
+  s_b5e2e7a656a5f4::t_bbc8afb9da016e 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b3e072ff4f02e59597cb20155f28ab3c59c94d9d",
+  "prompts": {},
+  "sessions": {
+    "s_b5e2e7a656a5f4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_089e633abffeYxLFh0tEpVPRNK",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
