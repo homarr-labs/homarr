@@ -6,13 +6,12 @@ ENV COREPACK_HOME=/corepack
 RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm@11.11.0
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
-RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm fetch --ignore-scripts
 COPY apps/docs ./apps/docs
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
-RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm install --recursive --offline --frozen-lockfile
+RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
 
 FROM dependencies AS website
 RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs

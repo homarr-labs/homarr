@@ -6862,16 +6862,8 @@
     "width",
     "wrapperProps"
   ],
-  "Chip.Group": [
-    "defaultValue",
-    "multiple",
-    "value"
-  ],
-  "ChipGroup": [
-    "defaultValue",
-    "multiple",
-    "value"
-  ],
+  "Chip.Group": ["defaultValue", "multiple", "value"],
+  "ChipGroup": ["defaultValue", "multiple", "value"],
   "CloseButton": [
     "attributes",
     "bd",
@@ -8171,10 +8163,7 @@
     "vocab",
     "w"
   ],
-  "CopyButton": [
-    "timeout",
-    "value"
-  ],
+  "CopyButton": ["timeout", "value"],
   "DataList": [
     "about",
     "accessKey",
@@ -12187,10 +12176,7 @@
     "withOverlay",
     "withRoles"
   ],
-  "HoverCard.Target": [
-    "eventPropsWrapperName",
-    "popupType"
-  ],
+  "HoverCard.Target": ["eventPropsWrapperName", "popupType"],
   "HoverCard.Dropdown": [
     "about",
     "accessKey",
@@ -12346,10 +12332,7 @@
     "vocab",
     "w"
   ],
-  "HoverCard.Group": [
-    "closeDelay",
-    "openDelay"
-  ],
+  "HoverCard.Group": ["closeDelay", "openDelay"],
   "HoverCardDropdown": [
     "about",
     "accessKey",
@@ -12505,14 +12488,8 @@
     "vocab",
     "w"
   ],
-  "HoverCardGroup": [
-    "closeDelay",
-    "openDelay"
-  ],
-  "HoverCardTarget": [
-    "eventPropsWrapperName",
-    "popupType"
-  ],
+  "HoverCardGroup": ["closeDelay", "openDelay"],
+  "HoverCardTarget": ["eventPropsWrapperName", "popupType"],
   "HueSlider": [
     "about",
     "accessKey",
@@ -15762,10 +15739,7 @@
     "vocab",
     "w"
   ],
-  "Menu.CheckboxGroup": [
-    "defaultValue",
-    "value"
-  ],
+  "Menu.CheckboxGroup": ["defaultValue", "value"],
   "Menu.RadioItem": [
     "about",
     "accessKey",
@@ -15930,18 +15904,9 @@
     "vocab",
     "w"
   ],
-  "Menu.RadioGroup": [
-    "defaultValue",
-    "value"
-  ],
-  "Menu.ContextMenu": [
-    "disabled",
-    "longPressDelay"
-  ],
-  "MenuCheckboxGroup": [
-    "defaultValue",
-    "value"
-  ],
+  "Menu.RadioGroup": ["defaultValue", "value"],
+  "Menu.ContextMenu": ["disabled", "longPressDelay"],
+  "MenuCheckboxGroup": ["defaultValue", "value"],
   "MenuCheckboxItem": [
     "about",
     "accessKey",
@@ -16106,10 +16071,7 @@
     "vocab",
     "w"
   ],
-  "MenuContextMenu": [
-    "disabled",
-    "longPressDelay"
-  ],
+  "MenuContextMenu": ["disabled", "longPressDelay"],
   "MenuDivider": [
     "about",
     "accessKey",
@@ -16638,10 +16600,7 @@
     "vocab",
     "w"
   ],
-  "MenuRadioGroup": [
-    "defaultValue",
-    "value"
-  ],
+  "MenuRadioGroup": ["defaultValue", "value"],
   "MenuRadioItem": [
     "about",
     "accessKey",
@@ -21530,10 +21489,7 @@
     "withOverlay",
     "withRoles"
   ],
-  "Popover.Target": [
-    "key",
-    "popupType"
-  ],
+  "Popover.Target": ["key", "popupType"],
   "Popover.Dropdown": [
     "about",
     "accessKey",
@@ -21689,14 +21645,8 @@
     "vocab",
     "w"
   ],
-  "Popover.ContextMenu": [
-    "disabled",
-    "longPressDelay"
-  ],
-  "PopoverContextMenu": [
-    "disabled",
-    "longPressDelay"
-  ],
+  "Popover.ContextMenu": ["disabled", "longPressDelay"],
+  "PopoverContextMenu": ["disabled", "longPressDelay"],
   "PopoverDropdown": [
     "about",
     "accessKey",
@@ -21852,10 +21802,7 @@
     "vocab",
     "w"
   ],
-  "PopoverTarget": [
-    "key",
-    "popupType"
-  ],
+  "PopoverTarget": ["key", "popupType"],
   "Progress": [
     "about",
     "accessKey",
@@ -30320,9 +30267,7 @@
     "vocab",
     "w"
   ],
-  "Table.DataRenderer": [
-    "data"
-  ],
+  "Table.DataRenderer": ["data"],
   "TableCaption": [
     "about",
     "accessKey",
@@ -34705,10 +34650,7 @@
     "vocab",
     "w"
   ],
-  "Tooltip.Group": [
-    "closeDelay",
-    "openDelay"
-  ],
+  "Tooltip.Group": ["closeDelay", "openDelay"],
   "TooltipFloating": [
     "about",
     "accessKey",
@@ -34872,10 +34814,7 @@
     "vocab",
     "w"
   ],
-  "TooltipGroup": [
-    "closeDelay",
-    "openDelay"
-  ],
+  "TooltipGroup": ["closeDelay", "openDelay"],
   "Tree": [
     "about",
     "accessKey",
@@ -39832,12 +39771,7 @@
     "withSuccessStyles",
     "wrapperProps"
   ],
-  "TimeValue": [
-    "amPmLabels",
-    "format",
-    "value",
-    "withSeconds"
-  ],
+  "TimeValue": ["amPmLabels", "format", "value", "withSeconds"],
   "WeekdaysRow": [
     "about",
     "accessKey",
