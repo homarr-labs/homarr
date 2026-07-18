@@ -75,7 +75,7 @@ export class ImmichIntegration extends Integration {
       assets: await Promise.all(
         albumAssets.map(async (asset) => {
           const publicLink = await imageProxy.createImageAsync(
-            this.url(`/api/assets/${asset.id}/original`).toString(),
+            this.url(`/api/assets/${asset.id}/thumbnail`).toString(),
             {
               "x-api-key": this.getSecretValue("apiKey"),
             },
