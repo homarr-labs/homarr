@@ -234,7 +234,7 @@ jobs:
 
       - name: Delete GHCR package version
         if: "!env.ACT"
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const packageName = "homarr-test";
