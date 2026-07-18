@@ -5,6 +5,7 @@ import { hashRuntimeParams, renderRequestBody, renderRequestTarget, validateRunt
 
 const request: CustomJsxRequest = {
   id: "device",
+  sourceId: "default",
   kind: "action",
   method: "PATCH",
   pathTemplate: "/devices/{device}/state",
@@ -12,6 +13,8 @@ const request: CustomJsxRequest = {
   bodyTemplate: { enabled: { $param: "enabled" }, nested: { level: { $param: "level" } } },
   auth: "inherit",
   minimumBoardPermission: "modify",
+  trigger: "manual",
+  queryTemplate: { verbose: true, level: { $param: "level" } },
 };
 
 describe("named request manifest rendering", () => {
@@ -28,6 +31,7 @@ describe("named request manifest rendering", () => {
     expect(renderRequestTarget("https://example.com/api", request, params).pathname).toBe(
       "/devices/living%20room%2F1/state",
     );
+    expect(renderRequestTarget("https://example.com/api", request, params).searchParams.get("level")).toBe("5");
     expect(JSON.parse(renderRequestBody(request.bodyTemplate, params) ?? "null")).toEqual({
       enabled: true,
       nested: { level: 5 },

@@ -49,9 +49,9 @@ export function ImportReviewDialog({ opened, review, pending, messages, onClose,
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
             <ImportFact label={messages.name} value={review.name} />
-            <ImportFact label={messages.origin} value={review.origin} />
-            <ImportFact label={messages.authentication} value={review.authType} />
-            <ImportFact label={messages.networkScope} value={review.networkScope} />
+            <ImportFact label={messages.origin} value={review.origins.join(", ")} />
+            <ImportFact label={messages.authentication} value={review.authTypes.join(", ")} />
+            <ImportFact label={messages.networkScope} value={review.networkScopes.join(", ")} />
           </SimpleGrid>
           <div>
             <Text size="sm" fw={600} mb={6}>

@@ -1,166 +1,424 @@
 import { describe, expect, test } from "vitest";
 
-import { customJsxExamples } from "../core/examples";
-import { customJsxDisplayConfigV2Schema, customJsxRequestSchema, displayConfigSchema } from "../core/schema";
-import { validateCustomJsxTemplate } from "../jsx/analyzer";
+import { customJsxExamples, CUSTOM_WIDGET_STARTER } from "../core/examples";
+import { customJsxRequestSchema, customWidgetCreateSchema, customWidgetDefinitionSchema } from "../core/schema";
+import { validateCustomWidgetOptions } from "../core/options";
 
-describe("custom JSX v2 validation", () => {
-  test.each(customJsxExamples)("validates the $id shared example", (example) => {
-    expect(() =>
-      customJsxDisplayConfigV2Schema.parse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        template: example.template,
-        networkScope: "public",
-        requests: [...example.requests],
-      }),
-    ).not.toThrow();
+describe("Custom JSX v2 validation", () => {
+  test.each(customJsxExamples)("validates $id", (example) => {
+    expect(() => customWidgetDefinitionSchema.parse(example.widget)).not.toThrow();
   });
 
-  test("retains display-only v1 compatibility", () => {
-    expect(displayConfigSchema.parse({ type: "customJsx", template: "<Text>{data.value}</Text>" })).toEqual({
-      type: "customJsx",
-      template: "<Text>{data.value}</Text>",
-    });
-  });
-
-  test("accepts benign text containing interpreter-reserved words", () => {
-    expect(() =>
-      customJsxDisplayConfigV2Schema.parse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        template: "<Text>constructor fetch prototype</Text>",
-        networkScope: "public",
-        requests: [],
-      }),
-    ).not.toThrow();
-  });
-
-  test("accepts supported Tabs, ScrollArea, and SubData image props without warnings", () => {
-    const diagnostics = validateCustomJsxTemplate(
-      '<Tabs.List grow><ScrollArea offsetScrollbars><SubData as="Image" fit="contain" alt="Artwork" /></ScrollArea></Tabs.List>',
-    );
-    expect(diagnostics).toEqual([]);
-  });
-
-  test("rejects malformed JSX and direct global fetch while allowing declarative onParams", () => {
-    const config = {
-      type: "customJsx" as const,
-      jsxApiVersion: 2 as const,
-      networkScope: "public" as const,
-      requests: [],
-    };
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "<Text>" }).success).toBe(false);
+  test("rejects every legacy schema", () => {
     expect(
-      customJsxDisplayConfigV2Schema.safeParse({ ...config, template: '<Text>{fetch("/private")}</Text>' }).success,
+      customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, $schema: "homarr-custom-widget-v3" }).success,
+    ).toBe(false);
+    expect(customWidgetDefinitionSchema.safeParse({ displayType: "raw", displayConfig: { type: "raw" } }).success).toBe(
+      false,
+    );
+  });
+
+  test("allows query POST and action GET while keeping actions manual", () => {
+    const base = {
+      sourceId: "default",
+      pathTemplate: "/status",
+      parameters: {},
+      auth: "none" as const,
+      trigger: "manual" as const,
+    };
+    expect(
+      customJsxRequestSchema.safeParse({
+        ...base,
+        id: "query",
+        kind: "query",
+        method: "POST",
+        minimumBoardPermission: "view",
+      }).success,
+    ).toBe(true);
+    expect(
+      customJsxRequestSchema.safeParse({
+        ...base,
+        id: "action",
+        kind: "action",
+        method: "GET",
+        minimumBoardPermission: "modify",
+      }).success,
+    ).toBe(true);
+    expect(
+      customJsxRequestSchema.safeParse({
+        ...base,
+        id: "action",
+        kind: "action",
+        method: "POST",
+        trigger: "load",
+        minimumBoardPermission: "modify",
+      }).success,
     ).toBe(false);
     expect(
-      customJsxDisplayConfigV2Schema.safeParse({
-        ...config,
-        template: '<ToggleSwitch requestId="toggle" onParams={{ enabled: true }} offParams={{ enabled: false }} />',
-        requests: [
-          {
-            id: "toggle",
-            kind: "action",
-            method: "POST",
-            pathTemplate: "/toggle",
-            parameters: { enabled: "boolean" },
-            bodyTemplate: { enabled: { $param: "enabled" } },
-            auth: "none",
-            minimumBoardPermission: "modify",
-          },
-        ],
+      customJsxRequestSchema.safeParse({
+        ...base,
+        id: "delete-query",
+        kind: "query",
+        method: "DELETE",
+        minimumBoardPermission: "full",
       }).success,
     ).toBe(true);
   });
 
-  test("rejects reserved manifest headers and mismatched request component kinds", () => {
-    expect(
-      customJsxRequestSchema.safeParse({
-        id: "status",
-        kind: "query",
-        method: "GET",
-        pathTemplate: "/status",
-        parameters: {},
-        staticHeaders: { Authorization: "secret" },
-        auth: "none",
-        minimumBoardPermission: "view",
-      }).success,
-    ).toBe(false);
-
-    expect(
-      customJsxDisplayConfigV2Schema.safeParse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        networkScope: "public",
-        template: '<ActionButton requestId="status" label="Run" />',
-        requests: [
-          {
-            id: "status",
-            kind: "query",
-            method: "GET",
-            pathTemplate: "/status",
-            parameters: {},
-            auth: "none",
-            minimumBoardPermission: "view",
-          },
-        ],
-      }).success,
-    ).toBe(false);
-  });
-
-  test("accepts 50,000 characters and rejects 50,001", () => {
-    const config = {
-      type: "customJsx" as const,
-      jsxApiVersion: 2 as const,
-      networkScope: "public" as const,
-      requests: [],
-    };
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "x".repeat(50_000) }).success).toBe(true);
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "x".repeat(50_001) }).success).toBe(false);
-  });
-
-  test("rejects duplicate request IDs", () => {
+  test("rejects reserved headers, duplicate IDs, and unknown sources", () => {
     const request = {
       id: "status",
+      sourceId: "missing",
       kind: "query" as const,
       method: "GET" as const,
       pathTemplate: "/status",
       parameters: {},
       auth: "none" as const,
       minimumBoardPermission: "view" as const,
+      trigger: "load" as const,
     };
-    const result = customJsxDisplayConfigV2Schema.safeParse({
-      type: "customJsx",
-      jsxApiVersion: 2,
-      template: "<Text />",
-      networkScope: "public",
-      requests: [request, request],
-    });
-    expect(result.success).toBe(false);
-  });
-
-  test("rejects mutation-shaped queries and weak DELETE permissions", () => {
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, requests: [request] }).success).toBe(
+      false,
+    );
+    expect(
+      customJsxRequestSchema.safeParse({ ...request, sourceId: "default", staticHeaders: { Authorization: "secret" } })
+        .success,
+    ).toBe(false);
     expect(
       customJsxRequestSchema.safeParse({
-        id: "mutating-query",
-        kind: "query",
-        method: "POST",
-        pathTemplate: "/status",
-        parameters: {},
-        auth: "none",
-        minimumBoardPermission: "view",
+        ...request,
+        sourceId: "default",
+        confirmation: { title: "Ignored", message: "Ignored" },
+      }).success,
+    ).toBe(false);
+    expect(customJsxRequestSchema.safeParse({ ...request, sourceId: "default", invalidates: ["status"] }).success).toBe(
+      false,
+    );
+    expect(
+      customWidgetCreateSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        secrets: [
+          { sourceId: "default", kind: "apiKey", value: "one" },
+          { sourceId: "default", kind: "apiKey", value: "two" },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
+  test("accepts multi-source actions, dynamic options, conditions, and typed state", () => {
+    const result = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      sources: [
+        {
+          id: "sonarr",
+          name: "Sonarr",
+          baseUrl: "http://sonarr:8989",
+          networkScope: "private",
+          auth: { type: "apiKeyHeader", headerName: "X-Api-Key" },
+        },
+        {
+          id: "radarr",
+          name: "Radarr",
+          baseUrl: "http://radarr:7878",
+          networkScope: "private",
+          auth: { type: "apiKeyHeader", headerName: "X-Api-Key" },
+        },
+      ],
+      requests: [
+        {
+          id: "list-calendars",
+          sourceId: "sonarr",
+          kind: "query",
+          method: "POST",
+          pathTemplate: "/api/v3/calendar",
+          parameters: { start: "string" },
+          bodyTemplate: { start: { $param: "start" } },
+          auth: "inherit",
+          minimumBoardPermission: "view",
+          trigger: "manual",
+        },
+        {
+          id: "monitor-series",
+          sourceId: "sonarr",
+          kind: "action",
+          method: "GET",
+          pathTemplate: "/api/v3/series/{seriesId}",
+          parameters: { seriesId: "number" },
+          auth: "inherit",
+          minimumBoardPermission: "modify",
+          trigger: "manual",
+          confirmation: { title: "Monitor series", message: "Monitor this series?" },
+          invalidates: ["list-calendars"],
+        },
+      ],
+      optionsSchema: {
+        type: "object",
+        properties: {
+          start: { type: "string", title: "Start date", "x-homarr": { control: "date", order: 1 } },
+          calendarId: {
+            type: "integer",
+            title: "Calendar",
+            "x-homarr": {
+              control: "select",
+              optionsSource: {
+                requestId: "list-calendars",
+                itemsPath: "$.data.environments",
+                valuePath: "$.Id",
+                labelPath: "$.Name",
+              },
+            },
+          },
+          advancedColor: { type: "string", "x-homarr": { control: "color", advanced: true } },
+        },
+        required: ["start"],
+        additionalProperties: false,
+        if: { properties: { start: { const: "today" } } },
+        // oxlint-disable-next-line unicorn/no-thenable -- JSON Schema uses the standard `then` keyword.
+        then: { properties: { advancedColor: { type: "string" } } },
+      },
+      defaultOptions: { start: "today" },
+      stateSchema: { selectedDate: "date", search: "string", opened: "boolean", selectedEntities: "string[]" },
+      defaultState: { selectedDate: "2026-07-17", search: "", opened: false, selectedEntities: ["light.office"] },
+      template:
+        '<Stack><Calendar bind="selectedDate"/><ActionButton requestId="monitor-series" params={{ seriesId: 1 }}>Monitor</ActionButton></Stack>',
+    });
+    expect(result.success, result.error?.issues.map((issue) => issue.message).join("; ")).toBe(true);
+  });
+
+  test("rejects unsafe source URLs, auth overrides, invalid defaults, and missing dynamic requests", () => {
+    const unsafeSource = { ...CUSTOM_WIDGET_STARTER.sources[0], baseUrl: "https://user:pass@example.com?token=nope" };
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, sources: [unsafeSource] }).success).toBe(
+      false,
+    );
+
+    const source = {
+      ...CUSTOM_WIDGET_STARTER.sources[0],
+      auth: { type: "apiKeyHeader" as const, headerName: "X-Api-Key" },
+    };
+    const request = {
+      id: "status",
+      sourceId: "default",
+      kind: "query" as const,
+      method: "GET" as const,
+      pathTemplate: "/status",
+      parameters: {},
+      auth: "inherit" as const,
+      minimumBoardPermission: "view" as const,
+      trigger: "load" as const,
+      staticHeaders: { "x-api-key": "not-a-secret" },
+    };
+    expect(
+      customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, sources: [source], requests: [request] })
+        .success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, defaultOptions: { apiKey: "not-exportable" } })
+        .success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        optionsSchema: {
+          type: "object",
+          properties: { accessToken: { type: "string" } },
+          additionalProperties: false,
+        },
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        stateSchema: { accessToken: "string" },
+        defaultState: {},
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            ...request,
+            sourceId: "default",
+            auth: "none",
+            staticHeaders: { "X-Custom": "Bearer not-exportable-token" },
+          },
+        ],
       }).success,
     ).toBe(false);
     expect(
       customJsxRequestSchema.safeParse({
-        id: "delete",
-        kind: "action",
-        method: "DELETE",
-        pathTemplate: "/resource",
-        parameters: {},
-        auth: "inherit",
-        minimumBoardPermission: "modify",
+        ...request,
+        sourceId: "default",
+        auth: "none",
+        staticHeaders: { "X-API-Key": "not-exportable" },
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        stateSchema: { count: "number" },
+        defaultState: { count: "wrong" },
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            id: "action",
+            sourceId: "default",
+            kind: "action",
+            method: "POST",
+            pathTemplate: "/action",
+            parameters: {},
+            auth: "none",
+            minimumBoardPermission: "modify",
+            trigger: "manual",
+            invalidates: ["missing"],
+          },
+        ],
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        optionsSchema: {
+          type: "object",
+          properties: {
+            endpoint: {
+              type: "string",
+              "x-homarr": {
+                control: "select",
+                optionsSource: { requestId: "missing", valuePath: "$.id", labelPath: "$.name" },
+              },
+            },
+          },
+          additionalProperties: false,
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("requires literal bindings to reference declared camel-case state", () => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        stateSchema: { selectedDate: "date" },
+        defaultState: { selectedDate: "2026-07-17" },
+        template: '<Calendar bind="selectedDate" />',
+      }).success,
+    ).toBe(true);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        stateSchema: { selectedDate: "date" },
+        template: '<Calendar bind="missingDate" />',
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        stateSchema: { selectedDate: "date" },
+        template: "<Calendar bind={state.selectedDate} />",
+      }).success,
+    ).toBe(false);
+  });
+
+  test("validates values declared only by the active conditional branch", () => {
+    const schema = {
+      type: "object",
+      properties: { mode: { type: "string", enum: ["simple", "advanced"] } },
+      required: ["mode"],
+      additionalProperties: false,
+      if: { properties: { mode: { const: "advanced" } } },
+      // oxlint-disable-next-line unicorn/no-thenable -- JSON Schema uses the standard `then` keyword.
+      then: {
+        properties: { color: { type: "string" } },
+        required: ["color"],
+      },
+    };
+    expect(validateCustomWidgetOptions(schema, { mode: "advanced", color: "blue" })).toEqual([]);
+    expect(validateCustomWidgetOptions(schema, { mode: "advanced" })).toEqual([
+      { path: "configuration.color", message: "This field is required" },
+    ]);
+    expect(validateCustomWidgetOptions(schema, { mode: "simple", color: "blue" })).toEqual([
+      { path: "configuration.color", message: "Unknown option" },
+    ]);
+  });
+
+  test("rejects unsafe custom authentication header names", () => {
+    const result = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      sources: [
+        {
+          ...CUSTOM_WIDGET_STARTER.sources[0],
+          auth: { type: "apiKeyHeader", headerName: "X-Forwarded-Authorization" },
+        },
+      ],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  test("rejects prototype-pollution keys in structured authored data", () => {
+    const request = {
+      id: "status",
+      sourceId: "default",
+      kind: "query" as const,
+      method: "POST" as const,
+      pathTemplate: "/status",
+      parameters: {},
+      bodyTemplate: JSON.parse('{"constructor":{"prototype":{"polluted":true}}}') as unknown,
+      auth: "none" as const,
+      minimumBoardPermission: "view" as const,
+      trigger: "manual" as const,
+    };
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, requests: [request] }).success).toBe(
+      false,
+    );
+  });
+
+  test("rejects option controls, enum values, and icon URLs that do not match their declared capability", () => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: "javascript:alert(1)" }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        iconUrl: "https://user:password@example.com/icon.png",
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        iconUrl: "https://example.com/icon.png?accessToken=literal-secret",
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        template: '<Text>apiKey="literal-secret"</Text>',
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        optionsSchema: {
+          type: "object",
+          properties: { enabled: { type: "boolean", "x-homarr": { control: "slider" } } },
+          additionalProperties: false,
+        },
+        defaultOptions: { enabled: true },
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        optionsSchema: {
+          type: "object",
+          properties: { count: { type: "integer", enum: [1, "two"] } },
+          additionalProperties: false,
+        },
+        defaultOptions: { count: 1 },
       }).success,
     ).toBe(false);
   });

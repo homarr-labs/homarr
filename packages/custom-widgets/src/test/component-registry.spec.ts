@@ -183,12 +183,14 @@ describe("customJsxComponentRegistry", () => {
   });
 
   test.each([
-    ["ChartTooltip", "allowed"],
-    ["ChartLegend", "allowed"],
-    ["VisuallyHidden", "allowed"],
+    ["ChartTooltip", "wrapped"],
+    ["ChartLegend", "wrapped"],
+    ["VisuallyHidden", "wrapped"],
     ["SubFetch", "wrapped"],
     ["Portal", "denied"],
-    ["TextInput", "denied"],
+    ["TextInput", "wrapped"],
+    ["ModalRoot", "denied"],
+    ["AppShellMain", "denied"],
   ] as const)("classifies %s as %s", (name, safety) => {
     expect(customJsxComponentByName.get(name)?.safety).toBe(safety);
   });
@@ -207,6 +209,9 @@ describe("customJsxComponentRegistry", () => {
       expect(component.supportedProps, component.name).toBeInstanceOf(Array);
       expect(component.subcomponents, component.name).toBeInstanceOf(Array);
       expect(component.accessibilityRequirements, component.name).toBeInstanceOf(Array);
+      expect(component.supportedProps, component.name).not.toContain("renderOption");
+      expect(component.supportedProps, component.name).not.toContain("rootRef");
+      expect(component.supportedProps, component.name).not.toContain("popoverTarget");
     }
   });
 

@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, 
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -22,7 +23,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
-  const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
+  const board = useRequiredBoard();
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery({ boardId: board.id });
   const settings = useSettings();
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
@@ -61,17 +63,41 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   }, [items, search]);
 
   const filteredCustomWidgets = useMemo(
-    () =>
-      (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
+    () => (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(search.toLowerCase())),
     [customWidgetDefs, search],
   );
 
-  const handleAddCustomWidget = (definitionId: string) => {
+  const handleAddCustomWidget = (definition: NonNullable<typeof customWidgetDefs>[number]) => {
     const itemId = createId();
     const defaultOptions = reduceWidgetOptionsWithDefaultValues("customApi", settings);
-    createItem({ id: itemId, kind: "customApi", integrationIds: [] });
-    updateItemOptions({ itemId, newOptions: { ...defaultOptions, definitionId } });
+    const options = {
+      ...defaultOptions,
+      definitionId: definition.id,
+      configuration: definition.defaultOptions,
+      configurationVersion: definition.updatedAt.getTime(),
+    };
     actions.closeModal();
+    openEditModal(
+      {
+        kind: "customApi",
+        value: {
+          advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+          options,
+          integrationIds: [],
+        },
+        onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
+          createItem({ id: itemId, kind: "customApi", integrationIds: [] });
+          updateItemOptions({ itemId, newOptions: configuredOptions });
+          updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
+        },
+        integrationData: [],
+        integrationSupport: false,
+        settings,
+      },
+      {
+        title: (titleT) => `${titleT("item.edit.title")} - ${definition.name}`,
+      },
+    );
   };
 
   const handleAdd = (kind: WidgetKind) => {
@@ -180,7 +206,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
                   background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
                 }}
               >
-                <Button onClick={() => handleAddCustomWidget(def.id)} variant="light" size="xs" fullWidth>
+                <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
                   {t("item.create.addToBoard")}
                 </Button>
               </Box>

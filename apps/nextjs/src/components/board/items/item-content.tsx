@@ -100,7 +100,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const { definition } = widgetImports[item.kind];
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options);
   const newItem = { ...item, options };
-  const { updateItemOptions } = useItemActions();
+  const { removeItem, updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
@@ -137,6 +137,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}
+            removeItem={() => removeItem({ itemId: item.id })}
             setOptions={(partialNewOptions) =>
               updateOptions({
                 newOptions: {

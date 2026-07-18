@@ -1,0 +1,42 @@
+name: Workshop
+
+on:
+  pull_request:
+    paths:
+      - "apps/workshop/**"
+      - "apps/docs/**"
+      - "packages/workshop/**"
+      - "packages/custom-widgets/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/workshop.yml"
+  push:
+    branches: [dev, v2]
+    paths:
+      - "apps/workshop/**"
+      - "apps/docs/**"
+      - "packages/workshop/**"
+      - "packages/custom-widgets/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/workshop.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.11.0
+          run_install: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @homarr/workshop typecheck
+      - run: pnpm --filter @homarr/docs typecheck
+      - run: pnpm test:workshop
+      - run: docker build --target production -f apps/workshop/Dockerfile .

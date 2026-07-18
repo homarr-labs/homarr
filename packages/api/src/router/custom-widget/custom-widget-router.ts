@@ -1,16 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { stringify as stringifySuperJson } from "superjson";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
-import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
-import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { and, eq, notInArray } from "@homarr/db";
+import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import {
   customWidgetCreateSchema,
+  customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
-  customJsxDisplayConfigV2Schema,
 } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -19,210 +18,156 @@ import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
 import { previewBaseProcedures } from "./preview-base-procedures";
 import { previewQueryProcedures } from "./preview-query-procedures";
-import { parseDisplayConfig } from "./parse-display-config";
-import { transferProcedures } from "./transfer-procedures";
+import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
 import { templateProcedures } from "./template-procedures";
+import { transferProcedures } from "./transfer-procedures";
+import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
+import { secretProcedures } from "./secret-procedures";
 
-const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
-
+const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
-
-const updateFieldSerializers: Record<string, (value: unknown) => unknown> = {
-  displayConfig: (value) => stringifySuperJson(value),
-};
 
 export const customWidgetRouter = createTRPCRouter({
   ...metadataProcedures,
-
   ...managementQueryProcedures,
 
-  create: adminProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Create a validated custom widget. Admin only. Call customWidget_schema and customWidget_validate first. For Custom JSX use jsxApiVersion 2, named requests, a GET base method, and no inline credentials.",
-      },
-    })
+  create: manageProcedure
+    .meta({ mcp: { enabled: true, description: "Create one validated Custom JSX widget." } })
     .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
+      const { secrets, ...candidate } = input;
+      if (secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Writing custom widget secrets requires dedicated permission",
+        });
+      }
+      const definition = customWidgetDefinitionSchema.parse(candidate);
+      assertSecretSources(definition.sources, secrets);
       const id = createId();
-
       await ctx.db.insert(customWidgetDefinitions).values({
         id,
-        name: input.name,
-        description: input.description,
-        iconUrl: input.iconUrl,
-        url: input.url,
-        authType: input.authType,
-        headerName: input.headerName,
-        method: input.method,
-        requestBody: input.requestBody,
-        displayType: input.displayType,
-        displayConfig: stringifySuperJson(input.displayConfig),
+        ...serializeCustomWidgetDefinition(definition),
         creatorId: ctx.session.user.id,
       });
-
-      if (input.secrets.length > 0) {
+      if (secrets.length > 0) {
         await ctx.db.insert(customWidgetSecrets).values(
-          input.secrets.map((secret) => ({
-            kind: secret.kind,
-            value: encryptSecret(secret.value),
+          secrets.map((secret) => ({
             definitionId: id,
+            sourceId: secret.sourceId,
+            kind: secret.kind,
+            encryptedValue: encryptSecret(secret.value),
             updatedAt: new Date(),
           })),
         );
       }
-
-      logger.info("Created custom widget definition", { id, name: input.name });
+      logger.info("Created custom widget definition", { id, name: definition.name });
       return { id };
     }),
 
-  update: adminProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Update an existing custom widget. Admin only. REQUIRED: id. Read it with customWidget_byId, preserve unrelated fields, validate the resulting complete draft, then send the changed fields. Omit secrets to preserve stored credentials.",
-      },
-    })
+  update: manageProcedure
+    .meta({ mcp: { enabled: true, description: "Update one Custom JSX widget." } })
     .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!existing) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      const effectiveDisplayConfig =
-        input.displayConfig ??
-        parseDisplayConfig(existing.displayConfig, input.id, logger, "Corrupt displayConfig in custom widget update");
-      const effectiveMethod = input.method ?? existing.method;
-      if (customJsxDisplayConfigV2Schema.safeParse(effectiveDisplayConfig).success && effectiveMethod !== "GET") {
+      const current = parseStoredCustomWidgetDefinition(existing);
+      const { id, secrets, ...changes } = input;
+      if (secrets?.length && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
         throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Custom JSX v2 base data requests must use GET; mutations belong in named actions",
+          code: "FORBIDDEN",
+          message: "Writing custom widget secrets requires dedicated permission",
         });
       }
+      const definition = customWidgetDefinitionSchema.parse({ ...current, ...changes });
+      if (secrets) assertSecretSources(definition.sources, secrets);
 
-      const { id, secrets, ...updateFields } = input;
-      const updateValues: Record<string, unknown> = { updatedAt: new Date() };
+      await ctx.db
+        .update(customWidgetDefinitions)
+        .set({ ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() })
+        .where(eq(customWidgetDefinitions.id, id));
 
-      for (const [key, value] of Object.entries(updateFields)) {
-        if (value === undefined) continue;
-        const serialize = updateFieldSerializers[key];
-        if (serialize) {
-          updateValues[key] = serialize(value);
-        } else {
-          updateValues[key] = value;
-        }
+      await ctx.db.delete(customWidgetSecrets).where(
+        and(
+          eq(customWidgetSecrets.definitionId, id),
+          notInArray(
+            customWidgetSecrets.sourceId,
+            definition.sources.map((source) => source.id),
+          ),
+        ),
+      );
+
+      for (const source of definition.sources) {
+        const kinds = [...requiredSecretKinds(source.auth.type)];
+        const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, source.id));
+        await ctx.db
+          .delete(customWidgetSecrets)
+          .where(kinds.length > 0 ? and(where, notInArray(customWidgetSecrets.kind, kinds)) : where);
       }
-
-      await ctx.db.update(customWidgetDefinitions).set(updateValues).where(eq(customWidgetDefinitions.id, id));
 
       if (secrets !== undefined) {
-        const effectiveAuthType = (updateFields.authType as string | undefined) ?? existing.authType;
-
-        if (secrets.length > 0) {
-          await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
-          await ctx.db.insert(customWidgetSecrets).values(
-            secrets.map((secret) => ({
-              kind: secret.kind,
-              value: encryptSecret(secret.value),
-              definitionId: id,
-              updatedAt: new Date(),
-            })),
-          );
-        } else if (
-          effectiveAuthType === "none" ||
-          (typeof updateFields.authType === "string" && updateFields.authType !== existing.authType)
-        ) {
-          await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+        for (const secret of secrets) {
+          await ctx.db
+            .delete(customWidgetSecrets)
+            .where(
+              and(
+                eq(customWidgetSecrets.definitionId, id),
+                eq(customWidgetSecrets.sourceId, secret.sourceId),
+                eq(customWidgetSecrets.kind, secret.kind),
+              ),
+            );
+          await ctx.db.insert(customWidgetSecrets).values({
+            definitionId: id,
+            sourceId: secret.sourceId,
+            kind: secret.kind,
+            encryptedValue: encryptSecret(secret.value),
+            updatedAt: new Date(),
+          });
         }
       }
-
       logger.info("Updated custom widget definition", { id });
     }),
 
-  toggleEnabled: adminProcedure
+  ...secretProcedures,
+
+  toggleEnabled: manageProcedure
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
-        where: eq(customWidgetDefinitions.id, input.id),
-      });
-
-      if (!existing) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
       await ctx.db
         .update(customWidgetDefinitions)
         .set({ enabled: input.enabled, updatedAt: new Date() })
         .where(eq(customWidgetDefinitions.id, input.id));
     }),
 
-  delete: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+  delete: manageProcedure
+    .meta({ mcp: { enabled: true, description: "Delete one Custom JSX widget." } })
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(customWidgetDefinitions).where(eq(customWidgetDefinitions.id, input.id));
+      logger.info("Deleted custom widget definition", { id: input.id });
+    }),
+
+  duplicate: manageProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.id),
     });
-
-    if (!existing) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
-
-    await ctx.db.delete(customWidgetDefinitions).where(eq(customWidgetDefinitions.id, input.id));
-    logger.info("Deleted custom widget definition", { id: input.id });
+    if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+    const current = parseStoredCustomWidgetDefinition(existing);
+    const id = createId();
+    await ctx.db.insert(customWidgetDefinitions).values({
+      id,
+      ...serializeCustomWidgetDefinition({ ...current, name: `${current.name} (copy)` }),
+      creatorId: ctx.session.user.id,
+    });
+    return { id, name: `${current.name} (copy)` };
   }),
 
   ...templateProcedures,
-
   ...transferProcedures,
-
   ...previewBaseProcedures,
   ...previewQueryProcedures,
   ...previewActionProcedures,
-
-  duplicate: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-      with: { secrets: true },
-    });
-
-    if (!definition) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
-
-    const newId = createId();
-    await ctx.db.insert(customWidgetDefinitions).values({
-      id: newId,
-      name: `${definition.name} (copy)`,
-      description: definition.description,
-      iconUrl: definition.iconUrl,
-      url: definition.url,
-      authType: definition.authType,
-      headerName: definition.headerName,
-      method: definition.method,
-      requestBody: definition.requestBody,
-      displayType: definition.displayType,
-      displayConfig: definition.displayConfig,
-      enabled: definition.enabled,
-      creatorId: ctx.session.user.id,
-    });
-
-    if (definition.secrets.length > 0) {
-      await ctx.db.insert(customWidgetSecrets).values(
-        definition.secrets.map((s) => ({
-          kind: s.kind,
-          value: s.value,
-          definitionId: newId,
-          updatedAt: new Date(),
-        })),
-      );
-    }
-
-    logger.info("Duplicated custom widget definition", { sourceId: input.id, newId });
-    return { id: newId, name: `${definition.name} (copy)` };
-  }),
 });

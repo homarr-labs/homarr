@@ -706,14 +706,7 @@
       "delete": "사용자 지정 위젯 삭제",
       "deleteConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
       "export": "내보내기",
-      "addMapping": "매핑 추가",
-      "addColumn": "열 추가",
       "edit": "편집",
-      "removeMapping": "매핑 제거",
-      "removeColumn": "열 제거",
-      "addItem": "항목 추가",
-      "removeItem": "항목 제거",
-      "addBar": "바 추가",
       "duplicate": "복사",
       "copyAiPrompt": "AI 프롬프트 복사",
       "enable": "활성화",
@@ -723,140 +716,7 @@
     "field": {
       "name": "이름",
       "description": "설명",
-      "iconUrl": "아이콘 URL",
-      "url": "URL",
-      "authType": "인증 유형",
-      "headerName": "헤더/쿼리 파라미터 이름",
-      "method": "메서드",
-      "requestBody": "요청 본문",
-      "displayType": "표시 유형",
-      "jsonPath": "JSON 경로",
-      "jsonPathHint": "JSONPath 문법으로 값을 추출하십시오. 예: $.data.temperature 또는 $.items[0].name",
-      "label": "레이블",
-      "unit": "단위",
-      "mappings": "매핑",
-      "tablePath": "JSON 경로 배열",
-      "tablePathHint": "응답에서 배열이 위치한 경로입니다. 예: $.data.items",
-      "columns": "열",
-      "header": "헤더",
-      "items": "항목",
-      "gridColumns": "그리드 열 개수",
-      "cardStyle": "카드 스타일",
-      "bars": "바",
-      "valuePath": "JSON 경로 값",
-      "maxPath": "JSON 경로 최댓값",
-      "showPercentage": "백분율 표시",
-      "barSize": "바 크기",
-      "goodValues": "정상 값(쉼표로 구분)",
-      "dotSize": "점 크기",
-      "valueSize": "값 크기",
-      "labelPosition": "레이블 위치",
-      "kvLayout": "레이아웃",
-      "striped": "",
-      "compact": "컴팩트 모드",
-      "maxHeight": "최대 높이 (px)",
-      "color": "색상",
-      "buttonLabel": "버튼 명칭",
-      "buttonColor": "버튼 색상",
-      "confirmText": "확인 텍스트",
-      "confirmTextHint": "설정하면 요청을 실행하기 전에 확인 대화상자가 표시됩니다",
-      "successMessage": "성공 메세지",
-      "successMessageHint": "실행 성공 후 표시되는 메세지",
-      "enabled": "활성화됨",
-      "template": {
-        "label": "JSX 템플릿",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU 온도",
-      "exampleLabelShort": "CPU 온도",
-      "exampleHeader": "이름",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "",
-      "color": "파랑"
-    },
-    "cardStyleOption": {
-      "filled": "채워짐",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "리스트",
-      "grid": "그리드"
-    },
-    "sizeOption": {
-      "sm": "작음",
-      "md": "중간",
-      "lg": "큼",
-      "xl": "매우 큼"
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "API 연결",
-      "display": "표시 설정"
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "없음",
-      "bearer": "Bearer 토큰",
-      "basic": "기본 인증",
-      "apiKeyHeader": "API 키(헤더)",
-      "apiKeyQuery": "API 키(쿼리)"
-    },
-    "displayType": {
-      "singleValue": "단일 값",
-      "keyValue": "키-값",
-      "table": "테이블",
-      "statGrid": "스택 그리드",
-      "progressBars": "진행 바",
-      "statusIndicator": "상태 인디케이터",
-      "countGrid": "카운트 그리드",
-      "raw": "원시 JSON",
-      "actionButton": "동작 버튼",
-      "customJsx": "사용자 지정 JSX"
-    },
-    "secret": {
-      "apiKey": "API 키/토큰",
-      "username": "사용자명",
-      "password": "비밀번호",
-      "savedPlaceholder": "••••••• (저장됨, 유지하려면 공백)"
-    },
-    "preview": {
-      "title": "미리보기",
-      "test": "테스트",
-      "hint": "현재 설정으로 API 응답을 미리 보려면 테스트를 클릭하십시오.",
-      "rawResponse": "원본 JSON 응답"
+      "iconUrl": "아이콘 URL"
     },
     "notification": {
       "created": "\"{name}\" 위젯 생성 완료.",
@@ -864,9 +724,6 @@
       "deleted": "\"{name}\" 위젯 삭제 완료.",
       "imported": "위젯 가져오기 완료.",
       "aiPromptCopied": "AI 프롬프트 클립보드에 복사됨",
-      "aiPromptDescription": "사전 제작된 프롬프트를 복사하여 AI 챗봇(ChatGPT, Claude, Gemini 등)에 붙여넣습니다. 전체 위젯 스키마 및 API 응답이 포함되어 있으므로 즉시 가져올 수 있는 JSON 설정을 AI가 생성할 수 있습니다.",
-      "aiPromptCopy": "클립보드에 복사",
-      "aiPromptNoResponse": "팁: 더 나은 결과를 얻기 위해 먼저 테스트로 프롬프트에 API 응답을 포함하십시오.",
       "aiPromptCopyError": "프롬프트 클립보드 복사 실패. 브라우저에서 이 기능을 지원하지 않을 수도 있습니다.",
       "createError": "위젯 생성 실패. API 엔드포인트에 도달할 수 있는지 확인해 보십시오.",
       "updateError": "위젯 업데이트 실패. 변경 사항이 저장되지 않습니다.",
@@ -879,14 +736,6 @@
       "previewError": "미리보기 가져오기 실패. URL을 확인한 후 다시 시도해 주십시오.",
       "executed": "작업 실행 완료.",
       "executeError": "작업 실패: {error}"
-    },
-    "table": {
-      "name": "이름",
-      "url": "URL",
-      "display": "표시"
-    },
-    "widget": {
-      "disabled": "위젯 비활성화됨"
     }
   },
   "integration": {
@@ -3554,26 +3403,6 @@
         "unhealthy": "비정상"
       }
     },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
-    },
     "beszelSystemTable": {
       "name": "",
       "description": "",
@@ -4195,7 +4024,6 @@
         "boards": "보드",
         "apps": "앱",
         "integrations": "통합",
-        "customWidgets": "",
         "searchEngies": "",
         "medias": "",
         "users": {

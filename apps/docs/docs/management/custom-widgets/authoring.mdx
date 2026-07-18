@@ -1,36 +1,34 @@
----
-sidebar_label: Authoring workbench
----
+# Workbench and ChatGPT
 
-# Authoring workbench
+The desktop workbench keeps code and preview side by side. Mobile uses Configure and Preview tabs. Save and preview actions stay available while the form scrolls.
 
-The Custom Widget form is a continuous workflow: choose a display, configure the HTTP connection, configure the display, then test it in the adjacent preview. Each section stays visible so you can revisit earlier choices without losing context.
+CodeMirror edits requests, options, state, and JSX. The editor supplies installed Mantine components, request/source IDs, option/state names, runtime components, and icons. The request toolbar jumps to a declaration and atomically renames its invalidation, dynamic-option, and JSX references. Diagnostics are copyable and secret-free.
 
-## Choose a display
+## Manual workflow
 
-The display grid is the first product decision. Built-in displays are best for common metrics, tables, statuses, and actions. Choose Custom JSX when the layout needs multiple Mantine components, conditional presentation, charts, dates, or named requests.
+1. Add the API source and select its network scope and authentication mode.
+2. Enter credentials. Existing values are shown only as configured; plaintext is never revealed.
+3. Declare named load/manual queries and actions.
+4. Define item options and local state.
+5. Write JSX using `data`, `status`, `options`, and `state`.
+6. Test requests, preview compact/standard/wide layouts, and inspect runtime and accessibility diagnostics.
+7. Save, then select the definition and its options in the board widget picker.
 
-Changing display type preserves shared connection fields and initializes safe display defaults. A Custom JSX template is never blank; new and migrated forms receive the tested starter fixture.
+## ChatGPT copy/paste
 
-## Test and preview
+Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Paste it into ChatGPT or another model. The model must return exactly:
 
-The preview has four tabs:
+1. A fenced `json` block with one complete widget and `template: "__HOMARR_TEMPLATE__"`.
+2. A fenced `jsx` block with the readable template.
 
-- **Widget** renders at compact, standard, or wide board-like sizes.
-- **Response** uses a tree to inspect data, copy paths, and insert paths into JSX. The external-response action opens a temporary local blob and never publishes the response.
-- **Request** shows the redacted base request, named capabilities, status, duration, and preview journal.
-- **Diagnostics** shows template size, named requests, network scope, and blocking or advisory issues.
+Use **Paste AI response** to fill the workbench. Enter credentials yourself, test, and preview. If validation or a request fails, select **Copy diagnostics for AI** and paste the correction back into Homarr.
 
-Only GET base requests run automatically. Preview actions are simulated until an administrator explicitly enables live actions for the five-minute preview session. DELETE still requires confirmation.
+The prompt is under 8,000 characters. It includes the installed Mantine version and capability rules but not a complete prop list, MCP workflow, server URL, or credentials.
 
-## Keyboard and clipboard
+## Options
 
-The JSX and JSON editors support native Ctrl/Cmd+Z and redo, plus visible toolbar controls. Cursor position, character count, and the 50,000-character limit remain visible.
+Options use a restricted object JSON Schema. Supported controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, URL, nested groups, conditions, and advanced JSON.
 
-On the list page, paste a complete v3 export with Ctrl+V or Command+V to import it as new. On an edit page, pasting opens a replacement review. Nothing is applied before the origin, methods, credential inheritance, and permissions are shown.
+Credentials are not widget options. Credential-like option names and static default values are rejected; configure authentication under the widget's API source so values stay encrypted and out of exports and board configuration.
 
-For AI output, prefer the authoring bundle format: a JSON block containing `"template": "__HOMARR_TEMPLATE__"`, followed by a JSX block. This keeps multiline JSX readable and avoids JSON escape errors.
-
-## Save behavior
-
-Errors block save; warnings do not. Server validation runs again on every create or update. Leaving with dirty changes triggers protection. Secrets omitted during edit remain unchanged, and secrets are never exported.
+Dynamic selects use `x-homarr.optionsSource` and a named query. Add `itemsPath` when the response wraps its result array, then use `valuePath` and `labelPath` relative to each item. These requests run only while configuring the item and use the same protected server executor as widget requests.

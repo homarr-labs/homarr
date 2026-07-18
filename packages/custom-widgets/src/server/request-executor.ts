@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
-import { fetch, Headers } from "undici";
-import type { Response } from "undici";
+import { STATUS_CODES } from "node:http";
+import { Headers, Response } from "undici";
 
 import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
 import { applyAuth } from "./auth";
@@ -61,6 +61,7 @@ export interface CustomWidgetHttpResponse {
 }
 const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
+let cacheEpoch = 0;
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   assertRequest(input);
@@ -75,15 +76,15 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     const headers = buildHeaders(input, currentUrl);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-    let response: Response;
+    let responseData: Awaited<ReturnType<typeof dispatcher.request>>;
     try {
-      response = await fetch(currentUrl, {
+      responseData = await dispatcher.request({
+        origin: currentUrl.origin,
+        path: `${currentUrl.pathname}${currentUrl.search}`,
         method: input.method,
         headers,
-        body: input.method === "GET" ? undefined : input.body,
-        redirect: "manual",
+        body: input.body,
         signal: controller.signal,
-        dispatcher,
       });
     } catch (error) {
       await dispatcher.close();
@@ -101,8 +102,14 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     } finally {
       clearTimeout(timeout);
     }
-    if (![301, 302, 303, 307, 308].includes(response.status)) {
+    if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
       try {
+        const body = await responseData.body.arrayBuffer();
+        const response = new Response(body.byteLength > 0 ? body : null, {
+          status: responseData.statusCode,
+          statusText: STATUS_CODES[responseData.statusCode] ?? "",
+          headers: normalizeResponseHeaders(responseData.headers),
+        });
         return {
           ok: response.ok,
           status: response.status,
@@ -113,11 +120,14 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
         await dispatcher.close();
       }
     }
-    await response.body?.cancel();
-    await dispatcher.close();
+    try {
+      await responseData.body.dump();
+    } finally {
+      await dispatcher.close();
+    }
     if (redirects >= maxRedirects)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect limit exceeded" });
-    const location = response.headers.get("location");
+    const location = normalizeResponseHeaders(responseData.headers).get("location");
     if (!location)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect is missing a location" });
     const redirected = validateCustomWidgetUrl(new URL(location, currentUrl));
@@ -127,11 +137,16 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
   }
 }
 
+function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(values)) {
+    if (Array.isArray(value)) value.forEach((entry) => headers.append(name, entry));
+    else if (value !== undefined) headers.set(name, value);
+  }
+  return headers;
+}
+
 function assertRequest(input: CustomWidgetHttpRequest): void {
-  if (input.kind === "query" && input.method !== "GET")
-    throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Queries must use GET" });
-  if (input.kind === "action" && input.method === "GET")
-    throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Actions cannot use GET" });
   if (input.body !== undefined && Buffer.byteLength(input.body, "utf8") > MAX_REQUEST_BODY_BYTES)
     throw new CustomWidgetDomainError({ code: "PAYLOAD_TOO_LARGE", message: "Request body exceeds the 10 KiB limit" });
   assertSafeStaticHeaders(input.staticHeaders);
@@ -149,24 +164,35 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL): Headers {
 }
 
 export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
-  const key = input.method === "GET" ? input.cacheKey : undefined;
+  const key = input.kind === "query" ? input.cacheKey : undefined;
   if (!key) return performRequest(input);
   const cached = cache.get(key);
   if (cached && cached.expiresAt > Date.now()) return cached.response;
   if (cached) cache.delete(key);
   const pending = inFlight.get(key);
   if (pending) return pending;
-  const request = performRequest(input)
+  const requestEpoch = cacheEpoch;
+  let request: Promise<CustomWidgetHttpResponse>;
+  request = performRequest(input)
     .then((response) => {
-      if (response.ok && (input.cacheTtlSeconds ?? 0) > 0) {
+      if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
         pruneCache();
         cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
       }
       return response;
     })
-    .finally(() => inFlight.delete(key));
+    .finally(() => {
+      if (inFlight.get(key) === request) inFlight.delete(key);
+    });
   inFlight.set(key, request);
   return request;
+}
+
+export function invalidateCustomWidgetResponseCache(prefixes: readonly string[]): void {
+  if (prefixes.length === 0) return;
+  cacheEpoch += 1;
+  for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
+  for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
 }
 
 function pruneCache(): void {

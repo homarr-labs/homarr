@@ -1,26 +1,30 @@
----
-sidebar_label: AI and MCP authoring
----
+# Agents and downloadable skill
 
-# AI and MCP authoring
+An external agent creates widgets one at a time through Homarr's MCP server. The harness owns any multi-widget task list; Homarr does not create packs or multi-widget drafts.
 
-Homarr exposes an iterative, validation-first workflow to authenticated administrators. Agents should continue until validation, preview, and diagnostics are clean; they must not invent inline network access.
+<a className="button button--primary" href="/downloads/homarr-custom-widget-2.0.0.zip" download>
+  Download Custom Widget Skill
+</a>
 
-## Recommended loop
+The archive follows the Agent Skills format and includes `SKILL.md` plus schema, runtime, and security references. Its SHA-256 is `5571b74b2faafe8a9e230231c1915193e889c7afa95acef38a1f70befe14a9e1`.
 
-1. Read `customWidget_schema` and the generated component/capability reference.
-2. Read an existing definition with `customWidget_byId`, or create a v3 draft.
-3. Call `customWidget_validate`; fix every issue using its exact path.
-4. Call `customWidget_preview` for the base GET and retain the preview session ID.
-5. Test each named query with `customWidget_previewQuery`.
-6. Dry-run every action with `customWidget_simulatePreviewAction`.
-7. Inspect `customWidget_previewJournal` for status, duration, and method coverage.
-8. Revalidate, then call import/create or a focused update/patch operation.
+## MCP discovery
 
-Stored secret values are never readable. Omitting secrets during an update preserves them. MCP actions are simulation-only; enabling live preview actions remains a browser-only administrator decision.
+- Prompt: `homarr-custom-widget-author`
+- Resources: `homarr://custom-widgets/schema`, `components`, `components/{name}`, `examples/{name}`, and `skill`
+- HTTP: `GET /api/custom-widgets/authoring-prompt` and `GET /api/custom-widgets/skill`
 
-## Template format
+The authoring-prompt tool description intentionally contains only one sentence. Workflow instructions live in the prompt and link to resources.
 
-Use multiline JSX when reading or patching templates. Prefer focused template read/write/patch tools over rewriting an escaped one-line JSON string. When a complete portable artifact is needed, use the authoring bundle placeholder plus a separate fenced JSX block.
+## Agent loop
 
-The AI prompt is generated from the same registry, examples, request rules, and limits as the validator. Agents should still trust validation output over prompt memory because the installed Homarr version is authoritative.
+1. Fetch the prompt, live schema, and component catalog.
+2. Read the external API documentation.
+3. Build and validate one definition without saving.
+4. Create a preview session and test its queries/actions.
+5. Open the returned preview URL with browser tools.
+6. Set a supplied credential with the dedicated secret-write permission, or ask the user through the ten-minute Homarr credential URL.
+7. Inspect the redacted journal and patch until valid.
+8. Create the widget, then repeat for the next requested widget.
+
+Credential URLs are scoped to one definition/preview, source, and required fields. The agent receives only pending/completed status. Plaintext is encrypted immediately and never returned.

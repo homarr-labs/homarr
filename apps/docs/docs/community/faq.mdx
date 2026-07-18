@@ -27,11 +27,11 @@ So make sure to manually whitelist this address.
 
 ### Can I add my own widgets? Do I need programming skills?
 
-Yes. Administrators can create [Custom Widgets](/docs/management/custom-widgets) that read an HTTP API and render the response with a built-in display type. These display types require no programming.
+Yes. [Custom Widgets](/docs/management/custom-widgets) can read public or private HTTP APIs, render responsive Mantine JSX, expose per-board options, and run permission-checked actions. Custom JSX v2 is the only custom-widget format.
 
-Custom JSX is available when you need a more specific layout or an interactive control. It uses a restricted declarative JSX interpreter with a classified Mantine component set. Network operations are declared as named, same-origin requests and are checked against board permissions on the server. It does not execute arbitrary JavaScript or expose browser `fetch`.
+You can author the JSON and JSX directly, use the one-click prompt with ChatGPT or another assistant, or let an MCP agent validate and preview a widget before saving it. The workbench parses a pasted AI response, shows request capabilities, and produces redacted diagnostics for another iteration.
 
-You should be comfortable reading JSON and JSX to author complex templates. The management workbench includes examples, diagnostics, a component reference, API response inspection, and a prompt you can copy into an AI assistant. Always review imported templates and request capabilities before saving them.
+The template is declarative: it cannot import packages, execute arbitrary JavaScript, or call browser `fetch`. Network operations are named, same-origin server requests protected by Homarr's board permissions and network policy. You should still review origins, methods, permissions, and actions before installing or publishing a widget.
 
 ### Is it secure to expose Homarr to the web?
 

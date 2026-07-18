@@ -1,9 +1,9 @@
 import type { ComponentType, ReactNode } from "react";
 import { createElement, Fragment } from "react";
 
-import { asNode, asNodeArray, isInterpreterCallback, SafeJsxError } from "./interpreter-foundation";
+import { asNode, asNodeArray, SafeJsxError } from "./interpreter-foundation";
 import type { AstNode, Budget, Environment, InterpreterCallback } from "./interpreter-foundation";
-import { normalizedProperty, sanitizeCustomJsxProps } from "./safe-properties";
+import { diagnoseCustomJsxProps, normalizedProperty, sanitizeCustomJsxProps } from "./safe-properties";
 import { CUSTOM_JSX_BLOCKED_TAGS } from "./policy";
 
 export interface JsxEmitterContext {
@@ -54,32 +54,20 @@ export function emitJsxElement(
     if (attribute.type !== "JSXAttribute") throw new SafeJsxError(`Unsupported JSX attribute: ${attribute.type}`);
     const nameNode = asNode(attribute.name, "attribute name");
     if (nameNode.type !== "JSXIdentifier") throw new SafeJsxError("Namespaced JSX attributes are not supported");
-    const name = normalizedProperty(nameNode.name);
+    const rawName = String(nameNode.name);
+    // `bind` is a safe declarative JSX prop even though reflective `.bind` access is blocked by the interpreter.
+    const name = rawName === "bind" ? rawName : normalizedProperty(rawName);
     if (attribute.value == null) rawProps[name] = true;
     else {
       const value = asNode(attribute.value, "attribute value");
       rawProps[name] = value.type === "Literal" ? value.value : context.evaluate(value, environment, depth + 1);
     }
   }
-  let children = asNodeArray(node.children, "JSX children").map((child) =>
+  const children = asNodeArray(node.children, "JSX children").map((child) =>
     context.evaluate(child, environment, depth + 1),
   );
+  diagnoseCustomJsxProps(rawProps, tag).forEach((diagnostic) => context.warnings.add(diagnostic));
   const props = sanitizeCustomJsxProps(rawProps, tag);
-  if (tag === "SubFetch") {
-    const callbackChildren = children.filter(isInterpreterCallback);
-    const callbackProp = rawProps.render;
-    if (callbackProp !== undefined && !isInterpreterCallback(callbackProp)) {
-      throw new SafeJsxError("SubFetch render must be an inline arrow callback");
-    }
-    if (callbackChildren.length > 1 || (callbackChildren.length === 1 && callbackProp !== undefined)) {
-      throw new SafeJsxError("SubFetch accepts only one render callback");
-    }
-    const callback = isInterpreterCallback(callbackProp) ? callbackProp : callbackChildren[0];
-    if (callback) {
-      props.render = (value: unknown, metadata: unknown) => context.renderCallback(callback, [value, metadata]);
-      children = children.filter((child) => child !== callback);
-    }
-  }
   context.budget.rendered();
   return createElement(component, props as never, ...(children as ReactNode[]));
 }

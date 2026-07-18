@@ -71,7 +71,11 @@ apps/nextjs/public/images/background.png
 
 # personal agent config
 .opencode
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/homarr-custom-widget/
+!.agents/skills/homarr-custom-widget/**
 skills-lock.json
 
 # docusaurus

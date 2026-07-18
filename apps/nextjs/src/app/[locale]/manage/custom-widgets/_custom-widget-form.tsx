@@ -1,29 +1,39 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Box, Button, Group, Paper, SegmentedControl, Stack, Text } from "@mantine/core";
-import { clientApi } from "@homarr/api/client";
-import { useZodForm } from "@homarr/form";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Button, Paper, SegmentedControl, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import {
+  IconAlertCircle,
+  IconApi,
+  IconBraces,
+  IconCode,
+  IconDatabase,
+  IconEye,
+  IconSettings,
+} from "@tabler/icons-react";
 
-import type { CustomWidgetAuthType, CustomWidgetDisplayType } from "@homarr/custom-widgets/core";
-import { buildDisplayConfigFromFormValues, CUSTOM_JSX_STARTER } from "@homarr/custom-widgets/core";
 import {
   analyzeJsxTemplate,
   analyzeRequestManifest,
-  DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
   customWidgetFormSchema,
-  parseRequestManifest,
+  DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
+  renameCustomWidgetRequest,
 } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
-import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
-import { CustomWidgetPreview } from "./_custom-widget-preview";
-import { ConfigureSection, ConnectionSection, FormatSection } from "./_custom-widget-form-sections";
-import { extractServerErrors } from "./_custom-widget-form-errors";
-import { useCustomWidgetClipboard } from "./_use-custom-widget-clipboard";
-import { useCustomWidgetPreview } from "./_use-custom-widget-preview";
+import { useZodForm } from "@homarr/form";
+import { IconPicker } from "@homarr/forms-collection";
+import { useScopedI18n } from "@homarr/translation/client";
+
+import { CodeEditor } from "./_code-editor";
+import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
+import { createCustomWidgetCompletions, getInvalidCustomWidgetSections } from "./_custom-widget-form-analysis";
+import { EditorSection, SaveActions } from "./_custom-widget-form-layout";
+import { applyDefinition, buildDefinition, isRecord, parseJson, parseJsonArray } from "./_custom-widget-form-utils";
+import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
+import type { PreviewState } from "./_custom-widget-preview-panel";
+import { CustomWidgetRequestTools } from "./_custom-widget-request-tools";
+import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
+import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import classes from "./_custom-widget-form.module.css";
 
 interface CustomWidgetFormProps {
@@ -32,260 +42,254 @@ interface CustomWidgetFormProps {
   definitionId?: string;
 }
 
+const sectionLinks = [
+  ["general", "section.general", IconSettings],
+  ["sources", "section.sources", IconApi],
+  ["requests", "section.requests", IconDatabase],
+  ["options", "section.options", IconBraces],
+  ["state", "section.state", IconSettings],
+  ["jsx", "section.jsx", IconCode],
+  ["preview", "section.preview", IconEye],
+] as const;
+
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
-  const router = useRouter();
-  const globalT = useI18n();
   const t = useScopedI18n("customWidget");
-  const utils = clientApi.useUtils();
-  const createMutation = clientApi.customWidget.create.useMutation();
-  const updateMutation = clientApi.customWidget.update.useMutation();
-  const [previewRefreshSignal, setPreviewRefreshSignal] = useState(0);
-  const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
-  const formatSectionRef = useRef<HTMLElement>(null);
-  const connectionSectionRef = useRef<HTMLElement>(null);
-  const configureSectionRef = useRef<HTMLElement>(null);
-  const scrollToSection = useCallback((section: number) => {
-    const element = [formatSectionRef.current, connectionSectionRef.current, configureSectionRef.current][section];
-    if (!element) return;
-    element.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => element.focus({ preventScroll: true }), 250);
-  }, []);
-
-  const mergedInitialValues = { ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES, ...initialValues };
-  if (mergedInitialValues.displayType === "customJsx" && !mergedInitialValues.template.trim()) {
-    mergedInitialValues.template = CUSTOM_JSX_STARTER;
-  }
-  const form = useZodForm(customWidgetFormSchema, { initialValues: mergedInitialValues });
-  const preview = useCustomWidgetPreview({
-    form,
-    definitionId,
-    refreshSignal: previewRefreshSignal,
-    onOpenPreview: () => setMobilePane("preview"),
-    t,
+  const w = useScopedI18n("customWidget.workbench");
+  const form = useZodForm(customWidgetFormSchema, {
+    initialValues: { ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES, ...initialValues },
   });
-  useCustomWidgetClipboard({ enabled: mode === "edit", form, t, onReplace: preview.reset });
+  const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
+  const [request, setRequest] = useState("");
+  const [documentationUrl, setDocumentationUrl] = useState("");
+  const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null });
+  const [previewSize, setPreviewSize] = useState("standard");
+  const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
+  const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>({});
+  const [stateSnapshot, setStateSnapshot] = useState<Record<string, unknown>>({});
+  const [revealedRequest, setRevealedRequest] = useState({ text: "", key: 0 });
+  const dirtyRef = useRef(false);
+  dirtyRef.current = form.isDirty();
 
-  const requestManifest = parseRequestManifest(form.values.requestManifest);
-  const requestIds = requestManifest
-    .map((request) => (request && typeof request === "object" && "id" in request ? request.id : null))
-    .filter((id): id is string => typeof id === "string");
-  const editorDiagnostics =
-    form.values.displayType === "customJsx"
-      ? analyzeJsxTemplate(form.values.template, {
-          apiVersion: form.values.jsxApiVersion === "2" ? 2 : 1,
-          requestIds,
-        })
-      : [];
-  const requestDiagnostics =
-    form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2"
-      ? analyzeRequestManifest(form.values.requestManifest)
-      : [];
-  const hasEditorErrors = [...editorDiagnostics, ...requestDiagnostics].some(
-    (diagnostic) => diagnostic.severity === "error",
+  const candidate = useMemo(() => buildDefinition(form.values), [form.values]);
+  const requestIds = useMemo(
+    () =>
+      parseJsonArray(form.values.requests).flatMap((entry) =>
+        isRecord(entry) && typeof entry.id === "string" ? [entry.id] : [],
+      ),
+    [form.values.requests],
   );
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  const stateKeys = useMemo(() => {
+    const state = parseJson(form.values.stateSchema);
+    return Object.keys(isRecord(state) ? state : {});
+  }, [form.values.stateSchema]);
+  const jsxCompletions = useMemo(
+    () => createCustomWidgetCompletions(form.values, requestIds),
+    [form.values, requestIds],
+  );
+  const templateDiagnostics = useMemo(
+    () => analyzeJsxTemplate(form.values.template, { requestIds, stateKeys }),
+    [form.values.template, requestIds, stateKeys],
+  );
+  const requestDiagnostics = useMemo(() => analyzeRequestManifest(form.values.requests), [form.values.requests]);
+  const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");
+  const invalidSections = useMemo(
+    () =>
+      getInvalidCustomWidgetSections(
+        candidate.success ? [] : candidate.error.issues,
+        requestDiagnostics,
+        templateDiagnostics,
+      ),
+    [candidate, requestDiagnostics, templateDiagnostics],
+  );
+
+  const { save, runPreview, pasteAiResponse, copyDiagnostics, pending } = useCustomWidgetFormActions({
+    mode,
+    definitionId,
+    form,
+    candidate,
+    templateDiagnostics,
+    requestDiagnostics,
+    preview,
+    setPreview,
+    setMobilePane,
+    setOptionsSnapshot,
+    setStateSnapshot,
+    request,
+    documentationUrl,
+  });
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (isDirtyRef.current) event.preventDefault();
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (dirtyRef.current) event.preventDefault();
     };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => window.removeEventListener("beforeunload", beforeUnload);
   }, []);
 
-  useEffect(() => {
-    if (form.values.displayType === "customJsx" && form.values.jsxApiVersion === "2" && form.values.method !== "GET") {
-      form.setFieldValue("method", "GET");
-      form.setFieldValue("requestBody", "");
-    }
-  }, [form, form.values.displayType, form.values.jsxApiVersion, form.values.method]);
-
-  const focusStepForErrors = (errors: Record<string, unknown>) => {
-    const fields = Object.keys(errors);
-    if (fields.some((field) => ["name", "description", "iconUrl", "displayType"].includes(field.split(".")[0] ?? ""))) {
-      scrollToSection(0);
-      return;
-    }
-    if (
-      fields.some((field) =>
-        ["url", "method", "authType", "headerName", "requestBody", "secrets"].includes(field.split(".")[0] ?? ""),
-      )
-    ) {
-      scrollToSection(1);
-      return;
-    }
-    scrollToSection(2);
+  const invalid = hasDiagnostics || !candidate.success;
+  const renameRequest = (currentId: string, nextId: string) => {
+    if (!candidate.success) throw new Error(w("invalidWidget"));
+    applyDefinition(form, renameCustomWidgetRequest(candidate.data, currentId, nextId));
+    setRevealedRequest((current) => ({ text: `"id": "${nextId}"`, key: current.key + 1 }));
   };
-
-  const handleSubmit = form.onSubmit(async (values) => {
-    if (hasEditorErrors) return;
-    const displayConfig = buildDisplayConfigFromFormValues(values);
-
-    const payload = {
-      name: values.name,
-      description: values.description || undefined,
-      iconUrl: values.iconUrl || undefined,
-      url: values.url,
-      authType: values.authType as CustomWidgetAuthType,
-      headerName: values.headerName || undefined,
-      method: values.method as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-      requestBody: values.requestBody || undefined,
-      displayType: values.displayType as CustomWidgetDisplayType,
-      displayConfig: displayConfig as never,
-      secrets: values.secrets
-        .filter((s) => s.value)
-        .map((s) => ({
-          kind: s.kind as "apiKey" | "username" | "password",
-          value: s.value,
-        })),
-    };
-
-    try {
-      if (mode === "create") {
-        const result = await createMutation.mutateAsync(payload);
-        showSuccessNotification({
-          title: t("action.create"),
-          message: t("notification.created", { name: values.name }),
-        });
-        await utils.customWidget.all.invalidate();
-        router.push(`/manage/custom-widgets/edit/${result.id}`);
-      } else if (definitionId) {
-        await updateMutation.mutateAsync({ id: definitionId, ...payload });
-        showSuccessNotification({
-          title: t("action.save"),
-          message: t("notification.updated", { name: values.name }),
-        });
-        setPreviewRefreshSignal((n) => n + 1);
-        await utils.customWidget.all.invalidate();
-        await utils.customWidget.byId.invalidate({ id: definitionId });
-        await utils.widget.customApi.getData.invalidate();
-        form.setInitialValues(values);
-        form.resetDirty();
-      }
-    } catch (err) {
-      const serverErrors = extractServerErrors(err, values.displayType);
-      if (Object.keys(serverErrors).length > 0) {
-        form.setErrors(serverErrors);
-        focusStepForErrors(serverErrors);
-      }
-      const errorKey = mode === "create" ? "notification.createError" : "notification.updateError";
-      showErrorNotification({
-        title: t("action.save"),
-        message: t(errorKey as never),
-      });
-    }
-  }, focusStepForErrors);
-
-  const continueToSection = (currentSection: number, field: string, nextSection: number) => {
-    if (form.validateField(field).hasError) {
-      scrollToSection(currentSection);
-      return;
-    }
-    scrollToSection(nextSection);
+  const revealRequest = (requestId: string) => {
+    setRevealedRequest((current) => ({ text: `"id": "${requestId}"`, key: current.key + 1 }));
   };
-
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
+    <form onSubmit={save} className={classes.form}>
       <SegmentedControl
         className={classes.paneSwitcher}
         fullWidth
         value={mobilePane}
-        onChange={(value) => setMobilePane(value as "configure" | "preview")}
+        onChange={(value) => setMobilePane(value as typeof mobilePane)}
         data={[
-          { value: "configure", label: t("workbench.configure") },
-          { value: "preview", label: t("workbench.preview") },
+          { value: "configure", label: w("configure") },
+          { value: "preview", label: w("section.preview") },
         ]}
       />
+      <nav className={classes.sectionNav} aria-label={w("sectionNavigation")}>
+        {sectionLinks.map(([id, key, SectionIcon]) => (
+          <Button
+            key={id}
+            component="a"
+            href={`#${id}`}
+            size="compact-sm"
+            variant="subtle"
+            color={invalidSections.has(id) ? "red" : undefined}
+            leftSection={<SectionIcon size={14} />}
+            rightSection={
+              invalidSections.has(id) ? <IconAlertCircle size={13} aria-label={w("status.invalid")} /> : undefined
+            }
+          >
+            {w(key)}
+          </Button>
+        ))}
+      </nav>
       <div className={classes.workbench} data-mobile-pane={mobilePane}>
-        <Stack gap="xl" className={classes.configuration}>
-          <Stack gap={0} className={classes.formFlow}>
-            <FormatSection
-              form={form}
-              t={t}
-              previewJson={preview.json}
-              sectionRef={formatSectionRef}
-              onContinue={() => continueToSection(0, "name", 1)}
+        <Stack gap="lg" className={classes.configuration}>
+          <EditorSection id="general" title={w("generalInformation")} icon={IconSettings}>
+            <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
+            <Textarea label={t("field.description")} autosize minRows={2} {...form.getInputProps("description")} />
+            <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
+          </EditorSection>
+          <EditorSection id="sources" title={w("sources.title")} icon={IconApi}>
+            <CustomWidgetSourcesEditor form={form} definitionId={definitionId} />
+          </EditorSection>
+          <EditorSection id="requests" title={w("requests.title")} icon={IconDatabase}>
+            <CustomWidgetRequestTools requestIds={requestIds} onGoTo={revealRequest} onRename={renameRequest} />
+            <CodeEditor
+              id="requests-editor"
+              label={w("requests.label")}
+              description={w("requests.description")}
+              language="json"
+              value={form.values.requests}
+              onChange={(value) => form.setFieldValue("requests", value)}
+              diagnostics={requestDiagnostics}
+              error={form.errors.requests}
+              revealText={revealedRequest.text}
+              revealKey={revealedRequest.key}
+              required
             />
-            <ConnectionSection
-              form={form}
-              t={t}
-              previewJson={preview.json}
-              sectionRef={connectionSectionRef}
-              isTesting={preview.isTesting}
-              onTest={() => void preview.test()}
-              onContinue={() => continueToSection(1, "url", 2)}
+          </EditorSection>
+          <EditorSection id="options" title={w("options.title")} icon={IconBraces}>
+            <CodeEditor
+              id="options-schema"
+              label={w("options.schema")}
+              language="json"
+              value={form.values.optionsSchema}
+              onChange={(value) => form.setFieldValue("optionsSchema", value)}
+              error={form.errors.optionsSchema}
             />
-            <ConfigureSection form={form} t={t} previewJson={preview.json} sectionRef={configureSectionRef} />
-          </Stack>
+            <CodeEditor
+              id="default-options"
+              label={w("options.defaults")}
+              language="json"
+              value={form.values.defaultOptions}
+              onChange={(value) => form.setFieldValue("defaultOptions", value)}
+              error={form.errors.defaultOptions}
+            />
+          </EditorSection>
+          <EditorSection id="state" title={w("state.title")} icon={IconSettings}>
+            <Text size="sm" c="dimmed">
+              {w("state.description")}
+            </Text>
+            <CodeEditor
+              id="state-schema"
+              label={w("state.schema")}
+              language="json"
+              value={form.values.stateSchema}
+              onChange={(value) => form.setFieldValue("stateSchema", value)}
+              error={form.errors.stateSchema}
+            />
+            <CodeEditor
+              id="default-state"
+              label={w("state.defaults")}
+              language="json"
+              value={form.values.defaultState}
+              onChange={(value) => form.setFieldValue("defaultState", value)}
+              error={form.errors.defaultState}
+            />
+          </EditorSection>
+          <EditorSection id="jsx" title={w("jsx.title")} icon={IconCode}>
+            <CodeEditor
+              id="jsx-editor"
+              label={w("jsx.label")}
+              language="jsx"
+              value={form.values.template}
+              onChange={(value) => form.setFieldValue("template", value)}
+              diagnostics={templateDiagnostics}
+              completions={jsxCompletions}
+              error={form.errors.template}
+              required
+              maxLength={50_000}
+            />
+          </EditorSection>
+          <CustomWidgetAiCard
+            candidate={candidate.success ? candidate.data : null}
+            request={request}
+            onRequestChange={setRequest}
+            documentationUrl={documentationUrl}
+            onDocumentationUrlChange={setDocumentationUrl}
+            onPaste={() => void pasteAiResponse()}
+            onCopyDiagnostics={() => void copyDiagnostics()}
+          />
           <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
-            <Group justify="space-between" wrap="nowrap">
-              <Text size="sm" fw={600}>
-                {form.isDirty() ? globalT("common.unsavedChanges") : t("action.readyToSave")}
-              </Text>
-              <Button
-                type="submit"
-                size="md"
-                loading={createMutation.isPending || updateMutation.isPending}
-                disabled={hasEditorErrors}
-              >
-                {mode === "create" ? t("action.create") : t("action.save")}
-              </Button>
-            </Group>
+            <SaveActions
+              dirty={form.isDirty()}
+              pending={pending}
+              invalid={invalid}
+              mode={mode}
+              onPreview={() => void runPreview()}
+            />
           </Paper>
         </Stack>
-
-        <Box component="aside" className={classes.previewPane} aria-label={t("preview.title")}>
+        <Box id="preview" component="aside" className={classes.previewPane} aria-label={w("widgetPreview")}>
           <Paper p="md" className={classes.actionBar} shadow="sm">
-            <Group justify="space-between" wrap="nowrap">
-              <div>
-                <Text size="sm" fw={600}>
-                  {form.isDirty() ? globalT("common.unsavedChanges") : t("action.readyToSave")}
-                </Text>
-                <Text size="xs" c="dimmed" visibleFrom="sm">
-                  {hasEditorErrors ? t("editor.saveBlocked") : t("editor.saveReady")}
-                </Text>
-              </div>
-              <Button
-                type="submit"
-                size="md"
-                loading={createMutation.isPending || updateMutation.isPending}
-                disabled={hasEditorErrors}
-                miw={160}
-              >
-                {mode === "create" ? t("action.create") : t("action.save")}
-              </Button>
-            </Group>
+            <SaveActions
+              dirty={form.isDirty()}
+              pending={pending}
+              invalid={invalid}
+              mode={mode}
+              onPreview={() => void runPreview()}
+            />
           </Paper>
-          <CopyAiPromptButton
-            rawResponse={preview.fetchResult?.rawResponse}
-            currentConfig={{
-              $schema: "homarr-custom-widget-v3",
-              name: form.values.name,
-              description: form.values.description,
-              iconUrl: form.values.iconUrl,
-              url: form.values.url,
-              authType: form.values.authType,
-              headerName: form.values.headerName,
-              method: form.values.method,
-              requestBody: form.values.requestBody,
-              displayType: form.values.displayType,
-              displayConfig: preview.input.displayConfig,
-            }}
-          />
-          <CustomWidgetPreview
-            getFormValues={preview.getInput}
-            formValues={preview.input}
-            fetchResult={preview.fetchResult}
-            cachedJson={preview.json}
-            onTest={() => void preview.test()}
-            isTesting={preview.isTesting}
-            isSampleStale={preview.isStale}
-            testError={preview.testError ? t("notification.previewError") : null}
-            onInsertDataPath={form.values.displayType === "customJsx" ? preview.insertDataPath : undefined}
-            onSetPreviewLiveActions={preview.setLiveActions}
-            isUpdatingPreviewActions={preview.isUpdatingLiveActions}
-            onSampleDataChange={preview.setSampleData}
+          <CustomWidgetPreviewPanel
+            candidate={candidate.success ? candidate.data : null}
+            preview={preview}
+            size={previewSize}
+            onSizeChange={setPreviewSize}
+            theme={previewTheme}
+            onThemeChange={setPreviewTheme}
+            optionsSnapshot={optionsSnapshot}
+            onOptionsChange={setOptionsSnapshot}
+            stateSnapshot={stateSnapshot}
+            onStateChange={setStateSnapshot}
+            onLiveActionsChange={(enabled) =>
+              setPreview((current) => ({
+                ...current,
+                session: current.session ? { ...current.session, liveActions: enabled } : null,
+              }))
+            }
           />
         </Box>
       </div>

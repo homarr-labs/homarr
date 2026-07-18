@@ -4,11 +4,13 @@ import { CUSTOM_JSX_LIMITS, validateCustomJsxTemplate } from "../jsx";
 export type EditorDiagnosticCode =
   | "ast"
   | "dynamicRequestId"
+  | "dynamicStateBinding"
+  | "inlineRequestProps"
   | "invalidRequestManifest"
-  | "legacyNetworkProps"
   | "missingRequestId"
   | "templateEmpty"
   | "templateTooLong"
+  | "unknownStateBinding"
   | "unknownRequest";
 
 export interface EditorDiagnostic {
@@ -21,16 +23,17 @@ export interface EditorDiagnostic {
 }
 
 export interface AnalyzeJsxTemplateOptions {
-  apiVersion?: 1 | 2;
   requestIds?: string[];
+  stateKeys?: string[];
 }
 const networkComponentPattern = /<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/giu;
+const stateBindingPattern = /<[A-Z][A-Za-z0-9.]*(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu;
 const lineAt = (source: string, index: number) => source.slice(0, index).split("\n").length;
 export const CUSTOM_JSX_TEMPLATE_LIMIT = CUSTOM_JSX_LIMITS.templateLength;
 
 export function analyzeJsxTemplate(
   template: string,
-  { apiVersion = 1, requestIds = [] }: AnalyzeJsxTemplateOptions = {},
+  { requestIds = [], stateKeys = [] }: AnalyzeJsxTemplateOptions = {},
 ): EditorDiagnostic[] {
   const diagnostics: EditorDiagnostic[] = [];
   if (!template.trim()) diagnostics.push({ code: "templateEmpty", severity: "error", line: 1, column: 1, index: 0 });
@@ -46,13 +49,12 @@ export function analyzeJsxTemplate(
       value: entry.message,
     })),
   );
-  if (apiVersion !== 2) return diagnostics;
   const knownIds = new Set(requestIds);
   for (const match of template.matchAll(networkComponentPattern)) {
     const props = match[2] ?? "";
     const line = lineAt(template, match.index);
     if (/\b(?:url|method|headers|body|onBody|offBody)\s*=/iu.test(props)) {
-      diagnostics.push({ code: "legacyNetworkProps", severity: "error", line, index: match.index });
+      diagnostics.push({ code: "inlineRequestProps", severity: "error", line, index: match.index });
     }
     const staticRequest = props.match(/\brequestId\s*=\s*["']([^"']+)["']/iu);
     if (staticRequest?.[1] && !knownIds.has(staticRequest[1])) {
@@ -67,6 +69,26 @@ export function analyzeJsxTemplate(
       diagnostics.push({ code: "dynamicRequestId", severity: "error", line, index: match.index });
     } else if (!staticRequest) {
       diagnostics.push({ code: "missingRequestId", severity: "error", line, index: match.index });
+    }
+  }
+  const knownState = new Set(stateKeys);
+  for (const match of template.matchAll(stateBindingPattern)) {
+    const stateName = match[1] ?? match[2];
+    if (!stateName) {
+      diagnostics.push({
+        code: "dynamicStateBinding",
+        severity: "error",
+        line: lineAt(template, match.index),
+        index: match.index,
+      });
+    } else if (!knownState.has(stateName)) {
+      diagnostics.push({
+        code: "unknownStateBinding",
+        severity: "error",
+        line: lineAt(template, match.index),
+        index: match.index,
+        value: stateName,
+      });
     }
   }
   return diagnostics;

@@ -29,6 +29,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@codemirror/lang-json": "catalog:",
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@homarr/api": "workspace:^0.1.0",
@@ -75,6 +76,7 @@
     "@tiptap/extension-underline": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
+    "@uiw/react-codemirror": "catalog:",
     "acorn": "catalog:",
     "acorn-jsx": "catalog:",
     "clsx": "catalog:",

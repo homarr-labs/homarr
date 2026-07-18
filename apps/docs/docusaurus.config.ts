@@ -125,6 +125,11 @@ const config: Config = {
           to: "/blog",
         },
         {
+          label: "Workshop",
+          position: "left",
+          to: "/workshop",
+        },
+        {
           label: "About us",
           position: "left",
           to: "/about-us",
@@ -277,8 +282,19 @@ const config: Config = {
     function homarrPackagesPlugin() {
       return {
         name: "resolve-homarr-packages",
-        configureWebpack() {
-          return { resolve: { symlinks: false } };
+        configureWebpack(_config, isServer, { getJSLoader }) {
+          return {
+            resolve: { symlinks: false },
+            module: {
+              rules: [
+                {
+                  test: /\.[jt]sx?$/iu,
+                  include: /node_modules[\\/]@homarr/u,
+                  use: [getJSLoader({ isServer })],
+                },
+              ],
+            },
+          };
         },
       };
     },
@@ -309,7 +325,6 @@ const config: Config = {
         },
       };
     },
-    "@signalwire/docusaurus-plugin-llms-txt",
     async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",

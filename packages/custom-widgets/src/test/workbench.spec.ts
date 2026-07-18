@@ -2,13 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import {
   analyzeJsxTemplate,
+  analyzeCustomWidgetAccessibility,
   analyzeRequestManifest,
   appendDataPath,
   createResponseTreeNode,
   CUSTOM_JSX_TEMPLATE_LIMIT,
   DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
   customWidgetFormSchema,
+  renameCustomWidgetRequest,
 } from "../workbench";
+import { CUSTOM_WIDGET_STARTER } from "../core/examples";
 
 describe("Custom Widget workbench contracts", () => {
   it("always provides a valid starter template", () => {
@@ -39,14 +42,22 @@ describe("Custom Widget workbench contracts", () => {
   });
 
   it("validates named request references and rejects inline network capabilities", () => {
-    expect(analyzeJsxTemplate('<SubFetch requestId="known" />', { apiVersion: 2, requestIds: ["known"] })).toEqual([]);
-    expect(
-      analyzeJsxTemplate('<SubFetch requestId="missing" url="/api" />', { apiVersion: 2, requestIds: ["known"] }),
-    ).toEqual(
+    expect(analyzeJsxTemplate('<SubFetch requestId="known" />', { requestIds: ["known"] })).toEqual([]);
+    expect(analyzeJsxTemplate('<SubFetch requestId="missing" url="/api" />', { requestIds: ["known"] })).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "legacyNetworkProps" }),
+        expect.objectContaining({ code: "inlineRequestProps" }),
         expect.objectContaining({ code: "unknownRequest", value: "missing" }),
       ]),
+    );
+  });
+
+  it("diagnoses dynamic and unknown local-state bindings", () => {
+    expect(analyzeJsxTemplate('<Calendar bind="selectedDate" />', { stateKeys: ["selectedDate"] })).toEqual([]);
+    expect(analyzeJsxTemplate('<Calendar bind="missing" />', { stateKeys: ["selectedDate"] })).toEqual([
+      expect.objectContaining({ code: "unknownStateBinding", value: "missing" }),
+    ]);
+    expect(analyzeJsxTemplate("<Calendar bind={state.selectedDate} />", { stateKeys: ["selectedDate"] })).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: "dynamicStateBinding" })]),
     );
   });
 
@@ -63,5 +74,72 @@ describe("Custom Widget workbench contracts", () => {
     expect(appendDataPath("data", "first-name", false)).toBe('data["first-name"]');
     const tree = createResponseTreeNode({ items: [{ name: "one" }] }, "data", "data");
     expect(tree.children?.[0]?.children?.[0]?.children?.[0]?.value).toBe("data.items[0].name");
+  });
+
+  it("renames a request and every canonical reference atomically", () => {
+    const renamed = renameCustomWidgetRequest(
+      {
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            id: "items",
+            sourceId: "default",
+            kind: "query",
+            method: "GET",
+            pathTemplate: "/items",
+            parameters: {},
+            auth: "none",
+            minimumBoardPermission: "view",
+            trigger: "manual",
+          },
+          {
+            id: "refresh",
+            sourceId: "default",
+            kind: "action",
+            method: "POST",
+            pathTemplate: "/refresh",
+            parameters: {},
+            auth: "none",
+            minimumBoardPermission: "modify",
+            trigger: "manual",
+            invalidates: ["items"],
+          },
+        ],
+        optionsSchema: {
+          type: "object",
+          properties: {
+            item: {
+              type: "string",
+              "x-homarr": {
+                control: "select",
+                optionsSource: { requestId: "items", valuePath: "$.id", labelPath: "$.name" },
+              },
+            },
+          },
+          additionalProperties: false,
+        },
+        template: '<Stack><SubFetch requestId="items" />{data["items"]}{status.items.ok}</Stack>',
+      },
+      "items",
+      "inventory",
+    );
+
+    expect(renamed.requests[0]?.id).toBe("inventory");
+    expect(renamed.requests[1]?.invalidates).toEqual(["inventory"]);
+    expect(JSON.stringify(renamed.optionsSchema)).toContain('"requestId":"inventory"');
+    expect(renamed.template).toBe(
+      '<Stack><SubFetch requestId="inventory" />{data["inventory"]}{status.inventory.ok}</Stack>',
+    );
+  });
+
+  it("reports common accessibility omissions in preview", () => {
+    expect(
+      analyzeCustomWidgetAccessibility('<Stack><Image src="/image.png"/><ActionIcon/><TextInput /></Stack>'),
+    ).toEqual(["imageAlt", "actionIconLabel", "inputLabel"]);
+    expect(
+      analyzeCustomWidgetAccessibility(
+        '<Stack><Image src="/image.png" alt="Preview"/><ActionIcon aria-label="Refresh"/><TextInput label="Search" /></Stack>',
+      ),
+    ).toEqual([]);
   });
 });

@@ -13,21 +13,8 @@ import { Link } from "@homarr/ui";
 import { NoResults } from "~/components/no-results";
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
 
-const displayTypeBadgeColors: Record<string, string> = {
-  singleValue: "blue",
-  keyValue: "green",
-  table: "orange",
-  statGrid: "violet",
-  progressBars: "teal",
-  statusIndicator: "cyan",
-  countGrid: "indigo",
-  raw: "gray",
-  actionButton: "red",
-  customJsx: "pink",
-};
-
 interface CustomWidgetListProps {
-  definitions: RouterOutputs["customWidget"]["all"];
+  definitions: RouterOutputs["customWidget"]["list"];
 }
 
 export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
@@ -52,7 +39,7 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
   );
 };
 
-type WidgetDef = RouterOutputs["customWidget"]["all"][number];
+type WidgetDef = RouterOutputs["customWidget"]["list"][number];
 
 function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
   const t = useScopedI18n("customWidget");
@@ -64,7 +51,7 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
       { id: widget.id, enabled: !widget.enabled },
       {
         onSuccess: () => {
-          void utils.customWidget.all.invalidate();
+          void utils.customWidget.list.invalidate();
           void utils.widget.customApi.getData.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
@@ -99,19 +86,14 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
             <Text size="sm" fw={600} lineClamp={1} style={{ minWidth: 0 }}>
               {widget.name}
             </Text>
-            {widget.url && (
+            {widget.sources[0] && (
               <Text size="xs" c="dimmed" ff="monospace" lineClamp={1} style={{ wordBreak: "break-all", minWidth: 0 }}>
-                {widget.url}
+                {widget.sources.map((source) => source.origin).join(" · ")}
               </Text>
             )}
           </Stack>
-          <Badge
-            color={displayTypeBadgeColors[widget.displayType] ?? "gray"}
-            size="sm"
-            variant="light"
-            style={{ flexShrink: 0 }}
-          >
-            {t(`displayType.${widget.displayType}` as never)}
+          <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
+            JSX · {widget.requestCount}
           </Badge>
         </Group>
 

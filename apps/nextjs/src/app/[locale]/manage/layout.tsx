@@ -5,6 +5,7 @@ import {
   IconApi,
   IconBook2,
   IconBox,
+  IconBuildingStore,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -78,7 +79,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("custom-widget-manage"),
+    },
+    {
+      icon: IconBuildingStore,
+      href: "/manage/workshop",
+      label: t("items.workshop"),
+      hidden: !session?.user.permissions.includes("custom-widget-manage"),
     },
     {
       icon: IconSearch,

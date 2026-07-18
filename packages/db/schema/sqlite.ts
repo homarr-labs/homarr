@@ -27,12 +27,7 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import type {
-  CustomWidgetAuthType,
-  CustomWidgetDisplayType,
-  CustomWidgetMethod,
-  CustomWidgetSecretKind,
-} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
@@ -494,13 +489,13 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
   name: text().notNull(),
   description: text(),
   iconUrl: text(),
-  url: text().notNull(),
-  authType: text().$type<CustomWidgetAuthType>().notNull().default("none"),
-  headerName: text(),
-  method: text().$type<CustomWidgetMethod>().notNull().default("GET"),
-  requestBody: text(),
-  displayType: text().$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
-  displayConfig: text().default(emptySuperJSON).notNull(),
+  sources: text().notNull(),
+  requests: text().notNull(),
+  optionsSchema: text().notNull(),
+  defaultOptions: text().notNull(),
+  stateSchema: text(),
+  defaultState: text(),
+  template: text().notNull(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()
@@ -514,8 +509,9 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
 export const customWidgetSecrets = sqliteTable(
   "custom_widget_secret",
   {
+    sourceId: text().notNull(),
     kind: text().$type<CustomWidgetSecretKind>().notNull(),
-    value: text().$type<`${string}.${string}`>().notNull(),
+    encryptedValue: text("encrypted_value").$type<`${string}.${string}`>().notNull(),
     updatedAt: int({ mode: "timestamp" })
       .$onUpdateFn(() => new Date())
       .notNull(),
@@ -525,7 +521,7 @@ export const customWidgetSecrets = sqliteTable(
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.definitionId, table.kind],
+      columns: [table.definitionId, table.sourceId, table.kind],
     }),
   }),
 );

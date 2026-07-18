@@ -6,6 +6,7 @@ import {
   assertSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest,
+  invalidateCustomWidgetResponseCache,
   resolveAndValidateHost,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
@@ -48,6 +49,66 @@ describe("custom widget network policy", () => {
         }),
       ).resolves.toMatchObject({ ok: true, status: 200, data: { status: "ok" } });
     } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("preserves structured bodies for GET queries", async () => {
+    const server = createServer((request, response) => {
+      let body = "";
+      request.setEncoding("utf8");
+      request.on("data", (chunk: string) => {
+        body += chunk;
+      });
+      request.on("end", () => {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({ body }));
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl: `http://127.0.0.1:${address.port}`,
+          method: "GET",
+          body: '{"query":"status"}',
+          networkScope: "loopback",
+          kind: "query",
+        }),
+      ).resolves.toMatchObject({ ok: true, data: { body: '{"query":"status"}' } });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("evicts declared response-cache prefixes after an action", async () => {
+    let calls = 0;
+    const server = createServer((_request, response) => {
+      calls += 1;
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(JSON.stringify({ calls }));
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    const cacheKey = "custom-jsx:item:status:params";
+    const input = {
+      baseUrl: `http://127.0.0.1:${address.port}`,
+      method: "GET" as const,
+      networkScope: "loopback" as const,
+      kind: "query" as const,
+      cacheKey,
+      cacheTtlSeconds: 60,
+    };
+    try {
+      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 1 } });
+      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 1 } });
+      invalidateCustomWidgetResponseCache(["custom-jsx:item:status:"]);
+      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 2 } });
+    } finally {
+      invalidateCustomWidgetResponseCache(["custom-jsx:item:status:"]);
       await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
     }
   });

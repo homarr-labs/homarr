@@ -302,6 +302,13 @@
       "when": 1783176100870,
       "tag": "0042_add_widget_secret",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1784305537309,
+      "tag": "0043_custom_widget_v2_reset",
+      "breakpoints": true
     }
   ]
 }

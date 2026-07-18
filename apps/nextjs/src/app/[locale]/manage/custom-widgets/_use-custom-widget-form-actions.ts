@@ -1,0 +1,169 @@
+"use client";
+
+import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
+import type { UseFormReturnType } from "@mantine/form";
+
+import { clientApi, fetchApi } from "@homarr/api/client";
+import {
+  buildCustomWidgetFixPrompt,
+  customWidgetDefinitionSchema,
+  parseCustomWidgetClipboardDetailed,
+} from "@homarr/custom-widgets/core";
+import type { EditorDiagnostic, CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
+
+import { applyDefinition, buildDefinition, loadPreviewQueries } from "./_custom-widget-form-utils";
+import type { PreviewState } from "./_custom-widget-preview-panel";
+
+interface FormActionsInput {
+  mode: "create" | "edit";
+  definitionId?: string;
+  form: UseFormReturnType<CustomWidgetFormValues>;
+  candidate: ReturnType<typeof buildDefinition>;
+  templateDiagnostics: EditorDiagnostic[];
+  requestDiagnostics: EditorDiagnostic[];
+  preview: PreviewState;
+  setPreview: Dispatch<SetStateAction<PreviewState>>;
+  setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
+  setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
+  setStateSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
+  request: string;
+  documentationUrl: string;
+}
+
+export function useCustomWidgetFormActions(input: FormActionsInput) {
+  const router = useRouter();
+  const t = useScopedI18n("customWidget");
+  const w = useScopedI18n("customWidget.workbench");
+  const utils = clientApi.useUtils();
+  const createMutation = clientApi.customWidget.create.useMutation();
+  const updateMutation = clientApi.customWidget.update.useMutation();
+  const previewMutation = clientApi.customWidget.previewCreate.useMutation();
+
+  const save = input.form.onSubmit(async (values) => {
+    const definition = buildDefinition(values);
+    if (!definition.success) {
+      showErrorNotification({
+        title: t("action.save"),
+        message: definition.error.issues[0]?.message ?? w("invalidWidget"),
+      });
+      return;
+    }
+    const changedSecrets = values.secrets
+      .filter((secret) => secret.value.trim())
+      .map(({ sourceId, kind, value }) => ({
+        sourceId,
+        kind: kind as "apiKey" | "username" | "password",
+        value,
+      }));
+    try {
+      if (input.mode === "create") {
+        const result = await createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
+        await utils.customWidget.list.invalidate();
+        showSuccessNotification({
+          title: t("action.create"),
+          message: t("notification.created", { name: values.name }),
+        });
+        router.push(`/manage/custom-widgets/edit/${result.id}`);
+      } else if (input.definitionId) {
+        await updateMutation.mutateAsync({
+          id: input.definitionId,
+          ...definition.data,
+          secrets: changedSecrets.length ? changedSecrets : undefined,
+        });
+        await Promise.all([
+          utils.customWidget.list.invalidate(),
+          utils.customWidget.get.invalidate({ id: input.definitionId }),
+          utils.widget.customApi.getData.invalidate(),
+        ]);
+        input.form.setInitialValues(values);
+        input.form.resetDirty();
+        showSuccessNotification({
+          title: t("action.save"),
+          message: t("notification.updated", { name: values.name }),
+        });
+      }
+    } catch {
+      showErrorNotification({ title: t("action.save"), message: t("notification.updateError") });
+    }
+  });
+
+  const runPreview = async () => {
+    if (!input.candidate.success) {
+      showErrorNotification({
+        title: w("section.preview"),
+        message: input.candidate.error.issues[0]?.message ?? w("invalidWidget"),
+      });
+      return;
+    }
+    input.setMobilePane("preview");
+    try {
+      const created = await previewMutation.mutateAsync({
+        definition: input.candidate.data,
+        definitionId: input.definitionId,
+        secrets: input.form.values.secrets
+          .filter((secret) => secret.value.trim())
+          .map(({ sourceId, kind, value }) => ({
+            sourceId,
+            kind: kind as "apiKey" | "username" | "password",
+            value,
+          })),
+      });
+      input.setOptionsSnapshot(input.candidate.data.defaultOptions);
+      input.setStateSnapshot(input.candidate.data.defaultState ?? {});
+      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
+      input.setPreview({ ...snapshot, session: created.previewSession });
+    } catch {
+      showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
+    }
+  };
+
+  const pasteAiResponse = async () => {
+    try {
+      const result = parseCustomWidgetClipboardDetailed(await navigator.clipboard.readText());
+      if (!result.success) throw new Error(result.error);
+      applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
+      input.setPreview({ data: {}, status: {}, session: null });
+      showSuccessNotification({ title: w("ai.response"), message: w("ai.loaded") });
+    } catch (error) {
+      showErrorNotification({
+        title: w("ai.response"),
+        message:
+          error instanceof Error ? w("ai.invalidResponseDetail", { message: error.message }) : w("ai.invalidResponse"),
+      });
+    }
+  };
+
+  const copyDiagnostics = async () => {
+    try {
+      const diagnostics = [...input.templateDiagnostics, ...input.requestDiagnostics]
+        .map((entry) => `${entry.severity.toUpperCase()} ${entry.code}: ${entry.value ?? ""}`)
+        .join("\n");
+      const journal = input.preview.session
+        ? await fetchApi.customWidget.previewJournal.query({ sessionId: input.preview.session.id }).catch(() => [])
+        : [];
+      await navigator.clipboard.writeText(
+        buildCustomWidgetFixPrompt({
+          currentConfig: input.candidate.success ? input.candidate.data : input.form.values,
+          request: input.request,
+          documentationUrl: input.documentationUrl,
+          diagnostics,
+          journal,
+        }),
+      );
+      showSuccessNotification({ title: w("ai.diagnostics"), message: w("ai.diagnosticsCopied") });
+    } catch {
+      showErrorNotification({ title: w("ai.diagnostics"), message: t("notification.aiPromptCopyError") });
+    }
+  };
+
+  return {
+    save,
+    runPreview,
+    pasteAiResponse,
+    copyDiagnostics,
+    pending: createMutation.isPending || updateMutation.isPending,
+  };
+}

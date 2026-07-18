@@ -223,6 +223,8 @@ const TABLER_ICON_MAP: Record<string, ComponentType<never>> = {
   pulse: IconHeartbeat,
 };
 
+export const SAFE_TABLER_ICON_NAMES = Object.freeze(Object.keys(TABLER_ICON_MAP).toSorted());
+
 function isValidIconProp(value: unknown): value is string | number {
   return typeof value === "number" || typeof value === "string";
 }

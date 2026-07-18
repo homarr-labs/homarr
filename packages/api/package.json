@@ -14,7 +14,8 @@
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
-    "./mcp": "./src/mcp.ts"
+    "./mcp": "./src/mcp.ts",
+    "./custom-widget-secrets": "./src/router/custom-widget/secret-requests.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

@@ -21,6 +21,9 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "check:architecture": "node ./scripts/check-architecture.mjs",
+    "generate:components": "tsx ./scripts/generate-component-metadata.ts",
+    "generate:component-docs": "tsx ./scripts/generate-component-docs.ts",
+    "generate": "pnpm generate:components && pnpm generate:component-docs",
     "format": "oxfmt .",
     "lint": "oxlint",
     "test": "vitest run",

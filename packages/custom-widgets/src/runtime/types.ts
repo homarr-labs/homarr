@@ -10,13 +10,22 @@ export interface CustomWidgetRequestResult {
   data: unknown;
   error?: string;
   simulated?: boolean;
+  invalidates?: string[];
 }
 
 export interface CustomJsxRequestCapability {
   id: string;
   kind: "query" | "action";
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  trigger: "load" | "manual";
   minimumBoardPermission: "view" | "modify" | "full";
+  confirmation?: {
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    destructive?: boolean;
+  };
+  invalidates?: string[];
 }
 
 export interface RuntimeRequestInput {
@@ -46,12 +55,12 @@ export interface CustomWidgetRuntimePort {
   query(input: RuntimeRequestInput, signal?: AbortSignal): Promise<CustomWidgetRequestResult>;
   executeAction(input: RuntimeActionInput): Promise<CustomWidgetRequestResult>;
   invalidate(input: RuntimeInvalidationInput): Promise<void>;
-  confirm(input: { title: string; message: ReactNode }): Promise<boolean>;
+  confirm(input: { title: string; message: ReactNode; confirmLabel?: string; destructive?: boolean }): Promise<boolean>;
   notify(notification: RuntimeNotification): void;
 }
 
 export interface CustomWidgetRuntimeMessages {
-  migrationRequired: string;
+  requestIdRequired: string;
   unsavedPreview: string;
   invalidParams: string;
   loadRequest: string;
@@ -72,8 +81,21 @@ export interface CustomWidgetRuntimeValue {
   definitionId?: string;
   previewSessionId?: string;
   previewLiveActions?: boolean;
+  queriesDisabled?: boolean;
   isEditMode: boolean;
   requestCapabilities: readonly CustomJsxRequestCapability[];
   port: CustomWidgetRuntimePort;
   messages: CustomWidgetRuntimeMessages;
+  setQueryState?(requestId: string, value: CustomWidgetPublishedQueryState | null): void;
+}
+
+export interface CustomWidgetPublishedQueryState {
+  data: unknown;
+  status: {
+    loading: boolean;
+    ok?: boolean;
+    status?: number;
+    statusText?: string;
+    error?: string;
+  };
 }

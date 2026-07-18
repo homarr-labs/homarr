@@ -4,7 +4,11 @@ import { Alert, Badge, Box, Group, Popover, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconNetwork } from "@tabler/icons-react";
 
 import { renderSafeJsx } from "../jsx/interpreter";
+import { CustomJsxStateProvider } from "../jsx/runtime-components";
 import type { CustomJsxRequestCapability } from "./types";
+
+type CustomWidgetStateValue = string | number | boolean | string[] | number[];
+const EMPTY_RECORD: Record<string, never> = {};
 
 const methodColors: Readonly<Record<string, string>> = {
   GET: "blue",
@@ -27,6 +31,11 @@ export interface CustomJsxRendererMessages {
 export interface CustomJsxRendererProps {
   template: string;
   data: unknown;
+  status?: Record<string, unknown>;
+  options?: Record<string, unknown>;
+  stateSchema?: Record<string, string>;
+  defaultState?: Record<string, unknown>;
+  onStateChange?(state: Record<string, CustomWidgetStateValue>): void;
   requestCapabilities: unknown;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
@@ -55,7 +64,15 @@ export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapabi
         id: record.id,
         kind: record.kind,
         method: record.method,
+        trigger: record.trigger === "load" ? "load" : "manual",
         minimumBoardPermission: record.minimumBoardPermission,
+        confirmation:
+          record.confirmation && typeof record.confirmation === "object"
+            ? (record.confirmation as CustomJsxRequestCapability["confirmation"])
+            : undefined,
+        invalidates: Array.isArray(record.invalidates)
+          ? record.invalidates.filter((entry): entry is string => typeof entry === "string")
+          : [],
       } as CustomJsxRequestCapability,
     ];
   });
@@ -80,6 +97,9 @@ class RendererErrorBoundary extends Component<
 function ErrorAlert({ error }: { error: Error }) {
   return (
     <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
+      <Text size="xs" fw={700}>
+        RUNTIME_RENDER_ERROR
+      </Text>
       <Text size="xs">{error.message}</Text>
     </Alert>
   );
@@ -88,13 +108,37 @@ function ErrorAlert({ error }: { error: Error }) {
 export function CustomJsxRenderer({
   template,
   data,
+  status = EMPTY_RECORD,
+  options = EMPTY_RECORD,
+  stateSchema = EMPTY_RECORD,
+  defaultState = EMPTY_RECORD,
+  onStateChange,
   requestCapabilities: rawCapabilities,
   components,
   createBindings,
   messages,
 }: CustomJsxRendererProps) {
   const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const bindings = useMemo(() => createBindings(data), [createBindings, data]);
+  const [state, setState] = useState<Record<string, CustomWidgetStateValue>>(() =>
+    normalizeState(stateSchema, defaultState),
+  );
+  useEffect(() => {
+    const next = normalizeState(stateSchema, defaultState);
+    setState((current) => (sameWidgetState(current, next) ? current : next));
+  }, [defaultState, stateSchema]);
+  const setStateValue = useCallback(
+    (name: string, value: CustomWidgetStateValue) => {
+      const type = stateSchema[name];
+      if (!type || !matchesStateType(type, value)) return;
+      setState((current) => ({ ...current, [name]: value }));
+    },
+    [stateSchema],
+  );
+  useEffect(() => onStateChange?.(state), [onStateChange, state]);
+  const bindings = useMemo(
+    () => ({ ...createBindings(data), status, options, state }),
+    [createBindings, data, options, state, status],
+  );
   const capabilities = useMemo(() => parseRequestCapabilities(rawCapabilities), [rawCapabilities]);
   const rendered = useMemo(() => {
     try {
@@ -172,9 +216,11 @@ export function CustomJsxRenderer({
         {rendered.error ? (
           <ErrorAlert error={rendered.error} />
         ) : (
-          <RendererErrorBoundary key={template} onError={handleError}>
-            {rendered.node}
-          </RendererErrorBoundary>
+          <CustomJsxStateProvider state={state} stateSchema={stateSchema} setStateValue={setStateValue}>
+            <RendererErrorBoundary key={template} onError={handleError}>
+              {rendered.node}
+            </RendererErrorBoundary>
+          </CustomJsxStateProvider>
         )}
       </Box>
       {parseErrors.length > 0 && (
@@ -191,4 +237,41 @@ export function CustomJsxRenderer({
       )}
     </Stack>
   );
+}
+
+function normalizeState(schema: Record<string, string>, defaults: Record<string, unknown>) {
+  const state: Record<string, CustomWidgetStateValue> = {};
+  for (const [name, type] of Object.entries(schema)) {
+    const value = defaults[name];
+    state[name] = matchesStateType(type, value)
+      ? value
+      : type.endsWith("[]")
+        ? []
+        : type === "number"
+          ? 0
+          : type === "boolean"
+            ? false
+            : "";
+  }
+  return state;
+}
+
+function matchesStateType(type: string, value: unknown): value is CustomWidgetStateValue {
+  if (type === "date") return typeof value === "string";
+  if (type === "string[]" || type === "date[]")
+    return Array.isArray(value) && value.every((entry) => typeof entry === "string");
+  if (type === "number[]") return Array.isArray(value) && value.every((entry) => typeof entry === "number");
+  return typeof value === type;
+}
+
+function sameWidgetState(left: Record<string, CustomWidgetStateValue>, right: Record<string, CustomWidgetStateValue>) {
+  const leftEntries = Object.entries(left);
+  const rightEntries = Object.entries(right);
+  if (leftEntries.length !== rightEntries.length) return false;
+  return leftEntries.every(([key, value]) => {
+    const candidate = right[key];
+    return Array.isArray(value) && Array.isArray(candidate)
+      ? value.length === candidate.length && value.every((entry, index) => Object.is(entry, candidate[index]))
+      : Object.is(value, candidate);
+  });
 }

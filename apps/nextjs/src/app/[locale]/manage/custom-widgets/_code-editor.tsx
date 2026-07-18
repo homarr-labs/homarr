@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { autocompletion } from "@codemirror/autocomplete";
-import type { CompletionSource } from "@codemirror/autocomplete";
+import type { Completion } from "@codemirror/autocomplete";
 import { redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
@@ -11,12 +11,12 @@ import { linter } from "@codemirror/lint";
 import { EditorView } from "@codemirror/view";
 import { Badge, Button, Group, Input, Loader, Text, useComputedColorScheme } from "@mantine/core";
 import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCode, IconFileCode, IconWand } from "@tabler/icons-react";
-import { enabledCustomJsxComponents } from "@homarr/custom-widgets/core";
 import { ComponentReference } from "@homarr/custom-widgets/workbench";
 import type { EditorDiagnostic } from "@homarr/custom-widgets/workbench";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { CodeEditorDiagnostics } from "./_code-editor-diagnostics";
+import { createCustomJsxCompletionSource, customJsxComponentHover } from "./_custom-widget-code-language";
 import classes from "./_code-editor.module.css";
 
 const Editor = dynamic(() => import("@uiw/react-codemirror").then((module) => module.default), {
@@ -27,19 +27,6 @@ const Editor = dynamic(() => import("@uiw/react-codemirror").then((module) => mo
     </Group>
   ),
 });
-
-const customJsxCompletionSource: CompletionSource = (context) => {
-  const word = context.matchBefore(/[A-Z][\w.]*/u);
-  if (!word && !context.explicit) return null;
-  return {
-    from: word?.from ?? context.pos,
-    options: enabledCustomJsxComponents.map((component) => ({
-      label: component.name,
-      type: "class",
-      detail: `${component.category} · ${component.safety}`,
-    })),
-  };
-};
 
 interface CodeEditorProps {
   id: string;
@@ -54,6 +41,9 @@ interface CodeEditorProps {
   required?: boolean;
   maxLength?: number;
   starter?: string;
+  completions?: Completion[];
+  revealText?: string;
+  revealKey?: number;
 }
 
 export function CodeEditor({
@@ -69,6 +59,9 @@ export function CodeEditor({
   required,
   maxLength,
   starter,
+  completions = [],
+  revealText,
+  revealKey,
 }: CodeEditorProps) {
   const t = useScopedI18n("customWidget.editor");
   const [cursor, setCursor] = useState({ line: 1, column: 1 });
@@ -94,14 +87,26 @@ export function CodeEditor({
     return language === "jsx"
       ? [
           javascript({ jsx: true }),
-          autocompletion({ override: [customJsxCompletionSource] }),
+          autocompletion({ override: [createCustomJsxCompletionSource(completions)] }),
+          customJsxComponentHover,
           diagnosticsExtension,
           accessibilityExtension,
         ]
       : [json(), diagnosticsExtension, accessibilityExtension];
-  }, [diagnostics, id, label, language, t]);
+  }, [completions, diagnostics, id, label, language, t]);
   const errorCount = diagnostics.filter((diagnostic) => diagnostic.severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
+
+  useEffect(() => {
+    if (!editorView || !revealText) return;
+    const from = editorView.state.doc.toString().indexOf(revealText);
+    if (from < 0) return;
+    editorView.dispatch({
+      selection: { anchor: from, head: from + revealText.length },
+      effects: EditorView.scrollIntoView(from, { y: "center" }),
+    });
+    editorView.focus();
+  }, [editorView, revealKey, revealText]);
 
   const formattedValue = useMemo(() => {
     if (language === "json") {

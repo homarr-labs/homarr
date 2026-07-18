@@ -1,27 +1,36 @@
 import { z } from "zod/v4";
 
 import {
-  customJsxNetworkScopes,
   customJsxRequestSchema,
-  customWidgetAuthTypes,
   customWidgetSecretKinds,
+  customWidgetSourceSchema,
+  customWidgetStateTypes,
 } from "../core";
-import type { CustomJsxNetworkScope, CustomJsxRequest, CustomWidgetAuthType } from "../core";
+import type { CustomJsxRequest, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 
-const SESSION_TTL_MS = 5 * 60_000;
+const SESSION_TTL_MS = 10 * 60_000;
 const MAX_JOURNAL_ENTRIES = 50;
+
+const encryptedSecretSchema = z.object({
+  sourceId: z.string(),
+  kind: z.enum(customWidgetSecretKinds),
+  value: z.string(),
+});
 
 const sessionSchema = z.object({
   id: z.string(),
   userId: z.string(),
   expiresAt: z.number(),
-  baseUrl: z.string(),
-  authType: z.enum(customWidgetAuthTypes),
-  headerName: z.string().nullable(),
-  secrets: z.array(z.object({ kind: z.enum(customWidgetSecretKinds), value: z.string() })),
-  networkScope: z.enum(customJsxNetworkScopes),
+  sources: z.array(customWidgetSourceSchema),
+  secrets: z.array(encryptedSecretSchema),
   requests: z.array(customJsxRequestSchema),
+  name: z.string(),
+  template: z.string(),
+  optionsSchema: z.record(z.string(), z.unknown()),
+  defaultOptions: z.record(z.string(), z.unknown()),
+  stateSchema: z.record(z.string(), z.enum(customWidgetStateTypes)),
+  defaultState: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
   liveActions: z.boolean(),
 });
@@ -42,12 +51,15 @@ export type CustomWidgetPreviewJournalEntry = z.infer<typeof journalEntrySchema>
 
 export interface CreatePreviewSessionInput {
   userId: string;
-  baseUrl: string;
-  authType: CustomWidgetAuthType;
-  headerName?: string;
-  secrets: Array<{ kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
-  networkScope: CustomJsxNetworkScope;
+  sources: CustomWidgetSource[];
+  secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
   requests: CustomJsxRequest[];
+  name: string;
+  template: string;
+  optionsSchema: Record<string, unknown>;
+  defaultOptions: Record<string, unknown>;
+  stateSchema: Record<string, (typeof customWidgetStateTypes)[number]>;
+  defaultState: Record<string, unknown>;
   definitionId?: string;
 }
 
@@ -77,16 +89,26 @@ export class CustomWidgetPreviewSessionService {
   }
 
   public async create(input: CreatePreviewSessionInput) {
+    const sourceIds = new Set(input.sources.map((source) => source.id));
+    if (input.secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: "A preview secret references an unknown source",
+      });
+    }
     const session: CustomWidgetPreviewSession = {
       id: this.options.createId(),
       userId: input.userId,
       expiresAt: this.now() + SESSION_TTL_MS,
-      baseUrl: input.baseUrl,
-      authType: input.authType,
-      headerName: input.headerName ?? null,
-      secrets: input.secrets.map((secret) => ({ kind: secret.kind, value: this.options.encrypt(secret.value) })),
-      networkScope: input.networkScope,
+      sources: input.sources,
+      secrets: input.secrets.map((secret) => ({ ...secret, value: this.options.encrypt(secret.value) })),
       requests: input.requests,
+      name: input.name,
+      template: input.template,
+      optionsSchema: input.optionsSchema,
+      defaultOptions: input.defaultOptions,
+      stateSchema: input.stateSchema,
+      defaultState: input.defaultState,
       definitionId: input.definitionId,
       liveActions: false,
     };
@@ -132,8 +154,35 @@ export class CustomWidgetPreviewSessionService {
     });
   }
 
-  public getSecrets(session: CustomWidgetPreviewSession) {
-    return session.secrets.map((secret) => ({ kind: secret.kind, value: this.options.decrypt(secret.value) }));
+  public getSecrets(session: CustomWidgetPreviewSession, sourceId: string) {
+    return session.secrets
+      .filter((secret) => secret.sourceId === sourceId)
+      .map((secret) => ({ kind: secret.kind, value: this.options.decrypt(secret.value) }));
+  }
+
+  public async setSecrets(
+    id: string,
+    userId: string,
+    secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>,
+  ) {
+    const session = await this.get(id, userId);
+    const sourceIds = new Set(session.sources.map((source) => source.id));
+    if (secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: "A preview secret references an unknown source",
+      });
+    }
+    const replacements = new Set(secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
+    const next = {
+      ...session,
+      secrets: [
+        ...session.secrets.filter((secret) => !replacements.has(`${secret.sourceId}:${secret.kind}`)),
+        ...secrets.map((secret) => ({ ...secret, value: this.options.encrypt(secret.value) })),
+      ],
+    };
+    await this.save(next);
+    return { id, expiresAt: next.expiresAt };
   }
 
   private async save(session: CustomWidgetPreviewSession): Promise<void> {

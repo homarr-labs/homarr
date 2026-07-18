@@ -1,204 +1,49 @@
 ---
-tags:
-  - Custom Widgets
-  - API
-  - Widgets
-  - JSX
+tags: [Custom Widgets, API, JSX, MCP]
 ---
-
-import { CustomJsxComponentReference } from "@site/src/components/custom-jsx-component-reference";
 
 # Custom Widgets
 
-Custom widgets connect a dashboard item to an HTTP API without compiling a new Homarr widget. Administrators choose the endpoint and authentication, then use a built-in display type or a Custom JSX template to render the response.
+Custom JSX v2 is Homarr's only custom-widget format. A definition owns its metadata, inline API sources, named requests, options, local state, and safe JSX template. Credentials belong to a source but are encrypted separately and never exported.
 
-## Guides
+There are no legacy display types, reusable connections, packs, or compatibility modes.
 
-- [Authoring workbench](./authoring): create, edit, preview, paste, undo, import, and export.
-- [Custom JSX language](./custom-jsx): supported syntax, components, bindings, diagnostics, and limits.
-- [Named requests and security](./requests-and-security): permissions, network scopes, request manifests, and server protections.
-- [AI and MCP authoring](./agent-authoring): an iterative agent workflow that validates and previews before saving.
-- [Compatibility and migration](./migration): v1/v2 JSX and v2/v3 import behavior.
-- [Troubleshooting](./troubleshooting): common editor, preview, permission, and networking failures.
-- [Maintainer architecture](./architecture): package boundaries, extension points, and required tests.
-- [Extension recipes](./extension-recipes): step-by-step changes for displays, JSX components, requests, and workbench features.
+## Start here
 
-:::caution
+- [Workbench and ChatGPT](./authoring): create widgets manually or use the copy/paste AI loop.
+- [JSX runtime](./custom-jsx): data roots, Mantine components, bindings, and diagnostics.
+- [Requests and security](./requests-and-security): sources, actions, permissions, and network protections.
+- [Agents and downloadable skill](./agent-authoring): MCP prompt/resources/tools and the portable Agent Skill.
+- [Troubleshooting](./troubleshooting): fix validation, request, configuration, and runtime failures.
 
-A custom widget can expose data or perform actions with the credentials configured for it. Import definitions only from sources you trust and review every network capability before using the widget on a shared board.
+## One definition
 
-:::
-
-## Create a widget
-
-Open **Management → Custom Widgets**, select **Add**, and configure:
-
-- **Name, description, and icon**: identify the widget in management and the widget picker.
-- **URL**: the full HTTP or HTTPS base endpoint.
-- **Authentication**: none, bearer token, basic authentication, API-key header, or API-key query parameter.
-- **Display type**: a built-in renderer or Custom JSX.
-
-Use **Test** to run the current GET request. The preview workbench separates the rendered widget, sanitized response tree, redacted request journal, and diagnostics. It marks sample data as stale whenever the connection or display configuration changes after a test.
-
-Testing creates a five-minute, administrator-bound preview session for unsaved named queries. Action controls are simulated by default. An administrator can explicitly enable live actions for that session; DELETE still requires confirmation.
-
-## Display types
-
-| Display type     | Use it for                                                |
-| ---------------- | --------------------------------------------------------- |
-| Single Value     | One metric with a label and unit                          |
-| Key Value        | Several labeled values                                    |
-| Table            | Arrays of records                                         |
-| Stat Grid        | Compact colored metrics                                   |
-| Progress Bars    | Capacity, quota, and completion                           |
-| Status Indicator | Health and availability                                   |
-| Count Grid       | Compact counters                                          |
-| Raw              | Sanitized JSON inspection                                 |
-| Action Button    | One explicit API action                                   |
-| Custom JSX       | A declarative Mantine layout with optional named requests |
-
-## Custom JSX workbench
-
-The JSX editor provides syntax highlighting, formatting, undo/redo buttons and Ctrl/Cmd+Z shortcuts, a searchable component reference, character and cursor status, and diagnostics. Errors block saving; warnings identify behavior that still receives server-side validation. Templates can contain up to 50,000 characters and render up to 10,000 nodes.
-
-The template reads the base GET response from `data`:
-
-```jsx
-<Stack gap="xs" p="sm">
-  <Text fw={600}>{data.name}</Text>
-  <Badge color={data.online ? "green" : "red"}>{data.status}</Badge>
-</Stack>
-```
-
-The **Copy AI prompt** action is available on desktop and mobile. Its prompt, component list, and examples are generated from the same metadata used by the renderer, so the reference stays aligned with the installed Homarr version.
-
-### JSX API versions
-
-- **Version 2** is the default. Network access is declared in a named-request manifest and enforced by the server.
-- **Version 1** remains available for display-only templates. Inline network components are disabled until the definition is reviewed and migrated.
-
-Definitions without `jsxApiVersion` are treated as version 1. Display-only templates can be migrated by selecting version 2 and saving an empty request list.
-
-## Named requests
-
-Version 2 templates never choose an arbitrary URL, method, header, or body at runtime. An administrator declares each allowed operation once, and the template references its `requestId` with typed parameters.
-
-```json
-{
-  "type": "customJsx",
-  "jsxApiVersion": 2,
-  "networkScope": "public",
-  "template": "<SubFetch requestId=\"service-detail\" params={{ id: data.id }}><SubData path=\"status\" as=\"Badge\" /></SubFetch>",
-  "requests": [
-    {
-      "id": "service-detail",
-      "kind": "query",
-      "method": "GET",
-      "pathTemplate": "/api/services/{id}",
-      "parameters": { "id": "string" },
-      "auth": "inherit",
-      "minimumBoardPermission": "view",
-      "cacheTtlSeconds": 30
-    }
-  ]
+```ts
+interface HomarrCustomWidgetV2 {
+  $schema: "homarr-custom-widget-v2";
+  name: string;
+  description?: string;
+  iconUrl?: string;
+  sources: CustomWidgetSource[];
+  requests: CustomWidgetRequest[];
+  optionsSchema: CustomWidgetOptionsSchema;
+  defaultOptions: Record<string, unknown>;
+  stateSchema?: Record<string, "string" | "number" | "boolean" | "date" | "string[]" | "number[]" | "date[]">;
+  defaultState?: Record<string, unknown>;
+  template: string;
 }
 ```
 
-Path placeholders use `{parameter}` and are URL-encoded by the server. JSON body placeholders use `{ "$param": "parameter" }` and preserve the declared string, number, or boolean type.
+Exports, imports, the UI, MCP, and Workshop all validate this schema. Old files are rejected. If a board references a missing definition, only that tile shows **Custom widget unavailable**; the board and sibling widgets continue rendering.
 
-`SubData` remains available for simple paths. For richer nested output, pass an interpreter-created render child; it receives the response data and safe status metadata:
+## Create and configure
 
-```jsx
-<SubFetch requestId="service-detail" params={{ id: data.id }}>
-  {(detail, meta) => (
-    <Stack gap="xs">
-      <Badge color={detail.online ? "green" : "red"}>{detail.status}</Badge>
-      <Text size="xs">HTTP {meta.status}</Text>
-    </Stack>
-  )}
-</SubFetch>
-```
+Open **Management → Custom Widgets → Add custom widget**. The continuous workbench has sections for general information, API sources and credentials, requests, options, state, JSX, and preview. Use the sticky navigation to jump between sections; there are no artificial “next” steps.
 
-| Component       | Request kind | Behavior                                                      |
-| --------------- | ------------ | ------------------------------------------------------------- |
-| `SubFetch`      | `query`      | Loads a named GET request automatically or manually           |
-| `ActionButton`  | `action`     | Runs a named POST, PUT, PATCH, or DELETE after a user gesture |
-| `ToggleSwitch`  | `action`     | Passes declared on/off parameters and rolls back on failure   |
-| `RefreshButton` | None         | Refreshes the parent GET response                             |
+A board item selects a definition from a searchable picker and immediately renders the definition's options. Invalid options block insertion. If an updated definition makes existing configuration invalid, opening the item shows the normal repair form.
 
-Queries require board **view** permission. POST, PUT, and PATCH actions require **modify** by default. DELETE requires **full** permission and confirmation. Allowing viewers to execute a non-DELETE action requires explicit administrator approval. Anonymous viewers cannot execute actions.
+## Import, export, and Workshop
 
-### Network scopes
+Export downloads one canonical JSON document without credentials. Import validates and shows the origins, auth modes, network scopes, methods, actions, and required board permissions before creating anything.
 
-| Scope      | Allowed destinations                                         |
-| ---------- | ------------------------------------------------------------ |
-| `public`   | Public IP addresses only                                     |
-| `private`  | Public addresses plus RFC1918 and IPv6 ULA private addresses |
-| `loopback` | Public, private, and loopback addresses                      |
-
-Link-local, cloud-metadata, unspecified, multicast, documentation, carrier-grade NAT, and IPv4-mapped bypass addresses remain blocked in every scope.
-
-### Example with a named query
-
-The editor and AI prompt include a shared Pokédex fixture that loads details only for the visible page. Its named request is equivalent to:
-
-```json
-{
-  "id": "pokemon-detail",
-  "kind": "query",
-  "method": "GET",
-  "pathTemplate": "/api/v2/pokemon/{name}",
-  "parameters": { "name": "string" },
-  "auth": "none",
-  "minimumBoardPermission": "view",
-  "cacheTtlSeconds": 300
-}
-```
-
-## Agent authoring through MCP
-
-Administrators can use Homarr's MCP server to iterate on custom widgets without bypassing validation or network controls. A typical agent workflow is:
-
-1. Call `customWidget_schema` to inspect the current import format.
-2. Generate a complete `homarr-custom-widget-v3` draft.
-3. Call `customWidget_validate` and correct every returned issue.
-4. Call `customWidget_preview` to test the base GET request through Homarr's hardened executor.
-5. Use `customWidget_previewQuery` for named queries and `customWidget_simulatePreviewAction` to verify action parameters without sending mutations.
-6. Inspect `customWidget_previewJournal`, then validate again.
-7. Call `customWidget_import`, or read an existing widget with `customWidget_byId` and apply a focused `customWidget_update`.
-
-MCP preview actions are simulation-only. Enabling live preview actions remains an explicit administrator choice in the browser workbench. Stored secret values are never returned by MCP; omit `secrets` when updating an existing widget to preserve them.
-
-## Component reference
-
-Custom JSX exposes a classified subset of Mantine Core, Charts, Dates, and Homarr components. Allowed components render directly. Wrapped components receive safe props or read-only behavior. Denied components remain in the registry so dependency upgrades cannot silently expand the template surface.
-
-<CustomJsxComponentReference />
-
-This table and the searchable component list in the editor are generated from Homarr's runtime registry.
-
-Component props are filtered. Polymorphic roots, portals, refs, unsafe positioning, raw event handlers, and `dangerouslySetInnerHTML` are not exposed. Direct browser globals and direct `fetch` calls are unavailable, while ordinary text containing the word “fetch” is valid.
-
-Safe bindings include conversion helpers, a restricted `Math` and `JSON` surface, object and array helpers, URI encoding helpers, and pure date formatting helpers. Collection callbacks and rendered output are subject to interpreter budgets.
-
-## HTTP protections and limits
-
-All base, preview, query, and action requests use the same server executor:
-
-- Only HTTP and HTTPS are accepted. URL credentials and fragments are rejected.
-- Named paths must stay on the base endpoint origin.
-- DNS results are validated against the selected network scope and pinned for the request.
-- Queries can follow up to three revalidated same-origin redirects. Actions do not follow redirects.
-- Authorization, cookie, host, forwarding, proxy, content-length, and hop-by-hop headers cannot be supplied by a template.
-- Request bodies are limited to 10 KiB. Decompressed responses are limited to 1 MiB, 32 JSON levels, and 50,000 JSON nodes.
-- GET requests can be cached and deduplicated. Actions are never cached, polled, or retried automatically.
-
-## Import and export
-
-New exports use `"$schema": "homarr-custom-widget-v3"`. Version 2 imports remain accepted. Secrets are never exported and must be entered again after import.
-
-Review the base origin, network scope, named request methods, inherited authentication, and required permissions before saving an imported widget. A version 1 template that contains inline network components stays disabled until it is converted to named requests.
-
-AI-generated Custom JSX can also be pasted as a Homarr authoring bundle: one fenced JSON block with `"template": "__HOMARR_TEMPLATE__"`, followed by one fenced JSX block containing the readable multiline template. Homarr combines the blocks before validation, avoiding JSON newline and quote escaping. Raw JSON imports remain supported.
-
-On the custom-widget list, paste a complete export with Ctrl+V or Command+V to open the import review and create it as a new definition. On an edit page, the same shortcut opens a replacement review and fills the existing form after confirmation. Pasted definitions never include secrets.
+The [Workshop](/docs/management/workshop) publishes valid widgets immediately. Users can vote or report a submission. Workshop administrators may dismiss reports or delete any post; deletion does not remove installed local copies.

@@ -1,20 +1,21 @@
 import { Parser } from "acorn";
 import jsx from "acorn-jsx";
 
-import { customJsxComponentByName, customJsxSupportedPropsByName } from "../core/component-registry";
+import {
+  customJsxBindableComponentNames,
+  customJsxComponentByName,
+  customJsxSupportedPropsByName,
+  enabledCustomJsxComponents,
+} from "../core/component-registry";
 import {
   CUSTOM_JSX_BLOCKED_PROPERTIES,
-  CUSTOM_JSX_BLOCKED_PROPS,
   CUSTOM_JSX_LIMITS,
+  CUSTOM_JSX_URL_PROPS,
+  isBlockedCustomJsxProp,
   normalizeCustomJsxProperty,
 } from "./policy";
-
-interface AstNode {
-  type: string;
-  start?: number;
-  loc?: { start?: { line?: number; column?: number } };
-  [key: string]: unknown;
-}
+import type { AstNode } from "./analyzer-ast";
+import { containsEscapingCallback, nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
 
 export interface CustomJsxTemplateDiagnostic {
   severity: "error" | "warning";
@@ -25,6 +26,32 @@ export interface CustomJsxTemplateDiagnostic {
 }
 
 const JsxParser = Parser.extend(jsx());
+const enabledComponentNames = enabledCustomJsxComponents.map((component) => component.name);
+
+function closestComponentName(value: string): string | undefined {
+  let closest: { name: string; distance: number } | undefined;
+  for (const name of enabledComponentNames) {
+    const distance = editDistance(value.toLowerCase(), name.toLowerCase());
+    if (!closest || distance < closest.distance) closest = { name, distance };
+  }
+  return closest && closest.distance <= Math.max(2, Math.floor(value.length / 3)) ? closest.name : undefined;
+}
+
+function editDistance(left: string, right: string): number {
+  const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {
+    const current = [leftIndex];
+    for (let rightIndex = 1; rightIndex <= right.length; rightIndex += 1) {
+      current[rightIndex] = Math.min(
+        (current[rightIndex - 1] ?? 0) + 1,
+        (previous[rightIndex] ?? 0) + 1,
+        (previous[rightIndex - 1] ?? 0) + (left[leftIndex - 1] === right[rightIndex - 1] ? 0 : 1),
+      );
+    }
+    previous.splice(0, previous.length, ...current);
+  }
+  return previous[right.length] ?? Math.max(left.length, right.length);
+}
 
 const rootBindings = new Set([
   "Array",
@@ -38,6 +65,9 @@ const rootBindings = new Set([
   "Object",
   "String",
   "data",
+  "options",
+  "state",
+  "status",
   "decodeURIComponent",
   "encodeURIComponent",
   "isFinite",
@@ -47,31 +77,15 @@ const rootBindings = new Set([
   "undefined",
 ]);
 
-const nodeOf = (value: unknown): AstNode | null =>
-  value !== null && typeof value === "object" && typeof (value as { type?: unknown }).type === "string"
-    ? (value as AstNode)
-    : null;
-
-const nodesOf = (value: unknown): AstNode[] =>
-  Array.isArray(value) ? value.map(nodeOf).filter((node): node is AstNode => node !== null) : [];
-
-const staticPropertyName = (node: AstNode | null): string | undefined => {
-  if (!node) return undefined;
-  if (node.type === "Literal" && (typeof node.value === "string" || typeof node.value === "number")) {
-    return String(node.value);
-  }
-  if (node.type === "BinaryExpression" && node.operator === "+") {
-    const left = staticPropertyName(nodeOf(node.left));
-    const right = staticPropertyName(nodeOf(node.right));
-    return left === undefined || right === undefined ? undefined : left + right;
-  }
-  if (node.type === "TemplateLiteral" && Array.isArray(node.expressions) && node.expressions.length === 0) {
-    return (node.quasis as Array<{ value?: { cooked?: unknown } }> | undefined)
-      ?.map((quasi) => String(quasi.value?.cooked ?? ""))
-      .join("");
-  }
-  return undefined;
-};
+function tagName(node: AstNode): string | null {
+  if (node.type === "JSXIdentifier") return String(node.name ?? "");
+  if (node.type !== "JSXMemberExpression") return null;
+  const object = nodeOf(node.object);
+  const property = nodeOf(node.property);
+  const left = object ? tagName(object) : null;
+  const right = property ? tagName(property) : null;
+  return left && right ? `${left}.${right}` : null;
+}
 
 export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
@@ -98,16 +112,6 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
     return depth <= CUSTOM_JSX_LIMITS.astDepth && operations <= CUSTOM_JSX_LIMITS.operations;
   };
 
-  const tagName = (node: AstNode): string | null => {
-    if (node.type === "JSXIdentifier") return String(node.name ?? "");
-    if (node.type !== "JSXMemberExpression") return null;
-    const object = nodeOf(node.object);
-    const property = nodeOf(node.property);
-    const left = object ? tagName(object) : null;
-    const right = property ? tagName(property) : null;
-    return left && right ? `${left}.${right}` : null;
-  };
-
   const visit = (node: AstNode, depth: number, bindings: ReadonlySet<string>): void => {
     if (!checkBudget(node, depth)) return;
 
@@ -132,8 +136,19 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         const nameNode = nodeOf(opening.name);
         const name = nameNode ? tagName(nameNode) : null;
         const descriptor = name ? customJsxComponentByName.get(name) : undefined;
-        if (!descriptor || descriptor.safety === "denied") {
-          add(opening, name ? `Component '${name}' is not available` : "Invalid JSX component name");
+        if (descriptor?.safety === "denied") {
+          add(
+            opening,
+            `BLOCKED_CAPABILITY: '${name}' is not available${descriptor.reason ? ` because it ${descriptor.reason.toLowerCase()}` : ""}`,
+          );
+        } else if (!descriptor) {
+          const suggestion = name ? closestComponentName(name) : undefined;
+          add(
+            opening,
+            name
+              ? `UNKNOWN_COMPONENT: '${name}' is not available${suggestion ? `. Did you mean '${suggestion}'?` : ""}`
+              : "UNKNOWN_COMPONENT: Invalid JSX component name",
+          );
         }
 
         for (const attribute of nodesOf(opening.attributes)) {
@@ -148,19 +163,29 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
           }
           const attributeNameNode = nodeOf(attribute.name);
           const attributeName = attributeNameNode?.type === "JSXIdentifier" ? String(attributeNameNode.name) : "";
-          const supportedProps = name ? customJsxSupportedPropsByName.get(name) : undefined;
-          if (
-            (/^on/i.test(attributeName) && !supportedProps?.has(attributeName)) ||
-            CUSTOM_JSX_BLOCKED_PROPS.has(attributeName)
-          ) {
-            add(attribute, `Prop '${attributeName}' is not allowed`);
-          } else if (name && !supportedProps?.has(attributeName)) {
-            add(attribute, `Prop '${attributeName}' is not supported by ${name} and will be ignored`, "warning");
+          if (isBlockedCustomJsxProp(attributeName)) {
+            add(attribute, `BLOCKED_CAPABILITY: Prop '${attributeName}' is not allowed`);
+          } else if (name && attributeName !== "bind" && !customJsxSupportedPropsByName.get(name)?.has(attributeName)) {
+            add(attribute, `UNKNOWN_MANTINE_PROP: '${attributeName}' on ${name} will be passed through`, "warning");
+          } else if (name && attributeName === "bind" && !customJsxBindableComponentNames.has(name)) {
+            add(attribute, `BINDING_UNAVAILABLE: '${name}' does not have a declarative binding adapter`, "warning");
           }
           const value = nodeOf(attribute.value);
+          if (
+            CUSTOM_JSX_URL_PROPS.has(attributeName) &&
+            value?.type === "Literal" &&
+            typeof value.value === "string" &&
+            !isSafeLiteralUrl(value.value)
+          ) {
+            add(attribute, `INVALID_PROP_VALUE: '${attributeName}' contains an unsafe URL`);
+          }
           if (value?.type === "JSXExpressionContainer") {
             const expression = nodeOf(value.expression);
-            if (expression && expression.type !== "JSXEmptyExpression") visit(expression, depth + 1, bindings);
+            if (expression && containsEscapingCallback(expression)) {
+              add(attribute, `BLOCKED_CAPABILITY: Callback prop '${attributeName}' is not allowed`);
+            } else if (expression && expression.type !== "JSXEmptyExpression") {
+              visit(expression, depth + 1, bindings);
+            }
           }
         }
         nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
@@ -303,4 +328,14 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
   }
 
   return diagnostics;
+}
+
+function isSafeLiteralUrl(value: string) {
+  if (value.startsWith("#") || (value.startsWith("/") && !value.startsWith("//"))) return true;
+  try {
+    const url = new URL(value);
+    return (url.protocol === "http:" || url.protocol === "https:") && !url.username && !url.password;
+  } catch {
+    return false;
+  }
 }

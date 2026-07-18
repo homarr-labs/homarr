@@ -27,11 +27,7 @@ export const validateRuntimeParams = (request: CustomJsxRequest, params: CustomJ
   }
 };
 
-export const renderRequestBody = (
-  template: CustomJsxRequest["bodyTemplate"],
-  params: CustomJsxRuntimeParams,
-): string | undefined => {
-  if (template === undefined) return undefined;
+export const renderBoundValue = (template: unknown, params: CustomJsxRuntimeParams): unknown => {
   const substitute = (value: unknown): unknown => {
     if (Array.isArray(value)) return value.map(substitute);
     if (value !== null && typeof value === "object") {
@@ -50,7 +46,15 @@ export const renderRequestBody = (
     }
     return value;
   };
-  return JSON.stringify(substitute(template));
+  return substitute(template);
+};
+
+export const renderRequestBody = (
+  template: CustomJsxRequest["bodyTemplate"],
+  params: CustomJsxRuntimeParams,
+): string | undefined => {
+  if (template === undefined) return undefined;
+  return JSON.stringify(renderBoundValue(template, params));
 };
 
 export const renderRequestTarget = (baseUrl: string, request: CustomJsxRequest, params: CustomJsxRuntimeParams) => {
@@ -68,7 +72,18 @@ export const renderRequestTarget = (baseUrl: string, request: CustomJsxRequest, 
       message: "Path template contains an invalid placeholder",
     });
   }
-  return resolveSameOriginTarget(baseUrl, new URL(path, baseUrl));
+  const target = resolveSameOriginTarget(baseUrl, new URL(path, baseUrl));
+  for (const [name, template] of Object.entries(request.queryTemplate ?? {})) {
+    const value = renderBoundValue(template, params);
+    if (!["string", "number", "boolean"].includes(typeof value)) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: `Query parameter '${name}' must resolve to a string, number, or boolean`,
+      });
+    }
+    target.searchParams.set(name, String(value));
+  }
+  return target;
 };
 
 export const hashRuntimeParams = (params: CustomJsxRuntimeParams) => {

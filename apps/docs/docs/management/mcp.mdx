@@ -166,54 +166,25 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 
 ## Custom Widget Workflow for AI Agents
 
-AI agents can create and iterate on custom widgets using these tools in sequence.
+Agents create one `homarr-custom-widget-v2` definition at a time. Start with the native prompt `homarr-custom-widget-author`, then read the live schema and component resources rather than guessing the installed Mantine surface.
 
-:::tip Editing an existing widget?
-Skip to step 5. Use `customWidget_byId` to fetch it and `customWidget_readTemplate` / `customWidget_writeTemplate` to edit its template directly.
-:::
+1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
+2. Build one widget and call `customWidget_validate` without saving.
+3. Call `customWidget_previewCreate`, then test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
+4. Open the returned preview URL, inspect `customWidget_previewJournal`, and iterate with `customWidget_templatePatch` or `customWidget_update`.
+5. Set a supplied credential with `customWidget_secretSet`, or use `customWidget_secretRequestUser` to issue a ten-minute Homarr entry URL. The agent receives completion status, never the plaintext.
+6. Call `customWidget_create`, then repeat for the next widget.
 
-### 1. Get the schema
+Discovery resources:
 
-Call `customWidget_schema` to receive the JSON Schema for the `homarr-custom-widget-v3` format. This tells the agent what fields are required and their types.
+- `homarr://custom-widgets/schema`
+- `homarr://custom-widgets/components`
+- `homarr://custom-widgets/components/{name}`
+- `homarr://custom-widgets/examples/{name}`
+- `homarr://custom-widgets/skill`
 
-### 2. Draft and validate
+The complete tool surface is `customWidget_schema`, `customWidget_validate`, `customWidget_list`, `customWidget_get`, `customWidget_create`, `customWidget_update`, `customWidget_delete`, `customWidget_templatePatch`, `customWidget_previewCreate`, `customWidget_previewQuery`, `customWidget_previewAction`, `customWidget_previewJournal`, `customWidget_secretSet`, `customWidget_secretRequestUser`, `customWidget_getAuthoringPrompt`, and `customWidget_getSkill`.
 
-Build a widget JSON object and call `customWidget_validate` with it. The tool returns structured issues (path + message) so the agent can fix and re-validate until the draft is clean.
+`custom-widget-manage` permits authoring. Supplying a secret directly requires the separate `custom-widget-secret-write` permission. Request execution retains Homarr's SSRF, DNS, redirect, response-size, timeout, rate, network-scope, and board-permission protections.
 
-### 3. Create the widget
-
-Call `customWidget_import` with the validated `homarr-custom-widget-v3` draft. This returns the new widget `id`. Use `customWidget_create` only when you intentionally need its lower-level creation input, including secret fields.
-
-### 4. Test with real data
-
-Call `customWidget_preview` with the widget's connection info. This makes a real GET request through Homarr's hardened executor and returns the sanitized response plus a preview session ID.
-
-For Custom JSX v2 widgets with named requests, use `customWidget_previewQuery` to test each named GET query, and `customWidget_simulatePreviewAction` to dry-run actions without network calls.
-
-### 5. Iterate on the template
-
-Use `customWidget_readTemplate` to get the current JSX template as plain text, then `customWidget_writeTemplate` to push updates. The write tool accepts either:
-
-- `template` — a single string (newlines as `\n`)
-- `templateLines` — an array of strings (joined with newlines server-side, avoids `\n` escaping)
-
-Both options validate the template AST before saving. This avoids re-sending the full widget JSON for template-only edits.
-
-For small changes, prefer `customWidget_patchTemplate`. Pass the `revision` returned by `customWidget_readTemplate` and one or more line edits. Homarr rejects stale revisions, applies all edits atomically, and validates the complete template against its named request manifest before saving.
-
-### 6. Update non-template fields
-
-Call `customWidget_byId` to get the full widget, modify fields, and call `customWidget_update` with only the changed fields.
-
-### Available components in templates
-
-Custom JSX templates support 100+ Mantine components plus:
-
-- `<TablerIcon name="server" size={20} color="blue" />` — 100+ curated Tabler icons by kebab-case name (e.g. `"player-play"`, `"alert-triangle"`)
-- `<SubFetch>` / `<ActionButton>` / `<ToggleSwitch>` — network-capable components for named requests
-- Array methods: `map`, `filter`, `find`, `findIndex`, `some`, `every`, `reduce`, `sort`, `slice`, `flat`, `reverse`, `at`, `pop`, `join`, `includes`, `indexOf` (note: `pop` returns last element without mutating)
-- String methods: `toUpperCase`, `toLowerCase`, `trim`, `trimStart`, `trimEnd`, `slice`, `substring`, `includes`, `startsWith`, `endsWith`, `split`, `replace`, `replaceAll`, `repeat`, `padStart`, `padEnd`, `charAt`, `indexOf`, `lastIndexOf`
-
-:::note
-All `customWidget_*` tools require admin-level API key permissions. The preview executor enforces rate limits (60 queries/min, 10 actions/min).
-:::
+See [Agents and downloadable skill](./custom-widgets/agent-authoring) for the full loop and portable Agent Skill.

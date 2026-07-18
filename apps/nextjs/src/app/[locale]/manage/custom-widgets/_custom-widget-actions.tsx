@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
+import { IconBuildingStore, IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -14,6 +14,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -29,6 +30,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const utils = clientApi.useUtils();
+  const [publishOpened, publishControls] = useDisclosure(false);
 
   const handleExport = async () => {
     try {
@@ -54,7 +56,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             title: t("action.duplicate"),
             message: t("notification.duplicated", { name: result.name }),
           });
-          void utils.customWidget.all.invalidate();
+          void utils.customWidget.list.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
         onError: () => {
@@ -77,7 +79,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
                 title: t("action.delete"),
                 message: t("notification.deleted", { name: widget.name }),
               });
-              void utils.customWidget.all.invalidate();
+              void utils.customWidget.list.invalidate();
               void utils.widget.customApi.getData.invalidate();
               void revalidatePathActionAsync("/manage/custom-widgets");
             },
@@ -91,34 +93,40 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   };
 
   return (
-    <Menu withinPortal position="bottom-end" shadow="md">
-      <Menu.Target>
-        <ActionIcon variant="subtle" color="gray" aria-label={t("action.menu")}>
-          <IconDots {...iconProps} />
-        </ActionIcon>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          onClick={handleDuplicate}
-          leftSection={<IconCopy {...iconProps} />}
-          disabled={duplicateMutation.isPending}
-        >
-          {t("action.duplicate")}
-        </Menu.Item>
-        <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
-          {t("action.export")}
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item
-          color="red"
-          leftSection={<IconTrash {...iconProps} />}
-          onClick={handleDelete}
-          disabled={deleteMutation.isPending}
-        >
-          {t("action.delete")}
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <>
+      <Menu withinPortal position="bottom-end" shadow="md">
+        <Menu.Target>
+          <ActionIcon variant="subtle" color="gray" aria-label={t("action.menu")}>
+            <IconDots {...iconProps} />
+          </ActionIcon>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item
+            onClick={handleDuplicate}
+            leftSection={<IconCopy {...iconProps} />}
+            disabled={duplicateMutation.isPending}
+          >
+            {t("action.duplicate")}
+          </Menu.Item>
+          <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
+            {t("action.export")}
+          </Menu.Item>
+          <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+            {t("action.publishWorkshop")}
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item
+            color="red"
+            leftSection={<IconTrash {...iconProps} />}
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {t("action.delete")}
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+      <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />
+    </>
   );
 };
 
@@ -133,7 +141,7 @@ export const ImportCustomWidgetButton = () => {
       closeReview();
       setPendingImport(null);
       showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });
-      void utils.customWidget.all.invalidate();
+      void utils.customWidget.list.invalidate();
       void revalidatePathActionAsync("/manage/custom-widgets");
     },
     onError: () => {

@@ -4,20 +4,21 @@ import { act } from "react";
 import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, Text } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ActionButton, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
+import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
 import type {
   CustomJsxRequestCapability,
+  CustomWidgetPublishedQueryState,
   CustomWidgetRequestResult,
   CustomWidgetRuntimeMessages,
   CustomWidgetRuntimePort,
 } from "../runtime";
 
 const messages: CustomWidgetRuntimeMessages = {
-  migrationRequired: "Migration required",
+  requestIdRequired: "Request ID required",
   unsavedPreview: "Unsaved",
   invalidParams: "Invalid params",
   loadRequest: "Load",
@@ -74,6 +75,7 @@ async function render(
   node: ReactNode,
   port: CustomWidgetRuntimePort,
   capabilities: readonly CustomJsxRequestCapability[] = [],
+  setQueryState?: (requestId: string, value: CustomWidgetPublishedQueryState | null) => void,
 ) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   await act(async () => {
@@ -86,6 +88,7 @@ async function render(
             requestCapabilities={capabilities}
             port={port}
             messages={messages}
+            setQueryState={setQueryState}
           >
             {node}
           </CustomWidgetRuntimeProvider>
@@ -102,15 +105,48 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
-  it("runs an automatic query once and exposes data to a render child", async () => {
-    const port = createPort();
-    await render(
-      <SubFetch requestId="details" render={(data) => <span>{(data as { name: string }).name}</span>} />,
-      port,
+  it("does not republish local state when equivalent default objects are rendered", async () => {
+    const onStateChange = vi.fn();
+    const rendererMessages = {
+      noTemplate: "No template",
+      interactive: "Interactive",
+      networkCapabilities: "Network capabilities",
+      templateWarnings: (count: number) => `${count} warnings`,
+    };
+    const widget = () => (
+      <CustomJsxRenderer
+        template="<Text>{state.search}</Text>"
+        data={{}}
+        stateSchema={{ search: "string" }}
+        defaultState={{ search: "containers" }}
+        onStateChange={onStateChange}
+        requestCapabilities={[]}
+        components={{ Text: Text as never }}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />
     );
+
+    await render(widget(), createPort());
+    await settle();
+    expect(onStateChange).toHaveBeenCalledTimes(1);
+
+    await render(widget(), createPort());
+    await settle();
+    expect(onStateChange).toHaveBeenCalledTimes(1);
+  });
+
+  it("runs an automatic query once and publishes data to the declarative data root", async () => {
+    const port = createPort();
+    const publish = vi.fn();
+    await render(<SubFetch requestId="details" />, port, [], publish);
     await settle();
     expect(port.query).toHaveBeenCalledTimes(1);
-    expect(host.textContent).toContain("Bulbasaur");
+    expect(publish).toHaveBeenLastCalledWith("details", {
+      data: { name: "Bulbasaur" },
+      status: expect.objectContaining({ loading: false, ok: true, status: 200 }),
+    });
+    expect(host.querySelector("button, p, code, [role='alert']")).toBeNull();
   });
 
   it("passes cancellation to the port when the component unmounts", async () => {
@@ -129,8 +165,15 @@ describe("Custom Widget runtime ports", () => {
 
   it("confirms DELETE actions, reports success, and invalidates declared targets", async () => {
     const port = createPort();
-    await render(<ActionButton requestId="remove" label="Remove" invalidate={["parent"]} />, port, [
-      { id: "remove", kind: "action", method: "DELETE", minimumBoardPermission: "full" },
+    await render(<ActionButton requestId="remove">Remove</ActionButton>, port, [
+      {
+        id: "remove",
+        kind: "action",
+        method: "DELETE",
+        trigger: "manual",
+        minimumBoardPermission: "full",
+        invalidates: ["parent"],
+      },
     ]);
     await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
     await settle();
@@ -153,5 +196,26 @@ describe("Custom Widget runtime ports", () => {
     expect(input.checked).toBe(false);
     expect(port.notify).toHaveBeenCalledWith(expect.objectContaining({ kind: "error", message: "Nope" }));
     expect(port.invalidate).not.toHaveBeenCalled();
+  });
+
+  it("confirms a DELETE toggle before executing it", async () => {
+    const port = createPort();
+    await render(
+      <ToggleSwitch requestId="delete-toggle" onParams={{ enabled: true }} offParams={{ enabled: false }} />,
+      port,
+      [
+        {
+          id: "delete-toggle",
+          kind: "action",
+          method: "DELETE",
+          trigger: "manual",
+          minimumBoardPermission: "full",
+        },
+      ],
+    );
+    await act(async () => (host.querySelector("input") as HTMLInputElement).click());
+    await settle();
+    expect(port.confirm).toHaveBeenCalledWith(expect.objectContaining({ destructive: true }));
+    expect(port.executeAction).toHaveBeenCalledWith(expect.objectContaining({ confirmed: true }));
   });
 });

@@ -5,6 +5,7 @@ export {
   assertSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest,
+  invalidateCustomWidgetResponseCache,
   MAX_REQUEST_BODY_BYTES,
   MAX_RESPONSE_BODY_BYTES,
   MAX_RESPONSE_JSON_DEPTH,
@@ -24,5 +25,11 @@ export type {
   PreviewSessionServiceOptions,
   PreviewSessionStore,
 } from "./preview-sessions";
-export { hashRuntimeParams, renderRequestBody, renderRequestTarget, validateRuntimeParams } from "./request-manifest";
+export {
+  hashRuntimeParams,
+  renderBoundValue,
+  renderRequestBody,
+  renderRequestTarget,
+  validateRuntimeParams,
+} from "./request-manifest";
 export type { CustomJsxRuntimeParams } from "./request-manifest";

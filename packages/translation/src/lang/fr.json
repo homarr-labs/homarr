@@ -706,14 +706,7 @@
       "delete": "Supprimer le widget personnalisé",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
       "export": "Exporter",
-      "addMapping": "",
-      "addColumn": "Ajouter une colonne",
       "edit": "Modifier",
-      "removeMapping": "",
-      "removeColumn": "Supprimer la colonne",
-      "addItem": "Ajouter un élément",
-      "removeItem": "Supprimer l'élément",
-      "addBar": "Ajouter une barre",
       "duplicate": "Dupliquer",
       "copyAiPrompt": "Copier le prompt IA",
       "enable": "Activer",
@@ -723,150 +716,13 @@
     "field": {
       "name": "Nom",
       "description": "Description",
-      "iconUrl": "URL de l'icône",
-      "url": "URL",
-      "authType": "Type d’authentification",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "Étiquette",
-      "unit": "Unité",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "Mode Compact",
-      "maxHeight": "",
-      "color": "Couleur",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "Texte de confirmation",
-      "confirmTextHint": "",
-      "successMessage": "Message de réussite",
-      "successMessageHint": "",
-      "enabled": "Activé",
-      "template": {
-        "label": "Template JSX",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "Température du CPU",
-      "exampleHeader": "Nom",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": "Très grand"
-    },
-    "labelPositionOption": {
-      "above": "Au-dessus",
-      "below": "En dessous"
-    },
-    "fieldset": {
-      "general": "Général",
-      "connection": "Connexion API",
-      "display": "Configuration de l'affichage"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Afficher une valeur extraite avec une étiquette et une unité",
-      "keyValue": "Afficher plusieurs valeurs étiquetées côte à côte",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "Points d'état colorés montrant en ligne/hors ligne ou l'état de santé",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "Un bouton qui déclenche une requête lorsqu'elle est cliquée",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "Nom d'utilisateur",
-      "password": "Mot de passe",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "iconUrl": "URL de l'icône"
     },
     "notification": {
       "created": "Widget \"{name}\" créé avec succès.",
       "updated": "Widget \"{name}\" mis à jour avec succès.",
       "deleted": "Widget \"{name}\" supprimé.",
       "imported": "Widget importé avec succès.",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "Copier dans le presse-papiers",
-      "aiPromptNoResponse": "",
       "aiPromptCopyError": "Échec de la copie du prompt dans le presse-papiers. Votre navigateur peut ne pas prendre en charge cette fonctionnalité.",
       "createError": "Impossible de créer le widget. Vérifiez que votre point de terminaison API est joignable.",
       "updateError": "Impossible de mettre à jour le widget. Vos modifications n'ont pas été enregistrées.",
@@ -879,14 +735,6 @@
       "previewError": "Impossible de récupérer l'aperçu. Vérifiez l'URL et réessayez.",
       "executed": "Action exécutée avec succès.",
       "executeError": "Échec de l'action: {error}"
-    },
-    "table": {
-      "name": "Nom",
-      "url": "URL",
-      "display": "Affichage"
-    },
-    "widget": {
-      "disabled": "Ce widget est désactivé"
     }
   },
   "integration": {
@@ -3554,26 +3402,6 @@
         "unhealthy": "Dysfonctionnement"
       }
     },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
-    },
     "beszelSystemTable": {
       "name": "",
       "description": "",
@@ -4195,7 +4023,6 @@
         "boards": "Tableaux de bord",
         "apps": "Applications",
         "integrations": "Intégrations",
-        "customWidgets": "",
         "searchEngies": "Moteurs de recherche",
         "medias": "Médias",
         "users": {
@@ -5362,18 +5189,6 @@
         },
         "edit": {
           "label": "Modifier"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

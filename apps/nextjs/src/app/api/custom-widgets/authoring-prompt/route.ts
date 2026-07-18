@@ -1,0 +1,17 @@
+import { NextResponse } from "next/server";
+
+import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/core";
+
+export const dynamic = "force-static";
+
+export function GET() {
+  return NextResponse.json({
+    version: 2,
+    prompt: CUSTOM_WIDGET_MCP_AUTHORING_PROMPT,
+    resources: [
+      "homarr://custom-widgets/schema",
+      "homarr://custom-widgets/components",
+      "homarr://custom-widgets/skill",
+    ],
+  });
+}

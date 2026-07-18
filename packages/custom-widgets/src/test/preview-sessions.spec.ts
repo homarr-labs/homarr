@@ -22,11 +22,23 @@ function createHarness() {
 
 const input: CreatePreviewSessionInput = {
   userId: "user-1",
-  baseUrl: "https://example.com/api",
-  authType: "bearer",
-  secrets: [{ kind: "apiKey", value: "secret" }],
-  networkScope: "public",
+  sources: [
+    {
+      id: "default",
+      name: "API",
+      baseUrl: "https://example.com/api",
+      auth: { type: "bearer" },
+      networkScope: "public",
+    },
+  ],
+  secrets: [{ sourceId: "default", kind: "apiKey", value: "secret" }],
   requests: [],
+  name: "Preview",
+  template: "<Text>Preview</Text>",
+  optionsSchema: { type: "object", properties: {}, additionalProperties: false },
+  defaultOptions: {},
+  stateSchema: {},
+  defaultState: {},
 };
 
 describe("preview session service", () => {
@@ -35,15 +47,15 @@ describe("preview session service", () => {
     const created = await service.create(input);
     const session = await service.get(created.id, input.userId);
     expect(session.secrets[0]?.value).toBe("encrypted:secret");
-    expect(service.getSecrets(session)).toEqual([{ kind: "apiKey", value: "secret" }]);
+    expect(service.getSecrets(session, "default")).toEqual([{ kind: "apiKey", value: "secret" }]);
   });
 
-  it("isolates sessions by user and expires them after five minutes", async () => {
+  it("isolates sessions by user and expires them after ten minutes", async () => {
     const { service, advance } = createHarness();
     const created = await service.create(input);
     await expect(service.get(created.id, "other-user")).rejects.toMatchObject({ code: "NOT_FOUND" });
     const second = await service.create(input);
-    advance(5 * 60_000 + 1);
+    advance(10 * 60_000 + 1);
     await expect(service.get(second.id, input.userId)).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 

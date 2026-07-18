@@ -1,49 +1,59 @@
----
-sidebar_label: Custom JSX language
----
+# Custom JSX runtime
 
-# Custom JSX language
+Templates are declarative JSX interpreted inside a widget-local error boundary. They cannot import modules or run arbitrary JavaScript.
 
-Custom JSX is a declarative expression language, not browser JavaScript. Homarr parses an explicit AST subset and emits React elements from a classified component registry. Templates cannot access browser globals, native prototypes, constructors, refs, portals, raw event handlers, or direct `fetch`.
-
-## Data and rendering
-
-The base GET response is available as `data`. Safe member access, conditionals, arrays, object literals, and interpreter-created collection callbacks can compose displays:
+## Data roots
 
 ```jsx
-<Stack gap="xs">
-  {data.services
-    .filter((service) => service.visible)
-    .map((service) => (
-      <Group key={service.id} justify="space-between">
-        <Text>{service.name}</Text>
-        <Badge color={service.online ? "green" : "red"}>{service.status}</Badge>
-      </Group>
-    ))}
+<Stack>
+  <TextInput bind="search" label="Search TV shows" />
+  <SubFetch requestId="search-series" params={{ query: state.search }} />
+  {data["search-series"]?.map((series) => (
+    <Group key={series.tvdbId}>
+      <Text>{series.title}</Text>
+      <ActionButton requestId="monitor-series" params={{ tvdbId: series.tvdbId }}>
+        Monitor
+      </ActionButton>
+    </Group>
+  ))}
 </Stack>
 ```
 
-Properties are resolved own-only. Reflective names such as `constructor`, `prototype`, `__proto__`, `caller`, `callee`, `arguments`, `bind`, `call`, and `apply` are rejected even when computed or Unicode escaped.
+- `data.<requestId>` contains sanitized JSON or text results.
+- `status.<requestId>` contains loading, success, HTTP, and error state.
+- `options` contains the validated board-item configuration.
+- `state` contains browser-session local state.
 
-## Components and props
+Load-triggered queries populate data automatically and follow the widget refresh interval. `SubFetch` runs a manual query. `ActionButton` and `ToggleSwitch` invoke actions.
 
-Every Mantine export is classified as allowed, wrapped, or denied. The [generated component reference](./#component-reference) is authoritative. Props are allowlisted per component; unsupported props produce warnings and are ignored. Polymorphic roots, unsafe URLs, portals, positioning escapes, refs, and function props are stripped.
+## Mantine capabilities
 
-`SubData` is a convenience for simple response paths. Prefer the render-child pattern for rich nested results:
+Homarr discovers exports from the installed Mantine Core, Dates, and Charts packages and generates prop metadata from their installed TypeScript definitions. Ordinary serializable props pass through. Style props, `style`, and `styles` are sanitized and scoped to the tile. Safe new Mantine exports become available without a hand-maintained allowlist; provider, portal, app-shell, modal, drawer, file, and low-level callback families are classified by the capability denylist.
+
+Use safe Tabler icons through the resolver, for example `<TablerIcon name="server" size={18} />`. The editor completes installed icon names, and `homarr://custom-widgets/components/TablerIcon` exposes the same names to MCP agents.
+
+The runtime blocks imports, hooks, refs, callbacks, polymorphic roots, provider replacement, arbitrary portal targets, browser networking, npm packages, evaluation, prototype-pollution keys, unsafe URLs, global selectors, and escaping CSS.
+
+## Bindings
+
+Declare state types and defaults, then bind controls:
 
 ```jsx
-<SubFetch requestId="detail" params={{ id: data.selectedId }}>
-  {(detail, meta) => (
-    <Stack>
-      <Title>{detail.name}</Title>
-      <Text>HTTP {meta.status}</Text>
-    </Stack>
-  )}
-</SubFetch>
+<TextInput bind="search" />
+<Calendar bind="selectedDate" />
+<Switch bind="enabled" />
+<MultiSelect bind="selectedEntities" data={options.entities} />
 ```
 
-## Safe helpers and budgets
+Homarr adapts ordinary `value/onChange`, `checked/onChange`, `active/onChange`, and `opened/onChange` patterns plus documented unusual component signatures. State supports primitive values and `string[]`, `number[]`, or `date[]` for multi-value controls. Authored callbacks are not allowed.
 
-Bindings include restricted conversion, string, array, object, JSON, math, URI, and pure date helpers. Native `Date` objects and native prototypes are not exposed.
+## Diagnostics
 
-Templates are limited to 50,000 characters, 10,000 rendered nodes, and explicit AST-depth, operation, collection, and string budgets. Budget errors stop only the Custom JSX renderer and are contained by its error boundary.
+- `BLOCKED_CAPABILITY`: unsafe behavior; saving fails.
+- `UNKNOWN_COMPONENT`: the component does not exist; saving fails.
+- `UNKNOWN_MANTINE_PROP`: advisory; the prop is passed through, not discarded.
+- `INVALID_PROP_VALUE`: warning or error depending on safety.
+- `BINDING_UNAVAILABLE`: the component renders, but `bind` is unavailable.
+- `RUNTIME_RENDER_ERROR`: rendering failed inside this tile only.
+
+Homarr never silently drops an ordinary prop.
