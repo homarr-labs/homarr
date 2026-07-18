@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Box, Group, Menu, ScrollArea } from "@mantine/core";
@@ -46,22 +46,22 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
 
-  if (!hasChangeAccess) {
-    return <SelectBoardsMenu />;
-  }
-
   return (
     <>
-      {isEditMode && <AddMenu />}
+      <BoardNavigationHotkeys />
 
-      <EditModeMenu demoReadOnly={demoReadOnly} />
-
-      {!demoReadOnly && (
-        <OnboardingTour.Target id="board-settings">
-          <HeaderButton href={`/boards/${board.name}/settings`}>
-            <IconSettings stroke={1.5} />
-          </HeaderButton>
-        </OnboardingTour.Target>
+      {hasChangeAccess && (
+        <>
+          {isEditMode && <AddMenu />}
+          <EditModeMenu demoReadOnly={demoReadOnly} />
+          {!demoReadOnly && (
+            <OnboardingTour.Target id="board-settings">
+              <HeaderButton href={`/boards/${board.name}/settings`}>
+                <IconSettings stroke={1.5} />
+              </HeaderButton>
+            </OnboardingTour.Target>
+          )}
+        </>
       )}
 
       <SelectBoardsMenu />
@@ -203,6 +203,41 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       </HeaderButton>
     </OnboardingTour.Target>
   );
+};
+
+const BoardNavigationHotkeys = () => {
+  const router = useRouter();
+  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
+  const board = useRequiredBoard();
+
+  const currentIndex = useMemo(() => boards.findIndex((b) => b.id === board.id), [boards, board.id]);
+
+  const navigateToBoard = useCallback(
+    (index: number) => {
+      const target = boards[index];
+      if (target) router.push(`/boards/${target.name}`);
+    },
+    [boards, router],
+  );
+
+  const hotkeyEntries = useMemo(() => {
+    const entries: [string, () => void][] = [];
+
+    if (boards.length > 1) {
+      entries.push(["mod+shift+ArrowRight", () => navigateToBoard((currentIndex + 1) % boards.length)]);
+      entries.push(["mod+shift+ArrowLeft", () => navigateToBoard((currentIndex - 1 + boards.length) % boards.length)]);
+    }
+
+    for (let i = 0; i < Math.min(boards.length, 9); i++) {
+      entries.push([`mod+shift+${i + 1}`, () => navigateToBoard(i)]);
+    }
+
+    return entries;
+  }, [boards, currentIndex, navigateToBoard]);
+
+  useHotkeys(hotkeyEntries);
+
+  return null;
 };
 
 const SelectBoardsMenu = () => {
