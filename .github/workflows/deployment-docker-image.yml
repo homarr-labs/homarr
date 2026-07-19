@@ -63,7 +63,7 @@ jobs:
           persist-credentials: false
       - uses: pnpm/action-setup@v6
         if: env.SKIP_RELEASE == 'false'
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: env.SKIP_RELEASE == 'false'
         with:
           node-version: 24.18.0
