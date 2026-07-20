@@ -1,0 +1,35 @@
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_955a5b644d1c62::t_7a5f60e65688e6 17-18
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_955a5b644d1c62::t_c148c3781c6a55 317-324
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.spec.tsx
+  s_787bde936079ee::t_9294facc0d9d32 1-94
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_955a5b644d1c62::t_be72ded681a113 42,63,65-67,69,71,76-98,142,151-157,175,216,226-227,244-255,259-261
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_0a2a67e5c29d55 937-940,944
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "ee832ad3c6a452f7142cbe4f7f506994e1fb0f09",
+  "prompts": {},
+  "sessions": {
+    "s_787bde936079ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8087-9ff9-7a42-8bbc-67f5905a4fa7",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
