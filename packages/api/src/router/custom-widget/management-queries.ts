@@ -107,7 +107,7 @@ export const managementQueryProcedures = {
           ),
           optionRequests: widget.requests
             .filter((request) => request.kind === "query")
-            .map(({ id, parameters }) => ({ id, parameters })),
+            .map(({ id, parameters, optionsBinding }) => ({ id, parameters, optionsBinding })),
           updatedAt: definition.updatedAt,
         };
       });

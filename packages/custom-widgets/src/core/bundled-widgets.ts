@@ -71,6 +71,11 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
           method: "GET",
           pathTemplate: "/v1/latest",
           parameters: { from: "string", to: "string", amount: "number" },
+          optionsBinding: {
+            from: { $option: "from" },
+            to: { $option: "to" },
+            amount: { $option: "amount" },
+          },
           queryTemplate: {
             from: { $param: "from" },
             to: { $param: "to" },
@@ -167,6 +172,7 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
           method: "GET",
           pathTemplate: "/api/v2/pokemon",
           parameters: { limit: "number" },
+          optionsBinding: { limit: { $option: "limit" } },
           queryTemplate: { limit: { $param: "limit" }, offset: 0 },
           auth: "inherit",
           minimumBoardPermission: "view",

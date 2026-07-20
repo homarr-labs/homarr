@@ -83,6 +83,116 @@ describe("Custom JSX v2 validation", () => {
     ).toBe(true);
   });
 
+  test("requires explicit parameter sources for load queries", () => {
+    const optionsSchema = {
+      type: "object" as const,
+      properties: {
+        endpointId: { type: "string" },
+        wrongType: { type: "boolean" },
+      },
+      required: ["endpointId"],
+      additionalProperties: false as const,
+    };
+    const request = {
+      id: "containers",
+      sourceId: "default",
+      kind: "query" as const,
+      method: "GET" as const,
+      pathTemplate: "/endpoints/{endpointId}/containers",
+      parameters: { endpointId: "string" as const, showAll: "boolean" as const },
+      queryTemplate: { all: { $param: "showAll" } },
+      auth: "none" as const,
+      minimumBoardPermission: "view" as const,
+      trigger: "load" as const,
+    };
+
+    const missing = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      requests: [request],
+      optionsSchema,
+      defaultOptions: { endpointId: "local" },
+    });
+    expect(missing.success).toBe(false);
+    if (missing.success) throw new Error("Expected missing bindings to fail");
+    expect(missing.error.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["requests", 0, "optionsBinding", "endpointId"],
+          message: expect.stringContaining("explicit option reference or literal"),
+        }),
+        expect.objectContaining({ path: ["requests", 0, "optionsBinding", "showAll"] }),
+      ]),
+    );
+
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            ...request,
+            optionsBinding: { endpointId: { $option: "endpointId" }, showAll: false },
+          },
+        ],
+        optionsSchema,
+        defaultOptions: { endpointId: "local" },
+      }).success,
+    ).toBe(true);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            ...request,
+            optionsBinding: { endpointId: { $option: "wrongType" }, showAll: false },
+          },
+        ],
+        optionsSchema,
+        defaultOptions: { endpointId: "local" },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("requires invoking components to provide params for parameterized manual requests", () => {
+    const request = {
+      id: "detail",
+      sourceId: "default",
+      kind: "query" as const,
+      method: "GET" as const,
+      pathTemplate: "/items/{id}",
+      parameters: { id: "string" as const },
+      auth: "none" as const,
+      minimumBoardPermission: "view" as const,
+      trigger: "manual" as const,
+    };
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [request],
+        template: '<SubFetch requestId="detail" />',
+      }).success,
+    ).toBe(false);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [request],
+        template: '<SubFetch requestId="detail" params={{ id: inputs.selectedId }} />',
+      }).success,
+    ).toBe(true);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        requests: [
+          {
+            ...request,
+            trigger: "load",
+            optionsBinding: { id: "fixed" },
+          },
+        ],
+        template: '<SubFetch requestId="detail" params={{ id: inputs.selectedId }} />',
+      }).success,
+    ).toBe(false);
+  });
+
   test("rejects reserved headers, duplicate IDs, and unknown sources", () => {
     const request = {
       id: "status",
@@ -150,6 +260,7 @@ describe("Custom JSX v2 validation", () => {
           method: "POST",
           pathTemplate: "/api/v3/calendar",
           parameters: { start: "string" },
+          optionsBinding: { start: { $option: "start" } },
           bodyTemplate: { start: { $param: "start" } },
           auth: "inherit",
           minimumBoardPermission: "view",

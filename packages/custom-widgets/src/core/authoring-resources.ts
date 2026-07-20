@@ -40,6 +40,7 @@ Create one widget at a time. Repeat the workflow when the user asks for several 
 
 - Use inline sources, named requests, definition-owned options, temporary bound inputs, and one safe JSX template.
 - Use \`kind\`, not the HTTP method, to distinguish reads from user-triggered actions.
+- Give every declared request parameter an explicit source. Load queries use \`optionsBinding\` with an option reference or primitive literal; manual queries and actions receive values only from the invoking component's \`params\` prop. Never infer bindings from matching names.
 - Never put a credential in JSX, options, headers, URLs, examples, exports, logs, or chat output.
 - Use declarative \`bind\` controls and Homarr request components; never emit imports, hooks, callbacks, browser requests, or arbitrary JavaScript.
 - Include responsive loading, empty, error, and success states.

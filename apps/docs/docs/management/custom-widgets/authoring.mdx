@@ -39,7 +39,25 @@ Dynamic selects use `x-homarr.optionsSource` and a named query. Add `itemsPath` 
 
 ### Named requests and parameter bindings
 
-Request parameters are a map from parameter name to `string`, `number`, or `boolean`. Query and body templates reference them with `{ "$param": "name" }`. Load queries receive matching widget options automatically; manual queries and actions receive `params` from their runtime component.
+Request parameters are a map from parameter name to `string`, `number`, or `boolean`. Query and body templates reference them with `{ "$param": "name" }`. Declaring a parameter does not give it a value, even when an option or temporary input has the same name.
+
+For a load query, bind every parameter explicitly in `optionsBinding`. Each entry is either `{ "$option": "optionName" }` or a primitive literal matching the declared parameter type:
+
+```json
+{
+  "pathTemplate": "/api/endpoints/{endpointId}/docker/containers/json",
+  "parameters": { "endpointId": "string", "showAll": "boolean" },
+  "queryTemplate": { "all": { "$param": "showAll" } },
+  "optionsBinding": {
+    "endpointId": { "$option": "endpointId" },
+    "showAll": false
+  }
+}
+```
+
+For manual queries and actions, `SubFetch`, `ActionButton`, or `ToggleSwitch` supplies the complete parameter object through its `params` prop. This is the only route from JSX values such as `inputs.search` or a loop variable into a request.
+
+Dynamic option requests also run without a JSX invoker. If they declare parameters, give them explicit `optionsBinding` entries so the configuration form can resolve those values.
 
 <CanonicalCustomWidgetExample
   id="named-widget-requests"

@@ -18,7 +18,11 @@ interface HomarrCustomWidgetV2 {
 
 A source has a stable lowercase `id`, display `name`, `baseUrl`, `networkScope` (`public`, `private`, or `loopback`), and one auth mode: `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`.
 
-A request has `id`, `sourceId`, `kind`, any supported HTTP `method`, same-origin `pathTemplate`, declared primitive `parameters`, optional `queryTemplate` and `bodyTemplate`, optional safe `staticHeaders`, `auth`, `minimumBoardPermission`, optional `trigger`, caching, confirmation, and invalidation. Parameter names may use camelCase. Bind a declared parameter with `{name}` in a path or `{ "$param": "name" }` in structured query/body data.
+A request has `id`, `sourceId`, `kind`, any supported HTTP `method`, same-origin `pathTemplate`, declared primitive `parameters`, optional `optionsBinding`, `queryTemplate`, and `bodyTemplate`, optional safe `staticHeaders`, `auth`, `minimumBoardPermission`, optional `trigger`, caching, confirmation, and invalidation. Parameter names may use camelCase. Reference a declared parameter with `{name}` in a path or `{ "$param": "name" }` in structured query/body data.
+
+Every declared parameter needs an explicit source. For a load query, bind each parameter in `optionsBinding` with `{ "$option": "optionName" }` or a primitive literal of the declared type. The referenced option must exist in `optionsSchema`. For manual queries and actions, the invoking `SubFetch`, `ActionButton`, or `ToggleSwitch` supplies the complete parameter object through `params`. Never infer a source because a parameter, option, or temporary input has the same name.
+
+Dynamic option requests have no JSX invoker and therefore also require `optionsBinding` for every parameter they declare.
 
 Options use a restricted object JSON Schema. Set `additionalProperties: false`. Presentation metadata lives under `x-homarr`; dynamic selects use `optionsSource.requestId`, optional `itemsPath` for wrapped arrays, `valuePath`, and `labelPath`. Default options must validate against the schema.
 

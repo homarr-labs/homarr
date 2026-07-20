@@ -21,6 +21,11 @@ export const customWidgetParameterIdentifierSchema = z
 const requestParametersSchema = z
   .record(customWidgetParameterIdentifierSchema, z.enum(customJsxRequestParameterTypes))
   .refine((parameters) => Object.keys(parameters).length <= 32, "A request can declare at most 32 parameters");
+const optionReferenceSchema = z.object({ $option: customWidgetParameterIdentifierSchema }).strict();
+const requestOptionBindingValueSchema = z.union([z.string(), z.number().finite(), z.boolean(), optionReferenceSchema]);
+const requestOptionsBindingSchema = z
+  .record(customWidgetParameterIdentifierSchema, requestOptionBindingValueSchema)
+  .refine((bindings) => Object.keys(bindings).length <= 32, "A request can bind at most 32 parameters");
 const reservedRequestHeaders = new Set([
   "authorization",
   "connection",
@@ -154,6 +159,7 @@ export const customJsxRequestSchema = z
       .refine((path) => !path.includes("\\"), "Path templates cannot contain backslashes")
       .refine((path) => !path.includes("#"), "Path templates cannot contain URL fragments"),
     parameters: requestParametersSchema,
+    optionsBinding: requestOptionsBindingSchema.optional(),
     queryTemplate: z.record(z.string().min(1).max(256), z.json()).optional(),
     bodyTemplate: z.json().optional(),
     staticHeaders: staticHeadersSchema.optional(),
@@ -192,6 +198,34 @@ export const customJsxRequestSchema = z
       });
     }
     const declared = new Set(Object.keys(request.parameters));
+    const optionBindings = request.optionsBinding ?? {};
+    for (const [name, binding] of Object.entries(optionBindings)) {
+      const parameterType = request.parameters[name];
+      if (!parameterType) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["optionsBinding", name],
+          message: `Option binding '${name}' does not match a declared parameter`,
+        });
+      } else if ((typeof binding !== "object" || binding === null) && typeof binding !== parameterType) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["optionsBinding", name],
+          message: `Literal binding for '${name}' must be ${parameterType}`,
+        });
+      }
+    }
+    if (request.kind === "query" && request.trigger === "load") {
+      for (const name of declared) {
+        if (!Object.hasOwn(optionBindings, name)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["optionsBinding", name],
+            message: `Load request parameter '${name}' requires an explicit option reference or literal value`,
+          });
+        }
+      }
+    }
     const used = [...request.pathTemplate.matchAll(/\{([^{}]+)\}/g)].map((match) => match[1] ?? "");
     collectParameterNames(request.queryTemplate).forEach((name) => used.push(name));
     collectParameterNames(request.bodyTemplate).forEach((name) => used.push(name));
@@ -202,3 +236,26 @@ export const customJsxRequestSchema = z
     }
   });
 export type CustomJsxRequest = z.infer<typeof customJsxRequestSchema>;
+export type CustomJsxRequestOptionsBinding = NonNullable<CustomJsxRequest["optionsBinding"]>;
+
+export function resolveCustomWidgetOptionsBinding(
+  request: Pick<CustomJsxRequest, "id" | "parameters" | "optionsBinding">,
+  options: Record<string, unknown>,
+): Record<string, string | number | boolean> {
+  const bindings = request.optionsBinding ?? {};
+  const params: Record<string, string | number | boolean> = {};
+  for (const [name, expectedType] of Object.entries(request.parameters)) {
+    const binding = bindings[name];
+    if (binding === undefined) {
+      throw new Error(`Request '${request.id}' parameter '${name}' has no explicit option binding`);
+    }
+    const optionName = typeof binding === "object" ? binding.$option : undefined;
+    const value = optionName === undefined ? binding : options[optionName];
+    if (typeof value !== expectedType) {
+      const source = optionName === undefined ? "literal binding" : `option '${optionName}'`;
+      throw new Error(`Request '${request.id}' parameter '${name}' requires ${source} to be ${expectedType}`);
+    }
+    params[name] = value as string | number | boolean;
+  }
+  return params;
+}

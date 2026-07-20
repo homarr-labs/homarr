@@ -7,6 +7,7 @@ import { eq } from "@homarr/db";
 import { boards, customWidgetDefinitions, items } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
 import { validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
+import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
@@ -173,21 +174,6 @@ const executeRequest = async (
   );
 };
 
-const getLoadParams = (resolved: ResolvedDefinition, request: CustomJsxRequest) => {
-  const params: Record<string, string | number | boolean> = {};
-  for (const [name, type] of Object.entries(request.parameters)) {
-    const value = resolved.configuration[name];
-    if (typeof value !== type) {
-      throw new TRPCError({
-        code: "PRECONDITION_FAILED",
-        message: `Load request '${request.id}' needs option '${name}' (${type})`,
-      });
-    }
-    params[name] = value as string | number | boolean;
-  }
-  return params;
-};
-
 export const customApiRouter = createTRPCRouter({
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
@@ -197,7 +183,8 @@ export const customApiRouter = createTRPCRouter({
     const entries = await Promise.all(
       loadRequests.map(async (request) => {
         try {
-          const response = await executeRequest(ctx, resolved, request, getLoadParams(resolved, request));
+          const params = resolveCustomWidgetOptionsBinding(request, resolved.configuration);
+          const response = await executeRequest(ctx, resolved, request, params);
           return [
             request.id,
             {
@@ -249,6 +236,9 @@ export const customApiRouter = createTRPCRouter({
   queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const request = findRequest(resolved, input.requestId, "query");
+    if (request.trigger !== "manual") {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Load queries cannot be invoked manually" });
+    }
     const response = await executeRequest(ctx, resolved, request, input.params);
     return {
       ok: response.ok,

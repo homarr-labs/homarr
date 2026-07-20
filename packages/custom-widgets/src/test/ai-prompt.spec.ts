@@ -32,6 +32,9 @@ describe("buildCustomWidgetAiPrompt", () => {
     expect(prompt).toContain("homarr-custom-widget-v2");
     expect(prompt).toContain("Return exactly two fenced blocks");
     expect(prompt).toContain("Never include credentials");
+    expect(prompt).toContain("Every declared parameter needs an explicit value source");
+    expect(prompt).toContain('"optionsBinding"');
+    expect(prompt).toContain("Never infer a binding from matching names");
     expect(prompt).toContain("Create a Portainer widget");
     expect(prompt.length).toBeLessThanOrEqual(8_000);
   });

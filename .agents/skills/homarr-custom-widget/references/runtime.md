@@ -8,6 +8,27 @@ Render icons as `<TablerIcon name="server" size={18} />`. When connected, retrie
 
 Use `SubFetch` for a manual query, `ActionButton` or `ToggleSwitch` for an action, and `RefreshButton` to refresh data. A query with `trigger: "load"` populates its data automatically and follows the widget refresh interval.
 
+Manual requests receive values only from the invoking component:
+
+```jsx
+<SubFetch requestId="search" params={{ query: inputs.search }} />
+<ActionButton requestId="restart" params={{ id: container.Id }}>Restart</ActionButton>
+```
+
+Loop variables and other JSX expressions can flow into a request only through that `params` prop. A load query has no invoking component, so every declared parameter must have an `optionsBinding` entry:
+
+```json
+{
+  "parameters": { "endpointId": "string", "showAll": "boolean" },
+  "optionsBinding": {
+    "endpointId": { "$option": "endpointId" },
+    "showAll": false
+  }
+}
+```
+
+Do not rely on parameter and option names matching. For an invalid-placeholder or unresolved-parameter error on a load query, check missing `optionsBinding` entries before changing placeholder syntax.
+
 Bind local controls declaratively:
 
 ```jsx

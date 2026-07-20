@@ -1,5 +1,5 @@
 import { fetchApi } from "@homarr/api/client";
-import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
+import { customWidgetDefinitionSchema, resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
@@ -70,13 +70,8 @@ export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessi
   const data: Record<string, unknown> = {};
   const status: Record<string, unknown> = {};
   for (const request of definition.requests.filter((entry) => entry.kind === "query" && entry.trigger === "load")) {
-    const params = Object.fromEntries(
-      Object.entries(request.parameters).flatMap(([name, type]) => {
-        const value = definition.defaultOptions[name];
-        return typeof value === type ? [[name, value as string | number | boolean]] : [];
-      }),
-    );
     try {
+      const params = resolveCustomWidgetOptionsBinding(request, definition.defaultOptions);
       const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId: request.id, params });
       data[request.id] = result.data;
       status[request.id] = { loading: false, ...result };

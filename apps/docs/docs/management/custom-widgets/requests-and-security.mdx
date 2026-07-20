@@ -13,7 +13,7 @@ Queries and actions support GET, POST, PUT, PATCH, and DELETE. `kind`, not metho
 
 Successful actions evict the declared queries from both the browser and server response cache before refetching them.
 
-Path parameters use `{name}`. Structured query/body templates use `{ "$param": "name" }`. Runtime values can come from validated options, temporary `inputs`, and explicit action parameters.
+Path parameters use `{name}`. Structured query/body templates use `{ "$param": "name" }`. Every declared parameter has an explicit source: load queries use `optionsBinding` entries containing `{ "$option": "optionName" }` or a primitive literal, while manual queries and actions receive the full parameter object from the invoking component's `params` prop. Homarr never matches parameter names to option or input names implicitly.
 
 ## Protections
 

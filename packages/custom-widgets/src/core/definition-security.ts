@@ -27,6 +27,7 @@ export function validateCredentialFreeExport(definition: SecurityDefinition, ctx
   }
   definition.requests.forEach((request, index) => {
     if (
+      containsCredentialLikeValue(request.optionsBinding) ||
       containsCredentialLikeValue(request.queryTemplate) ||
       containsCredentialLikeValue(request.bodyTemplate) ||
       Object.entries(request.staticHeaders ?? {}).some(
@@ -66,6 +67,7 @@ export function validatePrototypeKeys(definition: SecurityDefinition, ctx: Refin
     [["defaultOptions"], definition.defaultOptions],
   ];
   definition.requests.forEach((request, index) => {
+    values.push([["requests", index, "optionsBinding"], request.optionsBinding]);
     values.push([["requests", index, "queryTemplate"], request.queryTemplate]);
     values.push([["requests", index, "bodyTemplate"], request.bodyTemplate]);
   });

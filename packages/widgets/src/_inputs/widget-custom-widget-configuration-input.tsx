@@ -23,7 +23,7 @@ import { IconAlertTriangle, IconBraces } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
+import { resolveCustomWidgetOptionsBinding, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
 import { IconPicker } from "@homarr/forms-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -336,15 +336,17 @@ function DynamicOptionsSelect({
   const definition = available.data?.find((candidate) => candidate.id === definitionId);
   const requestId = typeof source.requestId === "string" ? source.requestId : "";
   const request = definition?.optionRequests.find((candidate) => candidate.id === requestId);
-  const params = Object.fromEntries(
-    Object.entries(request?.parameters ?? {}).flatMap(([name, type]) => {
-      const value = configuration[name];
-      return typeof value === type ? [[name, value as string | number | boolean]] : [];
-    }),
-  );
+  const params = (() => {
+    if (!request) return null;
+    try {
+      return resolveCustomWidgetOptionsBinding(request, configuration);
+    } catch {
+      return null;
+    }
+  })();
   const query = clientApi.customWidget.optionRequest.useQuery(
-    { boardId: board?.id ?? "", definitionId, requestId, params },
-    { enabled: Boolean(board?.id && definitionId && requestId && request) },
+    { boardId: board?.id ?? "", definitionId, requestId, params: params ?? {} },
+    { enabled: Boolean(board?.id && definitionId && requestId && request && params) },
   );
   const valuePath = typeof source.valuePath === "string" ? source.valuePath : "$.value";
   const labelPath = typeof source.labelPath === "string" ? source.labelPath : "$.label";

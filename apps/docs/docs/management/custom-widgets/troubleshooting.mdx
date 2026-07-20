@@ -10,7 +10,7 @@ Use the first schema/JSX diagnostic and its path. Ensure source/request IDs are 
 
 ## Request fails
 
-Check the source network scope, base URL, credentials, request method/path/body, runtime parameters, and board permission. The preview journal shows redacted method, request ID, path template, status, and duration without credentials.
+Check the source network scope, base URL, credentials, request method/path/body, runtime parameters, and board permission. For “invalid placeholder” or an unresolved parameter on a load query, first verify that every declared parameter has an explicit `optionsBinding` option reference or literal. Matching parameter and option names are not a binding. The preview journal shows redacted method, request ID, path template, status, and duration without credentials.
 
 ## Mantine prop warning
 

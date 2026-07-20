@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { resolveCustomWidgetOptionsBinding } from "../core";
 import type { CustomJsxRequest } from "../core";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget, validateRuntimeParams } from "../server";
 
@@ -57,5 +58,29 @@ describe("named request manifest rendering", () => {
 
   it("hashes parameters independently of object insertion order", () => {
     expect(hashRuntimeParams({ a: 1, b: "two" })).toBe(hashRuntimeParams({ b: "two", a: 1 }));
+  });
+
+  it("resolves only explicit option and literal bindings for automatic requests", () => {
+    const loadRequest: CustomJsxRequest = {
+      ...request,
+      kind: "query",
+      trigger: "load",
+      optionsBinding: {
+        device: { $option: "selectedDevice" },
+        enabled: true,
+        level: { $option: "volume" },
+      },
+    };
+    expect(resolveCustomWidgetOptionsBinding(loadRequest, { selectedDevice: "lamp", volume: 5 })).toEqual({
+      device: "lamp",
+      enabled: true,
+      level: 5,
+    });
+    expect(() => resolveCustomWidgetOptionsBinding({ ...loadRequest, optionsBinding: undefined }, {})).toThrow(
+      "has no explicit option binding",
+    );
+    expect(() => resolveCustomWidgetOptionsBinding(loadRequest, { device: "lamp", level: 5 })).toThrow(
+      "option 'selectedDevice'",
+    );
   });
 });

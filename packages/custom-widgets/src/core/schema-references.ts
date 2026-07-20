@@ -60,6 +60,23 @@ export const CUSTOM_WIDGET_REQUEST_EXAMPLES = {
       cacheTtlSeconds: 60,
     },
     {
+      id: "summary",
+      sourceId: "default",
+      kind: "query",
+      method: "GET",
+      pathTemplate: "/api/environments/{environmentId}/summary",
+      parameters: { environmentId: "number", includeStopped: "boolean" },
+      optionsBinding: {
+        environmentId: { $option: "environmentId" },
+        includeStopped: false,
+      },
+      queryTemplate: { includeStopped: { $param: "includeStopped" } },
+      auth: "inherit",
+      minimumBoardPermission: "view",
+      trigger: "load",
+      cacheTtlSeconds: 60,
+    },
+    {
       id: "search",
       sourceId: "default",
       kind: "query",

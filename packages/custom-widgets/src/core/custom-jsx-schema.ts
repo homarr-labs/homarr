@@ -121,6 +121,16 @@ function validateDynamicOptions(
           path: [...path, "x-homarr", "optionsSource", "requestId"],
           message: `Dynamic options require a query request named '${String(requestId)}'`,
         });
+      } else {
+        for (const parameterName of Object.keys(request.parameters)) {
+          if (!Object.hasOwn(request.optionsBinding ?? {}, parameterName)) {
+            ctx.addIssue({
+              code: "custom",
+              path: [...path, "x-homarr", "optionsSource", "requestId"],
+              message: `Dynamic option request '${request.id}' parameter '${parameterName}' requires an explicit optionsBinding entry`,
+            });
+          }
+        }
       }
     }
   }
@@ -167,6 +177,29 @@ function validateRequests(definition: Definition, sourceIds: Set<string>, ctx: z
         });
       }
     }
+    for (const [parameterName, binding] of Object.entries(request.optionsBinding ?? {})) {
+      if (typeof binding !== "object") continue;
+      const optionName = binding.$option;
+      const optionSchema = definition.optionsSchema.properties?.[optionName];
+      if (optionSchema === null || typeof optionSchema !== "object" || Array.isArray(optionSchema)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["requests", index, "optionsBinding", parameterName, "$option"],
+          message: `Unknown widget option '${optionName}'`,
+        });
+        continue;
+      }
+      const parameterType = request.parameters[parameterName];
+      const declaredOptionType = (optionSchema as Record<string, unknown>).type;
+      const optionType = declaredOptionType === "integer" ? "number" : declaredOptionType;
+      if (parameterType !== undefined && optionType !== parameterType) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["requests", index, "optionsBinding", parameterName, "$option"],
+          message: `Option '${optionName}' must be ${parameterType} to supply parameter '${parameterName}'`,
+        });
+      }
+    }
     requests.set(request.id, request);
   });
   definition.requests.forEach((request, index) => {
@@ -206,6 +239,18 @@ function validateTemplateRequests(template: string, requests: Map<string, Custom
         code: "custom",
         path: ["template"],
         message: `${component} requires a ${expectedKind} request, but '${requestId}' is ${request.kind}`,
+      });
+    } else if (component === "SubFetch" && request.trigger !== "manual") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["template"],
+        message: `SubFetch requires a manual query, but '${requestId}' is load-triggered`,
+      });
+    } else if (Object.keys(request.parameters).length > 0 && !/\bparams\s*=/u.test(match[2] ?? "")) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["template"],
+        message: `${component} must supply params for request '${requestId}'`,
       });
     }
   }

@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
+
 import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
@@ -31,8 +33,10 @@ export const previewQueryProcedures = {
       if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const resolved = getPreviewRequestSource(session, request.sourceId);
       if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
-      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, input.params);
-      const body = renderRequestBody(request.bodyTemplate, input.params);
+      const params =
+        request.trigger === "load" ? resolveCustomWidgetOptionsBinding(request, session.defaultOptions) : input.params;
+      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
+      const body = renderRequestBody(request.bodyTemplate, params);
       const release = await acquireCustomWidgetRequestLimit({
         category: "query",
         userId: ctx.session.user.id,
@@ -50,7 +54,7 @@ export const previewQueryProcedures = {
           auth: request.auth === "none" ? undefined : resolved.auth,
           networkScope: resolved.source.networkScope,
           kind: "query",
-          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(input.params)}`,
+          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}`,
           cacheTtlSeconds: request.cacheTtlSeconds,
         });
         await recordPreviewJournal(session, {

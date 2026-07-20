@@ -89,13 +89,24 @@ export const previewBaseProcedures = {
       optionsSchema: session.optionsSchema,
       defaultOptions: session.defaultOptions,
       requests: session.requests.map(
-        ({ id, kind, method, minimumBoardPermission, trigger, parameters, confirmation, invalidates }) => ({
+        ({
           id,
           kind,
           method,
           minimumBoardPermission,
           trigger,
           parameters,
+          optionsBinding,
+          confirmation,
+          invalidates,
+        }) => ({
+          id,
+          kind,
+          method,
+          minimumBoardPermission,
+          trigger,
+          parameters,
+          optionsBinding,
           confirmation,
           invalidates,
         }),
