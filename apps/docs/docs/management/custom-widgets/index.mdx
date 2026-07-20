@@ -80,7 +80,9 @@ A board item selects a definition from a searchable picker and immediately rende
 
 ## Import, export, and Workshop
 
-Export downloads one canonical JSON document without credentials. Import validates and shows the origins, auth modes, network scopes, methods, actions, and required board permissions before creating anything.
+Export downloads one canonical JSON document without credentials. Import validates and shows the origins, auth modes, network scopes, methods, actions, and required board permissions before creating anything. The same review screen is used for file, clipboard, and Workshop installs. It provides optional credential fields for every authenticated source; entered values are encrypted locally and never added to the imported document.
+
+Widgets that still need a bearer token, API key, username, or password show a **Credentials missing** indicator on the Custom Widgets management page. Importing without credentials remains supported, and the indicator disappears once every required source credential is configured.
 
 The [Workshop](/docs/management/workshop) publishes valid widgets immediately. Users can vote or report a submission. Workshop administrators may dismiss reports or delete any post; deletion does not remove installed local copies.
 

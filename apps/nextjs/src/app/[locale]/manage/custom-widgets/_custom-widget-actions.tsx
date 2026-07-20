@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBuildingStore, IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
@@ -9,16 +9,16 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import {
   formatCustomWidgetImportIssues,
-  getImportReview,
   looksLikeCustomWidgetClipboard,
   parseCustomWidgetClipboardDetailed,
 } from "@homarr/custom-widgets/core";
-import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
+import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
 
 const iconProps = { size: 16, stroke: 1.5 };
@@ -138,24 +138,10 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
 export const ImportCustomWidgetButton = () => {
   const t = useScopedI18n("customWidget");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pendingImport, setPendingImport] = useState<Record<string, unknown> | null>(null);
+  const [pendingImport, setPendingImport] = useState<HomarrCustomWidgetV2 | null>(null);
   const [reviewOpened, { open: openReview, close: closeReview }] = useDisclosure(false);
-  const utils = clientApi.useUtils();
-  const importMutation = clientApi.customWidget.import.useMutation({
-    onSuccess: () => {
-      closeReview();
-      setPendingImport(null);
-      showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });
-      void utils.customWidget.list.invalidate();
-      void revalidatePathActionAsync("/manage/custom-widgets");
-    },
-    onError: () => {
-      showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
-    },
-  });
-  const review = useMemo(() => getImportReview(pendingImport), [pendingImport]);
   const queueImport = useCallback(
-    (value: Record<string, unknown>) => {
+    (value: HomarrCustomWidgetV2) => {
       setPendingImport(value);
       openReview();
     },
@@ -213,7 +199,6 @@ export const ImportCustomWidgetButton = () => {
         variant="default"
         leftSection={<IconUpload size={16} />}
         onClick={() => fileInputRef.current?.click()}
-        loading={importMutation.isPending}
         title={t("action.pasteImportHint")}
       >
         {t("action.import")}
@@ -226,26 +211,12 @@ export const ImportCustomWidgetButton = () => {
         onChange={handleImport}
         aria-label={t("importReview.fileLabel")}
       />
-      <ImportReviewDialog
+      <CustomWidgetImportDialog
         opened={reviewOpened}
-        review={review}
-        pending={importMutation.isPending}
-        onClose={closeReview}
-        onConfirm={() => pendingImport && importMutation.mutate(pendingImport as never)}
-        messages={{
-          title: t("importReview.title"),
-          description: t("importReview.description"),
-          name: t("importReview.name"),
-          origin: t("importReview.origin"),
-          authentication: t("importReview.authentication"),
-          networkScope: t("importReview.networkScope"),
-          methods: t("importReview.methods"),
-          permissions: t("importReview.permissions"),
-          actionWarningTitle: t("importReview.actionWarning.title"),
-          actionWarningDescription: t("importReview.actionWarning.description"),
-          cancel: t("importReview.cancel"),
-          confirm: t("importReview.confirm"),
-          permission: (permission) => t(`preview.request.permission.${permission}` as never),
+        widget={pendingImport}
+        onClose={() => {
+          closeReview();
+          setPendingImport(null);
         }}
       />
     </>

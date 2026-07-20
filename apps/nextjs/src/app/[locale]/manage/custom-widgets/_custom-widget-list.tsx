@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Avatar, Badge, Card, Group, Stack, Switch, Text, Tooltip } from "@mantine/core";
-import { IconApi, IconPencil } from "@tabler/icons-react";
+import { IconAlertTriangle, IconApi, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -95,6 +95,23 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
           <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
             JSX · {widget.requestCount}
           </Badge>
+          {widget.missingSecrets.length > 0 && (
+            <Tooltip
+              label={t("page.list.missingCredentialsDescription", { count: widget.missingSecrets.length })}
+              multiline
+              maw={320}
+            >
+              <Badge
+                color="yellow"
+                size="sm"
+                variant="light"
+                leftSection={<IconAlertTriangle size={12} />}
+                style={{ flexShrink: 0 }}
+              >
+                {t("page.list.missingCredentials", { count: widget.missingSecrets.length })}
+              </Badge>
+            </Tooltip>
+          )}
         </Group>
 
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Alert, Badge, Button, Code, Group, Modal, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -24,6 +25,7 @@ export interface ImportReviewDialogProps {
   review: ImportReview | null;
   pending: boolean;
   messages: ImportReviewMessages;
+  children?: ReactNode;
   onClose(): void;
   onConfirm(): void;
 }
@@ -39,7 +41,15 @@ function ImportFact({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function ImportReviewDialog({ opened, review, pending, messages, onClose, onConfirm }: ImportReviewDialogProps) {
+export function ImportReviewDialog({
+  opened,
+  review,
+  pending,
+  messages,
+  children,
+  onClose,
+  onConfirm,
+}: ImportReviewDialogProps) {
   return (
     <Modal opened={opened} onClose={onClose} title={messages.title} centered size="lg">
       {review && (
@@ -89,6 +99,7 @@ export function ImportReviewDialog({ opened, review, pending, messages, onClose,
               <Text size="sm">{messages.actionWarningDescription}</Text>
             </Alert>
           )}
+          {children}
           <Group justify="flex-end">
             <Button type="button" variant="default" onClick={onClose} disabled={pending}>
               {messages.cancel}

@@ -1,21 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import { Button, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBuildingStore } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
-import { showSuccessNotification } from "@homarr/notifications";
+import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopBrowser } from "./workshop-browser";
 
 export function WorkshopInstallButton() {
   const t = useScopedI18n("workshop");
   const [opened, controls] = useDisclosure(false);
-  const mutation = clientApi.customWidget.import.useMutation();
-  const utils = clientApi.useUtils();
+  const [reviewOpened, reviewControls] = useDisclosure(false);
+  const [pendingWidget, setPendingWidget] = useState<HomarrCustomWidgetV2 | null>(null);
   return (
     <>
       <Button variant="default" leftSection={<IconBuildingStore size={16} />} onClick={controls.open}>
@@ -25,16 +26,20 @@ export function WorkshopInstallButton() {
         <WorkshopBrowser
           onInstall={async (submission) => {
             const widget = customWidgetImportSchema.parse(JSON.parse(submission.content));
-            await mutation.mutateAsync(widget);
-            await utils.customWidget.list.invalidate();
-            showSuccessNotification({
-              title: t("installed"),
-              message: t("installedDescription", { name: widget.name }),
-            });
-            controls.close();
+            setPendingWidget(widget);
+            reviewControls.open();
           }}
         />
       </Modal>
+      <CustomWidgetImportDialog
+        opened={reviewOpened}
+        widget={pendingWidget}
+        onClose={() => {
+          reviewControls.close();
+          setPendingWidget(null);
+        }}
+        onImported={controls.close}
+      />
     </>
   );
 }

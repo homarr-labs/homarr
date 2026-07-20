@@ -1,36 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
-import { clientApi } from "@homarr/api/client";
 import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import type { WorkshopSubmissionDetail } from "@homarr/workshop";
 
+import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopBrowser } from "./workshop-browser";
 
 export function WorkshopInstaller() {
-  const t = useScopedI18n("workshop");
   const router = useRouter();
-  const utils = clientApi.useUtils();
-  const importMutation = clientApi.customWidget.import.useMutation();
+  const [pendingWidget, setPendingWidget] = useState<HomarrCustomWidgetV2 | null>(null);
+  const [reviewOpened, reviewControls] = useDisclosure(false);
 
   const install = async (submission: WorkshopSubmissionDetail) => {
-    try {
-      const widget = customWidgetImportSchema.parse(JSON.parse(submission.content) as unknown);
-      const result = await importMutation.mutateAsync(widget);
-      await utils.customWidget.list.invalidate();
-      showSuccessNotification({ title: t("installSuccess"), message: t("installSuccessDescription") });
-      router.push(`/manage/custom-widgets/edit/${result.id}`);
-    } catch (error) {
-      showErrorNotification({
-        title: t("installError"),
-        message: error instanceof Error ? error.message : t("installErrorDescription"),
-      });
-      throw error;
-    }
+    const widget = customWidgetImportSchema.parse(JSON.parse(submission.content) as unknown);
+    setPendingWidget(widget);
+    reviewControls.open();
   };
 
-  return <WorkshopBrowser onInstall={install} />;
+  return (
+    <>
+      <WorkshopBrowser onInstall={install} />
+      <CustomWidgetImportDialog
+        opened={reviewOpened}
+        widget={pendingWidget}
+        onClose={() => {
+          reviewControls.close();
+          setPendingWidget(null);
+        }}
+        onImported={(result) => router.push(`/manage/custom-widgets/edit/${result.id}`)}
+      />
+    </>
+  );
 }

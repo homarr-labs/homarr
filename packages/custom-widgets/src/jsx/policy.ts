@@ -2,7 +2,7 @@ export const CUSTOM_JSX_LIMITS = Object.freeze({
   templateLength: 50_000,
   astDepth: 64,
   operations: 25_000,
-  collectionItems: 2_000,
+  collectionItems: 4_000,
   renderedNodes: 10_000,
   stringLength: 200_000,
 });

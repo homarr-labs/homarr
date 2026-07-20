@@ -1,11 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
+import { getCustomWidgetRequiredSecretKinds } from "@homarr/custom-widgets/core";
+
 export function requiredSecretKinds(authType: string) {
-  if (authType === "basic") return ["username", "password"] as const;
-  if (authType === "bearer" || authType === "apiKeyHeader" || authType === "apiKeyQuery") {
-    return ["apiKey"] as const;
-  }
-  return [] as const;
+  return getCustomWidgetRequiredSecretKinds(authType as Parameters<typeof getCustomWidgetRequiredSecretKinds>[0]);
 }
 
 export function assertSecretSources(

@@ -722,7 +722,9 @@
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
@@ -973,6 +975,17 @@
       "networkScope": "Network scope",
       "methods": "HTTP methods",
       "permissions": "Required board permissions",
+      "credentials": {
+        "title": "Configure credentials now",
+        "description": "Secrets are encrypted locally and never added to the imported widget. You can leave a field blank and configure it later.",
+        "header": "Sent through the {name} header",
+        "query": "Sent through the {name} query parameter",
+        "field": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
       "actionWarning": {
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."

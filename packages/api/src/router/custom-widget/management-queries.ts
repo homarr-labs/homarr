@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { decryptSecret } from "@homarr/common/server";
 import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions } from "@homarr/db/schema";
+import { getCustomWidgetSecretRequirements } from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -21,9 +22,11 @@ export const managementQueryProcedures = {
     .query(async ({ ctx }) => {
       const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
         orderBy: (table, { asc }) => asc(table.name),
+        with: { secrets: true },
       });
       return definitions.map((definition) => {
         const widget = parseStoredCustomWidgetDefinition(definition);
+        const configuredSecrets = new Set(definition.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
         return {
           id: definition.id,
           name: widget.name,
@@ -37,6 +40,9 @@ export const managementQueryProcedures = {
             authType: auth.type,
           })),
           requestCount: widget.requests.length,
+          missingSecrets: getCustomWidgetSecretRequirements(widget.sources).filter(
+            (requirement) => !configuredSecrets.has(`${requirement.sourceId}:${requirement.kind}`),
+          ),
           defaultOptions: widget.defaultOptions,
           updatedAt: definition.updatedAt,
           enabled: definition.enabled,

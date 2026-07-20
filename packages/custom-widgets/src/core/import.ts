@@ -208,7 +208,7 @@ export function formatCustomWidgetImportIssues(issues: readonly CustomWidgetImpo
   return `${visible.join(" ")}${remaining > 0 ? ` (+${remaining} more)` : ""}`;
 }
 
-export function getImportReview(value: Record<string, unknown> | null): ImportReview | null {
+export function getImportReview(value: unknown): ImportReview | null {
   const parsed = customWidgetImportSchema.safeParse(value);
   if (!parsed.success) return null;
   const widget = parsed.data;

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { BUNDLED_CUSTOM_WIDGETS } from "../core/bundled-widgets";
 import { customJsxExamples, CUSTOM_WIDGET_STARTER } from "../core/examples";
+import { getCustomWidgetSecretRequirements } from "../core/secret-requirements";
 import { customJsxRequestSchema, customWidgetCreateSchema, customWidgetDefinitionSchema } from "../core/schema";
 import { validateCustomWidgetOptions } from "../core/options";
 
@@ -25,6 +26,39 @@ describe("Custom JSX v2 validation", () => {
     for (const { widget } of BUNDLED_CUSTOM_WIDGETS) {
       expect(JSON.stringify(widget)).not.toMatch(/"(?:apiKey|password|secret|token)"\s*:/iu);
     }
+  });
+
+  test("derives every credential required by widget sources", () => {
+    expect(
+      getCustomWidgetSecretRequirements([
+        {
+          id: "default",
+          name: "Example API",
+          baseUrl: "https://api.example.com",
+          networkScope: "public",
+          auth: { type: "bearer" },
+        },
+        {
+          id: "portainer",
+          name: "Portainer",
+          baseUrl: "https://portainer.example.com",
+          networkScope: "public",
+          auth: { type: "apiKeyHeader", headerName: "X-API-Key" },
+        },
+        {
+          id: "basic",
+          name: "Basic API",
+          baseUrl: "https://basic.example.com",
+          networkScope: "public",
+          auth: { type: "basic" },
+        },
+      ]),
+    ).toEqual([
+      expect.objectContaining({ sourceId: "default", kind: "apiKey", authType: "bearer" }),
+      expect.objectContaining({ sourceId: "portainer", kind: "apiKey", destination: "X-API-Key" }),
+      expect.objectContaining({ sourceId: "basic", kind: "username" }),
+      expect.objectContaining({ sourceId: "basic", kind: "password" }),
+    ]);
   });
 
   test("rejects every legacy schema", () => {
