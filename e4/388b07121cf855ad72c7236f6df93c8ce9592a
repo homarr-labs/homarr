@@ -1,0 +1,49 @@
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_955a5b644d1c62::t_c67fc0c8e0b112 83-85
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_955a5b644d1c62::t_24edaa65e95688 3,15,21,141,144,214,216-219
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_955a5b644d1c62::t_6f8c730894df69 4,98-114
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  s_955a5b644d1c62::t_1bf7b6acdcbf11 1-118
+apps/nextjs/src/components/workshop/workshop-install-button.tsx
+  s_955a5b644d1c62::t_ed9ca25a0f4c85 3,9,12,18-19,29-30,34-42
+apps/nextjs/src/components/workshop/workshop-installer.tsx
+  s_955a5b644d1c62::t_c10445d4c3ff5f 4-5,8,11,16-17,20-22,25-38
+packages/api/src/router/custom-widget/management-queries.ts
+  s_955a5b644d1c62::t_c7253292e6d0f1 7,25,29,43-45
+packages/api/src/router/custom-widget/secret-policy.ts
+  s_955a5b644d1c62::t_dab7990c72430a 3-4,6
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_955a5b644d1c62::t_76ecd79fa4824e 5,8-9,12,27-56
+packages/custom-widgets/src/core/import.ts
+  s_955a5b644d1c62::t_e15cb2d9ae9145 211
+packages/custom-widgets/src/core/index.ts
+  s_955a5b644d1c62::t_c3b1cb7dd49edb 10
+packages/custom-widgets/src/core/secret-requirements.ts
+  s_955a5b644d1c62::t_556e46bde26fd9 1-37
+packages/custom-widgets/src/jsx/policy.ts
+  s_955a5b644d1c62::t_12745aabc38b58 5
+packages/custom-widgets/src/test/schema.spec.ts
+  s_955a5b644d1c62::t_d2a26647cfb4d9 5,31-63
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_955a5b644d1c62::t_12ccc6ae561f6a 1,28,44-52,102
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_d309909a6d93ef 725-727,978-988
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e4388b07121cf855ad72c7236f6df93c8ce9592a",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
