@@ -271,7 +271,6 @@ export const onboardRouter = createTRPCRouter({
   setupIntegrations: onboardingProcedure.requiresStep("integrations").mutation(async ({ ctx }) => {
     const db = ctx.db;
 
-    const allIntegrations = await db.query.integrations.findMany();
     const allApps = await db.query.apps.findMany();
 
     const board = await db.query.boards.findFirst({
@@ -316,7 +315,6 @@ export const onboardRouter = createTRPCRouter({
           layoutId: layout.id,
           columnCount: layout.columnCount,
         },
-        allIntegrations,
         allApps,
       );
     }

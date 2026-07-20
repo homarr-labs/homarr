@@ -1,19 +1,11 @@
-import superjson from "superjson";
+import { stringify } from "superjson";
 
 import { createId } from "@homarr/common";
-import {
-  defaultBookmarkApps,
-  defaultWidgetConfigs,
-  emptySuperJSON,
-  getWidgetKindsForIntegration,
-} from "@homarr/definitions";
+import { defaultBookmarkApps, defaultWidgetConfigs, emptySuperJSON } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 
 import type { Database } from "..";
 import { integrationItems, itemLayouts, items } from "../schema";
-import type { Integration } from "../schema";
-
-const widgetConfigMap = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
 
 interface BoardTarget {
   boardId: string;
@@ -77,12 +69,7 @@ interface App {
   name: string;
 }
 
-export const placeAllWidgetsAsync = async (
-  db: Database,
-  target: BoardTarget,
-  allIntegrations: Integration[],
-  allApps: App[],
-) => {
+export const placeAllWidgetsAsync = async (db: Database, target: BoardTarget, allApps: App[]) => {
   const ctx: PlacementContext = {
     ...target,
     xOffset: 0,
@@ -92,38 +79,11 @@ export const placeAllWidgetsAsync = async (
 
   const placedWidgets = new Set<WidgetKind>();
 
-  for (const integration of allIntegrations) {
-    for (const widgetKind of getWidgetKindsForIntegration(integration.kind)) {
-      if (placedWidgets.has(widgetKind)) continue;
-      const config = widgetConfigMap.get(widgetKind);
-      if (config?.skip) continue;
-      placedWidgets.add(widgetKind);
-
-      const matchingIds = allIntegrations
-        .filter((row) => getWidgetKindsForIntegration(row.kind).includes(widgetKind))
-        .map((row) => row.id);
-
-      const options = config?.options ? superjson.stringify(config.options) : undefined;
-      await placeWidgetAsync(
-        db,
-        ctx,
-        widgetKind,
-        matchingIds,
-        options,
-        config && { width: config.width, height: config.height },
-      );
-    }
-  }
-
   for (const app of allApps) {
-    await placeWidgetAsync(
-      db,
-      ctx,
-      "app",
-      [],
-      superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true }),
-      { width: 1, height: 1 },
-    );
+    await placeWidgetAsync(db, ctx, "app", [], stringify({ appId: app.id, openInNewTab: true, showTitle: true }), {
+      width: 1,
+      height: 1,
+    });
   }
 
   const bookmarkAppNames = new Set(defaultBookmarkApps.map((bookmark) => bookmark.name));
@@ -138,7 +98,7 @@ export const placeAllWidgetsAsync = async (
       options = { ...options, items: bookmarkAppIds };
     }
 
-    await placeWidgetAsync(db, ctx, config.kind, [], options ? superjson.stringify(options) : undefined, {
+    await placeWidgetAsync(db, ctx, config.kind, [], options ? stringify(options) : undefined, {
       width: config.width,
       height: config.height,
     });

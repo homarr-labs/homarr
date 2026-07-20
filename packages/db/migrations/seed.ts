@@ -698,13 +698,11 @@ const seedBoardWidgetsAsync = async (db: Database) => {
   const layout = board.layouts[0];
   if (!section || !layout) return;
 
-  const allIntegrations = await db.query.integrations.findMany();
   const allApps = await db.query.apps.findMany();
 
   const count = await placeAllWidgetsAsync(
     db,
     { boardId: board.id, sectionId: section.id, layoutId: layout.id, columnCount: layout.columnCount },
-    allIntegrations,
     allApps,
   );
 
