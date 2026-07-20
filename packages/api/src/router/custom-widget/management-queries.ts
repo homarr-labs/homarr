@@ -2,19 +2,21 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions } from "@homarr/db/schema";
 import { getCustomWidgetSecretRequirements } from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
-import { parseStoredCustomWidgetDefinition } from "./stored-definition";
+import { parseStoredCustomWidgetDefinition, safeParseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getCustomWidgetCacheVersion } from "./cache-version";
 
 const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
+const logger = createLogger({ module: "custom-widget:management" });
 
 export const managementQueryProcedures = {
   list: manageProcedure
@@ -25,7 +27,29 @@ export const managementQueryProcedures = {
         with: { secrets: true },
       });
       return definitions.map((definition) => {
-        const widget = parseStoredCustomWidgetDefinition(definition);
+        const result = safeParseStoredCustomWidgetDefinition(definition);
+        if (!result.success) {
+          logger.warn("Skipped parsing invalid custom widget definition", {
+            id: definition.id,
+            issueCount: result.issues.length,
+          });
+          return {
+            id: definition.id,
+            name: definition.name,
+            description: definition.description ?? undefined,
+            iconUrl: definition.iconUrl ?? undefined,
+            sources: [],
+            requestCount: 0,
+            missingSecrets: [],
+            defaultOptions: {},
+            updatedAt: definition.updatedAt,
+            enabled: definition.enabled,
+            valid: false as const,
+            validationIssues: result.issues,
+          };
+        }
+
+        const widget = result.widget;
         const configuredSecrets = new Set(definition.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
         return {
           id: definition.id,
@@ -46,6 +70,8 @@ export const managementQueryProcedures = {
           defaultOptions: widget.defaultOptions,
           updatedAt: definition.updatedAt,
           enabled: definition.enabled,
+          valid: true as const,
+          validationIssues: [],
         };
       });
     }),
@@ -84,8 +110,14 @@ export const managementQueryProcedures = {
           : eq(customWidgetDefinitions.enabled, true),
         orderBy: (table, { asc }) => asc(table.name),
       });
-      return definitions.map((definition) => {
-        const widget = parseStoredCustomWidgetDefinition(definition);
+      return definitions.flatMap((definition) => {
+        const result = safeParseStoredCustomWidgetDefinition(definition);
+        if (!result.success) {
+          logger.warn("Excluded invalid custom widget definition from board picker", { id: definition.id });
+          return [];
+        }
+
+        const widget = result.widget;
         return {
           id: definition.id,
           name: definition.name,

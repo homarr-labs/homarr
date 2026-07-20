@@ -68,8 +68,10 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
   return (
     <Card
       padding="sm"
+      withBorder={!widget.valid}
+      bd={!widget.valid ? "1px solid var(--mantine-color-red-6)" : undefined}
       style={{
-        opacity: widget.enabled ? 1 : 0.55,
+        opacity: widget.valid && !widget.enabled ? 0.55 : 1,
         transition: "opacity 150ms ease",
       }}
     >
@@ -86,15 +88,40 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
             <Text size="sm" fw={600} lineClamp={1} style={{ minWidth: 0 }}>
               {widget.name}
             </Text>
+            {!widget.valid && (
+              <Text size="xs" c="red">
+                {t("page.list.invalidDefinitionDescription")}
+              </Text>
+            )}
             {widget.sources[0] && (
               <Text size="xs" c="dimmed" ff="monospace" lineClamp={1} style={{ wordBreak: "break-all", minWidth: 0 }}>
                 {widget.sources.map((source) => source.origin).join(" · ")}
               </Text>
             )}
           </Stack>
-          <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
-            JSX · {widget.requestCount}
-          </Badge>
+          {widget.valid ? (
+            <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
+              JSX · {widget.requestCount}
+            </Badge>
+          ) : (
+            <Tooltip
+              label={widget.validationIssues
+                .map((issue) => (issue.path ? `${issue.path}: ${issue.message}` : issue.message))
+                .join("\n")}
+              multiline
+              maw={520}
+            >
+              <Badge
+                color="red"
+                size="sm"
+                variant="light"
+                leftSection={<IconAlertTriangle size={12} />}
+                style={{ flexShrink: 0 }}
+              >
+                {t("page.list.invalidDefinition")}
+              </Badge>
+            </Tooltip>
+          )}
           {widget.missingSecrets.length > 0 && (
             <Tooltip
               label={t("page.list.missingCredentialsDescription", { count: widget.missingSecrets.length })}
@@ -115,25 +142,31 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
         </Group>
 
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
-          <Tooltip label={widget.enabled ? t("action.disable") : t("action.enable")}>
-            <Switch
-              size="sm"
-              checked={widget.enabled}
-              onChange={handleToggle}
-              disabled={toggleMutation.isPending}
-              aria-label={widget.enabled ? t("action.disable") : t("action.enable")}
-            />
-          </Tooltip>
-          <ActionIcon
-            component={Link}
-            href={`/manage/custom-widgets/edit/${widget.id}`}
-            variant="subtle"
-            color="gray"
-            aria-label={t("action.edit")}
-          >
-            <IconPencil size={16} stroke={1.5} />
-          </ActionIcon>
-          <CustomWidgetRowActions widget={{ id: widget.id, name: widget.name, enabled: widget.enabled }} />
+          {widget.valid && (
+            <>
+              <Tooltip label={widget.enabled ? t("action.disable") : t("action.enable")}>
+                <Switch
+                  size="sm"
+                  checked={widget.enabled}
+                  onChange={handleToggle}
+                  disabled={toggleMutation.isPending}
+                  aria-label={widget.enabled ? t("action.disable") : t("action.enable")}
+                />
+              </Tooltip>
+              <ActionIcon
+                component={Link}
+                href={`/manage/custom-widgets/edit/${widget.id}`}
+                variant="subtle"
+                color="gray"
+                aria-label={t("action.edit")}
+              >
+                <IconPencil size={16} stroke={1.5} />
+              </ActionIcon>
+            </>
+          )}
+          <CustomWidgetRowActions
+            widget={{ id: widget.id, name: widget.name, enabled: widget.enabled, valid: widget.valid }}
+          />
         </Group>
       </Group>
     </Card>

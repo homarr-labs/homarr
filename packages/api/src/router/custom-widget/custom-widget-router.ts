@@ -18,7 +18,11 @@ import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
 import { previewBaseProcedures } from "./preview-base-procedures";
 import { previewQueryProcedures } from "./preview-query-procedures";
-import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
+import {
+  parseStoredCustomWidgetDefinition,
+  safeParseStoredCustomWidgetDefinition,
+  serializeCustomWidgetDefinition,
+} from "./stored-definition";
 import { templateProcedures } from "./template-procedures";
 import { transferProcedures } from "./transfer-procedures";
 import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
@@ -136,6 +140,19 @@ export const customWidgetRouter = createTRPCRouter({
   toggleEnabled: manageProcedure
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.enabled) {
+        const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+          where: eq(customWidgetDefinitions.id, input.id),
+        });
+        if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!safeParseStoredCustomWidgetDefinition(definition).success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid custom widget definition cannot be enabled",
+          });
+        }
+      }
+
       await ctx.db
         .update(customWidgetDefinitions)
         .set({ enabled: input.enabled, updatedAt: new Date() })

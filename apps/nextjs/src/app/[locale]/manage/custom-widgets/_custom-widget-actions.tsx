@@ -27,6 +27,7 @@ interface WidgetRef {
   id: string;
   name: string;
   enabled: boolean;
+  valid: boolean;
 }
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
@@ -106,20 +107,24 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item
-            onClick={handleDuplicate}
-            leftSection={<IconCopy {...iconProps} />}
-            disabled={duplicateMutation.isPending}
-          >
-            {t("action.duplicate")}
-          </Menu.Item>
-          <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
-            {t("action.export")}
-          </Menu.Item>
-          <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
-            {t("action.publishWorkshop")}
-          </Menu.Item>
-          <Menu.Divider />
+          {widget.valid && (
+            <>
+              <Menu.Item
+                onClick={handleDuplicate}
+                leftSection={<IconCopy {...iconProps} />}
+                disabled={duplicateMutation.isPending}
+              >
+                {t("action.duplicate")}
+              </Menu.Item>
+              <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
+                {t("action.export")}
+              </Menu.Item>
+              <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+                {t("action.publishWorkshop")}
+              </Menu.Item>
+              <Menu.Divider />
+            </>
+          )}
           <Menu.Item
             color="red"
             leftSection={<IconTrash {...iconProps} />}
@@ -130,7 +135,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-      <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />
+      {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
     </>
   );
 };

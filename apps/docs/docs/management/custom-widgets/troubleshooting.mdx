@@ -4,6 +4,10 @@
 
 The definition was deleted or reset. Remove the broken tile from the board and install or create a current Custom JSX v2 definition. There is no legacy recovery or migration wizard.
 
+## Invalid stored definition
+
+The Custom Widgets management page isolates definitions that no longer match the current schema instead of failing the entire page. Invalid definitions show their validation issues and can be deleted, but cannot be edited, enabled, exported, duplicated, published, or selected for a board. Recreate or import a valid definition; Homarr does not silently migrate unreleased Custom JSX formats.
+
 ## Validation fails
 
 Use the first schema/JSX diagnostic and its path. Ensure source/request IDs are unique, every request references a source, parameters are declared, defaults match the options schema, and network components reference the correct request kind.
