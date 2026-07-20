@@ -186,8 +186,21 @@ jobs:
           path: e2e/test-results/
           retention-days: 7
 
-      - name: Determine preview tag
-        id: preview
+      - name: Log in to GHCR for preview publication
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push amd64 preview image by digest
+        id: preview-build
         if: |
           !env.ACT &&
           (
