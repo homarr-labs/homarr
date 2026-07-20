@@ -23,7 +23,7 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
-    "docker:docs": "sh apps/workshop/run-docs.sh",
+    "docker:docs": "docker compose -f apps/workshop/docker-compose.yml up --build docs",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",

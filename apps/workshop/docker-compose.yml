@@ -19,3 +19,19 @@ services:
       - ./pb_migrations:/pb_migrations:ro
     security_opt:
       - no-new-privileges:true
+
+  docs:
+    profiles:
+      - docs
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+      target: production
+      args:
+        POCKETBASE_VERSION: 0.39.6
+    environment:
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+    ports:
+      - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:8090"
+    security_opt:
+      - no-new-privileges:true

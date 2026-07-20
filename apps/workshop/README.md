@@ -34,6 +34,12 @@ Build the documentation and serve it from PocketBase using the same production i
 pnpm docker:docs
 ```
 
-Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. The preview container is removed when it stops and does not persist PocketBase data.
+Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. The preview does not mount or persist PocketBase data.
+
+This command starts the profiled `docs` service from `apps/workshop/docker-compose.yml`. It does not start the development `workshop` service. Stop and remove the preview with:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --force docs
+```
 
 Production data lives in `/pb_data`. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.
