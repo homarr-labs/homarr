@@ -828,6 +828,11 @@
         "invalid": "Needs attention",
         "ready": "Ready"
       },
+      "saveError": {
+        "title": "Widget was not saved",
+        "description": "Fix these validation errors and save again.",
+        "more": "+{count} more errors are shown in the workbench."
+      },
       "action": {
         "preview": "Test and preview",
         "previewLoading": "Testing requests",

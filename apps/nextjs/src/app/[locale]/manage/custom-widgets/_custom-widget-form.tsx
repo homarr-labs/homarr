@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
+import { Alert, Box, Button, List, Paper, SegmentedControl, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
@@ -119,7 +119,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     [candidate, requestDiagnostics, templateDiagnostics],
   );
 
-  const { save, runPreview, pasteAiResponse, copyDiagnostics, savePending, previewPending } =
+  const { save, runPreview, pasteAiResponse, copyDiagnostics, saveIssues, savePending, previewPending } =
     useCustomWidgetFormActions({
       mode,
       definitionId,
@@ -164,6 +164,21 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           { value: "preview", label: w("section.preview") },
         ]}
       />
+      {saveIssues.length > 0 && (
+        <Alert color="red" title={w("saveError.title")} icon={<IconAlertCircle size={18} />}>
+          <Text size="sm" mb="xs">
+            {w("saveError.description")}
+          </Text>
+          <List size="sm" spacing={4}>
+            {saveIssues.map((issue, index) => (
+              <List.Item key={`${issue.path ?? "widget"}-${index}`}>
+                {issue.path ? `${issue.path}: ` : ""}
+                {issue.message}
+              </List.Item>
+            ))}
+          </List>
+        </Alert>
+      )}
       <nav className={classes.sectionNav} aria-label={w("sectionNavigation")}>
         {sectionLinks.map(([id, key, SectionIcon]) => (
           <Button

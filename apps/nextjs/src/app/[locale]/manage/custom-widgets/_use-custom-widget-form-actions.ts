@@ -18,6 +18,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { applyDefinition, buildDefinition, isRecord, loadPreviewQueries } from "./_custom-widget-form-utils";
 import type { PreviewState } from "./_custom-widget-preview-panel";
+import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
+import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 
 interface FormActionsInput {
   mode: "create" | "edit";
@@ -43,15 +45,21 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [importIssues, setImportIssues] = useState<string[]>([]);
+  const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
 
   const save = input.form.onSubmit(async (values) => {
+    clearSaveIssues(input.form, saveIssues);
+    setSaveIssues([]);
     const definition = buildDefinition(values);
     if (!definition.success) {
-      showErrorNotification({
-        title: t("action.save"),
-        message: definition.error.issues[0]?.message ?? w("invalidWidget"),
-      });
+      reportSaveIssues(
+        input.form,
+        definition.error.issues.map((issue) => ({ path: issue.path.join("."), message: issue.message })),
+        setSaveIssues,
+        t("action.save"),
+        (count) => w("saveError.more", { count }),
+      );
       return;
     }
     const changedSecrets = values.secrets
@@ -88,8 +96,15 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           message: t("notification.updated", { name: values.name }),
         });
       }
-    } catch {
-      showErrorNotification({ title: t("action.save"), message: t("notification.updateError") });
+    } catch (error) {
+      const issues = extractCustomWidgetSaveIssues(error);
+      if (issues.length > 0) {
+        reportSaveIssues(input.form, issues, setSaveIssues, t("action.save"), (count) =>
+          w("saveError.more", { count }),
+        );
+      } else {
+        showErrorNotification({ title: t("action.save"), message: t("notification.updateError") });
+      }
     }
   });
 
@@ -205,7 +220,35 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     runPreview,
     pasteAiResponse,
     copyDiagnostics,
+    saveIssues,
     savePending: createMutation.isPending || updateMutation.isPending,
     previewPending,
   };
+}
+
+function reportSaveIssues(
+  form: UseFormReturnType<CustomWidgetFormValues>,
+  issues: CustomWidgetSaveIssue[],
+  setIssues: Dispatch<SetStateAction<CustomWidgetSaveIssue[]>>,
+  title: string,
+  getRemainingLabel: (count: number) => string,
+) {
+  setIssues(issues);
+  const messagesByPath = new Map<string, string[]>();
+  for (const issue of issues) {
+    if (!issue.path) continue;
+    messagesByPath.set(issue.path, [...(messagesByPath.get(issue.path) ?? []), issue.message]);
+  }
+  for (const [path, messages] of messagesByPath) {
+    form.setFieldError(path, messages.join(" "));
+  }
+  const remaining = issues.length - 1;
+  showErrorNotification({
+    title,
+    message: `${issues[0]?.message ?? ""}${remaining > 0 ? ` ${getRemainingLabel(remaining)}` : ""}`,
+  });
+}
+
+function clearSaveIssues(form: UseFormReturnType<CustomWidgetFormValues>, issues: CustomWidgetSaveIssue[]) {
+  for (const path of new Set(issues.flatMap((issue) => (issue.path ? [issue.path] : [])))) form.clearFieldError(path);
 }
