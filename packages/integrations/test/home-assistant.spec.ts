@@ -29,7 +29,7 @@ vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
 });
 
 const DEFAULT_API_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjQwY2VjNDFjOGU0NGM5YmRlNWQ4ZmFjMjUzYWViZiIsImlhdCI6MTcxODQ3MTE1MSwiZXhwIjoyMDMzODMxMTUxfQ.uQCZ5FZTokipa6N27DtFhLHkwYEXU1LZr0fsVTryL2Q";
+  "3c65514b2b6419d517b961ea2c35c1b99ff939fecd8c8a75c555a89d15e5b75507fe9eb5b430e02edd78e0ccf285d81d37cef6b743e862a4f758ee845cd5ceff";
 const IMAGE_NAME = "ghcr.io/home-assistant/home-assistant:stable";
 
 describe("Home Assistant integration", () => {
