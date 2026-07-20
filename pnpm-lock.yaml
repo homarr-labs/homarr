@@ -541,8 +541,8 @@ catalogs:
       specifier: 3.19.0
       version: 3.19.0
     ws:
-      specifier: ^8.21.0
-      version: 8.21.0
+      specifier: ^8.21.1
+      version: 8.21.1
     xml2js:
       specifier: ^0.6.2
       version: 0.6.2
@@ -1206,7 +1206,7 @@ importers:
         version: 4.20.4
       ws:
         specifier: 'catalog:'
-        version: 8.21.0
+        version: 8.21.1
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -1962,7 +1962,7 @@ importers:
         version: 7.28.0
       ws:
         specifier: 'catalog:'
-        version: 8.21.0
+        version: 8.21.1
       xml2js:
         specifier: 'catalog:'
         version: 0.6.2
@@ -15226,6 +15226,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.21.1:
+    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   wsl-utils@0.1.0:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
@@ -18456,7 +18468,7 @@ snapshots:
       eventemitter2: 6.4.9
       http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.28.0)
       tough-cookie: 5.1.2
-      ws: 8.21.0
+      ws: 8.21.1
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -30051,6 +30063,8 @@ snapshots:
   ws@7.5.11: {}
 
   ws@8.21.0: {}
+
+  ws@8.21.1: {}
 
   wsl-utils@0.1.0:
     dependencies:
