@@ -37,5 +37,5 @@ describe("Mysql Migration", () => {
 
     connection.end();
     await mysqlContainer.stop();
-  }, 40_000);
+  }, 120_000);
 });
