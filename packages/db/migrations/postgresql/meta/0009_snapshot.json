@@ -1,5 +1,5 @@
 {
-  "id": "f2cd8146-b478-4617-870e-f601fb437d15",
+  "id": "97bda61f-0a71-4e41-8e60-874aafe17115",
   "prevId": "39cf38d0-0503-4c79-b7f4-632fa062fa2a",
   "version": "7",
   "dialect": "postgresql",
@@ -526,35 +526,51 @@
           "primaryKey": false,
           "notNull": false
         },
-        "sources": {
-          "name": "sources",
+        "url": {
+          "name": "url",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "requests": {
-          "name": "requests",
-          "type": "text",
+        "auth_type": {
+          "name": "auth_type",
+          "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'none'"
         },
-        "options_schema": {
-          "name": "options_schema",
-          "type": "text",
+        "header_name": {
+          "name": "header_name",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "default_options": {
-          "name": "default_options",
-          "type": "text",
+        "method": {
+          "name": "method",
+          "type": "varchar(16)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'GET'"
         },
-        "template": {
-          "name": "template",
+        "request_body": {
+          "name": "request_body",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "display_type": {
+          "name": "display_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'singleValue'"
+        },
+        "display_config": {
+          "name": "display_config",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"json\": {}}'"
         },
         "enabled": {
           "name": "enabled",
@@ -606,20 +622,14 @@
       "name": "custom_widget_secret",
       "schema": "",
       "columns": {
-        "source_id": {
-          "name": "source_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "kind": {
           "name": "kind",
           "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
-        "encrypted_value": {
-          "name": "encrypted_value",
+        "value": {
+          "name": "value",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -650,9 +660,9 @@
         }
       },
       "compositePrimaryKeys": {
-        "custom_widget_secret_definition_id_source_id_kind_pk": {
-          "name": "custom_widget_secret_definition_id_source_id_kind_pk",
-          "columns": ["definition_id", "source_id", "kind"]
+        "custom_widget_secret_definition_id_kind_pk": {
+          "name": "custom_widget_secret_definition_id_kind_pk",
+          "columns": ["definition_id", "kind"]
         }
       },
       "uniqueConstraints": {},
@@ -1940,42 +1950,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.trusted_certificate_hostname": {
-      "name": "trusted_certificate_hostname",
-      "schema": "",
-      "columns": {
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "thumbprint": {
-          "name": "thumbprint",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "certificate": {
-          "name": "certificate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "trusted_certificate_hostname_hostname_thumbprint_pk": {
-          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
-          "columns": ["hostname", "thumbprint"]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.user": {
       "name": "user",
       "schema": "",
@@ -2075,6 +2049,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "enable_right_click_on_widgets": {
+          "name": "enable_right_click_on_widgets",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         },
         "completed_manage_tour": {
           "name": "completed_manage_tour",
@@ -2208,6 +2189,42 @@
         "widget_secret_item_id_kind_pk": {
           "name": "widget_secret_item_id_kind_pk",
           "columns": ["item_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.trusted_certificate_hostname": {
+      "name": "trusted_certificate_hostname",
+      "schema": "",
+      "columns": {
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbprint": {
+          "name": "thumbprint",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "trusted_certificate_hostname_hostname_thumbprint_pk": {
+          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
+          "columns": ["hostname", "thumbprint"]
         }
       },
       "uniqueConstraints": {},

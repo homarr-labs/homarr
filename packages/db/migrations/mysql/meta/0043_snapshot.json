@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "1a10d79c-6c82-4036-8717-0283ebaece10",
+  "id": "073d408e-ff80-4a57-8007-f1f32da1c71c",
   "prevId": "4df22d3b-b69e-4afc-9d82-ac73d3c6e100",
   "tables": {
     "account": {
@@ -565,48 +565,51 @@
           "notNull": false,
           "autoincrement": false
         },
-        "sources": {
-          "name": "sources",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "requests": {
-          "name": "requests",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "options_schema": {
-          "name": "options_schema",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "default_options": {
-          "name": "default_options",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "template": {
-          "name": "template",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "enabled": {
-          "name": "enabled",
-          "type": "boolean",
+        "auth_type": {
+          "name": "auth_type",
+          "type": "varchar(32)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": true
+          "default": "'none'"
+        },
+        "header_name": {
+          "name": "header_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "method": {
+          "name": "method",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'GET'"
+        },
+        "request_body": {
+          "name": "request_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "display_type": {
+          "name": "display_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'singleValue'"
+        },
+        "display_config": {
+          "name": "display_config",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
         },
         "created_at": {
           "name": "created_at",
@@ -630,6 +633,21 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
         }
       },
       "indexes": {},
@@ -656,13 +674,6 @@
     "custom_widget_secret": {
       "name": "custom_widget_secret",
       "columns": {
-        "source_id": {
-          "name": "source_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "kind": {
           "name": "kind",
           "type": "varchar(64)",
@@ -670,8 +681,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "encrypted_value": {
-          "name": "encrypted_value",
+        "value": {
+          "name": "value",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -694,8 +705,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "custom_widget_secret_definition_id_custom_widget_definition_id_fk": {
-          "name": "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
+        "cw_secret_definition_id_cw_definition_id_fk": {
+          "name": "cw_secret_definition_id_cw_definition_id_fk",
           "tableFrom": "custom_widget_secret",
           "tableTo": "custom_widget_definition",
           "columnsFrom": ["definition_id"],
@@ -705,9 +716,9 @@
         }
       },
       "compositePrimaryKeys": {
-        "custom_widget_secret_definition_id_source_id_kind_pk": {
-          "name": "custom_widget_secret_definition_id_source_id_kind_pk",
-          "columns": ["definition_id", "source_id", "kind"]
+        "custom_widget_secret_definition_id_kind_pk": {
+          "name": "custom_widget_secret_definition_id_kind_pk",
+          "columns": ["definition_id", "kind"]
         }
       },
       "uniqueConstraints": {},
@@ -2043,42 +2054,6 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "trusted_certificate_hostname": {
-      "name": "trusted_certificate_hostname",
-      "columns": {
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "thumbprint": {
-          "name": "thumbprint",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "certificate": {
-          "name": "certificate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "trusted_certificate_hostname_hostname_thumbprint_pk": {
-          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
-          "columns": ["hostname", "thumbprint"]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
     "user": {
       "name": "user",
       "columns": {
@@ -2193,6 +2168,14 @@
           "autoincrement": false,
           "default": false
         },
+        "enable_right_click_on_widgets": {
+          "name": "enable_right_click_on_widgets",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
         "completed_manage_tour": {
           "name": "completed_manage_tour",
           "type": "boolean",
@@ -2285,6 +2268,42 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
+    "trusted_certificate_hostname": {
+      "name": "trusted_certificate_hostname",
+      "columns": {
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "thumbprint": {
+          "name": "thumbprint",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "trusted_certificate_hostname_hostname_thumbprint_pk": {
+          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
+          "columns": ["hostname", "thumbprint"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "widget_secret": {
       "name": "widget_secret",
       "columns": {
@@ -2331,8 +2350,8 @@
       },
       "compositePrimaryKeys": {
         "widget_secret_item_id_kind_pk": {
-          "name": "widget_secret_item_id_kind_pk",
-          "columns": ["item_id", "kind"]
+          "columns": ["item_id", "kind"],
+          "name": "widget_secret_item_id_kind_pk"
         }
       },
       "uniqueConstraints": {},

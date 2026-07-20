@@ -19203,7 +19203,7 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       react-number-format: 5.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-remove-scroll: 2.7.2(@types/react@19.2.17)(react@19.2.7)
-      type-fest: 5.7.0
+      type-fest: 5.6.0
     transitivePeerDependencies:
       - '@types/react'
 
@@ -20571,7 +20571,7 @@ snapshots:
     dependencies:
       '@scalar/helpers': 0.9.0
       nanoid: 5.1.16
-      type-fest: 5.7.0
+      type-fest: 5.6.0
       zod: 4.4.3
 
   '@scalar/use-codemirror@0.14.12(@typescript/typescript6@6.0.2)':
@@ -28045,14 +28045,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.1
       read-pkg: 10.0.0
-      type-fest: 5.6.0
+      type-fest: 5.7.0
 
   read-pkg@10.0.0:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 8.0.0
       parse-json: 8.3.0
-      type-fest: 5.6.0
+      type-fest: 5.7.0
       unicorn-magic: 0.3.0
 
   read-pkg@9.0.1:

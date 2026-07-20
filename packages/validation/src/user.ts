@@ -130,6 +130,10 @@ export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
 });
 
+export const userEnableRightClickOnWidgetsSchema = z.object({
+  enableRightClickOnWidgets: z.boolean(),
+});
+
 export const userDdgBangsSchema = z.object({
   ddgBangs: z.boolean(),
 });

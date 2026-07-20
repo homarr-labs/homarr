@@ -81,6 +81,7 @@ export const users = mysqlTable("user", {
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
+  enableRightClickOnWidgets: boolean().default(true).notNull(),
   completedManageTour: boolean().default(false).notNull(),
   completedBoardTour: boolean().default(false).notNull(),
 });

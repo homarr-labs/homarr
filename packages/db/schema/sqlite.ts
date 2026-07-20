@@ -63,6 +63,7 @@ export const users = sqliteTable("user", {
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
+  enableRightClickOnWidgets: int({ mode: "boolean" }).default(true).notNull(),
   completedManageTour: int({ mode: "boolean" }).default(false).notNull(),
   completedBoardTour: int({ mode: "boolean" }).default(false).notNull(),
 });

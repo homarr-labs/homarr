@@ -193,6 +193,10 @@ export function DockerTable({ initialData }: DockerTableProps) {
     positionToolbarAlertBanner: "top",
     enableTableFooter: false,
     enableBottomToolbar: false,
+    // MRT's built-in full-screen mode does not stretch the table to fill the
+    // viewport, so with few containers it renders as a thin strip (#6230). Disable
+    // it, matching the other management tables (users, invites).
+    enableFullScreenToggle: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
       placeholder: tDocker("table.search", { count: String(containers.length) }),

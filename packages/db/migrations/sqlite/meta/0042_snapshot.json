@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "852e049b-72cc-4d7f-8be9-931c042fe019",
-  "prevId": "d76abdce-ba49-450b-81f0-621bcf581b90",
+  "id": "30bbf6f8-3a3c-4cb0-994e-9d8494e4fcd0",
+  "prevId": "852e049b-72cc-4d7f-8be9-931c042fe019",
   "tables": {
     "account": {
       "name": "account",
@@ -546,58 +546,40 @@
           "notNull": false,
           "autoincrement": false
         },
-        "url": {
-          "name": "url",
+        "sources": {
+          "name": "sources",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "auth_type": {
-          "name": "auth_type",
+        "requests": {
+          "name": "requests",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'none'"
-        },
-        "header_name": {
-          "name": "header_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
-        "method": {
-          "name": "method",
+        "options_schema": {
+          "name": "options_schema",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'GET'"
-        },
-        "request_body": {
-          "name": "request_body",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
-        "display_type": {
-          "name": "display_type",
+        "default_options": {
+          "name": "default_options",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'singleValue'"
+          "autoincrement": false
         },
-        "display_config": {
-          "name": "display_config",
+        "template": {
+          "name": "template",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'{\"json\": {}}'"
+          "autoincrement": false
         },
         "enabled": {
           "name": "enabled",
@@ -650,6 +632,13 @@
     "custom_widget_secret": {
       "name": "custom_widget_secret",
       "columns": {
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "kind": {
           "name": "kind",
           "type": "text",
@@ -657,8 +646,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "value": {
-          "name": "value",
+        "encrypted_value": {
+          "name": "encrypted_value",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -692,9 +681,9 @@
         }
       },
       "compositePrimaryKeys": {
-        "custom_widget_secret_definition_id_kind_pk": {
-          "columns": ["definition_id", "kind"],
-          "name": "custom_widget_secret_definition_id_kind_pk"
+        "custom_widget_secret_definition_id_source_id_kind_pk": {
+          "columns": ["definition_id", "source_id", "kind"],
+          "name": "custom_widget_secret_definition_id_source_id_kind_pk"
         }
       },
       "uniqueConstraints": {},

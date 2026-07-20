@@ -292,8 +292,15 @@
     {
       "idx": 41,
       "version": "6",
+      "when": 1783786658943,
+      "tag": "0041_add_right_click_preference",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "6",
       "when": 1784305283910,
-      "tag": "0041_custom_widget_v2_reset",
+      "tag": "0042_custom_widget_v2_reset",
       "breakpoints": true
     }
   ]
