@@ -1,0 +1,98 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  s_955a5b644d1c62::t_670a0c64aa8ac0 34,55,83,101,121,177-184,321-324
+  s_955a5b644d1c62::t_1c158de1909768 325
+static-data/contributors.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 1
+packages/request-handler/src/release-providers.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 748-760,790-811
+  s_955a5b644d1c62::t_8da6d2bd7fc156 812
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_955a5b644d1c62::t_670a0c64aa8ac0 196-199
+packages/db/migrations/mysql/meta/0043_snapshot.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 4,568-570,573-574,576-578,580,583-585,588-589,591-592,595,598-600,603-604,606-608,612,636-650,684-685,708-709,719-721,2171-2178,2271-2306,2353-2354
+CHANGELOG.md
+  s_955a5b644d1c62::t_670a0c64aa8ac0 1-2
+packages/spotlight/src/preferences/preference-registry.tsx
+  s_955a5b644d1c62::t_670a0c64aa8ac0 6,50
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 6,133,135-141
+packages/db/schema/sqlite.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 66
+packages/validation/src/user.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 133-136
+packages/db/migrations/sqlite/0041_add_right_click_preference.sql
+  s_955a5b644d1c62::t_670a0c64aa8ac0 1
+packages/db/migrations/postgresql/0009_add_right_click_preference.sql
+  s_955a5b644d1c62::t_670a0c64aa8ac0 1
+packages/db/migrations/postgresql/meta/_journal.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 71-72
+  s_955a5b644d1c62::t_3eff90d39f1993 74-77,79
+  s_955a5b644d1c62::t_fa9c1a6f68b7c2 73
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 201-204,6140-6144
+  s_955a5b644d1c62::t_9c0fd5f007e2f6 6145-6147
+packages/api/src/router/test/user.spec.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 360-436
+packages/db/schema/postgresql.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 83
+packages/settings/src/preferences/definitions.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 60-65
+  s_955a5b644d1c62::t_5e2dc313359821 59
+package.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 3
+packages/db/migrations/sqlite/meta/0041_snapshot.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 4,549-550,556-557,561-568,571-572,576-583,586-587,591-592,594-595,599-600,660-661,695-697,2122-2129
+packages/db/schema/mysql.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 84
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_955a5b644d1c62::t_670a0c64aa8ac0 51,172
+packages/db/migrations/mysql/0043_add_right_click_preference.sql
+  s_955a5b644d1c62::t_670a0c64aa8ac0 1
+packages/settings/src/creator.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 13,36,53
+packages/db/migrations/postgresql/meta/0010_snapshot.json
+  s_955a5b644d1c62::t_5eb321f4773bf4 1-2,4-2077,2085-2237
+  s_955a5b644d1c62::t_3eff90d39f1993 3,2078-2084
+packages/db/migrations/sqlite/meta/_journal.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 295-296
+  s_955a5b644d1c62::t_3eff90d39f1993 298-301,303
+  s_955a5b644d1c62::t_e7e53f16cd76a0 297
+.github/workflows/ci.yml
+  s_955a5b644d1c62::t_670a0c64aa8ac0 189-190
+packages/spotlight/src/preferences/use-user-preference.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 96,120-121,129
+packages/db/migrations/mysql/meta/0044_snapshot.json
+  s_955a5b644d1c62::t_3eff90d39f1993 5,2195-2202
+  s_955a5b644d1c62::t_5eb321f4773bf4 1-4,6-2194,2203-2360
+packages/db/migrations/postgresql/meta/0009_snapshot.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 2,529-530,535-537,539-540,542-544,546,548-556,559,561-569,572-573,631-632,663-665,2053-2059,2198-2229
+  s_955a5b644d1c62::t_250623ba5be49d 2230-2233
+packages/db/migrations/mysql/meta/_journal.json
+  s_955a5b644d1c62::t_670a0c64aa8ac0 309-310
+  s_955a5b644d1c62::t_3eff90d39f1993 312-315,317
+  s_955a5b644d1c62::t_87b5f6fb0ee9ec 311
+packages/api/src/router/user.ts
+  s_955a5b644d1c62::t_670a0c64aa8ac0 26,349,386,657-681
+  s_955a5b644d1c62::t_03012708c8992d 682
+packages/db/migrations/sqlite/meta/0042_snapshot.json
+  s_955a5b644d1c62::t_5eb321f4773bf4 1-4,6-2109,2118-2270
+  s_955a5b644d1c62::t_3eff90d39f1993 5,2110-2117
+pnpm-lock.yaml
+  s_955a5b644d1c62::t_9d01e5a14be813 19206,20574,28048,28055
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "aebc7016b17f14d34c4c248d77c1ccd2a7a6a16d",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
