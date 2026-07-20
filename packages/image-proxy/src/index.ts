@@ -60,7 +60,7 @@ export class ImageProxy {
     }
 
     const proxyUrl = this.createImageUrl(id);
-    let response: Response;
+    let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
     try {
       response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
         headers: urlAndHeaders.headers ?? {},
