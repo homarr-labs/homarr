@@ -1,0 +1,31 @@
+.agents/skills/homarr-custom-widget/references/component-catalog.json
+  s_326c42d5720c04::t_f9cfdf88d61e5b 1-34613
+.agents/skills/homarr-custom-widget/references/components.md
+  s_326c42d5720c04::t_f51f099522de09 61-114
+.agents/skills/homarr-custom-widget/references/homarr-components.md
+  s_326c42d5720c04::t_453be69360a30b 22,38-51,54,70-73,76,92-94,97,113-123,126,142-147,150,166-171,174,190-202,205,221-230,233,249-252,255,271-276,279,295-297,300,316-326,329,345-348
+.agents/skills/homarr-custom-widget/references/mantine-core.md
+  s_326c42d5720c04::t_db6599d455c4b5 7,57
+.agents/skills/homarr-custom-widget/references/mantine-dates.md
+  s_326c42d5720c04::t_7b8f69423167eb 2,19,21,32,54-57,60-61,65,79,97-98,111,113,116,126,128,130,133
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_326c42d5720c04::t_1aba83bb9b7ed3 63-77,83-97
+.agents/skills/homarr-custom-widget/references/widget-schema.json
+  s_326c42d5720c04::t_7e079b6201a651 47,59,70,81,98,114,120,144,148,165,195,230,234,239,268,332,348
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "1faaf29c3b628b1bb85c29b1399bff388c6367ab",
+  "prompts": {},
+  "sessions": {
+    "s_326c42d5720c04": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8178-8b84-72b2-879e-b3680cc2362a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
