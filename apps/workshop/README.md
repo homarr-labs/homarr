@@ -26,4 +26,14 @@ Run the disposable service integration test from the repository root:
 pnpm test:workshop
 ```
 
+## Production docs preview
+
+Build the documentation and serve it from PocketBase using the same production image layout as the hosted Workshop:
+
+```sh
+pnpm docker:docs
+```
+
+Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. The preview container is removed when it stops and does not persist PocketBase data.
+
 Production data lives in `/pb_data`. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.

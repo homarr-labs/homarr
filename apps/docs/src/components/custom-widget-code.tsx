@@ -1,7 +1,21 @@
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import { useState } from "react";
 import { MantineProvider, Select, Stack, Text } from "@mantine/core";
-import "@mantine/core/styles.css";
+/* oxlint-disable import/no-unassigned-import -- Mantine component styles intentionally load for side effects. */
+import "@mantine/core/styles/Badge.css";
+import "@mantine/core/styles/Button.css";
+import "@mantine/core/styles/Combobox.css";
+import "@mantine/core/styles/Group.css";
+import "@mantine/core/styles/Input.css";
+import "@mantine/core/styles/Loader.css";
+import "@mantine/core/styles/Pill.css";
+import "@mantine/core/styles/PillsInput.css";
+import "@mantine/core/styles/Popover.css";
+import "@mantine/core/styles/ScrollArea.css";
+import "@mantine/core/styles/Stack.css";
+import "@mantine/core/styles/Text.css";
+import "@mantine/core/styles/UnstyledButton.css";
+/* oxlint-enable import/no-unassigned-import */
 
 import {
   BUNDLED_CUSTOM_WIDGETS,
