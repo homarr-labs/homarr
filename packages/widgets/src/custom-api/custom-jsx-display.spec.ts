@@ -84,6 +84,26 @@ describe("CustomJsxDisplay", () => {
     expect(container.textContent).toContain("3");
   });
 
+  it("recovers when preview data arrives after an initial render error", async () => {
+    const template = "<Stack>{data.items.map((item) => <Text key={item}>{item}</Text>)}</Stack>";
+    await renderDisplay({ template, data: {} });
+    expect(container.textContent).toContain("RUNTIME_RENDER_ERROR");
+
+    await act(async () => {
+      root.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(CustomJsxDisplay, { data: { template, data: { items: ["Bulbasaur", "Pikachu"] } } }),
+        ),
+      );
+    });
+
+    expect(container.textContent).toContain("Bulbasaur");
+    expect(container.textContent).toContain("Pikachu");
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
+  });
+
   it("blocks script tags and event handlers", async () => {
     await renderDisplay({
       template: '<script>document.title = "hacked"</script><button onClick={() => {}}>Click</button><Text>Safe</Text>',

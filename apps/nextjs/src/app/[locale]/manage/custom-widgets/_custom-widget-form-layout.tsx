@@ -39,13 +39,15 @@ export function EditorSection({
 
 export function SaveActions({
   dirty,
-  pending,
+  savePending,
+  previewPending,
   invalid,
   mode,
   onPreview,
 }: {
   dirty: boolean;
-  pending: boolean;
+  savePending: boolean;
+  previewPending: boolean;
   invalid: boolean;
   mode: "create" | "edit";
   onPreview(): void;
@@ -64,10 +66,17 @@ export function SaveActions({
         </Text>
       </Group>
       <Group gap="xs" wrap="nowrap">
-        <Button type="button" variant="light" leftSection={<IconPlayerPlay size={16} />} onClick={onPreview}>
-          {t("action.preview")}
+        <Button
+          type="button"
+          variant="light"
+          leftSection={<IconPlayerPlay size={16} />}
+          onClick={onPreview}
+          loading={previewPending}
+          disabled={invalid || savePending}
+        >
+          {previewPending ? t("action.previewLoading") : t("action.preview")}
         </Button>
-        <Button type="submit" loading={pending} disabled={invalid}>
+        <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
           {mode === "create" ? t("action.create") : t("action.save")}
         </Button>
       </Group>

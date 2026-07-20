@@ -13,10 +13,10 @@ import {
   parseCustomWidgetAiResponse,
 } from "@homarr/custom-widgets/core";
 import type { EditorDiagnostic, CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { applyDefinition, buildDefinition, loadPreviewQueries } from "./_custom-widget-form-utils";
+import { applyDefinition, buildDefinition, isRecord, loadPreviewQueries } from "./_custom-widget-form-utils";
 import type { PreviewState } from "./_custom-widget-preview-panel";
 
 interface FormActionsInput {
@@ -43,6 +43,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [importIssues, setImportIssues] = useState<string[]>([]);
+  const [previewPending, setPreviewPending] = useState(false);
 
   const save = input.form.onSubmit(async (values) => {
     const definition = buildDefinition(values);
@@ -93,6 +94,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   });
 
   const runPreview = async () => {
+    if (previewPending) return;
     if (!input.candidate.success) {
       showErrorNotification({
         title: w("section.preview"),
@@ -101,6 +103,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       return;
     }
     input.setMobilePane("preview");
+    input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
+    setPreviewPending(true);
     try {
       const created = await previewMutation.mutateAsync({
         definition: input.candidate.data,
@@ -115,9 +119,34 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       input.setOptionsSnapshot(input.candidate.data.defaultOptions);
       const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
-      input.setPreview({ ...snapshot, session: created.previewSession });
+      const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
+      input.setPreview({
+        ...snapshot,
+        session: created.previewSession,
+        outcome: failed > 0 ? "error" : "success",
+      });
+      if (failed > 0) {
+        showWarningNotification({
+          title: w("preview.result.error.title"),
+          message: w("preview.result.error.description", {
+            succeeded: Object.keys(snapshot.status).length - failed,
+            failed,
+          }),
+        });
+      } else {
+        showSuccessNotification({
+          title: w("preview.result.success.title"),
+          message: w("preview.result.success.description", {
+            succeeded: Object.keys(snapshot.status).length,
+            failed: 0,
+          }),
+        });
+      }
     } catch {
+      input.setPreview((current) => ({ ...current, outcome: "error" }));
       showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
+    } finally {
+      setPreviewPending(false);
     }
   };
 
@@ -130,7 +159,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       }
       setImportIssues([]);
       applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
-      input.setPreview({ data: {}, status: {}, session: null });
+      input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
         title: w("ai.response"),
         message:
@@ -176,6 +205,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     runPreview,
     pasteAiResponse,
     copyDiagnostics,
-    pending: createMutation.isPending || updateMutation.isPending,
+    savePending: createMutation.isPending || updateMutation.isPending,
+    previewPending,
   };
 }

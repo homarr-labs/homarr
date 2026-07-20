@@ -110,8 +110,6 @@ describe("Custom Widget runtime ports", () => {
     const setItem = vi.spyOn(Storage.prototype, "setItem");
     const rendererMessages = {
       noTemplate: "No template",
-      interactive: "Interactive",
-      networkCapabilities: "Network capabilities",
       templateWarnings: (count: number) => `${count} warnings`,
     };
     const components = createCustomJsxComponents({
@@ -122,7 +120,6 @@ describe("Custom Widget runtime ports", () => {
       <CustomJsxRenderer
         template={'<Stack><TextInput bind="search" defaultValue="containers"/><Text>{inputs.search}</Text></Stack>'}
         data={{}}
-        requestCapabilities={[]}
         components={components}
         createBindings={() => ({})}
         messages={rendererMessages}

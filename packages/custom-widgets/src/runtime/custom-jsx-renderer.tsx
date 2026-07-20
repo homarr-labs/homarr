@@ -1,7 +1,7 @@
 import type { ComponentType, ErrorInfo, ReactNode } from "react";
 import { Component, useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Box, Group, Popover, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle, IconNetwork } from "@tabler/icons-react";
+import { Alert, Box, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { renderSafeJsx } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
@@ -23,8 +23,6 @@ const permissions = new Set(["view", "modify", "full"]);
 
 export interface CustomJsxRendererMessages {
   noTemplate: string;
-  interactive: string;
-  networkCapabilities: string;
   templateWarnings(count: number): string;
 }
 
@@ -33,7 +31,6 @@ export interface CustomJsxRendererProps {
   data: unknown;
   status?: Record<string, unknown>;
   options?: Record<string, unknown>;
-  requestCapabilities: unknown;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
@@ -107,7 +104,6 @@ export function CustomJsxRenderer({
   data,
   status = EMPTY_RECORD,
   options = EMPTY_RECORD,
-  requestCapabilities: rawCapabilities,
   components,
   createBindings,
   messages,
@@ -150,7 +146,7 @@ export function CustomJsxRenderer({
     () => ({ ...createBindings(data), status, options, inputs }),
     [createBindings, data, inputs, options, status],
   );
-  const capabilities = useMemo(() => parseRequestCapabilities(rawCapabilities), [rawCapabilities]);
+  const boundaryKey = useMemo(() => createBoundaryKey(template, bindings), [bindings, template]);
   const rendered = useMemo(() => {
     try {
       return { ...renderSafeJsx({ template, components, bindings }), error: null };
@@ -182,47 +178,6 @@ export function CustomJsxRenderer({
     );
   return (
     <Stack gap={0} h="100%">
-      {capabilities.length > 0 && (
-        <Group justify="flex-end" mb={4}>
-          <Popover width={320} position="bottom-end" withinPortal={false} shadow="md">
-            <Popover.Target>
-              <Badge
-                component="button"
-                type="button"
-                size="sm"
-                color="gray"
-                variant="light"
-                leftSection={<IconNetwork size={12} />}
-                style={{ cursor: "pointer" }}
-              >
-                {messages.interactive}
-              </Badge>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Stack gap={6}>
-                <Text size="sm" fw={600}>
-                  {messages.networkCapabilities}
-                </Text>
-                {capabilities.map((capability) => (
-                  <Group key={capability.id} justify="space-between" gap="xs" wrap="nowrap">
-                    <Text size="xs" ff="monospace" truncate>
-                      {capability.id}
-                    </Text>
-                    <Group gap={4} wrap="nowrap">
-                      <Badge size="xs" color={methodColors[capability.method] ?? "gray"} variant="light">
-                        {capability.method}
-                      </Badge>
-                      <Badge size="xs" color="gray" variant="outline">
-                        {capability.minimumBoardPermission}
-                      </Badge>
-                    </Group>
-                  </Group>
-                ))}
-              </Stack>
-            </Popover.Dropdown>
-          </Popover>
-        </Group>
-      )}
       <Box h="100%" style={{ contain: "layout paint style", isolation: "isolate", overflow: "auto", minHeight: 0 }}>
         {rendered.error ? (
           <ErrorAlert error={rendered.error} />
@@ -233,7 +188,7 @@ export function CustomJsxRenderer({
             registerInput={registerInput}
             setInputValue={setInputValue}
           >
-            <RendererErrorBoundary key={template} onError={handleError}>
+            <RendererErrorBoundary key={boundaryKey} onError={handleError}>
               {rendered.node}
             </RendererErrorBoundary>
           </CustomJsxInputsProvider>
@@ -253,4 +208,11 @@ export function CustomJsxRenderer({
       )}
     </Stack>
   );
+}
+
+function createBoundaryKey(template: string, bindings: Readonly<Record<string, unknown>>) {
+  let hash = 0;
+  const value = `${template}\0${JSON.stringify(bindings)}`;
+  for (let index = 0; index < value.length; index += 1) hash = (hash * 31 + value.charCodeAt(index)) | 0;
+  return `${template.length}:${hash}`;
 }

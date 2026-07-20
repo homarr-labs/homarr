@@ -830,6 +830,7 @@
       },
       "action": {
         "preview": "Test and preview",
+        "previewLoading": "Testing requests",
         "create": "Create",
         "save": "Save"
       },
@@ -893,6 +894,26 @@
         "invalid": "Fix validation errors to preview this widget.",
         "fixtureError": "Preview fixture error",
         "requestData": "Request data",
+        "status": {
+          "idle": "Requests have not been tested",
+          "loading": "Testing requests",
+          "success": "All load requests succeeded",
+          "error": "One or more load requests failed"
+        },
+        "result": {
+          "loading": {
+            "title": "Testing API requests",
+            "description": "Homarr is creating a preview session and loading the widget data."
+          },
+          "success": {
+            "title": "Preview ready",
+            "description": "{succeeded, plural, =0 {This widget has no load requests.} one {# load request succeeded.} other {# load requests succeeded.}} Open Data to inspect the response."
+          },
+          "error": {
+            "title": "Preview completed with request errors",
+            "description": "{succeeded, number} succeeded and {failed, number} failed. Open Data for the response and error details."
+          }
+        },
         "instanceOptions": "Instance options",
         "liveActions": "Run actions against the configured API",
         "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",

@@ -25,6 +25,8 @@ import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
 import { CodeEditor } from "./_code-editor";
 import { isRecord, parseJson } from "./_custom-widget-form-utils";
+import { getPreviewSummary, PreviewResult, PreviewStatusDot } from "./_custom-widget-preview-status";
+import type { PreviewOutcome } from "./_custom-widget-preview-status";
 import { PreviewActionControl } from "./_custom-widget-preview-action";
 import classes from "./_custom-widget-form.module.css";
 
@@ -32,6 +34,7 @@ export interface PreviewState {
   data: Record<string, unknown>;
   status: Record<string, unknown>;
   session: { id: string; expiresAt: number; liveActions: boolean } | null;
+  outcome: PreviewOutcome;
 }
 
 interface PreviewPanelProps {
@@ -89,6 +92,21 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     queriesDisabled: fixture !== "live",
     isEditMode: fixture !== "live",
   };
+  const previewSummary = getPreviewSummary(props.preview.status);
+  const previewResult =
+    props.preview.outcome === "success"
+      ? {
+          title: t("result.success.title"),
+          description: t("result.success.description", previewSummary),
+        }
+      : props.preview.outcome === "error"
+        ? {
+            title: t("result.error.title"),
+            description: t("result.error.description", previewSummary),
+          }
+        : props.preview.outcome === "loading"
+          ? { title: t("result.loading.title"), description: t("result.loading.description") }
+          : { title: "", description: "" };
 
   return (
     <Card withBorder p="md">
@@ -125,11 +143,21 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
             { value: "error", label: t("fixture.error") },
           ]}
         />
+        <PreviewResult
+          outcome={props.preview.outcome}
+          title={previewResult.title}
+          description={previewResult.description}
+        />
         <Tabs defaultValue="widget" keepMounted={false}>
           <Tabs.List grow>
             {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
               <Tabs.Tab key={tab} value={tab}>
-                {t(`tab.${tab}`)}
+                <Group gap={6} wrap="nowrap" justify="center">
+                  {t(`tab.${tab}`)}
+                  {tab === "data" && (
+                    <PreviewStatusDot outcome={props.preview.outcome} label={t(`status.${props.preview.outcome}`)} />
+                  )}
+                </Group>
               </Tabs.Tab>
             ))}
           </Tabs.List>

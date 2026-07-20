@@ -44,13 +44,10 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
         ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
       }}
       options={isRecord(data.options) ? data.options : {}}
-      requestCapabilities={capabilities}
       components={components}
       createBindings={SAFE_BINDINGS}
       messages={{
         noTemplate: t("noTemplate"),
-        interactive: t("interactive"),
-        networkCapabilities: t("networkCapabilities"),
         templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
       }}
     />

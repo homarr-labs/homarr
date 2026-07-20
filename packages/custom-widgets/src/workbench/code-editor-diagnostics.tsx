@@ -1,4 +1,3 @@
-import type { EditorView } from "@codemirror/view";
 import { Alert, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -8,12 +7,12 @@ import classes from "./code-editor.module.css";
 
 export function EditorDiagnostics({
   diagnostics,
-  editorView,
   messages,
+  onSelect,
 }: {
   diagnostics: EditorDiagnostic[];
-  editorView: EditorView | null;
   messages: CustomWidgetEditorMessages;
+  onSelect(diagnostic: EditorDiagnostic): void;
 }) {
   if (diagnostics.length === 0) return null;
   return (
@@ -24,12 +23,7 @@ export function EditorDiagnostics({
             type="button"
             w="100%"
             className={classes.diagnosticButton}
-            onClick={() => {
-              if (!editorView || diagnostic.index === undefined) return;
-              const anchor = Math.min(diagnostic.index, editorView.state.doc.length);
-              editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
-              editorView.focus();
-            }}
+            onClick={() => onSelect(diagnostic)}
           >
             <Alert
               color={diagnostic.severity === "error" ? "red" : "yellow"}

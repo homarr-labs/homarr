@@ -86,8 +86,8 @@ const editorAdapter = await readFile(
   join(repositoryRoot, "packages/custom-widgets/src/workbench/code-editor.tsx"),
   "utf8",
 );
-if (!/useEffect\(\(\)\s*=>[\s\S]*import\(["']@uiw\/react-codemirror["']\)/u.test(editorAdapter)) {
-  failures.push("CodeMirror must remain dynamically loaded");
+if (!/lazy\(\(\)\s*=>\s*import\(["'].\/direct-code-mirror["']\)\)/u.test(editorAdapter)) {
+  failures.push("CodeMirror must remain dynamically loaded after the client mounts");
 }
 
 if (failures.length > 0) {

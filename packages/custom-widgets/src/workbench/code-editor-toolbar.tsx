@@ -1,5 +1,3 @@
-import { redo, undo } from "@codemirror/commands";
-import type { EditorView } from "@codemirror/view";
 import { Button, Group, Text } from "@mantine/core";
 import {
   IconArrowBackUp,
@@ -17,24 +15,28 @@ import classes from "./code-editor.module.css";
 
 interface CodeEditorToolbarProps {
   props: CustomWidgetCodeEditorProps;
-  editorView: EditorView | null;
+  editorCreated: boolean;
   historyDepth: { undo: number; redo: number };
   formattedValue: string;
   copied: boolean;
   referenceOpened: boolean;
   onReferenceToggle(): void;
   onCopy(): void;
+  onUndo(): void;
+  onRedo(): void;
 }
 
 export function CodeEditorToolbar({
   props,
-  editorView,
+  editorCreated,
   historyDepth,
   formattedValue,
   copied,
   referenceOpened,
   onReferenceToggle,
   onCopy,
+  onUndo,
+  onRedo,
 }: CodeEditorToolbarProps) {
   const starter = props.starter;
   return (
@@ -53,8 +55,8 @@ export function CodeEditorToolbar({
               size="compact-xs"
               variant="subtle"
               leftSection={<IconArrowBackUp size={14} />}
-              onClick={() => editorView && undo(editorView)}
-              disabled={!editorView || historyDepth.undo === 0}
+              onClick={onUndo}
+              disabled={!editorCreated || historyDepth.undo === 0}
             >
               {props.messages.undo}
             </Button>
@@ -63,8 +65,8 @@ export function CodeEditorToolbar({
               size="compact-xs"
               variant="subtle"
               leftSection={<IconArrowForwardUp size={14} />}
-              onClick={() => editorView && redo(editorView)}
-              disabled={!editorView || historyDepth.redo === 0}
+              onClick={onRedo}
+              disabled={!editorCreated || historyDepth.redo === 0}
             >
               {props.messages.redo}
             </Button>

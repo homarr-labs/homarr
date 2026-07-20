@@ -60,7 +60,8 @@ export function buildCustomWidgetAiPrompt(
   if (currentConfig) {
     sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(currentConfig), null, 2)}\n\`\`\``);
   }
-  return sections.join("\n\n").slice(0, 8_000);
+  const prompt = sections.join("\n\n");
+  return embeddedSkill ? prompt : prompt.slice(0, 8_000);
 }
 
 export function buildCustomWidgetFixPrompt(input: {

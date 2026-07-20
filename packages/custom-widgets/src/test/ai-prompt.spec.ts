@@ -18,7 +18,7 @@ describe("buildCustomWidgetAiPrompt", () => {
     expect(prompt).toContain("Use this embedded Homarr Custom Widget skill while authoring:");
     expect(prompt).toContain("# Homarr Custom Widget");
     expect(prompt).toContain("installed Mantine components can differ by Homarr release.");
-    expect(prompt.length).toBeLessThanOrEqual(8_000);
+    expect(prompt.endsWith(CUSTOM_WIDGET_SKILL_MD)).toBe(true);
   });
 
   test("is concise and describes the one-widget v2 contract", () => {

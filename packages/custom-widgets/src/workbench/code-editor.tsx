@@ -1,21 +1,15 @@
 "use client";
 
-import { autocompletion } from "@codemirror/autocomplete";
-import { redoDepth, undoDepth } from "@codemirror/commands";
-import { javascript } from "@codemirror/lang-javascript";
-import { json } from "@codemirror/lang-json";
-import { linter } from "@codemirror/lint";
+import { redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
 import type { EditorView as EditorViewType } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
-import type { ComponentType } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
+import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Badge, Collapse, Group, Input, Loader, Tabs, Text, useComputedColorScheme } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
-import { createCustomJsxCompletionSource, customJsxComponentHover } from "./code-language";
 import { EditorDiagnostics } from "./code-editor-diagnostics";
 import { CodeEditorToolbar } from "./code-editor-toolbar";
+import type { EditorDiagnostic } from "./analyzer";
 import type {
   CustomWidgetCodeEditorProps,
   CustomWidgetEditorMessages,
@@ -30,53 +24,24 @@ export type {
 } from "./code-editor-types";
 
 const EMPTY_DIAGNOSTICS: NonNullable<CustomWidgetCodeEditorProps["diagnostics"]> = [];
+const LazyCodeMirror = lazy(() => import("./direct-code-mirror"));
+const editorViews = new Map<string, EditorViewType>();
 
 export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
+  const editorInstanceId = useId();
   const diagnostics = props.diagnostics ?? EMPTY_DIAGNOSTICS;
-  const [CodeMirror, setCodeMirror] = useState<ComponentType<ReactCodeMirrorProps> | null>(null);
+  const [editorReady, setEditorReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const [referenceOpened, setReferenceOpened] = useState(false);
   const [cursor, setCursor] = useState({ line: 1, column: 1 });
-  const [editorView, setEditorView] = useState<EditorViewType | null>(null);
+  const [editorCreated, setEditorCreated] = useState(false);
   const [historyDepth, setHistoryDepth] = useState({ undo: 0, redo: 0 });
   const colorScheme = useComputedColorScheme("light");
   useEffect(() => {
-    let cancelled = false;
-    void import("@uiw/react-codemirror").then((module) => {
-      if (!cancelled) setCodeMirror(() => module.default);
-    });
-    return () => {
-      cancelled = true;
-    };
+    setEditorReady(true);
   }, []);
-  const extensions = useMemo(() => {
-    const diagnosticsExtension = linter((view) =>
-      diagnostics.map((diagnostic) => {
-        const from = Math.min(diagnostic.index ?? 0, view.state.doc.length);
-        return {
-          from,
-          to: Math.min(from + 1, view.state.doc.length),
-          severity: diagnostic.severity,
-          message: props.messages.diagnostic(diagnostic),
-        };
-      }),
-    );
-    const accessibilityExtension = EditorView.contentAttributes.of({ id: props.id, "aria-label": props.label });
-    const editable = props.readOnly
-      ? [EditorView.editable.of(false), EditorView.contentAttributes.of({ tabindex: "0" })]
-      : [];
-    return props.language === "jsx"
-      ? [
-          javascript({ jsx: true }),
-          autocompletion({ override: [createCustomJsxCompletionSource(props.completions ?? [])] }),
-          customJsxComponentHover,
-          diagnosticsExtension,
-          accessibilityExtension,
-          ...editable,
-        ]
-      : [json(), diagnosticsExtension, accessibilityExtension, ...editable];
-  }, [diagnostics, props.completions, props.id, props.label, props.language, props.messages, props.readOnly]);
   useEffect(() => {
+    const editorView = editorViews.get(editorInstanceId);
     if (!editorView || !props.revealText) return;
     const from = editorView.state.doc.toString().indexOf(props.revealText);
     if (from < 0) return;
@@ -85,12 +50,27 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       effects: EditorView.scrollIntoView(from, { y: "center" }),
     });
     editorView.focus();
-  }, [editorView, props.revealKey, props.revealText]);
-  const handleCreateEditor = useCallback((view: EditorViewType) => {
-    // @uiw invokes this while constructing CodeMirror. Deferring the parent update avoids
-    // re-entering React's renderer during initialisation in Next.js and Docusaurus.
-    window.setTimeout(() => setEditorView(view), 0);
-  }, []);
+  }, [editorCreated, editorInstanceId, props.revealKey, props.revealText]);
+  const handleCreateEditor = useCallback(
+    (view: EditorViewType) => {
+      editorViews.set(editorInstanceId, view);
+      window.setTimeout(() => setEditorCreated(true), 0);
+    },
+    [editorInstanceId],
+  );
+  const handleDestroyEditor = useCallback(() => {
+    editorViews.delete(editorInstanceId);
+  }, [editorInstanceId]);
+  const selectDiagnostic = useCallback(
+    (diagnostic: EditorDiagnostic) => {
+      const editorView = editorViews.get(editorInstanceId);
+      if (!editorView || diagnostic.index === undefined) return;
+      const anchor = Math.min(diagnostic.index, editorView.state.doc.length);
+      editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
+      editorView.focus();
+    },
+    [editorInstanceId],
+  );
   const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
@@ -115,13 +95,21 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       <div className={classes.root}>
         <CodeEditorToolbar
           props={props}
-          editorView={editorView}
+          editorCreated={editorCreated}
           historyDepth={historyDepth}
           formattedValue={formattedValue}
           copied={copied}
           referenceOpened={referenceOpened}
           onReferenceToggle={() => setReferenceOpened((value) => !value)}
           onCopy={() => void copy()}
+          onUndo={() => {
+            const editorView = editorViews.get(editorInstanceId);
+            if (editorView) undo(editorView);
+          }}
+          onRedo={() => {
+            const editorView = editorViews.get(editorInstanceId);
+            if (editorView) redo(editorView);
+          }}
         />
         {props.reference && (
           <Collapse expanded={referenceOpened}>
@@ -129,36 +117,32 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           </Collapse>
         )}
         <div className={classes.viewport}>
-          {CodeMirror ? (
-            <CodeMirror
-              id={`${props.id}-root`}
-              value={props.value}
-              onChange={props.readOnly ? () => undefined : props.onChange}
-              placeholder={props.placeholder}
-              extensions={extensions}
-              theme={colorScheme}
-              height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
-              basicSetup={{
-                autocompletion: props.language !== "jsx" && !props.readOnly,
-                bracketMatching: true,
-                closeBrackets: !props.readOnly,
-                foldGutter: true,
-                history: !props.readOnly,
-                highlightActiveLine: !props.readOnly,
-                highlightActiveLineGutter: !props.readOnly,
-                indentOnInput: !props.readOnly,
-                lineNumbers: true,
-              }}
-              onCreateEditor={handleCreateEditor}
-              onUpdate={(update) => {
-                if (!editorView) return;
-                if (!update.selectionSet && !update.docChanged) return;
-                const head = update.state.selection.main.head;
-                const line = update.state.doc.lineAt(head);
-                setCursor({ line: line.number, column: head - line.from + 1 });
-                setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
-              }}
-            />
+          {editorReady ? (
+            <Suspense fallback={<EditorLoader />}>
+              <LazyCodeMirror
+                id={`${props.id}-root`}
+                value={props.value}
+                language={props.language}
+                diagnostics={diagnostics}
+                completions={props.completions ?? []}
+                label={props.label}
+                placeholder={props.placeholder}
+                theme={colorScheme}
+                height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
+                readOnly={props.readOnly ?? false}
+                diagnosticMessage={props.messages.diagnostic}
+                onChange={props.readOnly ? () => undefined : props.onChange}
+                onCreateEditor={handleCreateEditor}
+                onDestroyEditor={handleDestroyEditor}
+                onUpdate={(update) => {
+                  if (!update.selectionSet && !update.docChanged) return;
+                  const head = update.state.selection.main.head;
+                  const line = update.state.doc.lineAt(head);
+                  setCursor({ line: line.number, column: head - line.from + 1 });
+                  setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
+                }}
+              />
+            </Suspense>
           ) : (
             <EditorLoader />
           )}
@@ -190,7 +174,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           </Text>
         </Group>
       </div>
-      <EditorDiagnostics diagnostics={diagnostics} editorView={editorView} messages={props.messages} />
+      <EditorDiagnostics diagnostics={diagnostics} messages={props.messages} onSelect={selectDiagnostic} />
     </Input.Wrapper>
   );
 }

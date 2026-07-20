@@ -83,7 +83,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
   const [request, setRequest] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");
-  const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null });
+  const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null, outcome: "idle" });
   const [previewSize, setPreviewSize] = useState("standard");
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
   const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>({});
@@ -119,20 +119,21 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     [candidate, requestDiagnostics, templateDiagnostics],
   );
 
-  const { save, runPreview, pasteAiResponse, copyDiagnostics, pending } = useCustomWidgetFormActions({
-    mode,
-    definitionId,
-    form,
-    candidate,
-    templateDiagnostics,
-    requestDiagnostics,
-    preview,
-    setPreview,
-    setMobilePane,
-    setOptionsSnapshot,
-    request,
-    documentationUrl,
-  });
+  const { save, runPreview, pasteAiResponse, copyDiagnostics, savePending, previewPending } =
+    useCustomWidgetFormActions({
+      mode,
+      definitionId,
+      form,
+      candidate,
+      templateDiagnostics,
+      requestDiagnostics,
+      preview,
+      setPreview,
+      setMobilePane,
+      setOptionsSnapshot,
+      request,
+      documentationUrl,
+    });
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -254,7 +255,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
             <SaveActions
               dirty={form.isDirty()}
-              pending={pending}
+              savePending={savePending}
+              previewPending={previewPending}
               invalid={invalid}
               mode={mode}
               onPreview={() => void runPreview()}
@@ -265,7 +267,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           <Paper p="md" className={classes.actionBar} shadow="sm">
             <SaveActions
               dirty={form.isDirty()}
-              pending={pending}
+              savePending={savePending}
+              previewPending={previewPending}
               invalid={invalid}
               mode={mode}
               onPreview={() => void runPreview()}
