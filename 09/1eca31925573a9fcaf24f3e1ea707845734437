@@ -1,0 +1,57 @@
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_9152426acc0266 18
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_955a5b644d1c62::t_461f11a605637e 10,72-84
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  s_955a5b644d1c62::t_7a4fcf1eca22a9 42-43,49-50,69-77,79
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_955a5b644d1c62::t_35d6f05d7ea754 86,122-136,258-259,270-271
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_955a5b644d1c62::t_afc512619b0e2a 28-29,37,95-109,146-150,155-160
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-status.tsx
+  s_955a5b644d1c62::t_faa0599a5cdc2e 1-54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_955a5b644d1c62::t_ade7479184a450 16,19,46,97,106-107,122-144,146,148-149,162,208-209
+packages/custom-widgets/package.json
+  s_955a5b644d1c62::t_a7a6bf90eef730 38-39,49
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_955a5b644d1c62::t_f97c11d0ff9ec7 89-90
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_05c99c703d4795 63-64
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_955a5b644d1c62::t_92b69fdf0b0a1e 3-4,149,191,212-218
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_0e1487c0e1b43c 21
+packages/custom-widgets/src/workbench/code-editor-diagnostics.tsx
+  s_955a5b644d1c62::t_84e9d942d74067 11,15,26
+packages/custom-widgets/src/workbench/code-editor-toolbar.tsx
+  s_955a5b644d1c62::t_c71480a22d3001 18,25-26,31,38-39,58-59,68-69
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_955a5b644d1c62::t_7764aa2ff31545 3,6,12,27-28,31,33,37,41,44,53-73,98,105-112,120-145,177
+packages/custom-widgets/src/workbench/direct-code-mirror.tsx
+  s_955a5b644d1c62::t_c3d049ee067c48 1-135
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_de3091118f79c7 833,897-916
+packages/widgets/src/custom-api/custom-jsx-display.spec.ts
+  s_955a5b644d1c62::t_7a8cb71701dd28 87-106
+pnpm-lock.yaml
+  s_955a5b644d1c62::t_93aa21b37550aa 1722-1727,1755-1757
+pnpm-workspace.yaml
+  s_955a5b644d1c62::t_e9cbf0cae1fbb3 11-12,124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "091eca31925573a9fcaf24f3e1ea707845734437",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
