@@ -1,12 +1,25 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Box, Button, List, Paper, SegmentedControl, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import {
+  Alert,
+  Box,
+  Button,
+  CopyButton,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Text,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
   IconBraces,
+  IconCheck,
   IconCode,
+  IconCopy,
   IconDatabase,
   IconEye,
   IconSettings,
@@ -119,21 +132,17 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     [candidate, requestDiagnostics, templateDiagnostics],
   );
 
-  const { save, runPreview, pasteAiResponse, copyDiagnostics, saveIssues, savePending, previewPending } =
-    useCustomWidgetFormActions({
-      mode,
-      definitionId,
-      form,
-      candidate,
-      templateDiagnostics,
-      requestDiagnostics,
-      preview,
-      setPreview,
-      setMobilePane,
-      setOptionsSnapshot,
-      request,
-      documentationUrl,
-    });
+  const { save, runPreview, pasteAiResponse, saveIssues, savePending, previewPending } = useCustomWidgetFormActions({
+    mode,
+    definitionId,
+    form,
+    candidate,
+    preview,
+    setPreview,
+    setMobilePane,
+    setOptionsSnapshot,
+  });
+  const saveIssueText = saveIssues.map((issue) => `${issue.path ? `${issue.path}: ` : ""}${issue.message}`).join("\n");
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -169,14 +178,29 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           <Text size="sm" mb="xs">
             {w("saveError.description")}
           </Text>
-          <List size="sm" spacing={4}>
-            {saveIssues.map((issue, index) => (
-              <List.Item key={`${issue.path ?? "widget"}-${index}`}>
-                {issue.path ? `${issue.path}: ` : ""}
-                {issue.message}
-              </List.Item>
-            ))}
-          </List>
+          <Textarea
+            value={saveIssueText}
+            readOnly
+            autosize
+            minRows={2}
+            maxRows={10}
+            aria-label={w("saveError.errors")}
+            mb="xs"
+          />
+          <CopyButton value={saveIssueText} timeout={2_000}>
+            {({ copied, copy }) => (
+              <Button
+                type="button"
+                size="compact-sm"
+                variant="light"
+                color={copied ? "green" : "red"}
+                leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+                onClick={copy}
+              >
+                {copied ? w("saveError.copied") : w("saveError.copy")}
+              </Button>
+            )}
+          </CopyButton>
         </Alert>
       )}
       <nav className={classes.sectionNav} aria-label={w("sectionNavigation")}>
@@ -265,7 +289,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             documentationUrl={documentationUrl}
             onDocumentationUrlChange={setDocumentationUrl}
             onPaste={() => void pasteAiResponse()}
-            onCopyDiagnostics={() => void copyDiagnostics()}
           />
           <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
             <SaveActions

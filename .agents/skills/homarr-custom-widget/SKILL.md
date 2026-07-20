@@ -31,4 +31,4 @@ Create one widget at a time. Repeat the workflow when the user asks for several 
 - Include responsive loading, empty, error, and success states.
 - Keep actions explicit, permission-scoped, confirmed when destructive, and followed by targeted invalidation.
 
-Read [references/schema.md](references/schema.md), [references/runtime.md](references/runtime.md), and [references/security.md](references/security.md) before offline authoring. When connected, prefer live resources because installed Mantine components can differ by Homarr release.
+When connected through MCP, use the live schema, component, example, and skill resources. If live resources are unavailable, follow this document and the authoring prompt; do not assume access to repository-relative files.

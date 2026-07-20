@@ -831,7 +831,10 @@
       "saveError": {
         "title": "Widget was not saved",
         "description": "Fix these validation errors and save again.",
-        "more": "+{count} more errors are shown in the workbench."
+        "more": "+{count} more errors are shown in the workbench.",
+        "errors": "Validation errors",
+        "copy": "Copy errors",
+        "copied": "Errors copied"
       },
       "action": {
         "preview": "Test and preview",
@@ -887,13 +890,10 @@
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste AI response",
-        "copyDiagnostics": "Copy diagnostics",
         "response": "AI response",
         "loaded": "Widget loaded into the editor",
         "invalidResponse": "Clipboard does not contain a valid v2 widget",
-        "invalidResponseDetail": "The AI response is invalid: {message}",
-        "diagnostics": "Diagnostics",
-        "diagnosticsCopied": "Redacted fix prompt copied"
+        "invalidResponseDetail": "The AI response is invalid: {message}"
       },
       "preview": {
         "invalid": "Fix validation errors to preview this widget.",

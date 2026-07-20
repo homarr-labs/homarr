@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card, Group, Stack, Text, TextInput, Textarea } from "@mantine/core";
-import { IconCopy, IconSparkles } from "@tabler/icons-react";
+import { IconSparkles } from "@tabler/icons-react";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -15,7 +15,6 @@ interface AiCardProps {
   documentationUrl: string;
   onDocumentationUrlChange(value: string): void;
   onPaste(): void;
-  onCopyDiagnostics(): void;
 }
 
 export function CustomWidgetAiCard(props: AiCardProps) {
@@ -47,9 +46,6 @@ export function CustomWidgetAiCard(props: AiCardProps) {
           />
           <Button type="button" variant="light" leftSection={<IconSparkles size={16} />} onClick={props.onPaste}>
             {t("paste")}
-          </Button>
-          <Button type="button" variant="subtle" leftSection={<IconCopy size={16} />} onClick={props.onCopyDiagnostics}>
-            {t("copyDiagnostics")}
           </Button>
         </Group>
       </Stack>

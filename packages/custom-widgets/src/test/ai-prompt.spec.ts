@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { buildCustomWidgetAiPrompt, buildCustomWidgetFixPrompt, buildCustomWidgetMcpPrompt } from "../core/ai-prompt";
+import { buildCustomWidgetAiPrompt, buildCustomWidgetMcpPrompt } from "../core/ai-prompt";
 import { CUSTOM_WIDGET_SKILL_MD } from "../core/authoring-resources";
 import { CUSTOM_WIDGET_STARTER } from "../core/examples";
 
@@ -17,7 +17,8 @@ describe("buildCustomWidgetAiPrompt", () => {
 
     expect(prompt).toContain("Use this embedded Homarr Custom Widget skill while authoring:");
     expect(prompt).toContain("# Homarr Custom Widget");
-    expect(prompt).toContain("installed Mantine components can differ by Homarr release.");
+    expect(prompt).toContain("do not assume access to repository-relative files");
+    expect(prompt).not.toContain("references/schema.md");
     expect(prompt.endsWith(CUSTOM_WIDGET_SKILL_MD)).toBe(true);
   });
 
@@ -73,25 +74,6 @@ describe("buildCustomWidgetAiPrompt", () => {
 
   test("redacts malformed URLs without recursing", () => {
     expect(buildCustomWidgetAiPrompt(undefined, null, null, "Inspect http://[", null)).toContain("[REDACTED_URL]");
-  });
-});
-
-describe("buildCustomWidgetFixPrompt", () => {
-  test("includes the complete current widget and redacted iteration evidence", () => {
-    const secret = "literal-sensitive-value";
-    const prompt = buildCustomWidgetFixPrompt({
-      currentConfig: {
-        name: "Large widget",
-        template: `<Text>${"x".repeat(9_000)}</Text>`,
-        secrets: [{ value: secret }],
-      },
-      request: `Fix it with password='${secret}'`,
-      diagnostics: `Header apiKey='${secret}' is invalid`,
-      journal: [{ requestId: "load", authorization: secret }],
-    });
-    expect(prompt).toContain("x".repeat(9_000));
-    expect(prompt).toContain("Validation diagnostics");
-    expect(prompt).not.toContain(secret);
   });
 });
 

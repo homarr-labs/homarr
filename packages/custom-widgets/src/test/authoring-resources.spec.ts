@@ -12,6 +12,8 @@ describe("custom widget Agent Skill", () => {
     const source = await readFile(resolve(repositoryRoot, ".agents/skills/homarr-custom-widget/SKILL.md"), "utf8");
     expect(CUSTOM_WIDGET_SKILL_MD).toBe(source);
     expect(getCustomWidgetSkill().skillMd).toBe(source);
+    expect(source).not.toContain("references/schema.md");
+    expect(source).toContain("do not assume access to repository-relative files");
   });
 
   test("publishes repository-based skills.sh installation metadata", () => {

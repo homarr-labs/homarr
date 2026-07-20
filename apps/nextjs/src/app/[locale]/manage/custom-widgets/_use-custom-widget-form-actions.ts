@@ -5,14 +5,13 @@ import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import type { UseFormReturnType } from "@mantine/form";
 
-import { clientApi, fetchApi } from "@homarr/api/client";
+import { clientApi } from "@homarr/api/client";
 import {
-  buildCustomWidgetFixPrompt,
   customWidgetDefinitionSchema,
   formatCustomWidgetImportIssues,
   parseCustomWidgetAiResponse,
 } from "@homarr/custom-widgets/core";
-import type { EditorDiagnostic, CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -26,14 +25,10 @@ interface FormActionsInput {
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
   candidate: ReturnType<typeof buildDefinition>;
-  templateDiagnostics: EditorDiagnostic[];
-  requestDiagnostics: EditorDiagnostic[];
   preview: PreviewState;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
   setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
-  request: string;
-  documentationUrl: string;
 }
 
 export function useCustomWidgetFormActions(input: FormActionsInput) {
@@ -44,7 +39,6 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
-  const [importIssues, setImportIssues] = useState<string[]>([]);
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
 
@@ -169,10 +163,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     try {
       const result = parseCustomWidgetAiResponse(await navigator.clipboard.readText());
       if (!result.success) {
-        setImportIssues(result.issues.map((issue) => `${issue.path?.join(".") ?? "widget"}: ${issue.message}`));
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
-      setImportIssues([]);
       applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
       input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
@@ -191,35 +183,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     }
   };
 
-  const copyDiagnostics = async () => {
-    try {
-      const diagnostics = [...input.templateDiagnostics, ...input.requestDiagnostics]
-        .map((entry) => `${entry.severity.toUpperCase()} ${entry.code}: ${entry.value ?? ""}`)
-        .concat(importIssues.map((issue) => `IMPORT: ${issue}`))
-        .join("\n");
-      const journal = input.preview.session
-        ? await fetchApi.customWidget.previewJournal.query({ sessionId: input.preview.session.id }).catch(() => [])
-        : [];
-      await navigator.clipboard.writeText(
-        buildCustomWidgetFixPrompt({
-          currentConfig: input.candidate.success ? input.candidate.data : input.form.values,
-          request: input.request,
-          documentationUrl: input.documentationUrl,
-          diagnostics,
-          journal,
-        }),
-      );
-      showSuccessNotification({ title: w("ai.diagnostics"), message: w("ai.diagnosticsCopied") });
-    } catch {
-      showErrorNotification({ title: w("ai.diagnostics"), message: t("notification.aiPromptCopyError") });
-    }
-  };
-
   return {
     save,
     runPreview,
     pasteAiResponse,
-    copyDiagnostics,
     saveIssues,
     savePending: createMutation.isPending || updateMutation.isPending,
     previewPending,

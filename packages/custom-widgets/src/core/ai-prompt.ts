@@ -64,26 +64,6 @@ export function buildCustomWidgetAiPrompt(
   return embeddedSkill ? prompt : prompt.slice(0, 8_000);
 }
 
-export function buildCustomWidgetFixPrompt(input: {
-  currentConfig: Partial<HomarrCustomWidgetV2> | Record<string, unknown>;
-  request?: string | null;
-  documentationUrl?: string | null;
-  diagnostics: string;
-  journal: unknown;
-}) {
-  const sections = [AUTHORING_PROMPT];
-  if (input.documentationUrl) sections.push(`API documentation: ${redactUrl(input.documentationUrl)}`);
-  sections.push(`Original request: ${redactText(input.request?.trim() || "Fix the current widget.")}`);
-  sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(input.currentConfig), null, 2)}\n\`\`\``);
-  sections.push(
-    `Validation diagnostics:\n\n\`\`\`text\n${redactText(input.diagnostics) || "No static diagnostics."}\n\`\`\``,
-  );
-  sections.push(
-    `Redacted request journal:\n\n\`\`\`json\n${JSON.stringify(redactValue(input.journal), null, 2)}\n\`\`\``,
-  );
-  return sections.join("\n\n");
-}
-
 const sensitiveKey =
   /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
 

@@ -4,7 +4,7 @@ import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget
 
 The desktop workbench keeps code and preview side by side. Mobile uses Configure and Preview tabs. Save and preview actions stay available while the form scrolls.
 
-CodeMirror edits requests, options, and JSX. The editor supplies installed Mantine components, request/source IDs, option names, temporary input names, runtime components, and icons. The request toolbar jumps to a declaration and atomically renames its invalidation, dynamic-option, and JSX references. Diagnostics are copyable and secret-free.
+CodeMirror edits requests, options, and JSX. The editor supplies installed Mantine components, request/source IDs, option names, temporary input names, runtime components, and icons. The request toolbar jumps to a declaration and atomically renames its invalidation, dynamic-option, and JSX references. Save validation errors appear as selectable plain text with a direct **Copy errors** action.
 
 The **Schema** action beside Undo, Redo, and Format expands the generated JSON Schema plus minimal and full examples. These references are generated from the same validators used by imports, MCP, Workshop, and saved definitions.
 
@@ -25,7 +25,7 @@ Enter a short request and optional API documentation URL, then select **Copy AI 
 1. A fenced `json` block with one complete widget and `template: "__HOMARR_TEMPLATE__"`.
 2. A fenced `jsx` block with the readable template.
 
-Use **Paste AI response** to fill the workbench. Enter credentials yourself, test, and preview. If validation or a request fails, select **Copy diagnostics for AI** and paste the correction back into Homarr.
+Use **Paste AI response** to fill the workbench. Enter credentials yourself, test, and preview. If saving fails, select or copy the validation errors shown by Homarr and give that plain text to the model. Homarr does not generate a separate fix prompt or assume the model can access local skill files.
 
 The prompt is under 8,000 characters. It includes the installed Mantine version and capability rules but not a complete prop list, MCP workflow, server URL, or credentials.
 
