@@ -314,6 +314,14 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Paper>
           <CustomWidgetPreviewPanel
             candidate={candidate.success ? candidate.data : null}
+            validationIssues={
+              candidate.success
+                ? []
+                : candidate.error.issues.map((issue) => ({
+                    path: issue.path.map(String).join(".") || undefined,
+                    message: issue.message,
+                  }))
+            }
             preview={preview}
             size={previewSize}
             onSizeChange={setPreviewSize}

@@ -934,9 +934,14 @@
         "sessionActive": "Preview session active",
         "simulationPending": "Actions are simulated until you run preview",
         "containedFailures": "Runtime failures are contained inside this widget. Request journals never include secret values.",
+        "validation": {
+          "title": "Validation",
+          "ready": "The widget definition is valid."
+        },
         "accessibility": {
           "title": "Accessibility checks",
           "ready": "No common accessibility omissions detected.",
+          "pending": "Accessibility checks will run when the widget definition is valid.",
           "imageAlt": "Add alt text to every Image, using an empty alt only for decorative images.",
           "actionIconLabel": "Add an aria-label or title to every ActionIcon.",
           "inputLabel": "Add a visible label or accessible name to every input."

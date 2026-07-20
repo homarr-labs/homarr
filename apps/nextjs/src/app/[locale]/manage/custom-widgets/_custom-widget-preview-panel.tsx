@@ -39,6 +39,7 @@ export interface PreviewState {
 
 interface PreviewPanelProps {
   candidate: HomarrCustomWidgetV2 | null;
+  validationIssues: Array<{ path?: string; message: string }>;
   preview: PreviewState;
   size: string;
   onSizeChange(value: string): void;
@@ -58,40 +59,43 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     { enabled: Boolean(props.preview.session), refetchInterval: props.preview.session ? 2_000 : false },
   );
   const widths: Record<string, number> = { compact: 320, standard: 480, wide: 720 };
-  if (!props.candidate) return <Alert color="yellow">{t("invalid")}</Alert>;
   const candidate = props.candidate;
-  const accessibilityIssues = analyzeCustomWidgetAccessibility(candidate.template);
+  const accessibilityIssues = candidate ? analyzeCustomWidgetAccessibility(candidate.template) : [];
   const fixtureData =
-    fixture === "empty" ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, []])) : props.preview.data;
+    fixture === "empty" && candidate
+      ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, []]))
+      : props.preview.data;
   const fixtureStatus =
-    fixture === "loading"
+    fixture === "loading" && candidate
       ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, { loading: true }]))
-      : fixture === "error"
+      : fixture === "error" && candidate
         ? Object.fromEntries(
             candidate.requests.map((entry) => [entry.id, { loading: false, ok: false, error: t("fixtureError") }]),
           )
         : props.preview.status;
-  const displayData = {
-    template: candidate.template,
-    data: fixtureData,
-    status: fixtureStatus,
-    options: props.optionsSnapshot,
-    requestCapabilities: candidate.requests.map(
-      ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
-        id,
-        kind,
-        method,
-        trigger,
-        minimumBoardPermission,
-        confirmation,
-        invalidates,
-      }),
-    ),
-    previewSessionId: props.preview.session?.id,
-    previewLiveActions: props.preview.session?.liveActions ?? false,
-    queriesDisabled: fixture !== "live",
-    isEditMode: fixture !== "live",
-  };
+  const displayData = candidate
+    ? {
+        template: candidate.template,
+        data: fixtureData,
+        status: fixtureStatus,
+        options: props.optionsSnapshot,
+        requestCapabilities: candidate.requests.map(
+          ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
+            id,
+            kind,
+            method,
+            trigger,
+            minimumBoardPermission,
+            confirmation,
+            invalidates,
+          }),
+        ),
+        previewSessionId: props.preview.session?.id,
+        previewLiveActions: props.preview.session?.liveActions ?? false,
+        queriesDisabled: fixture !== "live",
+        isEditMode: fixture !== "live",
+      }
+    : null;
   const previewSummary = getPreviewSummary(props.preview.status);
   const previewResult =
     props.preview.outcome === "success"
@@ -135,6 +139,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
         <SegmentedControl
           size="xs"
           value={fixture}
+          disabled={!candidate}
           onChange={(value) => setFixture(value as typeof fixture)}
           data={[
             { value: "live", label: t("fixture.live") },
@@ -143,11 +148,13 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
             { value: "error", label: t("fixture.error") },
           ]}
         />
-        <PreviewResult
-          outcome={props.preview.outcome}
-          title={previewResult.title}
-          description={previewResult.description}
-        />
+        {candidate && (
+          <PreviewResult
+            outcome={props.preview.outcome}
+            title={previewResult.title}
+            description={previewResult.description}
+          />
+        )}
         <Tabs defaultValue="widget" keepMounted={false}>
           <Tabs.List grow>
             {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
@@ -165,7 +172,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
             <Box className={classes.previewCanvas}>
               <MantineProvider forceColorScheme={props.theme}>
                 <Paper withBorder p="sm" h={360} w={widths[props.size] ?? 480} maw="100%" style={{ overflow: "auto" }}>
-                  <CustomJsxDisplay data={displayData} />
+                  {displayData ? <CustomJsxDisplay data={displayData} /> : <Alert color="yellow">{t("invalid")}</Alert>}
                 </Paper>
               </MantineProvider>
             </Box>
@@ -206,7 +213,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                   );
                 }}
               />
-              {candidate.requests
+              {candidate?.requests
                 .filter((request) => request.kind === "action")
                 .map((request) => (
                   <PreviewActionControl
@@ -216,7 +223,8 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                     options={props.optionsSnapshot}
                   />
                 ))}
-              {candidate.requests.every((request) => request.kind !== "action") && (
+              {!candidate && <Alert color="yellow">{t("invalid")}</Alert>}
+              {candidate?.requests.every((request) => request.kind !== "action") && (
                 <Text size="sm" c="dimmed">
                   {t("noActions")}
                 </Text>
@@ -234,9 +242,23 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                 {t("containedFailures")}
               </Text>
               <Text size="sm" fw={600}>
+                {t("validation.title")}
+              </Text>
+              {props.validationIssues.length === 0 ? (
+                <Alert color="green">{t("validation.ready")}</Alert>
+              ) : (
+                props.validationIssues.map((issue, index) => (
+                  <Alert key={`${issue.path ?? "widget"}-${index}`} color="red" title={issue.path}>
+                    {issue.message}
+                  </Alert>
+                ))
+              )}
+              <Text size="sm" fw={600}>
                 {t("accessibility.title")}
               </Text>
-              {accessibilityIssues.length === 0 ? (
+              {!candidate ? (
+                <Alert color="gray">{t("accessibility.pending")}</Alert>
+              ) : accessibilityIssues.length === 0 ? (
                 <Alert color="green">{t("accessibility.ready")}</Alert>
               ) : (
                 accessibilityIssues.map((issue) => (
