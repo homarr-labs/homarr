@@ -44,7 +44,7 @@ export function validateCredentialFreeExport(definition: SecurityDefinition, ctx
   if (credentialTextPattern.test(definition.template)) {
     ctx.addIssue({ code: "custom", path: ["template"], message: "Templates cannot contain literal credentials" });
   }
-  if (definition.iconUrl) {
+  if (definition.iconUrl && URL.canParse(definition.iconUrl)) {
     const icon = new URL(definition.iconUrl);
     if ([...icon.searchParams].some(([key, value]) => isCredentialKeyName(key) && value.trim().length > 0)) {
       ctx.addIssue({ code: "custom", path: ["iconUrl"], message: "Widget icon URLs cannot contain credentials" });

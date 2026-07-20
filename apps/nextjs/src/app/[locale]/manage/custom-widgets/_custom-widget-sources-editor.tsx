@@ -4,7 +4,8 @@ import { Accordion, Button, Fieldset, Group, PasswordInput, Select, Stack, Text,
 import { IconKey, IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { getCustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -16,6 +17,13 @@ const secretFields: Record<string, Array<{ kind: "apiKey" | "username" | "passwo
   basic: [{ kind: "username" }, { kind: "password" }],
   apiKeyHeader: [{ kind: "apiKey" }],
   apiKeyQuery: [{ kind: "apiKey" }],
+};
+
+const sourceUrlErrorKeys: Record<CustomWidgetSourceUrlIssue, `baseUrlError.${CustomWidgetSourceUrlIssue}`> = {
+  invalid: "baseUrlError.invalid",
+  protocol: "baseUrlError.protocol",
+  credentials: "baseUrlError.credentials",
+  queryOrFragment: "baseUrlError.queryOrFragment",
 };
 
 export function CustomWidgetSourcesEditor({
@@ -122,107 +130,111 @@ export function CustomWidgetSourcesEditor({
 
   return (
     <Stack gap="sm">
-      {sources.map((source, index) => (
-        <Fieldset key={source.id} legend={index === 0 ? t("primary") : source.name}>
-          <Stack gap="sm">
-            <Group grow align="start">
+      {sources.map((source, index) => {
+        const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
+        return (
+          <Fieldset key={source.id} legend={index === 0 ? t("primary") : source.name}>
+            <Stack gap="sm">
+              <Group grow align="start">
+                <TextInput
+                  label={t("id")}
+                  value={source.id}
+                  disabled={Boolean(definitionId)}
+                  onChange={(event) => update(index, { id: event.currentTarget.value })}
+                />
+                <TextInput
+                  label={t("name")}
+                  value={source.name}
+                  onChange={(event) => update(index, { name: event.currentTarget.value })}
+                />
+              </Group>
               <TextInput
-                label={t("id")}
-                value={source.id}
-                disabled={Boolean(definitionId)}
-                onChange={(event) => update(index, { id: event.currentTarget.value })}
+                label={t("baseUrl")}
+                type="url"
+                value={source.baseUrl}
+                error={baseUrlIssue ? t(sourceUrlErrorKeys[baseUrlIssue]) : undefined}
+                onChange={(event) => update(index, { baseUrl: event.currentTarget.value })}
               />
-              <TextInput
-                label={t("name")}
-                value={source.name}
-                onChange={(event) => update(index, { name: event.currentTarget.value })}
-              />
-            </Group>
-            <TextInput
-              label={t("baseUrl")}
-              type="url"
-              value={source.baseUrl}
-              onChange={(event) => update(index, { baseUrl: event.currentTarget.value })}
-            />
-            <Group grow align="start">
-              <Select
-                label={t("networkScope")}
-                data={["public", "private", "loopback"]}
-                value={source.networkScope}
-                onChange={(value) =>
-                  value && update(index, { networkScope: value as CustomWidgetSource["networkScope"] })
-                }
-                allowDeselect={false}
-              />
-              <Select
-                label={t("authentication")}
-                data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
-                value={source.auth.type}
-                onChange={(value) => setAuth(index, value ?? "none")}
-                allowDeselect={false}
-              />
-            </Group>
-            {source.auth.type === "apiKeyHeader" && (
-              <TextInput
-                label={t("headerName")}
-                value={source.auth.headerName}
-                onChange={(event) =>
-                  update(index, { auth: { type: "apiKeyHeader", headerName: event.currentTarget.value } })
-                }
-              />
-            )}
-            {source.auth.type === "apiKeyQuery" && (
-              <TextInput
-                label={t("queryParameter")}
-                value={source.auth.parameterName}
-                onChange={(event) =>
-                  update(index, { auth: { type: "apiKeyQuery", parameterName: event.currentTarget.value } })
-                }
-              />
-            )}
-            {(secretFields[source.auth.type] ?? []).map((field) => {
-              const secret = form.values.secrets.find(
-                (entry) => entry.sourceId === source.id && entry.kind === field.kind,
-              );
-              const Input = field.kind === "username" ? TextInput : PasswordInput;
-              return (
-                <Group key={field.kind} align="end" wrap="nowrap">
-                  <Input
-                    style={{ flex: 1 }}
-                    label={t(`secret.${field.kind}`)}
-                    value={secret?.value ?? ""}
-                    placeholder={secret?.hasValue ? t("configured") : undefined}
-                    leftSection={<IconKey size={15} />}
-                    onChange={(event) => setSecret(source.id, field.kind, event.currentTarget.value)}
-                  />
-                  {definitionId && secret?.hasValue && (
-                    <Button
-                      type="button"
-                      color="red"
-                      variant="subtle"
-                      loading={clearSecretMutation.isPending}
-                      onClick={() => void clearSecret(source.id, field.kind)}
-                    >
-                      {t("clear")}
-                    </Button>
-                  )}
-                </Group>
-              );
-            })}
-            {index > 0 && (
-              <Button
-                type="button"
-                color="red"
-                variant="subtle"
-                leftSection={<IconTrash size={16} />}
-                onClick={() => removeSource(index)}
-              >
-                {t("remove")}
-              </Button>
-            )}
-          </Stack>
-        </Fieldset>
-      ))}
+              <Group grow align="start">
+                <Select
+                  label={t("networkScope")}
+                  data={["public", "private", "loopback"]}
+                  value={source.networkScope}
+                  onChange={(value) =>
+                    value && update(index, { networkScope: value as CustomWidgetSource["networkScope"] })
+                  }
+                  allowDeselect={false}
+                />
+                <Select
+                  label={t("authentication")}
+                  data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
+                  value={source.auth.type}
+                  onChange={(value) => setAuth(index, value ?? "none")}
+                  allowDeselect={false}
+                />
+              </Group>
+              {source.auth.type === "apiKeyHeader" && (
+                <TextInput
+                  label={t("headerName")}
+                  value={source.auth.headerName}
+                  onChange={(event) =>
+                    update(index, { auth: { type: "apiKeyHeader", headerName: event.currentTarget.value } })
+                  }
+                />
+              )}
+              {source.auth.type === "apiKeyQuery" && (
+                <TextInput
+                  label={t("queryParameter")}
+                  value={source.auth.parameterName}
+                  onChange={(event) =>
+                    update(index, { auth: { type: "apiKeyQuery", parameterName: event.currentTarget.value } })
+                  }
+                />
+              )}
+              {(secretFields[source.auth.type] ?? []).map((field) => {
+                const secret = form.values.secrets.find(
+                  (entry) => entry.sourceId === source.id && entry.kind === field.kind,
+                );
+                const Input = field.kind === "username" ? TextInput : PasswordInput;
+                return (
+                  <Group key={field.kind} align="end" wrap="nowrap">
+                    <Input
+                      style={{ flex: 1 }}
+                      label={t(`secret.${field.kind}`)}
+                      value={secret?.value ?? ""}
+                      placeholder={secret?.hasValue ? t("configured") : undefined}
+                      leftSection={<IconKey size={15} />}
+                      onChange={(event) => setSecret(source.id, field.kind, event.currentTarget.value)}
+                    />
+                    {definitionId && secret?.hasValue && (
+                      <Button
+                        type="button"
+                        color="red"
+                        variant="subtle"
+                        loading={clearSecretMutation.isPending}
+                        onClick={() => void clearSecret(source.id, field.kind)}
+                      >
+                        {t("clear")}
+                      </Button>
+                    )}
+                  </Group>
+                );
+              })}
+              {index > 0 && (
+                <Button
+                  type="button"
+                  color="red"
+                  variant="subtle"
+                  leftSection={<IconTrash size={16} />}
+                  onClick={() => removeSource(index)}
+                >
+                  {t("remove")}
+                </Button>
+              )}
+            </Stack>
+          </Fieldset>
+        );
+      })}
       <Accordion variant="contained">
         <Accordion.Item value="advanced">
           <Accordion.Control>{t("advanced")}</Accordion.Control>

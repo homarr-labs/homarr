@@ -12,6 +12,8 @@ The Custom Widgets management page isolates definitions that no longer match the
 
 Use the first schema/JSX diagnostic and its path. Ensure source/request IDs are unique, every request references a source, parameters are declared, defaults match the options schema, and network components reference the correct request kind.
 
+Incomplete API source and icon URLs are normal form validation errors. The workbench keeps the current draft mounted and highlights the invalid field while you type; malformed URLs must never replace the form with the error boundary.
+
 ## Request fails
 
 Check the source network scope, base URL, credentials, request method/path/body, runtime parameters, and board permission. For “invalid placeholder” or an unresolved parameter on a load query, first verify that every declared parameter has an explicit `optionsBinding` option reference or literal. Matching parameter and option names are not a binding. The preview journal shows redacted method, request ID, path template, status, and duration without credentials.

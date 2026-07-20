@@ -120,6 +120,24 @@ const authSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+export type CustomWidgetSourceUrlIssue = "invalid" | "protocol" | "credentials" | "queryOrFragment";
+
+export function getCustomWidgetSourceUrlIssue(value: string): CustomWidgetSourceUrlIssue | null {
+  if (!URL.canParse(value)) return "invalid";
+  const url = new URL(value);
+  if (url.protocol !== "http:" && url.protocol !== "https:") return "protocol";
+  if (url.username || url.password) return "credentials";
+  if (url.search || url.hash) return "queryOrFragment";
+  return null;
+}
+
+const sourceUrlIssueMessages: Record<CustomWidgetSourceUrlIssue, string> = {
+  invalid: "Must be a valid URL",
+  protocol: "API sources must use HTTP or HTTPS",
+  credentials: "Credentials must not be embedded in an API source URL",
+  queryOrFragment: "API source URLs cannot contain a query string or fragment",
+};
+
 export const customWidgetSourceSchema = z.object({
   id: customWidgetIdentifierSchema,
   name: z.string().trim().min(1).max(128),
@@ -128,16 +146,8 @@ export const customWidgetSourceSchema = z.object({
     .url()
     .max(2048)
     .superRefine((value, ctx) => {
-      const url = new URL(value);
-      if (url.protocol !== "http:" && url.protocol !== "https:") {
-        ctx.addIssue({ code: "custom", message: "API sources must use HTTP or HTTPS" });
-      }
-      if (url.username || url.password) {
-        ctx.addIssue({ code: "custom", message: "Credentials must not be embedded in an API source URL" });
-      }
-      if (url.search || url.hash) {
-        ctx.addIssue({ code: "custom", message: "API source URLs cannot contain a query string or fragment" });
-      }
+      const issue = getCustomWidgetSourceUrlIssue(value);
+      if (issue && issue !== "invalid") ctx.addIssue({ code: "custom", message: sourceUrlIssueMessages[issue] });
     }),
   networkScope: z.enum(customJsxNetworkScopes),
   auth: authSchema,

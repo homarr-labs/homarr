@@ -16,6 +16,15 @@ describe("Custom JSX v2 validation", () => {
     expect(result.success, result.error?.issues.map((issue) => issue.message).join("; ")).toBe(true);
   });
 
+  test.each(["q", "http://["])("reports an incomplete URL inline without throwing: %s", (value) => {
+    const source = { ...CUSTOM_WIDGET_STARTER.sources[0], baseUrl: value };
+
+    expect(() => customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, sources: [source] })).not.toThrow();
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, sources: [source] }).success).toBe(false);
+    expect(() => customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: value })).not.toThrow();
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: value }).success).toBe(false);
+  });
+
   test("keeps the bundled seed set stable, disabled-ready, and credential-free", () => {
     expect(BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id)).toEqual([
       "seed-dog-facts",

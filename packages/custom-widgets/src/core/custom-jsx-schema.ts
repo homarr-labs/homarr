@@ -61,6 +61,7 @@ export const customWidgetDefinitionSchema = z
       .string()
       .url()
       .refine((value) => {
+        if (!URL.canParse(value)) return false;
         const url = new URL(value);
         return (url.protocol === "http:" || url.protocol === "https:") && !url.username && !url.password;
       }, "Widget icons must use HTTP or HTTPS without embedded credentials")

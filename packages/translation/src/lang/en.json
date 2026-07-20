@@ -872,6 +872,12 @@
         "id": "Source ID",
         "name": "Name",
         "baseUrl": "Base URL",
+        "baseUrlError": {
+          "invalid": "Enter a complete URL.",
+          "protocol": "Use an HTTP or HTTPS URL.",
+          "credentials": "Remove the username and password from this URL. Configure credentials below instead.",
+          "queryOrFragment": "Remove the query string or fragment from this base URL. Add query values to a named request."
+        },
         "networkScope": "Network access",
         "authentication": "Authentication",
         "headerName": "Header name",
