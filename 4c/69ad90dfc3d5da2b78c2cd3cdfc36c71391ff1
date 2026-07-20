@@ -1,0 +1,41 @@
+apps/docs/docs/management/custom-widgets/_category_.json
+  s_955a5b644d1c62::t_023d1d8289f70b 1-9
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_955a5b644d1c62::t_55229962d56d03 15
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_65d14ac5bb7aea 23
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_955a5b644d1c62::t_14c1cceabe5532 2-3
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_955a5b644d1c62::t_f62b71aa54b156 89
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_c532e8b7c9f49f 51,56-58
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_0bdceeeaa767d3 12
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_6581bd1d97533e 4,8-23
+packages/db/test/mysql-migration.spec.ts
+  s_955a5b644d1c62::t_de073c5c0971d9 6,11-12,36,40-44
+packages/db/test/postgresql-migration.spec.ts
+  s_955a5b644d1c62::t_ae53ad973b9edc 6,11-12,41,45-49
+packages/db/test/sqlite-migration.spec.ts
+  s_955a5b644d1c62::t_7f93e97e984a42 1-27
+vitest.config.mts
+  s_955a5b644d1c62::t_815fd76354ace8 29-37,44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "4c69ad90dfc3d5da2b78c2cd3cdfc36c71391ff1",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
