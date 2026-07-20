@@ -1,16 +1,16 @@
-import { customJsxRequestSchema } from "../core";
+import { customJsxRequestSchema, getCustomJsxBindingType } from "../core";
 import { CUSTOM_JSX_LIMITS, validateCustomJsxTemplate } from "../jsx";
 
 export type EditorDiagnosticCode =
   | "ast"
+  | "bindingTypeConflict"
   | "dynamicRequestId"
-  | "dynamicStateBinding"
+  | "dynamicInputBinding"
   | "inlineRequestProps"
   | "invalidRequestManifest"
   | "missingRequestId"
   | "templateEmpty"
   | "templateTooLong"
-  | "unknownStateBinding"
   | "unknownRequest";
 
 export interface EditorDiagnostic {
@@ -24,16 +24,15 @@ export interface EditorDiagnostic {
 
 export interface AnalyzeJsxTemplateOptions {
   requestIds?: string[];
-  stateKeys?: string[];
 }
 const networkComponentPattern = /<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/giu;
-const stateBindingPattern = /<[A-Z][A-Za-z0-9.]*(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu;
+const inputBindingPattern = /<([A-Z][A-Za-z0-9.]*)(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu;
 const lineAt = (source: string, index: number) => source.slice(0, index).split("\n").length;
 export const CUSTOM_JSX_TEMPLATE_LIMIT = CUSTOM_JSX_LIMITS.templateLength;
 
 export function analyzeJsxTemplate(
   template: string,
-  { requestIds = [], stateKeys = [] }: AnalyzeJsxTemplateOptions = {},
+  { requestIds = [] }: AnalyzeJsxTemplateOptions = {},
 ): EditorDiagnostic[] {
   const diagnostics: EditorDiagnostic[] = [];
   if (!template.trim()) diagnostics.push({ code: "templateEmpty", severity: "error", line: 1, column: 1, index: 0 });
@@ -71,24 +70,31 @@ export function analyzeJsxTemplate(
       diagnostics.push({ code: "missingRequestId", severity: "error", line, index: match.index });
     }
   }
-  const knownState = new Set(stateKeys);
-  for (const match of template.matchAll(stateBindingPattern)) {
-    const stateName = match[1] ?? match[2];
-    if (!stateName) {
+  const inputTypes = new Map<string, string>();
+  for (const match of template.matchAll(inputBindingPattern)) {
+    const componentName = match[1] ?? "";
+    const inputName = match[2] ?? match[3];
+    if (!inputName) {
       diagnostics.push({
-        code: "dynamicStateBinding",
+        code: "dynamicInputBinding",
         severity: "error",
         line: lineAt(template, match.index),
         index: match.index,
       });
-    } else if (!knownState.has(stateName)) {
+      continue;
+    }
+    const type = getCustomJsxBindingType(componentName);
+    const existing = inputTypes.get(inputName);
+    if (type && existing && existing !== type) {
       diagnostics.push({
-        code: "unknownStateBinding",
+        code: "bindingTypeConflict",
         severity: "error",
         line: lineAt(template, match.index),
         index: match.index,
-        value: stateName,
+        value: inputName,
       });
+    } else if (type) {
+      inputTypes.set(inputName, type);
     }
   }
   return diagnostics;

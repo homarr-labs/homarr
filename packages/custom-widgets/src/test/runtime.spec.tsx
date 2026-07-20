@@ -4,11 +4,12 @@ import { act } from "react";
 import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { MantineProvider, Text } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
+import { createCustomJsxComponents } from "../jsx";
 import type {
   CustomJsxRequestCapability,
   CustomWidgetPublishedQueryState,
@@ -105,35 +106,33 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
-  it("does not republish local state when equivalent default objects are rendered", async () => {
-    const onStateChange = vi.fn();
+  it("exposes temporary bindings through inputs without browser storage", async () => {
+    const setItem = vi.spyOn(Storage.prototype, "setItem");
     const rendererMessages = {
       noTemplate: "No template",
       interactive: "Interactive",
       networkCapabilities: "Network capabilities",
       templateWarnings: (count: number) => `${count} warnings`,
     };
-    const widget = () => (
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    const widget = (
       <CustomJsxRenderer
-        template="<Text>{state.search}</Text>"
+        template={'<Stack><TextInput bind="search" defaultValue="containers"/><Text>{inputs.search}</Text></Stack>'}
         data={{}}
-        stateSchema={{ search: "string" }}
-        defaultState={{ search: "containers" }}
-        onStateChange={onStateChange}
         requestCapabilities={[]}
-        components={{ Text: Text as never }}
+        components={components}
         createBindings={() => ({})}
         messages={rendererMessages}
       />
     );
 
-    await render(widget(), createPort());
+    await render(widget, createPort());
     await settle();
-    expect(onStateChange).toHaveBeenCalledTimes(1);
-
-    await render(widget(), createPort());
-    await settle();
-    expect(onStateChange).toHaveBeenCalledTimes(1);
+    expect(host.textContent).toContain("containers");
+    expect(setItem).not.toHaveBeenCalled();
   });
 
   it("runs an automatic query once and publishes data to the declarative data root", async () => {

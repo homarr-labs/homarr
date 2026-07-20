@@ -44,9 +44,6 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
         ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
       }}
       options={isRecord(data.options) ? data.options : {}}
-      stateSchema={isStringRecord(data.stateSchema) ? data.stateSchema : {}}
-      defaultState={isRecord(data.defaultState) ? data.defaultState : {}}
-      onStateChange={typeof data.onStateChange === "function" ? (data.onStateChange as never) : undefined}
       requestCapabilities={capabilities}
       components={components}
       createBindings={SAFE_BINDINGS}
@@ -89,8 +86,4 @@ function sameStatus(left: CustomWidgetPublishedQueryState["status"], right: Cust
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function isStringRecord(value: unknown): value is Record<string, string> {
-  return isRecord(value) && Object.values(value).every((entry) => typeof entry === "string");
 }

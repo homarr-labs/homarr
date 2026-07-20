@@ -7,7 +7,7 @@ Templates are declarative JSX interpreted inside a widget-local error boundary. 
 ```jsx
 <Stack>
   <TextInput bind="search" label="Search TV shows" />
-  <SubFetch requestId="search-series" params={{ query: state.search }} />
+  <SubFetch requestId="search-series" params={{ query: inputs.search }} />
   {data["search-series"]?.map((series) => (
     <Group key={series.tvdbId}>
       <Text>{series.title}</Text>
@@ -22,7 +22,7 @@ Templates are declarative JSX interpreted inside a widget-local error boundary. 
 - `data.<requestId>` contains sanitized JSON or text results.
 - `status.<requestId>` contains loading, success, HTTP, and error state.
 - `options` contains the validated board-item configuration.
-- `state` contains browser-session local state.
+- `inputs` contains temporary values from controls using `bind`.
 
 Load-triggered queries populate data automatically and follow the widget refresh interval. `SubFetch` runs a manual query. `ActionButton` and `ToggleSwitch` invoke actions.
 
@@ -34,18 +34,21 @@ Use safe Tabler icons through the resolver, for example `<TablerIcon name="serve
 
 The runtime blocks imports, hooks, refs, callbacks, polymorphic roots, provider replacement, arbitrary portal targets, browser networking, npm packages, evaluation, prototype-pollution keys, unsafe URLs, global selectors, and escaping CSS.
 
-## Bindings
+## Temporary inputs
 
-Declare state types and defaults, then bind controls:
+Bind a control to a literal name and read the value from `inputs`:
 
 ```jsx
-<TextInput bind="search" />
+<TextInput bind="search" defaultValue="" />
 <Calendar bind="selectedDate" />
-<Switch bind="enabled" />
+<Switch bind="enabled" defaultChecked={false} />
 <MultiSelect bind="selectedEntities" data={options.entities} />
+<SubFetch requestId="search" params={{ query: inputs.search }} />
 ```
 
-Homarr adapts ordinary `value/onChange`, `checked/onChange`, `active/onChange`, and `opened/onChange` patterns plus documented unusual component signatures. State supports primitive values and `string[]`, `number[]`, or `date[]` for multi-value controls. Authored callbacks are not allowed.
+These values exist only in React memory while the widget is mounted. They are never written to the definition, board options, database, browser storage, or `localStorage`; reloading or remounting resets them. Use widget options for persisted user configuration.
+
+Homarr infers the adapter type and handles ordinary `value/onChange`, `checked/onChange`, `active/onChange`, and `opened/onChange` patterns plus unusual Mantine signatures. `defaultValue` and `defaultChecked` initialize the temporary value and are not forwarded beside the controlled prop. Multiple components may share a name only when their adapter types match. Authored callbacks are not allowed.
 
 ## Diagnostics
 
@@ -54,6 +57,7 @@ Homarr adapts ordinary `value/onChange`, `checked/onChange`, `active/onChange`, 
 - `UNKNOWN_MANTINE_PROP`: advisory; the prop is passed through, not discarded.
 - `INVALID_PROP_VALUE`: warning or error depending on safety.
 - `BINDING_UNAVAILABLE`: the component renders, but `bind` is unavailable.
+- `BINDING_TYPE_CONFLICT`: components sharing one input name require incompatible value types.
 - `RUNTIME_RENDER_ERROR`: rendering failed inside this tile only.
 
 Homarr never silently drops an ordinary prop.

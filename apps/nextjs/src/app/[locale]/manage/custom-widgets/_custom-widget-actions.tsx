@@ -7,7 +7,12 @@ import { IconBuildingStore, IconCopy, IconDots, IconDownload, IconTrash, IconUpl
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getImportReview, parseCustomWidgetClipboard } from "@homarr/custom-widgets/core";
+import {
+  formatCustomWidgetImportIssues,
+  getImportReview,
+  looksLikeCustomWidgetClipboard,
+  parseCustomWidgetClipboardDetailed,
+} from "@homarr/custom-widgets/core";
 import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -161,14 +166,22 @@ export const ImportCustomWidgetButton = () => {
     const handlePaste = (event: ClipboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.matches("input, textarea, [contenteditable='true']")) return;
-      const widget = parseCustomWidgetClipboard(event.clipboardData?.getData("text/plain") ?? "");
-      if (!widget) return;
+      const text = event.clipboardData?.getData("text/plain") ?? "";
+      if (!looksLikeCustomWidgetClipboard(text)) return;
       event.preventDefault();
-      queueImport(widget);
+      const result = parseCustomWidgetClipboardDetailed(text);
+      if (!result.success) {
+        showErrorNotification({
+          title: t("action.import"),
+          message: formatCustomWidgetImportIssues(result.issues),
+        });
+        return;
+      }
+      queueImport(result.widget);
     };
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [queueImport]);
+  }, [queueImport, t]);
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -177,11 +190,14 @@ export const ImportCustomWidgetButton = () => {
     const reader = new FileReader();
     reader.addEventListener("load", (e) => {
       try {
-        const widget = parseCustomWidgetClipboard(e.target?.result as string);
-        if (!widget) throw new Error("Invalid import");
-        queueImport(widget);
-      } catch {
-        showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
+        const result = parseCustomWidgetClipboardDetailed(e.target?.result as string);
+        if (!result.success) throw new Error(formatCustomWidgetImportIssues(result.issues));
+        queueImport(result.widget);
+      } catch (error) {
+        showErrorNotification({
+          title: t("action.import"),
+          message: error instanceof Error ? error.message : t("notification.importError"),
+        });
       }
     });
     reader.addEventListener("error", () => {

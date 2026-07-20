@@ -13,8 +13,6 @@ const TOP_LEVEL_FIELDS = [
   "requests",
   "optionsSchema",
   "defaultOptions",
-  "stateSchema",
-  "defaultState",
   "template",
 ];
 const SOURCE_FIELDS = ["id", "name", "baseUrl", "networkScope", "auth"];
@@ -452,22 +450,6 @@ function collectDynamicOptionRequestIds(schema, result) {
     if (schema[branch] !== undefined) collectDynamicOptionRequestIds(schema[branch], result);
 }
 
-function validateDefaultState(schema, state) {
-  if (!isObject(state)) bad("Widget default state is invalid");
-  for (const [key, value] of Object.entries(state)) {
-    const type = schema[key];
-    const matches =
-      type === "date"
-        ? typeof value === "string"
-        : type === "string[]" || type === "date[]"
-          ? Array.isArray(value) && value.every((entry) => typeof entry === "string")
-          : type === "number[]"
-            ? Array.isArray(value) && value.every((entry) => typeof entry === "number")
-            : typeof value === type;
-    if (!type || !matches) bad("Widget default state does not match its schema");
-  }
-}
-
 function containsCredential(value, key) {
   if (SENSITIVE_KEY.test(key || "") && typeof value === "string" && value.trim()) return true;
   if (Array.isArray(value)) return value.some((entry) => containsCredential(entry, ""));
@@ -488,7 +470,7 @@ function containsPrototypeKey(value) {
 function validateTemplate(template) {
   if (typeof template !== "string" || !template.trim() || template.length > 50000) bad("Widget template is invalid");
   if (
-    /(?:<\s*(?:script|style|iframe|object|embed|form)\b|dangerouslySetInnerHTML\s*=|\bon[A-Z][A-Za-z]*\s*=|\b(?:component|renderRoot|withinPortal|ref)\s*=|\b(?:fetch|eval|XMLHttpRequest)\s*\(|\bimport\s)/i.test(
+    /(?:<\s*(?:script|style|iframe|object|embed|form)\b|dangerouslySetInnerHTML\s*=|\bon[A-Z][A-Za-z]*\s*=|\b(?:component|renderRoot|withinPortal|ref)\s*=|\b(?:fetch|eval|XMLHttpRequest)\s*\(|\bimport\s|\{[^{}]*\bstate(?:\.|\[))/i.test(
       template,
     )
   )
@@ -509,14 +491,13 @@ function validateTemplateRequests(template, requests) {
   }
 }
 
-function validateTemplateStateBindings(template, stateSchema) {
+function validateTemplateBindings(template) {
   const bindingPattern = /<[A-Z][A-Za-z0-9.]*(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/g;
   let match;
   while ((match = bindingPattern.exec(template)) !== null) {
-    const stateName = match[1] || match[2];
-    if (!stateName) bad("bind must use a literal state name");
-    if (!Object.prototype.hasOwnProperty.call(stateSchema, stateName))
-      bad(`bind references unknown state '${stateName}'`);
+    const inputName = match[1] || match[2];
+    if (!inputName) bad("bind must use a literal input name");
+    if (!validBindingId(inputName)) bad("bind must use a valid input name");
   }
 }
 
@@ -595,21 +576,9 @@ function validateSubmission(record) {
     const request = widget.requests.find((candidate) => candidate.id === requestId);
     if (!request || request.kind !== "query") bad("Widget dynamic options must reference a query request");
   }
-  if (
-    widget.stateSchema !== undefined &&
-    (!isObject(widget.stateSchema) ||
-      Object.entries(widget.stateSchema).some(
-        ([key, type]) =>
-          !validBindingId(key) ||
-          SENSITIVE_KEY.test(key) ||
-          !["string", "number", "boolean", "date", "string[]", "number[]", "date[]"].includes(type),
-      ))
-  )
-    bad("Widget state schema is invalid");
-  if (widget.defaultState !== undefined) validateDefaultState(widget.stateSchema || {}, widget.defaultState);
   validateTemplate(widget.template);
   validateTemplateRequests(widget.template, widget.requests);
-  validateTemplateStateBindings(widget.template, widget.stateSchema || {});
+  validateTemplateBindings(widget.template);
   for (const request of widget.requests) {
     for (const [name, value] of Object.entries(request.staticHeaders || {})) {
       if ((SENSITIVE_KEY.test(name) && String(value).trim()) || /^\s*bearer\s+\S{8,}\s*$/i.test(String(value)))
@@ -619,7 +588,6 @@ function validateSubmission(record) {
   if (
     CREDENTIAL_TEXT.test(widget.template) ||
     containsCredential(widget.defaultOptions, "") ||
-    containsCredential(widget.defaultState, "") ||
     widget.requests.some(
       (request) => containsCredential(request.bodyTemplate, "") || containsCredential(request.queryTemplate, ""),
     )
@@ -628,7 +596,6 @@ function validateSubmission(record) {
   if (
     containsPrototypeKey(widget.optionsSchema) ||
     containsPrototypeKey(widget.defaultOptions) ||
-    containsPrototypeKey(widget.defaultState) ||
     widget.requests.some(
       (request) => containsPrototypeKey(request.queryTemplate) || containsPrototypeKey(request.bodyTemplate),
     )

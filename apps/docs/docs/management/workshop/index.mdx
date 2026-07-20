@@ -9,3 +9,17 @@ Votes are unique per user and submission. Public listings show upvotes, downvote
 Workshop administrators use a protected administration page to review reports grouped by submission, see reporter identities and explanations, inspect vote totals, dismiss reports, delete any submission, browse unreported posts, and view the audit trail. Workshop has no banning, account-state, moderator, approval, quarantine, badge, or remote-deletion system.
 
 Deleting a Workshop post never deletes widgets already installed in a self-hosted Homarr instance.
+
+## GitHub sign-in deployment
+
+Workshop authentication is hosted by the central Workshop PocketBase service. Register this single callback in the GitHub OAuth application:
+
+```text
+https://<workshop-host>/api/oauth2-redirect
+```
+
+Self-hosted Homarr origins such as `http://localhost:3000`, `https://home.example.com`, or another custom domain do not need separate GitHub callback registrations. The popup starts directly from the user's click, authenticates against the Workshop host, and returns the result to the calling Homarr page.
+
+PocketBase permits all origins by default. If the Workshop deployment uses PocketBase's `--origins` option or a restrictive reverse-proxy CORS policy, it must allow arbitrary self-hosted Homarr origins. Restricting it to `homarr.dev` breaks sign-in from private installations. See [PocketBase routing and CORS](https://pocketbase.io/docs/go-routing/).
+
+Homarr reports provider misconfiguration, popup blocking, cancellation, and unavailable OAuth as visible notifications. Keep the Workshop host and GitHub provider configuration centralized; do not register every Homarr installation hostname.

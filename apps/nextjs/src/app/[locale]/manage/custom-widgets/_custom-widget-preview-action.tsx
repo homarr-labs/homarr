@@ -15,19 +15,17 @@ export function PreviewActionControl({
   request,
   sessionId,
   options,
-  state,
 }: {
   request: HomarrCustomWidgetV2["requests"][number];
   sessionId?: string;
   options: Record<string, unknown>;
-  state: Record<string, unknown>;
 }) {
   const t = useScopedI18n("customWidget.workbench.preview");
   const { openConfirmModal } = useConfirmModal();
   const actionMutation = clientApi.customWidget.previewAction.useMutation();
   const initialParams = Object.fromEntries(
     Object.entries(request.parameters).map(([name, type]) => {
-      const bound = state[name] ?? options[name];
+      const bound = options[name];
       if (typeof bound === type) return [name, bound];
       return [name, type === "number" ? 0 : type === "boolean" ? false : ""];
     }),

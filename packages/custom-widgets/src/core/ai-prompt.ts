@@ -4,7 +4,7 @@ export const CUSTOM_WIDGET_MANTINE_VERSION = "9.4.1";
 
 const AUTHORING_PROMPT = `You create Homarr Custom JSX v2 widgets. Return exactly two fenced blocks: a json block containing one complete widget object with template set to "__HOMARR_TEMPLATE__", then a jsx block containing the readable template.
 
-Use $schema "homarr-custom-widget-v2". A widget contains metadata, inline API sources, named requests, an options schema, defaults, optional local state, and one JSX template. Never include credentials. Use one source named "default" unless the widget genuinely combines APIs.
+Use $schema "homarr-custom-widget-v2". A widget contains metadata, inline API sources, named requests, an options schema, defaults, and one JSX template. Never include credentials. Use one source named "default" unless the widget genuinely combines APIs.
 
 This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. When connected, read homarr://custom-widgets/schema and homarr://custom-widgets/components instead of guessing the installed surface.
 
@@ -12,12 +12,12 @@ Queries and actions may use GET, POST, PUT, PATCH, or DELETE. Set kind to query 
 
 Source authentication is exactly one of {"type":"none"}, {"type":"bearer"}, {"type":"basic"}, {"type":"apiKeyHeader","headerName":"X-API-Key"}, or {"type":"apiKeyQuery","parameterName":"api_key"}. Credentials are configured separately by the user.
 
-Templates can read data, status, options, and state. Bind supported Mantine controls with bind="stateName" instead of event handlers. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, event callbacks, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
+Templates can read data, status, options, and inputs. Bind supported Mantine controls with bind="search" and read the temporary value as inputs.search. Bound inputs live only in memory and reset when the widget reloads; saved configuration belongs in options. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, event callbacks, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
 
-Options use a restricted object JSON Schema. x-homarr controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, url, duration, timeZone, and json. Dynamic selects use x-homarr.optionsSource with requestId, optional itemsPath for wrapped arrays, valuePath, and labelPath. Local state types are string, number, boolean, date, string[], number[], or date[].
+Options use a restricted object JSON Schema. x-homarr controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, url, duration, timeZone, and json. Dynamic selects use x-homarr.optionsSource with requestId, optional itemsPath for wrapped arrays, valuePath, and labelPath.
 
 Widget shape:
-{ "$schema":"homarr-custom-widget-v2", "name":"...", "description":"...", "iconUrl":"https://...", "sources":[{ "id":"default", "name":"API", "baseUrl":"https://host", "networkScope":"public|private|loopback", "auth":{ "type":"none|bearer|basic|apiKeyHeader|apiKeyQuery" } }], "requests":[{ "id":"data", "sourceId":"default", "kind":"query|action", "method":"GET|POST|PUT|PATCH|DELETE", "pathTemplate":"/api/path", "parameters":{}, "queryTemplate":{}, "bodyTemplate":{}, "auth":"inherit|none", "minimumBoardPermission":"view|modify|full", "trigger":"load|manual", "confirmation":{ "title":"...", "message":"...", "destructive":false }, "invalidates":[] }], "optionsSchema":{ "type":"object", "properties":{}, "additionalProperties":false }, "defaultOptions":{}, "stateSchema":{}, "defaultState":{}, "template":"__HOMARR_TEMPLATE__" }
+{ "$schema":"homarr-custom-widget-v2", "name":"...", "description":"...", "iconUrl":"https://...", "sources":[{ "id":"default", "name":"API", "baseUrl":"https://host", "networkScope":"public|private|loopback", "auth":{ "type":"none|bearer|basic|apiKeyHeader|apiKeyQuery" } }], "requests":[{ "id":"data", "sourceId":"default", "kind":"query|action", "method":"GET|POST|PUT|PATCH|DELETE", "pathTemplate":"/api/{id}", "parameters":{ "id":"string", "limit":"number" }, "queryTemplate":{ "limit":{ "$param":"limit" } }, "auth":"inherit|none", "minimumBoardPermission":"view|modify|full", "trigger":"load|manual", "confirmation":{ "title":"...", "message":"...", "destructive":false }, "invalidates":[] }], "optionsSchema":{ "type":"object", "properties":{}, "additionalProperties":false }, "defaultOptions":{}, "template":"__HOMARR_TEMPLATE__" }
 
 Keep the result concise, accessible, responsive, and valid. Preserve unrelated fields when fixing an existing widget.`;
 
@@ -33,7 +33,7 @@ export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX 
 6. Use customWidget_secretSet only for a credential the user supplied and only with dedicated permission. Otherwise call customWidget_secretRequestUser and poll its completion status; never receive or repeat the plaintext.
 7. Call customWidget_create only after validation, request tests, action simulation, and visual inspection pass.
 
-Use inline sources, named queries/actions, restricted JSON Schema options, session-local typed state, declarative bind controls, and safe Mantine JSX. Use kind, not method, to distinguish reads from user-triggered changes. Never include credentials, imports, hooks, refs, callbacks, browser requests, arbitrary JavaScript, npm packages, polymorphic roots, or arbitrary portals. Make the widget responsive, accessible, loading-aware, empty-aware, and error-aware. The live schema and component resources are authoritative for the installed Homarr release.`;
+Use inline sources, named queries/actions, restricted JSON Schema options, temporary declarative bind controls exposed through inputs, and safe Mantine JSX. Use kind, not method, to distinguish reads from user-triggered changes. Never include credentials, imports, hooks, refs, callbacks, browser requests, arbitrary JavaScript, npm packages, polymorphic roots, or arbitrary portals. Make the widget responsive, accessible, loading-aware, empty-aware, and error-aware. The live schema and component resources are authoritative for the installed Homarr release.`;
 
 export function buildCustomWidgetMcpPrompt(request?: string | null, documentationUrl?: string | null) {
   const sections = [CUSTOM_WIDGET_MCP_AUTHORING_PROMPT];
@@ -91,7 +91,7 @@ function redactValue(value: unknown, key = ""): unknown {
     );
   }
   if (typeof value === "string") {
-    if (["sources", "requests", "optionsSchema", "defaultOptions", "stateSchema", "defaultState"].includes(key)) {
+    if (["sources", "requests", "optionsSchema", "defaultOptions"].includes(key)) {
       try {
         return redactValue(JSON.parse(value) as unknown);
       } catch {

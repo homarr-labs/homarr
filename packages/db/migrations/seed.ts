@@ -1,6 +1,7 @@
 import SuperJSON from "superjson";
 
 import { createId, objectKeys } from "@homarr/common";
+import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
@@ -15,7 +16,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
+import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -26,6 +27,7 @@ import {
 import {
   apps,
   boards,
+  customWidgetDefinitions,
   groupMembers,
   groupPermissions,
   groups,
@@ -57,6 +59,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedDefaultIntegrationsAsync(db);
   await seedDefaultAppsAsync(db);
   await seedDefaultBoardAsync(db);
+  await seedDefaultCustomWidgetsAsync(db);
   await seedBoardWidgetsAsync(db);
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
@@ -550,6 +553,37 @@ const seedDemoUserAsync = async (db: Database) => {
   console.log(
     "Demo mode enabled: created demo user, mock integration, and sample board with widgets. Disable by setting DEMO_MODE=false.",
   );
+};
+
+const seedDefaultCustomWidgetsAsync = async (db: Database) => {
+  const seedIds = BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id);
+  const existing = await db.query.customWidgetDefinitions.findMany({
+    columns: { id: true },
+    where: inArray(customWidgetDefinitions.id, seedIds),
+  });
+  const existingIds = new Set(existing.map(({ id }) => id));
+  const values = BUNDLED_CUSTOM_WIDGETS.filter(({ id }) => !existingIds.has(id)).map(({ id, widget }) => {
+    const definition = customWidgetDefinitionSchema.parse(widget);
+    return {
+      id,
+      name: definition.name,
+      description: definition.description ?? null,
+      iconUrl: definition.iconUrl ?? null,
+      sources: SuperJSON.stringify(definition.sources),
+      requests: SuperJSON.stringify(definition.requests),
+      optionsSchema: SuperJSON.stringify(definition.optionsSchema),
+      defaultOptions: SuperJSON.stringify(definition.defaultOptions),
+      template: definition.template,
+      enabled: false,
+      creatorId: null,
+    };
+  });
+  if (values.length === 0) {
+    console.log("Skipping seeding of bundled custom widgets because they already exist");
+    return;
+  }
+  await db.insert(customWidgetDefinitions).values(values);
+  console.log(`Created ${values.length} bundled custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {

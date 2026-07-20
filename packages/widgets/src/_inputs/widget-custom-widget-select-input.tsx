@@ -157,8 +157,6 @@ export const WidgetCustomWidgetSelectInput = ({
                     selected.requestCapabilities.map((request) => [request.id, { loading: true }]),
                   ),
                   options: selected.defaultOptions,
-                  stateSchema: selected.stateSchema,
-                  defaultState: selected.defaultState,
                   requestCapabilities: selected.requestCapabilities,
                   previewSessionId: "widget-picker",
                   queriesDisabled: true,

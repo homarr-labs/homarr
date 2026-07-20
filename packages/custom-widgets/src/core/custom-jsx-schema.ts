@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { validateCustomJsxTemplate } from "../jsx/analyzer";
-import { isCredentialKeyName, validateCredentialFreeExport, validatePrototypeKeys } from "./definition-security";
+import { validateCredentialFreeExport, validatePrototypeKeys } from "./definition-security";
 import { validateCustomWidgetOptions } from "./options";
 import { customWidgetOptionsSchemaSchema } from "./options-schema";
 import { customJsxRequestSchema, customWidgetIdentifierSchema, customWidgetSourceSchema } from "./request-schema";
@@ -12,35 +12,11 @@ export * from "./options-schema";
 export * from "./request-schema";
 export type CustomWidgetOptionsSchema = z.infer<typeof customWidgetOptionsSchemaSchema>;
 
-export const customWidgetStateTypes = [
-  "string",
-  "number",
-  "boolean",
-  "date",
-  "string[]",
-  "number[]",
-  "date[]",
-] as const;
 export const customWidgetBindingIdentifierSchema = z
   .string()
   .min(1)
   .max(64)
   .regex(/^[A-Za-z][A-Za-z0-9_-]*$/u, "Binding names must start with a letter and contain letters, numbers, - or _");
-export const customWidgetStateSchemaSchema = z
-  .record(customWidgetBindingIdentifierSchema, z.enum(customWidgetStateTypes))
-  .superRefine((schema, ctx) => {
-    for (const key of Object.keys(schema)) {
-      if (isCredentialKeyName(key)) {
-        ctx.addIssue({
-          code: "custom",
-          path: [key],
-          message: "Credentials must use source authentication, not local state",
-        });
-      }
-    }
-  });
-export type CustomWidgetStateSchema = z.infer<typeof customWidgetStateSchemaSchema>;
-
 export const customJsxTemplateSchema = z
   .string()
   .min(1)
@@ -93,10 +69,9 @@ export const customWidgetDefinitionSchema = z
     requests: z.array(customJsxRequestSchema).max(64),
     optionsSchema: customWidgetOptionsSchemaSchema,
     defaultOptions: z.record(z.string(), z.unknown()),
-    stateSchema: customWidgetStateSchemaSchema.optional(),
-    defaultState: z.record(z.string(), z.unknown()).optional(),
     template: customJsxTemplateSchema,
   })
+  .strict()
   .superRefine((definition, ctx) => {
     for (const issue of validateCustomWidgetOptions(definition.optionsSchema, definition.defaultOptions)) {
       ctx.addIssue({
@@ -106,11 +81,10 @@ export const customWidgetDefinitionSchema = z
       });
     }
     const sourceIds = validateSourceIds(definition.sources, ctx);
-    validateDefaultState(definition.stateSchema ?? {}, definition.defaultState ?? {}, ctx);
     const requests = validateRequests(definition, sourceIds, ctx);
     validateDynamicOptions(definition.optionsSchema, requests, ctx);
     validateTemplateRequests(definition.template, requests, ctx);
-    validateTemplateStateBindings(definition.template, definition.stateSchema ?? {}, ctx);
+    validateTemplateBindings(definition.template, ctx);
     validateCredentialFreeExport(definition, ctx);
     validatePrototypeKeys(definition, ctx);
   });
@@ -158,28 +132,6 @@ function validateDynamicOptions(
   for (const branch of ["if", "then", "else"] as const) {
     if (node[branch] !== undefined) validateDynamicOptions(node[branch], requests, ctx, [...path, branch]);
   }
-}
-
-function validateDefaultState(
-  schema: NonNullable<Definition["stateSchema"]>,
-  state: NonNullable<Definition["defaultState"]>,
-  ctx: z.RefinementCtx,
-) {
-  for (const [key, value] of Object.entries(state)) {
-    const type = schema[key];
-    if (!type) ctx.addIssue({ code: "custom", path: ["defaultState", key], message: `Unknown state key: ${key}` });
-    else if (!matchesStateType(type, value)) {
-      ctx.addIssue({ code: "custom", path: ["defaultState", key], message: `Expected ${type}` });
-    }
-  }
-}
-
-function matchesStateType(type: CustomWidgetStateSchema[string], value: unknown) {
-  if (type === "date") return typeof value === "string";
-  if (type === "string[]" || type === "date[]")
-    return Array.isArray(value) && value.every((entry) => typeof entry === "string");
-  if (type === "number[]") return Array.isArray(value) && value.every((entry) => typeof entry === "number");
-  return typeof value === type;
 }
 
 function validateRequests(definition: Definition, sourceIds: Set<string>, ctx: z.RefinementCtx) {
@@ -259,14 +211,12 @@ function validateTemplateRequests(template: string, requests: Map<string, Custom
   }
 }
 
-function validateTemplateStateBindings(template: string, stateSchema: CustomWidgetStateSchema, ctx: z.RefinementCtx) {
+function validateTemplateBindings(template: string, ctx: z.RefinementCtx) {
   for (const match of template.matchAll(/<[A-Z][A-Za-z0-9.]*(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu)) {
-    const stateName = match[1] ?? match[2];
-    if (!stateName) {
-      ctx.addIssue({ code: "custom", path: ["template"], message: "bind must use a literal state name" });
-    } else if (!Object.hasOwn(stateSchema, stateName)) {
-      ctx.addIssue({ code: "custom", path: ["template"], message: `bind references unknown state '${stateName}'` });
-    }
+    const inputName = match[1] ?? match[2];
+    if (!inputName) ctx.addIssue({ code: "custom", path: ["template"], message: "bind must use a literal input name" });
+    else if (!customWidgetBindingIdentifierSchema.safeParse(inputName).success)
+      ctx.addIssue({ code: "custom", path: ["template"], message: `Invalid bind input name '${inputName}'` });
   }
 }
 
@@ -280,7 +230,8 @@ export const customWidgetUpdateSchema = z
   .extend({
     id: z.string().min(1),
     secrets: customWidgetSecretsInputSchema.optional(),
-  });
+  })
+  .strict();
 export const customWidgetImportSchema = customWidgetDefinitionSchema;
 export type CustomWidgetCreateInput = z.infer<typeof customWidgetCreateSchema>;
 export type CustomWidgetUpdateInput = z.infer<typeof customWidgetUpdateSchema>;

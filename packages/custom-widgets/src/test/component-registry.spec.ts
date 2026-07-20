@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { customJsxComponentByName, customJsxComponentRegistry } from "../core/component-registry";
+import {
+  customJsxComponentByName,
+  customJsxComponentRegistry,
+  getCustomJsxBindingType,
+} from "../core/component-registry";
 
 const mantineCore941ComponentExports = [
   "RemoveScroll",
@@ -230,5 +234,26 @@ describe("customJsxComponentRegistry", () => {
     ...mantineDates941ComponentExports,
   ])("classifies the Mantine 9.4.1 export %s", (name) => {
     expect(customJsxComponentByName.has(name), `${name} is not classified`).toBe(true);
+  });
+
+  test.each([
+    ["TextInput", "string"],
+    ["NumberInput", "number"],
+    ["Switch", "boolean"],
+    ["Select", "string"],
+    ["MultiSelect", "string[]"],
+    ["DateInput", "string"],
+    ["Calendar", "string"],
+    ["Tabs", "string"],
+    ["Popover", "boolean"],
+    ["RangeSlider", "number[]"],
+  ] as const)("infers %s bindings as %s", (component, type) => {
+    expect(getCustomJsxBindingType(component)).toBe(type);
+  });
+
+  test("infers range and multiple date controls from their authored props", () => {
+    expect(getCustomJsxBindingType("Calendar", { type: "range" })).toBe("string[]");
+    expect(getCustomJsxBindingType("Chip.Group", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("Text", {})).toBeNull();
   });
 });

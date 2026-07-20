@@ -1,11 +1,6 @@
 import { z } from "zod/v4";
 
-import {
-  customJsxRequestSchema,
-  customWidgetSecretKinds,
-  customWidgetSourceSchema,
-  customWidgetStateTypes,
-} from "../core";
+import { customJsxRequestSchema, customWidgetSecretKinds, customWidgetSourceSchema } from "../core";
 import type { CustomJsxRequest, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 
@@ -29,8 +24,6 @@ const sessionSchema = z.object({
   template: z.string(),
   optionsSchema: z.record(z.string(), z.unknown()),
   defaultOptions: z.record(z.string(), z.unknown()),
-  stateSchema: z.record(z.string(), z.enum(customWidgetStateTypes)),
-  defaultState: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
   liveActions: z.boolean(),
 });
@@ -58,8 +51,6 @@ export interface CreatePreviewSessionInput {
   template: string;
   optionsSchema: Record<string, unknown>;
   defaultOptions: Record<string, unknown>;
-  stateSchema: Record<string, (typeof customWidgetStateTypes)[number]>;
-  defaultState: Record<string, unknown>;
   definitionId?: string;
 }
 
@@ -107,8 +98,6 @@ export class CustomWidgetPreviewSessionService {
       template: input.template,
       optionsSchema: input.optionsSchema,
       defaultOptions: input.defaultOptions,
-      stateSchema: input.stateSchema,
-      defaultState: input.defaultState,
       definitionId: input.definitionId,
       liveActions: false,
     };

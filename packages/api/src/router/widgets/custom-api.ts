@@ -234,8 +234,6 @@ export const customApiRouter = createTRPCRouter({
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,
-      stateSchema: resolved.definition.stateSchema ?? {},
-      defaultState: resolved.definition.defaultState ?? {},
       requestCapabilities: resolved.definition.requests.map((request) => ({
         id: request.id,
         kind: request.kind,

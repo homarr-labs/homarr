@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "首页",
         "boards": "面板",
         "apps": "应用",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "管理中心",
       "boards": {
         "label": "面板"

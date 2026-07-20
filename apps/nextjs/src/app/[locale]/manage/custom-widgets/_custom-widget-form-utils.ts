@@ -16,8 +16,6 @@ export function buildDefinition(values: CustomWidgetFormValues) {
     requests: parseJson(values.requests),
     optionsSchema: parseJson(values.optionsSchema),
     defaultOptions: parseJson(values.defaultOptions),
-    stateSchema: parseJson(values.stateSchema),
-    defaultState: parseJson(values.defaultState),
     template: values.template,
   });
 }
@@ -32,8 +30,6 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     requests: JSON.stringify(widget.requests, null, 2),
     optionsSchema: JSON.stringify(widget.optionsSchema, null, 2),
     defaultOptions: JSON.stringify(widget.defaultOptions, null, 2),
-    stateSchema: JSON.stringify(widget.stateSchema ?? {}, null, 2),
-    defaultState: JSON.stringify(widget.defaultState ?? {}, null, 2),
     template: widget.template,
   });
 }

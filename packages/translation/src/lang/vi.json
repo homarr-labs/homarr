@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Trang chủ",
         "boards": "Bảng",
         "apps": "Ứng dụng",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Quản lý",
       "boards": {
         "label": "Bảng"

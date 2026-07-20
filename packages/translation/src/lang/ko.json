@@ -4020,6 +4020,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "홈",
         "boards": "보드",
         "apps": "앱",
@@ -5158,6 +5159,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "관리",
       "boards": {
         "label": "보드"

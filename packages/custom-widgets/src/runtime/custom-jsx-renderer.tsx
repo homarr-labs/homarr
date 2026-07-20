@@ -4,10 +4,10 @@ import { Alert, Badge, Box, Group, Popover, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconNetwork } from "@tabler/icons-react";
 
 import { renderSafeJsx } from "../jsx/interpreter";
-import { CustomJsxStateProvider } from "../jsx/runtime-components";
+import { CustomJsxInputsProvider } from "../jsx/runtime-components";
+import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import type { CustomJsxRequestCapability } from "./types";
 
-type CustomWidgetStateValue = string | number | boolean | string[] | number[];
 const EMPTY_RECORD: Record<string, never> = {};
 
 const methodColors: Readonly<Record<string, string>> = {
@@ -33,9 +33,6 @@ export interface CustomJsxRendererProps {
   data: unknown;
   status?: Record<string, unknown>;
   options?: Record<string, unknown>;
-  stateSchema?: Record<string, string>;
-  defaultState?: Record<string, unknown>;
-  onStateChange?(state: Record<string, CustomWidgetStateValue>): void;
   requestCapabilities: unknown;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
@@ -110,34 +107,48 @@ export function CustomJsxRenderer({
   data,
   status = EMPTY_RECORD,
   options = EMPTY_RECORD,
-  stateSchema = EMPTY_RECORD,
-  defaultState = EMPTY_RECORD,
-  onStateChange,
   requestCapabilities: rawCapabilities,
   components,
   createBindings,
   messages,
 }: CustomJsxRendererProps) {
   const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const [state, setState] = useState<Record<string, CustomWidgetStateValue>>(() =>
-    normalizeState(stateSchema, defaultState),
-  );
-  useEffect(() => {
-    const next = normalizeState(stateSchema, defaultState);
-    setState((current) => (sameWidgetState(current, next) ? current : next));
-  }, [defaultState, stateSchema]);
-  const setStateValue = useCallback(
-    (name: string, value: CustomWidgetStateValue) => {
-      const type = stateSchema[name];
-      if (!type || !matchesStateType(type, value)) return;
-      setState((current) => ({ ...current, [name]: value }));
+  const [bindingErrors, setBindingErrors] = useState<string[]>([]);
+  const [inputs, setInputs] = useState<Record<string, WidgetInputValue>>({});
+  const [inputTypes, setInputTypes] = useState<Record<string, WidgetInputType>>({});
+  const registerInput = useCallback((name: string, type: WidgetInputType, initialValue: WidgetInputValue) => {
+    setInputTypes((current) => {
+      const existing = current[name];
+      if (existing === type) return current;
+      if (existing && existing !== type) {
+        setBindingErrors((errors) => {
+          const message = `BINDING_TYPE_CONFLICT: '${name}' is bound as both ${existing} and ${type}`;
+          return errors.includes(message) ? errors : [...errors.slice(0, 4), message];
+        });
+        return current;
+      }
+      return { ...current, [name]: type };
+    });
+    setInputs((current) => (Object.hasOwn(current, name) ? current : { ...current, [name]: initialValue }));
+  }, []);
+  const setInputValue = useCallback(
+    (name: string, type: WidgetInputType, value: WidgetInputValue) => {
+      const existing = inputTypes[name];
+      if (existing && existing !== type) {
+        setBindingErrors((errors) => {
+          const message = `BINDING_TYPE_CONFLICT: '${name}' is bound as both ${existing} and ${type}`;
+          return errors.includes(message) ? errors : [...errors.slice(0, 4), message];
+        });
+        return;
+      }
+      setInputTypes((current) => (current[name] === type ? current : { ...current, [name]: type }));
+      setInputs((current) => (Object.is(current[name], value) ? current : { ...current, [name]: value }));
     },
-    [stateSchema],
+    [inputTypes],
   );
-  useEffect(() => onStateChange?.(state), [onStateChange, state]);
   const bindings = useMemo(
-    () => ({ ...createBindings(data), status, options, state }),
-    [createBindings, data, options, state, status],
+    () => ({ ...createBindings(data), status, options, inputs }),
+    [createBindings, data, inputs, options, status],
   );
   const capabilities = useMemo(() => parseRequestCapabilities(rawCapabilities), [rawCapabilities]);
   const rendered = useMemo(() => {
@@ -216,19 +227,24 @@ export function CustomJsxRenderer({
         {rendered.error ? (
           <ErrorAlert error={rendered.error} />
         ) : (
-          <CustomJsxStateProvider state={state} stateSchema={stateSchema} setStateValue={setStateValue}>
+          <CustomJsxInputsProvider
+            inputs={inputs}
+            inputTypes={inputTypes}
+            registerInput={registerInput}
+            setInputValue={setInputValue}
+          >
             <RendererErrorBoundary key={template} onError={handleError}>
               {rendered.node}
             </RendererErrorBoundary>
-          </CustomJsxStateProvider>
+          </CustomJsxInputsProvider>
         )}
       </Box>
-      {parseErrors.length > 0 && (
+      {[...parseErrors, ...bindingErrors].length > 0 && (
         <Alert color="yellow" variant="light" p="xs" mt="xs">
           <Text size="xs" c="dimmed">
-            {messages.templateWarnings(parseErrors.length)}
+            {messages.templateWarnings(parseErrors.length + bindingErrors.length)}
           </Text>
-          {parseErrors.map((message) => (
+          {[...parseErrors, ...bindingErrors].map((message) => (
             <Text key={message} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
               {message}
             </Text>
@@ -237,41 +253,4 @@ export function CustomJsxRenderer({
       )}
     </Stack>
   );
-}
-
-function normalizeState(schema: Record<string, string>, defaults: Record<string, unknown>) {
-  const state: Record<string, CustomWidgetStateValue> = {};
-  for (const [name, type] of Object.entries(schema)) {
-    const value = defaults[name];
-    state[name] = matchesStateType(type, value)
-      ? value
-      : type.endsWith("[]")
-        ? []
-        : type === "number"
-          ? 0
-          : type === "boolean"
-            ? false
-            : "";
-  }
-  return state;
-}
-
-function matchesStateType(type: string, value: unknown): value is CustomWidgetStateValue {
-  if (type === "date") return typeof value === "string";
-  if (type === "string[]" || type === "date[]")
-    return Array.isArray(value) && value.every((entry) => typeof entry === "string");
-  if (type === "number[]") return Array.isArray(value) && value.every((entry) => typeof entry === "number");
-  return typeof value === type;
-}
-
-function sameWidgetState(left: Record<string, CustomWidgetStateValue>, right: Record<string, CustomWidgetStateValue>) {
-  const leftEntries = Object.entries(left);
-  const rightEntries = Object.entries(right);
-  if (leftEntries.length !== rightEntries.length) return false;
-  return leftEntries.every(([key, value]) => {
-    const candidate = right[key];
-    return Array.isArray(value) && Array.isArray(candidate)
-      ? value.length === candidate.length && value.every((entry, index) => Object.is(entry, candidate[index]))
-      : Object.is(value, candidate);
-  });
 }

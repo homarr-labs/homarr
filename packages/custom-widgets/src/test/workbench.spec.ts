@@ -12,6 +12,13 @@ import {
   renameCustomWidgetRequest,
 } from "../workbench";
 import { CUSTOM_WIDGET_STARTER } from "../core/examples";
+import {
+  CUSTOM_WIDGET_OPTIONS_EXAMPLES,
+  CUSTOM_WIDGET_REQUEST_EXAMPLES,
+  getCustomWidgetDefaultOptionsJsonSchema,
+  getCustomWidgetOptionsJsonSchema,
+  getCustomWidgetRequestsJsonSchema,
+} from "../core/schema-references";
 
 describe("Custom Widget workbench contracts", () => {
   it("always provides a valid starter template", () => {
@@ -41,6 +48,14 @@ describe("Custom Widget workbench contracts", () => {
     );
   });
 
+  it("generates schema references and examples from canonical validators", () => {
+    expect(getCustomWidgetRequestsJsonSchema()).toMatchObject({ type: "array" });
+    expect(getCustomWidgetOptionsJsonSchema()).toMatchObject({ type: "object" });
+    expect(getCustomWidgetDefaultOptionsJsonSchema()).toMatchObject({ type: "object" });
+    expect(analyzeRequestManifest(JSON.stringify(CUSTOM_WIDGET_REQUEST_EXAMPLES.full))).toEqual([]);
+    expect(CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.defaults).toMatchObject({ limit: 20 });
+  });
+
   it("validates named request references and rejects inline network capabilities", () => {
     expect(analyzeJsxTemplate('<SubFetch requestId="known" />', { requestIds: ["known"] })).toEqual([]);
     expect(analyzeJsxTemplate('<SubFetch requestId="missing" url="/api" />', { requestIds: ["known"] })).toEqual(
@@ -51,13 +66,13 @@ describe("Custom Widget workbench contracts", () => {
     );
   });
 
-  it("diagnoses dynamic and unknown local-state bindings", () => {
-    expect(analyzeJsxTemplate('<Calendar bind="selectedDate" />', { stateKeys: ["selectedDate"] })).toEqual([]);
-    expect(analyzeJsxTemplate('<Calendar bind="missing" />', { stateKeys: ["selectedDate"] })).toEqual([
-      expect.objectContaining({ code: "unknownStateBinding", value: "missing" }),
-    ]);
-    expect(analyzeJsxTemplate("<Calendar bind={state.selectedDate} />", { stateKeys: ["selectedDate"] })).toEqual(
-      expect.arrayContaining([expect.objectContaining({ code: "dynamicStateBinding" })]),
+  it("accepts named temporary inputs and diagnoses dynamic bindings", () => {
+    expect(analyzeJsxTemplate('<Calendar bind="selectedDate" />')).toEqual([]);
+    expect(analyzeJsxTemplate("<Calendar bind={inputs.selectedDate} />")).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: "dynamicInputBinding" })]),
+    );
+    expect(analyzeJsxTemplate('<TextInput bind="filter"/><Switch bind="filter"/>')).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: "bindingTypeConflict", value: "filter" })]),
     );
   });
 

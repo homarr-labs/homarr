@@ -7,12 +7,15 @@ import { customJsxExamples } from "./examples";
 import { customJsxTablerIconNames } from "./tabler-icons";
 
 export const CUSTOM_WIDGET_SKILL_VERSION = "2.0.0";
-export const CUSTOM_WIDGET_SKILL_DOWNLOAD_URL = "https://homarr.dev/downloads/homarr-custom-widget-2.0.0.zip";
-export const CUSTOM_WIDGET_SKILL_SHA256 = "5571b74b2faafe8a9e230231c1915193e889c7afa95acef38a1f70befe14a9e1";
+export const CUSTOM_WIDGET_SKILLS_SH_URL = "https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget";
+export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
+  "https://github.com/homarr-labs/homarr/tree/v2/.agents/skills/homarr-custom-widget";
+export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
+  "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author, validate, preview, and install safe Homarr Custom JSX v2 widgets from API documentation. Use when creating or fixing Homarr custom widgets, including multi-source dashboards, queries, actions, options, local state, and Mantine JSX.
+description: Author, validate, preview, and install safe Homarr Custom JSX v2 widgets from API documentation. Use when creating or fixing Homarr custom widgets, including multi-source dashboards, queries, actions, options, temporary inputs, and Mantine JSX.
 license: Apache-2.0
 metadata:
   version: "2.0.0"
@@ -35,7 +38,7 @@ Create one widget at a time. Repeat the workflow when the user asks for several 
 
 ## Output rules
 
-- Use inline sources, named requests, definition-owned options, session-local state, and one safe JSX template.
+- Use inline sources, named requests, definition-owned options, temporary bound inputs, and one safe JSX template.
 - Use \`kind\`, not the HTTP method, to distinguish reads from user-triggered actions.
 - Never put a credential in JSX, options, headers, URLs, examples, exports, logs, or chat output.
 - Use declarative \`bind\` controls and Homarr request components; never emit imports, hooks, callbacks, browser requests, or arbitrary JavaScript.
@@ -50,8 +53,9 @@ export function getCustomWidgetSkill() {
     name: "homarr-custom-widget",
     version: CUSTOM_WIDGET_SKILL_VERSION,
     skillMd: CUSTOM_WIDGET_SKILL_MD,
-    downloadUrl: CUSTOM_WIDGET_SKILL_DOWNLOAD_URL,
-    sha256: CUSTOM_WIDGET_SKILL_SHA256,
+    skillsShUrl: CUSTOM_WIDGET_SKILLS_SH_URL,
+    sourceUrl: CUSTOM_WIDGET_SKILL_SOURCE_URL,
+    installCommand: CUSTOM_WIDGET_SKILL_INSTALL_COMMAND,
   };
 }
 

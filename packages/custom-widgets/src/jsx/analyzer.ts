@@ -66,7 +66,7 @@ const rootBindings = new Set([
   "String",
   "data",
   "options",
-  "state",
+  "inputs",
   "status",
   "decodeURIComponent",
   "encodeURIComponent",

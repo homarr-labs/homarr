@@ -88,8 +88,6 @@ export const managementQueryProcedures = {
           optionsSchema: widget.optionsSchema,
           defaultOptions: widget.defaultOptions,
           template: widget.template,
-          stateSchema: widget.stateSchema ?? {},
-          defaultState: widget.defaultState ?? {},
           sources: widget.sources.map(({ id, name, networkScope, auth }) => ({
             id,
             name,

@@ -1,12 +1,18 @@
-# Agents and downloadable skill
+# Agents and skills.sh
 
 An external agent creates widgets one at a time through Homarr's MCP server. The harness owns any multi-widget task list; Homarr does not create packs or multi-widget drafts.
 
-<a className="button button--primary" href="/downloads/homarr-custom-widget-2.0.0.zip" download>
-  Download Custom Widget Skill
+<a className="button button--primary" href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget">
+  View the Custom Widget Skill on skills.sh
 </a>
 
-The archive follows the Agent Skills format and includes `SKILL.md` plus schema, runtime, and security references. Its SHA-256 is `5571b74b2faafe8a9e230231c1915193e889c7afa95acef38a1f70befe14a9e1`.
+Install the Agent Skill directly from the verified Homarr repository:
+
+```sh
+npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
+```
+
+The source lives at [`.agents/skills/homarr-custom-widget`](https://github.com/homarr-labs/homarr/tree/v2/.agents/skills/homarr-custom-widget). There is no ZIP archive. After the skill exists on the public `v2` branch, run the command once to register installation activity, verify the skills.sh page, and request official maker attribution for `homarr-labs` through skills.sh. Repository code cannot grant that attribution itself.
 
 ## MCP discovery
 
@@ -15,6 +21,21 @@ The archive follows the Agent Skills format and includes `SKILL.md` plus schema,
 - HTTP: `GET /api/custom-widgets/authoring-prompt` and `GET /api/custom-widgets/skill`
 
 The authoring-prompt tool description intentionally contains only one sentence. Workflow instructions live in the prompt and link to resources.
+
+`GET /api/custom-widgets/skill`, the MCP tool, and the MCP resource return the live `SKILL.md` with:
+
+```ts
+{
+  name: "homarr-custom-widget";
+  version: string;
+  skillMd: string;
+  skillsShUrl: string;
+  sourceUrl: string;
+  installCommand: string;
+}
+```
+
+They do not return an archive URL or hash.
 
 ## Agent loop
 

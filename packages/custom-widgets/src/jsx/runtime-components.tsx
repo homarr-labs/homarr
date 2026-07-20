@@ -4,7 +4,12 @@ import * as Core from "@mantine/core";
 import * as Charts from "@mantine/charts";
 import * as Dates from "@mantine/dates";
 
-import { customJsxBindableComponentNames, enabledCustomJsxComponents } from "../core/component-registry";
+import {
+  customJsxBindableComponentNames,
+  enabledCustomJsxComponents,
+  getCustomJsxBindingType,
+} from "../core/component-registry";
+import type { CustomJsxBindingType } from "../core/component-registry";
 import { ActionButton, ToggleSwitch } from "../runtime/actions";
 import { SubData } from "../runtime/data";
 import { RefreshButton } from "../runtime/refresh-button";
@@ -31,25 +36,28 @@ function safeUrl(value: unknown) {
   return typeof value === "string" && (/^https?:\/\//iu.test(value) || value.startsWith("/") || value.startsWith("#"));
 }
 
-type WidgetStateValue = string | number | boolean | string[] | number[];
-interface CustomJsxStateContextValue {
-  state: Record<string, WidgetStateValue>;
-  stateSchema: Record<string, string>;
-  setStateValue(name: string, value: WidgetStateValue): void;
+export type WidgetInputValue = string | number | boolean | string[] | number[];
+export type WidgetInputType = CustomJsxBindingType;
+interface CustomJsxInputsContextValue {
+  inputs: Record<string, WidgetInputValue>;
+  inputTypes: Record<string, WidgetInputType>;
+  registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): void;
+  setInputValue(name: string, type: WidgetInputType, value: WidgetInputValue): void;
 }
 
-const CustomJsxStateContext = createContext<CustomJsxStateContextValue | null>(null);
+const CustomJsxInputsContext = createContext<CustomJsxInputsContextValue | null>(null);
 
-export function CustomJsxStateProvider({
+export function CustomJsxInputsProvider({
   children,
-  state,
-  stateSchema,
-  setStateValue,
-}: CustomJsxStateContextValue & { children: ReactNode }) {
+  inputs,
+  inputTypes,
+  registerInput,
+  setInputValue,
+}: CustomJsxInputsContextValue & { children: ReactNode }) {
   return (
-    <CustomJsxStateContext.Provider value={{ state, stateSchema, setStateValue }}>
+    <CustomJsxInputsContext.Provider value={{ inputs, inputTypes, registerInput, setInputValue }}>
       {children}
-    </CustomJsxStateContext.Provider>
+    </CustomJsxInputsContext.Provider>
   );
 }
 
@@ -67,7 +75,7 @@ const popoverInputComponents = new Set([
 ]);
 const buttonRootComponents = new Set(["ActionIcon", "Burger", "Button", "CloseButton", "UnstyledButton"]);
 
-function extractEventValue(value: unknown, checked: boolean): WidgetStateValue | null {
+function extractEventValue(value: unknown, checked: boolean): WidgetInputValue | null {
   if (value && typeof value === "object" && "currentTarget" in value) {
     const target = (value as { currentTarget?: { checked?: unknown; value?: unknown } }).currentTarget;
     const result = checked ? target?.checked : target?.value;
@@ -85,37 +93,57 @@ function extractEventValue(value: unknown, checked: boolean): WidgetStateValue |
 
 function useBoundProps(componentName: string, props: Record<string, unknown>): Record<string, unknown> {
   const binding = typeof props.bind === "string" ? props.bind : undefined;
-  const context = useContext(CustomJsxStateContext);
+  const context = useContext(CustomJsxInputsContext);
   const sanitized = sanitizeCustomJsxProps(props);
   delete sanitized.bind;
-  if (!binding || !context || !customJsxBindableComponentNames.has(componentName)) return sanitized;
-  const stateType = context.stateSchema[binding];
-  if (!stateType) return sanitized;
+  const inputType = getCustomJsxBindingType(componentName, sanitized);
+  const initialValue = getInitialInputValue(inputType, sanitized);
+  delete sanitized.defaultValue;
+  delete sanitized.defaultChecked;
+  useEffect(() => {
+    if (binding && context && inputType && customJsxBindableComponentNames.has(componentName))
+      context.registerInput(binding, inputType, initialValue);
+  }, [binding, componentName, context, initialValue, inputType]);
+  if (!binding || !context || !inputType || !customJsxBindableComponentNames.has(componentName)) return sanitized;
+  const currentValue = context.inputs[binding] ?? initialValue;
 
   const update = (value: unknown, checked = false) => {
     const extracted = extractEventValue(value, checked);
-    context.setStateValue(binding, extracted ?? emptyStateValue(stateType));
+    context.setInputValue(binding, inputType, extracted ?? emptyInputValue(inputType));
   };
   if (componentName === "Calendar") {
-    return { ...sanitized, date: context.state[binding], onDateChange: update };
+    return { ...sanitized, date: currentValue, onDateChange: update };
   }
   if (checkedComponents.has(componentName)) {
     return {
       ...sanitized,
-      checked: Boolean(context.state[binding]),
+      checked: Boolean(currentValue),
       onChange: (event: unknown) => update(event, true),
     };
   }
   if (openedComponents.has(componentName)) {
-    return { ...sanitized, opened: Boolean(context.state[binding]), onChange: update, withinPortal: false };
+    return { ...sanitized, opened: Boolean(currentValue), onChange: update, withinPortal: false };
   }
   if (activeComponents.has(componentName)) {
-    return { ...sanitized, active: Number(context.state[binding] ?? 0), onStepClick: update };
+    return { ...sanitized, active: Number(currentValue), onStepClick: update };
   }
-  return { ...sanitized, value: context.state[binding], onChange: update };
+  return { ...sanitized, value: currentValue, onChange: update };
 }
 
-function emptyStateValue(type: string): WidgetStateValue {
+function getInitialInputValue(type: WidgetInputType | null, props: Record<string, unknown>): WidgetInputValue {
+  if (!type) return "";
+  const candidate = type === "boolean" ? props.defaultChecked : props.defaultValue;
+  if (type === "boolean" && typeof candidate === "boolean") return candidate;
+  if (type === "number" && typeof candidate === "number") return candidate;
+  if (type === "string" && typeof candidate === "string") return candidate;
+  if (type === "string[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "string"))
+    return candidate;
+  if (type === "number[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "number"))
+    return candidate;
+  return emptyInputValue(type);
+}
+
+function emptyInputValue(type: WidgetInputType): WidgetInputValue {
   if (type.endsWith("[]")) return [];
   if (type === "number") return 0;
   if (type === "boolean") return false;

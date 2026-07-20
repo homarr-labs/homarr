@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button, Paper, SegmentedControl, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
@@ -12,6 +12,13 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
+import {
+  CUSTOM_WIDGET_OPTIONS_EXAMPLES,
+  CUSTOM_WIDGET_REQUEST_EXAMPLES,
+  getCustomWidgetDefaultOptionsJsonSchema,
+  getCustomWidgetOptionsJsonSchema,
+  getCustomWidgetRequestsJsonSchema,
+} from "@homarr/custom-widgets/core";
 import {
   analyzeJsxTemplate,
   analyzeRequestManifest,
@@ -28,7 +35,7 @@ import { CodeEditor } from "./_code-editor";
 import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
 import { createCustomWidgetCompletions, getInvalidCustomWidgetSections } from "./_custom-widget-form-analysis";
 import { EditorSection, SaveActions } from "./_custom-widget-form-layout";
-import { applyDefinition, buildDefinition, isRecord, parseJson, parseJsonArray } from "./_custom-widget-form-utils";
+import { applyDefinition, buildDefinition, isRecord, parseJsonArray } from "./_custom-widget-form-utils";
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
 import type { PreviewState } from "./_custom-widget-preview-panel";
 import { CustomWidgetRequestTools } from "./_custom-widget-request-tools";
@@ -47,10 +54,25 @@ const sectionLinks = [
   ["sources", "section.sources", IconApi],
   ["requests", "section.requests", IconDatabase],
   ["options", "section.options", IconBraces],
-  ["state", "section.state", IconSettings],
   ["jsx", "section.jsx", IconCode],
   ["preview", "section.preview", IconEye],
 ] as const;
+
+const requestReference = {
+  schema: getCustomWidgetRequestsJsonSchema(),
+  minimal: CUSTOM_WIDGET_REQUEST_EXAMPLES.minimal,
+  full: CUSTOM_WIDGET_REQUEST_EXAMPLES.full,
+};
+const optionsSchemaReference = {
+  schema: getCustomWidgetOptionsJsonSchema(),
+  minimal: CUSTOM_WIDGET_OPTIONS_EXAMPLES.minimal.schema,
+  full: CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.schema,
+};
+const defaultOptionsReference = {
+  schema: getCustomWidgetDefaultOptionsJsonSchema(),
+  minimal: CUSTOM_WIDGET_OPTIONS_EXAMPLES.minimal.defaults,
+  full: CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.defaults,
+};
 
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
   const t = useScopedI18n("customWidget");
@@ -65,7 +87,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [previewSize, setPreviewSize] = useState("standard");
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
   const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>({});
-  const [stateSnapshot, setStateSnapshot] = useState<Record<string, unknown>>({});
   const [revealedRequest, setRevealedRequest] = useState({ text: "", key: 0 });
   const dirtyRef = useRef(false);
   dirtyRef.current = form.isDirty();
@@ -78,17 +99,13 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       ),
     [form.values.requests],
   );
-  const stateKeys = useMemo(() => {
-    const state = parseJson(form.values.stateSchema);
-    return Object.keys(isRecord(state) ? state : {});
-  }, [form.values.stateSchema]);
   const jsxCompletions = useMemo(
     () => createCustomWidgetCompletions(form.values, requestIds),
     [form.values, requestIds],
   );
   const templateDiagnostics = useMemo(
-    () => analyzeJsxTemplate(form.values.template, { requestIds, stateKeys }),
-    [form.values.template, requestIds, stateKeys],
+    () => analyzeJsxTemplate(form.values.template, { requestIds }),
+    [form.values.template, requestIds],
   );
   const requestDiagnostics = useMemo(() => analyzeRequestManifest(form.values.requests), [form.values.requests]);
   const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");
@@ -113,7 +130,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     setPreview,
     setMobilePane,
     setOptionsSnapshot,
-    setStateSnapshot,
     request,
     documentationUrl,
   });
@@ -188,6 +204,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               error={form.errors.requests}
               revealText={revealedRequest.text}
               revealKey={revealedRequest.key}
+              reference={requestReference}
               required
             />
           </EditorSection>
@@ -199,6 +216,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               value={form.values.optionsSchema}
               onChange={(value) => form.setFieldValue("optionsSchema", value)}
               error={form.errors.optionsSchema}
+              reference={optionsSchemaReference}
             />
             <CodeEditor
               id="default-options"
@@ -207,27 +225,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               value={form.values.defaultOptions}
               onChange={(value) => form.setFieldValue("defaultOptions", value)}
               error={form.errors.defaultOptions}
-            />
-          </EditorSection>
-          <EditorSection id="state" title={w("state.title")} icon={IconSettings}>
-            <Text size="sm" c="dimmed">
-              {w("state.description")}
-            </Text>
-            <CodeEditor
-              id="state-schema"
-              label={w("state.schema")}
-              language="json"
-              value={form.values.stateSchema}
-              onChange={(value) => form.setFieldValue("stateSchema", value)}
-              error={form.errors.stateSchema}
-            />
-            <CodeEditor
-              id="default-state"
-              label={w("state.defaults")}
-              language="json"
-              value={form.values.defaultState}
-              onChange={(value) => form.setFieldValue("defaultState", value)}
-              error={form.errors.defaultState}
+              reference={defaultOptionsReference}
             />
           </EditorSection>
           <EditorSection id="jsx" title={w("jsx.title")} icon={IconCode}>
@@ -282,8 +280,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             onThemeChange={setPreviewTheme}
             optionsSnapshot={optionsSnapshot}
             onOptionsChange={setOptionsSnapshot}
-            stateSnapshot={stateSnapshot}
-            onStateChange={setStateSnapshot}
             onLiveActionsChange={(enabled) =>
               setPreview((current) => ({
                 ...current,

@@ -60,8 +60,6 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
               data,
               status,
               options: preview.defaultOptions,
-              stateSchema: preview.stateSchema,
-              defaultState: preview.defaultState,
               requestCapabilities: preview.requests,
               previewSessionId: preview.id,
               previewLiveActions: preview.liveActions,

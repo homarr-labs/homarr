@@ -4035,6 +4035,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "crwdns1572:0crwdne1572:0",
         "boards": "crwdns1574:0crwdne1574:0",
         "apps": "crwdns1576:0crwdne1576:0",
@@ -5174,6 +5175,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "crwdns1994:0crwdne1994:0",
       "boards": {
         "label": "crwdns1996:0crwdne1996:0"

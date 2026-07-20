@@ -1,6 +1,6 @@
 ---
 name: homarr-custom-widget
-description: Author, validate, preview, and install safe Homarr Custom JSX v2 widgets from API documentation. Use when creating or fixing Homarr custom widgets, including multi-source dashboards, queries, actions, options, local state, and Mantine JSX.
+description: Author, validate, preview, and install safe Homarr Custom JSX v2 widgets from API documentation. Use when creating or fixing Homarr custom widgets, including multi-source dashboards, queries, actions, options, temporary inputs, and Mantine JSX.
 license: Apache-2.0
 metadata:
   version: "2.0.0"
@@ -23,7 +23,7 @@ Create one widget at a time. Repeat the workflow when the user asks for several 
 
 ## Output rules
 
-- Use inline sources, named requests, definition-owned options, session-local state, and one safe JSX template.
+- Use inline sources, named requests, definition-owned options, temporary bound inputs, and one safe JSX template.
 - Use `kind`, not the HTTP method, to distinguish reads from user-triggered actions.
 - Never put a credential in JSX, options, headers, URLs, examples, exports, logs, or chat output.
 - Use declarative `bind` controls and Homarr request components; never emit imports, hooks, callbacks, browser requests, or arbitrary JavaScript.

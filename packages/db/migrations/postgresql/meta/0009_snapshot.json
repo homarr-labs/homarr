@@ -550,18 +550,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "state_schema": {
-          "name": "state_schema",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "default_state": {
-          "name": "default_state",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "template": {
           "name": "template",
           "type": "text",

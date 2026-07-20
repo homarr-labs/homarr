@@ -718,12 +718,18 @@ importers:
       '@docusaurus/theme-mermaid':
         specifier: ^3.10.1
         version: 3.10.1(@docusaurus/faster@3.10.1(@docusaurus/types@3.10.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(esbuild@0.28.1)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@swc/helpers@0.5.15)(esbuild@0.28.1)(postcss@8.5.16))(@docusaurus/plugin-content-docs@3.10.1(@docusaurus/faster@3.10.1(@docusaurus/types@3.10.1(@swc/core@1.15.3(@swc/helpers@0.5.15))(esbuild@0.28.1)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@swc/helpers@0.5.15)(esbuild@0.28.1)(postcss@8.5.16))(@mdx-js/react@3.1.1(@types/react@19.2.17)(react@19.2.7))(@rspack/core@1.7.11(@swc/helpers@0.5.15))(@swc/core@1.15.3(@swc/helpers@0.5.15))(@typescript/typescript6@6.0.2)(esbuild@0.28.1)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mdx-js/react@3.1.1(@types/react@19.2.17)(react@19.2.7))(@rspack/core@1.7.11(@swc/helpers@0.5.15))(@swc/core@1.15.3(@swc/helpers@0.5.15))(@typescript/typescript6@6.0.2)(esbuild@0.28.1)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@homarr/custom-widgets':
+        specifier: workspace:^
+        version: link:../../packages/custom-widgets
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../../packages/definitions
       '@homarr/workshop':
         specifier: workspace:^
         version: link:../../packages/workshop
+      '@mantine/core':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.17)(react@19.2.7)
@@ -809,24 +815,6 @@ importers:
 
   apps/nextjs:
     dependencies:
-      '@codemirror/autocomplete':
-        specifier: 'catalog:'
-        version: 6.20.3
-      '@codemirror/commands':
-        specifier: 'catalog:'
-        version: 6.10.3
-      '@codemirror/lang-javascript':
-        specifier: 'catalog:'
-        version: 6.2.5
-      '@codemirror/lang-json':
-        specifier: 'catalog:'
-        version: 6.0.2
-      '@codemirror/lint':
-        specifier: 'catalog:'
-        version: 6.9.6
-      '@codemirror/view':
-        specifier: 'catalog:'
-        version: 6.43.0
       '@dnd-kit/core':
         specifier: 'catalog:'
         version: 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -995,9 +983,6 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.18.0(@typescript/typescript6@6.0.2)
-      '@uiw/react-codemirror':
-        specifier: 'catalog:'
-        version: 4.25.11(@babel/runtime@7.29.7)(@codemirror/autocomplete@6.20.3)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.6)(@codemirror/search@6.7.1)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.43.0)(codemirror@6.0.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@xterm/addon-canvas':
         specifier: 'catalog:'
         version: 0.7.0(@xterm/xterm@6.0.0)
@@ -1719,6 +1704,24 @@ importers:
 
   packages/custom-widgets:
     dependencies:
+      '@codemirror/autocomplete':
+        specifier: 'catalog:'
+        version: 6.20.3
+      '@codemirror/commands':
+        specifier: 'catalog:'
+        version: 6.10.3
+      '@codemirror/lang-javascript':
+        specifier: 'catalog:'
+        version: 6.2.5
+      '@codemirror/lang-json':
+        specifier: 'catalog:'
+        version: 6.0.2
+      '@codemirror/lint':
+        specifier: 'catalog:'
+        version: 6.9.6
+      '@codemirror/view':
+        specifier: 'catalog:'
+        version: 6.43.0
       '@mantine/charts':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.9.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
@@ -1737,6 +1740,9 @@ importers:
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.101.2(react@19.2.7)
+      '@uiw/react-codemirror':
+        specifier: 'catalog:'
+        version: 4.25.11(@babel/runtime@7.29.7)(@codemirror/autocomplete@6.20.3)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.6)(@codemirror/search@6.7.1)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.43.0)(codemirror@6.0.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       acorn:
         specifier: 'catalog:'
         version: 8.16.0

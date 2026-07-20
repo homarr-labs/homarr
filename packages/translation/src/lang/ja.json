@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "ホーム",
         "boards": "ボード",
         "apps": "アプリ",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "管理",
       "boards": {
         "label": "ボード"

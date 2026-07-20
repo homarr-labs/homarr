@@ -254,7 +254,7 @@ const mcpHandler = createMcpHandler(
       else if (uri === "homarr://custom-widgets/components") text = JSON.stringify(getCustomWidgetComponentCatalog());
       else if (uri === "homarr://custom-widgets/skill") {
         const skill = getCustomWidgetSkill();
-        text = `${skill.skillMd}\n\nMatching archive: ${skill.downloadUrl}\nSHA-256: ${skill.sha256}\n`;
+        text = `${skill.skillMd}\n\nInstall from skills.sh: ${skill.skillsShUrl}\nSource: ${skill.sourceUrl}\nCommand: ${skill.installCommand}\n`;
         mimeType = "text/markdown";
       } else if (uri.startsWith("homarr://custom-widgets/components/")) {
         const name = decodeURIComponent(uri.slice("homarr://custom-widgets/components/".length));

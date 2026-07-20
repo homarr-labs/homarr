@@ -43,8 +43,6 @@ interface PreviewPanelProps {
   onThemeChange(value: "light" | "dark"): void;
   optionsSnapshot: Record<string, unknown>;
   onOptionsChange(value: Record<string, unknown>): void;
-  stateSnapshot: Record<string, unknown>;
-  onStateChange(value: Record<string, unknown>): void;
   onLiveActionsChange(enabled: boolean): void;
 }
 
@@ -75,8 +73,6 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     data: fixtureData,
     status: fixtureStatus,
     options: props.optionsSnapshot,
-    stateSchema: candidate.stateSchema ?? {},
-    defaultState: props.stateSnapshot,
     requestCapabilities: candidate.requests.map(
       ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
         id,
@@ -92,7 +88,6 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     previewLiveActions: props.preview.session?.liveActions ?? false,
     queriesDisabled: fixture !== "live",
     isEditMode: fixture !== "live",
-    onStateChange: props.onStateChange,
   };
 
   return (
@@ -132,7 +127,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
         />
         <Tabs defaultValue="widget" keepMounted={false}>
           <Tabs.List grow>
-            {(["widget", "data", "options", "state", "actions", "diagnostics"] as const).map((tab) => (
+            {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
               <Tabs.Tab key={tab} value={tab}>
                 {t(`tab.${tab}`)}
               </Tabs.Tab>
@@ -164,14 +159,6 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
               onChange={props.onOptionsChange}
             />
           </Tabs.Panel>
-          <Tabs.Panel value="state" pt="sm">
-            <JsonPreviewEditor
-              id="preview-state"
-              label={t("localState")}
-              value={props.stateSnapshot}
-              onChange={props.onStateChange}
-            />
-          </Tabs.Panel>
           <Tabs.Panel value="actions" pt="sm">
             <Stack gap="sm">
               <Switch
@@ -199,7 +186,6 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                     request={request}
                     sessionId={props.preview.session?.id}
                     options={props.optionsSnapshot}
-                    state={props.stateSnapshot}
                   />
                 ))}
               {candidate.requests.every((request) => request.kind !== "action") && (

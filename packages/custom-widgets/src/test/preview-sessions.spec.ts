@@ -37,8 +37,6 @@ const input: CreatePreviewSessionInput = {
   template: "<Text>Preview</Text>",
   optionsSchema: { type: "object", properties: {}, additionalProperties: false },
   defaultOptions: {},
-  stateSchema: {},
-  defaultState: {},
 };
 
 describe("preview session service", () => {

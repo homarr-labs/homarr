@@ -13,8 +13,6 @@ export function serializeCustomWidgetDefinition(definition: HomarrCustomWidgetV2
     requests: stringifySuperJson(definition.requests),
     optionsSchema: stringifySuperJson(definition.optionsSchema),
     defaultOptions: stringifySuperJson(definition.defaultOptions),
-    stateSchema: definition.stateSchema ? stringifySuperJson(definition.stateSchema) : null,
-    defaultState: definition.defaultState ? stringifySuperJson(definition.defaultState) : null,
     template: definition.template,
   };
 }
@@ -22,16 +20,7 @@ export function serializeCustomWidgetDefinition(definition: HomarrCustomWidgetV2
 export function parseStoredCustomWidgetDefinition(
   definition: Pick<
     CustomWidgetDefinition,
-    | "name"
-    | "description"
-    | "iconUrl"
-    | "sources"
-    | "requests"
-    | "optionsSchema"
-    | "defaultOptions"
-    | "stateSchema"
-    | "defaultState"
-    | "template"
+    "name" | "description" | "iconUrl" | "sources" | "requests" | "optionsSchema" | "defaultOptions" | "template"
   >,
 ): HomarrCustomWidgetV2 {
   return customWidgetDefinitionSchema.parse({
@@ -43,8 +32,6 @@ export function parseStoredCustomWidgetDefinition(
     requests: parseSuperJson(definition.requests),
     optionsSchema: parseSuperJson(definition.optionsSchema),
     defaultOptions: parseSuperJson(definition.defaultOptions),
-    stateSchema: definition.stateSchema ? parseSuperJson(definition.stateSchema) : undefined,
-    defaultState: definition.defaultState ? parseSuperJson(definition.defaultState) : undefined,
     template: definition.template,
   });
 }

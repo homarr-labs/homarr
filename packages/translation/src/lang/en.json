@@ -722,7 +722,7 @@
       },
       "create": {
         "title": "Create Custom Widget",
-        "subtitle": "Build a safe JSX widget with inline API sources, options, state, queries, and actions."
+        "subtitle": "Build a safe JSX widget with inline API sources, options, queries, and actions."
       },
       "edit": {
         "title": "Edit Custom Widget"
@@ -742,7 +742,7 @@
       "enable": "Enable",
       "disable": "Disable",
       "menu": "Actions",
-      "downloadSkill": "Download Custom Widget Skill",
+      "downloadSkill": "View Custom Widget Skill",
       "publishWorkshop": "Publish to Workshop"
     },
     "field": {
@@ -764,7 +764,15 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "undo": "Undo",
-        "redo": "Redo"
+        "redo": "Redo",
+        "copy": "Copy",
+        "copied": "Copied",
+        "schema": "Schema"
+      },
+      "reference": {
+        "schema": "JSON Schema",
+        "minimal": "Minimal example",
+        "full": "Full example"
       },
       "componentReference": {
         "search": "Search components",
@@ -783,14 +791,14 @@
         "title": "Template diagnostics",
         "line": "Line {line, number}",
         "ast": "{value}",
+        "bindingTypeConflict": "The input \"{value}\" is shared by controls with incompatible value types.",
         "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
-        "dynamicStateBinding": "A literal state name is required for bind.",
+        "dynamicInputBinding": "A literal input name is required for bind.",
         "inlineRequestProps": "Network components accept requestId and params; inline URL, method, header, and body props are blocked.",
         "invalidRequestManifest": "Named requests must be a valid request array. {value}",
         "missingRequestId": "This network component requires a literal requestId.",
         "templateEmpty": "Enter a JSX template.",
         "templateTooLong": "The template exceeds the 50,000 character limit.",
-        "unknownStateBinding": "No local state named \"{value}\" exists.",
         "unknownRequest": "No named request with ID \"{value}\" exists."
       }
     },
@@ -805,7 +813,6 @@
         "sources": "API sources",
         "requests": "Requests",
         "options": "Options",
-        "state": "State",
         "jsx": "JSX",
         "preview": "Preview"
       },
@@ -833,12 +840,6 @@
         "title": "Widget options",
         "schema": "Options schema",
         "defaults": "Default option values"
-      },
-      "state": {
-        "title": "Local state",
-        "description": "State lives in this widget instance and browser session. Persisted choices belong in options.",
-        "schema": "State schema",
-        "defaults": "Default state"
       },
       "jsx": {
         "title": "JSX template",
@@ -886,7 +887,6 @@
         "fixtureError": "Preview fixture error",
         "requestData": "Request data",
         "instanceOptions": "Instance options",
-        "localState": "Local state",
         "liveActions": "Run actions against the configured API",
         "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",
         "noActions": "No actions are defined.",
@@ -985,6 +985,7 @@
     "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
     "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
     "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
     "signOut": "Sign out",
     "search": "Search widgets",
     "sort": "Sort",
@@ -5852,6 +5853,9 @@
             "label": "Flow"
           }
         }
+      },
+      "workshop": {
+        "label": "Workshop"
       },
       "users": {
         "label": "Users",

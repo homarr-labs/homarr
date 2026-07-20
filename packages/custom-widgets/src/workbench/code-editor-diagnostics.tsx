@@ -2,26 +2,22 @@ import type { EditorView } from "@codemirror/view";
 import { Alert, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import type { EditorDiagnostic } from "@homarr/custom-widgets/workbench";
+import type { EditorDiagnostic } from "./analyzer";
+import type { CustomWidgetEditorMessages } from "./code-editor-types";
+import classes from "./code-editor.module.css";
 
-import classes from "./_code-editor.module.css";
-
-interface CodeEditorDiagnosticsProps {
-  diagnostics: EditorDiagnostic[];
-  editorView: EditorView | null;
-  title: string;
-  formatDiagnostic: (diagnostic: EditorDiagnostic) => string;
-}
-
-export function CodeEditorDiagnostics({
+export function EditorDiagnostics({
   diagnostics,
   editorView,
-  title,
-  formatDiagnostic,
-}: CodeEditorDiagnosticsProps) {
+  messages,
+}: {
+  diagnostics: EditorDiagnostic[];
+  editorView: EditorView | null;
+  messages: CustomWidgetEditorMessages;
+}) {
   if (diagnostics.length === 0) return null;
   return (
-    <Stack component="ul" gap={6} mt="xs" pl={0} style={{ listStyle: "none" }} aria-label={title}>
+    <Stack component="ul" gap={6} mt="xs" pl={0} style={{ listStyle: "none" }} aria-label={messages.diagnosticsTitle}>
       {diagnostics.map((diagnostic, index) => (
         <li key={`${diagnostic.code}-${diagnostic.line ?? 0}-${index}`}>
           <UnstyledButton
@@ -41,7 +37,7 @@ export function CodeEditorDiagnostics({
               p="xs"
               icon={<IconAlertTriangle size={15} />}
             >
-              <Text size="xs">{formatDiagnostic(diagnostic)}</Text>
+              <Text size="xs">{messages.diagnostic(diagnostic)}</Text>
             </Alert>
           </UnstyledButton>
         </li>

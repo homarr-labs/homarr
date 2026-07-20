@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Button, FileInput, Group, Modal, Stack, Textarea, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { showErrorNotification } from "@homarr/notifications";
 import type { WorkshopUser } from "@homarr/workshop";
 import { WORKSHOP_API_URL, WorkshopClient } from "@homarr/workshop";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -78,7 +79,10 @@ export function WorkshopPublishModal({
                       void client
                         .signInWithGitHub()
                         .then(setUser)
-                        .catch((cause: Error) => setError(cause.message))
+                        .catch((cause: Error) => {
+                          setError(cause.message);
+                          showErrorNotification({ title: t("signIn"), message: cause.message });
+                        })
                     }
                   >
                     {t("signIn")}

@@ -2,9 +2,38 @@
 tags: [Custom Widgets, API, JSX, MCP]
 ---
 
+import { BundledCustomWidgetGallery, CustomWidgetCodeExample } from "@site/src/components/custom-widget-code";
+
+export const completeManifest = `{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Service status",
+  "description": "Shows the current service status.",
+  "sources": [{
+    "id": "default",
+    "name": "Service API",
+    "baseUrl": "https://status.example.com",
+    "networkScope": "public",
+    "auth": { "type": "none" }
+  }],
+  "requests": [{
+    "id": "status",
+    "sourceId": "default",
+    "kind": "query",
+    "method": "GET",
+    "pathTemplate": "/api/status",
+    "parameters": {},
+    "auth": "inherit",
+    "minimumBoardPermission": "view",
+    "trigger": "load"
+  }],
+  "optionsSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+  "defaultOptions": {},
+  "template": "<Badge color={data.status?.ok ? 'green' : 'red'}>{data.status?.label ?? 'Unknown'}</Badge>"
+}`;
+
 # Custom Widgets
 
-Custom JSX v2 is Homarr's only custom-widget format. A definition owns its metadata, inline API sources, named requests, options, local state, and safe JSX template. Credentials belong to a source but are encrypted separately and never exported.
+Custom JSX v2 is Homarr's only custom-widget format. A definition owns its metadata, inline API sources, named requests, options, and safe JSX template. Credentials belong to a source but are encrypted separately and never exported.
 
 There are no legacy display types, reusable connections, packs, or compatibility modes.
 
@@ -13,7 +42,7 @@ There are no legacy display types, reusable connections, packs, or compatibility
 - [Workbench and ChatGPT](./authoring): create widgets manually or use the copy/paste AI loop.
 - [JSX runtime](./custom-jsx): data roots, Mantine components, bindings, and diagnostics.
 - [Requests and security](./requests-and-security): sources, actions, permissions, and network protections.
-- [Agents and downloadable skill](./agent-authoring): MCP prompt/resources/tools and the portable Agent Skill.
+- [Agents and skills.sh](./agent-authoring): MCP prompt/resources/tools and the portable Agent Skill.
 - [Troubleshooting](./troubleshooting): fix validation, request, configuration, and runtime failures.
 
 ## One definition
@@ -28,17 +57,22 @@ interface HomarrCustomWidgetV2 {
   requests: CustomWidgetRequest[];
   optionsSchema: CustomWidgetOptionsSchema;
   defaultOptions: Record<string, unknown>;
-  stateSchema?: Record<string, "string" | "number" | "boolean" | "date" | "string[]" | "number[]" | "date[]">;
-  defaultState?: Record<string, unknown>;
   template: string;
 }
 ```
+
+<CustomWidgetCodeExample
+  id="complete-widget-manifest"
+  label="Complete Custom Widget manifest"
+  code={completeManifest}
+  height="420px"
+/>
 
 Exports, imports, the UI, MCP, and Workshop all validate this schema. Old files are rejected. If a board references a missing definition, only that tile shows **Custom widget unavailable**; the board and sibling widgets continue rendering.
 
 ## Create and configure
 
-Open **Management → Custom Widgets → Add custom widget**. The continuous workbench has sections for general information, API sources and credentials, requests, options, state, JSX, and preview. Use the sticky navigation to jump between sections; there are no artificial “next” steps.
+Open **Management → Custom Widgets → Add custom widget**. The continuous workbench has sections for general information, API sources and credentials, requests, options, JSX, and preview. Use the sticky navigation to jump between sections; there are no artificial “next” steps.
 
 A board item selects a definition from a searchable picker and immediately renders the definition's options. Invalid options block insertion. If an updated definition makes existing configuration invalid, opening the item shows the normal repair form.
 
@@ -47,3 +81,9 @@ A board item selects a definition from a searchable picker and immediately rende
 Export downloads one canonical JSON document without credentials. Import validates and shows the origins, auth modes, network scopes, methods, actions, and required board permissions before creating anything.
 
 The [Workshop](/docs/management/workshop) publishes valid widgets immediately. Users can vote or report a submission. Workshop administrators may dismiss reports or delete any post; deletion does not remove installed local copies.
+
+## Bundled examples
+
+Homarr seeds four disabled examples. They use the same canonical schema as user widgets and are never overwritten after a user edits them. Select one to explore its manifest and JSX.
+
+<BundledCustomWidgetGallery />

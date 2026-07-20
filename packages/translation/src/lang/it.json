@@ -4035,6 +4035,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Home",
         "boards": "Board",
         "apps": "Applicazioni",
@@ -5174,6 +5175,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gestisci",
       "boards": {
         "label": "Board"

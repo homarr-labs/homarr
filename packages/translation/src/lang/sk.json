@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Domovská stránka",
         "boards": "Dosky",
         "apps": "Aplikácie",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Spravovať",
       "boards": {
         "label": "Dosky"

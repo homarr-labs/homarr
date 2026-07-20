@@ -507,8 +507,6 @@ export const customWidgetDefinitions = pgTable("custom_widget_definition", {
   requests: text().notNull(),
   optionsSchema: text().notNull(),
   defaultOptions: text().notNull(),
-  stateSchema: text(),
-  defaultState: text(),
   template: text().notNull(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),

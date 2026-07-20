@@ -112,9 +112,6 @@ export class WorkshopClient {
 
   public async signInWithGitHub() {
     try {
-      const methods = await this.pocketBase.collection("users").listAuthMethods();
-      if (!methods.oauth2.providers.some((provider) => provider.name === "github"))
-        throw new WorkshopError("unavailable", "GitHub login is not configured");
       await this.pocketBase
         .collection("users")
         .authWithOAuth2({ provider: "github", createData: { displayName: "Community member" } });

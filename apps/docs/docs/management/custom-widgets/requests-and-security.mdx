@@ -13,7 +13,7 @@ Queries and actions support GET, POST, PUT, PATCH, and DELETE. `kind`, not metho
 
 Successful actions evict the declared queries from both the browser and server response cache before refetching them.
 
-Path parameters use `{name}`. Structured query/body templates use `{ "$param": "name" }`. Runtime values can come from validated options, local state, and action input.
+Path parameters use `{name}`. Structured query/body templates use `{ "$param": "name" }`. Runtime values can come from validated options, temporary `inputs`, and explicit action parameters.
 
 ## Protections
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import type { UseFormReturnType } from "@mantine/form";
@@ -8,7 +9,8 @@ import { clientApi, fetchApi } from "@homarr/api/client";
 import {
   buildCustomWidgetFixPrompt,
   customWidgetDefinitionSchema,
-  parseCustomWidgetClipboardDetailed,
+  formatCustomWidgetImportIssues,
+  parseCustomWidgetAiResponse,
 } from "@homarr/custom-widgets/core";
 import type { EditorDiagnostic, CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -28,7 +30,6 @@ interface FormActionsInput {
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
   setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
-  setStateSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
   request: string;
   documentationUrl: string;
 }
@@ -41,6 +42,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
+  const [importIssues, setImportIssues] = useState<string[]>([]);
 
   const save = input.form.onSubmit(async (values) => {
     const definition = buildDefinition(values);
@@ -112,7 +114,6 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           })),
       });
       input.setOptionsSnapshot(input.candidate.data.defaultOptions);
-      input.setStateSnapshot(input.candidate.data.defaultState ?? {});
       const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
       input.setPreview({ ...snapshot, session: created.previewSession });
     } catch {
@@ -122,11 +123,21 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
 
   const pasteAiResponse = async () => {
     try {
-      const result = parseCustomWidgetClipboardDetailed(await navigator.clipboard.readText());
-      if (!result.success) throw new Error(result.error);
+      const result = parseCustomWidgetAiResponse(await navigator.clipboard.readText());
+      if (!result.success) {
+        setImportIssues(result.issues.map((issue) => `${issue.path?.join(".") ?? "widget"}: ${issue.message}`));
+        throw new Error(formatCustomWidgetImportIssues(result.issues));
+      }
+      setImportIssues([]);
       applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
       input.setPreview({ data: {}, status: {}, session: null });
-      showSuccessNotification({ title: w("ai.response"), message: w("ai.loaded") });
+      showSuccessNotification({
+        title: w("ai.response"),
+        message:
+          result.warnings.length > 0
+            ? `${w("ai.loaded")} ${formatCustomWidgetImportIssues(result.warnings)}`
+            : w("ai.loaded"),
+      });
     } catch (error) {
       showErrorNotification({
         title: w("ai.response"),
@@ -140,6 +151,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     try {
       const diagnostics = [...input.templateDiagnostics, ...input.requestDiagnostics]
         .map((entry) => `${entry.severity.toUpperCase()} ${entry.code}: ${entry.value ?? ""}`)
+        .concat(importIssues.map((issue) => `IMPORT: ${issue}`))
         .join("\n");
       const journal = input.preview.session
         ? await fetchApi.customWidget.previewJournal.query({ sessionId: input.preview.session.id }).catch(() => [])

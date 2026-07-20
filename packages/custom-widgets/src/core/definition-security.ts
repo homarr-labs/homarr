@@ -11,7 +11,6 @@ const blockedObjectKeys = new Set(["__proto__", "prototype", "constructor"]);
 
 interface SecurityDefinition {
   defaultOptions: Record<string, unknown>;
-  defaultState?: Record<string, unknown>;
   requests: CustomJsxRequest[];
   template: string;
   iconUrl?: string;
@@ -25,9 +24,6 @@ export function isCredentialKeyName(value: string) {
 export function validateCredentialFreeExport(definition: SecurityDefinition, ctx: RefinementCtx) {
   if (containsCredentialLikeValue(definition.defaultOptions)) {
     ctx.addIssue({ code: "custom", path: ["defaultOptions"], message: "Default options cannot contain credentials" });
-  }
-  if (containsCredentialLikeValue(definition.defaultState)) {
-    ctx.addIssue({ code: "custom", path: ["defaultState"], message: "Default state cannot contain credentials" });
   }
   definition.requests.forEach((request, index) => {
     if (
@@ -68,7 +64,6 @@ export function validatePrototypeKeys(definition: SecurityDefinition, ctx: Refin
   const values: Array<[Array<string | number>, unknown]> = [
     [["optionsSchema"], definition.optionsSchema],
     [["defaultOptions"], definition.defaultOptions],
-    [["defaultState"], definition.defaultState],
   ];
   definition.requests.forEach((request, index) => {
     values.push([["requests", index, "queryTemplate"], request.queryTemplate]);

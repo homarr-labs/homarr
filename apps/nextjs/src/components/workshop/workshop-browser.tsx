@@ -36,7 +36,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopUser } from "@homarr/workshop";
 import { WORKSHOP_API_URL, WorkshopClient, workshopExportFilename } from "@homarr/workshop";
 import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
-import { showSuccessNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 const workshopUrl = process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? WORKSHOP_API_URL;
@@ -63,6 +63,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
   const [reportOpened, reportControls] = useDisclosure(false);
   const [reportCategory, setReportCategory] = useState<WorkshopReport["category"]>("other");
   const [reportExplanation, setReportExplanation] = useState("");
+  const [loginPending, setLoginPending] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -80,7 +82,19 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
     queryFn: ({ signal }) => client.get(selectedId ?? "", signal),
     enabled: selectedId !== null,
   });
-  const login = useMutation({ mutationFn: () => client.signInWithGitHub(), onSuccess: setUser });
+  const signIn = () => {
+    setLoginPending(true);
+    setLoginError(null);
+    void client
+      .signInWithGitHub()
+      .then(setUser)
+      .catch((cause: unknown) => {
+        const message = cause instanceof Error ? cause.message : t("signInError");
+        setLoginError(message);
+        showErrorNotification({ title: t("signIn"), message });
+      })
+      .finally(() => setLoginPending(false));
+  };
   const install = useMutation({
     mutationFn: async (submission: WorkshopSubmissionDetail) => onInstall?.(submission),
     onSuccess: () => setSelectedId(null),
@@ -136,7 +150,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
               </Button>
             </Group>
           ) : (
-            <Button size="xs" loading={login.isPending} onClick={() => login.mutate()}>
+            <Button size="xs" loading={loginPending} onClick={signIn}>
               {t("signIn")}
             </Button>
           )}
@@ -145,7 +159,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
       <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
         {t("securityNotice")}
       </Alert>
-      {login.error && <Alert color="red">{login.error.message}</Alert>}
+      {loginError && <Alert color="red">{loginError}</Alert>}
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         <TextInput
           label={t("search")}

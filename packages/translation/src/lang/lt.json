@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Pagrindinis",
         "boards": "Lentos",
         "apps": "Programėlės",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Valdyti",
       "boards": {
         "label": "Lentos"

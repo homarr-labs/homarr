@@ -60,8 +60,6 @@ const previewCreateProcedure = manageProcedure
       template: input.definition.template,
       optionsSchema: input.definition.optionsSchema,
       defaultOptions: input.definition.defaultOptions,
-      stateSchema: input.definition.stateSchema ?? {},
-      defaultState: input.definition.defaultState ?? {},
       secrets,
       definitionId: input.definitionId,
     });
@@ -75,7 +73,6 @@ const previewCreateProcedure = manageProcedure
       definition: {
         template: input.definition.template,
         defaultOptions: input.definition.defaultOptions,
-        defaultState: input.definition.defaultState ?? {},
       },
     };
   });
@@ -91,8 +88,6 @@ export const previewBaseProcedures = {
       template: session.template,
       optionsSchema: session.optionsSchema,
       defaultOptions: session.defaultOptions,
-      stateSchema: session.stateSchema,
-      defaultState: session.defaultState,
       requests: session.requests.map(
         ({ id, kind, method, minimumBoardPermission, trigger, parameters, confirmation, invalidates }) => ({
           id,

@@ -31,8 +31,6 @@ export const CUSTOM_WIDGET_STARTER: HomarrCustomWidgetV2 = {
   requests: [],
   optionsSchema: { type: "object", properties: {}, additionalProperties: false },
   defaultOptions: {},
-  stateSchema: {},
-  defaultState: {},
   template: CUSTOM_JSX_STARTER,
 };
 
@@ -68,8 +66,6 @@ export const customJsxExamples: readonly CustomJsxExample[] = [
       ],
       optionsSchema: { type: "object", properties: {}, additionalProperties: false },
       defaultOptions: {},
-      stateSchema: {},
-      defaultState: {},
       template: `<Stack gap="xs" p="sm">
   <Group justify="space-between">
     <Text fw={600}>{data.status.name ?? "Service"}</Text>

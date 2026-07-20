@@ -5,8 +5,6 @@ import { isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 export function createCustomWidgetCompletions(values: CustomWidgetFormValues, requestIds: string[]) {
   const schema = parseJson(values.optionsSchema);
   const optionKeys = Object.keys(isRecord(schema) && isRecord(schema.properties) ? schema.properties : {});
-  const state = parseJson(values.stateSchema);
-  const stateKeys = Object.keys(isRecord(state) ? state : {});
   return [
     ...requestIds.flatMap((id) => [
       { label: `data["${id}"]`, type: "variable", detail: `Response from ${id}` },
@@ -15,7 +13,7 @@ export function createCustomWidgetCompletions(values: CustomWidgetFormValues, re
     ]),
     ...parseSources(values.sources).map(({ id }) => ({ label: id, type: "constant", detail: "Source ID" })),
     ...optionKeys.map((key) => ({ label: `options.${key}`, type: "variable", detail: "Widget option" })),
-    ...stateKeys.map((key) => ({ label: `state.${key}`, type: "variable", detail: "Local state" })),
+    { label: "inputs", type: "variable", detail: "Temporary bound input values" },
   ];
 }
 
@@ -31,7 +29,6 @@ export function getInvalidCustomWidgetSections(
     else if (field === "sources") result.add("sources");
     else if (field === "requests") result.add("requests");
     else if (["optionsSchema", "defaultOptions"].includes(field)) result.add("options");
-    else if (["stateSchema", "defaultState"].includes(field)) result.add("state");
     else if (field === "template") result.add("jsx");
   }
   if (requestDiagnostics.some((entry) => entry.severity === "error")) result.add("requests");

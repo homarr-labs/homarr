@@ -3976,6 +3976,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Головна",
         "boards": "Дошки",
         "apps": "Додатки",
@@ -5114,6 +5115,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Керувати",
       "boards": {
         "label": "Дошки"

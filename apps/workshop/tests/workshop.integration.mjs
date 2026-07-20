@@ -83,8 +83,6 @@ const widget = {
   requests: [],
   optionsSchema: { type: "object", properties: {}, additionalProperties: false },
   defaultOptions: {},
-  stateSchema: {},
-  defaultState: {},
   template: "<Text>Runtime probe</Text>",
 };
 const submission = await request("/api/collections/submissions/records", {

@@ -3976,6 +3976,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Sākums",
         "boards": "Dēļi",
         "apps": "Lietotnes",
@@ -5114,6 +5115,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Pārvaldīt",
       "boards": {
         "label": "Dēļi"

@@ -151,8 +151,7 @@ function containsCredentialLikeValue(widget: z.infer<typeof customWidgetImportSc
         containsCredential(request.bodyTemplate, "", sensitiveName) ||
         containsCredential(request.queryTemplate, "", sensitiveName),
     ) ||
-    containsCredential(widget.defaultOptions, "", sensitiveName) ||
-    containsCredential(widget.defaultState, "", sensitiveName)
+    containsCredential(widget.defaultOptions, "", sensitiveName)
   );
 }
 

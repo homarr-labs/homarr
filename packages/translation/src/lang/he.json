@@ -3966,6 +3966,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "מסך הבית",
         "boards": "לוחות",
         "apps": "אפליקציות",
@@ -5104,6 +5105,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "ניהול",
       "boards": {
         "label": "לוחות"

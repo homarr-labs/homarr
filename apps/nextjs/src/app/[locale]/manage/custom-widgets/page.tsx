@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { Group } from "@mantine/core";
-import { IconDownload, IconPlus } from "@tabler/icons-react";
+import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -30,8 +30,10 @@ export default async function CustomWidgetsPage() {
         <Group gap="xs">
           <MobileAffixButton
             component="a"
-            href="https://homarr.dev/downloads/homarr-custom-widget-2.0.0.zip"
-            leftSection={<IconDownload size={16} />}
+            href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget"
+            target="_blank"
+            rel="noopener noreferrer"
+            leftSection={<IconExternalLink size={16} />}
             variant="default"
           >
             {t("action.downloadSkill")}

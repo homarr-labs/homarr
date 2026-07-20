@@ -9,8 +9,6 @@ CREATE TABLE "custom_widget_definition" (
 	"requests" text NOT NULL,
 	"options_schema" text NOT NULL,
 	"default_options" text NOT NULL,
-	"state_schema" text,
-	"default_state" text,
 	"template" text NOT NULL,
 	"enabled" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,

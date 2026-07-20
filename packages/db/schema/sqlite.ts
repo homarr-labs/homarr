@@ -493,8 +493,6 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
   requests: text().notNull(),
   optionsSchema: text().notNull(),
   defaultOptions: text().notNull(),
-  stateSchema: text(),
-  defaultState: text(),
   template: text().notNull(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })

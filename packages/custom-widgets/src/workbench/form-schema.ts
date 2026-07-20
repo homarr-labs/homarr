@@ -27,8 +27,6 @@ export const customWidgetFormSchema = z.object({
   requests: jsonArrayString,
   optionsSchema: jsonObjectString,
   defaultOptions: jsonObjectString,
-  stateSchema: jsonObjectString,
-  defaultState: jsonObjectString,
   template: z.string().min(1).max(50_000),
   secrets: z.array(
     z.object({ sourceId: z.string(), kind: z.string(), value: z.string(), hasValue: z.boolean().optional() }),
@@ -58,8 +56,6 @@ export const DEFAULT_CUSTOM_WIDGET_FORM_VALUES: CustomWidgetFormValues = {
   requests: JSON.stringify(CUSTOM_WIDGET_STARTER.requests, null, 2),
   optionsSchema: JSON.stringify(CUSTOM_WIDGET_STARTER.optionsSchema, null, 2),
   defaultOptions: JSON.stringify(CUSTOM_WIDGET_STARTER.defaultOptions, null, 2),
-  stateSchema: JSON.stringify(CUSTOM_WIDGET_STARTER.stateSchema ?? {}, null, 2),
-  defaultState: JSON.stringify(CUSTOM_WIDGET_STARTER.defaultState ?? {}, null, 2),
   template: CUSTOM_WIDGET_STARTER.template,
   secrets: [],
 };

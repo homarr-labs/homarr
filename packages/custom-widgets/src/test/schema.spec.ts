@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { BUNDLED_CUSTOM_WIDGETS } from "../core/bundled-widgets";
 import { customJsxExamples, CUSTOM_WIDGET_STARTER } from "../core/examples";
 import { customJsxRequestSchema, customWidgetCreateSchema, customWidgetDefinitionSchema } from "../core/schema";
 import { validateCustomWidgetOptions } from "../core/options";
@@ -7,6 +8,23 @@ import { validateCustomWidgetOptions } from "../core/options";
 describe("Custom JSX v2 validation", () => {
   test.each(customJsxExamples)("validates $id", (example) => {
     expect(() => customWidgetDefinitionSchema.parse(example.widget)).not.toThrow();
+  });
+
+  test.each(BUNDLED_CUSTOM_WIDGETS)("validates bundled definition $id", ({ widget }) => {
+    const result = customWidgetDefinitionSchema.safeParse(widget);
+    expect(result.success, result.error?.issues.map((issue) => issue.message).join("; ")).toBe(true);
+  });
+
+  test("keeps the bundled seed set stable, disabled-ready, and credential-free", () => {
+    expect(BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id)).toEqual([
+      "seed-dog-facts",
+      "seed-currency-exchange",
+      "seed-jellyfin",
+      "seed-pokedex",
+    ]);
+    for (const { widget } of BUNDLED_CUSTOM_WIDGETS) {
+      expect(JSON.stringify(widget)).not.toMatch(/"(?:apiKey|password|secret|token)"\s*:/iu);
+    }
   });
 
   test("rejects every legacy schema", () => {
@@ -105,7 +123,7 @@ describe("Custom JSX v2 validation", () => {
     ).toBe(false);
   });
 
-  test("accepts multi-source actions, dynamic options, conditions, and typed state", () => {
+  test("accepts multi-source actions, dynamic options, conditions, and temporary inputs", () => {
     const result = customWidgetDefinitionSchema.safeParse({
       ...CUSTOM_WIDGET_STARTER,
       sources: [
@@ -177,8 +195,6 @@ describe("Custom JSX v2 validation", () => {
         then: { properties: { advancedColor: { type: "string" } } },
       },
       defaultOptions: { start: "today" },
-      stateSchema: { selectedDate: "date", search: "string", opened: "boolean", selectedEntities: "string[]" },
-      defaultState: { selectedDate: "2026-07-17", search: "", opened: false, selectedEntities: ["light.office"] },
       template:
         '<Stack><Calendar bind="selectedDate"/><ActionButton requestId="monitor-series" params={{ seriesId: 1 }}>Monitor</ActionButton></Stack>',
     });
@@ -225,13 +241,7 @@ describe("Custom JSX v2 validation", () => {
         },
       }).success,
     ).toBe(false);
-    expect(
-      customWidgetDefinitionSchema.safeParse({
-        ...CUSTOM_WIDGET_STARTER,
-        stateSchema: { accessToken: "string" },
-        defaultState: {},
-      }).success,
-    ).toBe(false);
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, stateSchema: {} }).success).toBe(false);
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
@@ -251,13 +261,6 @@ describe("Custom JSX v2 validation", () => {
         sourceId: "default",
         auth: "none",
         staticHeaders: { "X-API-Key": "not-exportable" },
-      }).success,
-    ).toBe(false);
-    expect(
-      customWidgetDefinitionSchema.safeParse({
-        ...CUSTOM_WIDGET_STARTER,
-        stateSchema: { count: "number" },
-        defaultState: { count: "wrong" },
       }).success,
     ).toBe(false);
     expect(
@@ -299,27 +302,23 @@ describe("Custom JSX v2 validation", () => {
     ).toBe(false);
   });
 
-  test("requires literal bindings to reference declared camel-case state", () => {
+  test("requires literal temporary input bindings", () => {
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
-        stateSchema: { selectedDate: "date" },
-        defaultState: { selectedDate: "2026-07-17" },
         template: '<Calendar bind="selectedDate" />',
       }).success,
     ).toBe(true);
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
-        stateSchema: { selectedDate: "date" },
-        template: '<Calendar bind="missingDate" />',
+        template: "<Calendar bind={inputs.selectedDate} />",
       }).success,
     ).toBe(false);
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
-        stateSchema: { selectedDate: "date" },
-        template: "<Calendar bind={state.selectedDate} />",
+        template: "<Text>{state.search}</Text>",
       }).success,
     ).toBe(false);
   });

@@ -1,11 +1,7 @@
 import type { Completion, CompletionSource } from "@codemirror/autocomplete";
 import { hoverTooltip } from "@codemirror/view";
 
-import {
-  customJsxComponentByName,
-  customJsxTablerIconNames,
-  enabledCustomJsxComponents,
-} from "@homarr/custom-widgets/core";
+import { customJsxComponentByName, customJsxTablerIconNames, enabledCustomJsxComponents } from "../core";
 
 const componentCompletions: Completion[] = enabledCustomJsxComponents.map((component) => ({
   label: component.name,
