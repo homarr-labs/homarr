@@ -15,11 +15,16 @@ describe("buildCustomWidgetAiPrompt", () => {
       CUSTOM_WIDGET_SKILL_MD,
     );
 
-    expect(prompt).toContain("Use this embedded Homarr Custom Widget skill while authoring:");
+    expect(prompt.startsWith("# User request\n\nCreate a status widget")).toBe(true);
+    expect(prompt).toContain("## Execution mode: standalone copy/paste");
+    expect(prompt).toContain("Do not search for unavailable Homarr tools");
+    expect(prompt).toContain("## Embedded Homarr Custom Widget skill");
     expect(prompt).toContain("# Homarr Custom Widget");
+    expect(prompt).toContain("When Homarr MCP tools and `homarr://` resources are unavailable, continue offline");
     expect(prompt).toContain("do not assume access to repository-relative files");
     expect(prompt).not.toContain("references/schema.md");
-    expect(prompt.endsWith(CUSTOM_WIDGET_SKILL_MD)).toBe(true);
+    expect(prompt.endsWith("Do not respond with a plan, a refusal, a tool-access warning, or a question.")).toBe(true);
+    expect(prompt.match(/Create a status widget/g)).toHaveLength(2);
   });
 
   test("is concise and describes the one-widget v2 contract", () => {
@@ -37,6 +42,7 @@ describe("buildCustomWidgetAiPrompt", () => {
     expect(prompt).toContain('"optionsBinding"');
     expect(prompt).toContain("Never infer a binding from matching names");
     expect(prompt).toContain("Create a Portainer widget");
+    expect(prompt.startsWith("# User request\n\nCreate a Portainer widget")).toBe(true);
     expect(prompt.length).toBeLessThanOrEqual(8_000);
   });
 

@@ -50,16 +50,25 @@ export function buildCustomWidgetAiPrompt(
   documentationUrl?: string | null,
   embeddedSkill?: string,
 ) {
-  const sections = [AUTHORING_PROMPT];
+  const requestedWidget = redactText(request?.trim() || "Describe the widget you want to create.");
+  const sections = [`# User request\n\n${requestedWidget}`];
   if (documentationUrl) sections.push(`API documentation: ${redactUrl(documentationUrl)}`);
-  sections.push(`Requested widget: ${redactText(request?.trim() || "Describe the widget you want to create.")}`);
   if (embeddedSkill) {
-    sections.push(`Use this embedded Homarr Custom Widget skill while authoring:\n\n${embeddedSkill}`);
+    sections.push(`## Execution mode: standalone copy/paste
+
+You do not have to connect to Homarr MCP or access any \`homarr://\` resource to complete this request. Do not search for unavailable Homarr tools, do not stop because they are unavailable, and do not ask whether to proceed. Author the best valid widget you can from the instructions embedded below. Do not claim that you validated, previewed, or installed it; the user will paste your two output blocks into Homarr for validation.`);
   }
+  sections.push(AUTHORING_PROMPT);
+  if (embeddedSkill) sections.push(`## Embedded Homarr Custom Widget skill\n\n${embeddedSkill}`);
   if (rawResponse) sections.push(`Sample API response:\n\n\`\`\`json\n${redactResponse(rawResponse)}\n\`\`\``);
   if (currentConfig) {
     sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(currentConfig), null, 2)}\n\`\`\``);
   }
+  sections.push(`## Produce the response now
+
+Create this widget: ${requestedWidget}
+
+Return exactly one complete \`json\` fenced block and one complete \`jsx\` fenced block as specified above. Do not respond with a plan, a refusal, a tool-access warning, or a question.`);
   const prompt = sections.join("\n\n");
   return embeddedSkill ? prompt : prompt.slice(0, 8_000);
 }

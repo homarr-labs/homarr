@@ -20,14 +20,14 @@ The **Schema** action beside Undo, Redo, and Format expands the generated JSON S
 
 ## ChatGPT copy/paste
 
-Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Its dropdown also offers a self-contained version with the Custom Widget skill embedded for models that cannot discover skills or MCP resources. Paste either prompt into ChatGPT or another model. The model must return exactly:
+Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Its dropdown also offers a self-contained version with the Custom Widget skill embedded for models that cannot discover skills or MCP resources. The copied text starts with your request and repeats it as the final instruction so it cannot be lost behind the authoring reference. The embedded version explicitly uses a standalone workflow: the model must author immediately without searching for Homarr MCP tools or claiming that it validated the result. Paste either prompt into ChatGPT or another model. The model must return exactly:
 
 1. A fenced `json` block with one complete widget and `template: "__HOMARR_TEMPLATE__"`.
 2. A fenced `jsx` block with the readable template.
 
 Use **Paste AI response** to fill the workbench. Enter credentials yourself, test, and preview. If saving fails, select or copy the validation errors shown by Homarr and give that plain text to the model. Homarr does not generate a separate fix prompt or assume the model can access local skill files.
 
-The prompt is under 8,000 characters. It includes the installed Mantine version and capability rules but not a complete prop list, MCP workflow, server URL, or credentials.
+The normal prompt is under 8,000 characters. It includes the installed Mantine version and capability rules but not a complete prop list, MCP workflow, server URL, or credentials. The embedded-skill variant is longer because it includes the portable offline instructions.
 
 ## Options
 

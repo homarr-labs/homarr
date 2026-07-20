@@ -14,6 +14,7 @@ describe("custom widget Agent Skill", () => {
     expect(getCustomWidgetSkill().skillMd).toBe(source);
     expect(source).not.toContain("references/schema.md");
     expect(source).toContain("do not assume access to repository-relative files");
+    expect(source).toContain("When Homarr MCP tools and `homarr://` resources are unavailable, continue offline");
   });
 
   test("publishes repository-based skills.sh installation metadata", () => {

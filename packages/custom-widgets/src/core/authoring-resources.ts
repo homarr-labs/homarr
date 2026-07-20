@@ -25,7 +25,13 @@ metadata:
 
 Create one widget at a time. Repeat the workflow when the user asks for several widgets; do not invent packs or shared connections.
 
+## Standalone workflow
+
+When Homarr MCP tools and \`homarr://\` resources are unavailable, continue offline using this skill and the supplied authoring prompt. Do not search repeatedly for missing tools, stop, or ask whether to proceed. Produce the requested credential-free manifest and JSX directly, without claiming they were validated, previewed, or installed. The user will paste them into Homarr and return any diagnostics for correction.
+
 ## Connected workflow
+
+Use this workflow only when the Homarr MCP tools and resources are actually available:
 
 1. Get \`homarr-custom-widget-author\`, then read \`homarr://custom-widgets/schema\` and \`homarr://custom-widgets/components\`.
 2. Read the API documentation supplied by the user. Ask for missing base URLs and credentials only when needed.
