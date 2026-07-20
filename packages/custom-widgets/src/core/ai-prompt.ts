@@ -48,10 +48,14 @@ export function buildCustomWidgetAiPrompt(
   currentConfig?: Partial<HomarrCustomWidgetV2> | Record<string, unknown> | null,
   request?: string | null,
   documentationUrl?: string | null,
+  embeddedSkill?: string,
 ) {
   const sections = [AUTHORING_PROMPT];
   if (documentationUrl) sections.push(`API documentation: ${redactUrl(documentationUrl)}`);
   sections.push(`Requested widget: ${redactText(request?.trim() || "Describe the widget you want to create.")}`);
+  if (embeddedSkill) {
+    sections.push(`Use this embedded Homarr Custom Widget skill while authoring:\n\n${embeddedSkill}`);
+  }
   if (rawResponse) sections.push(`Sample API response:\n\n\`\`\`json\n${redactResponse(rawResponse)}\n\`\`\``);
   if (currentConfig) {
     sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(currentConfig), null, 2)}\n\`\`\``);

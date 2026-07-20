@@ -743,6 +743,7 @@
       "edit": "Edit",
       "duplicate": "Duplicate",
       "copyAiPrompt": "Copy AI prompt",
+      "copyAiPromptWithSkill": "Copy AI prompt with embedded skill",
       "enable": "Enable",
       "disable": "Disable",
       "menu": "Actions",

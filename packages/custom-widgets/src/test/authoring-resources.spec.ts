@@ -17,7 +17,7 @@ describe("custom widget Agent Skill", () => {
   test("publishes repository-based skills.sh installation metadata", () => {
     const skill = getCustomWidgetSkill();
     expect(skill.skillsShUrl).toBe("https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget");
-    expect(skill.sourceUrl).toContain("github.com/homarr-labs/homarr/tree/v2/.agents/skills/homarr-custom-widget");
+    expect(skill.sourceUrl).toBe("https://github.com/homarr-labs/homarr/tree/dev/.agents/skills/homarr-custom-widget");
     expect(skill.installCommand).toBe(
       "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget",
     );

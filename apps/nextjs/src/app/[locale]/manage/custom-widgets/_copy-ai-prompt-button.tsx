@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@mantine/core";
-import { IconSparkles } from "@tabler/icons-react";
+import { Button, Menu } from "@mantine/core";
+import { IconChevronDown, IconFileText, IconSparkles } from "@tabler/icons-react";
 
-import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/core";
+import { buildCustomWidgetAiPrompt, CUSTOM_WIDGET_SKILL_MD } from "@homarr/custom-widgets/core";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -22,10 +22,17 @@ export const CopyAiPromptButton = ({
 }: CopyAiPromptButtonProps) => {
   const t = useScopedI18n("customWidget");
 
-  const handleCopy = async () => {
+  const handleCopy = async (includeSkill = false) => {
     try {
       await navigator.clipboard.writeText(
-        buildCustomWidgetAiPrompt(undefined, rawResponse, currentConfig, request, documentationUrl),
+        buildCustomWidgetAiPrompt(
+          undefined,
+          rawResponse,
+          currentConfig,
+          request,
+          documentationUrl,
+          includeSkill ? CUSTOM_WIDGET_SKILL_MD : undefined,
+        ),
       );
       showSuccessNotification({ title: t("action.copyAiPrompt"), message: t("notification.aiPromptCopied") });
     } catch {
@@ -34,15 +41,32 @@ export const CopyAiPromptButton = ({
   };
 
   return (
-    <Button
-      type="button"
-      variant="light"
-      leftSection={<IconSparkles size={16} />}
-      onClick={() => void handleCopy()}
-      fullWidth
-      size="sm"
-    >
-      {t("action.copyAiPrompt")}
-    </Button>
+    <Button.Group w="100%">
+      <Button
+        type="button"
+        variant="light"
+        leftSection={<IconSparkles size={16} />}
+        onClick={() => void handleCopy()}
+        fullWidth
+        size="sm"
+      >
+        {t("action.copyAiPrompt")}
+      </Button>
+      <Menu position="bottom-end" withinPortal={false}>
+        <Menu.Target>
+          <Button type="button" variant="light" px="xs" aria-label={t("action.copyAiPromptWithSkill")}>
+            <IconChevronDown size={16} />
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item leftSection={<IconSparkles size={16} />} onClick={() => void handleCopy()}>
+            {t("action.copyAiPrompt")}
+          </Menu.Item>
+          <Menu.Item leftSection={<IconFileText size={16} />} onClick={() => void handleCopy(true)}>
+            {t("action.copyAiPromptWithSkill")}
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </Button.Group>
   );
 };

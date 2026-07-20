@@ -7,7 +7,9 @@ import { json } from "@codemirror/lang-json";
 import { linter } from "@codemirror/lint";
 import type { EditorView as EditorViewType } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import type { ComponentType } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import { Badge, Collapse, Group, Input, Loader, Tabs, Text, useComputedColorScheme } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -27,19 +29,26 @@ export type {
   CustomWidgetSchemaReferenceData,
 } from "./code-editor-types";
 
-const LazyCodeMirror = lazy(() => import("@uiw/react-codemirror").then((module) => ({ default: module.default })));
 const EMPTY_DIAGNOSTICS: NonNullable<CustomWidgetCodeEditorProps["diagnostics"]> = [];
 
 export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   const diagnostics = props.diagnostics ?? EMPTY_DIAGNOSTICS;
-  const [mounted, setMounted] = useState(false);
+  const [CodeMirror, setCodeMirror] = useState<ComponentType<ReactCodeMirrorProps> | null>(null);
   const [copied, setCopied] = useState(false);
   const [referenceOpened, setReferenceOpened] = useState(false);
   const [cursor, setCursor] = useState({ line: 1, column: 1 });
   const [editorView, setEditorView] = useState<EditorViewType | null>(null);
   const [historyDepth, setHistoryDepth] = useState({ undo: 0, redo: 0 });
   const colorScheme = useComputedColorScheme("light");
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    let cancelled = false;
+    void import("@uiw/react-codemirror").then((module) => {
+      if (!cancelled) setCodeMirror(() => module.default);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const extensions = useMemo(() => {
     const diagnosticsExtension = linter((view) =>
       diagnostics.map((diagnostic) => {
@@ -77,6 +86,11 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
     });
     editorView.focus();
   }, [editorView, props.revealKey, props.revealText]);
+  const handleCreateEditor = useCallback((view: EditorViewType) => {
+    // @uiw invokes this while constructing CodeMirror. Deferring the parent update avoids
+    // re-entering React's renderer during initialisation in Next.js and Docusaurus.
+    window.setTimeout(() => setEditorView(view), 0);
+  }, []);
   const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
@@ -115,37 +129,36 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           </Collapse>
         )}
         <div className={classes.viewport}>
-          {mounted ? (
-            <Suspense fallback={<EditorLoader />}>
-              <LazyCodeMirror
-                id={`${props.id}-root`}
-                value={props.value}
-                onChange={props.readOnly ? () => undefined : props.onChange}
-                placeholder={props.placeholder}
-                extensions={extensions}
-                theme={colorScheme}
-                height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
-                basicSetup={{
-                  autocompletion: props.language !== "jsx" && !props.readOnly,
-                  bracketMatching: true,
-                  closeBrackets: !props.readOnly,
-                  foldGutter: true,
-                  history: !props.readOnly,
-                  highlightActiveLine: !props.readOnly,
-                  highlightActiveLineGutter: !props.readOnly,
-                  indentOnInput: !props.readOnly,
-                  lineNumbers: true,
-                }}
-                onCreateEditor={setEditorView}
-                onUpdate={(update) => {
-                  if (!update.selectionSet && !update.docChanged) return;
-                  const head = update.state.selection.main.head;
-                  const line = update.state.doc.lineAt(head);
-                  setCursor({ line: line.number, column: head - line.from + 1 });
-                  setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
-                }}
-              />
-            </Suspense>
+          {CodeMirror ? (
+            <CodeMirror
+              id={`${props.id}-root`}
+              value={props.value}
+              onChange={props.readOnly ? () => undefined : props.onChange}
+              placeholder={props.placeholder}
+              extensions={extensions}
+              theme={colorScheme}
+              height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
+              basicSetup={{
+                autocompletion: props.language !== "jsx" && !props.readOnly,
+                bracketMatching: true,
+                closeBrackets: !props.readOnly,
+                foldGutter: true,
+                history: !props.readOnly,
+                highlightActiveLine: !props.readOnly,
+                highlightActiveLineGutter: !props.readOnly,
+                indentOnInput: !props.readOnly,
+                lineNumbers: true,
+              }}
+              onCreateEditor={handleCreateEditor}
+              onUpdate={(update) => {
+                if (!editorView) return;
+                if (!update.selectionSet && !update.docChanged) return;
+                const head = update.state.selection.main.head;
+                const line = update.state.doc.lineAt(head);
+                setCursor({ line: line.number, column: head - line.from + 1 });
+                setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
+              }}
+            />
           ) : (
             <EditorLoader />
           )}

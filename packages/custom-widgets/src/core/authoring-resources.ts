@@ -9,7 +9,7 @@ import { customJsxTablerIconNames } from "./tabler-icons";
 export const CUSTOM_WIDGET_SKILL_VERSION = "2.0.0";
 export const CUSTOM_WIDGET_SKILLS_SH_URL = "https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
-  "https://github.com/homarr-labs/homarr/tree/v2/.agents/skills/homarr-custom-widget";
+  "https://github.com/homarr-labs/homarr/tree/dev/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
 

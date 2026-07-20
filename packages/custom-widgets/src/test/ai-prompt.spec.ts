@@ -1,9 +1,26 @@
 import { describe, expect, test } from "vitest";
 
 import { buildCustomWidgetAiPrompt, buildCustomWidgetFixPrompt, buildCustomWidgetMcpPrompt } from "../core/ai-prompt";
+import { CUSTOM_WIDGET_SKILL_MD } from "../core/authoring-resources";
 import { CUSTOM_WIDGET_STARTER } from "../core/examples";
 
 describe("buildCustomWidgetAiPrompt", () => {
+  test("can embed the portable skill for standalone chat models", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      undefined,
+      undefined,
+      "Create a status widget",
+      undefined,
+      CUSTOM_WIDGET_SKILL_MD,
+    );
+
+    expect(prompt).toContain("Use this embedded Homarr Custom Widget skill while authoring:");
+    expect(prompt).toContain("# Homarr Custom Widget");
+    expect(prompt).toContain("installed Mantine components can differ by Homarr release.");
+    expect(prompt.length).toBeLessThanOrEqual(8_000);
+  });
+
   test("is concise and describes the one-widget v2 contract", () => {
     const prompt = buildCustomWidgetAiPrompt(
       undefined,
