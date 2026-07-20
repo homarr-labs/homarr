@@ -376,8 +376,8 @@ catalogs:
       specifier: ^3.18.0
       version: 3.18.0
     jotai:
-      specifier: ^2.20.1
-      version: 2.20.1
+      specifier: ^2.20.2
+      version: 2.20.2
     jsdom:
       specifier: ^29.1.1
       version: 29.1.1
@@ -988,7 +988,7 @@ importers:
         version: 3.18.0(@noble/hashes@2.0.1)
       jotai:
         specifier: 'catalog:'
-        version: 2.20.1(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7)
+        version: 2.20.2(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7)
       jszip:
         specifier: 'catalog:'
         version: 3.10.1
@@ -2369,7 +2369,7 @@ importers:
         version: 3.44.0(react@19.2.7)
       jotai:
         specifier: 'catalog:'
-        version: 2.20.1(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7)
+        version: 2.20.2(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.2.10(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
@@ -11206,8 +11206,8 @@ packages:
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
 
-  jotai@2.20.1:
-    resolution: {integrity: sha512-dnuKfU/GLi8B28RRMjQ3AfoN7kfzP8o41+AX2FmITZqEMY8PHnjABq+VkEooomLwYaGjda+pgy0yFSjaHX/ZPg==}
+  jotai@2.20.2:
+    resolution: {integrity: sha512-aHB4CNb9qRcyf0mwSB6EO5bCGAjx8cTwFgOFCE2leOnTzqACbnSWG8XoWB3LxCT1Qoj03I1OWAHszDmN4uHb/w==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -25286,7 +25286,7 @@ snapshots:
 
   jose@6.2.3: {}
 
-  jotai@2.20.1(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7):
+  jotai@2.20.2(@babel/core@7.29.0)(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7):
     optionalDependencies:
       '@babel/core': 7.29.0
       '@babel/template': 7.29.7
